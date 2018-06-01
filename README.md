@@ -1,2 +1,2 @@
-# ios.station.ruuvi.com
+# com.ruuvi.station.ios
 iOS Ruuvi Station
