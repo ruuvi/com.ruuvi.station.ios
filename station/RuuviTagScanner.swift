@@ -24,7 +24,7 @@ class RuuviTagScanner: NSObject, CBCentralManagerDelegate {
     func start() {
         print("scan start")
         if ready {
-            manager?.scanForPeripherals(withServices: nil, options: nil)
+            manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true)])
         }
     }
     
