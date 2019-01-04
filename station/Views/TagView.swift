@@ -24,12 +24,12 @@ public class TagView: UIView {
             } else {
                 macLbl.text = ruuviTag?.uuid.uppercased()
             }
-            let temperatureText = NSMutableAttributedString.init(string: String(format: "%.1f", ruuviTag!.temperature) + "")
+            let temperatureText = NSMutableAttributedString.init(string: String(format: "%.2f", ruuviTag!.temperature) + "")
             //temperatureText.setAttributes([kCTFontAttributeName as NSAttributedStringKey: UIFont.systemFont(ofSize: 32)],
             //                              range: NSMakeRange(temperatureText.length - 2, 2))
             temperatureLbl.attributedText = temperatureText
             //temperatureLbl.sizeToFit()
-            humidityLbl.text = String(format: "%.1f", ruuviTag!.humidity) + " %"
+            humidityLbl.text = String(format: "%.2f", ruuviTag!.humidity) + " %"
             pressureLbl.text = String(ruuviTag!.pressure) + " hPa"
             rssiLbl.text = String(ruuviTag!.rssi) + " dBm"
             updateLbl.text = ruuviTag?.updatedAt?.description
