@@ -81,7 +81,7 @@
                                 </constraints>
                                 <state key="normal">
                                     <attributedString key="attributedTitle">
-                                        <fragment content="ADD TAGS">
+                                        <fragment content="Tap + to add tags">
                                             <attributes>
                                                 <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <font key="NSFont" size="18" name="Arial-BoldMT"/>
