@@ -26,7 +26,7 @@ class TagViewController: UIViewController, RuuviTagListener {
     }
     
     func bluetoothDisabled() {
-        let alertVC = UIAlertController(title: "Bluetooth is not enabled", message: "Ruuvi Station need bluetooth to be able to listen for RuuviTags. Make sure that your bluetooth is turned on.", preferredStyle: UIAlertControllerStyle.alert)
+        let alertVC = UIAlertController(title: "Bluetooth is not enabled", message: "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.", preferredStyle: UIAlertControllerStyle.alert)
         let action = UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) -> Void in
             self.dismiss(animated: true, completion: nil)
         })
