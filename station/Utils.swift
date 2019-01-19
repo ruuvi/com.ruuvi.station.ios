@@ -5,12 +5,12 @@ public class Utils {
         let elapsed = Int(Date().timeIntervalSince(date))
         var output = "Updated ";
         // show date if the tag has not been seen for 24h
-        if elapsed > 24 * 60 * 60 {
+        if elapsed >= 24 * 60 * 60 {
             output += date.description
         } else {
             let seconds = elapsed % 60
             let minutes = (elapsed / 60) % 60
-            let hours   = (elapsed / (1000*60*60)) % 24
+            let hours   = (elapsed / (60*60)) % 24
             if hours > 0 {
                 output += String(hours) + " h "
             }
