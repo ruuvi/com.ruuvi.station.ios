@@ -82,7 +82,7 @@ class TagViewController: UIViewController, RuuviTagListener {
                 DispatchQueue.main.async {
                     let alert = UIAlertController(title: "Enter a name", message: "", preferredStyle: .alert)
                     alert.addTextField { (textField) in
-                        textField.autocapitalizationType = UITextAutocapitalizationType.words
+                        textField.autocapitalizationType = UITextAutocapitalizationType.sentences
                         textField.text = ruuvitag.name
                     }
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
