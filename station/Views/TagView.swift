@@ -32,7 +32,6 @@ public class TagView: UIView {
             humidityLbl.text = String(format: "%.2f", ruuviTag!.humidity) + " %"
             pressureLbl.text = String(ruuviTag!.pressure) + " hPa"
             rssiLbl.text = String(ruuviTag!.rssi) + " dBm"
-            updateLbl.text = ruuviTag?.updatedAt?.description
             updateLbl.text = Utils().timeSince(date: ruuviTag!.updatedAt! as Date)
 
             //if backgroundImage.alpha == 0 {

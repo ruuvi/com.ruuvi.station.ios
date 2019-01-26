@@ -22,14 +22,19 @@ class RuuviTagScanner: NSObject, CBCentralManagerDelegate {
     }
     
     func start() {
+        if manager == nil {
+            manager = CBCentralManager(delegate: self, queue: nil)
+        }
         print("scan start")
         if ready {
-            manager?.scanForPeripherals(withServices: nil, options: nil)
+            manager?.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true)])
         }
     }
     
     func stop() {
         manager?.stopScan()
+        manager = nil
+        ready = false
         print("scan stopped")
     }
     
@@ -107,6 +112,6 @@ class RuuviTagScanner: NSObject, CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        //print(error!)
+        print(error!)
     }
 }
