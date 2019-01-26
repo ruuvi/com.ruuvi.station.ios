@@ -6,7 +6,8 @@ class TagViewController: UIViewController, RuuviTagListener {
     
     var ruuviTags: NSMutableArray = []
     var scanner: RuuviTagScanner?
-    var timer: Timer?
+    var updateViewTimer: Timer?
+    var restartScanTimer: Timer?
     
     @IBOutlet weak var editBtn: UIBarButtonItem!
     @IBOutlet weak var tagPager: UIScrollView!
@@ -82,7 +83,7 @@ class TagViewController: UIViewController, RuuviTagListener {
                 DispatchQueue.main.async {
                     let alert = UIAlertController(title: "Enter a name", message: "", preferredStyle: .alert)
                     alert.addTextField { (textField) in
-                        textField.autocapitalizationType = UITextAutocapitalizationType.words
+                        textField.autocapitalizationType = UITextAutocapitalizationType.sentences
                         textField.text = ruuvitag.name
                     }
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
@@ -161,8 +162,10 @@ class TagViewController: UIViewController, RuuviTagListener {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        timer?.invalidate()
-        timer = nil
+        updateViewTimer?.invalidate()
+        updateViewTimer = nil
+        restartScanTimer?.invalidate()
+        restartScanTimer = nil
         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
@@ -192,10 +195,16 @@ class TagViewController: UIViewController, RuuviTagListener {
             }))
             self.present(alert, animated: true, completion: nil)
         }
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateView), userInfo: nil, repeats: true)
+        updateViewTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateView), userInfo: nil, repeats: true)
+        
+        restartScanTimer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(restarter), userInfo: nil, repeats: true)
         scanner?.start()
     }
     
+    @objc func restarter() {
+        scanner?.stop()
+        scanner?.start()
+    }
     @objc func updateView() {
         for rt in ruuviTags {
             let tag = rt as! TagView
