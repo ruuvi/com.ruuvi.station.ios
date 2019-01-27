@@ -108,7 +108,8 @@ class TagViewController: UIViewController, RuuviTagListener {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let page = getCurrentPage()
         coordinator.animate(alongsideTransition: { (UIViewControllerTransitionCoordinatorContext) -> Void in
-            self.tagPager.contentSize = CGSize(width: size.width * CGFloat(self.ruuviTags.count), height: self.tagPager.frame.height)
+            let width = self.view.bounds.width
+            self.tagPager.contentSize = CGSize(width: width * CGFloat(self.ruuviTags.count), height: self.tagPager.frame.height)
             for (i, rt) in self.ruuviTags.enumerated() {
                 if let tagView = rt as? TagView {
                     tagView.frame = CGRect(origin: CGPoint(x: size.width * CGFloat(i), y: 0), size: CGSize(width: size.width, height: self.self.tagPager.contentSize.height))
