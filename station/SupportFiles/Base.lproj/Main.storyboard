@@ -69,7 +69,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="LU9-by-xAS">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsVerticalScrollIndicator="NO" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-lx-MpJ">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-lx-MpJ">
                                 <rect key="frame" x="0.0" y="88" width="375" height="724"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </scrollView>
@@ -111,14 +111,14 @@
                             <constraint firstAttribute="bottom" secondItem="LU9-by-xAS" secondAttribute="bottom" id="DNM-eS-wd1"/>
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="JMp-YH-6gO"/>
                             <constraint firstItem="SqT-dD-Fkx" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="UX5-Vj-TAH"/>
-                            <constraint firstItem="8sE-lx-MpJ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="dTp-Nz-gcK"/>
-                            <constraint firstItem="SqT-dD-Fkx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="et7-sZ-zKJ"/>
-                            <constraint firstItem="8sE-lx-MpJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="fcx-IT-PEv"/>
+                            <constraint firstItem="8sE-lx-MpJ" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="dTp-Nz-gcK"/>
+                            <constraint firstItem="SqT-dD-Fkx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="et7-sZ-zKJ"/>
+                            <constraint firstItem="8sE-lx-MpJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fcx-IT-PEv"/>
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="jW2-If-oEA"/>
-                            <constraint firstItem="LU9-by-xAS" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="p7c-sz-W5M"/>
+                            <constraint firstItem="LU9-by-xAS" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="p7c-sz-W5M"/>
                             <constraint firstItem="6GS-2w-zYy" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-32" id="sWR-bY-bGD"/>
-                            <constraint firstItem="LU9-by-xAS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="tmy-lT-aLL"/>
-                            <constraint firstItem="SqT-dD-Fkx" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="v2v-p9-Ebo"/>
+                            <constraint firstItem="LU9-by-xAS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="tmy-lT-aLL"/>
+                            <constraint firstItem="SqT-dD-Fkx" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="v2v-p9-Ebo"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -211,8 +211,8 @@
                             <constraint firstItem="n1U-BJ-dmZ" firstAttribute="trailing" secondItem="glF-7W-yM2" secondAttribute="trailing" id="eKx-XK-sL5"/>
                             <constraint firstItem="d3i-72-UVB" firstAttribute="top" secondItem="dD3-Yr-pFC" secondAttribute="top" id="g9R-dl-dF8"/>
                             <constraint firstItem="F9K-PP-QkV" firstAttribute="centerX" secondItem="dD3-Yr-pFC" secondAttribute="centerX" id="kNa-Ya-0zJ"/>
-                            <constraint firstItem="n1U-BJ-dmZ" firstAttribute="trailing" secondItem="d3i-72-UVB" secondAttribute="trailing" id="tQe-5h-lgz"/>
-                            <constraint firstItem="d3i-72-UVB" firstAttribute="leading" secondItem="n1U-BJ-dmZ" secondAttribute="leading" id="uho-Yt-eFy"/>
+                            <constraint firstAttribute="trailing" secondItem="d3i-72-UVB" secondAttribute="trailing" id="tQe-5h-lgz"/>
+                            <constraint firstItem="d3i-72-UVB" firstAttribute="leading" secondItem="dD3-Yr-pFC" secondAttribute="leading" id="uho-Yt-eFy"/>
                             <constraint firstItem="F9K-PP-QkV" firstAttribute="top" secondItem="RGv-pU-dCJ" secondAttribute="bottom" constant="8" id="xrA-c2-pdX"/>
                             <constraint firstItem="n1U-BJ-dmZ" firstAttribute="bottom" secondItem="F9K-PP-QkV" secondAttribute="bottom" constant="75" id="y2E-Cb-cfK"/>
                         </constraints>
