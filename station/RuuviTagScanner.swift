@@ -40,6 +40,9 @@ class RuuviTagScanner: NSObject, CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData:
         [String : Any], rssi RSSI: NSNumber) {
+        if RSSI.intValue == 127 {
+            return
+        }
         if let manufacturerData = advertisementData[CBAdvertisementDataServiceDataKey] as? [NSObject:AnyObject] {
             if let manufacturerData = manufacturerData.first?.value as? Data{
                 if manufacturerData.count != 20 {
