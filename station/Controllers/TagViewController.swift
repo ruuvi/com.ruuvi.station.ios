@@ -54,7 +54,7 @@ class TagViewController: UIViewController, RuuviTagListener {
             }
             alertController.addAction(cancelAction)
             
-            let destroyAction = UIAlertAction(title: "Remove Tag", style: .destructive) { action in
+            let destroyAction = UIAlertAction(title: "Remove", style: .destructive) { action in
                 DispatchQueue.main.async {
                     for view in self.tagPager.subviews {
                         view.removeFromSuperview()
@@ -80,7 +80,7 @@ class TagViewController: UIViewController, RuuviTagListener {
             }
             alertController.addAction(destroyAction)
             
-            let renameAction = UIAlertAction(title: "Rename tag", style: .default) { action in
+            let renameAction = UIAlertAction(title: "Rename", style: .default) { action in
                 DispatchQueue.main.async {
                     let alert = UIAlertController(title: "Enter a name", message: "", preferredStyle: .alert)
                     alert.addTextField { (textField) in
