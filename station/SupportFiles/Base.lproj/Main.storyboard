@@ -73,40 +73,10 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6GS-2w-zYy">
-                                <rect key="frame" x="107" y="418" width="200" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="SWE-Pl-jmF"/>
-                                    <constraint firstAttribute="height" constant="50" id="zTt-Ps-6Op"/>
-                                </constraints>
-                                <state key="normal">
-                                    <attributedString key="attributedTitle">
-                                        <fragment content="ADD TAGS">
-                                            <attributes>
-                                                <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                <font key="NSFont" size="18" name="Arial-BoldMT"/>
-                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                            </attributes>
-                                        </fragment>
-                                    </attributedString>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="25"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="2"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <segue destination="gVl-Kv-WuJ" kind="show" id="qve-OF-Bsb"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="SqT-dD-Fkx" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" symbolic="YES" id="5Xm-BZ-4Gz"/>
-                            <constraint firstItem="6GS-2w-zYy" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="9FT-dg-O5K"/>
                             <constraint firstItem="LU9-by-xAS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="9Fu-cB-7VQ"/>
                             <constraint firstAttribute="bottom" secondItem="LU9-by-xAS" secondAttribute="bottom" id="DNM-eS-wd1"/>
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="JMp-YH-6gO"/>
@@ -116,7 +86,6 @@
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fcx-IT-PEv"/>
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="jW2-If-oEA"/>
                             <constraint firstItem="LU9-by-xAS" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="p7c-sz-W5M"/>
-                            <constraint firstItem="6GS-2w-zYy" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-32" id="sWR-bY-bGD"/>
                             <constraint firstItem="LU9-by-xAS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="tmy-lT-aLL"/>
                             <constraint firstItem="SqT-dD-Fkx" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="v2v-p9-Ebo"/>
                         </constraints>
@@ -125,7 +94,7 @@
                     <navigationItem key="navigationItem" title="Ruuvi Station" id="psq-Vc-L1A">
                         <barButtonItem key="leftBarButtonItem" systemItem="add" id="Vrm-0x-EcF">
                             <connections>
-                                <segue destination="gVl-Kv-WuJ" kind="show" id="RRU-w5-c8N"/>
+                                <segue destination="gVl-Kv-WuJ" kind="show" identifier="segueToAdd" id="RRU-w5-c8N"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="5P0-Iv-ZEX">
@@ -136,7 +105,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editBtn" destination="5P0-Iv-ZEX" id="cvC-S9-XN1"/>
-                        <outlet property="noTagsBtn" destination="6GS-2w-zYy" id="8sc-sX-50v"/>
                         <outlet property="tagPager" destination="8sE-lx-MpJ" id="aJX-WC-UkL"/>
                     </connections>
                 </viewController>
@@ -259,7 +227,4 @@
         <image name="gradient_layer" width="359" height="641"/>
         <image name="welcome_friend" width="901" height="578"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="qve-OF-Bsb"/>
-    </inferredMetricsTieBreakers>
 </document>
