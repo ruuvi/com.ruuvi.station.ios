@@ -11,7 +11,6 @@ class TagViewController: UIViewController, RuuviTagListener {
     
     @IBOutlet weak var editBtn: UIBarButtonItem!
     @IBOutlet weak var tagPager: UIScrollView!
-    @IBOutlet weak var noTagsBtn: UIButton!
     
     func found(tag: RuuviTag) {
         for ruuviTag in ruuviTags {
@@ -63,7 +62,6 @@ class TagViewController: UIViewController, RuuviTagListener {
                     ruuvitag.delete()
                     self.ruuviTags.removeAllObjects()
                     let tags = RuuviTag().getAll()
-                    self.noTagsBtn.isHidden = tags.count > 0
                     for tag in tags {
                         let tagView = self.getView(tag: tag)
                         tagView.draw()
@@ -75,6 +73,9 @@ class TagViewController: UIViewController, RuuviTagListener {
                     self.tagPager.setContentOffset(CGPoint(x: CGFloat(Int(self.tagPager.frame.size.width) * indexOfPage), y:0), animated: true)
                     //self.tagPager.contentOffset.x = CGFloat(Int(self.tagPager.frame.size.width) * indexOfPage)
                     self.view.setNeedsLayout()
+                    if tags.count == 0 {
+                        self.performSegue(withIdentifier: "segueToAdd", sender: nil)
+                    }
                 }
             }
             alertController.addAction(destroyAction)
@@ -142,7 +143,6 @@ class TagViewController: UIViewController, RuuviTagListener {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        noTagsBtn.layer.borderColor = UIColor.white.cgColor
         scanner = RuuviTagScanner(caller: self as RuuviTagListener)
         NotificationCenter.default.addObserver(self, selector: #selector(self.background), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.foreground), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
@@ -180,7 +180,6 @@ class TagViewController: UIViewController, RuuviTagListener {
             animateToPage = tags.count - 1
         }
         ruuviTags.removeAllObjects()
-        noTagsBtn.isHidden = tags.count > 0
         for tag in tags {
             let tagView = getView(tag: tag)
             tagView.draw()
@@ -200,6 +199,10 @@ class TagViewController: UIViewController, RuuviTagListener {
         
         restartScanTimer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(restarter), userInfo: nil, repeats: true)
         scanner?.start()
+    
+        if tags.count == 0 {
+            performSegue(withIdentifier: "segueToAdd", sender: nil)
+        }
     }
     
     @objc func restarter() {
