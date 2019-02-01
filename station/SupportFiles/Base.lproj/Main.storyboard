@@ -160,13 +160,12 @@
                                                     <constraint firstAttribute="height" constant="128" id="rfw-0d-rxN"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-pU-dCJ">
-                                                <rect key="frame" x="83.333333333333314" y="218" width="250" height="142.33333333333337"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To find nearby RuuviTags and receive live sensor data, press scan." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-pU-dCJ">
+                                                <rect key="frame" x="83.333333333333314" y="218" width="250" height="61"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="250" id="Lgo-pN-jGD"/>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="aps-Hb-mkE"/>
                                                 </constraints>
-                                                <string key="text">The app is currently in beta and our team is working to add new features.  To find nearby RuuviTags and receive live sensor data, press scan.</string>
                                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
