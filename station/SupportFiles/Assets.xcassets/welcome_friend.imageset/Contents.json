@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "title-welcome-svg.png",
+      "filename" : "title-welcome1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "title-welcome2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "title-welcome3x.png",
       "scale" : "3x"
     }
   ],
