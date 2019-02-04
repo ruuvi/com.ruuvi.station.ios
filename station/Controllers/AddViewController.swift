@@ -23,10 +23,7 @@ class AddViewController: UITableViewController, RuuviTagListener {
     
     func reloadTable() {
         ruuviTags.sort() { $0.rssi > $1.rssi }
-        UIView.transition(with: tableView,
-                          duration: 0.3,
-                          options: .transitionCrossDissolve,
-                          animations: { self.tableView.reloadData() })
+        self.tableView.reloadData()
     }
     
     func bluetoothDisabled() {
@@ -40,7 +37,7 @@ class AddViewController: UITableViewController, RuuviTagListener {
     
     func reload() {
         DispatchQueue.main.async() {
-            self.tableView.reloadData()
+            self.reloadTable()
         }
     }
     
