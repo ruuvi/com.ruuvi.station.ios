@@ -126,88 +126,77 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="d3i-72-UVB">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9K-PP-QkV">
-                                <rect key="frame" x="107" y="737" width="200" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="DDs-Ta-8BV"/>
-                                    <constraint firstAttribute="height" constant="50" id="Zah-nW-4GC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="SCAN">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="25"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="2"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="start:" destination="BYr-8F-lLO" eventType="touchUpInside" id="Yuq-Im-WoM"/>
-                                </connections>
-                            </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QOS-x2-Re1">
-                                <rect key="frame" x="0.0" y="44" width="414" height="685"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m1y-WP-8mu">
+                                <rect key="frame" x="0.0" y="248" width="414" height="400"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m1y-WP-8mu">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="welcome_friend" translatesAutoresizingMaskIntoConstraints="NO" id="glF-7W-yM2">
-                                                <rect key="frame" x="0.0" y="50" width="414" height="128"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="128" id="rfw-0d-rxN"/>
-                                                </constraints>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To find nearby RuuviTags and receive live sensor data, press scan." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-pU-dCJ">
-                                                <rect key="frame" x="83.333333333333314" y="218" width="250" height="61"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="250" id="Lgo-pN-jGD"/>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="aps-Hb-mkE"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="welcome_friend" translatesAutoresizingMaskIntoConstraints="NO" id="glF-7W-yM2">
+                                        <rect key="frame" x="0.0" y="50" width="414" height="128"/>
                                         <constraints>
-                                            <constraint firstItem="RGv-pU-dCJ" firstAttribute="top" secondItem="glF-7W-yM2" secondAttribute="bottom" constant="40" id="FYO-4z-RTZ"/>
-                                            <constraint firstAttribute="height" constant="200" id="HEJ-mw-8qF"/>
-                                            <constraint firstItem="glF-7W-yM2" firstAttribute="top" secondItem="m1y-WP-8mu" secondAttribute="top" constant="50" id="TWU-eH-l4y"/>
-                                            <constraint firstAttribute="trailing" secondItem="glF-7W-yM2" secondAttribute="trailing" id="fST-2v-8Od"/>
-                                            <constraint firstItem="RGv-pU-dCJ" firstAttribute="centerX" secondItem="m1y-WP-8mu" secondAttribute="centerX" constant="1.1666666666666288" id="fSV-gb-ta6"/>
-                                            <constraint firstItem="glF-7W-yM2" firstAttribute="leading" secondItem="m1y-WP-8mu" secondAttribute="leading" id="qLq-yD-t6Y"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="128" id="kv2-VS-lOW"/>
+                                            <constraint firstAttribute="height" constant="128" id="rfw-0d-rxN"/>
                                         </constraints>
-                                    </view>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To find nearby RuuviTags and receive live sensor data, press scan." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-pU-dCJ">
+                                        <rect key="frame" x="82" y="210" width="250" height="61"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="250" id="Lgo-pN-jGD"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="aps-Hb-mkE"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="tfh-a8-Hy9"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9K-PP-QkV">
+                                        <rect key="frame" x="107" y="303" width="200" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="DDs-Ta-8BV"/>
+                                            <constraint firstAttribute="height" constant="50" id="Zah-nW-4GC"/>
+                                            <constraint firstAttribute="width" constant="200" id="m40-fL-3J9"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="SCAN">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="25"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="start:" destination="BYr-8F-lLO" eventType="touchUpInside" id="Yuq-Im-WoM"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="m1y-WP-8mu" firstAttribute="top" secondItem="QOS-x2-Re1" secondAttribute="top" id="UKR-yq-gth"/>
-                                    <constraint firstItem="m1y-WP-8mu" firstAttribute="leading" secondItem="QOS-x2-Re1" secondAttribute="leading" id="eW0-8J-6ST"/>
-                                    <constraint firstAttribute="trailing" secondItem="m1y-WP-8mu" secondAttribute="trailing" id="eqY-Ud-PQA"/>
-                                    <constraint firstAttribute="bottom" secondItem="m1y-WP-8mu" secondAttribute="bottom" constant="201" id="jKN-MB-6pV"/>
-                                    <constraint firstItem="m1y-WP-8mu" firstAttribute="width" secondItem="QOS-x2-Re1" secondAttribute="width" id="tsM-xD-Zk0"/>
+                                    <constraint firstItem="RGv-pU-dCJ" firstAttribute="centerX" secondItem="m1y-WP-8mu" secondAttribute="centerX" id="9gg-5u-JRx"/>
+                                    <constraint firstItem="F9K-PP-QkV" firstAttribute="top" secondItem="RGv-pU-dCJ" secondAttribute="bottom" constant="32" id="LCd-VG-VgO"/>
+                                    <constraint firstItem="glF-7W-yM2" firstAttribute="top" secondItem="m1y-WP-8mu" secondAttribute="top" constant="50" id="Ofg-a9-Glo"/>
+                                    <constraint firstItem="F9K-PP-QkV" firstAttribute="centerX" secondItem="m1y-WP-8mu" secondAttribute="centerX" id="Oi6-c5-lC8"/>
+                                    <constraint firstItem="glF-7W-yM2" firstAttribute="leading" secondItem="m1y-WP-8mu" secondAttribute="leading" id="SaO-Yw-b4z"/>
+                                    <constraint firstAttribute="height" constant="400" id="ckC-bz-cr0"/>
+                                    <constraint firstItem="RGv-pU-dCJ" firstAttribute="top" secondItem="glF-7W-yM2" secondAttribute="bottom" constant="32" id="khQ-y8-fql"/>
+                                    <constraint firstAttribute="trailing" secondItem="glF-7W-yM2" secondAttribute="trailing" id="xiw-D4-wR4"/>
                                 </constraints>
-                            </scrollView>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="QOS-x2-Re1" firstAttribute="trailing" secondItem="n1U-BJ-dmZ" secondAttribute="trailing" id="06s-FD-c7f"/>
                             <constraint firstItem="V4H-g7-3Tl" firstAttribute="trailing" secondItem="dD3-Yr-pFC" secondAttribute="trailing" id="4vm-QG-iyt"/>
                             <constraint firstAttribute="bottom" secondItem="d3i-72-UVB" secondAttribute="bottom" id="Fei-wL-YVQ"/>
+                            <constraint firstItem="m1y-WP-8mu" firstAttribute="leading" secondItem="n1U-BJ-dmZ" secondAttribute="leading" id="GE4-HM-731"/>
                             <constraint firstItem="V4H-g7-3Tl" firstAttribute="bottom" secondItem="dD3-Yr-pFC" secondAttribute="bottom" id="H6J-m1-TTp"/>
-                            <constraint firstAttribute="trailing" secondItem="QOS-x2-Re1" secondAttribute="trailing" id="IT7-GA-960"/>
-                            <constraint firstItem="QOS-x2-Re1" firstAttribute="centerX" secondItem="dD3-Yr-pFC" secondAttribute="centerX" id="NyX-BC-C5G"/>
                             <constraint firstItem="V4H-g7-3Tl" firstAttribute="top" secondItem="dD3-Yr-pFC" secondAttribute="top" id="O0e-YT-rn7"/>
                             <constraint firstItem="V4H-g7-3Tl" firstAttribute="leading" secondItem="dD3-Yr-pFC" secondAttribute="leading" id="O9V-HA-7Pd"/>
+                            <constraint firstItem="m1y-WP-8mu" firstAttribute="trailing" secondItem="n1U-BJ-dmZ" secondAttribute="trailing" id="Oil-Ga-wxQ"/>
                             <constraint firstItem="d3i-72-UVB" firstAttribute="top" secondItem="dD3-Yr-pFC" secondAttribute="top" id="g9R-dl-dF8"/>
-                            <constraint firstItem="QOS-x2-Re1" firstAttribute="top" secondItem="n1U-BJ-dmZ" secondAttribute="top" id="jR3-Uy-0Xc"/>
-                            <constraint firstItem="F9K-PP-QkV" firstAttribute="centerX" secondItem="dD3-Yr-pFC" secondAttribute="centerX" id="kNa-Ya-0zJ"/>
-                            <constraint firstItem="F9K-PP-QkV" firstAttribute="top" secondItem="QOS-x2-Re1" secondAttribute="bottom" constant="8" id="prg-mL-mlC"/>
                             <constraint firstAttribute="trailing" secondItem="d3i-72-UVB" secondAttribute="trailing" id="tQe-5h-lgz"/>
                             <constraint firstItem="d3i-72-UVB" firstAttribute="leading" secondItem="dD3-Yr-pFC" secondAttribute="leading" id="uho-Yt-eFy"/>
-                            <constraint firstItem="n1U-BJ-dmZ" firstAttribute="bottom" secondItem="F9K-PP-QkV" secondAttribute="bottom" constant="75" id="y2E-Cb-cfK"/>
+                            <constraint firstItem="m1y-WP-8mu" firstAttribute="centerY" secondItem="dD3-Yr-pFC" secondAttribute="centerY" id="yaz-N9-Yj9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="n1U-BJ-dmZ"/>
                     </view>
@@ -218,7 +207,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jFT-YF-b2v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-132" y="966.50246305418727"/>
+            <point key="canvasLocation" x="-133.33333333333334" y="966.29464285714278"/>
         </scene>
     </scenes>
     <resources>
