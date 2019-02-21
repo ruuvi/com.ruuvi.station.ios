@@ -43,7 +43,7 @@
         <scene sceneID="UXm-Om-wLk">
             <objects>
                 <navigationController id="SVa-tF-Gc0" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="WUK-dO-1V1">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="WUK-dO-1V1">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -70,7 +70,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sE-lx-MpJ">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </scrollView>
                         </subviews>
@@ -84,7 +84,7 @@
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="dTp-Nz-gcK"/>
                             <constraint firstItem="SqT-dD-Fkx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="et7-sZ-zKJ"/>
                             <constraint firstItem="8sE-lx-MpJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fcx-IT-PEv"/>
-                            <constraint firstItem="8sE-lx-MpJ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="jW2-If-oEA"/>
+                            <constraint firstItem="8sE-lx-MpJ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="jW2-If-oEA"/>
                             <constraint firstItem="LU9-by-xAS" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="p7c-sz-W5M"/>
                             <constraint firstItem="LU9-by-xAS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="tmy-lT-aLL"/>
                             <constraint firstItem="SqT-dD-Fkx" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="v2v-p9-Ebo"/>
@@ -93,11 +93,13 @@
                     </view>
                     <navigationItem key="navigationItem" title="Ruuvi Station" id="psq-Vc-L1A">
                         <barButtonItem key="leftBarButtonItem" systemItem="add" id="Vrm-0x-EcF">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <segue destination="gVl-Kv-WuJ" kind="show" identifier="segueToAdd" id="RRU-w5-c8N"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="5P0-Iv-ZEX">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="removeClick:" destination="BYZ-38-t0r" id="rgE-cx-ldI"/>
                             </connections>
@@ -110,7 +112,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-132" y="175.86206896551727"/>
+            <point key="canvasLocation" x="-133.33333333333334" y="175.44642857142856"/>
         </scene>
         <!--Welcome View Controller-->
         <scene sceneID="HhK-0u-aFG">

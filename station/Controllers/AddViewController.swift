@@ -51,6 +51,12 @@ class AddViewController: UITableViewController, RuuviTagListener {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = UIBarStyle.default
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         scanner?.start()
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(removeOldTags), userInfo: nil, repeats: true)
@@ -84,6 +90,10 @@ class AddViewController: UITableViewController, RuuviTagListener {
         scanner?.stop()
         timer?.invalidate()
         timer = nil
+    }
+    
+    override func willMove(toParentViewController parent: UIViewController?) {
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
