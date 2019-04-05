@@ -53,8 +53,8 @@ class AddViewController: UITableViewController, RuuviTagListener {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.default
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
+//        self.navigationController?.navigationBar.barStyle = UIBarStyle.default
+//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -93,7 +93,7 @@ class AddViewController: UITableViewController, RuuviTagListener {
     }
     
     override func willMove(toParentViewController parent: UIViewController?) {
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+//        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
