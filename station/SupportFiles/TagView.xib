@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="adm-3r-bu8">
-                    <rect key="frame" x="37.666666666666657" y="67" width="300" height="21"/>
+                    <rect key="frame" x="37.666666666666657" y="104" width="300" height="21"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="300" id="CuX-FW-mPX"/>
                         <constraint firstAttribute="height" constant="21" id="gVz-dw-4Y2"/>
@@ -41,7 +41,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdz-4v-Oll">
-                    <rect key="frame" x="115.00000000000001" y="168" width="145.33333333333337" height="70"/>
+                    <rect key="frame" x="115.00000000000001" y="205" width="145.33333333333337" height="70"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="bFT-S4-K29"/>
                     </constraints>
@@ -68,7 +68,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wFf-OX-UbI">
-                    <rect key="frame" x="260.33333333333331" y="174" width="35" height="35"/>
+                    <rect key="frame" x="260.33333333333331" y="211" width="35" height="35"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="35" id="34t-34-4cL"/>
                         <constraint firstAttribute="width" constant="35" id="yu7-lr-ssL"/>
@@ -131,7 +131,7 @@
                 <constraint firstItem="b2Z-ap-Ff0" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="RK6-pF-4gh"/>
                 <constraint firstItem="PgG-0h-RVX" firstAttribute="top" secondItem="C6J-ZA-Czm" secondAttribute="bottom" constant="8" id="SZv-V3-Rp8"/>
                 <constraint firstItem="YPS-AT-R5Z" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="T4E-Se-7KS"/>
-                <constraint firstItem="adm-3r-bu8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="23" id="Tbx-u7-XXJ"/>
+                <constraint firstItem="adm-3r-bu8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="Tbx-u7-XXJ"/>
                 <constraint firstItem="wFf-OX-UbI" firstAttribute="leading" secondItem="tdz-4v-Oll" secondAttribute="trailing" id="Uv7-tY-EGv"/>
                 <constraint firstItem="wFf-OX-UbI" firstAttribute="top" secondItem="adm-3r-bu8" secondAttribute="bottom" constant="86" id="V4z-rQ-G6n"/>
                 <constraint firstItem="b2Z-ap-Ff0" firstAttribute="top" secondItem="PgG-0h-RVX" secondAttribute="bottom" constant="8" id="Wfh-he-RbT"/>
@@ -160,6 +160,7 @@
                 <outlet property="pressureLbl" destination="AO0-cZ-ySd" id="Isa-tp-sEF"/>
                 <outlet property="rssiLbl" destination="R5j-86-W1s" id="AP2-wG-UOn"/>
                 <outlet property="temperatureLbl" destination="tdz-4v-Oll" id="vD2-nR-eqq"/>
+                <outlet property="temperatureUnitLbl" destination="wFf-OX-UbI" id="tAs-32-EOX"/>
                 <outlet property="updateLbl" destination="oZQ-xt-TFz" id="A66-jD-KaS"/>
             </connections>
             <point key="canvasLocation" x="33.5" y="53.5"/>
