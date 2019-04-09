@@ -75,7 +75,9 @@ class TagViewController: UIViewController, RuuviTagListener {
                     //self.tagPager.contentOffset.x = CGFloat(Int(self.tagPager.frame.size.width) * indexOfPage)
                     self.view.setNeedsLayout()
                     if tags.count == 0 {
-                        self.performSegue(withIdentifier: "segueToAdd", sender: nil)
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let addVC = storyboard.instantiateViewController(withIdentifier: "AddViewControllerContainerNav")
+                        self.present(addVC, animated: true, completion: nil)
                     }
                 }
             }
