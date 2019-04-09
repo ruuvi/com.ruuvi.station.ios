@@ -158,11 +158,13 @@ class TagViewController: UIViewController, RuuviTagListener {
         SideMenuManager.default.menuLeftNavigationController = storyboard!.instantiateViewController(withIdentifier: "side_menu") as? UISideMenuNavigationController
         SideMenuManager.default.menuAddScreenEdgePanGesturesToPresent(toView: self.tagPager)
         SideMenuManager.default.menuFadeStatusBar = false
+        SideMenuManager.default.menuPresentMode = .menuSlideIn
     }
     
     @objc func background()  {
         scanner?.stop()
     }
+    
     @objc func foreground()  {
         scanner?.start()
     }
