@@ -10,4 +10,10 @@ It can also be used as a gateway for your tags, lettings you see and log sensor 
 
 See https://lab.ruuvi.com/ruuvi-station/
 
-Available on Apple App Store.
+Available on Apple App Store: https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8
+
+# How to build
+
+1. Clone the repo
+2. cd into repo and run: ```pod install```
+3. Build with Xcode
