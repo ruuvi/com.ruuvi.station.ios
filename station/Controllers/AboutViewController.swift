@@ -9,11 +9,18 @@
 import UIKit
 
 class AboutViewController: UIViewController {
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return UIStatusBarStyle.lightContent
-    }
+
+    @IBOutlet weak var aboutTextView: UITextView!
     
     override func viewDidLoad() {
+        // this is stupid but for some reasons setting the font to bold in ib did not work
+        let attrString = NSMutableAttributedString(attributedString: aboutTextView.attributedText)
+        let makeBold = ["ABOUT / HELP", "OPERATIONS MANUAL", "TROUBLESHOOTING", "OPEN-SOURCE", "MORE TO READ"]
+        for bold in makeBold {
+            let range = NSString(string: attrString.string).range(of: bold)
+            attrString.addAttribute(NSAttributedStringKey.font, value: UIFont(name: "Muli-Bold", size: 18)!, range: range)
+        }
+        aboutTextView.attributedText = attrString
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
@@ -23,5 +30,9 @@ class AboutViewController: UIViewController {
     
     @IBAction func backClick(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
 }
