@@ -1,5 +1,6 @@
 import UIKit
 import CoreBluetooth
+import SideMenu
 
 
 class TagViewController: UIViewController, RuuviTagListener {
@@ -38,7 +39,7 @@ class TagViewController: UIViewController, RuuviTagListener {
         return Int(self.tagPager.contentOffset.x / self.tagPager.frame.size.width);
     }
     
-    @IBAction func removeClick(_ sender: Any) {
+    @IBAction func tagSettingsClick(_ sender: Any) {
         if ruuviTags.count == 0 {
             return
         }
@@ -74,7 +75,9 @@ class TagViewController: UIViewController, RuuviTagListener {
                     //self.tagPager.contentOffset.x = CGFloat(Int(self.tagPager.frame.size.width) * indexOfPage)
                     self.view.setNeedsLayout()
                     if tags.count == 0 {
-                        self.performSegue(withIdentifier: "segueToAdd", sender: nil)
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let addVC = storyboard.instantiateViewController(withIdentifier: "AddViewControllerContainerNav")
+                        self.present(addVC, animated: true, completion: nil)
                     }
                 }
             }
@@ -152,13 +155,33 @@ class TagViewController: UIViewController, RuuviTagListener {
             let vc : UIViewController = mainStoryboard.instantiateViewController(withIdentifier: "welcomeView") as UIViewController
             self.present(vc, animated: true, completion: nil)
         }
+        SideMenuManager.default.menuLeftNavigationController = storyboard!.instantiateViewController(withIdentifier: "side_menu") as? UISideMenuNavigationController
+        SideMenuManager.default.menuAddScreenEdgePanGesturesToPresent(toView: self.tagPager)
+        SideMenuManager.default.menuFadeStatusBar = false
+        SideMenuManager.default.menuPresentMode = .menuSlideIn
     }
     
     @objc func background()  {
         scanner?.stop()
     }
+    
     @objc func foreground()  {
         scanner?.start()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.barStyle = UIBarStyle.black
+        let logoContainer = UIView(frame: CGRect(x: 0, y: 0, width: 270, height: 25))
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 270, height: 25))
+        imageView.contentMode = .scaleAspectFit
+        let image = UIImage(named: "ruuvi_logo_nega.png")
+        imageView.image = image
+        logoContainer.addSubview(imageView)
+        navigationItem.titleView = logoContainer
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -167,8 +190,10 @@ class TagViewController: UIViewController, RuuviTagListener {
         updateViewTimer = nil
         restartScanTimer?.invalidate()
         restartScanTimer = nil
-        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-        //NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -201,7 +226,9 @@ class TagViewController: UIViewController, RuuviTagListener {
         scanner?.start()
     
         if tags.count == 0 {
-            performSegue(withIdentifier: "segueToAdd", sender: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let addVC = storyboard.instantiateViewController(withIdentifier: "AddViewControllerContainerNav")
+            self.present(addVC, animated: true, completion: nil)
         }
     }
     
@@ -209,6 +236,7 @@ class TagViewController: UIViewController, RuuviTagListener {
         scanner?.stop()
         scanner?.start()
     }
+    
     @objc func updateView() {
         for rt in ruuviTags {
             let tag = rt as! TagView
