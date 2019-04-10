@@ -4,19 +4,23 @@ PODS:
   - Realm/Headers (3.12.0)
   - RealmSwift (3.12.0):
     - Realm (= 3.12.0)
+  - SideMenu (5.0.3)
 
 DEPENDENCIES:
   - RealmSwift
+  - SideMenu
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Realm
     - RealmSwift
+    - SideMenu
 
 SPEC CHECKSUMS:
   Realm: cdaef23c4ddb36ab1ddffed23f5a7f3332fc5585
   RealmSwift: 5576324033f0aa5ef1e0a839a3da2281dff47a7f
+  SideMenu: 1dcaabce84538c53325c287f7fe62999379a641c
 
-PODFILE CHECKSUM: a8c75fddf659659ff7c23362efd28d0cf9a64403
+PODFILE CHECKSUM: 60707e8fe9fa7af570274fa46184c653b479ee24
 
 COCOAPODS: 1.5.3

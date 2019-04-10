@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		35FE7045FE85A1F9791D81FA /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2798DFCFB0C4AA40F30556ED /* Pods_station.framework */; };
+		64249C8A22477C5500F1EAB7 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64249C8922477C5500F1EAB7 /* SideMenuViewController.swift */; };
+		64249C8C2247D91100F1EAB7 /* SideMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64249C8B2247D91100F1EAB7 /* SideMenuTableViewController.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2B20B0C45900CDF4B6 /* TagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2A20B0C45900CDF4B6 /* TagViewController.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
@@ -27,10 +29,15 @@
 		64333D6B20B1546500CDF4B6 /* DecodeFormat3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D6120B1546500CDF4B6 /* DecodeFormat3.swift */; };
 		643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		645CC54F21BD96920085D6B8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645CC54E21BD96920085D6B8 /* Utils.swift */; };
+		64678191225D03300072856A /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64678190225D02CE0072856A /* Muli-Bold.ttf */; };
+		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		64855EBC21CD8DF80070EF65 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64855EBB21CD8DF80070EF65 /* WelcomeViewController.swift */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
 		64CACE7920C7ACD100217D74 /* DecodeFormat2and4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CACE7820C7ACD100217D74 /* DecodeFormat2and4.swift */; };
+		64E3EF1B2257B55300FC0EF6 /* AddViewContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E3EF1A2257B55300FC0EF6 /* AddViewContainerViewController.swift */; };
+		64E3EF1D2257BCD700FC0EF6 /* AppSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E3EF1C2257BCD700FC0EF6 /* AppSettingsTableViewController.swift */; };
+		64E3EF1F2257D51200FC0EF6 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E3EF1E2257D51200FC0EF6 /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +60,8 @@
 /* Begin PBXFileReference section */
 		1DEB44A22D01901DF084E3E3 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Pods/Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		2798DFCFB0C4AA40F30556ED /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		64249C8922477C5500F1EAB7 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		64249C8B2247D91100F1EAB7 /* SideMenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuTableViewController.swift; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2A20B0C45900CDF4B6 /* TagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewController.swift; sourceTree = "<group>"; };
@@ -78,10 +87,15 @@
 		64333D6120B1546500CDF4B6 /* DecodeFormat3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecodeFormat3.swift; sourceTree = "<group>"; };
 		643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		645CC54E21BD96920085D6B8 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		6467818F225CFB170072856A /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
+		64678190225D02CE0072856A /* Muli-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Bold.ttf"; sourceTree = "<group>"; };
 		64855EBB21CD8DF80070EF65 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Bold.ttf"; sourceTree = "<group>"; };
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64CACE7820C7ACD100217D74 /* DecodeFormat2and4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeFormat2and4.swift; sourceTree = "<group>"; };
+		64E3EF1A2257B55300FC0EF6 /* AddViewContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewContainerViewController.swift; sourceTree = "<group>"; };
+		64E3EF1C2257BCD700FC0EF6 /* AppSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsTableViewController.swift; sourceTree = "<group>"; };
+		64E3EF1E2257D51200FC0EF6 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		71E37D58034250363E4E9E89 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Pods/Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,7 +138,12 @@
 			children = (
 				64855EBB21CD8DF80070EF65 /* WelcomeViewController.swift */,
 				64333D2A20B0C45900CDF4B6 /* TagViewController.swift */,
+				64E3EF1E2257D51200FC0EF6 /* AboutViewController.swift */,
 				64333D5920B1546400CDF4B6 /* AddViewController.swift */,
+				64E3EF1A2257B55300FC0EF6 /* AddViewContainerViewController.swift */,
+				64249C8922477C5500F1EAB7 /* SideMenuViewController.swift */,
+				64249C8B2247D91100F1EAB7 /* SideMenuTableViewController.swift */,
+				64E3EF1C2257BCD700FC0EF6 /* AppSettingsTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -229,6 +248,8 @@
 		6486970E20E042BC00CCD7C1 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				64678190225D02CE0072856A /* Muli-Bold.ttf */,
+				6467818F225CFB170072856A /* Muli-Regular.ttf */,
 				643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */,
 				6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */,
 				6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */,
@@ -354,9 +375,11 @@
 				6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
+				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				64333D6920B1546500CDF4B6 /* TagView.xib in Resources */,
+				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,11 +410,13 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-station/Pods-station-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SideMenu/SideMenu.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SideMenu.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -424,18 +449,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				64333D6520B1546500CDF4B6 /* RuuviTag.swift in Sources */,
+				64E3EF1B2257B55300FC0EF6 /* AddViewContainerViewController.swift in Sources */,
 				64333D6620B1546500CDF4B6 /* RuuviTagListener.swift in Sources */,
 				64333D6420B1546500CDF4B6 /* Extensions.swift in Sources */,
 				64333D2B20B0C45900CDF4B6 /* TagViewController.swift in Sources */,
 				64CACE7920C7ACD100217D74 /* DecodeFormat2and4.swift in Sources */,
 				645CC54F21BD96920085D6B8 /* Utils.swift in Sources */,
 				64333D6220B1546500CDF4B6 /* DecodeFormat5.swift in Sources */,
+				64249C8C2247D91100F1EAB7 /* SideMenuTableViewController.swift in Sources */,
+				64E3EF1F2257D51200FC0EF6 /* AboutViewController.swift in Sources */,
 				64333D6B20B1546500CDF4B6 /* DecodeFormat3.swift in Sources */,
+				64E3EF1D2257BCD700FC0EF6 /* AppSettingsTableViewController.swift in Sources */,
 				64333D6320B1546500CDF4B6 /* AddViewController.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				64333D6A20B1546500CDF4B6 /* RuuviTagScanner.swift in Sources */,
 				64333D6720B1546500CDF4B6 /* TagView.swift in Sources */,
 				64333D6820B1546500CDF4B6 /* RuuviTagDecoder.swift in Sources */,
+				64249C8A22477C5500F1EAB7 /* SideMenuViewController.swift in Sources */,
 				64855EBC21CD8DF80070EF65 /* WelcomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
