@@ -16,6 +16,9 @@
         <array key="Oswald-Bold.ttf">
             <string>Oswald-Bold</string>
         </array>
+        <array key="Oswald-ExtraLight.ttf">
+            <string>Oswald-ExtraLight</string>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -41,11 +44,11 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdz-4v-Oll">
-                    <rect key="frame" x="115.00000000000001" y="205" width="145.33333333333337" height="70"/>
+                    <rect key="frame" x="105" y="205" width="165" height="70"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="bFT-S4-K29"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Oswald-Bold" family="Oswald" pointSize="67"/>
+                    <fontDescription key="fontDescription" name="Oswald-Bold" family="Oswald" pointSize="76"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -68,12 +71,12 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wFf-OX-UbI">
-                    <rect key="frame" x="260.33333333333331" y="211" width="35" height="35"/>
+                    <rect key="frame" x="270" y="209" width="40" height="40"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="35" id="34t-34-4cL"/>
-                        <constraint firstAttribute="width" constant="35" id="yu7-lr-ssL"/>
+                        <constraint firstAttribute="height" constant="40" id="34t-34-4cL"/>
+                        <constraint firstAttribute="width" constant="40" id="yu7-lr-ssL"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="31"/>
+                    <fontDescription key="fontDescription" name="Oswald-ExtraLight" family="Oswald ExtraLight" pointSize="40"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -133,7 +136,7 @@
                 <constraint firstItem="YPS-AT-R5Z" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="T4E-Se-7KS"/>
                 <constraint firstItem="adm-3r-bu8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="Tbx-u7-XXJ"/>
                 <constraint firstItem="wFf-OX-UbI" firstAttribute="leading" secondItem="tdz-4v-Oll" secondAttribute="trailing" id="Uv7-tY-EGv"/>
-                <constraint firstItem="wFf-OX-UbI" firstAttribute="top" secondItem="adm-3r-bu8" secondAttribute="bottom" constant="86" id="V4z-rQ-G6n"/>
+                <constraint firstItem="wFf-OX-UbI" firstAttribute="top" secondItem="adm-3r-bu8" secondAttribute="bottom" constant="84" id="V4z-rQ-G6n"/>
                 <constraint firstItem="b2Z-ap-Ff0" firstAttribute="top" secondItem="PgG-0h-RVX" secondAttribute="bottom" constant="8" id="Wfh-he-RbT"/>
                 <constraint firstItem="YPS-AT-R5Z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZTE-kU-TuF"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="tfp-gD-ivY" secondAttribute="trailing" constant="16" id="bCL-lF-kPm"/>
