@@ -97,7 +97,7 @@ class AddViewController: UITableViewController, RuuviTagListener {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ruuviTags.count
+        return max(ruuviTags.count, 1)
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -106,6 +106,12 @@ class AddViewController: UITableViewController, RuuviTagListener {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "addCell", for: indexPath)
+        if ruuviTags.count == 0 {
+            cell.textLabel?.text = "Get More Sensors"
+            cell.imageView?.image = UIImage(named: "eye_circle")
+            return cell
+        }
+        
         let tag = ruuviTags[indexPath.row]
         if tag.mac == "" {
             cell.textLabel?.text = tag.uuid
@@ -127,6 +133,10 @@ class AddViewController: UITableViewController, RuuviTagListener {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if ruuviTags.count == 0 {
+            UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
+            return
+        }
         let tag = ruuviTags[indexPath.row]
         tag.defaultBackground = randomNumber(inRange: 1...9)
         tag.save()
