@@ -20,6 +20,11 @@ class AboutViewController: UIViewController {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedStringKey.font, value: UIFont(name: "Muli-Bold", size: 18)!, range: range)
         }
+        // .. and this is to reduce the linespacing below the titles
+        for range in attrString.string.ranges(of: "  ") {
+        
+            attrString.addAttribute(NSAttributedStringKey.font, value: UIFont(name: "Muli-Bold", size: 8)!, range: NSRange(range, in: attrString.string))
+        }
         aboutTextView.attributedText = attrString
     }
     

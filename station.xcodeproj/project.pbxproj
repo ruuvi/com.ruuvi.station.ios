@@ -28,6 +28,7 @@
 		64333D6A20B1546500CDF4B6 /* RuuviTagScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D6020B1546500CDF4B6 /* RuuviTagScanner.swift */; };
 		64333D6B20B1546500CDF4B6 /* DecodeFormat3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D6120B1546500CDF4B6 /* DecodeFormat3.swift */; };
 		643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
+		643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */; };
 		645CC54F21BD96920085D6B8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645CC54E21BD96920085D6B8 /* Utils.swift */; };
 		64678191225D03300072856A /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64678190225D02CE0072856A /* Muli-Bold.ttf */; };
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
@@ -86,6 +87,7 @@
 		64333D6020B1546500CDF4B6 /* RuuviTagScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviTagScanner.swift; sourceTree = "<group>"; };
 		64333D6120B1546500CDF4B6 /* DecodeFormat3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecodeFormat3.swift; sourceTree = "<group>"; };
 		643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-ExtraLight.ttf"; sourceTree = "<group>"; };
 		645CC54E21BD96920085D6B8 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		6467818F225CFB170072856A /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
 		64678190225D02CE0072856A /* Muli-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Bold.ttf"; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */,
 				6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */,
 				6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */,
+				643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
+				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				64333D6920B1546500CDF4B6 /* TagView.xib in Resources */,
