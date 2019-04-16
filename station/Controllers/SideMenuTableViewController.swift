@@ -38,6 +38,9 @@ class SideMenuTableViewController: UITableViewController {
             let aboutVC = storyboard.instantiateViewController(withIdentifier: "aboutViewController")
             self.present(aboutVC, animated: true, completion: nil)
             break
+        case 3:
+            UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
+            break
         default:
             return
         }
