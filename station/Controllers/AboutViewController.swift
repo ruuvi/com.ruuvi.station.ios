@@ -27,6 +27,16 @@ class AboutViewController: UIViewController {
         }
         aboutTextView.attributedText = attrString
     }
+    override func viewWillAppear(_ animated: Bool) {
+        DispatchQueue.main.async {
+            UIView.setAnimationsEnabled(false)
+            self.aboutTextView.scrollRangeToVisible(NSMakeRange(0, 0))
+            UIView.setAnimationsEnabled(true)
+        }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        aboutTextView.layoutManager.allowsNonContiguousLayout = false
+    }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         UIApplication.shared.open(URL, options: [:])

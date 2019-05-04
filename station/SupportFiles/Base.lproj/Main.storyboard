@@ -183,68 +183,43 @@
                                     <constraint firstAttribute="height" constant="26" id="i64-xB-JDD"/>
                                 </constraints>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-DG-Vac">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdN-f5-dge">
                                 <rect key="frame" x="36" y="308" width="342" height="588"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tPu-QI-34f">
-                                        <rect key="frame" x="0.0" y="0.0" width="342" height="588"/>
-                                        <subviews>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdN-f5-dge">
-                                                <rect key="frame" x="0.0" y="0.0" width="342" height="588"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="tintColor" red="0.41568627450980389" green="0.91764705882352937" blue="0.88235294117647056" alpha="1" colorSpace="calibratedRGB"/>
-                                                <attributedString key="attributedText">
-                                                    <fragment>
-                                                        <string key="content">ABOUT / HELP  Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.   OPERATIONS MANUAL  We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals   TROUBLESHOOTING  If you're experiencing problems and manuals didn't offer help, head to see our troubleshooting topics: ruuvi.com/troubles   OPEN-SOURCE  Just like RuuviTag, so is Ruuvi Station open sourced: github.com/ruuvi   MORE TO READ  Ruuvi's website: ruuvi.com Ruuvi Forum: f.ruuvi.com Ruuvi Blog: blog.ruuvi.com Ruuvi on Twitter: twitter.com/ruuvicom
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" red="0.41568627450980389" green="0.91764705882352937" blue="0.88235294117647056" alpha="1" colorSpace="calibratedRGB"/>
+                                <attributedString key="attributedText">
+                                    <fragment>
+                                        <string key="content">ABOUT / HELP  Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.   OPERATIONS MANUAL  We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals   TROUBLESHOOTING  If you're experiencing problems and manuals didn't offer help, head to see our troubleshooting topics: ruuvi.com/troubles   OPEN-SOURCE  Just like RuuviTag, so is Ruuvi Station open sourced: github.com/ruuvi   MORE TO READ  Ruuvi's website: ruuvi.com Ruuvi Forum: f.ruuvi.com Ruuvi Blog: blog.ruuvi.com Ruuvi on Twitter: twitter.com/ruuvicom
 </string>
-                                                        <attributes>
-                                                            <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <font key="NSFont" size="18" name="Muli-Regular"/>
-                                                            <font key="NSOriginalFont" size="18" name="Muli-Regular"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                                            </textView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="WdN-f5-dge" secondAttribute="bottom" id="7b3-mu-PZ6"/>
-                                            <constraint firstItem="WdN-f5-dge" firstAttribute="top" secondItem="tPu-QI-34f" secondAttribute="top" id="Rrz-J2-Ydi"/>
-                                            <constraint firstAttribute="trailing" secondItem="WdN-f5-dge" secondAttribute="trailing" id="ajg-CI-cla"/>
-                                            <constraint firstItem="WdN-f5-dge" firstAttribute="leading" secondItem="tPu-QI-34f" secondAttribute="leading" id="nMB-Oe-Ijl"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="tPu-QI-34f" firstAttribute="leading" secondItem="Shv-DG-Vac" secondAttribute="leading" id="4K9-Jt-nXt"/>
-                                    <constraint firstItem="tPu-QI-34f" firstAttribute="top" secondItem="Shv-DG-Vac" secondAttribute="top" id="9QE-Zc-SXv"/>
-                                    <constraint firstAttribute="trailing" secondItem="tPu-QI-34f" secondAttribute="trailing" id="EKc-9J-JF0"/>
-                                    <constraint firstAttribute="bottom" secondItem="tPu-QI-34f" secondAttribute="bottom" id="IrB-wc-gU0"/>
-                                    <constraint firstItem="tPu-QI-34f" firstAttribute="height" secondItem="Shv-DG-Vac" secondAttribute="height" priority="250" id="IvO-X9-BnC"/>
-                                    <constraint firstItem="tPu-QI-34f" firstAttribute="width" secondItem="Shv-DG-Vac" secondAttribute="width" id="oGo-jd-rUL"/>
-                                </constraints>
-                            </scrollView>
+                                        <attributes>
+                                            <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="18" name="Muli-Regular"/>
+                                            <font key="NSOriginalFont" size="18" name="Muli-Regular"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Nex-Za-fpo" firstAttribute="trailing" secondItem="Shv-DG-Vac" secondAttribute="trailing" constant="36" id="1kX-GY-wyR"/>
                             <constraint firstItem="BpK-xU-cHD" firstAttribute="top" secondItem="Nex-Za-fpo" secondAttribute="top" constant="13" id="3TE-Wn-pwk"/>
                             <constraint firstItem="gie-jb-EaI" firstAttribute="top" secondItem="Nex-Za-fpo" secondAttribute="top" constant="8" id="3Ue-0e-wTP"/>
                             <constraint firstItem="Fz4-oS-8SH" firstAttribute="top" secondItem="cdQ-dG-yCG" secondAttribute="top" id="Bg6-SE-TiX"/>
                             <constraint firstItem="TTb-lf-gAm" firstAttribute="centerX" secondItem="cdQ-dG-yCG" secondAttribute="centerX" id="GLx-tX-m92"/>
-                            <constraint firstItem="Shv-DG-Vac" firstAttribute="leading" secondItem="Nex-Za-fpo" secondAttribute="leading" constant="36" id="KKw-BF-8UH"/>
                             <constraint firstItem="r90-eA-NIf" firstAttribute="top" secondItem="cdQ-dG-yCG" secondAttribute="top" id="KwN-4j-k1h"/>
+                            <constraint firstAttribute="bottom" secondItem="WdN-f5-dge" secondAttribute="bottom" id="Myo-eD-iFz"/>
                             <constraint firstAttribute="bottom" secondItem="r90-eA-NIf" secondAttribute="bottom" id="NnM-kQ-fdx"/>
                             <constraint firstItem="r90-eA-NIf" firstAttribute="trailing" secondItem="cdQ-dG-yCG" secondAttribute="trailing" id="QhM-5D-61M"/>
-                            <constraint firstAttribute="bottom" secondItem="Shv-DG-Vac" secondAttribute="bottom" id="RDU-6u-GUu"/>
+                            <constraint firstItem="WdN-f5-dge" firstAttribute="top" secondItem="TTb-lf-gAm" secondAttribute="bottom" constant="36" id="WEC-ue-OBC"/>
+                            <constraint firstItem="Nex-Za-fpo" firstAttribute="trailing" secondItem="WdN-f5-dge" secondAttribute="trailing" constant="36" id="Zaa-Bx-JuQ"/>
                             <constraint firstItem="r90-eA-NIf" firstAttribute="leading" secondItem="cdQ-dG-yCG" secondAttribute="leading" id="ceG-V2-L4y"/>
-                            <constraint firstItem="Shv-DG-Vac" firstAttribute="top" secondItem="TTb-lf-gAm" secondAttribute="bottom" constant="36" id="eXv-vn-5Cx"/>
                             <constraint firstItem="BpK-xU-cHD" firstAttribute="leading" secondItem="gie-jb-EaI" secondAttribute="trailing" constant="8" id="fTG-e8-xEo"/>
                             <constraint firstItem="gie-jb-EaI" firstAttribute="leading" secondItem="Nex-Za-fpo" secondAttribute="leading" constant="8" id="mgg-N6-Eda"/>
                             <constraint firstItem="Fz4-oS-8SH" firstAttribute="leading" secondItem="cdQ-dG-yCG" secondAttribute="leading" id="p5f-Pg-pd7"/>
+                            <constraint firstItem="WdN-f5-dge" firstAttribute="leading" secondItem="Nex-Za-fpo" secondAttribute="leading" constant="36" id="rhN-Pr-uMR"/>
                             <constraint firstAttribute="bottom" secondItem="Fz4-oS-8SH" secondAttribute="bottom" id="sKz-Nj-hlk"/>
                             <constraint firstItem="Fz4-oS-8SH" firstAttribute="trailing" secondItem="cdQ-dG-yCG" secondAttribute="trailing" id="tVn-lb-Mlf"/>
                             <constraint firstItem="TTb-lf-gAm" firstAttribute="top" secondItem="Nex-Za-fpo" secondAttribute="top" constant="100" id="uxb-z2-4yq"/>
