@@ -150,11 +150,6 @@ class TagViewController: UIViewController, RuuviTagListener {
         NotificationCenter.default.addObserver(self, selector: #selector(self.background), name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.foreground), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         
-        if !UserDefaults.standard.bool(forKey: "hasShownWelcome") {
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-            let vc : UIViewController = mainStoryboard.instantiateViewController(withIdentifier: "welcomeView") as UIViewController
-            self.present(vc, animated: true, completion: nil)
-        }
         SideMenuManager.default.menuLeftNavigationController = storyboard!.instantiateViewController(withIdentifier: "side_menu") as? UISideMenuNavigationController
         SideMenuManager.default.menuAddScreenEdgePanGesturesToPresent(toView: self.tagPager)
         SideMenuManager.default.menuFadeStatusBar = false
@@ -197,6 +192,12 @@ class TagViewController: UIViewController, RuuviTagListener {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        if !UserDefaults.standard.bool(forKey: "hasShownWelcome") {
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+            let vc : UIViewController = mainStoryboard.instantiateViewController(withIdentifier: "welcomeView") as UIViewController
+            self.present(vc, animated: true, completion: nil)
+            return
+        }
         let currentPage = getCurrentPage()
         var animateToPage = currentPage
         let tags = RuuviTag().getAll()

@@ -18,7 +18,7 @@ class AboutViewController: UIViewController {
         let makeBold = ["ABOUT / HELP", "OPERATIONS MANUAL", "TROUBLESHOOTING", "OPEN-SOURCE", "MORE TO READ"]
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
-            attrString.addAttribute(NSAttributedStringKey.font, value: UIFont(name: "Muli-Bold", size: 18)!, range: range)
+            attrString.addAttribute(NSAttributedStringKey.font, value: UIFont(name: "Muli-Bold", size: 16)!, range: range)
         }
         // .. and this is to reduce the linespacing below the titles
         for range in attrString.string.ranges(of: "  ") {
@@ -26,6 +26,16 @@ class AboutViewController: UIViewController {
             attrString.addAttribute(NSAttributedStringKey.font, value: UIFont(name: "Muli-Bold", size: 8)!, range: NSRange(range, in: attrString.string))
         }
         aboutTextView.attributedText = attrString
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        DispatchQueue.main.async {
+            UIView.setAnimationsEnabled(false)
+            self.aboutTextView.scrollRangeToVisible(NSMakeRange(0, 0))
+            UIView.setAnimationsEnabled(true)
+        }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        aboutTextView.layoutManager.allowsNonContiguousLayout = false
     }
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
