@@ -39,7 +39,7 @@ class TagViewController: UIViewController, RuuviTagListener {
         return Int(self.tagPager.contentOffset.x / self.tagPager.frame.size.width);
     }
     
-    @IBAction func tagSettingsClick(_ sender: Any) {
+    @IBAction func tagSettingsClick(_ sender: UIButton) {
         if ruuviTags.count == 0 {
             return
         }
@@ -47,7 +47,7 @@ class TagViewController: UIViewController, RuuviTagListener {
         if let ruuvitag = (self.ruuviTags[indexOfPage] as! TagView).ruuviTag {
             var infoText = "Data format: " + String(ruuvitag.dataFormat)
             if ruuvitag.voltage != 0.0 {
-                 infoText.append("\nVoltage: " + String(ruuvitag.voltage) + " V")
+                infoText.append("\nVoltage: " + String(ruuvitag.voltage) + " V")
             }
             let alertController = UIAlertController(title: nil, message: infoText, preferredStyle: .actionSheet)
             
@@ -101,11 +101,11 @@ class TagViewController: UIViewController, RuuviTagListener {
             alertController.addAction(renameAction)
             
             if let presenter = alertController.popoverPresentationController {
-                presenter.barButtonItem = self.editBtn
+                presenter.sourceView = self.view
+                presenter.sourceRect = sender.frame
             }
-
-            self.present(alertController, animated: true) {
-            }
+            
+            self.present(alertController, animated: true)
         }
     }
     
