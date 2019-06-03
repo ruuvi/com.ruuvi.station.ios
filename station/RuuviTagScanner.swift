@@ -45,7 +45,7 @@ class RuuviTagScanner: NSObject, CBCentralManagerDelegate {
         }
         if let manufacturerData = advertisementData[CBAdvertisementDataServiceDataKey] as? [NSObject:AnyObject] {
             if let manufacturerData = manufacturerData.first?.value as? Data{
-                if manufacturerData.count != 20 {
+                if manufacturerData.count < 19 {
                     return
                 }
                 if let url = String(data: manufacturerData[3 ... manufacturerData.count - 1], encoding: .utf8) {
