@@ -99,6 +99,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="D5t-O8-5iS"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Ih4-as-gq9">
+                        <barButtonItem key="backBarButtonItem" title=" " id="oH5-OL-Oqi"/>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lEW-DO-NLc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
