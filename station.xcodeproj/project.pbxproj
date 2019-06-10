@@ -14,7 +14,6 @@
 		64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D3120B0C45A00CDF4B6 /* LaunchScreen.storyboard */; };
 		64333D3E20B0C45A00CDF4B6 /* stationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D3D20B0C45A00CDF4B6 /* stationTests.swift */; };
 		64333D4920B0C45B00CDF4B6 /* stationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D4820B0C45B00CDF4B6 /* stationUITests.swift */; };
-		64333D6920B1546500CDF4B6 /* TagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64333D5F20B1546500CDF4B6 /* TagView.xib */; };
 		643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */; };
 		64678191225D03300072856A /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64678190225D02CE0072856A /* Muli-Bold.ttf */; };
@@ -55,7 +54,6 @@
 		64333D4420B0C45B00CDF4B6 /* stationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = stationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D4820B0C45B00CDF4B6 /* stationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stationUITests.swift; sourceTree = "<group>"; };
 		64333D4A20B0C45B00CDF4B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		64333D5F20B1546500CDF4B6 /* TagView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagView.xib; sourceTree = "<group>"; };
 		643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-ExtraLight.ttf"; sourceTree = "<group>"; };
 		6467818F225CFB170072856A /* Muli-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Regular.ttf"; sourceTree = "<group>"; };
@@ -91,23 +89,88 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E09671522AE74CB00E85F48 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		0E09671622AE74D600E85F48 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				0E09671522AE74CB00E85F48 /* Application */,
+				0E09671922AE764200E85F48 /* Presentation */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		0E09671722AE762900E85F48 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0E09671A22AE769F00E85F48 /* Plists */,
+				0E09671822AE763500E85F48 /* Images */,
+				6486970E20E042BC00CCD7C1 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		0E09671822AE763500E85F48 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		0E09671922AE764200E85F48 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				0E09671B22AE76B700E85F48 /* Launch */,
+				0E09671C22AE76CC00E85F48 /* Modules */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		0E09671A22AE769F00E85F48 /* Plists */ = {
+			isa = PBXGroup;
+			children = (
+				64333D3420B0C45A00CDF4B6 /* Info.plist */,
+			);
+			path = Plists;
+			sourceTree = "<group>";
+		};
+		0E09671B22AE76B700E85F48 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				64333D3120B0C45A00CDF4B6 /* LaunchScreen.storyboard */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		0E09671C22AE76CC00E85F48 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				0E09671D22AE76D800E85F48 /* Main */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		0E09671D22AE76D800E85F48 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				64333D2C20B0C45900CDF4B6 /* Main.storyboard */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		0EA45937D8F4E86922BADA55 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				2798DFCFB0C4AA40F30556ED /* Pods_station.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		6410468F21DBFE2300F62962 /* SupportFiles */ = {
-			isa = PBXGroup;
-			children = (
-				64333D2C20B0C45900CDF4B6 /* Main.storyboard */,
-				64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */,
-				64333D3120B0C45A00CDF4B6 /* LaunchScreen.storyboard */,
-				64333D5F20B1546500CDF4B6 /* TagView.xib */,
-			);
-			path = SupportFiles;
 			sourceTree = "<group>";
 		};
 		64333D1C20B0C45900CDF4B6 = {
@@ -135,10 +198,8 @@
 		64333D2720B0C45900CDF4B6 /* station */ = {
 			isa = PBXGroup;
 			children = (
-				6410468F21DBFE2300F62962 /* SupportFiles */,
-				6486970E20E042BC00CCD7C1 /* Fonts */,
-				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
-				64333D3420B0C45A00CDF4B6 /* Info.plist */,
+				0E09671622AE74D600E85F48 /* Classes */,
+				0E09671722AE762900E85F48 /* Resources */,
 			);
 			path = station;
 			sourceTree = "<group>";
@@ -296,7 +357,6 @@
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
-				64333D6920B1546500CDF4B6 /* TagView.xib in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 			);
@@ -543,7 +603,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5V5EUT3ZXJ;
-				INFOPLIST_FILE = station/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -566,7 +626,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5V5EUT3ZXJ;
-				INFOPLIST_FILE = station/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
