@@ -1,7 +1,7 @@
 platform :ios, '10.0'
+use_frameworks!
+inhibit_all_warnings!
 
 target 'station' do
-  use_frameworks!
-  pod 'RealmSwift'
-  pod 'SideMenu'
+  pod 'BTKit', :path => '../BTKit'
 end
