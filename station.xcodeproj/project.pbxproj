@@ -3,10 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */; };
+		0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */; };
+		0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
 		35FE7045FE85A1F9791D81FA /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2798DFCFB0C4AA40F30556ED /* Pods_station.framework */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
@@ -40,6 +43,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
+		0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		0E09672422AE897000E85F48 /* CALayer+IB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+IB.swift"; sourceTree = "<group>"; };
 		1DEB44A22D01901DF084E3E3 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Pods/Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		2798DFCFB0C4AA40F30556ED /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +158,7 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				0E09671E22AE7F2600E85F48 /* Welcome */,
 				0E09671D22AE76D800E85F48 /* Main */,
 			);
 			path = Modules;
@@ -163,6 +170,23 @@
 				64333D2C20B0C45900CDF4B6 /* Main.storyboard */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		0E09671E22AE7F2600E85F48 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */,
+				0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
+		0E09672322AE895600E85F48 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		0EA45937D8F4E86922BADA55 /* Frameworks */ = {
@@ -199,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				0E09671622AE74D600E85F48 /* Classes */,
+				0E09672322AE895600E85F48 /* Extensions */,
 				0E09671722AE762900E85F48 /* Resources */,
 			);
 			path = station;
@@ -355,6 +380,7 @@
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
+				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
@@ -421,7 +447,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
+				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
