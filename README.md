@@ -3,17 +3,13 @@ iOS Ruuvi Station
 
 # Ruuvi Station
 
-RuuviTag scanner, datalogger/gateway
-
-With this app you can easily monitor RuuviTag bluetooth sensors https://ruuvi.com/index.php?id=2.
-It can also be used as a gateway for your tags, lettings you see and log sensor readings in the cloud.
-
-See https://lab.ruuvi.com/ruuvi-station/
-
-Available on Apple App Store: https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8
+RuuviTag scanner. Under construction.  
 
 # How to build
 
-1. Clone the repo
-2. cd into repo and run: ```pod install```
+Atm the framework used (BTKit) is under development, and as you can see in the Podfile, it is linked using :path. That's why you need to keep it in :path => '../BTKit' folder.  
+
+1. Clone [BTKit](https://github.com/rinat-enikeev/BTKit) repo into some folder
+3. Clone this repository into the same folder
+2. cd into this repo and run: ```pod install```
 3. Build with Xcode
