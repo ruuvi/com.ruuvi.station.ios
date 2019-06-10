@@ -1,26 +1,25 @@
 PODS:
-  - Realm (3.12.0):
-    - Realm/Headers (= 3.12.0)
-  - Realm/Headers (3.12.0)
-  - RealmSwift (3.12.0):
-    - Realm (= 3.12.0)
-  - SideMenu (5.0.3)
+  - BTKit (0.0.1):
+    - BTKit/Devices (= 0.0.1)
+    - BTKit/Ruuvi (= 0.0.1)
+    - BTKit/Scanner (= 0.0.1)
+  - BTKit/Devices (0.0.1)
+  - BTKit/Ruuvi (0.0.1):
+    - BTKit/Devices
+    - BTKit/Scanner
+  - BTKit/Scanner (0.0.1):
+    - BTKit/Devices
 
 DEPENDENCIES:
-  - RealmSwift
-  - SideMenu
+  - BTKit (from `../BTKit`)
 
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - Realm
-    - RealmSwift
-    - SideMenu
+EXTERNAL SOURCES:
+  BTKit:
+    :path: "../BTKit"
 
 SPEC CHECKSUMS:
-  Realm: cdaef23c4ddb36ab1ddffed23f5a7f3332fc5585
-  RealmSwift: 5576324033f0aa5ef1e0a839a3da2281dff47a7f
-  SideMenu: 1dcaabce84538c53325c287f7fe62999379a641c
+  BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
 
-PODFILE CHECKSUM: 60707e8fe9fa7af570274fa46184c653b479ee24
+PODFILE CHECKSUM: 4b250666054c8820afcb89ddc2e054955a5165fc
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.7.0
