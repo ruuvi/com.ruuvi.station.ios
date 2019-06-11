@@ -77,7 +77,7 @@ extension DiscoverViewController {
 // MARK: - Private
 extension DiscoverViewController {
     private func startScanning() {
-        observationToken = scanner.observeDevice(self) { (observer, device) in
+        observationToken = scanner.scan(self, options: [.callbackQueue(.mainAsync)]) { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
                 observer.ruuviTags.update(with: ruuviTag)
             }
