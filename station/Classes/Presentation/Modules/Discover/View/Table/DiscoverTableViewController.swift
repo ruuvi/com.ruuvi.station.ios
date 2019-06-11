@@ -7,7 +7,7 @@ class DiscoverTableViewController: UITableViewController {
 
     var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
         
-    private let cellReuseIdentifier = "DiscoverCellReuseIdentifier"
+    private let cellReuseIdentifier = "DiscoverTableViewCellReuseIdentifier"
 }
 
 // MARK: - DiscoverViewInput
