@@ -3,6 +3,8 @@ import BTKit
 
 class DiscoverTableViewController: UITableViewController {
     
+    var output: DiscoverViewOutput!
+    
     private let scanner = Ruuvi.scanner
     private var ruuviTags = Set<RuuviTag>()
     private var orderedRuuviTags = [RuuviTag]()
@@ -14,6 +16,17 @@ class DiscoverTableViewController: UITableViewController {
     deinit {
         scanToken?.invalidate()
         stateToken?.invalidate()
+    }
+}
+
+// MARK: - DiscoverViewInput
+extension DiscoverTableViewController: DiscoverViewInput {
+    func localize() {
+        
+    }
+    
+    func apply(theme: Theme) {
+        
     }
 }
 
