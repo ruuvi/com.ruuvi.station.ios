@@ -8,10 +8,10 @@ class DiscoverViewController: UITableViewController {
     private var orderedRuuviTags = [RuuviTag]()
     private let cellReuseIdentifier = "DiscoverCellReuseIdentifier"
     private var reloadTimer: Timer?
-    private var observationToken: ObservationToken!
+    private var scanToken: ObservationToken!
     
     deinit {
-        observationToken?.invalidate()
+        scanToken?.invalidate()
     }
 }
 
@@ -77,7 +77,7 @@ extension DiscoverViewController {
 // MARK: - Private
 extension DiscoverViewController {
     private func startScanning() {
-        observationToken = scanner.scan(self, options: [.callbackQueue(.mainAsync)]) { (observer, device) in
+        scanToken = scanner.scan(self, options: [.callbackQueue(.mainAsync)]) { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
                 observer.ruuviTags.update(with: ruuviTag)
             }
@@ -85,7 +85,7 @@ extension DiscoverViewController {
     }
     
     private func stopScanning() {
-        observationToken?.invalidate()
+        scanToken?.invalidate()
     }
     
     private func startReloading() {
