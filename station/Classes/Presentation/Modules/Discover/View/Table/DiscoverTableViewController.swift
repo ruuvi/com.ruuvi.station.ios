@@ -37,6 +37,7 @@ extension DiscoverTableViewController {
         super.viewDidAppear(animated)
         navigationItem.setHidesBackButton(true, animated: animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
+        output.viewWillAppear()
         startObservingBluetoothState()
         startScanning()
         startReloading()
@@ -45,6 +46,7 @@ extension DiscoverTableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        output.viewWillDisappear()
         stopObservingBluetoothState()
         stopScanning()
         stopReloading()
