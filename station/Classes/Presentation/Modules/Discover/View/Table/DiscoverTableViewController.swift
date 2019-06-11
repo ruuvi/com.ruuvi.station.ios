@@ -4,19 +4,10 @@ import BTKit
 class DiscoverTableViewController: UITableViewController {
     
     var output: DiscoverViewOutput!
-    
-    private let scanner = Ruuvi.scanner
-    private var ruuviTags = Set<RuuviTag>()
-    private var orderedRuuviTags = [RuuviTag]()
+
+    var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
+        
     private let cellReuseIdentifier = "DiscoverCellReuseIdentifier"
-    private var reloadTimer: Timer?
-    private var scanToken: ObservationToken?
-    private var stateToken: ObservationToken?
-    
-    deinit {
-        scanToken?.invalidate()
-        stateToken?.invalidate()
-    }
 }
 
 // MARK: - DiscoverViewInput
@@ -38,30 +29,24 @@ extension DiscoverTableViewController {
         navigationItem.setHidesBackButton(true, animated: animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
         output.viewWillAppear()
-        startObservingBluetoothState()
-        startScanning()
-        startReloading()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
         output.viewWillDisappear()
-        stopObservingBluetoothState()
-        stopScanning()
-        stopReloading()
     }
 }
 
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return orderedRuuviTags.count
+        return ruuviTags.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverTableViewCell
-        let tag = orderedRuuviTags[indexPath.row]
+        let tag = ruuviTags[indexPath.row]
         configure(cell: cell, with: tag)
         return cell
     }
@@ -90,52 +75,15 @@ extension DiscoverTableViewController {
     }
 }
 
-// MARK: - Show
+// MARK: - Update UI
 extension DiscoverTableViewController {
-    private func showBluetoothDisabled() {
-        print("Bluetooth disabled")
-    }
-}
-
-// MARK: - Private
-extension DiscoverTableViewController {
-    
-    private func startObservingBluetoothState() {
-        stateToken = scanner.state(self, closure: { (observer, state) in
-            if state == .poweredOff {
-                observer.showBluetoothDisabled()
-            }
-        })
+    private func updateUI() {
+        updateUIRuuviTags()
     }
     
-    private func stopObservingBluetoothState() {
-        stateToken?.invalidate()
-    }
-    
-    private func startScanning() {
-        scanToken = scanner.scan(self) { (observer, device) in
-            if let ruuviTag = device.ruuvi?.tag {
-                observer.ruuviTags.update(with: ruuviTag)
-            }
+    private func updateUIRuuviTags() {
+        if isViewLoaded {
+            tableView.reloadData()
         }
-    }
-    
-    private func stopScanning() {
-        scanToken?.invalidate()
-    }
-    
-    private func startReloading() {
-        reloadTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
-            self?.reload()
-        })
-    }
-    
-    private func stopReloading() {
-        reloadTimer?.invalidate()
-    }
-    
-    private func reload() {
-        orderedRuuviTags = ruuviTags.sorted(by: {$0.rssi > $1.rssi })
-        tableView.reloadData()
     }
 }
