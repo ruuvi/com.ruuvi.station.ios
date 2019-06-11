@@ -4,4 +4,5 @@ inhibit_all_warnings!
 
 target 'station' do
   pod 'BTKit', :path => '../BTKit'
+  pod 'Localize-Swift'
 end
