@@ -11,12 +11,12 @@
 		0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */; };
 		0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
 		0E09672822AE8D7A00E85F48 /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09672722AE8D7A00E85F48 /* Discover.storyboard */; };
-		0E09672A22AE8E5D00E85F48 /* DiscoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672922AE8E5D00E85F48 /* DiscoverViewController.swift */; };
-		0E09672C22AE94F000E85F48 /* DiscoverCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672B22AE94F000E85F48 /* DiscoverCell.swift */; };
+		0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672B22AE94F000E85F48 /* DiscoverTableViewCell.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
 		0E70A46822AF9658006CB87C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
+		0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -54,12 +54,12 @@
 		0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0E09672422AE897000E85F48 /* CALayer+IB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+IB.swift"; sourceTree = "<group>"; };
 		0E09672722AE8D7A00E85F48 /* Discover.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Discover.storyboard; sourceTree = "<group>"; };
-		0E09672922AE8E5D00E85F48 /* DiscoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewController.swift; sourceTree = "<group>"; };
-		0E09672B22AE94F000E85F48 /* DiscoverCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverCell.swift; sourceTree = "<group>"; };
+		0E09672B22AE94F000E85F48 /* DiscoverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewCell.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
 		0E70A46722AF9658006CB87C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2D20B0C45900CDF4B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -211,8 +211,7 @@
 			isa = PBXGroup;
 			children = (
 				0E09672722AE8D7A00E85F48 /* Discover.storyboard */,
-				0E09672B22AE94F000E85F48 /* DiscoverCell.swift */,
-				0E09672922AE8E5D00E85F48 /* DiscoverViewController.swift */,
+				0E70A46922AF96B9006CB87C /* View */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -240,6 +239,23 @@
 				0E70A46522AF962A006CB87C /* Themeable.swift */,
 			);
 			path = Theme;
+			sourceTree = "<group>";
+		};
+		0E70A46922AF96B9006CB87C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E70A46A22AF96C5006CB87C /* Table */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0E70A46A22AF96C5006CB87C /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0E09672B22AE94F000E85F48 /* DiscoverTableViewCell.swift */,
+				0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */,
+			);
+			path = Table;
 			sourceTree = "<group>";
 		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
@@ -505,12 +521,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
-				0E09672C22AE94F000E85F48 /* DiscoverCell.swift in Sources */,
-				0E09672A22AE8E5D00E85F48 /* DiscoverViewController.swift in Sources */,
+				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,

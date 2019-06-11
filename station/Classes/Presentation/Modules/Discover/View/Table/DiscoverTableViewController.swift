@@ -1,7 +1,7 @@
 import UIKit
 import BTKit
 
-class DiscoverViewController: UITableViewController {
+class DiscoverTableViewController: UITableViewController {
     
     private let scanner = Ruuvi.scanner
     private var ruuviTags = Set<RuuviTag>()
@@ -18,7 +18,7 @@ class DiscoverViewController: UITableViewController {
 }
 
 // MARK: - View lifecycle
-extension DiscoverViewController {
+extension DiscoverTableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -39,13 +39,13 @@ extension DiscoverViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension DiscoverViewController {
+extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return orderedRuuviTags.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverTableViewCell
         let tag = orderedRuuviTags[indexPath.row]
         configure(cell: cell, with: tag)
         return cell
@@ -53,8 +53,8 @@ extension DiscoverViewController {
 }
 
 // MARK: - Cell configuration
-extension DiscoverViewController {
-    private func configure(cell: DiscoverCell, with ruuviTag: RuuviTag) {
+extension DiscoverTableViewController {
+    private func configure(cell: DiscoverTableViewCell, with ruuviTag: RuuviTag) {
         
         // identifier
         if let mac = ruuviTag.mac {
@@ -76,14 +76,14 @@ extension DiscoverViewController {
 }
 
 // MARK: - Show
-extension DiscoverViewController {
+extension DiscoverTableViewController {
     private func showBluetoothDisabled() {
         print("Bluetooth disabled")
     }
 }
 
 // MARK: - Private
-extension DiscoverViewController {
+extension DiscoverTableViewController {
     
     private func startObservingBluetoothState() {
         stateToken = scanner.state(self, closure: { (observer, state) in
