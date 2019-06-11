@@ -43,29 +43,26 @@ extension DiscoverViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverCell
         let tag = orderedRuuviTags[indexPath.row]
-        configure(cell: cell, with: .ruuvi(.tag(tag)))
+        configure(cell: cell, with: tag)
         return cell
     }
-    
-    private func configure(cell: DiscoverCell, with device: BTDevice) {
+}
+
+// MARK: - Cell configuration
+extension DiscoverViewController {
+    private func configure(cell: DiscoverCell, with ruuviTag: RuuviTag) {
         
         // identifier
-        switch device {
-        case .ruuvi(let ruuviDevice):
-            switch ruuviDevice {
-            case .tag(let ruuviTag):
-                if let mac = ruuviTag.mac {
-                    cell.identifierLabel.text = mac
-                } else {
-                    cell.identifierLabel.text = ruuviTag.uuid
-                }
-            }
+        if let mac = ruuviTag.mac {
+            cell.identifierLabel.text = mac
+        } else {
+            cell.identifierLabel.text = ruuviTag.uuid
         }
         
         // RSSI
-        if (device.rssi < -80) {
+        if (ruuviTag.rssi < -80) {
             cell.rssiImageView.image = UIImage(named: "icon-connection-1")
-        } else if (device.rssi < -50) {
+        } else if (ruuviTag.rssi < -50) {
             cell.rssiImageView.image = UIImage(named: "icon-connection-2")
         } else {
             cell.rssiImageView.image = UIImage(named: "icon-connection-3")
