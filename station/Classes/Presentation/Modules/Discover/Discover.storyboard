@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KWd-e4-kyA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ukq-MD-Dsm">
     <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="VXX-7k-D8o">
             <objects>
-                <tableViewController id="KWd-e4-kyA" customClass="DiscoverTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="DiscoverTableViewController" id="KWd-e4-kyA" customClass="DiscoverTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="W8G-uS-rmw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -71,5 +72,115 @@
             </objects>
             <point key="canvasLocation" x="169.56521739130437" y="141.96428571428569"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="Xyg-Yw-F4r">
+            <objects>
+                <viewController storyboardIdentifier="DiscoverPulsatorViewController" id="ukq-MD-Dsm" customClass="DiscoverPulsatorViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bC8-ah-28c">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ypS-0K-BWw">
+                                <rect key="frame" x="0.0" y="642" width="414" height="220"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="220" id="5Y3-Q4-9wI"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Z7Y-ft-08p">
+                                    <size key="itemSize" width="100" height="100"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DiscoverPulsatorCollectionViewCellReuseIdentifier" id="abT-3d-dnC" customClass="DiscoverPulsatorCollectionViewCell" customModule="station" customModuleProvider="target">
+                                        <rect key="frame" x="20" y="0.0" width="100" height="100"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye_circle" translatesAutoresizingMaskIntoConstraints="NO" id="9LB-XY-YK5">
+                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="9LB-XY-YK5" firstAttribute="top" secondItem="abT-3d-dnC" secondAttribute="top" id="CBb-Dn-qAz"/>
+                                            <constraint firstAttribute="bottom" secondItem="9LB-XY-YK5" secondAttribute="bottom" id="Qy8-ME-WsF"/>
+                                            <constraint firstItem="9LB-XY-YK5" firstAttribute="leading" secondItem="abT-3d-dnC" secondAttribute="leading" id="oOE-6f-9Gp"/>
+                                            <constraint firstAttribute="trailing" secondItem="9LB-XY-YK5" secondAttribute="trailing" id="pSv-fi-5gs"/>
+                                        </constraints>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="ukq-MD-Dsm" id="W3q-Hs-88U"/>
+                                    <outlet property="delegate" destination="ukq-MD-Dsm" id="uy3-1A-AVK"/>
+                                </connections>
+                            </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fwe-A1-nUK">
+                                <rect key="frame" x="0.0" y="44" width="414" height="598"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lrN-xw-a37">
+                                        <rect key="frame" x="147" y="239" width="120" height="120"/>
+                                        <color key="backgroundColor" red="0.3169536101761008" green="0.84742995709779367" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="120" id="LYr-ih-PPb"/>
+                                            <constraint firstAttribute="width" secondItem="lrN-xw-a37" secondAttribute="height" multiplier="1:1" id="WEQ-Un-2YS"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="60"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7ug-IL-Nb0">
+                                        <rect key="frame" x="-49" y="269" width="512" height="60"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="1Ar-A8-za9"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="lrN-xw-a37" firstAttribute="centerX" secondItem="7ug-IL-Nb0" secondAttribute="centerX" id="E1O-HM-E9F"/>
+                                    <constraint firstItem="lrN-xw-a37" firstAttribute="centerY" secondItem="7ug-IL-Nb0" secondAttribute="centerY" id="QnC-VS-HQs"/>
+                                    <constraint firstItem="7ug-IL-Nb0" firstAttribute="centerY" secondItem="Fwe-A1-nUK" secondAttribute="centerY" id="ZN2-Cr-o9e"/>
+                                    <constraint firstItem="7ug-IL-Nb0" firstAttribute="centerX" secondItem="Fwe-A1-nUK" secondAttribute="centerX" id="xsM-AM-wCb"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.63529411764705879" blue="0.92941176470588238" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="ypS-0K-BWw" firstAttribute="trailing" secondItem="c8P-bh-4Ee" secondAttribute="trailing" id="9QX-gf-FM0"/>
+                            <constraint firstItem="Fwe-A1-nUK" firstAttribute="leading" secondItem="c8P-bh-4Ee" secondAttribute="leading" id="9eA-j0-rSU"/>
+                            <constraint firstItem="Fwe-A1-nUK" firstAttribute="top" secondItem="c8P-bh-4Ee" secondAttribute="top" id="Sbp-7e-Plj"/>
+                            <constraint firstItem="ypS-0K-BWw" firstAttribute="bottom" secondItem="c8P-bh-4Ee" secondAttribute="bottom" id="Ykj-bX-RSQ"/>
+                            <constraint firstItem="Fwe-A1-nUK" firstAttribute="trailing" secondItem="c8P-bh-4Ee" secondAttribute="trailing" id="aF8-uL-jdZ"/>
+                            <constraint firstItem="ypS-0K-BWw" firstAttribute="top" secondItem="Fwe-A1-nUK" secondAttribute="bottom" id="skR-77-Tax"/>
+                            <constraint firstItem="ypS-0K-BWw" firstAttribute="leading" secondItem="c8P-bh-4Ee" secondAttribute="leading" id="vNU-sc-0p4"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="c8P-bh-4Ee"/>
+                    </view>
+                    <connections>
+                        <outlet property="bluetoothCircleView" destination="lrN-xw-a37" id="7IL-kh-gfk"/>
+                        <outlet property="bluetoothIconImageView" destination="7ug-IL-Nb0" id="82l-oa-YI1"/>
+                        <outlet property="collectionView" destination="ypS-0K-BWw" id="uP7-Eg-dQZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hLQ-rE-B9b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="Kct-1L-hx3" customClass="DiscoverPulsatorInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="ukq-MD-Dsm" id="One-P4-Itg"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="1210.144927536232" y="141.96428571428569"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="bluetooth_icon" width="512" height="512"/>
+        <image name="eye_circle" width="192" height="192"/>
+    </resources>
 </document>
