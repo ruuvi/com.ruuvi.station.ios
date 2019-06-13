@@ -34,6 +34,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
         stopReloading()
         stopObservingLost()
     }
+    
+    func viewDidSelect(ruuviTag: RuuviTag) {
+        
+    }
 }
 
 // MARK: - Private

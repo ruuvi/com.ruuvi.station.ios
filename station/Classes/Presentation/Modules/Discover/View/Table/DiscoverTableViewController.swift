@@ -63,6 +63,15 @@ extension DiscoverTableViewController {
     }
 }
 
+// MARK: - UITableViewDelegate {
+extension DiscoverTableViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row < ruuviTags.count {
+            output.viewDidSelect(ruuviTag: ruuviTags[indexPath.row])
+        }
+    }
+}
+
 // MARK: - EmptyDataSetSource
 extension DiscoverTableViewController: EmptyDataSetSource {
     func customView(forEmptyDataSet scrollView: UIScrollView) -> UIView? {
