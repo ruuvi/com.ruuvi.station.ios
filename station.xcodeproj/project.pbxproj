@@ -28,6 +28,7 @@
 		0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48422AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift */; };
 		0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */; };
 		0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48A22AFC77F006CB87C /* Pulsator.swift */; };
+		0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -82,6 +83,7 @@
 		0E70A48422AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorInitializer.swift; sourceTree = "<group>"; };
 		0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorConfigurator.swift; sourceTree = "<group>"; };
 		0E70A48A22AFC77F006CB87C /* Pulsator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pulsator.swift; sourceTree = "<group>"; };
+		0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCollectionViewLayout.swift; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2D20B0C45900CDF4B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 		0E70A47E22AFA31E006CB87C /* Pulsator */ = {
 			isa = PBXGroup;
 			children = (
+				0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */,
 				0E70A48122AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift */,
 				0E70A47F22AFA335006CB87C /* DiscoverPulsatorViewController.swift */,
 			);
@@ -615,6 +618,7 @@
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
+				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
@@ -816,7 +820,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -839,7 +843,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -859,7 +863,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.stationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/station.app/station";
 			};
@@ -880,7 +884,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.stationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/station.app/station";
 			};
@@ -900,7 +904,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.stationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = station;
 			};
@@ -920,7 +924,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.stationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = station;
 			};
