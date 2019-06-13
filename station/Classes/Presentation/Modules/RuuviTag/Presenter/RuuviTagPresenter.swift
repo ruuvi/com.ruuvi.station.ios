@@ -3,6 +3,7 @@ import BTKit
 
 class RuuviTagPresenter: RuuviTagModuleInput {
     weak var view: RuuviTagViewInput!
+    var router: RuuviTagRouterInput!
     
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
     
@@ -14,7 +15,7 @@ class RuuviTagPresenter: RuuviTagModuleInput {
 // MARK: - RuuviTagViewOutput
 extension RuuviTagPresenter: RuuviTagViewOutput {
     func viewDidTapOnDimmingView() {
-        print("tapped on dimming view")
+        router.dismiss()
     }
 }
 
