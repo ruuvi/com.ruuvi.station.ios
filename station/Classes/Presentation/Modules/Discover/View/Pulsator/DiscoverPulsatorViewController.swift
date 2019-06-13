@@ -59,6 +59,15 @@ extension DiscoverPulsatorViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+extension DiscoverPulsatorViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.item < ruuviTags.count {
+            output.viewDidSelect(ruuviTag: ruuviTags[indexPath.item])
+        }
+    }
+}
+
 // MARK: - Cell configuration
 extension DiscoverPulsatorViewController {
     private func configure(cell: DiscoverPulsatorCollectionViewCell, with ruuviTag: RuuviTag) {
