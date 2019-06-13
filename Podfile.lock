@@ -11,12 +11,14 @@ PODS:
     - BTKit/Devices
   - DateToolsSwift (4.0.0)
   - EmptyDataSet-Swift (4.2.0)
+  - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
 
 DEPENDENCIES:
   - BTKit (from `../BTKit`)
   - DateToolsSwift
   - EmptyDataSet-Swift
+  - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
 
 SPEC REPOS:
@@ -28,13 +30,21 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   BTKit:
     :path: "../BTKit"
+  LightRoute:
+    :git: https://github.com/rinat-enikeev/LightRoute.git
+
+CHECKOUT OPTIONS:
+  LightRoute:
+    :commit: c537a7afacc290504bc73c4a893957a4e1932fb7
+    :git: https://github.com/rinat-enikeev/LightRoute.git
 
 SPEC CHECKSUMS:
   BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
+  LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
 
-PODFILE CHECKSUM: a9697d86964094b91d8b0f3ca9171b731e3ec12e
+PODFILE CHECKSUM: d120a9f537d6e4cfc381db3ed33ec96868446533
 
 COCOAPODS: 1.7.0
