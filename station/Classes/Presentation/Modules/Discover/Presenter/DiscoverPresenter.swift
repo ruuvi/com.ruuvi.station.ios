@@ -35,9 +35,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
 extension DiscoverPresenter {
     private func startObservingBluetoothState() {
         stateToken = scanner.state(self, closure: { (observer, state) in
-            if state == .poweredOff {
-                // TODO: inform user that BT is disabled
-            }
+            observer.view.isBluetoothEnabled = state == .poweredOn
         })
     }
     

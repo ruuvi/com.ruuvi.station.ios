@@ -5,9 +5,12 @@ class DiscoverPulsatorViewController: UIViewController {
     var output: DiscoverViewOutput!
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var bluetoothIconImageView: UIImageView!
+    
+    @IBOutlet weak var btEnabledImageView: UIImageView!
+    @IBOutlet weak var btDisabledImageView: UIImageView!
     
     var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
+    var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
     
     private let cellReuseIdentifier = "DiscoverPulsatorCollectionViewCellReuseIdentifier"
 }
@@ -25,6 +28,11 @@ extension DiscoverPulsatorViewController: DiscoverViewInput {
 
 // MARK: - View lifecycle
 extension DiscoverPulsatorViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureViews()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -58,10 +66,26 @@ extension DiscoverPulsatorViewController {
     }
 }
 
+// MARK: - View configuration
+extension DiscoverPulsatorViewController {
+    private func configureViews() {
+        btEnabledImageView.tintColor = .white
+        btDisabledImageView.tintColor = .red
+    }
+}
+
 // MARK: - Update UI
 extension DiscoverPulsatorViewController {
     private func updateUI() {
         updateUIRuuviTags()
+        updateUIISBluetoothEnabled()
+    }
+    
+    private func updateUIISBluetoothEnabled() {
+        if isViewLoaded {
+            btEnabledImageView.isHidden = !isBluetoothEnabled
+            btDisabledImageView.isHidden = isBluetoothEnabled
+        }
     }
     
     private func updateUIRuuviTags() {
