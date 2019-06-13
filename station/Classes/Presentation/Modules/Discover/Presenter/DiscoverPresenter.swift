@@ -37,7 +37,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidSelect(ruuviTag: RuuviTag) {
-        
+        router.open(ruuviTag: ruuviTag)
     }
 }
 
