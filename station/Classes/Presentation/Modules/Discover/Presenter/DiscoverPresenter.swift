@@ -3,6 +3,7 @@ import BTKit
 
 class DiscoverPresenter: DiscoverModuleInput {
     weak var view: DiscoverViewInput!
+    var router: DiscoverRouterInput!
     
     private let scanner = Ruuvi.scanner
     private var ruuviTags = Set<RuuviTag>()
