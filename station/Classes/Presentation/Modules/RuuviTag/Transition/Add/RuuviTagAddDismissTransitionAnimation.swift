@@ -14,7 +14,7 @@ class RuuviTagAddDismissTransitionAnimation: NSObject, UIViewControllerAnimatedT
         
         let appearedFrame = transitionContext.finalFrame(for: fromVC)
         let initialFrame = appearedFrame
-        let finalFrame = CGRect(x: containerView.frame.size.width / 2.0, y: containerView.frame.size.height / 2.0, width: 0, height: 0)
+        let finalFrame = CGRect(x: appearedFrame.origin.x, y: containerView.bounds.size.height, width: appearedFrame.size.width, height: appearedFrame.size.height)
         fromView.frame = initialFrame
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.6, options: .curveEaseInOut, animations: {

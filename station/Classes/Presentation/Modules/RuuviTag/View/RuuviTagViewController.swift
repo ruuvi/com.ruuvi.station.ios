@@ -34,6 +34,18 @@ extension RuuviTagViewController: RuuviTagViewInput {
     }
 }
 
+// MARK: - IBActions
+extension RuuviTagViewController {
+    @IBAction func plusButtonTouchUpInside(_ sender: Any) {
+        output.viewDidTapOnPlus()
+    }
+    
+    
+    @IBAction func viewGestureRecognizerAction(_ sender: Any) {
+        output.viewDidTapOnView()
+    }
+}
+
 // MARK: - View lifecycle
 extension RuuviTagViewController {
     override func viewDidLoad() {

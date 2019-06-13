@@ -17,6 +17,14 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
     func viewDidTapOnDimmingView() {
         router.dismiss()
     }
+    
+    func viewDidTapOnView() {
+        router.dismiss()
+    }
+    
+    func viewDidTapOnPlus() {
+        router.dismiss()
+    }
 }
 
 // MARK: - Private
