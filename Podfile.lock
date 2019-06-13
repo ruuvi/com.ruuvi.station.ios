@@ -9,16 +9,19 @@ PODS:
     - BTKit/Scanner
   - BTKit/Scanner (0.0.1):
     - BTKit/Devices
+  - DateToolsSwift (4.0.0)
   - EmptyDataSet-Swift (4.2.0)
   - Localize-Swift (2.0.0)
 
 DEPENDENCIES:
   - BTKit (from `../BTKit`)
+  - DateToolsSwift
   - EmptyDataSet-Swift
   - Localize-Swift
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - DateToolsSwift
     - EmptyDataSet-Swift
     - Localize-Swift
 
@@ -28,9 +31,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
+  DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
 
-PODFILE CHECKSUM: bdc54bdd24e74d6bce84229fc34d1da5e93221b2
+PODFILE CHECKSUM: a9697d86964094b91d8b0f3ca9171b731e3ec12e
 
 COCOAPODS: 1.7.0
