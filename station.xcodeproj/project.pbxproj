@@ -21,6 +21,8 @@
 		0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB422B27B2800E8A6CC /* RuuviTagInitializer.swift */; };
 		0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB622B27B5D00E8A6CC /* RuuviTagConfigurator.swift */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
+		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
+		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
@@ -85,6 +87,8 @@
 		0E502FB422B27B2800E8A6CC /* RuuviTagInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagInitializer.swift; sourceTree = "<group>"; };
 		0E502FB622B27B5D00E8A6CC /* RuuviTagConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagConfigurator.swift; sourceTree = "<group>"; };
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
+		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
+		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
@@ -256,6 +260,7 @@
 				0E09672722AE8D7A00E85F48 /* Discover.storyboard */,
 				0E70A47622AF9B69006CB87C /* Assembly */,
 				0E70A47122AF993F006CB87C /* Presenter */,
+				0E502FBC22B2816400E8A6CC /* Router */,
 				0E70A46922AF96B9006CB87C /* View */,
 			);
 			path = Discover;
@@ -306,6 +311,15 @@
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		0E502FBC22B2816400E8A6CC /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */,
+				0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */,
+			);
+			path = Router;
 			sourceTree = "<group>";
 		};
 		0E70A45E22AF9558006CB87C /* Contract */ = {
@@ -696,10 +710,12 @@
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
 				0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */,
+				0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */,
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
+				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
 				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
