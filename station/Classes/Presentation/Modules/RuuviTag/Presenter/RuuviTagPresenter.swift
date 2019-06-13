@@ -13,7 +13,9 @@ class RuuviTagPresenter: RuuviTagModuleInput {
 
 // MARK: - RuuviTagViewOutput
 extension RuuviTagPresenter: RuuviTagViewOutput {
-    
+    func viewDidTapOnDimmingView() {
+        print("tapped on dimming view")
+    }
 }
 
 // MARK: - Private
