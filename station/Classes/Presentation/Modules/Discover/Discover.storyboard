@@ -83,7 +83,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fwe-A1-nUK">
                                 <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ypS-0K-BWw">
+                                    <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ypS-0K-BWw">
                                         <rect key="frame" x="0.0" y="219" width="414" height="414"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -91,15 +91,16 @@
                                         </constraints>
                                         <collectionViewLayout key="collectionViewLayout" id="qwC-8J-xct" customClass="CircleCollectionViewLayout" customModule="station" customModuleProvider="target"/>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DiscoverPulsatorCollectionViewCellReuseIdentifier" id="abT-3d-dnC" customClass="DiscoverPulsatorCollectionViewCell" customModule="station" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DiscoverPulsatorCollectionViewCellReuseIdentifier" id="abT-3d-dnC" customClass="DiscoverPulsatorCollectionViewCell" customModule="station" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eye_circle" translatesAutoresizingMaskIntoConstraints="NO" id="9LB-XY-YK5">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo" translatesAutoresizingMaskIntoConstraints="NO" id="9LB-XY-YK5">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </imageView>
                                                     </subviews>
                                                 </view>
@@ -109,6 +110,9 @@
                                                     <constraint firstItem="9LB-XY-YK5" firstAttribute="leading" secondItem="abT-3d-dnC" secondAttribute="leading" id="oOE-6f-9Gp"/>
                                                     <constraint firstAttribute="trailing" secondItem="9LB-XY-YK5" secondAttribute="trailing" id="pSv-fi-5gs"/>
                                                 </constraints>
+                                                <connections>
+                                                    <outlet property="imageView" destination="9LB-XY-YK5" id="sID-5w-BRQ"/>
+                                                </connections>
                                             </collectionViewCell>
                                         </cells>
                                         <connections>
@@ -116,32 +120,17 @@
                                             <outlet property="delegate" destination="ukq-MD-Dsm" id="uy3-1A-AVK"/>
                                         </connections>
                                     </collectionView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lrN-xw-a37">
-                                        <rect key="frame" x="167" y="386" width="80" height="80"/>
-                                        <color key="backgroundColor" red="0.3169536101761008" green="0.84742995709779367" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="LYr-ih-PPb"/>
-                                            <constraint firstAttribute="width" secondItem="lrN-xw-a37" secondAttribute="height" multiplier="1:1" id="WEQ-Un-2YS"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="40"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7ug-IL-Nb0">
-                                        <rect key="frame" x="-49" y="406" width="512" height="40"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphone_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7ug-IL-Nb0">
+                                        <rect key="frame" x="172" y="386" width="70" height="80"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="1Ar-A8-za9"/>
+                                            <constraint firstAttribute="height" constant="80" id="1Ar-A8-za9"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="lrN-xw-a37" firstAttribute="centerX" secondItem="7ug-IL-Nb0" secondAttribute="centerX" id="E1O-HM-E9F"/>
                                     <constraint firstItem="ypS-0K-BWw" firstAttribute="centerY" secondItem="Fwe-A1-nUK" secondAttribute="centerY" id="PHh-6i-B9O"/>
-                                    <constraint firstItem="lrN-xw-a37" firstAttribute="centerY" secondItem="7ug-IL-Nb0" secondAttribute="centerY" id="QnC-VS-HQs"/>
                                     <constraint firstItem="7ug-IL-Nb0" firstAttribute="centerY" secondItem="Fwe-A1-nUK" secondAttribute="centerY" id="ZN2-Cr-o9e"/>
                                     <constraint firstAttribute="trailing" secondItem="ypS-0K-BWw" secondAttribute="trailing" id="ZTk-J0-Lht"/>
                                     <constraint firstItem="ypS-0K-BWw" firstAttribute="leading" secondItem="Fwe-A1-nUK" secondAttribute="leading" id="f1a-ew-V5b"/>
@@ -160,7 +149,6 @@
                         <viewLayoutGuide key="safeArea" id="c8P-bh-4Ee"/>
                     </view>
                     <connections>
-                        <outlet property="bluetoothCircleView" destination="lrN-xw-a37" id="7IL-kh-gfk"/>
                         <outlet property="bluetoothIconImageView" destination="7ug-IL-Nb0" id="82l-oa-YI1"/>
                         <outlet property="collectionView" destination="ypS-0K-BWw" id="uP7-Eg-dQZ"/>
                     </connections>
@@ -176,7 +164,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bluetooth_icon" width="512" height="512"/>
-        <image name="eye_circle" width="192" height="192"/>
+        <image name="iphone_icon" width="70" height="128"/>
+        <image name="ruuvi_logo" width="192" height="192"/>
     </resources>
 </document>

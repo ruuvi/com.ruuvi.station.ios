@@ -6,12 +6,10 @@ class DiscoverPulsatorViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var bluetoothIconImageView: UIImageView!
-    @IBOutlet weak var bluetoothCircleView: UIView!
     
     var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
     
     private let cellReuseIdentifier = "DiscoverPulsatorCollectionViewCellReuseIdentifier"
-    private let pulsator: Pulsator = Pulsator()
 }
 
 // MARK: - DiscoverViewInput
@@ -27,17 +25,7 @@ extension DiscoverPulsatorViewController: DiscoverViewInput {
 
 // MARK: - View lifecycle
 extension DiscoverPulsatorViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureViews()
-    }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.layer.layoutIfNeeded()
-        pulsator.position = bluetoothCircleView.layer.position
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         output.viewWillAppear()
@@ -67,21 +55,6 @@ extension DiscoverPulsatorViewController: UICollectionViewDataSource {
 extension DiscoverPulsatorViewController {
     private func configure(cell: DiscoverPulsatorCollectionViewCell, with ruuviTag: RuuviTag) {
         
-    }
-}
-
-// MARK: - View configuration
-extension DiscoverPulsatorViewController {
-    private func configureViews() {
-        configurePulsator()
-    }
-    
-    private func configurePulsator() {
-        pulsator.backgroundColor = UIColor.white.cgColor
-        pulsator.numPulse = 3
-        pulsator.radius = 200
-        bluetoothCircleView.layer.superlayer?.insertSublayer(pulsator, below: bluetoothCircleView.layer)
-        pulsator.start()
     }
 }
 
