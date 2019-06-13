@@ -27,6 +27,8 @@
 		0E502FC622B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FC522B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift */; };
 		0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FC722B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift */; };
 		0E502FCA22B2864E00E8A6CC /* RuuviTagAddPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FC922B2864E00E8A6CC /* RuuviTagAddPresentationController.swift */; };
+		0E502FCD22B2876A00E8A6CC /* RuuviTagRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FCC22B2876A00E8A6CC /* RuuviTagRouter.swift */; };
+		0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FCE22B2877900E8A6CC /* RuuviTagRouterInput.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
@@ -97,6 +99,8 @@
 		0E502FC522B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagAddPresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E502FC722B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagAddDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E502FC922B2864E00E8A6CC /* RuuviTagAddPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagAddPresentationController.swift; sourceTree = "<group>"; };
+		0E502FCC22B2876A00E8A6CC /* RuuviTagRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRouter.swift; sourceTree = "<group>"; };
+		0E502FCE22B2877900E8A6CC /* RuuviTagRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRouterInput.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
@@ -281,6 +285,7 @@
 				0E502FB322B27B1400E8A6CC /* Assembly */,
 				0E502FC122B284C600E8A6CC /* Transition */,
 				0E502FA622B2783900E8A6CC /* Presenter */,
+				0E502FCB22B2875300E8A6CC /* Router */,
 				0E502FA522B2783400E8A6CC /* View */,
 			);
 			path = RuuviTag;
@@ -348,6 +353,15 @@
 				0E502FC922B2864E00E8A6CC /* RuuviTagAddPresentationController.swift */,
 			);
 			path = Add;
+			sourceTree = "<group>";
+		};
+		0E502FCB22B2875300E8A6CC /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0E502FCE22B2877900E8A6CC /* RuuviTagRouterInput.swift */,
+				0E502FCC22B2876A00E8A6CC /* RuuviTagRouter.swift */,
+			);
+			path = Router;
 			sourceTree = "<group>";
 		};
 		0E70A45E22AF9558006CB87C /* Contract */ = {
@@ -734,6 +748,7 @@
 				0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
+				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
@@ -746,6 +761,7 @@
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
+				0E502FCD22B2876A00E8A6CC /* RuuviTagRouter.swift in Sources */,
 				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
