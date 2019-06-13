@@ -9,10 +9,13 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var reloadTimer: Timer?
     private var scanToken: ObservationToken?
     private var stateToken: ObservationToken?
+    private var lostToken: ObservationToken?
     
     deinit {
+        reloadTimer?.invalidate()
         scanToken?.invalidate()
         stateToken?.invalidate()
+        lostToken?.invalidate()
     }
 }
 
@@ -22,20 +25,38 @@ extension DiscoverPresenter: DiscoverViewOutput {
         startObservingBluetoothState()
         startScanning()
         startReloading()
+        startObservingLost()
     }
     
     func viewWillDisappear() {
         stopObservingBluetoothState()
         stopScanning()
         stopReloading()
+        stopObservingLost()
     }
 }
 
 // MARK: - Private
 extension DiscoverPresenter {
+    private func startObservingLost() {
+        lostToken = scanner.lost(self, closure: { (observer, device) in
+            if let ruuviTag = device.ruuvi?.tag {
+                observer.ruuviTags.remove(ruuviTag)
+            }
+        })
+    }
+    
+    private func stopObservingLost() {
+        lostToken?.invalidate()
+    }
+    
     private func startObservingBluetoothState() {
         stateToken = scanner.state(self, closure: { (observer, state) in
             observer.view.isBluetoothEnabled = state == .poweredOn
+            if state == .poweredOff {
+                observer.ruuviTags.removeAll()
+                observer.view.ruuviTags = []
+            }
         })
     }
     
