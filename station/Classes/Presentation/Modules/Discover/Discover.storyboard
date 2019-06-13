@@ -18,6 +18,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="Zgc-HN-yFj">
+                            <rect key="frame" x="0.0" y="72" width="414" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverTableViewCellReuseIdentifier" id="L0Y-10-bMg" customClass="DiscoverTableViewCell" customModule="station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="44"/>
@@ -62,6 +67,10 @@
                     <navigationItem key="navigationItem" title="Add tags" id="yQ1-Je-TFL">
                         <barButtonItem key="backBarButtonItem" title=" " id="XSA-ZK-17r"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="btDisabledEmptyDataSetView" destination="g64-7X-j0B" id="BHv-gg-CGX"/>
+                        <outlet property="btDisabledImageView" destination="0Oj-Ez-KU2" id="SUr-ff-9TM"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F67-h2-RM0" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="S6r-SM-vSQ" customClass="DiscoverTableInitializer" customModule="station" customModuleProvider="target">
@@ -69,6 +78,22 @@
                         <outlet property="viewController" destination="KWd-e4-kyA" id="iN1-6D-Qwk"/>
                     </connections>
                 </customObject>
+                <view contentMode="scaleToFill" id="g64-7X-j0B">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth_disabled_icon" translatesAutoresizingMaskIntoConstraints="NO" id="0Oj-Ez-KU2">
+                            <rect key="frame" x="66" y="15" width="108" height="108"/>
+                            <color key="tintColor" red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="0Oj-Ez-KU2" firstAttribute="centerY" secondItem="AVZ-bG-hF5" secondAttribute="centerY" id="WqD-eY-gWx"/>
+                        <constraint firstItem="0Oj-Ez-KU2" firstAttribute="centerX" secondItem="AVZ-bG-hF5" secondAttribute="centerX" id="czw-4D-1Qx"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="AVZ-bG-hF5"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="169.56521739130437" y="141.96428571428569"/>
         </scene>
@@ -120,20 +145,31 @@
                                             <outlet property="delegate" destination="ukq-MD-Dsm" id="uy3-1A-AVK"/>
                                         </connections>
                                     </collectionView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphone_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7ug-IL-Nb0">
-                                        <rect key="frame" x="172" y="386" width="70" height="80"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth_disabled_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7ug-IL-Nb0">
+                                        <rect key="frame" x="153" y="386" width="108" height="80"/>
+                                        <color key="tintColor" name="systemPinkColor" catalog="System" colorSpace="catalog"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="1Ar-A8-za9"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth_icon" translatesAutoresizingMaskIntoConstraints="NO" id="1Zi-oN-esv">
+                                        <rect key="frame" x="153" y="386" width="108" height="80"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="0l8-2r-wNf"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="1Zi-oN-esv" firstAttribute="width" secondItem="7ug-IL-Nb0" secondAttribute="width" id="B0f-oN-M0P"/>
                                     <constraint firstItem="ypS-0K-BWw" firstAttribute="centerY" secondItem="Fwe-A1-nUK" secondAttribute="centerY" id="PHh-6i-B9O"/>
+                                    <constraint firstItem="1Zi-oN-esv" firstAttribute="height" secondItem="7ug-IL-Nb0" secondAttribute="height" id="VWC-cz-h5r"/>
                                     <constraint firstItem="7ug-IL-Nb0" firstAttribute="centerY" secondItem="Fwe-A1-nUK" secondAttribute="centerY" id="ZN2-Cr-o9e"/>
                                     <constraint firstAttribute="trailing" secondItem="ypS-0K-BWw" secondAttribute="trailing" id="ZTk-J0-Lht"/>
                                     <constraint firstItem="ypS-0K-BWw" firstAttribute="leading" secondItem="Fwe-A1-nUK" secondAttribute="leading" id="f1a-ew-V5b"/>
+                                    <constraint firstItem="1Zi-oN-esv" firstAttribute="centerY" secondItem="7ug-IL-Nb0" secondAttribute="centerY" id="iMJ-9N-xeR"/>
+                                    <constraint firstItem="1Zi-oN-esv" firstAttribute="centerX" secondItem="7ug-IL-Nb0" secondAttribute="centerX" id="q5f-uB-2bV"/>
                                     <constraint firstItem="ypS-0K-BWw" firstAttribute="centerX" secondItem="Fwe-A1-nUK" secondAttribute="centerX" id="x9X-WB-Kmc"/>
                                     <constraint firstItem="7ug-IL-Nb0" firstAttribute="centerX" secondItem="Fwe-A1-nUK" secondAttribute="centerX" id="xsM-AM-wCb"/>
                                 </constraints>
@@ -149,7 +185,8 @@
                         <viewLayoutGuide key="safeArea" id="c8P-bh-4Ee"/>
                     </view>
                     <connections>
-                        <outlet property="bluetoothIconImageView" destination="7ug-IL-Nb0" id="82l-oa-YI1"/>
+                        <outlet property="btDisabledImageView" destination="7ug-IL-Nb0" id="P7G-Jt-Qpk"/>
+                        <outlet property="btEnabledImageView" destination="1Zi-oN-esv" id="SU9-hI-haa"/>
                         <outlet property="collectionView" destination="ypS-0K-BWw" id="uP7-Eg-dQZ"/>
                     </connections>
                 </viewController>
@@ -164,7 +201,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="iphone_icon" width="70" height="128"/>
+        <image name="bluetooth_disabled_icon" width="108" height="108"/>
+        <image name="bluetooth_icon" width="108" height="108"/>
         <image name="ruuvi_logo" width="192" height="192"/>
     </resources>
 </document>

@@ -9,14 +9,17 @@ PODS:
     - BTKit/Scanner
   - BTKit/Scanner (0.0.1):
     - BTKit/Devices
+  - EmptyDataSet-Swift (4.2.0)
   - Localize-Swift (2.0.0)
 
 DEPENDENCIES:
   - BTKit (from `../BTKit`)
+  - EmptyDataSet-Swift
   - Localize-Swift
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - EmptyDataSet-Swift
     - Localize-Swift
 
 EXTERNAL SOURCES:
@@ -25,8 +28,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
+  EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
 
-PODFILE CHECKSUM: 6fdb91600de443ca01ab6c2a1aa4638d35ea8a52
+PODFILE CHECKSUM: bdc54bdd24e74d6bce84229fc34d1da5e93221b2
 
 COCOAPODS: 1.7.0
