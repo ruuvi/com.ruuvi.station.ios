@@ -5,8 +5,18 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     weak var view: RuuviTagViewInput!
     var router: RuuviTagRouterInput!
     var ruuviTagPersistence: RuuviTagPersistence!
+    var activityPresenter: ActivityPresenter!
     
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
+    private var isSaving: Bool = false {
+        didSet {
+            if isSaving {
+                activityPresenter.increment()
+            } else {
+                activityPresenter.decrement()
+            }
+        }
+    }
     
     func configure(ruuviTag: RuuviTag) {
         self.ruuviTag = ruuviTag
@@ -25,7 +35,6 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
     
     func viewDidSave(name: String) {
         let save = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name)
-        
     }
     
 }
