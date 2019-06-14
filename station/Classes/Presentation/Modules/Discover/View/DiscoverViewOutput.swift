@@ -1,8 +1,8 @@
 import Foundation
-import BTKit
 
 protocol DiscoverViewOutput {
+    func viewDidLoad()
     func viewWillAppear()
     func viewWillDisappear()
-    func viewDidSelect(ruuviTag: RuuviTag)
+    func viewDidSelect(device: DiscoverDeviceViewModel)
 }

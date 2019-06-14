@@ -117,26 +117,37 @@
                                         <collectionViewLayout key="collectionViewLayout" id="qwC-8J-xct" customClass="CircleCollectionViewLayout" customModule="station" customModuleProvider="target"/>
                                         <cells>
                                             <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DiscoverPulsatorCollectionViewCellReuseIdentifier" id="abT-3d-dnC" customClass="DiscoverPulsatorCollectionViewCell" customModule="station" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo" translatesAutoresizingMaskIntoConstraints="NO" id="9LB-XY-YK5">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="ruuvi_logo" translatesAutoresizingMaskIntoConstraints="NO" id="9LB-XY-YK5">
+                                                            <rect key="frame" x="0.0" y="0.0" width="70" height="52"/>
                                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" ambiguous="YES" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pkw-MV-oY8">
+                                                            <rect key="frame" x="0.0" y="52" width="70" height="17"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                 </view>
                                                 <constraints>
                                                     <constraint firstItem="9LB-XY-YK5" firstAttribute="top" secondItem="abT-3d-dnC" secondAttribute="top" id="CBb-Dn-qAz"/>
-                                                    <constraint firstAttribute="bottom" secondItem="9LB-XY-YK5" secondAttribute="bottom" id="Qy8-ME-WsF"/>
+                                                    <constraint firstItem="Pkw-MV-oY8" firstAttribute="top" secondItem="9LB-XY-YK5" secondAttribute="bottom" id="IJH-nP-c4i"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Pkw-MV-oY8" secondAttribute="trailing" id="NeJ-Vv-2e4"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Pkw-MV-oY8" secondAttribute="bottom" id="Y3R-Bk-t8v"/>
+                                                    <constraint firstItem="Pkw-MV-oY8" firstAttribute="leading" secondItem="abT-3d-dnC" secondAttribute="leading" id="fDy-dX-EoV"/>
                                                     <constraint firstItem="9LB-XY-YK5" firstAttribute="leading" secondItem="abT-3d-dnC" secondAttribute="leading" id="oOE-6f-9Gp"/>
                                                     <constraint firstAttribute="trailing" secondItem="9LB-XY-YK5" secondAttribute="trailing" id="pSv-fi-5gs"/>
                                                 </constraints>
+                                                <size key="customSize" width="70" height="70"/>
                                                 <connections>
                                                     <outlet property="imageView" destination="9LB-XY-YK5" id="sID-5w-BRQ"/>
+                                                    <outlet property="nameLabel" destination="Pkw-MV-oY8" id="ohs-Og-cW0"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>

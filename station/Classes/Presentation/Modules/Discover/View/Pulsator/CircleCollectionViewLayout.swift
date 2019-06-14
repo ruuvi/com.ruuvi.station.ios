@@ -31,7 +31,7 @@ final class CircleCollectionViewLayout: UICollectionViewLayout {
     
     private var layoutCircleFrame = CGRect.zero
     private let layoutInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-    private let itemSize = CGSize(width: 60, height: 60)
+    private let itemSize = CGSize(width: 70, height: 70)
     private var itemLayoutAttributes = [UICollectionViewLayoutAttributes]()
     
     override func prepare() {

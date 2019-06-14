@@ -9,7 +9,7 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     
-    var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
+    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
     
     private var emptyDataSetView: UIView?
@@ -33,6 +33,7 @@ extension DiscoverTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        output.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,12 +53,12 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ruuviTags.count
+        return devices.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverTableViewCell
-        let tag = ruuviTags[indexPath.row]
+        let tag = devices[indexPath.row]
         configure(cell: cell, with: tag)
         return cell
     }
@@ -66,8 +67,8 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < ruuviTags.count {
-            output.viewDidSelect(ruuviTag: ruuviTags[indexPath.row])
+        if indexPath.row < devices.count {
+            output.viewDidSelect(device: devices[indexPath.row])
         }
     }
 }
@@ -88,19 +89,19 @@ extension DiscoverTableViewController: EmptyDataSetDelegate {
 
 // MARK: - Cell configuration
 extension DiscoverTableViewController {
-    private func configure(cell: DiscoverTableViewCell, with ruuviTag: RuuviTag) {
+    private func configure(cell: DiscoverTableViewCell, with device: DiscoverDeviceViewModel) {
         
         // identifier
-        if let mac = ruuviTag.mac {
+        if let mac = device.mac {
             cell.identifierLabel.text = mac
         } else {
-            cell.identifierLabel.text = ruuviTag.uuid
+            cell.identifierLabel.text = device.uuid
         }
         
         // RSSI
-        if (ruuviTag.rssi < -80) {
+        if (device.rssi < -80) {
             cell.rssiImageView.image = UIImage(named: "icon-connection-1")
-        } else if (ruuviTag.rssi < -50) {
+        } else if (device.rssi < -50) {
             cell.rssiImageView.image = UIImage(named: "icon-connection-2")
         } else {
             cell.rssiImageView.image = UIImage(named: "icon-connection-3")
@@ -130,7 +131,7 @@ extension DiscoverTableViewController {
 // MARK: - Update UI
 extension DiscoverTableViewController {
     private func updateUI() {
-        updateUIRuuviTags()
+        updateUIDevices()
         updateUIISBluetoothEnabled()
     }
     
@@ -141,7 +142,7 @@ extension DiscoverTableViewController {
         }
     }
     
-    private func updateUIRuuviTags() {
+    private func updateUIDevices() {
         if isViewLoaded {
             tableView.reloadData()
         }
