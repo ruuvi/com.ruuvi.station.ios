@@ -42,6 +42,9 @@
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="baseline_menu_white_48pt"/>
+                                <connections>
+                                    <action selector="menuButtonTouchUpInside:" destination="pVR-SE-6mP" eventType="touchUpInside" id="7JK-G1-iuG"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tie-KF-CFy">
                                 <rect key="frame" x="370" y="52" width="36" height="36"/>
@@ -54,7 +57,7 @@
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" image="baseline_settings_white_48pt"/>
                                 <connections>
-                                    <action selector="tagSettingsClick:" destination="pVR-SE-6mP" eventType="touchUpInside" id="qz3-th-00b"/>
+                                    <action selector="settingsButtonTouchUpInside:" destination="pVR-SE-6mP" eventType="touchUpInside" id="qz3-th-00b"/>
                                 </connections>
                             </button>
                         </subviews>

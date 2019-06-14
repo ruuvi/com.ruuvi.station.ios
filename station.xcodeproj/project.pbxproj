@@ -44,6 +44,20 @@
 		0E1C1DE422B3C2710032F6CA /* DashboardRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE322B3C2710032F6CA /* DashboardRouter.swift */; };
 		0E1C1DE822B3C2B60032F6CA /* DashboardScrollInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE722B3C2B60032F6CA /* DashboardScrollInitializer.swift */; };
 		0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE922B3C2E60032F6CA /* DashboardScrollConfigurator.swift */; };
+		0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF022B3FDE30032F6CA /* Menu.storyboard */; };
+		0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF222B3FEFF0032F6CA /* MenuViewInput.swift */; };
+		0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF422B3FF1D0032F6CA /* MenuViewOutput.swift */; };
+		0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF722B3FF480032F6CA /* MenuTableViewController.swift */; };
+		0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF922B3FFBF0032F6CA /* MenuRouterInput.swift */; };
+		0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DFB22B3FFD90032F6CA /* MenuRouter.swift */; };
+		0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DFD22B3FFFC0032F6CA /* MenuModuleInput.swift */; };
+		0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DFF22B400130032F6CA /* MenuPresenter.swift */; };
+		0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0222B400590032F6CA /* MenuTableInitializer.swift */; };
+		0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0422B400890032F6CA /* MenuTableConfigurator.swift */; };
+		0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */; };
+		0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0A22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift */; };
+		0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0C22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift */; };
+		0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
 		0E502FA822B2784C00E8A6CC /* RuuviTag.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E502FA722B2784C00E8A6CC /* RuuviTag.storyboard */; };
 		0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FA922B278F500E8A6CC /* RuuviTagViewController.swift */; };
 		0E502FAC22B27A3100E8A6CC /* RuuviTagViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FAB22B27A3100E8A6CC /* RuuviTagViewInput.swift */; };
@@ -148,6 +162,20 @@
 		0E1C1DE322B3C2710032F6CA /* DashboardRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRouter.swift; sourceTree = "<group>"; };
 		0E1C1DE722B3C2B60032F6CA /* DashboardScrollInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardScrollInitializer.swift; sourceTree = "<group>"; };
 		0E1C1DE922B3C2E60032F6CA /* DashboardScrollConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardScrollConfigurator.swift; sourceTree = "<group>"; };
+		0E1C1DF022B3FDE30032F6CA /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
+		0E1C1DF222B3FEFF0032F6CA /* MenuViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewInput.swift; sourceTree = "<group>"; };
+		0E1C1DF422B3FF1D0032F6CA /* MenuViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewOutput.swift; sourceTree = "<group>"; };
+		0E1C1DF722B3FF480032F6CA /* MenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		0E1C1DF922B3FFBF0032F6CA /* MenuRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuRouterInput.swift; sourceTree = "<group>"; };
+		0E1C1DFB22B3FFD90032F6CA /* MenuRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuRouter.swift; sourceTree = "<group>"; };
+		0E1C1DFD22B3FFFC0032F6CA /* MenuModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuModuleInput.swift; sourceTree = "<group>"; };
+		0E1C1DFF22B400130032F6CA /* MenuPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPresenter.swift; sourceTree = "<group>"; };
+		0E1C1E0222B400590032F6CA /* MenuTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableInitializer.swift; sourceTree = "<group>"; };
+		0E1C1E0422B400890032F6CA /* MenuTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableConfigurator.swift; sourceTree = "<group>"; };
+		0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableTransitioningDelegate.swift; sourceTree = "<group>"; };
+		0E1C1E0A22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTablePresentTransitionAnimation.swift; sourceTree = "<group>"; };
+		0E1C1E0C22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableDismissTransitionAnimation.swift; sourceTree = "<group>"; };
+		0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTablePresentationController.swift; sourceTree = "<group>"; };
 		0E502FA722B2784C00E8A6CC /* RuuviTag.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = RuuviTag.storyboard; sourceTree = "<group>"; };
 		0E502FA922B278F500E8A6CC /* RuuviTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagViewController.swift; sourceTree = "<group>"; };
 		0E502FAB22B27A3100E8A6CC /* RuuviTagViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagViewInput.swift; sourceTree = "<group>"; };
@@ -304,6 +332,7 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
 				0E09672622AE8D6A00E85F48 /* Discover */,
 				0E09671D22AE76D800E85F48 /* Main */,
@@ -554,6 +583,91 @@
 				0E1C1DE922B3C2E60032F6CA /* DashboardScrollConfigurator.swift */,
 			);
 			path = Scroll;
+			sourceTree = "<group>";
+		};
+		0E1C1DEB22B3FDB40032F6CA /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DF022B3FDE30032F6CA /* Menu.storyboard */,
+				0E1C1DEF22B3FDD60032F6CA /* Assembly */,
+				0E1C1E0622B401A80032F6CA /* Transition */,
+				0E1C1DEE22B3FDCC0032F6CA /* Presenter */,
+				0E1C1DED22B3FDC70032F6CA /* Router */,
+				0E1C1DEC22B3FDBB0032F6CA /* View */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		0E1C1DEC22B3FDBB0032F6CA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DF622B3FF2F0032F6CA /* Table */,
+				0E1C1DF222B3FEFF0032F6CA /* MenuViewInput.swift */,
+				0E1C1DF422B3FF1D0032F6CA /* MenuViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0E1C1DED22B3FDC70032F6CA /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DF922B3FFBF0032F6CA /* MenuRouterInput.swift */,
+				0E1C1DFB22B3FFD90032F6CA /* MenuRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0E1C1DEE22B3FDCC0032F6CA /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DFD22B3FFFC0032F6CA /* MenuModuleInput.swift */,
+				0E1C1DFF22B400130032F6CA /* MenuPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0E1C1DEF22B3FDD60032F6CA /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1E0122B400470032F6CA /* Table */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E1C1DF622B3FF2F0032F6CA /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DF722B3FF480032F6CA /* MenuTableViewController.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		0E1C1E0122B400470032F6CA /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1E0222B400590032F6CA /* MenuTableInitializer.swift */,
+				0E1C1E0422B400890032F6CA /* MenuTableConfigurator.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		0E1C1E0622B401A80032F6CA /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1E0722B4022F0032F6CA /* Table */,
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
+		0E1C1E0722B4022F0032F6CA /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */,
+				0E1C1E0A22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift */,
+				0E1C1E0C22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift */,
+				0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */,
+			);
+			path = Table;
 			sourceTree = "<group>";
 		};
 		0E502FA422B2780300E8A6CC /* RuuviTag */ = {
@@ -950,6 +1064,7 @@
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
 				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
+				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0E502FA822B2784C00E8A6CC /* RuuviTag.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
@@ -1025,6 +1140,10 @@
 				0E502FAC22B27A3100E8A6CC /* RuuviTagViewInput.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
+				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
+				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
+				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
+				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E502FC422B285B900E8A6CC /* RuuviTagAddTransitioningDelegate.swift in Sources */,
 				0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
@@ -1032,6 +1151,7 @@
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* DashboardViewOutput.swift in Sources */,
 				0E502FAE22B27A4E00E8A6CC /* RuuviTagViewOutput.swift in Sources */,
+				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */,
@@ -1041,6 +1161,8 @@
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
+				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
+				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
@@ -1051,8 +1173,11 @@
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E502FC622B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift in Sources */,
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
+				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
+				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
+				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
@@ -1067,6 +1192,7 @@
 				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
+				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
@@ -1074,7 +1200,9 @@
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
+				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,
 				0E1C1DE822B3C2B60032F6CA /* DashboardScrollInitializer.swift in Sources */,
+				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
 				0E502FCA22B2864E00E8A6CC /* RuuviTagAddPresentationController.swift in Sources */,
 				0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */,
