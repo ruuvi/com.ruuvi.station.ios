@@ -4,6 +4,7 @@ import BTKit
 class RuuviTagPresenter: RuuviTagModuleInput {
     weak var view: RuuviTagViewInput!
     var router: RuuviTagRouterInput!
+    var ruuviTagPersistence: RuuviTagPersistence!
     
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
     
