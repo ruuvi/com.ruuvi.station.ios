@@ -22,6 +22,13 @@
 		0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */; };
 		0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA722B387A00032F6CA /* AppAssembly.swift */; };
 		0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */; };
+		0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */; };
+		0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB222B390080032F6CA /* ActivityPresenterRuuviLogo.swift */; };
+		0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB422B3903B0032F6CA /* ActivityRuuviLogo.storyboard */; };
+		0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB622B390BC0032F6CA /* ActivityRuuviLogoViewController.swift */; };
+		0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DB822B390ED0032F6CA /* ActivitySpinnerView.swift */; };
+		0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */; };
+		0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */; };
 		0E502FA822B2784C00E8A6CC /* RuuviTag.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E502FA722B2784C00E8A6CC /* RuuviTag.storyboard */; };
 		0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FA922B278F500E8A6CC /* RuuviTagViewController.swift */; };
 		0E502FAC22B27A3100E8A6CC /* RuuviTagViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FAB22B27A3100E8A6CC /* RuuviTagViewInput.swift */; };
@@ -104,6 +111,13 @@
 		0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDataRealm.swift; sourceTree = "<group>"; };
 		0E1C1DA722B387A00032F6CA /* AppAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembly.swift; sourceTree = "<group>"; };
 		0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceAssembly.swift; sourceTree = "<group>"; };
+		0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPresenter.swift; sourceTree = "<group>"; };
+		0E1C1DB222B390080032F6CA /* ActivityPresenterRuuviLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPresenterRuuviLogo.swift; sourceTree = "<group>"; };
+		0E1C1DB422B3903B0032F6CA /* ActivityRuuviLogo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ActivityRuuviLogo.storyboard; sourceTree = "<group>"; };
+		0E1C1DB622B390BC0032F6CA /* ActivityRuuviLogoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRuuviLogoViewController.swift; sourceTree = "<group>"; };
+		0E1C1DB822B390ED0032F6CA /* ActivitySpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySpinnerView.swift; sourceTree = "<group>"; };
+		0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+ViewController.swift"; sourceTree = "<group>"; };
+		0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAssembly.swift; sourceTree = "<group>"; };
 		0E502FA722B2784C00E8A6CC /* RuuviTag.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = RuuviTag.storyboard; sourceTree = "<group>"; };
 		0E502FA922B278F500E8A6CC /* RuuviTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagViewController.swift; sourceTree = "<group>"; };
 		0E502FAB22B27A3100E8A6CC /* RuuviTagViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagViewInput.swift; sourceTree = "<group>"; };
@@ -229,9 +243,11 @@
 		0E09671922AE764200E85F48 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				0E1C1DBC22B3920C0032F6CA /* Assembly */,
 				0E70A45E22AF9558006CB87C /* Contract */,
 				0E09671B22AE76B700E85F48 /* Launch */,
 				0E70A46122AF958E006CB87C /* Localization */,
+				0E1C1DAC22B38F220032F6CA /* Presenters */,
 				0E70A46422AF960B006CB87C /* Theme */,
 				0E09671C22AE76CC00E85F48 /* Modules */,
 			);
@@ -286,6 +302,7 @@
 			isa = PBXGroup;
 			children = (
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
+				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -367,6 +384,50 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E1C1DAC22B38F220032F6CA /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DAD22B38F320032F6CA /* Activity */,
+			);
+			path = Presenters;
+			sourceTree = "<group>";
+		};
+		0E1C1DAD22B38F320032F6CA /* Activity */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DB022B38F840032F6CA /* RuuviLogo */,
+				0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */,
+			);
+			path = Activity;
+			sourceTree = "<group>";
+		};
+		0E1C1DB022B38F840032F6CA /* RuuviLogo */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DB122B38FFA0032F6CA /* View */,
+				0E1C1DB222B390080032F6CA /* ActivityPresenterRuuviLogo.swift */,
+			);
+			path = RuuviLogo;
+			sourceTree = "<group>";
+		};
+		0E1C1DB122B38FFA0032F6CA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DB422B3903B0032F6CA /* ActivityRuuviLogo.storyboard */,
+				0E1C1DB622B390BC0032F6CA /* ActivityRuuviLogoViewController.swift */,
+				0E1C1DB822B390ED0032F6CA /* ActivitySpinnerView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0E1C1DBC22B3920C0032F6CA /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -760,6 +821,7 @@
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
+				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0E502FA822B2784C00E8A6CC /* RuuviTag.storyboard in Resources */,
@@ -844,6 +906,7 @@
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */,
+				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
@@ -852,10 +915,14 @@
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
+				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E502FC622B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift in Sources */,
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
+				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
+				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */,
+				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */,
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
@@ -869,6 +936,7 @@
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
+				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,

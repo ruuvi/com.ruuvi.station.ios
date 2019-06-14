@@ -11,6 +11,7 @@ class RuuviTagConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+        presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         
         view.output = presenter
     }
