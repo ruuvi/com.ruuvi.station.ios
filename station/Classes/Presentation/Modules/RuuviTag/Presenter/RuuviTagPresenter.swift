@@ -22,6 +22,7 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     
     func configure(ruuviTag: RuuviTag) {
         self.ruuviTag = ruuviTag
+        view.name = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTag.uuid)?.name
     }
 }
 
@@ -52,7 +53,7 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
 // MARK: - Private
 extension RuuviTagPresenter {
     private func updateViewFromRuuviTag() {
-        view.name = ruuviTag.mac ?? ruuviTag.uuid
+        view.uuid = ruuviTag.mac ?? ruuviTag.uuid
         view.temperature = ruuviTag.celsius
         view.temperatureUnit = .celsius
         view.humidity = ruuviTag.humidity
