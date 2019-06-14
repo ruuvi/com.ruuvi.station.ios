@@ -11,6 +11,7 @@ PODS:
     - BTKit/Devices
   - DateToolsSwift (4.0.0)
   - EmptyDataSet-Swift (4.2.0)
+  - FutureX (1.0)
   - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
   - Realm (3.16.1):
@@ -23,6 +24,7 @@ DEPENDENCIES:
   - BTKit (from `../BTKit`)
   - DateToolsSwift
   - EmptyDataSet-Swift
+  - FutureX
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
   - RealmSwift
@@ -31,6 +33,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - DateToolsSwift
     - EmptyDataSet-Swift
+    - FutureX
     - Localize-Swift
     - Realm
     - RealmSwift
@@ -50,11 +53,12 @@ SPEC CHECKSUMS:
   BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
+  FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
   Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
   RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
 
-PODFILE CHECKSUM: 8333e3c2269bc72bb98fb8621a2c03ca2a0cfe12
+PODFILE CHECKSUM: 1ce32fdf13a60fc8ec59ca8070fbf10ce369618f
 
 COCOAPODS: 1.7.0

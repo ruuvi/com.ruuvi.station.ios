@@ -6,6 +6,7 @@ target 'station' do
   pod 'BTKit', :path => '../BTKit'
   pod 'EmptyDataSet-Swift'
   pod 'DateToolsSwift'
+  pod 'FutureX'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'RealmSwift'
