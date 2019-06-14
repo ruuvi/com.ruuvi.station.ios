@@ -3,6 +3,7 @@ import UIKit
 class DiscoverPulsatorCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
     
     private let pulsator: Pulsator = Pulsator()
     
@@ -13,14 +14,14 @@ class DiscoverPulsatorCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        pulsator.position = imageView.layer.position
+        pulsator.position = contentView.layer.position
     }
     
     private func configurePulsator() {
         pulsator.backgroundColor = UIColor.white.cgColor
         pulsator.numPulse = 3
         pulsator.radius = 100
-        imageView.layer.superlayer?.insertSublayer(pulsator, below: imageView.layer)
+        contentView.layer.superlayer?.insertSublayer(pulsator, below: contentView.layer)
         pulsator.start()
     }
     

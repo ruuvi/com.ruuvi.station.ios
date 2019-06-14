@@ -8,6 +8,8 @@ class ErrorPresenterAlert: ErrorPresenter {
             case .persistence(let error):
                 presentAlert(error: error)
             }
+        } else {
+            presentAlert(error: error)
         }
     }
     

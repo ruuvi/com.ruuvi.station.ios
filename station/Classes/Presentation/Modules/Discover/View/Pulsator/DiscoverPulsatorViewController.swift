@@ -9,7 +9,7 @@ class DiscoverPulsatorViewController: UIViewController {
     @IBOutlet weak var btEnabledImageView: UIImageView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     
-    var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
+    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -36,6 +36,7 @@ extension DiscoverPulsatorViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        output.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,13 +53,13 @@ extension DiscoverPulsatorViewController {
 // MARK: - UICollectionViewDataSource
 extension DiscoverPulsatorViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ruuviTags.count
+        return devices.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverPulsatorCollectionViewCell
-        let ruuviTag = ruuviTags[indexPath.row]
-        configure(cell: cell, with: ruuviTag)
+        let device = devices[indexPath.row]
+        configure(cell: cell, with: device)
         return cell
     }
 }
@@ -66,16 +67,17 @@ extension DiscoverPulsatorViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension DiscoverPulsatorViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item < ruuviTags.count {
-            output.viewDidSelect(ruuviTag: ruuviTags[indexPath.item])
+        if indexPath.item < devices.count {
+            output.viewDidSelect(device: devices[indexPath.item])
         }
     }
 }
 
 // MARK: - Cell configuration
 extension DiscoverPulsatorViewController {
-    private func configure(cell: DiscoverPulsatorCollectionViewCell, with ruuviTag: RuuviTag) {
-        
+    private func configure(cell: DiscoverPulsatorCollectionViewCell, with device: DiscoverDeviceViewModel) {
+        cell.imageView.image = device.logo
+        cell.nameLabel.text = device.name
     }
 }
 
@@ -90,7 +92,7 @@ extension DiscoverPulsatorViewController {
 // MARK: - Update UI
 extension DiscoverPulsatorViewController {
     private func updateUI() {
-        updateUIRuuviTags()
+        updateUIDevices()
         updateUIISBluetoothEnabled()
     }
     
@@ -101,7 +103,7 @@ extension DiscoverPulsatorViewController {
         }
     }
     
-    private func updateUIRuuviTags() {
+    private func updateUIDevices() {
         if isViewLoaded {
             collectionView.reloadData()
         }
