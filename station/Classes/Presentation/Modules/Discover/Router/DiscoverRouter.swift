@@ -18,4 +18,12 @@ class DiscoverRouter: DiscoverRouterInput {
                 module.configure(ruuviTag: ruuviTag)
             })
     }
+    
+    func openDashboard() {
+        let factory = StoryboardFactory(storyboardName: "Dashboard")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: DashboardModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .perform()
+    }
 }
