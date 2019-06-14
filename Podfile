@@ -8,4 +8,5 @@ target 'station' do
   pod 'DateToolsSwift'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
+  pod 'RealmSwift'
 end
