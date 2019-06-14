@@ -36,7 +36,14 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
     
     func viewDidSave(name: String) {
         let save = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name)
-        
+        isSaving = true
+        save.on(success: { [weak self] (ruuviTag) in
+            self?.router.dismiss()
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        }) {
+            self.isSaving = false
+        }
     }
     
 }
