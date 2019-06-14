@@ -10,4 +10,5 @@ target 'station' do
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'RealmSwift'
+  pod 'Swinject'
 end
