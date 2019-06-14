@@ -35,6 +35,7 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
     
     func viewDidSave(name: String) {
         let save = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name)
+        
     }
     
 }
