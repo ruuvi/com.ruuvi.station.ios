@@ -1,10 +1,13 @@
 import UIKit
+import RealmSwift
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
     
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
+    
+    var ruuviTags: Results<RuuviTagRealm>! { didSet { updateUIRuuviTags() }  }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -22,10 +25,31 @@ extension DashboardScrollViewController: DashboardViewInput {
     }
 }
 
-
 // MARK: - IBActions
 extension DashboardScrollViewController {
     @IBAction func tagSettingsClick(_ sender: UIButton) {
         
+    }
+}
+
+// MARK: - View lifecycle
+extension DashboardScrollViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateUI()
+        output.viewDidLoad()
+    }
+}
+
+// MARK: - Update UI
+extension DashboardScrollViewController {
+    private func updateUI() {
+        updateUIRuuviTags()
+    }
+    
+    private func updateUIRuuviTags() {
+        if isViewLoaded {
+            
+        }
     }
 }
