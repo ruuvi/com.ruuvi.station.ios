@@ -18,6 +18,8 @@
 		0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */; };
 		0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */; };
 		0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9F22B36C100032F6CA /* RUError.swift */; };
+		0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */; };
+		0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */; };
 		0E502FA822B2784C00E8A6CC /* RuuviTag.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E502FA722B2784C00E8A6CC /* RuuviTag.storyboard */; };
 		0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FA922B278F500E8A6CC /* RuuviTagViewController.swift */; };
 		0E502FAC22B27A3100E8A6CC /* RuuviTagViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FAB22B27A3100E8A6CC /* RuuviTagViewInput.swift */; };
@@ -96,6 +98,8 @@
 		0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistence.swift; sourceTree = "<group>"; };
 		0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistenceRealm.swift; sourceTree = "<group>"; };
 		0E1C1D9F22B36C100032F6CA /* RUError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUError.swift; sourceTree = "<group>"; };
+		0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealm.swift; sourceTree = "<group>"; };
+		0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDataRealm.swift; sourceTree = "<group>"; };
 		0E502FA722B2784C00E8A6CC /* RuuviTag.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = RuuviTag.storyboard; sourceTree = "<group>"; };
 		0E502FA922B278F500E8A6CC /* RuuviTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagViewController.swift; sourceTree = "<group>"; };
 		0E502FAB22B27A3100E8A6CC /* RuuviTagViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagViewInput.swift; sourceTree = "<group>"; };
@@ -192,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				0E09671522AE74CB00E85F48 /* Application */,
+				0E1C1DA122B36CE70032F6CA /* Model */,
 				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E09671922AE764200E85F48 /* Presentation */,
 			);
@@ -331,6 +336,23 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
+		0E1C1DA122B36CE70032F6CA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DA422B36EB50032F6CA /* Realm */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		0E1C1DA422B36EB50032F6CA /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */,
+				0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -801,6 +823,7 @@
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E502FC422B285B900E8A6CC /* RuuviTagAddTransitioningDelegate.swift in Sources */,
+				0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				0E502FAE22B27A4E00E8A6CC /* RuuviTagViewOutput.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
@@ -810,6 +833,7 @@
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
+				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
