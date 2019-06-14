@@ -30,6 +30,13 @@ extension DiscoverPulsatorViewController: DiscoverViewInput {
     }
 }
 
+// MARK: - IBActions
+extension DiscoverPulsatorViewController {
+    @IBAction func continueButtonTouchUpInside(_ sender: Any) {
+        output.viewDidTriggerContinue()
+    }
+}
+
 // MARK: - View lifecycle
 extension DiscoverPulsatorViewController {
     

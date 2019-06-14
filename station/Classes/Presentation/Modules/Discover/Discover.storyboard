@@ -185,13 +185,25 @@
                                     <constraint firstItem="7ug-IL-Nb0" firstAttribute="centerX" secondItem="Fwe-A1-nUK" secondAttribute="centerX" id="xsM-AM-wCb"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ag-qd-mem">
+                                <rect key="frame" x="161" y="814" width="92" height="48"/>
+                                <inset key="contentEdgeInsets" minX="15" minY="15" maxX="15" maxY="15"/>
+                                <state key="normal" title="Continue">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="continueButtonTouchUpInside:" destination="ukq-MD-Dsm" eventType="touchUpInside" id="JLt-IC-uCa"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.63529411764705879" blue="0.92941176470588238" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Fwe-A1-nUK" firstAttribute="leading" secondItem="c8P-bh-4Ee" secondAttribute="leading" id="9eA-j0-rSU"/>
+                            <constraint firstItem="c8P-bh-4Ee" firstAttribute="bottom" secondItem="7Ag-qd-mem" secondAttribute="bottom" id="AzX-H0-VEN"/>
                             <constraint firstAttribute="bottom" secondItem="Fwe-A1-nUK" secondAttribute="bottom" id="Rhk-AT-ugz"/>
                             <constraint firstItem="Fwe-A1-nUK" firstAttribute="top" secondItem="c8P-bh-4Ee" secondAttribute="top" id="Sbp-7e-Plj"/>
                             <constraint firstItem="Fwe-A1-nUK" firstAttribute="trailing" secondItem="c8P-bh-4Ee" secondAttribute="trailing" id="aF8-uL-jdZ"/>
+                            <constraint firstItem="7Ag-qd-mem" firstAttribute="centerX" secondItem="c8P-bh-4Ee" secondAttribute="centerX" id="kgc-KV-SgK"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c8P-bh-4Ee"/>
                     </view>
