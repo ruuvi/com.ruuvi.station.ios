@@ -52,6 +52,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
             router.open(ruuviTag: ruuviTag)
         }
     }
+    
+    func viewDidTriggerContinue() {
+        
+    }
 }
 
 // MARK: - Private
