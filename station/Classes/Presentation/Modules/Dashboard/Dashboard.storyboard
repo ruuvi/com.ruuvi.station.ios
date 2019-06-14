@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pVR-SE-6mP">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="GFb-Vj-mkO">
+            <objects>
+                <viewController storyboardIdentifier="DashboardScrollViewController" id="pVR-SE-6mP" customClass="DashboardScrollViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Gfm-eP-ACx">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg9" translatesAutoresizingMaskIntoConstraints="NO" id="uwL-6G-spH">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="VHk-jU-Dq6">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X3t-5y-1HP">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </scrollView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_white" translatesAutoresizingMaskIntoConstraints="NO" id="HLP-h6-z2n">
+                                <rect key="frame" x="52" y="57" width="310" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="HVh-SA-VNX"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QWq-xL-Hcm">
+                                <rect key="frame" x="8" y="52" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="36" id="ISJ-of-POL"/>
+                                    <constraint firstAttribute="height" constant="36" id="ZyK-u5-2Tv"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="baseline_menu_white_48pt"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tie-KF-CFy">
+                                <rect key="frame" x="370" y="52" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="36" id="BHQ-kr-Yq8"/>
+                                    <constraint firstAttribute="height" constant="36" id="KZF-pt-Y9x"/>
+                                    <constraint firstAttribute="width" constant="36" id="ejT-nh-pSV"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="36" id="t5L-vS-wHs"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="baseline_settings_white_48pt"/>
+                                <connections>
+                                    <action selector="tagSettingsClick:" destination="pVR-SE-6mP" eventType="touchUpInside" id="qz3-th-00b"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="X3t-5y-1HP" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="3Pm-gn-oGH"/>
+                            <constraint firstItem="uwL-6G-spH" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="5yA-u0-zfd"/>
+                            <constraint firstAttribute="bottom" secondItem="VHk-jU-Dq6" secondAttribute="bottom" id="6Xr-rF-R9l"/>
+                            <constraint firstItem="X3t-5y-1HP" firstAttribute="bottom" secondItem="Gfm-eP-ACx" secondAttribute="bottom" id="Gb6-3L-UWE"/>
+                            <constraint firstItem="uwL-6G-spH" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="Mfb-Vu-nnk"/>
+                            <constraint firstItem="HLP-h6-z2n" firstAttribute="leading" secondItem="QWq-xL-Hcm" secondAttribute="trailing" constant="8" id="RF1-zc-Xbe"/>
+                            <constraint firstItem="QWq-xL-Hcm" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="8" id="RQ0-hb-Xef"/>
+                            <constraint firstItem="HLP-h6-z2n" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="13" id="SRy-5q-Yd4"/>
+                            <constraint firstItem="X3t-5y-1HP" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="V7f-vw-dMc"/>
+                            <constraint firstItem="X3t-5y-1HP" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="W5Z-O7-utY"/>
+                            <constraint firstItem="VHk-jU-Dq6" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="d9J-0G-FsY"/>
+                            <constraint firstItem="uwL-6G-spH" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="feH-91-mwv"/>
+                            <constraint firstItem="QWq-xL-Hcm" firstAttribute="leading" secondItem="cQV-kG-itc" secondAttribute="leading" constant="8" id="fhL-7b-Yzk"/>
+                            <constraint firstItem="VHk-jU-Dq6" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="ns4-Pg-hDK"/>
+                            <constraint firstItem="VHk-jU-Dq6" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="smU-BS-OQh"/>
+                            <constraint firstItem="uwL-6G-spH" firstAttribute="bottom" secondItem="Gfm-eP-ACx" secondAttribute="bottom" id="tlr-1u-nRQ"/>
+                            <constraint firstItem="tie-KF-CFy" firstAttribute="leading" secondItem="HLP-h6-z2n" secondAttribute="trailing" constant="8" id="uI9-TI-wI1"/>
+                            <constraint firstItem="tie-KF-CFy" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="8" id="uzA-HY-q8T"/>
+                            <constraint firstItem="cQV-kG-itc" firstAttribute="trailing" secondItem="tie-KF-CFy" secondAttribute="trailing" constant="8" id="wWH-Tq-W9K"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cQV-kG-itc"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Ruuvi Station" id="Utr-nt-Tul">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" id="Erq-Xy-rVP">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="Y59-1m-VFk">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="removeClick:" destination="pVR-SE-6mP" id="D5g-w5-RhM"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="scrollView" destination="X3t-5y-1HP" id="EUO-AO-B4e"/>
+                        <outlet property="settingsButton" destination="Y59-1m-VFk" id="kEQ-R8-wU3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EaF-Br-ohx" sceneMemberID="firstResponder"/>
+                <customObject id="bfj-My-BrB" customClass="DashboardScrollInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="pVR-SE-6mP" id="Ir2-gC-7SY"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-97.101449275362327" y="-583.25892857142856"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="baseline_menu_white_48pt" width="48" height="48"/>
+        <image name="baseline_settings_white_48pt" width="48" height="48"/>
+        <image name="bg9" width="960" height="1440"/>
+        <image name="gradient_layer" width="359" height="641"/>
+        <image name="logo_white" width="721" height="101"/>
+    </resources>
+</document>
