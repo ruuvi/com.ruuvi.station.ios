@@ -27,8 +27,12 @@ extension DashboardScrollViewController: DashboardViewInput {
 
 // MARK: - IBActions
 extension DashboardScrollViewController {
-    @IBAction func tagSettingsClick(_ sender: UIButton) {
+    @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
         
+    }
+    
+    @IBAction func menuButtonTouchUpInside(_ sender: Any) {
+        output.viewDidTriggerMenu()
     }
 }
 

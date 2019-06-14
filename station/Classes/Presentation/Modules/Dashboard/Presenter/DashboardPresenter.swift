@@ -18,6 +18,10 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
     }
+    
+    func viewDidTriggerMenu() {
+        router.openMenu()
+    }
 }
 
 extension DashboardPresenter {
