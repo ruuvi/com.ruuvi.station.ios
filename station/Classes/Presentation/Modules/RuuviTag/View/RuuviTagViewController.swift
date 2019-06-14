@@ -13,7 +13,8 @@ class RuuviTagViewController: UIViewController {
     @IBOutlet weak var pressureLabel: UILabel!
     @IBOutlet weak var rssiLabel: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
- 
+    @IBOutlet weak var checkmarkButton: UIButton!
+    
     var name: String? { didSet { updateUIName() } }
     var temperature: Double? { didSet { updateUITemperature() } }
     var temperatureUnit: TemperatureUnit? { didSet { updateUITemperatureUnit() } }
@@ -39,11 +40,17 @@ extension RuuviTagViewController: RuuviTagViewInput {
 extension RuuviTagViewController {
     
     @IBAction func checkmarkButtonTouchUpInside(_ sender: Any) {
-        output.viewDidTapOnCheckmark()
+        if let name = nameTextField.text, !name.isEmpty {
+            output.viewDidSave(name: name)
+        }
     }
     
     @IBAction func viewGestureRecognizerAction(_ sender: Any) {
         output.viewDidTapOnView()
+    }
+    
+    @IBAction func nameTextFieldEditingChanged(_ sender: Any) {
+        updateUIIsCheckmarkEnabled()
     }
 }
 
@@ -65,7 +72,10 @@ extension RuuviTagViewController {
 extension RuuviTagViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        output.viewDidTapOnDone()
+        if textField == nameTextField,
+            let name = nameTextField.text, !name.isEmpty {
+            output.viewDidSave(name: name)
+        }
         return false
     }
 }
@@ -99,6 +109,17 @@ extension RuuviTagViewController {
         updateUIPressure()
         updateUIRssi()
         updateUIUpdated()
+        updateUIIsCheckmarkEnabled()
+    }
+    
+    private func updateUIIsCheckmarkEnabled() {
+        if isViewLoaded {
+            if let name = nameTextField.text {
+                checkmarkButton.isEnabled = !name.isEmpty
+            } else {
+                checkmarkButton.isEnabled = false
+            }
+        }
     }
     
     private func updateUIUpdated() {

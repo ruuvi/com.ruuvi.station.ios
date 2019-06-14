@@ -23,13 +23,11 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
         router.dismiss()
     }
     
-    func viewDidTapOnCheckmark() {
-        router.dismiss()
+    func viewDidSave(name: String) {
+        let save = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name)
+        
     }
     
-    func viewDidTapOnDone() {
-        router.dismiss()
-    }
 }
 
 // MARK: - Private

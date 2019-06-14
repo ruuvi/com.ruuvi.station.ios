@@ -131,7 +131,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmC-H7-M5n">
                                         <rect key="frame" x="81" y="350" width="252" height="44"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q19-yD-tHn">
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q19-yD-tHn">
                                                 <rect key="frame" x="208" y="0.0" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="44" id="Mh8-3n-c0P"/>
@@ -153,6 +153,7 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="alert" returnKeyType="done"/>
                                                 <connections>
+                                                    <action selector="nameTextFieldEditingChanged:" destination="JRy-fN-WKF" eventType="editingChanged" id="OhJ-q6-wmX"/>
                                                     <outlet property="delegate" destination="JRy-fN-WKF" id="4VI-9W-lQS"/>
                                                 </connections>
                                             </textField>
@@ -216,6 +217,7 @@
                     </view>
                     <size key="freeformSize" width="414" height="480"/>
                     <connections>
+                        <outlet property="checkmarkButton" destination="Q19-yD-tHn" id="ecp-ca-OQl"/>
                         <outlet property="humidityLabel" destination="axZ-OE-otP" id="ZOU-Z4-Qng"/>
                         <outlet property="nameLabel" destination="smY-KI-9Hn" id="lY5-jV-b81"/>
                         <outlet property="nameTextField" destination="mhK-ml-HNd" id="e26-8a-dqD"/>
