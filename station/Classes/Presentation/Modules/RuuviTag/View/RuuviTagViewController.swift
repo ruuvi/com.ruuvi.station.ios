@@ -5,7 +5,7 @@ class RuuviTagViewController: UIViewController {
 
     var output: RuuviTagViewOutput!
     
-    @IBOutlet weak var backgroundImage: UIImageView!
+    @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var temperatureUnitLabel: UILabel!
@@ -21,6 +21,10 @@ class RuuviTagViewController: UIViewController {
     var pressure: Double? { didSet { updateUIPressure() } }
     var rssi: Int? { didSet { updateUIRssi() } }
     var updated: Date? { didSet { updateUIUpdated() } }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 }
 
 // MARK: - RuuviTagViewInput
@@ -36,10 +40,10 @@ extension RuuviTagViewController: RuuviTagViewInput {
 
 // MARK: - IBActions
 extension RuuviTagViewController {
-    @IBAction func plusButtonTouchUpInside(_ sender: Any) {
-        output.viewDidTapOnPlus()
-    }
     
+    @IBAction func checkmarkButtonTouchUpInside(_ sender: Any) {
+        output.viewDidTapOnCheckmark()
+    }
     
     @IBAction func viewGestureRecognizerAction(_ sender: Any) {
         output.viewDidTapOnView()
@@ -51,6 +55,40 @@ extension RuuviTagViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+        registerForNotifications()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        nameTextField.becomeFirstResponder()
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension RuuviTagViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        output.viewDidTapOnDone()
+        return false
+    }
+}
+
+// MARK: - Notifications
+extension RuuviTagViewController {
+    private func registerForNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(RuuviTagViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RuuviTagViewController.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let margin = CGFloat(16)
+            view.frame.origin.y = UIScreen.main.bounds.size.height - keyboardSize.height - view.frame.size.height - margin
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        view.frame.origin.y = (UIScreen.main.bounds.height / 2.0) - (view.frame.size.height / 2.0)
     }
 }
 

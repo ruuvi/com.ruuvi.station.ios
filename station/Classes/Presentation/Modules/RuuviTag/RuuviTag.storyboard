@@ -26,11 +26,11 @@
             <objects>
                 <viewController storyboardIdentifier="RuuviTagViewController" id="JRy-fN-WKF" customClass="RuuviTagViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yX3-F5-l8q">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="520"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L5X-Ak-wqh">
-                                <rect key="frame" x="0.0" y="44" width="414" height="442"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="402"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MB3-XH-z2k">
                                         <rect key="frame" x="82" y="272" width="51.5" height="50"/>
@@ -128,14 +128,46 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q19-yD-tHn">
-                                        <rect key="frame" x="157" y="342" width="100" height="100"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" image="plus_icon"/>
-                                        <connections>
-                                            <action selector="plusButtonTouchUpInside:" destination="JRy-fN-WKF" eventType="touchUpInside" id="qFK-4b-9NY"/>
-                                        </connections>
-                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmC-H7-M5n">
+                                        <rect key="frame" x="81" y="350" width="252" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q19-yD-tHn">
+                                                <rect key="frame" x="208" y="0.0" width="44" height="44"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="44" id="Mh8-3n-c0P"/>
+                                                    <constraint firstAttribute="height" constant="44" id="efM-fx-xu9"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="checkmark_icon"/>
+                                                <connections>
+                                                    <action selector="checkmarkButtonTouchUpInside:" destination="JRy-fN-WKF" eventType="touchUpInside" id="r7j-cS-jxG"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mhK-ml-HNd">
+                                                <rect key="frame" x="0.0" y="0.0" width="200" height="44"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="200" id="6Wo-Xe-dP9"/>
+                                                </constraints>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardAppearance="alert" returnKeyType="done"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="JRy-fN-WKF" id="4VI-9W-lQS"/>
+                                                </connections>
+                                            </textField>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="Q19-yD-tHn" firstAttribute="leading" secondItem="mhK-ml-HNd" secondAttribute="trailing" constant="8" id="MkE-1E-gqC"/>
+                                            <constraint firstItem="Q19-yD-tHn" firstAttribute="top" secondItem="lmC-H7-M5n" secondAttribute="top" id="jkL-4G-ygF"/>
+                                            <constraint firstAttribute="trailing" secondItem="Q19-yD-tHn" secondAttribute="trailing" id="pdL-Cv-t5v"/>
+                                            <constraint firstItem="mhK-ml-HNd" firstAttribute="leading" secondItem="lmC-H7-M5n" secondAttribute="leading" id="q6y-ma-jPR"/>
+                                            <constraint firstItem="mhK-ml-HNd" firstAttribute="top" secondItem="lmC-H7-M5n" secondAttribute="top" id="qmw-4B-PgC"/>
+                                            <constraint firstAttribute="bottom" secondItem="mhK-ml-HNd" secondAttribute="bottom" id="vex-AQ-COF"/>
+                                            <constraint firstAttribute="bottom" secondItem="Q19-yD-tHn" secondAttribute="bottom" id="yCy-P7-MUA"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -145,20 +177,20 @@
                                     <constraint firstItem="smY-KI-9Hn" firstAttribute="top" secondItem="Wj8-hb-lJt" secondAttribute="bottom" constant="16" id="6a9-TP-8xL"/>
                                     <constraint firstItem="Wj8-hb-lJt" firstAttribute="top" secondItem="L5X-Ak-wqh" secondAttribute="top" id="CIN-sb-nyz"/>
                                     <constraint firstItem="V1u-5h-d5b" firstAttribute="leading" secondItem="Wof-uY-XvJ" secondAttribute="leading" id="Cgu-BV-Eb4"/>
-                                    <constraint firstAttribute="bottom" secondItem="Q19-yD-tHn" secondAttribute="bottom" id="Iid-bz-6vQ"/>
                                     <constraint firstItem="NC5-N3-wxO" firstAttribute="centerY" secondItem="V1u-5h-d5b" secondAttribute="centerY" id="KTA-RS-94Y"/>
                                     <constraint firstItem="NC5-N3-wxO" firstAttribute="leading" secondItem="V1u-5h-d5b" secondAttribute="trailing" constant="16" id="KrA-Bh-6dE"/>
                                     <constraint firstItem="Wof-uY-XvJ" firstAttribute="top" secondItem="2mO-Uk-Ibu" secondAttribute="bottom" constant="8" id="MDw-tP-W8s"/>
                                     <constraint firstItem="axZ-OE-otP" firstAttribute="leading" secondItem="Wof-uY-XvJ" secondAttribute="trailing" constant="16" id="MdI-V1-zRo"/>
                                     <constraint firstItem="2mO-Uk-Ibu" firstAttribute="top" secondItem="smY-KI-9Hn" secondAttribute="bottom" constant="6" id="OYV-g6-XDi"/>
+                                    <constraint firstItem="lmC-H7-M5n" firstAttribute="centerX" secondItem="L5X-Ak-wqh" secondAttribute="centerX" id="PaS-M5-YcA"/>
                                     <constraint firstAttribute="trailing" secondItem="2mO-Uk-Ibu" secondAttribute="trailing" constant="16" id="S4G-VW-11v"/>
                                     <constraint firstItem="yjO-el-gL8" firstAttribute="top" secondItem="V1u-5h-d5b" secondAttribute="bottom" constant="8" id="Wg4-n3-gpy"/>
+                                    <constraint firstAttribute="bottom" secondItem="lmC-H7-M5n" secondAttribute="bottom" constant="8" id="ZRD-c1-jse"/>
                                     <constraint firstItem="MB3-XH-z2k" firstAttribute="centerY" secondItem="yjO-el-gL8" secondAttribute="centerY" id="hse-pT-OGh"/>
                                     <constraint firstItem="2mO-Uk-Ibu" firstAttribute="leading" secondItem="L5X-Ak-wqh" secondAttribute="leading" constant="16" id="jRN-ol-bnc"/>
                                     <constraint firstItem="Wj8-hb-lJt" firstAttribute="centerX" secondItem="L5X-Ak-wqh" secondAttribute="centerX" id="nzK-7v-SI7"/>
                                     <constraint firstItem="Wof-uY-XvJ" firstAttribute="leading" secondItem="L5X-Ak-wqh" secondAttribute="leading" constant="16" id="rW7-sA-SUx"/>
                                     <constraint firstItem="MB3-XH-z2k" firstAttribute="leading" secondItem="yjO-el-gL8" secondAttribute="trailing" constant="16" id="t2W-iK-hNg"/>
-                                    <constraint firstItem="Q19-yD-tHn" firstAttribute="centerX" secondItem="L5X-Ak-wqh" secondAttribute="centerX" id="vw7-Se-8cn"/>
                                     <constraint firstItem="smY-KI-9Hn" firstAttribute="leading" secondItem="L5X-Ak-wqh" secondAttribute="leading" constant="16" id="xBr-jT-Qa0"/>
                                     <constraint firstAttribute="trailing" secondItem="smY-KI-9Hn" secondAttribute="trailing" constant="16" id="yhI-hF-bWj"/>
                                 </constraints>
@@ -182,10 +214,11 @@
                             <outletCollection property="gestureRecognizers" destination="3W3-f5-kk3" appends="YES" id="VMe-UC-7iY"/>
                         </connections>
                     </view>
-                    <size key="freeformSize" width="414" height="520"/>
+                    <size key="freeformSize" width="414" height="480"/>
                     <connections>
                         <outlet property="humidityLabel" destination="axZ-OE-otP" id="ZOU-Z4-Qng"/>
                         <outlet property="nameLabel" destination="smY-KI-9Hn" id="lY5-jV-b81"/>
+                        <outlet property="nameTextField" destination="mhK-ml-HNd" id="e26-8a-dqD"/>
                         <outlet property="pressureLabel" destination="NC5-N3-wxO" id="9Ie-PO-8bQ"/>
                         <outlet property="rssiLabel" destination="MB3-XH-z2k" id="CCl-YM-ym9"/>
                         <outlet property="temperatureLabel" destination="SWz-wx-HAH" id="XFI-Su-MCA"/>
@@ -209,9 +242,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="checkmark_icon" width="36" height="36"/>
         <image name="icon-measure-humidity" width="221" height="221"/>
         <image name="icon-measure-pressure" width="221" height="221"/>
         <image name="icon-measure-signal" width="221" height="221"/>
-        <image name="plus_icon" width="100" height="100"/>
     </resources>
 </document>
