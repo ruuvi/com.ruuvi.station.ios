@@ -22,9 +22,6 @@ class RuuviTagViewController: UIViewController {
     var rssi: Int? { didSet { updateUIRssi() } }
     var updated: Date? { didSet { updateUIUpdated() } }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
 }
 
 // MARK: - RuuviTagViewInput
