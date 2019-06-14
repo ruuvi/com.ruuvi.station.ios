@@ -22,7 +22,11 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
         router.dismiss()
     }
     
-    func viewDidTapOnPlus() {
+    func viewDidTapOnCheckmark() {
+        router.dismiss()
+    }
+    
+    func viewDidTapOnDone() {
         router.dismiss()
     }
 }

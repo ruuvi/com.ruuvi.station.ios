@@ -31,7 +31,7 @@ class RuuviTagAddPresentationController: UIPresentationController {
     override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
         let horizontalMargin = CGFloat(15)
         let width = parentSize.width - (2 * horizontalMargin)
-        let height = 520.0 / 414.0 * width
+        let height = 480.0 / 414.0 * width
         return CGSize(width: width, height: height)
     }
     
