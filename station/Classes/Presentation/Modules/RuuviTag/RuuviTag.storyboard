@@ -219,13 +219,13 @@
                     <connections>
                         <outlet property="checkmarkButton" destination="Q19-yD-tHn" id="ecp-ca-OQl"/>
                         <outlet property="humidityLabel" destination="axZ-OE-otP" id="ZOU-Z4-Qng"/>
-                        <outlet property="nameLabel" destination="smY-KI-9Hn" id="lY5-jV-b81"/>
                         <outlet property="nameTextField" destination="mhK-ml-HNd" id="e26-8a-dqD"/>
                         <outlet property="pressureLabel" destination="NC5-N3-wxO" id="9Ie-PO-8bQ"/>
                         <outlet property="rssiLabel" destination="MB3-XH-z2k" id="CCl-YM-ym9"/>
                         <outlet property="temperatureLabel" destination="SWz-wx-HAH" id="XFI-Su-MCA"/>
                         <outlet property="temperatureUnitLabel" destination="4QB-k9-TEY" id="IZI-We-jYQ"/>
                         <outlet property="updatedLabel" destination="2mO-Uk-Ibu" id="e2S-eO-bVw"/>
+                        <outlet property="uuidLabel" destination="smY-KI-9Hn" id="lY5-jV-b81"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xLu-1c-rT3" userLabel="First Responder" sceneMemberID="firstResponder"/>

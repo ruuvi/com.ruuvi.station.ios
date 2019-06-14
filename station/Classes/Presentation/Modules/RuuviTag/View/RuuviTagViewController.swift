@@ -6,7 +6,7 @@ class RuuviTagViewController: UIViewController {
     var output: RuuviTagViewOutput!
     
     @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var uuidLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var temperatureUnitLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
@@ -16,6 +16,7 @@ class RuuviTagViewController: UIViewController {
     @IBOutlet weak var checkmarkButton: UIButton!
     
     var name: String? { didSet { updateUIName() } }
+    var uuid: String? { didSet { updateUIUUID() } }
     var temperature: Double? { didSet { updateUITemperature() } }
     var temperatureUnit: TemperatureUnit? { didSet { updateUITemperatureUnit() } }
     var humidity: Double? { didSet { updateUIHumidity() } }
@@ -103,6 +104,7 @@ extension RuuviTagViewController {
 extension RuuviTagViewController {
     private func updateUI() {
         updateUIName()
+        updateUIUUID()
         updateUITemperature()
         updateUITemperatureUnit()
         updateUIHumidity()
@@ -110,6 +112,12 @@ extension RuuviTagViewController {
         updateUIRssi()
         updateUIUpdated()
         updateUIIsCheckmarkEnabled()
+    }
+    
+    private func updateUIName() {
+        if isViewLoaded {
+            nameTextField.text = name
+        }
     }
     
     private func updateUIIsCheckmarkEnabled() {
@@ -187,9 +195,9 @@ extension RuuviTagViewController {
         }
     }
     
-    private func updateUIName() {
+    private func updateUIUUID() {
         if isViewLoaded {
-            nameLabel.text = name
+            uuidLabel.text = uuid
         }
     }
 }
