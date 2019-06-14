@@ -14,5 +14,10 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
         
+        container.register(ErrorPresenter.self) { r in
+            let presenter = ErrorPresenterAlert()
+            return presenter
+        }
+        
     }
 }
