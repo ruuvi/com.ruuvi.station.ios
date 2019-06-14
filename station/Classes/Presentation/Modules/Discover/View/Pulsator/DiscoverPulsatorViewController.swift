@@ -12,6 +12,10 @@ class DiscoverPulsatorViewController: UIViewController {
     var ruuviTags: [RuuviTag] = [RuuviTag]() { didSet { updateUIRuuviTags() } }
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     private let cellReuseIdentifier = "DiscoverPulsatorCollectionViewCellReuseIdentifier"
 }
 
