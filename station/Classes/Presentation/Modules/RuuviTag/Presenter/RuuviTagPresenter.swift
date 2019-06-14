@@ -6,6 +6,7 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     var router: RuuviTagRouterInput!
     var ruuviTagPersistence: RuuviTagPersistence!
     var activityPresenter: ActivityPresenter!
+    var errorPresenter: ErrorPresenter!
     
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
     private var isSaving: Bool = false {
