@@ -7,6 +7,7 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     var ruuviTagPersistence: RuuviTagPersistence!
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
+    var realmContext: RealmContext!
     
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
     private var isSaving: Bool = false {
