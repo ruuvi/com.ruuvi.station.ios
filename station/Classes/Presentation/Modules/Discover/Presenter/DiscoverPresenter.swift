@@ -54,7 +54,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidTriggerContinue() {
-        
+        router.openDashboard()
     }
 }
 
