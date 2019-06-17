@@ -82,7 +82,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="INW-hX-gVH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="88o-5U-I22" customClass="MenuTableInitializer" customModule="station" customModuleProvider="target">
                     <connections>
-                        <outlet property="viewController" destination="Ta4-x1-hx1" id="xXX-7I-dsI"/>
+                        <outlet property="viewController" destination="Ta4-x1-hx1" id="1VR-Sx-ZEF"/>
                     </connections>
                 </customObject>
             </objects>
