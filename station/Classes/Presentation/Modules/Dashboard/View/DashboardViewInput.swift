@@ -7,4 +7,5 @@ protocol DashboardViewInput: ViewInput {
     var viewModels: [DashboardRuuviTagViewModel] { get set }
     
     func reload(viewModel: DashboardRuuviTagViewModel)
+    func showMenu(for viewModel: DashboardRuuviTagViewModel)
 }

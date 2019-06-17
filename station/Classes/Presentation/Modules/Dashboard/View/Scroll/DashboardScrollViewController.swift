@@ -1,4 +1,5 @@
 import UIKit
+import Localize_Swift
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
@@ -10,6 +11,9 @@ class DashboardScrollViewController: UIViewController {
     var viewModels = [DashboardRuuviTagViewModel]() { didSet { updateUIRuuviTags() }  }
     
     private var ruuviTagViews = [DashboardRuuviTagViewModel: DashboardRuuviTagView]()
+    private var currentPage: Int {
+        return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+    }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -31,12 +35,30 @@ extension DashboardScrollViewController: DashboardViewInput {
             configure(view: view, with: viewModel)
         }
     }
+    
+    func showMenu(for viewModel: DashboardRuuviTagViewModel) {
+        var infoText = String(format: "Dashboard.settings.dataFormat.format".localized(), viewModel.version)
+        if let voltage = viewModel.voltage {
+            infoText.append(String(format: "Dashboard.settings.voltage.format".localized(), voltage))
+        }
+        let controller = UIAlertController(title: nil, message: infoText, preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        controller.addAction(UIAlertAction(title: "Dashboard.settings.remove.title".localized(), style: .destructive, handler: { [weak self] (action) in
+            self?.output.viewDidAskToRemove(viewModel: viewModel)
+        }))
+        controller.addAction(UIAlertAction(title: "Dashboard.settings.rename.title".localized(), style: .default, handler: { [weak self] (action) in
+            self?.output.viewDidAskToRename(viewModel: viewModel)
+        }))
+        present(controller, animated: false)
+    }
 }
 
 // MARK: - IBActions
 extension DashboardScrollViewController {
     @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
-        
+        if currentPage >= 0 && currentPage < viewModels.count {
+            output.viewDidTriggerSettings(for: viewModels[currentPage])
+        }
     }
     
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
