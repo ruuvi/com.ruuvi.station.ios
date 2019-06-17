@@ -39,6 +39,7 @@ extension DashboardPresenter: DashboardViewOutput {
 
 extension DashboardPresenter {
     private func startScanningRuuviTags() {
+        observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()
         if let ruuviTags = view.ruuviTags {
             for ruuviTag in ruuviTags {
