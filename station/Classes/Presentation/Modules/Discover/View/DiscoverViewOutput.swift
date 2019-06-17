@@ -8,4 +8,5 @@ protocol DiscoverViewOutput {
     func viewDidTriggerContinue()
     func viewDidChoose(device: DiscoverDeviceViewModel)
     func viewDidTapOnGetMoreSensors()
+    func viewDidTriggerClose()
 }

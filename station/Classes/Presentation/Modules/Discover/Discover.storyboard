@@ -80,12 +80,17 @@
                             <outlet property="delegate" destination="KWd-e4-kyA" id="ZTC-ZM-aua"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Add tags" id="yQ1-Je-TFL">
-                        <barButtonItem key="backBarButtonItem" title=" " id="XSA-ZK-17r"/>
+                    <navigationItem key="navigationItem" title="Add tag" id="idW-IY-zqC">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="wzL-rj-N05">
+                            <connections>
+                                <action selector="closeBarButtonItemAction:" destination="KWd-e4-kyA" id="uh8-hb-uaZ"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="btDisabledEmptyDataSetView" destination="g64-7X-j0B" id="BHv-gg-CGX"/>
                         <outlet property="btDisabledImageView" destination="0Oj-Ez-KU2" id="SUr-ff-9TM"/>
+                        <outlet property="closeBarButtonItem" destination="wzL-rj-N05" id="38R-M9-MDJ"/>
                         <outlet property="getMoreSensorsEmptyDataSetView" destination="QrL-fM-HUZ" id="GlA-pj-S1F"/>
                     </connections>
                 </tableViewController>

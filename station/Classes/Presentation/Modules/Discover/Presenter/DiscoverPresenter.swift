@@ -22,6 +22,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var lostToken: ObservationToken?
     private var persistedRuuviTagsToken: NotificationToken?
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
+    private var isOpenedFromWelcome: Bool = true
     
     deinit {
         reloadTimer?.invalidate()
@@ -29,6 +30,10 @@ class DiscoverPresenter: DiscoverModuleInput {
         stateToken?.invalidate()
         lostToken?.invalidate()
         persistedRuuviTagsToken?.invalidate()
+    }
+    
+    func configure(isOpenedFromWelcome: Bool) {
+        self.isOpenedFromWelcome = isOpenedFromWelcome
     }
 }
 
@@ -75,6 +80,14 @@ extension DiscoverPresenter: DiscoverViewOutput {
     
     func viewDidTapOnGetMoreSensors() {
         router.openRuuviWebsite()
+    }
+    
+    func viewDidTriggerClose() {
+        if isOpenedFromWelcome {
+            router.openDashboard()
+        } else {
+            router.dismiss()
+        }
     }
 }
 

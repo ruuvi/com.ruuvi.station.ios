@@ -30,4 +30,8 @@ class DiscoverRouter: DiscoverRouterInput {
     func openRuuviWebsite() {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
+    
+    func dismiss() {
+        try! transitionHandler.closeCurrentModule().perform()
+    }
 }
