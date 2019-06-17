@@ -68,6 +68,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidTriggerContinue() {
         router.openDashboard()
     }
+    
+    func viewDidTapOnGetMoreSensors() {
+        router.openRuuviWebsite()
+    }
 }
 
 // MARK: - Private
