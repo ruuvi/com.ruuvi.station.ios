@@ -33,6 +33,8 @@ extension DashboardScrollViewController: DashboardViewInput {
     func reload(viewModel: DashboardRuuviTagViewModel) {
         if let view = ruuviTagViews[viewModel] {
             configure(view: view, with: viewModel)
+            ruuviTagViews.removeValue(forKey: viewModel)
+            ruuviTagViews[viewModel] = view
         }
     }
     
@@ -117,7 +119,7 @@ extension DashboardScrollViewController {
             view.temperatureUnitLabel.text = "°C"
         case .fahrenheit:
             view.temperatureLabel.text = String(format: "%.2f", viewModel.fahrenheit)
-            view.temperatureUnitLabel.text = "°C"
+            view.temperatureUnitLabel.text = "°F"
         }
     }
 }
