@@ -1,5 +1,6 @@
 import UIKit
 import RealmSwift
+import BTKit
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
@@ -26,6 +27,12 @@ extension DashboardScrollViewController: DashboardViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func update(ruuviTag: RuuviTagRealm, with data: RuuviTag) {
+        if let view = ruuviTagViews[ruuviTag] {
+            configure(view: view, with: data)
+        }
+    }
 }
 
 // MARK: - IBActions
@@ -46,10 +53,34 @@ extension DashboardScrollViewController {
         updateUI()
         output.viewDidLoad()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        output.viewWillDisappear()
+    }
 }
 
 // MARK: - Configure view
 extension DashboardScrollViewController {
+    private func configure(view: DashboardRuuviTagView, with data: RuuviTag) {
+        switch temperatureUnit {
+        case .celsius:
+            view.temperatureLabel.text = String(format: "%.2f", data.celsius)
+            view.temperatureUnitLabel.text = "°C"
+        case .fahrenheit:
+            view.temperatureLabel.text = String(format: "%.2f", data.fahrenheit)
+            view.temperatureUnitLabel.text = "°C"
+        }
+        view.humidityLabel.text = String(format: "%.2f", data.humidity) + " %"
+        view.pressureLabel.text = "\(data.pressure) hPa"
+        view.rssiLabel.text = "\(data.rssi) dBm"
+    }
+    
     private func configure(view: DashboardRuuviTagView, with ruuviTag: RuuviTagRealm) {
         view.nameLabel.text = ruuviTag.name.uppercased()
         configureTemperature(view: view, with: ruuviTag)
