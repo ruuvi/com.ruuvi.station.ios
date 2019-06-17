@@ -6,4 +6,5 @@ protocol DiscoverViewOutput {
     func viewWillDisappear()
     func viewDidSelect(device: DiscoverDeviceViewModel)
     func viewDidTriggerContinue()
+    func viewDidChoose(device: DiscoverDeviceViewModel)
 }

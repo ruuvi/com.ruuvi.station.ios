@@ -68,7 +68,7 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row < devices.count {
-            output.viewDidSelect(device: devices[indexPath.row])
+            output.viewDidChoose(device: devices[indexPath.row])
         }
     }
 }
