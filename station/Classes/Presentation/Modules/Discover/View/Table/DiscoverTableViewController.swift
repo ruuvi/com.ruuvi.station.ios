@@ -71,6 +71,10 @@ extension DiscoverTableViewController {
             output.viewDidChoose(device: devices[indexPath.row])
         }
     }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "DiscoverTable.SectionTitle.Tags".localized()
+    }
 }
 
 // MARK: - EmptyDataSetSource
