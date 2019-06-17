@@ -63,7 +63,16 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidAskToRename(viewModel: DashboardRuuviTagViewModel) {
-        
+        view.showRenameDialog(for: viewModel)
+    }
+    
+    func viewDidChangeName(of viewModel: DashboardRuuviTagViewModel, to name: String) {
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
+            let operation = ruuviTagPersistence.update(name: name, of: ruuviTag)
+            operation.on(failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        }
     }
 }
 
@@ -87,7 +96,7 @@ extension DashboardPresenter {
     }
     
     private func startObservingRuuviTags() {
-        let ruuviTags = realmContext.main.objects(RuuviTagRealm.self).sorted(byKeyPath: "name")
+        let ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
         ruuviTagsToken = ruuviTags.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
