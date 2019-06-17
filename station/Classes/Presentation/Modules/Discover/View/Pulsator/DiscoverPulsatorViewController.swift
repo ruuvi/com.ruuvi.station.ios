@@ -10,6 +10,7 @@ class DiscoverPulsatorViewController: UIViewController {
     @IBOutlet weak var btDisabledImageView: UIImageView!
     
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
+    var savedDevicesUUIDs: [String] = [String]()
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {

@@ -11,7 +11,11 @@ class DiscoverPresenter: DiscoverModuleInput {
     
     private let scanner = Ruuvi.scanner
     private var ruuviTags = Set<RuuviTag>()
-    private var persistedRuuviTags: Results<RuuviTagRealm>!
+    private var persistedRuuviTags: Results<RuuviTagRealm>! {
+        didSet {
+            view.savedDevicesUUIDs = persistedRuuviTags.map( { $0.uuid })
+        }
+    }
     private var reloadTimer: Timer?
     private var scanToken: ObservationToken?
     private var stateToken: ObservationToken?
