@@ -7,7 +7,7 @@ class RuuviTagDataRealm: Object {
     
     // all versions
     @objc dynamic var rssi: Int = 0
-    @objc dynamic var temperature: Double = 0.0
+    @objc dynamic var celsius: Double = 0.0
     @objc dynamic var humidity: Double = 0.0
     @objc dynamic var pressure: Double = 0.0
     
@@ -22,4 +22,7 @@ class RuuviTagDataRealm: Object {
     let measurementSequenceNumber = RealmOptional<Int>()
     let txPower = RealmOptional<Int>()
 
+    var fahrenheit: Double {
+        return (celsius * 9.0/5.0) + 32.0
+    }
 }

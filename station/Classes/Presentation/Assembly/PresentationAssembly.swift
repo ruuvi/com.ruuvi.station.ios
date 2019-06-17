@@ -8,5 +8,9 @@ class PresentationAssembly: Assembly {
             return presenter
         }
         
+        container.register(ErrorPresenter.self) { r in
+            let presenter = ErrorPresenterAlert()
+            return presenter
+        }
     }
 }
