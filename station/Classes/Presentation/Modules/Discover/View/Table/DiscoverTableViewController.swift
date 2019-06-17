@@ -63,12 +63,12 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return devices.count
+        return shownDevices.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverTableViewCell
-        let tag = devices[indexPath.row]
+        let tag = shownDevices[indexPath.row]
         configure(cell: cell, with: tag)
         return cell
     }
@@ -77,13 +77,13 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < devices.count {
-            output.viewDidChoose(device: devices[indexPath.row])
+        if indexPath.row < shownDevices.count {
+            output.viewDidChoose(device: shownDevices[indexPath.row])
         }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "DiscoverTable.SectionTitle.Tags".localized()
+        return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Tags".localized() : nil
     }
 }
 
