@@ -11,18 +11,23 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             do {
                 if let existingTag = self.fetch(uuid: ruuviTag.uuid) {
                     try self.context.bg.write {
-                        existingTag.name = name
-                        if existingTag.version != ruuviTag.version {
-                            existingTag.version = ruuviTag.version
-                        }
-                        if existingTag.mac != ruuviTag.mac {
-                            existingTag.mac = ruuviTag.mac
+                        if existingTag.isInvalidated {
+                            let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
+                            self.context.bg.add(realmTag, update: .all)
+                        } else {
+                            existingTag.name = name
+                            if existingTag.version != ruuviTag.version {
+                                existingTag.version = ruuviTag.version
+                            }
+                            if existingTag.mac != ruuviTag.mac {
+                                existingTag.mac = ruuviTag.mac
+                            }
                         }
                     }
                 } else {
                     let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
                     try self.context.bg.write {
-                        self.context.bg.add(realmTag)
+                        self.context.bg.add(realmTag, update: .all)
                     }
                 }
                 promise.succeed(value: ruuviTag)
