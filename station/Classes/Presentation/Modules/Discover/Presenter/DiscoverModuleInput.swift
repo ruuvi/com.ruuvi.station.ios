@@ -1,5 +1,5 @@
 import Foundation
 
-protocol DiscoverModuleInput {
-    
+protocol DiscoverModuleInput: class {
+    func configure(isOpenedFromWelcome: Bool)
 }

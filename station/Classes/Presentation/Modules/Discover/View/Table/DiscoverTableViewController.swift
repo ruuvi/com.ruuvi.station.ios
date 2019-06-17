@@ -6,6 +6,7 @@ class DiscoverTableViewController: UITableViewController {
     
     var output: DiscoverViewOutput!
 
+    @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
@@ -34,6 +35,13 @@ extension DiscoverTableViewController: DiscoverViewInput {
     
     func apply(theme: Theme) {
         
+    }
+}
+
+// MARK: - IBActions
+extension DiscoverTableViewController {
+    @IBAction func closeBarButtonItemAction(_ sender: Any) {
+        output.viewDidTriggerClose()
     }
 }
 
@@ -135,7 +143,6 @@ extension DiscoverTableViewController {
     private func configureViews() {
         configureTableView()
         configureBTDisabledImageView()
-
     }
     
     private func configureTableView() {
