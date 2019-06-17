@@ -10,11 +10,20 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     
-    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
+    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet {
+            shownDevices = devices.filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+        }
+    }
+    var savedDevicesUUIDs: [String] = [String]() { didSet {
+        shownDevices = devices.filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+        }
+    }
+    
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
     
     private var emptyDataSetView: UIView?
     private let cellReuseIdentifier = "DiscoverTableViewCellReuseIdentifier"
+    private var shownDevices:  [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
 }
 
 // MARK: - DiscoverViewInput
@@ -142,8 +151,9 @@ extension DiscoverTableViewController {
 // MARK: - Update UI
 extension DiscoverTableViewController {
     private func updateUI() {
-        updateUIDevices()
+        updateUIShownDevices()
         updateUIISBluetoothEnabled()
+        
     }
     
     private func updateUIISBluetoothEnabled() {
@@ -153,7 +163,7 @@ extension DiscoverTableViewController {
         }
     }
     
-    private func updateUIDevices() {
+    private func updateUIShownDevices() {
         if isViewLoaded {
             tableView.reloadData()
         }
