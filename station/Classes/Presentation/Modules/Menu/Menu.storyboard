@@ -61,7 +61,7 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bEW-LA-DOE">
                                 <rect key="frame" x="0.0" y="150" width="414" height="746"/>
                                 <connections>
-                                    <segue destination="Idp-Td-ufs" kind="embed" id="0xk-TQ-TAu"/>
+                                    <segue destination="Idp-Td-ufs" kind="embed" identifier="EmbedMenuTableEmbededViewControllerSegueIdentifier" id="0xk-TQ-TAu"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -88,10 +88,10 @@
             </objects>
             <point key="canvasLocation" x="-257.97101449275362" y="-254.46428571428569"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Menu Table Embeded View Controller-->
         <scene sceneID="NdS-tr-bZD">
             <objects>
-                <tableViewController id="Idp-Td-ufs" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MenuTableEmbededViewController" id="Idp-Td-ufs" customClass="MenuTableEmbededViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="G1s-tm-ya2">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="746"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -180,6 +180,12 @@
                             <outlet property="delegate" destination="Idp-Td-ufs" id="uX7-il-Y3D"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="aboutCell" destination="5jP-lL-ZsG" id="Fn2-zH-noK"/>
+                        <outlet property="addRuuviTagCell" destination="7M8-AE-dVG" id="XHE-LM-utr"/>
+                        <outlet property="getMoreSensorsCell" destination="Q41-gm-NmA" id="yQD-Eu-H6g"/>
+                        <outlet property="settingsCell" destination="Whs-Vz-g1g" id="A61-3K-Zae"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W7Q-dC-60Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -9,4 +9,20 @@ extension MenuPresenter: MenuViewOutput {
     func viewDidTapOnDimmingView() {
         router.dismiss()
     }
+    
+    func viewDidSelectAddRuuviTag() {
+        router.openDiscover()
+    }
+    
+    func viewDidSelectAbout() {
+        
+    }
+    
+    func viewDidSelectGetMoreSensors() {
+        
+    }
+    
+    func viewDidSelectSettings() {
+        
+    }
 }
