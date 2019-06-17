@@ -3,6 +3,11 @@ import Swinject
 class PersistenceAssembly: Assembly {
     func assemble(container: Container) {
         
+        container.register(BackgroundPersistence.self) { r in
+            let persistence = BackgroundPersistenceUserDefaults()
+            return persistence
+        }
+        
         container.register(RealmContext.self) { r in
             let context = RealmContextImpl()
             return context
