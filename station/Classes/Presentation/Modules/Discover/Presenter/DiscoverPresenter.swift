@@ -67,7 +67,12 @@ extension DiscoverPresenter: DiscoverViewOutput {
         if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
             let operation = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: ruuviTag.mac ?? ruuviTag.uuid)
             operation.on(success: { [weak self] (ruuviTag) in
-                self?.router.openDashboard()
+                if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
+                    self?.router.openDashboard()
+                } else {
+                    self?.router.dismiss()
+                }
+                
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
