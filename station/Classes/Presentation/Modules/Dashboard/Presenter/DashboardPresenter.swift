@@ -46,7 +46,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTriggerMenu() {
-        router.openMenu()
+        router.openMenu(output: self)
     }
     
     func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel) {
@@ -76,6 +76,15 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 }
 
+// MARK: - MenuModuleOutput
+extension DashboardPresenter: MenuModuleOutput {
+    func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
+        module.dismiss()
+        router.openDiscover()
+    }
+}
+
+// MARK: - Private
 extension DashboardPresenter {
     private func startScanningRuuviTags() {
         observeTokens.forEach( { $0.invalidate() } )
