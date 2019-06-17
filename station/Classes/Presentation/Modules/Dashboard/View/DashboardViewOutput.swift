@@ -8,4 +8,5 @@ protocol DashboardViewOutput {
     func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel)
     func viewDidAskToRemove(viewModel: DashboardRuuviTagViewModel)
     func viewDidAskToRename(viewModel: DashboardRuuviTagViewModel)
+    func viewDidChangeName(of viewModel: DashboardRuuviTagViewModel, to name: String)
 }

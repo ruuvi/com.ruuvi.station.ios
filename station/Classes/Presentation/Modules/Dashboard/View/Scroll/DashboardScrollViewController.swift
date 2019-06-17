@@ -51,6 +51,19 @@ extension DashboardScrollViewController: DashboardViewInput {
         }))
         present(controller, animated: true)
     }
+    
+    func showRenameDialog(for viewModel: DashboardRuuviTagViewModel) {
+        let alert = UIAlertController(title: "Dashboard.settings.rename.title.EnterAName".localized(), message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.autocapitalizationType = UITextAutocapitalizationType.sentences
+            textField.text = viewModel.name
+        }
+        alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak alert, weak self] (action) in
+            let textField = alert?.textFields![0]
+            self?.output.viewDidChangeName(of: viewModel, to: textField?.text ?? "")
+        }))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - IBActions

@@ -1,4 +1,5 @@
 "Cancel" = "Cancel";
+"OK" = "OK";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
@@ -9,3 +10,4 @@
 "Dashboard.settings.voltage.format" = "\nVoltage: %.2f V";
 "Dashboard.settings.remove.title" = "Remove";
 "Dashboard.settings.rename.title" = "Rename";
+"Dashboard.settings.rename.title.EnterAName" = "Enter a name";
