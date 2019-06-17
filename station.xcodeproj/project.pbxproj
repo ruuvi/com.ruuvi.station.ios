@@ -101,6 +101,16 @@
 		0EEB20C722B7A7200015F9E0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CA22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift */; };
 		0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */; };
+		0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20D022B7C6F30015F9E0 /* Settings.storyboard */; };
+		0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */; };
+		0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D522B7C7E70015F9E0 /* SettingsViewInput.swift */; };
+		0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D722B7C8060015F9E0 /* SettingsViewOutput.swift */; };
+		0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20DC22B7C8650015F9E0 /* SettingsRouterInput.swift */; };
+		0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20DE22B7C8790015F9E0 /* SettingsRouter.swift */; };
+		0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E022B7C8A90015F9E0 /* SettingsModuleInput.swift */; };
+		0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E222B7C8C10015F9E0 /* SettingsPresenter.swift */; };
+		0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E522B7C8F20015F9E0 /* SettingsTableInitializer.swift */; };
+		0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20E722B7C92C0015F9E0 /* SettingsTableConfigurator.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -228,6 +238,16 @@
 		0EEB20C822B7A7200015F9E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0EEB20CA22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableEmbededViewController.swift; sourceTree = "<group>"; };
 		0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuModuleOutput.swift; sourceTree = "<group>"; };
+		0EEB20D022B7C6F30015F9E0 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		0EEB20D522B7C7E70015F9E0 /* SettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewInput.swift; sourceTree = "<group>"; };
+		0EEB20D722B7C8060015F9E0 /* SettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewOutput.swift; sourceTree = "<group>"; };
+		0EEB20DC22B7C8650015F9E0 /* SettingsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRouterInput.swift; sourceTree = "<group>"; };
+		0EEB20DE22B7C8790015F9E0 /* SettingsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRouter.swift; sourceTree = "<group>"; };
+		0EEB20E022B7C8A90015F9E0 /* SettingsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModuleInput.swift; sourceTree = "<group>"; };
+		0EEB20E222B7C8C10015F9E0 /* SettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPresenter.swift; sourceTree = "<group>"; };
+		0EEB20E522B7C8F20015F9E0 /* SettingsTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableInitializer.swift; sourceTree = "<group>"; };
+		0EEB20E722B7C92C0015F9E0 /* SettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableConfigurator.swift; sourceTree = "<group>"; };
 		272DB961932AC4E45A00C71E /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2901CA4D7EB4811E9B8DDCEF /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -350,6 +370,7 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
 				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
 				0E09672622AE8D6A00E85F48 /* Discover */,
@@ -924,6 +945,71 @@
 			path = UserDefaults;
 			sourceTree = "<group>";
 		};
+		0EEB20CE22B7C6DA0015F9E0 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20D022B7C6F30015F9E0 /* Settings.storyboard */,
+				0EEB20DB22B7C83E0015F9E0 /* Assembly */,
+				0EEB20DA22B7C8380015F9E0 /* Presenter */,
+				0EEB20D922B7C8330015F9E0 /* Router */,
+				0EEB20CF22B7C6E40015F9E0 /* View */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		0EEB20CF22B7C6E40015F9E0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20D422B7C7BE0015F9E0 /* Table */,
+				0EEB20D522B7C7E70015F9E0 /* SettingsViewInput.swift */,
+				0EEB20D722B7C8060015F9E0 /* SettingsViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0EEB20D422B7C7BE0015F9E0 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		0EEB20D922B7C8330015F9E0 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20DC22B7C8650015F9E0 /* SettingsRouterInput.swift */,
+				0EEB20DE22B7C8790015F9E0 /* SettingsRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0EEB20DA22B7C8380015F9E0 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20E022B7C8A90015F9E0 /* SettingsModuleInput.swift */,
+				0EEB20E222B7C8C10015F9E0 /* SettingsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0EEB20DB22B7C83E0015F9E0 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20E422B7C8E60015F9E0 /* Table */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EEB20E422B7C8E60015F9E0 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20E522B7C8F20015F9E0 /* SettingsTableInitializer.swift */,
+				0EEB20E722B7C92C0015F9E0 /* SettingsTableConfigurator.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1127,6 +1213,7 @@
 				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0E502FA822B2784C00E8A6CC /* RuuviTag.storyboard in Resources */,
+				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 			);
@@ -1204,6 +1291,7 @@
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
+				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E502FC422B285B900E8A6CC /* RuuviTagAddTransitioningDelegate.swift in Sources */,
@@ -1216,6 +1304,7 @@
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
+				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */,
 				0E1C1DDF22B3C2330032F6CA /* DashboardPresenter.swift in Sources */,
 				0E1C1DC622B396040032F6CA /* UIAlertController+Show.swift in Sources */,
@@ -1231,9 +1320,11 @@
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
+				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
+				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E502FC622B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift in Sources */,
@@ -1261,7 +1352,9 @@
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
+				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
+				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */,
@@ -1272,11 +1365,14 @@
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
 				0E502FCA22B2864E00E8A6CC /* RuuviTagAddPresentationController.swift in Sources */,
+				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */,
+				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* DashboardRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* DashboardRouterInput.swift in Sources */,
+				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,

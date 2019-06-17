@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ivn-QC-p8c">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="lkx-vK-Gew">
+            <objects>
+                <tableViewController storyboardIdentifier="SettingsTableViewController" id="Vxh-DE-JMT" customClass="SettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="WbK-hQ-TVy">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="GENERAL" id="gh8-AV-gmb">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="8wV-qf-Kio">
+                                        <rect key="frame" x="0.0" y="55.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8wV-qf-Kio" id="1v3-GZ-kVI">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use Fahrenheit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vN3-8D-6Uc">
+                                                    <rect key="frame" x="20" y="11.5" width="116" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="GGg-TC-AXn">
+                                                    <rect key="frame" x="345" y="6" width="49" height="31"/>
+                                                    <connections>
+                                                        <action selector="useFahrenheitSwitchValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="XDw-OK-5Oa"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="vN3-8D-6Uc" firstAttribute="leading" secondItem="1v3-GZ-kVI" secondAttribute="leading" constant="20" id="0eH-eY-kSZ"/>
+                                                <constraint firstItem="GGg-TC-AXn" firstAttribute="centerY" secondItem="1v3-GZ-kVI" secondAttribute="centerY" id="315-rn-WWo"/>
+                                                <constraint firstItem="vN3-8D-6Uc" firstAttribute="centerY" secondItem="1v3-GZ-kVI" secondAttribute="centerY" id="7AA-TD-nfY"/>
+                                                <constraint firstAttribute="trailing" secondItem="GGg-TC-AXn" secondAttribute="trailing" constant="22" id="m9m-jJ-fH5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Vxh-DE-JMT" id="Qox-7b-1rn"/>
+                            <outlet property="delegate" destination="Vxh-DE-JMT" id="Wvl-Vf-Aed"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Settings" id="zVX-j9-FXb">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="lsn-T2-IDJ">
+                            <connections>
+                                <action selector="closeBarButtonItemAction:" destination="Vxh-DE-JMT" id="Woh-5e-gHl"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="useFahrenheitSwitch" destination="GGg-TC-AXn" id="Ezn-3U-xoA"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5ur-UI-uvS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="zlA-YX-pbL" customClass="SettingsTableInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="Vxh-DE-JMT" id="QRB-di-V5c"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-4" y="138"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="kwL-bN-YuY">
+            <objects>
+                <navigationController id="ivn-QC-p8c" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6X1-LP-kkX">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Vxh-DE-JMT" kind="relationship" relationship="rootViewController" id="xcN-fc-M4T"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zm5-lh-Nwk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-699" y="138"/>
+        </scene>
+    </scenes>
+</document>
