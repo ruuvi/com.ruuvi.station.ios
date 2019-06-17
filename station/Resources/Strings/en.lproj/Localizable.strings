@@ -11,3 +11,7 @@
 "Dashboard.settings.remove.title" = "Remove";
 "Dashboard.settings.rename.title" = "Rename";
 "Dashboard.settings.rename.title.EnterAName" = "Enter a name";
+
+
+// DiscoverTable
+"DiscoverTable.SectionTitle.Tags" = "Tags";
