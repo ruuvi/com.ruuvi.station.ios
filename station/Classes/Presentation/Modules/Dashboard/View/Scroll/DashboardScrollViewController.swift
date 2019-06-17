@@ -79,6 +79,7 @@ extension DashboardScrollViewController {
         view.humidityLabel.text = String(format: "%.2f", data.humidity) + " %"
         view.pressureLabel.text = "\(data.pressure) hPa"
         view.rssiLabel.text = "\(data.rssi) dBm"
+        view.updatedAt = Date()
     }
     
     private func configure(view: DashboardRuuviTagView, with ruuviTag: RuuviTagRealm) {
