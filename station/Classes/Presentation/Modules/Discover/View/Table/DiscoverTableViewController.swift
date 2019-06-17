@@ -8,6 +8,7 @@ class DiscoverTableViewController: UITableViewController {
 
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
+    @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
@@ -89,6 +90,12 @@ extension DiscoverTableViewController: EmptyDataSetDelegate {
     func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {
         return true
     }
+    
+    func emptyDataSet(_ scrollView: UIScrollView, didTapView view: UIView) {
+        if emptyDataSetView == getMoreSensorsEmptyDataSetView {
+            output.viewDidTapOnGetMoreSensors()
+        }
+    }
 }
 
 // MARK: - Cell configuration
@@ -141,7 +148,7 @@ extension DiscoverTableViewController {
     
     private func updateUIISBluetoothEnabled() {
         if isViewLoaded {
-            emptyDataSetView = isBluetoothEnabled ? nil : btDisabledEmptyDataSetView
+            emptyDataSetView = isBluetoothEnabled ? getMoreSensorsEmptyDataSetView : btDisabledEmptyDataSetView
             tableView.reloadEmptyDataSet()
         }
     }
