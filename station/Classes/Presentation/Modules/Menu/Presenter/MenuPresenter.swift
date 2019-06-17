@@ -29,7 +29,7 @@ extension MenuPresenter: MenuViewOutput {
     }
     
     func viewDidSelectGetMoreSensors() {
-        
+        output?.menu(module: self, didSelectGetMoreSensors: nil)
     }
     
     func viewDidSelectSettings() {

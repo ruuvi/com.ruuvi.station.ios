@@ -5,4 +5,5 @@ protocol DashboardRouterInput {
     func openDiscover()
     func openSettings()
     func openAbout()
+    func openRuuviWebsite()
 }

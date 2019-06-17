@@ -39,4 +39,8 @@ class DashboardRouter: DashboardRouterInput {
             .forStoryboard(factory: factory, to: AboutModuleInput.self)
             .perform()
     }
+    
+    func openRuuviWebsite() {
+        UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
+    }
 }

@@ -98,6 +98,11 @@ extension DashboardPresenter: MenuModuleOutput {
         module.dismiss()
         router.openAbout()
     }
+    
+    func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
+        module.dismiss()
+        router.openRuuviWebsite()
+    }
 }
 
 // MARK: - Private
