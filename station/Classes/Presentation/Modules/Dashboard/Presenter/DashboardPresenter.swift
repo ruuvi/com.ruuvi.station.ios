@@ -54,6 +54,7 @@ extension DashboardPresenter {
     
     private func stopScanningRuuviTags() {
         observeTokens.forEach( { $0.invalidate() } )
+        observeTokens.removeAll()
     }
     
     private func startObservingRuuviTags() {
@@ -61,10 +62,10 @@ extension DashboardPresenter {
         ruuviTagsToken = ruuviTags.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
-                self?.view.viewModels = ruuviTags.map( { return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: 0, humidity: 0, pressure: 0, rssi: 0, background: self?.backgroundPersistence.background(for: $0.uuid)) } )
+                self?.view.viewModels = ruuviTags.map( { return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: $0.data.last?.celsius ?? 0, humidity: $0.data.last?.humidity ?? 0, pressure: $0.data.last?.pressure ?? 0, rssi: $0.data.last?.rssi ?? 0, background: self?.backgroundPersistence.background(for: $0.uuid)) } )
                 self?.startScanningRuuviTags()
             case .update(let ruuviTags, _, _, _):
-                self?.view.viewModels = ruuviTags.map( { return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: 0, humidity: 0, pressure: 0, rssi: 0, background: self?.backgroundPersistence.background(for: $0.uuid)) } )
+                self?.view.viewModels = ruuviTags.map( { return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: $0.data.last?.celsius ?? 0, humidity: $0.data.last?.humidity ?? 0, pressure: $0.data.last?.pressure ?? 0, rssi: $0.data.last?.rssi ?? 0, background: self?.backgroundPersistence.background(for: $0.uuid)) } )
                 self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
