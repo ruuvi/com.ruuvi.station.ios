@@ -49,7 +49,7 @@ extension DashboardScrollViewController: DashboardViewInput {
         controller.addAction(UIAlertAction(title: "Dashboard.settings.rename.title".localized(), style: .default, handler: { [weak self] (action) in
             self?.output.viewDidAskToRename(viewModel: viewModel)
         }))
-        present(controller, animated: false)
+        present(controller, animated: true)
     }
 }
 
