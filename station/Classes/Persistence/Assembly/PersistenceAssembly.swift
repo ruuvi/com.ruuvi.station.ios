@@ -14,10 +14,10 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
         
-        container.register(ErrorPresenter.self) { r in
-            let presenter = ErrorPresenterAlert()
-            return presenter
-        }
+        container.register(Settings.self) { r in
+            let settings = SettingsUserDegaults()
+            return settings
+        }.inObjectScope(.container)
         
     }
 }

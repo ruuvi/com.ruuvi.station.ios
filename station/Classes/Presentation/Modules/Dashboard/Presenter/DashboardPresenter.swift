@@ -6,6 +6,7 @@ class DashboardPresenter: DashboardModuleInput {
     var router: DashboardRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
+    var settings: Settings!
     
     private var ruuviTagsToken: NotificationToken?
     
@@ -27,7 +28,7 @@ extension DashboardPresenter: DashboardViewOutput {
 extension DashboardPresenter {
     private func startObservingRuuviTags() {
         view.ruuviTags = realmContext.main.objects(RuuviTagRealm.self).sorted(byKeyPath: "name")
-        ruuviTagsToken = view.ruuviTags.observe { [weak self] (change) in
+        ruuviTagsToken = view.ruuviTags?.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
                 self?.view.ruuviTags = ruuviTags

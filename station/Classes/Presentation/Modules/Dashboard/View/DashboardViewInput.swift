@@ -2,5 +2,6 @@ import Foundation
 import RealmSwift
 
 protocol DashboardViewInput: ViewInput {
-    var ruuviTags: Results<RuuviTagRealm>! { get set }
+    var temperatureUnit: TemperatureUnit { get set }
+    var ruuviTags: Results<RuuviTagRealm>? { get set }
 }
