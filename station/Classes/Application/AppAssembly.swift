@@ -7,6 +7,7 @@ class AppAssembly {
     init() {
         assembler = Assembler(
             [
+                BusinessAssembly(),
                 PersistenceAssembly(),
                 PresentationAssembly()
             ])
