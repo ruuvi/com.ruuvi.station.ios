@@ -5,6 +5,50 @@ import BTKit
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
     var context: RealmContext!
     
+    @discardableResult
+    func persist(ruuviTagData: RuuviTagDataRealm, realm: Realm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        do {
+            try realm.write {
+                realm.add(ruuviTagData)
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+    
+    @discardableResult
+    func persist(ruuviTag: RuuviTagRealm, data: RuuviTag) -> Future<RuuviTag,RUError> {
+        let promise = Promise<RuuviTag,RUError>()
+        if ruuviTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    let tagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: data)
+                    try self.context.bg.write {
+                        self.context.bg.add(tagData)
+                    }
+                    promise.succeed(value: data)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                let tagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: data)
+                try ruuviTag.realm?.write {
+                    self.context.main.add(tagData)
+                }
+                promise.succeed(value: data)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+        
+    }
+    
     func persist(ruuviTag: RuuviTag, name: String) -> Future<RuuviTag,RUError> {
         let promise = Promise<RuuviTag,RUError>()
         context.bgWorker.enqueue {

@@ -121,6 +121,11 @@
 		0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FE22B7D2DD0015F9E0 /* AboutPresenter.swift */; };
 		0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210022B7D2F50015F9E0 /* AboutInitializer.swift */; };
 		0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
+		0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */; };
+		0EEB210C22B7D8620015F9E0 /* RuuviTagDaemonRealmBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210B22B7D8620015F9E0 /* RuuviTagDaemonRealmBTKit.swift */; };
+		0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */; };
+		0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
+		0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -133,7 +138,7 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
-		DF2FBCA193D4531646C20842 /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 272DB961932AC4E45A00C71E /* Pods_station.framework */; };
+		EF9F64C3D2A03C2F8F50786A /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F733AC354A6D4FDBC830369 /* Pods_station.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -268,8 +273,12 @@
 		0EEB20FE22B7D2DD0015F9E0 /* AboutPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPresenter.swift; sourceTree = "<group>"; };
 		0EEB210022B7D2F50015F9E0 /* AboutInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutInitializer.swift; sourceTree = "<group>"; };
 		0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutConfigurator.swift; sourceTree = "<group>"; };
-		272DB961932AC4E45A00C71E /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2901CA4D7EB4811E9B8DDCEF /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
+		0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemon.swift; sourceTree = "<group>"; };
+		0EEB210B22B7D8620015F9E0 /* RuuviTagDaemonRealmBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemonRealmBTKit.swift; sourceTree = "<group>"; };
+		0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessAssembly.swift; sourceTree = "<group>"; };
+		0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
+		0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemonBackgroundWorker.swift; sourceTree = "<group>"; };
+		290F7681E568F25BA2568722 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2D20B0C45900CDF4B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -288,7 +297,8 @@
 		64678190225D02CE0072856A /* Muli-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Bold.ttf"; sourceTree = "<group>"; };
 		6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Bold.ttf"; sourceTree = "<group>"; };
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
-		71D1B5440B24AF4A05D7643F /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		6900653E1C5902EFD55A586D /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		6F733AC354A6D4FDBC830369 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,7 +306,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF2FBCA193D4531646C20842 /* Pods_station.framework in Frameworks */,
+				EF9F64C3D2A03C2F8F50786A /* Pods_station.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +333,7 @@
 				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
 				0E1C1D9022B35D6A0032F6CA /* Worker.swift */,
+				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -331,6 +342,7 @@
 			isa = PBXGroup;
 			children = (
 				0E09671522AE74CB00E85F48 /* Application */,
+				0EEB210722B7D8020015F9E0 /* Business */,
 				0E1C1DA122B36CE70032F6CA /* Model */,
 				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E09671922AE764200E85F48 /* Presentation */,
@@ -1080,11 +1092,46 @@
 			path = Assembly;
 			sourceTree = "<group>";
 		};
+		0EEB210722B7D8020015F9E0 /* Business */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB210822B7D80C0015F9E0 /* Assembly */,
+				0EEB210922B7D8110015F9E0 /* Daemons */,
+			);
+			path = Business;
+			sourceTree = "<group>";
+		};
+		0EEB210822B7D80C0015F9E0 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EEB210922B7D8110015F9E0 /* Daemons */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB210A22B7D8500015F9E0 /* RealmBTKit */,
+				0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */,
+			);
+			path = Daemons;
+			sourceTree = "<group>";
+		};
+		0EEB210A22B7D8500015F9E0 /* RealmBTKit */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB210B22B7D8620015F9E0 /* RuuviTagDaemonRealmBTKit.swift */,
+				0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift */,
+			);
+			path = RealmBTKit;
+			sourceTree = "<group>";
+		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				71D1B5440B24AF4A05D7643F /* Pods-station.debug.xcconfig */,
-				2901CA4D7EB4811E9B8DDCEF /* Pods-station.release.xcconfig */,
+				6900653E1C5902EFD55A586D /* Pods-station.debug.xcconfig */,
+				290F7681E568F25BA2568722 /* Pods-station.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1097,7 +1144,7 @@
 				64333D4720B0C45B00CDF4B6 /* stationUITests */,
 				64333D2620B0C45900CDF4B6 /* Products */,
 				62FD66A56B206724C5DE9CFE /* Pods */,
-				FB71F9A6D886D9F2767F8C08 /* Frameworks */,
+				A67DD9499E66D6E3C428CD9A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1154,10 +1201,10 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		FB71F9A6D886D9F2767F8C08 /* Frameworks */ = {
+		A67DD9499E66D6E3C428CD9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				272DB961932AC4E45A00C71E /* Pods_station.framework */,
+				6F733AC354A6D4FDBC830369 /* Pods_station.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1169,11 +1216,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D4D20B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "station" */;
 			buildPhases = (
-				A401E37A031416F1391EAD84 /* [CP] Check Pods Manifest.lock */,
+				281B2B9617F063DB72F991FD /* [CP] Check Pods Manifest.lock */,
 				64333D2120B0C45900CDF4B6 /* Sources */,
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
 				64333D2320B0C45900CDF4B6 /* Resources */,
-				632BEFDD0EEDBC84AF8204C1 /* [CP] Embed Pods Frameworks */,
+				BBC54561ECF090F087E21D40 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1307,24 +1354,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		632BEFDD0EEDBC84AF8204C1 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A401E37A031416F1391EAD84 /* [CP] Check Pods Manifest.lock */ = {
+		281B2B9617F063DB72F991FD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1346,6 +1376,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BBC54561ECF090F087E21D40 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1353,6 +1400,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */,
 				0E1C1E1122B756B40032F6CA /* DashboardRuuviTagView.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
@@ -1389,6 +1437,7 @@
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
+				0EEB210C22B7D8620015F9E0 /* RuuviTagDaemonRealmBTKit.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
@@ -1397,6 +1446,7 @@
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
+				0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
@@ -1425,8 +1475,10 @@
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
 				0E502FCD22B2876A00E8A6CC /* RuuviTagRouter.swift in Sources */,
+				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
 				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
+				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
@@ -1636,7 +1688,7 @@
 		};
 		64333D4E20B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 71D1B5440B24AF4A05D7643F /* Pods-station.debug.xcconfig */;
+			baseConfigurationReference = 6900653E1C5902EFD55A586D /* Pods-station.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1659,7 +1711,7 @@
 		};
 		64333D4F20B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2901CA4D7EB4811E9B8DDCEF /* Pods-station.release.xcconfig */;
+			baseConfigurationReference = 290F7681E568F25BA2568722 /* Pods-station.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

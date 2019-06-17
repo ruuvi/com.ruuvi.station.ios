@@ -1,4 +1,5 @@
 import RealmSwift
+import BTKit
 
 class RuuviTagDataRealm: Object {
     
@@ -24,5 +25,21 @@ class RuuviTagDataRealm: Object {
 
     var fahrenheit: Double {
         return (celsius * 9.0/5.0) + 32.0
+    }
+    
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
+        self.init()
+        self.ruuviTag = ruuviTag
+        self.rssi = data.rssi
+        self.celsius = data.celsius
+        self.humidity = data.humidity
+        self.pressure = data.pressure
+        self.accelerationX.value = data.accelerationX
+        self.accelerationY.value = data.accelerationY
+        self.accelerationZ.value = data.accelerationZ
+        self.voltage.value = data.voltage
+        self.movementCounter.value = data.movementCounter
+        self.measurementSequenceNumber.value = data.measurementSequenceNumber
+        self.txPower.value = data.txPower
     }
 }

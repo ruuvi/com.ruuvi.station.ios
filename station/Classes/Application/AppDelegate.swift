@@ -5,9 +5,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let r = AppAssembly.shared.assembler.resolver
+        let daemon = r.resolve(RuuviTagDaemon.self)
+        daemon?.startSavingBroadcasts()
         return true
     }
 
