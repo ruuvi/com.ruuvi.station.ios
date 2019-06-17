@@ -7,6 +7,8 @@ struct DashboardRuuviTagViewModel {
     var humidity: Double
     var pressure: Double
     var rssi: Int
+    var version: Int
+    var voltage: Double?
     var background: UIImage?
     
     var fahrenheit: Double {

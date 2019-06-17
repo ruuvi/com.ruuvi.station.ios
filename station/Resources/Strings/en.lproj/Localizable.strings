@@ -1,0 +1,11 @@
+"Cancel" = "Cancel";
+
+// ErrorPresenterAlert
+"ErrorPresenterAlert.Error" = "Error";
+"ErrorPresenterAlert.OK" = "OK";
+
+// Dashboard
+"Dashboard.settings.dataFormat.format" = "Data format: %d";
+"Dashboard.settings.voltage.format" = "\nVoltage: %.2f V";
+"Dashboard.settings.remove.title" = "Remove";
+"Dashboard.settings.rename.title" = "Rename";
