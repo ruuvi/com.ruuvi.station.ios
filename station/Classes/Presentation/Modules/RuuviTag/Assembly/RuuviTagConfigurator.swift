@@ -14,6 +14,7 @@ class RuuviTagConfigurator {
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.realmContext = r.resolve(RealmContext.self)
+        presenter.settings = r.resolve(Settings.self)
         
         view.output = presenter
     }

@@ -8,6 +8,7 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
     var realmContext: RealmContext!
+    var settings: Settings!
     
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
     private var isSaving: Bool = false {
@@ -54,8 +55,13 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
 extension RuuviTagPresenter {
     private func updateViewFromRuuviTag() {
         view.uuid = ruuviTag.mac ?? ruuviTag.uuid
-        view.temperature = ruuviTag.celsius
-        view.temperatureUnit = .celsius
+        view.temperatureUnit = settings.temperatureUnit
+        switch settings.temperatureUnit {
+        case .celsius:
+            view.temperature = ruuviTag.celsius
+        case .fahrenheit:
+            view.temperature = ruuviTag.fahrenheit
+        }
         view.humidity = ruuviTag.humidity
         view.pressure = ruuviTag.pressure
         view.rssi = ruuviTag.rssi
