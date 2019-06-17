@@ -33,6 +33,6 @@ extension MenuPresenter: MenuViewOutput {
     }
     
     func viewDidSelectSettings() {
-        
+        output?.menu(module: self, didSelectSettings: nil)
     }
 }

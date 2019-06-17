@@ -82,6 +82,11 @@ extension DashboardPresenter: MenuModuleOutput {
         module.dismiss()
         router.openDiscover()
     }
+    
+    func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
+        module.dismiss()
+        router.openSettings()
+    }
 }
 
 // MARK: - Private
