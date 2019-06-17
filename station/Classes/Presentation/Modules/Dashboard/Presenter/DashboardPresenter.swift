@@ -8,6 +8,7 @@ class DashboardPresenter: DashboardModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
+    var backgroundPersistence: BackgroundPersistence!
     
     private let scanner = Ruuvi.scanner
     private var ruuviTagsToken: NotificationToken?
@@ -41,14 +42,13 @@ extension DashboardPresenter {
     private func startScanningRuuviTags() {
         observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()
-        if let ruuviTags = view.ruuviTags {
-            for ruuviTag in ruuviTags {
-                observeTokens.append(scanner.observe(self, uuid: ruuviTag.uuid) { (observer, device) in
-                    if let tagData = device.ruuvi?.tag {
-                        observer.view.update(ruuviTag: ruuviTag, with: tagData)
-                    }
-                })
-            }
+        for viewModel in view.viewModels {
+            observeTokens.append(scanner.observe(self, uuid: viewModel.uuid) { (observer, device) in
+                if let tagData = device.ruuvi?.tag {
+                    let model = DashboardRuuviTagViewModel(uuid: viewModel.uuid, name: viewModel.name, celsius: tagData.celsius, humidity: tagData.humidity, pressure: tagData.pressure, rssi: tagData.rssi, background: viewModel.background)
+                    observer.view.reload(viewModel: model)
+                }
+            })
         }
     }
     
@@ -61,10 +61,10 @@ extension DashboardPresenter {
         ruuviTagsToken = ruuviTags.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
-                self?.view.ruuviTags = ruuviTags
+                self?.view.viewModels = ruuviTags.map( { return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: 0, humidity: 0, pressure: 0, rssi: 0, background: self?.backgroundPersistence.background(for: $0.uuid)) } )
                 self?.startScanningRuuviTags()
             case .update(let ruuviTags, _, _, _):
-                self?.view.ruuviTags = ruuviTags
+                self?.view.viewModels = ruuviTags.map( { return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: 0, humidity: 0, pressure: 0, rssi: 0, background: self?.backgroundPersistence.background(for: $0.uuid)) } )
                 self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)

@@ -1,6 +1,4 @@
 import UIKit
-import RealmSwift
-import BTKit
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
@@ -9,9 +7,9 @@ class DashboardScrollViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
-    var ruuviTags: Results<RuuviTagRealm>? { didSet { updateUIRuuviTags() }  }
+    var viewModels = [DashboardRuuviTagViewModel]() { didSet { updateUIRuuviTags() }  }
     
-    private var ruuviTagViews = [RuuviTagRealm: DashboardRuuviTagView]()
+    private var ruuviTagViews = [DashboardRuuviTagViewModel: DashboardRuuviTagView]()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -28,9 +26,9 @@ extension DashboardScrollViewController: DashboardViewInput {
         
     }
     
-    func update(ruuviTag: RuuviTagRealm, with data: RuuviTag) {
-        if let view = ruuviTagViews[ruuviTag] {
-            configure(view: view, with: data)
+    func reload(viewModel: DashboardRuuviTagViewModel) {
+        if let view = ruuviTagViews[viewModel] {
+            configure(view: view, with: viewModel)
         }
     }
 }
@@ -67,41 +65,24 @@ extension DashboardScrollViewController {
 
 // MARK: - Configure view
 extension DashboardScrollViewController {
-    private func configure(view: DashboardRuuviTagView, with data: RuuviTag) {
+    private func configure(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
+        view.nameLabel.text = viewModel.name.uppercased()
+        configureTemperature(view: view, with: viewModel)
+        view.humidityLabel.text = String(format: "%.2f", viewModel.humidity) + " %"
+        view.pressureLabel.text = "\(viewModel.pressure) hPa"
+        view.rssiLabel.text = "\(viewModel.rssi) dBm"
+        view.updatedAt = Date()
+        view.backgroundImage.image = viewModel.background
+    }
+    
+    private func configureTemperature(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
         switch temperatureUnit {
         case .celsius:
-            view.temperatureLabel.text = String(format: "%.2f", data.celsius)
+            view.temperatureLabel.text = String(format: "%.2f", viewModel.celsius)
             view.temperatureUnitLabel.text = "°C"
         case .fahrenheit:
-            view.temperatureLabel.text = String(format: "%.2f", data.fahrenheit)
+            view.temperatureLabel.text = String(format: "%.2f", viewModel.fahrenheit)
             view.temperatureUnitLabel.text = "°C"
-        }
-        view.humidityLabel.text = String(format: "%.2f", data.humidity) + " %"
-        view.pressureLabel.text = "\(data.pressure) hPa"
-        view.rssiLabel.text = "\(data.rssi) dBm"
-        view.updatedAt = Date()
-    }
-    
-    private func configure(view: DashboardRuuviTagView, with ruuviTag: RuuviTagRealm) {
-        view.nameLabel.text = ruuviTag.name.uppercased()
-        configureTemperature(view: view, with: ruuviTag)
-        if let data = ruuviTag.data.last {
-            view.humidityLabel.text = String(format: "%.2f", data.humidity) + " %"
-            view.pressureLabel.text = "\(data.pressure) hPa"
-            view.rssiLabel.text = "\(data.rssi) dBm"
-        }
-    }
-    
-    private func configureTemperature(view: DashboardRuuviTagView, with ruuviTag: RuuviTagRealm) {
-        if let data = ruuviTag.data.last {
-            switch temperatureUnit {
-            case .celsius:
-                view.temperatureLabel.text = String(format: "%.2f", data.celsius)
-                view.temperatureUnitLabel.text = "°C"
-            case .fahrenheit:
-                view.temperatureLabel.text = String(format: "%.2f", data.fahrenheit)
-                view.temperatureUnitLabel.text = "°C"
-            }
         }
     }
 }
@@ -123,15 +104,15 @@ extension DashboardScrollViewController {
         if isViewLoaded {
             ruuviTagViews.values.forEach({ $0.removeFromSuperview() })
             
-            if let ruuviTags = ruuviTags, ruuviTags.count > 0 {
+            if viewModels.count > 0 {
                 var leftView: UIView = scrollView
-                for ruuviTag in ruuviTags {
+                for viewModel in viewModels {
                     let view = Bundle.main.loadNibNamed("DashboardRuuviTagView", owner: self, options: nil)?.first as! DashboardRuuviTagView
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)
-                    configure(view: view, with: ruuviTag)
-                    ruuviTagViews[ruuviTag] = view
+                    configure(view: view, with: viewModel)
+                    ruuviTagViews[viewModel] = view
                     leftView = view
                 }
                 scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal

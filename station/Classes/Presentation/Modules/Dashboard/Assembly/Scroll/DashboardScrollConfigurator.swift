@@ -13,6 +13,7 @@ class DashboardScrollConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(Settings.self)
+        presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         
         view.output = presenter
     }

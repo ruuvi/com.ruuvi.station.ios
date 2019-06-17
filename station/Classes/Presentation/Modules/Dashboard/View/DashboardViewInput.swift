@@ -4,7 +4,7 @@ import BTKit
 
 protocol DashboardViewInput: ViewInput {
     var temperatureUnit: TemperatureUnit { get set }
-    var ruuviTags: Results<RuuviTagRealm>? { get set }
+    var viewModels: [DashboardRuuviTagViewModel] { get set }
     
-    func update(ruuviTag: RuuviTagRealm, with data: RuuviTag)
+    func reload(viewModel: DashboardRuuviTagViewModel)
 }
