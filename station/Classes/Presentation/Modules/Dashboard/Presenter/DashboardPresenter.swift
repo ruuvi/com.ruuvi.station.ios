@@ -14,6 +14,7 @@ class DashboardPresenter: DashboardModuleInput {
     private let scanner = Ruuvi.scanner
     private var ruuviTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
+    private var settingsToken: NSObjectProtocol?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             if let ruuviTags = ruuviTags {
@@ -29,12 +30,17 @@ class DashboardPresenter: DashboardModuleInput {
     deinit {
         ruuviTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
+        if let settingsToken = settingsToken {
+            NotificationCenter.default.removeObserver(settingsToken)
+        }
     }
 }
 
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
+        view.temperatureUnit = settings.temperatureUnit
         startObservingRuuviTags()
+        startListeningToSettings()
     }
     
     func viewWillAppear() {
@@ -91,6 +97,13 @@ extension DashboardPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
+    private func startListeningToSettings() {
+        settingsToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
+            guard let sSelf = self else { return }
+            sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
+        }
+    }
+    
     private func startScanningRuuviTags() {
         observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()

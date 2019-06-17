@@ -370,12 +370,12 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
-				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
 				0E09672622AE8D6A00E85F48 /* Discover */,
 				0E09671D22AE76D800E85F48 /* Main */,
+				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0E502FA422B2780300E8A6CC /* RuuviTag */,
+				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
 				0E09671E22AE7F2600E85F48 /* Welcome */,
 			);
 			path = Modules;

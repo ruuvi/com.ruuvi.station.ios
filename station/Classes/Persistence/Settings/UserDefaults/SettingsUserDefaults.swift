@@ -8,6 +8,11 @@ class SettingsUserDegaults: Settings {
         }
         set {
             useFahrenheit = newValue == .fahrenheit
+            NotificationCenter
+                .default
+                .post(name: .TemperatureUnitDidChange,
+                      object: self,
+                      userInfo: nil)
         }
     }
     
