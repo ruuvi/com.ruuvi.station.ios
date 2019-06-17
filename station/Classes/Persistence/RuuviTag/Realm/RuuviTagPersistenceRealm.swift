@@ -34,6 +34,32 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
     
+    func delete(ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        if ruuviTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        self.context.bg.delete(ruuviTag)
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    self.context.main.delete(ruuviTag)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    
     private func fetch(uuid: String) -> RuuviTagRealm? {
         return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
     }
