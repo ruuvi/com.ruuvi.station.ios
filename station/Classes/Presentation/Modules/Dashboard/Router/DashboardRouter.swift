@@ -32,4 +32,11 @@ class DashboardRouter: DashboardRouterInput {
             .forStoryboard(factory: factory, to: SettingsModuleInput.self)
             .perform()
     }
+    
+    func openAbout() {
+        let factory = StoryboardFactory(storyboardName: "About")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: AboutModuleInput.self)
+            .perform()
+    }
 }

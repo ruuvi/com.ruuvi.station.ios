@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="izz-TU-3SU">
+            <objects>
+                <viewController storyboardIdentifier="AboutViewController" id="Jxi-gj-SMg" customClass="AboutViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="b2e-AP-9Um">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg9" translatesAutoresizingMaskIntoConstraints="NO" id="WXN-aj-5hu">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="Uiu-N9-Bdy">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_station" translatesAutoresizingMaskIntoConstraints="NO" id="9bG-f9-nKD">
+                                <rect key="frame" x="57" y="144" width="300" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="IO5-Nh-EGU"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWL-lH-VPV">
+                                <rect key="frame" x="8" y="52" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="7b8-q0-X6K"/>
+                                    <constraint firstAttribute="width" constant="36" id="Jzn-C6-dGd"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button" image="baseline_keyboard_backspace_white_48pt"/>
+                                <connections>
+                                    <action selector="backButtonTouchUpInside:" destination="Jxi-gj-SMg" eventType="touchUpInside" id="SfR-Nw-BF4"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_white" translatesAutoresizingMaskIntoConstraints="NO" id="3Q7-px-H5S">
+                                <rect key="frame" x="52" y="57" width="200" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="QPq-oA-lae"/>
+                                    <constraint firstAttribute="height" constant="26" id="Zpt-Ta-pB1"/>
+                                </constraints>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pyx-d9-7cb">
+                                <rect key="frame" x="36" y="308" width="342" height="588"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" red="0.41568627450000001" green="0.91764705879999997" blue="0.88235294119999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <attributedString key="attributedText">
+                                    <fragment>
+                                        <string key="content">ABOUT / HELP  Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.   OPERATIONS MANUAL  We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals   TROUBLESHOOTING  If you're experiencing problems and manuals didn't offer help, head to see our troubleshooting topics: ruuvi.com/troubles   OPEN-SOURCE  Just like RuuviTag, so is Ruuvi Station open sourced: github.com/ruuvi   MORE TO READ  Ruuvi's website: ruuvi.com Ruuvi Forum: f.ruuvi.com Ruuvi Blog: blog.ruuvi.com Ruuvi on Twitter: twitter.com/ruuvicom
+</string>
+                                        <attributes>
+                                            <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" metaFont="system" size="16"/>
+                                            <font key="NSOriginalFont" metaFont="system" size="18"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="pyx-d9-7cb" firstAttribute="leading" secondItem="NtZ-tC-tio" secondAttribute="leading" constant="36" id="6X9-yv-xOQ"/>
+                            <constraint firstItem="FWL-lH-VPV" firstAttribute="leading" secondItem="NtZ-tC-tio" secondAttribute="leading" constant="8" id="6e7-xp-4kM"/>
+                            <constraint firstAttribute="bottom" secondItem="WXN-aj-5hu" secondAttribute="bottom" id="8G2-O7-zsI"/>
+                            <constraint firstAttribute="bottom" secondItem="pyx-d9-7cb" secondAttribute="bottom" id="DGb-WR-DXD"/>
+                            <constraint firstItem="3Q7-px-H5S" firstAttribute="top" secondItem="NtZ-tC-tio" secondAttribute="top" constant="13" id="Fal-Hj-Cji"/>
+                            <constraint firstItem="9bG-f9-nKD" firstAttribute="centerX" secondItem="b2e-AP-9Um" secondAttribute="centerX" id="M6X-GR-M0M"/>
+                            <constraint firstItem="WXN-aj-5hu" firstAttribute="top" secondItem="b2e-AP-9Um" secondAttribute="top" id="NV3-3F-o6y"/>
+                            <constraint firstItem="WXN-aj-5hu" firstAttribute="leading" secondItem="b2e-AP-9Um" secondAttribute="leading" id="QKo-Jr-0Ef"/>
+                            <constraint firstAttribute="bottom" secondItem="Uiu-N9-Bdy" secondAttribute="bottom" id="QuH-al-McW"/>
+                            <constraint firstItem="Uiu-N9-Bdy" firstAttribute="trailing" secondItem="b2e-AP-9Um" secondAttribute="trailing" id="Sjt-Ft-jZd"/>
+                            <constraint firstItem="Uiu-N9-Bdy" firstAttribute="top" secondItem="b2e-AP-9Um" secondAttribute="top" id="Uxz-1t-m0u"/>
+                            <constraint firstItem="pyx-d9-7cb" firstAttribute="top" secondItem="9bG-f9-nKD" secondAttribute="bottom" constant="36" id="Vhq-rj-g1q"/>
+                            <constraint firstItem="NtZ-tC-tio" firstAttribute="trailing" secondItem="pyx-d9-7cb" secondAttribute="trailing" constant="36" id="VnN-nO-Nwk"/>
+                            <constraint firstItem="WXN-aj-5hu" firstAttribute="trailing" secondItem="b2e-AP-9Um" secondAttribute="trailing" id="ZVf-eM-JPL"/>
+                            <constraint firstItem="Uiu-N9-Bdy" firstAttribute="leading" secondItem="b2e-AP-9Um" secondAttribute="leading" id="acR-qj-gCv"/>
+                            <constraint firstItem="FWL-lH-VPV" firstAttribute="top" secondItem="NtZ-tC-tio" secondAttribute="top" constant="8" id="c6G-Dz-7o4"/>
+                            <constraint firstItem="9bG-f9-nKD" firstAttribute="top" secondItem="NtZ-tC-tio" secondAttribute="top" constant="100" id="ekx-Nc-X6V"/>
+                            <constraint firstItem="3Q7-px-H5S" firstAttribute="leading" secondItem="FWL-lH-VPV" secondAttribute="trailing" constant="8" id="zLx-Bh-mWM"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="NtZ-tC-tio"/>
+                    </view>
+                    <connections>
+                        <outlet property="aboutTextView" destination="pyx-d9-7cb" id="KnS-FS-hFt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="obc-y7-K3C" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="6zE-9P-1uY" customClass="AboutInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="Jxi-gj-SMg" id="UJk-Af-C4J"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="1605.7971014492755" y="1681.4732142857142"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="baseline_keyboard_backspace_white_48pt" width="48" height="48"/>
+        <image name="bg9" width="960" height="1440"/>
+        <image name="gradient_layer" width="359" height="641"/>
+        <image name="logo_white" width="721" height="101"/>
+        <image name="ruuvi_station" width="300" height="208"/>
+    </resources>
+</document>
