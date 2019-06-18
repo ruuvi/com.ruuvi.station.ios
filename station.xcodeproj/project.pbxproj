@@ -141,6 +141,18 @@
 		0EEB213522B8CE810015F9E0 /* ChartPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */; };
 		0EEB213722B8D6850015F9E0 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213622B8D6850015F9E0 /* ChartViewModel.swift */; };
 		0EEB213922B8D7BC0015F9E0 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213822B8D7BC0015F9E0 /* DateValueFormatter.swift */; };
+		0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */; };
+		0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */; };
+		0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */; };
+		0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214322B8FBC50015F9E0 /* MainConfigurator.swift */; };
+		0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214622B8FC3E0015F9E0 /* WelcomeViewInput.swift */; };
+		0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214822B8FC570015F9E0 /* WelcomeViewOutput.swift */; };
+		0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214B22B8FCC70015F9E0 /* WelcomeRouterInput.swift */; };
+		0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214D22B8FCDC0015F9E0 /* WelcomeRouter.swift */; };
+		0EEB215122B8FD070015F9E0 /* WelcomeModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215022B8FD070015F9E0 /* WelcomeModuleInput.swift */; };
+		0EEB215322B8FD1F0015F9E0 /* WelcomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215222B8FD1F0015F9E0 /* WelcomePresenter.swift */; };
+		0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215522B8FD590015F9E0 /* WelcomeInitializer.swift */; };
+		0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -308,6 +320,18 @@
 		0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresentationController.swift; sourceTree = "<group>"; };
 		0EEB213622B8D6850015F9E0 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
 		0EEB213822B8D7BC0015F9E0 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
+		0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
+		0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationDelegate.swift; sourceTree = "<group>"; };
+		0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInitializer.swift; sourceTree = "<group>"; };
+		0EEB214322B8FBC50015F9E0 /* MainConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainConfigurator.swift; sourceTree = "<group>"; };
+		0EEB214622B8FC3E0015F9E0 /* WelcomeViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewInput.swift; sourceTree = "<group>"; };
+		0EEB214822B8FC570015F9E0 /* WelcomeViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewOutput.swift; sourceTree = "<group>"; };
+		0EEB214B22B8FCC70015F9E0 /* WelcomeRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeRouterInput.swift; sourceTree = "<group>"; };
+		0EEB214D22B8FCDC0015F9E0 /* WelcomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeRouter.swift; sourceTree = "<group>"; };
+		0EEB215022B8FD070015F9E0 /* WelcomeModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeModuleInput.swift; sourceTree = "<group>"; };
+		0EEB215222B8FD1F0015F9E0 /* WelcomePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePresenter.swift; sourceTree = "<group>"; };
+		0EEB215522B8FD590015F9E0 /* WelcomeInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeInitializer.swift; sourceTree = "<group>"; };
+		0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeConfigurator.swift; sourceTree = "<group>"; };
 		377033B3FEFC65CFFCC57708 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -449,6 +473,9 @@
 			isa = PBXGroup;
 			children = (
 				64333D2C20B0C45900CDF4B6 /* Main.storyboard */,
+				0EEB213D22B8FB6B0015F9E0 /* Transition */,
+				0EEB214022B8FB930015F9E0 /* Assembly */,
+				0EEB213A22B8FABD0015F9E0 /* Router */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -457,7 +484,10 @@
 			isa = PBXGroup;
 			children = (
 				0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */,
-				0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */,
+				0EEB215422B8FD440015F9E0 /* Assembly */,
+				0EEB214F22B8FCF80015F9E0 /* Presenter */,
+				0EEB214A22B8FCB50015F9E0 /* Router */,
+				0EEB214522B8FC2E0015F9E0 /* View */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -1220,6 +1250,68 @@
 			path = Transition;
 			sourceTree = "<group>";
 		};
+		0EEB213A22B8FABD0015F9E0 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0EEB213D22B8FB6B0015F9E0 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */,
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
+		0EEB214022B8FB930015F9E0 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */,
+				0EEB214322B8FBC50015F9E0 /* MainConfigurator.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EEB214522B8FC2E0015F9E0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB214622B8FC3E0015F9E0 /* WelcomeViewInput.swift */,
+				0EEB214822B8FC570015F9E0 /* WelcomeViewOutput.swift */,
+				0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0EEB214A22B8FCB50015F9E0 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB214B22B8FCC70015F9E0 /* WelcomeRouterInput.swift */,
+				0EEB214D22B8FCDC0015F9E0 /* WelcomeRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0EEB214F22B8FCF80015F9E0 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB215022B8FD070015F9E0 /* WelcomeModuleInput.swift */,
+				0EEB215222B8FD1F0015F9E0 /* WelcomePresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0EEB215422B8FD440015F9E0 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB215522B8FD590015F9E0 /* WelcomeInitializer.swift */,
+				0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1505,14 +1597,18 @@
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
+				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
+				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
+				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0E502FC422B285B900E8A6CC /* RuuviTagAddTransitioningDelegate.swift in Sources */,
 				0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				0E1C1DDA22B3C1AF0032F6CA /* DashboardScrollViewController.swift in Sources */,
+				0EEB215322B8FD1F0015F9E0 /* WelcomePresenter.swift in Sources */,
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* DashboardViewOutput.swift in Sources */,
 				0EEB212722B8C7610015F9E0 /* ChartPresenter.swift in Sources */,
@@ -1534,13 +1630,16 @@
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
+				0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */,
 				0EEB213122B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
+				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
+				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0EEB212B22B8C7B70015F9E0 /* ChartConfigurator.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
@@ -1557,7 +1656,9 @@
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
+				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,
 				0E502FC622B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift in Sources */,
+				0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */,
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
 				0EEB211D22B8C5CB0015F9E0 /* ChartViewInput.swift in Sources */,
 				0EEB212922B8C78A0015F9E0 /* ChartInitializer.swift in Sources */,
@@ -1579,6 +1680,7 @@
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
+				0EEB215122B8FD070015F9E0 /* WelcomeModuleInput.swift in Sources */,
 				0E502FCD22B2876A00E8A6CC /* RuuviTagRouter.swift in Sources */,
 				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
@@ -1596,6 +1698,7 @@
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
+				0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */,
 				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,
 				0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */,
 				0E1C1DE822B3C2B60032F6CA /* DashboardScrollInitializer.swift in Sources */,
@@ -1610,6 +1713,7 @@
 				0E1C1DE422B3C2710032F6CA /* DashboardRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* DashboardRouterInput.swift in Sources */,
+				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,

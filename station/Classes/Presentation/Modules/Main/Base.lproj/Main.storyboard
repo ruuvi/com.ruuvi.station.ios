@@ -21,6 +21,11 @@
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sfl-eQ-XKp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="rNp-yL-vYr" customClass="MainInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="navigationController" destination="WBe-yq-UV6" id="CN5-ha-uDG"/>
+                    </connections>
+                </customObject>
             </objects>
             <point key="canvasLocation" x="686" y="757"/>
         </scene>

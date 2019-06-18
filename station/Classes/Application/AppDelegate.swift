@@ -7,6 +7,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let r = AppAssembly.shared.assembler.resolver
+        if let settings = r.resolve(Settings.self),
+            settings.welcomeShown {
+            let mainRouter = MainRouter.shared
+            mainRouter.openDashboard()
+        }
         return true
     }
 
