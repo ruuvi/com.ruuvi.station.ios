@@ -70,6 +70,22 @@ extension DashboardScrollViewController: DashboardViewInput {
         }))
         present(alert, animated: true)
     }
+    
+    func scroll(to index: Int) {
+        let key = "DashboardScrollViewController.hasShownSwipeAlert"
+        if viewModels.count > 1 && !UserDefaults.standard.bool(forKey: key) {
+            UserDefaults.standard.set(true, forKey: key)
+            let alert = UIAlertController(title: "Dashboard.SwipeAlert.title".localized(), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+            present(alert, animated: true)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let sSelf = self else { return }
+            let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
+            sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+        }
+    }
 }
 
 // MARK: - IBActions
