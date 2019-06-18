@@ -15,11 +15,27 @@
             <objects>
                 <viewController storyboardIdentifier="ChartViewController" id="12Y-DI-t3V" customClass="ChartViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XM5-Id-j6g">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sni-3W-Dwo" customClass="LineChartView" customModule="Charts">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="sni-3W-Dwo" secondAttribute="bottom" id="E8r-wD-Dyd"/>
+                            <constraint firstItem="sni-3W-Dwo" firstAttribute="leading" secondItem="x4z-OL-IOf" secondAttribute="leading" id="JcV-p1-N0R"/>
+                            <constraint firstItem="sni-3W-Dwo" firstAttribute="trailing" secondItem="x4z-OL-IOf" secondAttribute="trailing" id="wDs-vx-38R"/>
+                            <constraint firstItem="sni-3W-Dwo" firstAttribute="top" secondItem="XM5-Id-j6g" secondAttribute="top" id="y4e-3c-bjd"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="x4z-OL-IOf"/>
                     </view>
+                    <size key="freeformSize" width="414" height="414"/>
+                    <connections>
+                        <outlet property="chartView" destination="sni-3W-Dwo" id="gIl-eP-noc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M7D-nl-wFc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="CAE-Hu-whs" customClass="ChartInitializer" customModule="station" customModuleProvider="target">
@@ -28,6 +44,7 @@
                     </connections>
                 </customObject>
             </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="59.598214285714285"/>
         </scene>
     </scenes>
 </document>
