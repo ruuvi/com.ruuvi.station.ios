@@ -5,9 +5,11 @@ class ChartPresenter: ChartModuleInput {
     var router: ChartRouterInput!
     
     private var ruuviTag: RuuviTagRealm!
+    private var type: ChartDataType!
     
-    func configure(ruuviTag: RuuviTagRealm) {
+    func configure(ruuviTag: RuuviTagRealm, type: ChartDataType) {
         self.ruuviTag = ruuviTag
+        self.type = type
     }
 }
 
