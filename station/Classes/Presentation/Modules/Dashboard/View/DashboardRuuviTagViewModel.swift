@@ -10,6 +10,7 @@ struct DashboardRuuviTagViewModel {
     var version: Int
     var voltage: Double?
     var background: UIImage?
+    var mac: String?
     
     var fahrenheit: Double {
         return (celsius * 9.0/5.0) + 32.0
