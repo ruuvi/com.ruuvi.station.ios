@@ -139,6 +139,8 @@
 		0EEB213122B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213022B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift */; };
 		0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213222B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift */; };
 		0EEB213522B8CE810015F9E0 /* ChartPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */; };
+		0EEB213722B8D6850015F9E0 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213622B8D6850015F9E0 /* ChartViewModel.swift */; };
+		0EEB213922B8D7BC0015F9E0 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213822B8D7BC0015F9E0 /* DateValueFormatter.swift */; };
 		43946BF026751FE2EA3BEF98 /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5251CA981EE0EEF099607F59 /* Pods_station.framework */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
@@ -304,6 +306,8 @@
 		0EEB213022B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0EEB213222B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresentationController.swift; sourceTree = "<group>"; };
+		0EEB213622B8D6850015F9E0 /* ChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
+		0EEB213822B8D7BC0015F9E0 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
 		2C9489BF1CAEEB8954E1625E /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		5251CA981EE0EEF099607F59 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1169,6 +1173,8 @@
 		0EEB211422B8C49B0015F9E0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0EEB213822B8D7BC0015F9E0 /* DateValueFormatter.swift */,
+				0EEB213622B8D6850015F9E0 /* ChartViewModel.swift */,
 				0EEB211C22B8C5CB0015F9E0 /* ChartViewInput.swift */,
 				0EEB211E22B8C5E70015F9E0 /* ChartViewOutput.swift */,
 				0EEB211A22B8C5B70015F9E0 /* ChartViewController.swift */,
@@ -1510,6 +1516,7 @@
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* DashboardViewOutput.swift in Sources */,
 				0EEB212722B8C7610015F9E0 /* ChartPresenter.swift in Sources */,
+				0EEB213922B8D7BC0015F9E0 /* DateValueFormatter.swift in Sources */,
 				0E502FAE22B27A4E00E8A6CC /* RuuviTagViewOutput.swift in Sources */,
 				0EEB212122B8C6040015F9E0 /* ChartRouterInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
@@ -1542,6 +1549,7 @@
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
+				0EEB213722B8D6850015F9E0 /* ChartViewModel.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
