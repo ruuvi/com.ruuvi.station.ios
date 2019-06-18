@@ -100,6 +100,15 @@ extension DashboardScrollViewController {
     }
 }
 
+// MARK: - DashboardRuuviTagViewDelegate
+extension DashboardScrollViewController: DashboardRuuviTagViewDelegate {
+    func dashboardRuuviTag(view: DashboardRuuviTagView, didTapOnRSSI sender: Any?) {
+        if currentPage >= 0 && currentPage < viewModels.count {
+            output.viewDidTapOnRSSI(for: viewModels[currentPage])
+        }
+    }
+}
+
 // MARK: - Configure view
 extension DashboardScrollViewController {
     private func configure(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
@@ -145,6 +154,7 @@ extension DashboardScrollViewController {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
                     let view = Bundle.main.loadNibNamed("DashboardRuuviTagView", owner: self, options: nil)?.first as! DashboardRuuviTagView
+                    view.delegate = self
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)

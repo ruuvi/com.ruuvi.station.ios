@@ -4,6 +4,20 @@ class DashboardRouter: DashboardRouterInput {
     weak var transitionHandler: TransitionHandler!
     
     private lazy var menuTableTransitioningDelegate = MenuTableTransitioningDelegate()
+    private lazy var chartTransitioningDelegate = ChartTransitioningDelegate()
+    
+    
+    func openChart(ruuviTag: RuuviTagRealm, type: ChartDataType) {
+        let factory = StoryboardFactory(storyboardName: "Chart")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: ChartModuleInput.self)
+            .add(transitioningDelegate: chartTransitioningDelegate)
+            .apply(to: { (viewController) in
+                viewController.modalPresentationStyle = .custom
+            }).then({ (module) -> Any? in
+                module.configure(ruuviTag: ruuviTag, type: type)
+            })
+    }
     
     func openMenu(output: MenuModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Menu")

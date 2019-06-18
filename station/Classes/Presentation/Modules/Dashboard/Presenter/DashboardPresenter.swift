@@ -80,6 +80,12 @@ extension DashboardPresenter: DashboardViewOutput {
             })
         }
     }
+    
+    func viewDidTapOnRSSI(for viewModel: DashboardRuuviTagViewModel) {
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
+            router.openChart(ruuviTag: ruuviTag, type: .rssi)
+        }   
+    }
 }
 
 // MARK: - MenuModuleOutput
