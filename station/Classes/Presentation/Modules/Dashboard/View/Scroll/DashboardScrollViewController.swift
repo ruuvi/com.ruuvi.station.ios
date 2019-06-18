@@ -58,7 +58,11 @@ extension DashboardScrollViewController: DashboardViewInput {
         let alert = UIAlertController(title: "Dashboard.settings.rename.title.EnterAName".localized(), message: nil, preferredStyle: .alert)
         alert.addTextField { (textField) in
             textField.autocapitalizationType = UITextAutocapitalizationType.sentences
-            textField.text = viewModel.name
+            if viewModel.name == viewModel.uuid || viewModel.name == viewModel.mac {
+                textField.text = nil
+            } else {
+                textField.text = viewModel.name
+            }
         }
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak alert, weak self] (action) in
             let textField = alert?.textFields![0]
