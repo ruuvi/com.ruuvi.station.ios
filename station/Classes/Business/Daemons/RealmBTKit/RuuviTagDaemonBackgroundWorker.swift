@@ -57,6 +57,8 @@ class RuuviTagDaemonBackgroundWorker: BackgroundWorker, RuuviTagDaemon {
     }
     
     deinit {
+        observeTokens.forEach( { $0.invalidate() })
+        observeTokens.removeAll()
         token?.invalidate()
     }
 }
