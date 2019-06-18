@@ -135,6 +135,10 @@
 		0EEB212722B8C7610015F9E0 /* ChartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB212622B8C7610015F9E0 /* ChartPresenter.swift */; };
 		0EEB212922B8C78A0015F9E0 /* ChartInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB212822B8C78A0015F9E0 /* ChartInitializer.swift */; };
 		0EEB212B22B8C7B70015F9E0 /* ChartConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB212A22B8C7B70015F9E0 /* ChartConfigurator.swift */; };
+		0EEB212F22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB212E22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift */; };
+		0EEB213122B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213022B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift */; };
+		0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213222B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift */; };
+		0EEB213522B8CE810015F9E0 /* ChartPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */; };
 		43946BF026751FE2EA3BEF98 /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5251CA981EE0EEF099607F59 /* Pods_station.framework */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
@@ -296,6 +300,10 @@
 		0EEB212622B8C7610015F9E0 /* ChartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresenter.swift; sourceTree = "<group>"; };
 		0EEB212822B8C78A0015F9E0 /* ChartInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInitializer.swift; sourceTree = "<group>"; };
 		0EEB212A22B8C7B70015F9E0 /* ChartConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartConfigurator.swift; sourceTree = "<group>"; };
+		0EEB212E22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartTransitioningDelegate.swift; sourceTree = "<group>"; };
+		0EEB213022B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresentTransitionAnimation.swift; sourceTree = "<group>"; };
+		0EEB213222B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDismissTransitionAnimation.swift; sourceTree = "<group>"; };
+		0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPresentationController.swift; sourceTree = "<group>"; };
 		2C9489BF1CAEEB8954E1625E /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		5251CA981EE0EEF099607F59 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1150,6 +1158,7 @@
 			children = (
 				0EEB211822B8C4B50015F9E0 /* Chart.storyboard */,
 				0EEB211722B8C4A80015F9E0 /* Assembly */,
+				0EEB212D22B8CD800015F9E0 /* Transition */,
 				0EEB211622B8C4A30015F9E0 /* Presenter */,
 				0EEB211522B8C49F0015F9E0 /* Router */,
 				0EEB211422B8C49B0015F9E0 /* View */,
@@ -1192,6 +1201,17 @@
 				0EEB212A22B8C7B70015F9E0 /* ChartConfigurator.swift */,
 			);
 			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EEB212D22B8CD800015F9E0 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB212E22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift */,
+				0EEB213022B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift */,
+				0EEB213222B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift */,
+				0EEB213422B8CE810015F9E0 /* ChartPresentationController.swift */,
+			);
+			path = Transition;
 			sourceTree = "<group>";
 		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
@@ -1505,7 +1525,9 @@
 				0EEB20C622B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
+				0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
+				0EEB213122B8CE430015F9E0 /* ChartPresentTransitionAnimation.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
@@ -1538,6 +1560,7 @@
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */,
+				0EEB213522B8CE810015F9E0 /* ChartPresentationController.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
 				0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */,
@@ -1583,6 +1606,7 @@
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
+				0EEB212F22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift in Sources */,
 				0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */,
 				0E502FB222B27AA800E8A6CC /* RuuviTagPresenter.swift in Sources */,
 				0EEB211B22B8C5B70015F9E0 /* ChartViewController.swift in Sources */,
