@@ -4,14 +4,9 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-    private var daemon: RuuviTagDaemon!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let r = AppAssembly.shared.assembler.resolver
-        daemon = r.resolve(RuuviTagDaemon.self)!
-        daemon.startSavingBroadcasts()
         return true
     }
 
