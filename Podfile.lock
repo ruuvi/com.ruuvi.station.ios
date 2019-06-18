@@ -9,6 +9,9 @@ PODS:
     - BTKit/Scanner
   - BTKit/Scanner (0.0.1):
     - BTKit/Devices
+  - Charts (3.3.0):
+    - Charts/Core (= 3.3.0)
+  - Charts/Core (3.3.0)
   - DateToolsSwift (4.0.0)
   - EmptyDataSet-Swift (4.2.0)
   - FutureX (1.0)
@@ -23,6 +26,7 @@ PODS:
 
 DEPENDENCIES:
   - BTKit (from `../BTKit`)
+  - Charts
   - DateToolsSwift
   - EmptyDataSet-Swift
   - FutureX
@@ -33,6 +37,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Charts
     - DateToolsSwift
     - EmptyDataSet-Swift
     - FutureX
@@ -54,6 +59,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
+  Charts: ec1f57f9340054155691e84d4544a1d239d382c5
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
@@ -63,6 +69,6 @@ SPEC CHECKSUMS:
   RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
 
-PODFILE CHECKSUM: 6cd1be6fde97effc5d09f36af63a654df8c62541
+PODFILE CHECKSUM: 103c410f23f7c67a03216c7694e3b2500059a450
 
 COCOAPODS: 1.7.0
