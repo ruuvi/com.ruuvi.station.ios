@@ -34,17 +34,16 @@ extension ChartPresenter {
     private func startObservingData() {
         dataToken = ruuviTag.data.observe({ [weak self] (change) in
             guard let sSelf = self else { return }
-            
             switch change {
             case .initial(let data):
-                sSelf.view.data = data.map({ (tagData) -> ChartViewModel in
+                sSelf.view.data = data.suffix(20).map({ (tagData) -> ChartViewModel in
                     switch sSelf.type {
                     case .rssi:
                         return ChartViewModel(date: tagData.date, value: Double(tagData.rssi))
                     }
                 })
             case .update(let data, _, _, _):
-                sSelf.view.data = data.map({ (tagData) -> ChartViewModel in
+                sSelf.view.data = data.suffix(20).map({ (tagData) -> ChartViewModel in
                     switch sSelf.type {
                     case .rssi:
                         return ChartViewModel(date: tagData.date, value: Double(tagData.rssi))
