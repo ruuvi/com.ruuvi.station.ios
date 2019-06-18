@@ -92,7 +92,10 @@ extension DashboardScrollViewController: DashboardViewInput {
 extension DashboardScrollViewController {
     @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
         if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[currentPage])
+            let viewModel = viewModels[currentPage]
+            if let viewModel = ruuviTagViews.keys.first(where: { $0.uuid == viewModel.uuid }) {
+                output.viewDidTriggerSettings(for: viewModel)
+            }
         }
     }
     
@@ -124,7 +127,10 @@ extension DashboardScrollViewController {
 extension DashboardScrollViewController: DashboardRuuviTagViewDelegate {
     func dashboardRuuviTag(view: DashboardRuuviTagView, didTapOnRSSI sender: Any?) {
         if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTapOnRSSI(for: viewModels[currentPage])
+            let viewModel = viewModels[currentPage]
+            if let viewModel = ruuviTagViews.keys.first(where: { $0.uuid == viewModel.uuid }) {
+                output.viewDidTapOnRSSI(for: viewModel)
+            }
         }
     }
 }
