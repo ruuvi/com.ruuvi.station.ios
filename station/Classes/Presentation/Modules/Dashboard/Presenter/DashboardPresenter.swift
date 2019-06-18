@@ -19,13 +19,15 @@ class DashboardPresenter: DashboardModuleInput {
         didSet {
             if let ruuviTags = ruuviTags {
                 view.viewModels = ruuviTags.map( {
-                    return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: $0.data.last?.celsius ?? 0, humidity: $0.data.last?.humidity ?? 0, pressure: $0.data.last?.pressure ?? 0, rssi: $0.data.last?.rssi ?? 0, version: $0.version, voltage: $0.data.last?.voltage.value, background: backgroundPersistence.background(for: $0.uuid), mac: $0.mac)
+                    let last = lastValues[$0.uuid]
+                    return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: last?.celsius ?? 0, humidity: last?.humidity ?? 0, pressure: last?.pressure ?? 0, rssi: last?.rssi ?? 0, version: $0.version, voltage: last?.voltage, background: backgroundPersistence.background(for: $0.uuid), mac: $0.mac)
                 } )
             } else {
                 view.viewModels = []
             }
         }
     }
+    private var lastValues: [String:RuuviTag] = [String:RuuviTag]()
     
     deinit {
         ruuviTagsToken?.invalidate()
@@ -124,10 +126,11 @@ extension DashboardPresenter {
         observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()
         for viewModel in view.viewModels {
-            observeTokens.append(scanner.observe(self, uuid: viewModel.uuid) { (observer, device) in
+            observeTokens.append(scanner.observe(self, uuid: viewModel.uuid) { [weak self] (observer, device) in
                 if let tagData = device.ruuvi?.tag {
                     let model = DashboardRuuviTagViewModel(uuid: viewModel.uuid, name: viewModel.name, celsius: tagData.celsius, humidity: tagData.humidity, pressure: tagData.pressure, rssi: tagData.rssi, version: tagData.version, voltage: tagData.voltage, background: viewModel.background, mac: viewModel.mac)
                     observer.view.reload(viewModel: model)
+                    self?.lastValues[tagData.uuid] = tagData
                 }
             })
         }
