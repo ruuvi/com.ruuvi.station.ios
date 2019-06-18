@@ -1,4 +1,3 @@
-import RealmSwift
 import BTKit
 import RealmSwift
 
@@ -39,7 +38,7 @@ class RuuviTagDaemonBackgroundWorker: BackgroundWorker, RuuviTagDaemon {
         observeTokens.forEach( { $0.invalidate() })
         observeTokens.removeAll()
         for ruuviTag in ruuviTags {
-            scanner.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
+            observeTokens.append(scanner.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag {
                     let tagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: tag)
@@ -49,7 +48,7 @@ class RuuviTagDaemonBackgroundWorker: BackgroundWorker, RuuviTagDaemon {
                             waitUntilDone: false,
                             modes: [RunLoop.Mode.default.rawValue])
                 }
-            }
+            })
         }
     }
     
