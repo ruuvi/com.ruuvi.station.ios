@@ -20,7 +20,7 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
     
-    var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
+    var isBluetoothEnabled: Bool = true { didSet { updateUIISBluetoothEnabled() } }
     
     private var emptyDataSetView: UIView?
     private let cellReuseIdentifier = "DiscoverTableViewCellReuseIdentifier"
@@ -51,6 +51,7 @@ extension DiscoverTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        updateUI()
         output.viewDidLoad()
     }
     
