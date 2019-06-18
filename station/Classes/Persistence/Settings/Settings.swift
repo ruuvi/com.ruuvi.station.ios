@@ -6,4 +6,5 @@ extension Notification.Name {
 
 protocol Settings {
     var temperatureUnit: TemperatureUnit { get set }
+    var welcomeShown: Bool { get set }
 }
