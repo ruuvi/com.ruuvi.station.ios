@@ -145,8 +145,11 @@ extension DashboardPresenter {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags
                 self?.startScanningRuuviTags()
-            case .update(let ruuviTags, _, _, _):
+            case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
+                if let index = insertions.last {
+                    self?.view.scroll(to: index)
+                }
                 self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)

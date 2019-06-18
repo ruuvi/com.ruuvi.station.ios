@@ -9,4 +9,5 @@ protocol DashboardViewInput: ViewInput {
     func reload(viewModel: DashboardRuuviTagViewModel)
     func showMenu(for viewModel: DashboardRuuviTagViewModel)
     func showRenameDialog(for viewModel: DashboardRuuviTagViewModel)
+    func scroll(to index: Int)
 }
