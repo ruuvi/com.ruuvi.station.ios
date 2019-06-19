@@ -52,8 +52,9 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        animations: {
                         fromView.frame = finalFrame
         }) { (finished) -> Void in
-            
-            fromView.removeFromSuperview()
+            if !transitionContext.transitionWasCancelled {
+                fromView.removeFromSuperview()
+            }
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
