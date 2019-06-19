@@ -5,6 +5,8 @@ class MainInitializer: NSObject {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        let r = AppAssembly.shared.assembler.resolver
+        r.resolve(MigrationManager.self)?.migrateIfNeeded()
         MainConfigurator().configure(navigationController: navigationController)
     }
 }
