@@ -18,6 +18,7 @@ class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDel
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let controller = MenuTablePresentationController(presentedViewController: presented, presenting: presenting)
         controller.menuWidth = manager.menuWidth
+        controller.dismissTransition = dismiss
         return controller
     }
     

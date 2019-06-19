@@ -4,14 +4,12 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
     
     var manager: MenuTableTransitionManager
     
-    var presentDirection: UIRectEdge = .left
-    
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
     
     @objc internal func handlePresentMenuLeftScreenEdge(_ edge: UIScreenEdgePanGestureRecognizer) {
-        presentDirection = .left
+        manager.presentDirection = .left
         handlePresentMenuPan(edge)
     }
     
@@ -61,14 +59,14 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
             }
             
             if !(pan is UIScreenEdgePanGestureRecognizer) {
-                presentDirection = translation.x > 0 ? .left : .right
+                manager.presentDirection = translation.x > 0 ? .left : .right
             }
             
             manager.isInteractive = true
             manager.container.present(manager.menu, animated: true)
         }
         
-        let direction: CGFloat = presentDirection == .left ? 1 : -1
+        let direction: CGFloat = manager.presentDirection == .left ? 1 : -1
         let distance = translation.x / manager.menuWidth
         // now lets deal with different states that the gesture recognizer sends
         switch (pan.state) {

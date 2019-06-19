@@ -24,8 +24,6 @@ class DashboardScrollConfigurator {
         menuPresenter.configure(output: presenter)
         
         let manager = MenuTableTransitionManager(container: view, menu: menu)
-        router.menuTableTransition = MenuTableTransitioningDelegate(manager: manager)
-        
         let transition = MenuTableTransitioningDelegate(manager: manager)
         router.menuTableInteractiveTransition = transition
         menu.transitioningDelegate = transition
