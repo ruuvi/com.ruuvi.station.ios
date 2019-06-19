@@ -9,5 +9,9 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
         
+        container.register(MigrationManager.self) { r in
+            let manager = MigrationManagerToVIPER()
+            return manager
+        }
     }
 }
