@@ -67,7 +67,7 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         }
         
         let direction: CGFloat = manager.presentDirection == .left ? 1 : -1
-        let distance = translation.x / manager.menuWidth
+        let distance = translation.x / MenuTableTransitionManager.appScreenRect.width
         // now lets deal with different states that the gesture recognizer sends
         switch (pan.state) {
         case .began, .changed:

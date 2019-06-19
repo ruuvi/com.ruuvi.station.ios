@@ -8,7 +8,7 @@ class MenuTableTransitionManager: NSObject {
     var isInteractive: Bool = false
     var presentDirection: UIRectEdge = .left
     
-    private static var appScreenRect: CGRect {
+    static var appScreenRect: CGRect {
         let appWindowRect = UIApplication.shared.keyWindow?.bounds ?? UIWindow().bounds
         return appWindowRect
     }

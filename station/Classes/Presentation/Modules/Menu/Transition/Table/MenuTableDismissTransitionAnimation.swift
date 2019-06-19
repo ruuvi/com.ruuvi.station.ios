@@ -11,7 +11,7 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
     @objc internal func handleHideMenuPan(_ pan: UIPanGestureRecognizer) {
         let translation = pan.translation(in: pan.view!)
         let direction: CGFloat = manager.presentDirection == .left ? -1 : 1
-        let distance = translation.x / manager.menuWidth * direction
+        let distance = translation.x / MenuTableTransitionManager.appScreenRect.width * direction
         
         switch (pan.state) {
         case .began:
