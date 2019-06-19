@@ -6,14 +6,6 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
     
     var presentDirection: UIRectEdge = .left
     
-    private var switchMenus = false {
-        didSet {
-            if switchMenus {
-                cancel()
-            }
-        }
-    }
-    
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
@@ -53,16 +45,6 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
     }
     
     func handlePresentMenuPan(_ pan: UIPanGestureRecognizer) {
-//        if activeGesture == nil {
-//            activeGesture = pan
-//        } else if pan != activeGesture {
-//            pan.isEnabled = false
-//            pan.isEnabled = true
-//            return
-//        } else if pan.state != .began && pan.state != .changed {
-//            activeGesture = nil
-//        }
-        
         guard let view = pan.view else {
             return
         }
@@ -92,17 +74,6 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         switch (pan.state) {
         case .began, .changed:
             update(min(distance * direction, 1))
-//            if pan is UIScreenEdgePanGestureRecognizer {
-//                update(min(distance * direction, 1))
-//            } else if distance > 0 && presentDirection == .right && sideMenuManager.menuLeftNavigationController != nil {
-//                presentDirection = .left
-//                switchMenus = true
-//            } else if distance < 0 && presentDirection == .left && sideMenuManager.menuRightNavigationController != nil {
-//                presentDirection = .right
-//                switchMenus = true
-//            } else {
-//                update(min(distance * direction, 1))
-//            }
         default:
             manager.isInteractive = false
             view.transform = .identity
