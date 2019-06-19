@@ -8,6 +8,39 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
         self.manager = manager
     }
     
+    
+    @objc internal func handleHideMenuPan(_ pan: UIPanGestureRecognizer) {
+//        if activeGesture == nil {
+//            activeGesture = pan
+//        } else if pan != activeGesture {
+//            pan.isEnabled = false
+//            pan.isEnabled = true
+//            return
+//        }
+
+        let translation = pan.translation(in: pan.view!)
+        let direction: CGFloat = manager.presentDirection == .left ? -1 : 1
+        let distance = translation.x / manager.menuWidth * direction
+        
+        switch (pan.state) {
+        case .began:
+            manager.isInteractive = true
+            manager.menu.dismiss(animated: true)
+        case .changed:
+            update(max(min(distance, 1), 0))
+        default:
+            manager.isInteractive = false
+            let velocity = pan.velocity(in: pan.view!).x * direction
+            if velocity >= 100 || velocity >= -50 && distance >= 0.5 {
+                finish()
+//                activeGesture = nil
+            } else {
+                cancel()
+//                activeGesture = nil
+            }
+        }
+    }
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.35
     }

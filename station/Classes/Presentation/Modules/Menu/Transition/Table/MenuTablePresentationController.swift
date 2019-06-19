@@ -3,18 +3,27 @@ import UIKit
 class MenuTablePresentationController: UIPresentationController {
     
     var menuWidth: CGFloat = 0
+    var dismissTransition: MenuTableDismissTransitionAnimation!
     
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.7)
         view.alpha = 0
         view.addGestureRecognizer(tapGestureRecognizer)
+        view.addGestureRecognizer(panGestureRecognizer)
         return view
     }()
     
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer(target: self, action: #selector(MenuTablePresentationController.dimmingViewTapped(_:)))
         return tap
+    }()
+    
+    private lazy var panGestureRecognizer: UIPanGestureRecognizer = {
+        let exitPanGesture = UIPanGestureRecognizer()
+        exitPanGesture.cancelsTouchesInView = false
+        exitPanGesture.addTarget(dismissTransition as Any, action:#selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
+        return exitPanGesture
     }()
     
     
