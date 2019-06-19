@@ -3,9 +3,10 @@ import LightRoute
 class DashboardRouter: DashboardRouterInput {
     weak var transitionHandler: TransitionHandler!
     
-    private lazy var menuTableTransitioningDelegate = MenuTableTransitioningDelegate()
-    private lazy var chartTransitioningDelegate = ChartTransitioningDelegate()
+    var menuTableTransition: MenuTableTransitioningDelegate!
+    var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
     
+    private lazy var chartTransitioningDelegate = ChartTransitioningDelegate()
     
     func openChart(ruuviTag: RuuviTagRealm, type: ChartDataType) {
         let factory = StoryboardFactory(storyboardName: "Chart")
@@ -23,7 +24,7 @@ class DashboardRouter: DashboardRouterInput {
         let factory = StoryboardFactory(storyboardName: "Menu")
         try! transitionHandler
             .forStoryboard(factory: factory, to: MenuModuleInput.self)
-            .add(transitioningDelegate: menuTableTransitioningDelegate)
+            .add(transitioningDelegate: menuTableTransition)
             .apply(to: { (viewController) in
                 viewController.modalPresentationStyle = .custom
             }).then({ (module) -> Any? in
