@@ -2,6 +2,8 @@ import UIKit
 
 class MenuTablePresentationController: UIPresentationController {
     
+    var menuWidth: CGFloat = 0
+    
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.7)
@@ -29,7 +31,7 @@ class MenuTablePresentationController: UIPresentationController {
     }
     
     override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
-        return CGSize(width: parentSize.width / 1.5, height: parentSize.height)
+        return CGSize(width: menuWidth, height: parentSize.height)
     }
     
     override var frameOfPresentedViewInContainerView: CGRect {

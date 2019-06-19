@@ -3,6 +3,8 @@ import Localize_Swift
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
+    var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
+    var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -108,7 +110,9 @@ extension DashboardScrollViewController {
 extension DashboardScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureViews()
         updateUI()
+        configureViews()
         output.viewDidLoad()
     }
     
@@ -156,6 +160,21 @@ extension DashboardScrollViewController {
             view.temperatureLabel.text = String(format: "%.2f", viewModel.fahrenheit)
             view.temperatureUnitLabel.text = "°F"
         }
+    }
+}
+
+// MARK: - View configuration
+extension DashboardScrollViewController {
+    private func configureViews() {
+        configureEdgeGestureRecognozer()
+    }
+    
+    private func configureEdgeGestureRecognozer() {
+        let leftScreenEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer()
+        leftScreenEdgeGestureRecognizer.cancelsTouchesInView = true
+        scrollView.addGestureRecognizer(leftScreenEdgeGestureRecognizer)
+        leftScreenEdgeGestureRecognizer.addTarget(menuPresentInteractiveTransition as Any, action:#selector(MenuTablePresentTransitionAnimation.handlePresentMenuLeftScreenEdge(_:)))
+        leftScreenEdgeGestureRecognizer.edges = .left
     }
 }
 

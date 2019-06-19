@@ -1,6 +1,12 @@
 import UIKit
 
-class MenuTableDismissTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
+    
+    var manager: MenuTableTransitionManager
+    
+    init(manager: MenuTableTransitionManager) {
+        self.manager = manager
+    }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.35
