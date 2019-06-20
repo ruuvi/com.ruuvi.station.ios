@@ -24,12 +24,19 @@ class DashboardScrollViewController: UIViewController {
 
 // MARK: - DashboardViewInput
 extension DashboardScrollViewController: DashboardViewInput {
+
     func localize() {
         
     }
     
     func apply(theme: Theme) {
         
+    }
+
+    func showBluetoothDisabled() {
+        let alertVC = UIAlertController(title: "Dashboard.BluetoothDisabledAlert.title".localized(), message: "Dashboard.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
     }
     
     func reload(viewModel: DashboardRuuviTagViewModel) {

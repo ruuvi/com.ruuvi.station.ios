@@ -15,6 +15,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var settingsToken: NSObjectProtocol?
+    private var stateToken: ObservationToken?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             if let ruuviTags = ruuviTags {
@@ -32,6 +33,7 @@ class DashboardPresenter: DashboardModuleInput {
     deinit {
         ruuviTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
+        stateToken?.invalidate()
         if let settingsToken = settingsToken {
             NotificationCenter.default.removeObserver(settingsToken)
         }
@@ -47,10 +49,12 @@ extension DashboardPresenter: DashboardViewOutput {
     
     func viewWillAppear() {
         startScanningRuuviTags()
+        startObservingBluetoothState()
     }
     
     func viewWillDisappear() {
         stopScanningRuuviTags()
+        stopObservingBluetoothState()
     }
     
     func viewDidTriggerMenu() {
@@ -115,6 +119,19 @@ extension DashboardPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
+    private func startObservingBluetoothState() {
+        stateToken = scanner.state(self, closure: { (observer, state) in
+            if state != .poweredOn {
+                observer.view.showBluetoothDisabled()
+            }
+        })
+    }
+    
+    private func stopObservingBluetoothState() {
+        stateToken?.invalidate()
+    }
+    
+    
     private func startListeningToSettings() {
         settingsToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
             guard let sSelf = self else { return }
