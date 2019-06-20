@@ -66,9 +66,11 @@ extension DashboardScrollViewController: DashboardViewInput {
         controller.addAction(UIAlertAction(title: "Dashboard.settings.calibrateHumidity.title".localized(), style: .default, handler: { [weak self] (action) in
             self?.output.viewDidAskToCalibrateHumidity(viewModel: viewModel)
         }))
-        controller.addAction(UIAlertAction(title: "Dashboard.settings.cleanHumidityCalibration.title".localized(), style: .default, handler: { [weak self] (action) in
-            self?.output.viewDidAskToClearHumidityCalibration(viewModel: viewModel)
-        }))
+        if viewModel.humidityOffsetDate != nil {
+            controller.addAction(UIAlertAction(title: "Dashboard.settings.cleanHumidityCalibration.title".localized(), style: .default, handler: { [weak self] (action) in
+                self?.output.viewDidAskToClearHumidityCalibration(viewModel: viewModel)
+            }))
+        }
         controller.addAction(UIAlertAction(title: "Dashboard.settings.remove.title".localized(), style: .destructive, handler: { [weak self] (action) in
             self?.output.viewDidAskToRemove(viewModel: viewModel)
         }))
