@@ -154,7 +154,6 @@
 		0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215522B8FD590015F9E0 /* WelcomeInitializer.swift */; };
 		0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */; };
 		0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */; };
-		0EEB215D22BA60860015F9E0 /* RuuviTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215C22BA60860015F9E0 /* RuuviTag.swift */; };
 		0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215F22BA61430015F9E0 /* MigrationManager.swift */; };
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
@@ -337,7 +336,6 @@
 		0EEB215522B8FD590015F9E0 /* WelcomeInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeInitializer.swift; sourceTree = "<group>"; };
 		0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeConfigurator.swift; sourceTree = "<group>"; };
 		0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableTransitionManager.swift; sourceTree = "<group>"; };
-		0EEB215C22BA60860015F9E0 /* RuuviTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTag.swift; sourceTree = "<group>"; };
 		0EEB215F22BA61430015F9E0 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToVIPER.swift; sourceTree = "<group>"; };
 		377033B3FEFC65CFFCC57708 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
@@ -571,7 +569,6 @@
 		0E1C1DA122B36CE70032F6CA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB215B22BA60730015F9E0 /* Deprecated */,
 				0E1C1DA422B36EB50032F6CA /* Realm */,
 			);
 			path = Model;
@@ -1323,14 +1320,6 @@
 			path = Assembly;
 			sourceTree = "<group>";
 		};
-		0EEB215B22BA60730015F9E0 /* Deprecated */ = {
-			isa = PBXGroup;
-			children = (
-				0EEB215C22BA60860015F9E0 /* RuuviTag.swift */,
-			);
-			path = Deprecated;
-			sourceTree = "<group>";
-		};
 		0EEB215E22BA610E0015F9E0 /* Migration */ = {
 			isa = PBXGroup;
 			children = (
@@ -1677,7 +1666,6 @@
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
-				0EEB215D22BA60860015F9E0 /* RuuviTag.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0EEB212B22B8C7B70015F9E0 /* ChartConfigurator.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,

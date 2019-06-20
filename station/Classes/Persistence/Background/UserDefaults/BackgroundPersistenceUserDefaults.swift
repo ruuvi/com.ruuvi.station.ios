@@ -14,4 +14,9 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
     
+    func setBackground(_ id: Int, for uuid: String) {
+        let key = "BackgroundPersistenceUserDefaults.background." + uuid
+        UserDefaults.standard.set(id, forKey: key)
+    }
+    
 }

@@ -11,6 +11,8 @@ class BusinessAssembly: Assembly {
         
         container.register(MigrationManager.self) { r in
             let manager = MigrationManagerToVIPER()
+            manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            manager.settings = r.resolve(Settings.self)
             return manager
         }
     }
