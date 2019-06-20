@@ -6,7 +6,7 @@ class DashboardScrollConfigurator {
         
         let router = DashboardRouter()
         router.transitionHandler = view
-        
+        router.settings = r.resolve(Settings.self)
         
         let presenter = DashboardPresenter()
         presenter.router = router

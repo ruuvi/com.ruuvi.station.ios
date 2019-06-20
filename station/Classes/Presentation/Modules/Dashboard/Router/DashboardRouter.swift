@@ -2,6 +2,7 @@ import LightRoute
 
 class DashboardRouter: DashboardRouterInput {
     weak var transitionHandler: TransitionHandler!
+    var settings: Settings!
     
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
     
@@ -36,7 +37,8 @@ class DashboardRouter: DashboardRouterInput {
     }
     
     func openDiscover() {
-        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: "DiscoverTableNavigationController")
+        let restorationId = settings.experimentalUX ? "DiscoverPulsatorViewController" : "DiscoverTableNavigationController"
+        let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
         try! transitionHandler
             .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
             .then({ (module) -> Any? in
