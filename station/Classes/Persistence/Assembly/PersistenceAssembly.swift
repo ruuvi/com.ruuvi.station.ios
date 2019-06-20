@@ -8,6 +8,11 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
         
+        container.register(CalibrationPersistence.self) { r in
+            let persistence = CalibrationPersistenceUserDefaults()
+            return persistence
+        }
+        
         container.register(RealmContext.self) { r in
             let context = RealmContextImpl()
             return context

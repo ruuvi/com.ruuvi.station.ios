@@ -10,6 +10,7 @@ class DashboardPresenter: DashboardModuleInput {
     var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
     var ruuviTagPersistence: RuuviTagPersistence!
+    var calibrationService: CalibrationService!
     
     private let scanner = Ruuvi.scanner
     private var ruuviTagsToken: NotificationToken?
@@ -95,7 +96,7 @@ extension DashboardPresenter: DashboardViewOutput {
     
     func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel) {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            let update = ruuviTagPersistence.update(humidityOffset: 75 - viewModel.humidity, of: ruuviTag)
+            let update = calibrationService.calibrateHumiditySaltTest(currentValue: viewModel.humidity, for: ruuviTag)
             update.on(failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
@@ -104,7 +105,7 @@ extension DashboardPresenter: DashboardViewOutput {
     
     func viewDidAskToClearHumidityCalibration(viewModel: DashboardRuuviTagViewModel) {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            let clear = ruuviTagPersistence.clearHumidityCalibration(of: ruuviTag)
+            let clear = calibrationService.cleanHumidityCalibration(for: ruuviTag)
             clear.on(failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })

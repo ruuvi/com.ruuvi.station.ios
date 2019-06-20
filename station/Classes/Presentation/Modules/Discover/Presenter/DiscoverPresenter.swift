@@ -7,7 +7,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var router: DiscoverRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
-    var ruuviTagPersistence: RuuviTagPersistence!
+    var ruuviTagService: RuuviTagService!
     
     private let scanner = Ruuvi.scanner
     private var ruuviTags = Set<RuuviTag>()
@@ -69,7 +69,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     
     func viewDidChoose(device: DiscoverDeviceViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
-            let operation = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: ruuviTag.mac ?? ruuviTag.uuid)
+            let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: ruuviTag.mac ?? ruuviTag.uuid)
             operation.on(success: { [weak self] (ruuviTag) in
                 if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
                     self?.router.openDashboard()

@@ -4,7 +4,7 @@ import BTKit
 class RuuviTagPresenter: RuuviTagModuleInput {
     weak var view: RuuviTagViewInput!
     var router: RuuviTagRouterInput!
-    var ruuviTagPersistence: RuuviTagPersistence!
+    var ruuviTagService: RuuviTagService!
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
     var realmContext: RealmContext!
@@ -41,7 +41,7 @@ extension RuuviTagPresenter: RuuviTagViewOutput {
     }
     
     func viewDidSave(name: String) {
-        let save = ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name)
+        let save = ruuviTagService.persist(ruuviTag: ruuviTag, name: name)
         isSaving = true
         save.on(success: { [weak self] (ruuviTag) in
             self?.router.dismiss()

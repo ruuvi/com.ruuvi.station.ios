@@ -10,7 +10,7 @@ class RuuviTagConfigurator {
         let presenter = RuuviTagPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+        presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.realmContext = r.resolve(RealmContext.self)

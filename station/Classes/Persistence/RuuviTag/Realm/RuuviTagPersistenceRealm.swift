@@ -49,7 +49,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         
     }
     
-    func persist(ruuviTag: RuuviTag, name: String) -> Future<RuuviTag,RUError> {
+    func persist(ruuviTag: RuuviTag, name: String, humidityOffset: Double, humidityOffsetDate: Date?) -> Future<RuuviTag,RUError> {
         let promise = Promise<RuuviTag,RUError>()
         context.bgWorker.enqueue {
             do {
@@ -57,9 +57,13 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     try self.context.bg.write {
                         if existingTag.isInvalidated {
                             let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
+                            realmTag.humidityOffset = humidityOffset
+                            realmTag.humidityOffsetDate = humidityOffsetDate
                             self.context.bg.add(realmTag, update: .all)
                         } else {
                             existingTag.name = name
+                            existingTag.humidityOffset = humidityOffset
+                            existingTag.humidityOffsetDate = humidityOffsetDate
                             if existingTag.version != ruuviTag.version {
                                 existingTag.version = ruuviTag.version
                             }
@@ -70,6 +74,8 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     }
                 } else {
                     let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
+                    realmTag.humidityOffset = humidityOffset
+                    realmTag.humidityOffsetDate = humidityOffsetDate
                     try self.context.bg.write {
                         self.context.bg.add(realmTag, update: .all)
                     }
@@ -137,14 +143,14 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
     
-    func update(humidityOffset: Double, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
+    func update(humidityOffset: Double, date: Date, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
         if ruuviTag.realm == context.bg {
             context.bgWorker.enqueue {
                 do {
                     try self.context.bg.write {
                         ruuviTag.humidityOffset = humidityOffset
-                        ruuviTag.humidityOffsetDate = Date()
+                        ruuviTag.humidityOffsetDate = date
                     }
                     promise.succeed(value: true)
                 } catch {
@@ -155,7 +161,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             do {
                 try context.main.write {
                     ruuviTag.humidityOffset = humidityOffset
-                    ruuviTag.humidityOffsetDate = Date()
+                    ruuviTag.humidityOffsetDate = date
                 }
                 promise.succeed(value: true)
             } catch {
