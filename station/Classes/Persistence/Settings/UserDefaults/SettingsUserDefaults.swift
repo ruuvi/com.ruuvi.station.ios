@@ -26,6 +26,16 @@ class SettingsUserDegaults: Settings {
     }
     private let welcomeShownUDKey = "SettingsUserDegaults.welcomeShown"
     
+    var experimentalUX: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: experimentalUXUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: experimentalUXUDKey)
+        }
+    }
+    private let experimentalUXUDKey = "SettingsUserDegaults.experimentalUX"
+    
     private var useFahrenheit: Bool {
         get {
             return UserDefaults.standard.bool(forKey: useFahrenheitUDKey)
