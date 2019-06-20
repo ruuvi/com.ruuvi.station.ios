@@ -10,4 +10,5 @@ protocol DashboardViewInput: ViewInput {
     func showMenu(for viewModel: DashboardRuuviTagViewModel)
     func showRenameDialog(for viewModel: DashboardRuuviTagViewModel)
     func scroll(to index: Int)
+    func showBluetoothDisabled()
 }
