@@ -92,6 +92,10 @@ extension DashboardPresenter: DashboardViewOutput {
 //            router.openChart(ruuviTag: ruuviTag, type: .rssi)
 //        }   
     }
+    
+    func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel) {
+        print(viewModel.uuid)
+    }
 }
 
 // MARK: - MenuModuleOutput
