@@ -116,6 +116,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 do {
                     try self.context.bg.write {
                         ruuviTag.humidityOffset = humidityOffset
+                        ruuviTag.humidityOffsetDate = Date()
                     }
                     promise.succeed(value: true)
                 } catch {
@@ -126,6 +127,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             do {
                 try context.main.write {
                     ruuviTag.humidityOffset = humidityOffset
+                    ruuviTag.humidityOffsetDate = Date()
                 }
                 promise.succeed(value: true)
             } catch {
