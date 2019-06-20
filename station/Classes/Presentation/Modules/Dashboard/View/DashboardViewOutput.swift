@@ -10,4 +10,5 @@ protocol DashboardViewOutput {
     func viewDidAskToRename(viewModel: DashboardRuuviTagViewModel)
     func viewDidChangeName(of viewModel: DashboardRuuviTagViewModel, to name: String)
     func viewDidTapOnRSSI(for viewModel: DashboardRuuviTagViewModel)
+    func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel)
 }
