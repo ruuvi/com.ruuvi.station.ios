@@ -15,6 +15,7 @@
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 "Dashboard.settings.calibrateHumidity.title" = "Calibrate hygrometer (75% salt test)";
+"Dashboard.settings.humidityOffsetDate.format" = "\nHygrometer calibration date: %@";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Tags" = "Tags";

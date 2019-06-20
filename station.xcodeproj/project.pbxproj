@@ -1951,6 +1951,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
