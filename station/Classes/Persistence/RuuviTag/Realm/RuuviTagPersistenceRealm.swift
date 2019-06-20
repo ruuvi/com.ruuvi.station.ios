@@ -109,6 +109,32 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
     
+    func update(humidityOffset: Double, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        if ruuviTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        ruuviTag.humidityOffset = humidityOffset
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    ruuviTag.humidityOffset = humidityOffset
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    
     func update(name: String, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
         if ruuviTag.realm == context.bg {
