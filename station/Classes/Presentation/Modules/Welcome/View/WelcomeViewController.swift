@@ -2,6 +2,10 @@ import UIKit
 
 class WelcomeViewController: UIViewController {
     var output: WelcomeViewOutput!
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 }
 
 extension WelcomeViewController: WelcomeViewInput {
