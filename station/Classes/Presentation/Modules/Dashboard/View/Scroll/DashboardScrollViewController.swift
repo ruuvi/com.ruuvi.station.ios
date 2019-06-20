@@ -1,5 +1,6 @@
 import UIKit
 import Localize_Swift
+import DateToolsSwift
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
@@ -51,6 +52,11 @@ extension DashboardScrollViewController: DashboardViewInput {
         var infoText = String(format: "Dashboard.settings.dataFormat.format".localized(), viewModel.version)
         if let voltage = viewModel.voltage {
             infoText.append(String(format: "Dashboard.settings.voltage.format".localized(), voltage))
+        }
+        if let humidityOffsetDate = viewModel.humidityOffsetDate {
+            let df = DateFormatter()
+            df.dateFormat = "dd MMMM yyyy"
+            infoText.append(String(format: "Dashboard.settings.humidityOffsetDate.format".localized(), df.string(from: humidityOffsetDate)))
         }
         let controller = UIAlertController(title: nil, message: infoText, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
