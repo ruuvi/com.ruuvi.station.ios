@@ -21,7 +21,7 @@ class DashboardPresenter: DashboardModuleInput {
             if let ruuviTags = ruuviTags {
                 view.viewModels = ruuviTags.map( {
                     let last = lastValues[$0.uuid]
-                    return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: last?.celsius ?? 0, humidity: last?.humidity ?? 0, pressure: last?.pressure ?? 0, rssi: last?.rssi ?? 0, version: $0.version, voltage: last?.voltage, background: backgroundPersistence.background(for: $0.uuid), mac: $0.mac)
+                    return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: last?.celsius ?? 0, humidity: last?.humidity ?? 0, pressure: last?.pressure ?? 0, rssi: last?.rssi ?? 0, version: $0.version, voltage: last?.voltage, background: backgroundPersistence.background(for: $0.uuid), mac: $0.mac, humidityOffset: $0.humidityOffset)
                 } )
             } else {
                 view.viewModels = []
@@ -149,7 +149,7 @@ extension DashboardPresenter {
         for viewModel in view.viewModels {
             observeTokens.append(scanner.observe(self, uuid: viewModel.uuid) { [weak self] (observer, device) in
                 if let tagData = device.ruuvi?.tag {
-                    let model = DashboardRuuviTagViewModel(uuid: viewModel.uuid, name: viewModel.name, celsius: tagData.celsius, humidity: tagData.humidity, pressure: tagData.pressure, rssi: tagData.rssi, version: tagData.version, voltage: tagData.voltage, background: viewModel.background, mac: viewModel.mac)
+                    let model = DashboardRuuviTagViewModel(uuid: viewModel.uuid, name: viewModel.name, celsius: tagData.celsius, humidity: tagData.humidity, pressure: tagData.pressure, rssi: tagData.rssi, version: tagData.version, voltage: tagData.voltage, background: viewModel.background, mac: viewModel.mac, humidityOffset: viewModel.humidityOffset)
                     observer.view.reload(viewModel: model)
                     self?.lastValues[tagData.uuid] = tagData
                 }

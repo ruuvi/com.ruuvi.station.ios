@@ -20,6 +20,7 @@ class RuuviTagViewController: UIViewController {
     var temperature: Double? { didSet { updateUITemperature() } }
     var temperatureUnit: TemperatureUnit? { didSet { updateUITemperatureUnit() } }
     var humidity: Double? { didSet { updateUIHumidity() } }
+    var humidityOffset: Double? { didSet { updateUIHumidity() } }
     var pressure: Double? { didSet { updateUIPressure() } }
     var rssi: Int? { didSet { updateUIRssi() } }
     var updated: Date? { didSet { updateUIUpdated() } }
@@ -163,7 +164,11 @@ extension RuuviTagViewController {
     private func updateUIHumidity() {
         if isViewLoaded {
             if let humidity = humidity {
-                humidityLabel.text = String(format: "%.2f", humidity) + " %"
+                if let humidityOffset = humidityOffset {
+                    humidityLabel.text = String(format: "%.2f", humidity + humidityOffset) + " %"
+                } else {
+                    humidityLabel.text = String(format: "%.2f", humidity) + " %"
+                }
             } else {
                 humidityLabel.text = nil
             }
