@@ -50,6 +50,38 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="User experience" id="w4R-7x-ROo">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="pVE-1R-Sav">
+                                        <rect key="frame" x="0.0" y="155.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pVE-1R-Sav" id="TN6-9T-hHe">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Experimental UX" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WV2-WB-Col">
+                                                    <rect key="frame" x="20" y="11.5" width="128" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="N5K-Fp-LVi">
+                                                    <rect key="frame" x="345" y="6" width="49" height="31"/>
+                                                    <connections>
+                                                        <action selector="experimentalUXValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="55T-Qm-B7o"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="N5K-Fp-LVi" firstAttribute="centerY" secondItem="TN6-9T-hHe" secondAttribute="centerY" id="4W1-az-2ZQ"/>
+                                                <constraint firstItem="WV2-WB-Col" firstAttribute="leading" secondItem="TN6-9T-hHe" secondAttribute="leading" constant="20" id="skA-AG-vLU"/>
+                                                <constraint firstItem="WV2-WB-Col" firstAttribute="centerY" secondItem="TN6-9T-hHe" secondAttribute="centerY" id="thM-7r-dKu"/>
+                                                <constraint firstAttribute="trailing" secondItem="N5K-Fp-LVi" secondAttribute="trailing" constant="22" id="wFC-hC-TuC"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Vxh-DE-JMT" id="Qox-7b-1rn"/>
@@ -64,6 +96,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="experimentalUXSwitch" destination="N5K-Fp-LVi" id="BYC-yZ-laU"/>
                         <outlet property="useFahrenheitSwitch" destination="GGg-TC-AXn" id="Ezn-3U-xoA"/>
                     </connections>
                 </tableViewController>
