@@ -60,14 +60,17 @@ extension DashboardScrollViewController: DashboardViewInput {
         }
         let controller = UIAlertController(title: nil, message: infoText, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        controller.addAction(UIAlertAction(title: "Dashboard.settings.calibrateHumidity.title".localized(), style: .destructive, handler: { [weak self] (action) in
+        controller.addAction(UIAlertAction(title: "Dashboard.settings.rename.title".localized(), style: .default, handler: { [weak self] (action) in
+            self?.output.viewDidAskToRename(viewModel: viewModel)
+        }))
+        controller.addAction(UIAlertAction(title: "Dashboard.settings.calibrateHumidity.title".localized(), style: .default, handler: { [weak self] (action) in
             self?.output.viewDidAskToCalibrateHumidity(viewModel: viewModel)
+        }))
+        controller.addAction(UIAlertAction(title: "Dashboard.settings.cleanHumidityCalibration.title".localized(), style: .default, handler: { [weak self] (action) in
+            self?.output.viewDidAskToClearHumidityCalibration(viewModel: viewModel)
         }))
         controller.addAction(UIAlertAction(title: "Dashboard.settings.remove.title".localized(), style: .destructive, handler: { [weak self] (action) in
             self?.output.viewDidAskToRemove(viewModel: viewModel)
-        }))
-        controller.addAction(UIAlertAction(title: "Dashboard.settings.rename.title".localized(), style: .default, handler: { [weak self] (action) in
-            self?.output.viewDidAskToRename(viewModel: viewModel)
         }))
         present(controller, animated: true)
     }

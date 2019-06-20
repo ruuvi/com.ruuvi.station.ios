@@ -101,6 +101,15 @@ extension DashboardPresenter: DashboardViewOutput {
             })
         }
     }
+    
+    func viewDidAskToClearHumidityCalibration(viewModel: DashboardRuuviTagViewModel) {
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
+            let clear = ruuviTagPersistence.clearHumidityCalibration(of: ruuviTag)
+            clear.on(failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        }
+    }
 }
 
 // MARK: - MenuModuleOutput
