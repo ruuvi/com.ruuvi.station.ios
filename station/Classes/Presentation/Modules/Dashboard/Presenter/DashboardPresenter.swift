@@ -94,7 +94,12 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel) {
-        print(viewModel.uuid)
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
+            let update = ruuviTagPersistence.update(humidityOffset: 75 - viewModel.humidity, of: ruuviTag)
+            update.on(failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        }
     }
 }
 
