@@ -7,13 +7,24 @@ class MenuTablePresentationController: UIPresentationController {
     
     private lazy var dimmingView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.0, alpha: 0.7)
+        view.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
         view.alpha = 0
         view.addGestureRecognizer(tapGestureRecognizer)
         view.addGestureRecognizer(panGestureRecognizer)
         return view
     }()
     
+    private lazy var shadowView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.clipsToBounds = false
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 5
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
+        return view
+    }()
+
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer(target: self, action: #selector(MenuTablePresentationController.dimmingViewTapped(_:)))
         return tap
@@ -61,12 +72,16 @@ class MenuTablePresentationController: UIPresentationController {
         if let containerView = containerView {
             dimmingView.bounds = containerView.bounds
             dimmingView.alpha = 0
+            
+            shadowView.frame = .zero
         }
         
+        containerView?.insertSubview(shadowView, at: 0)
         containerView?.insertSubview(dimmingView, at: 0)
         
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
             transitionCoordinator.animate(alongsideTransition: { (context) in
+                self.shadowView.frame = self.presentedView?.frame ?? .zero
                 self.dimmingView.alpha = 1.0
             }, completion: nil)
         } else {
@@ -78,6 +93,7 @@ class MenuTablePresentationController: UIPresentationController {
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
             transitionCoordinator.animate(alongsideTransition: { (context) in
                 self.dimmingView.alpha = 0
+                self.shadowView.frame = self.presentedView?.frame ?? .zero
             }, completion: nil)
         } else {
             self.dimmingView.alpha = 0
