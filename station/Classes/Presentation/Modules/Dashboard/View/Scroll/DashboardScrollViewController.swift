@@ -154,7 +154,7 @@ extension DashboardScrollViewController {
     private func configure(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
         view.nameLabel.text = viewModel.name.uppercased()
         configureTemperature(view: view, with: viewModel)
-        view.humidityLabel.text = String(format: "%.2f", viewModel.humidity) + " %"
+        view.humidityLabel.text = String(format: "%.2f", viewModel.humidity + viewModel.humidityOffset) + " %"
         view.pressureLabel.text = "\(viewModel.pressure) hPa"
         view.rssiLabel.text = "\(viewModel.rssi) dBm"
         view.updatedAt = Date()

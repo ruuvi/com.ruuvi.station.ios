@@ -23,7 +23,10 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     
     func configure(ruuviTag: RuuviTag) {
         self.ruuviTag = ruuviTag
-        view.name = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTag.uuid)?.name
+        if let savedTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTag.uuid) {
+            view.name = savedTag.name
+            view.humidityOffset = savedTag.humidityOffset
+        }
     }
 }
 

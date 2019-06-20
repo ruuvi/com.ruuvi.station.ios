@@ -11,6 +11,7 @@ struct DashboardRuuviTagViewModel {
     var voltage: Double?
     var background: UIImage?
     var mac: String?
+    var humidityOffset: Double = 0
     
     var fahrenheit: Double {
         return (celsius * 9.0/5.0) + 32.0
