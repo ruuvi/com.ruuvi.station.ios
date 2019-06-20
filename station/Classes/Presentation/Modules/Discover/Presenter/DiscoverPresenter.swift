@@ -84,7 +84,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidTriggerContinue() {
-        router.openDashboard()
+        if isOpenedFromWelcome {
+            router.openDashboard()
+        } else {
+            router.dismiss()
+        }
     }
     
     func viewDidTapOnGetMoreSensors() {
