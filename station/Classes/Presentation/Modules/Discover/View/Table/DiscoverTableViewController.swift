@@ -36,6 +36,12 @@ extension DiscoverTableViewController: DiscoverViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func showBluetoothDisabled() {
+        let alertVC = UIAlertController(title: "DiscoverTable.BluetoothDisabledAlert.title".localized(), message: "DiscoverTable.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions

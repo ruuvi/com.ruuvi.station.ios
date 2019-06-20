@@ -29,6 +29,12 @@ extension DiscoverPulsatorViewController: DiscoverViewInput {
     func localize() {
         
     }
+    
+    func showBluetoothDisabled() {
+        let alertVC = UIAlertController(title: "DiscoverPulsator.BluetoothDisabledAlert.title".localized(), message: "DiscoverPulsator.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions

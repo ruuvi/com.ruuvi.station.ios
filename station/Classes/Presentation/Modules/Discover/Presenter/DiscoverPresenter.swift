@@ -40,6 +40,10 @@ class DiscoverPresenter: DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
+        view.isBluetoothEnabled = scanner.bluetoothState == .poweredOn
+        if !view.isBluetoothEnabled {
+            view.showBluetoothDisabled()
+        }
         startObservingPersistedRuuviTags()
     }
     
@@ -131,6 +135,7 @@ extension DiscoverPresenter {
             if state == .poweredOff {
                 observer.ruuviTags.removeAll()
                 observer.view.devices = []
+                observer.view.showBluetoothDisabled()
             }
         })
     }
