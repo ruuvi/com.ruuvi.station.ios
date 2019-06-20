@@ -5,7 +5,9 @@ inhibit_all_warnings!
 target 'station' do
   pod 'BTKit', :path => '../BTKit'
   pod 'Charts'
+  pod 'Crashlytics'
   pod 'EmptyDataSet-Swift'
+  pod 'Fabric'
   pod 'DateToolsSwift'
   pod 'FutureX'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'

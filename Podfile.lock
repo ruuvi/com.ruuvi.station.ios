@@ -12,8 +12,11 @@ PODS:
   - Charts (3.3.0):
     - Charts/Core (= 3.3.0)
   - Charts/Core (3.3.0)
+  - Crashlytics (3.13.1):
+    - Fabric (~> 1.10.1)
   - DateToolsSwift (4.0.0)
   - EmptyDataSet-Swift (4.2.0)
+  - Fabric (1.10.1)
   - FutureX (1.0)
   - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
@@ -27,8 +30,10 @@ PODS:
 DEPENDENCIES:
   - BTKit (from `../BTKit`)
   - Charts
+  - Crashlytics
   - DateToolsSwift
   - EmptyDataSet-Swift
+  - Fabric
   - FutureX
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -38,8 +43,10 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Charts
+    - Crashlytics
     - DateToolsSwift
     - EmptyDataSet-Swift
+    - Fabric
     - FutureX
     - Localize-Swift
     - Realm
@@ -60,8 +67,10 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   BTKit: 7856ad6841801150c1bb845a2cdd0e9586ceebe6
   Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
+  Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
+  Fabric: f6f21452846788bb44595d73e9909d79d328e617
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
@@ -69,6 +78,6 @@ SPEC CHECKSUMS:
   RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
 
-PODFILE CHECKSUM: 103c410f23f7c67a03216c7694e3b2500059a450
+PODFILE CHECKSUM: 8fb49cf62ce28daabfb7a1f4eec3232dd429d46c
 
 COCOAPODS: 1.7.0
