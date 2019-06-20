@@ -12,7 +12,7 @@ class DiscoverTableConfigurator {
         presenter.router = router
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+        presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         
         view.output = presenter
     }

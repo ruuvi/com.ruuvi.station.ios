@@ -16,6 +16,7 @@ class DashboardScrollConfigurator {
         presenter.settings = r.resolve(Settings.self)
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+        presenter.calibrationService = r.resolve(CalibrationService.self)
         
         let menu = UIStoryboard(name: "Menu", bundle: .main).instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom

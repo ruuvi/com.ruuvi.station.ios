@@ -156,6 +156,12 @@
 		0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */; };
 		0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215F22BA61430015F9E0 /* MigrationManager.swift */; };
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
+		0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
+		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
+		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
+		0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
+		0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */; };
+		0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -338,6 +344,12 @@
 		0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableTransitionManager.swift; sourceTree = "<group>"; };
 		0EEB215F22BA61430015F9E0 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToVIPER.swift; sourceTree = "<group>"; };
+		0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistence.swift; sourceTree = "<group>"; };
+		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
+		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
+		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
+		0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagService.swift; sourceTree = "<group>"; };
+		0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagServiceImpl.swift; sourceTree = "<group>"; };
 		2007726230FE7073B821A1A6 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -525,6 +537,7 @@
 			children = (
 				0E1C1DA922B387BE0032F6CA /* Assembly */,
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
+				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
 				0E1C1D9322B362420032F6CA /* Realm */,
 				0E1C1D9922B364FC0032F6CA /* RuuviTag */,
 				0E1C1E1522B76F400032F6CA /* Settings */,
@@ -1166,6 +1179,7 @@
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
 				0EEB210922B7D8110015F9E0 /* Daemons */,
 				0EEB215E22BA610E0015F9E0 /* Migration */,
+				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 			);
 			path = Business;
 			sourceTree = "<group>";
@@ -1335,6 +1349,66 @@
 				0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */,
 			);
 			path = toVIPER;
+			sourceTree = "<group>";
+		};
+		0EFDD6CD22BBD95700EADFC6 /* Calibration */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6D022BBD9A100EADFC6 /* UserDefaults */,
+				0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */,
+			);
+			path = Calibration;
+			sourceTree = "<group>";
+		};
+		0EFDD6D022BBD9A100EADFC6 /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
+		0EFDD6D122BBD9AB00EADFC6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6D222BBD9C300EADFC6 /* Calibration */,
+				0EFDD6DA22BBDDBF00EADFC6 /* RuuviTag */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		0EFDD6D222BBD9C300EADFC6 /* Calibration */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6D722BBDBB300EADFC6 /* Impl */,
+				0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */,
+			);
+			path = Calibration;
+			sourceTree = "<group>";
+		};
+		0EFDD6D722BBDBB300EADFC6 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
+		0EFDD6DA22BBDDBF00EADFC6 /* RuuviTag */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6DD22BBDDE300EADFC6 /* Impl */,
+				0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */,
+			);
+			path = RuuviTag;
+			sourceTree = "<group>";
+		};
+		0EFDD6DD22BBDDE300EADFC6 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */,
+			);
+			path = Impl;
 			sourceTree = "<group>";
 		};
 		487E801695EFF16FEBB529A5 /* Frameworks */ = {
@@ -1634,6 +1708,7 @@
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
 				0E502FAC22B27A3100E8A6CC /* RuuviTagViewInput.swift in Sources */,
+				0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
@@ -1648,6 +1723,7 @@
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
+				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
 				0E502FC422B285B900E8A6CC /* RuuviTagAddTransitioningDelegate.swift in Sources */,
 				0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
@@ -1669,6 +1745,7 @@
 				0E1C1DDF22B3C2330032F6CA /* DashboardPresenter.swift in Sources */,
 				0E1C1DC622B396040032F6CA /* UIAlertController+Show.swift in Sources */,
 				0EEB211F22B8C5E70015F9E0 /* ChartViewOutput.swift in Sources */,
+				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
@@ -1698,6 +1775,7 @@
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
+				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
@@ -1752,6 +1830,7 @@
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
 				0E502FCA22B2864E00E8A6CC /* RuuviTagAddPresentationController.swift in Sources */,
 				0EEB212322B8C6180015F9E0 /* ChartRouter.swift in Sources */,
+				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
@@ -1760,6 +1839,7 @@
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* DashboardRouterInput.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
+				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
