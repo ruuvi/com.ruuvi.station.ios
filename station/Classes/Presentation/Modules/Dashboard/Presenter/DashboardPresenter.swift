@@ -189,8 +189,8 @@ extension DashboardPresenter {
     }
     
     private func startObservingRuuviTags() {
-        let ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
-        ruuviTagsToken = ruuviTags.observe { [weak self] (change) in
+        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags
