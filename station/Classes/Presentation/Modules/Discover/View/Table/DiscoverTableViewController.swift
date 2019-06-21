@@ -12,11 +12,15 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet {
-            shownDevices = devices.filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+            shownDevices = devices
+                .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+                .sorted(by: { $0.rssi > $1.rssi })
         }
     }
     var savedDevicesUUIDs: [String] = [String]() { didSet {
-        shownDevices = devices.filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+        shownDevices = devices
+            .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+            .sorted(by: { $0.rssi > $1.rssi })
         }
     }
     
