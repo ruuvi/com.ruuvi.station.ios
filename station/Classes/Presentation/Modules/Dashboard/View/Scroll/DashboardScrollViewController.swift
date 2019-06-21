@@ -79,13 +79,14 @@ extension DashboardScrollViewController: DashboardViewInput {
     
     func showRenameDialog(for viewModel: DashboardRuuviTagViewModel) {
         let alert = UIAlertController(title: "Dashboard.settings.rename.title.EnterAName".localized(), message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
+        alert.addTextField { [weak self] (textField) in
             textField.autocapitalizationType = UITextAutocapitalizationType.sentences
             if viewModel.name == viewModel.uuid || viewModel.name == viewModel.mac {
                 textField.text = nil
             } else {
                 textField.text = viewModel.name
             }
+            textField.delegate = self
         }
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak alert, weak self] (action) in
             let textField = alert?.textFields?[0]
@@ -164,6 +165,19 @@ extension DashboardScrollViewController: DashboardRuuviTagViewDelegate {
                 output.viewDidTapOnRSSI(for: viewModel)
             }
         }
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension DashboardScrollViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let textFieldText = textField.text,
+            let rangeOfTextToReplace = Range(range, in: textFieldText) else {
+                return false
+        }
+        let substringToReplace = textFieldText[rangeOfTextToReplace]
+        let count = textFieldText.count - substringToReplace.count + string.count
+        return count <= 30
     }
 }
 
