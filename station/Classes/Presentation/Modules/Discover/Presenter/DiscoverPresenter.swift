@@ -122,7 +122,7 @@ extension DiscoverPresenter {
     }
     
     private func startObservingLost() {
-        lostToken = scanner.lost(self, closure: { (observer, device) in
+        lostToken = scanner.lost(self, options: [.lostDeviceDelay(10)], closure: { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
                 observer.ruuviTags.remove(ruuviTag)
             }
