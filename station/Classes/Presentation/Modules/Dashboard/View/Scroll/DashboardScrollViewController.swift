@@ -88,8 +88,10 @@ extension DashboardScrollViewController: DashboardViewInput {
             }
         }
         alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak alert, weak self] (action) in
-            let textField = alert?.textFields![0]
-            self?.output.viewDidChangeName(of: viewModel, to: textField?.text ?? "")
+            let textField = alert?.textFields?[0]
+            if let text = textField?.text, !text.isEmpty {
+                self?.output.viewDidChangeName(of: viewModel, to: text)
+            }
         }))
         present(alert, animated: true)
     }
