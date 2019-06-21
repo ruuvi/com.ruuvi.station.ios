@@ -146,6 +146,11 @@ extension DashboardScrollViewController {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        output.viewDidAppear()
+    }
 }
 
 // MARK: - DashboardRuuviTagViewDelegate
