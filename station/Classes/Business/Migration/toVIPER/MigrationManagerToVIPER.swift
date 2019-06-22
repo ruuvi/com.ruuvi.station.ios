@@ -16,7 +16,19 @@ class MigrationManagerToVIPER: MigrationManager {
                             let name = oldObject?["name"] as? String,
                             let version = oldObject?["dataFormat"] as? Int,
                             let mac = oldObject?["mac"] as? String {
-                            migration.create(RuuviTagRealm.className(), value: ["uuid": uuid, "name": name, "version": version, "mac": mac])
+                            
+                            var realName: String
+                            if name.isEmpty {
+                                if mac.isEmpty {
+                                    realName = uuid
+                                } else {
+                                    realName = mac
+                                }
+                            } else {
+                                realName = name
+                            }
+                            
+                            migration.create(RuuviTagRealm.className(), value: ["uuid": uuid, "name": realName, "version": version, "mac": mac])
                         }
                         
                         if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
