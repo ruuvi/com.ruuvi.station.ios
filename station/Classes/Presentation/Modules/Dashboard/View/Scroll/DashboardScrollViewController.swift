@@ -189,7 +189,7 @@ extension DashboardScrollViewController {
         view.humidityLabel.text = String(format: "%.2f", viewModel.humidity + viewModel.humidityOffset) + " %"
         view.pressureLabel.text = "\(viewModel.pressure) hPa"
         view.rssiLabel.text = "\(viewModel.rssi) dBm"
-        view.updatedAt = Date()
+        view.updatedAt = viewModel.date
         view.backgroundImage.image = viewModel.background
     }
     
