@@ -27,6 +27,7 @@ class DashboardPresenter: DashboardModuleInput {
             } else {
                 view.viewModels = []
             }
+            openDiscoverIfEmpty()
         }
     }
     private var lastValues: [String:RuuviTag] = [String:RuuviTag]()
@@ -56,6 +57,10 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewWillDisappear() {
         stopScanningRuuviTags()
         stopObservingBluetoothState()
+    }
+    
+    func viewDidAppear() {
+        openDiscoverIfEmpty()
     }
     
     func viewDidTriggerMenu() {
@@ -138,6 +143,12 @@ extension DashboardPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
+    private func openDiscoverIfEmpty() {
+        if view.viewModels.count == 0 {
+            router.openDiscover()
+        }
+    }
+    
     private func startObservingBluetoothState() {
         stateToken = scanner.state(self, closure: { (observer, state) in
             if state != .poweredOn {
@@ -178,8 +189,8 @@ extension DashboardPresenter {
     }
     
     private func startObservingRuuviTags() {
-        let ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
-        ruuviTagsToken = ruuviTags.observe { [weak self] (change) in
+        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags

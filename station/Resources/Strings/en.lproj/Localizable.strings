@@ -11,7 +11,7 @@
 "Dashboard.settings.remove.title" = "Remove";
 "Dashboard.settings.rename.title" = "Rename";
 "Dashboard.settings.rename.title.EnterAName" = "Enter a name";
-"Dashboard.SwipeAlert.title" = "Swipe to switch between RuuviTags";
+"Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 "Dashboard.settings.calibrateHumidity.title" = "Calibrate hygrometer (75% salt test)";
