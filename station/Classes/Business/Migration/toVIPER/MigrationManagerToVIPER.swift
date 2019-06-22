@@ -28,7 +28,22 @@ class MigrationManagerToVIPER: MigrationManager {
                                 realName = name
                             }
                             
-                            migration.create(RuuviTagRealm.className(), value: ["uuid": uuid, "name": realName, "version": version, "mac": mac])
+                            let ruuviTag = migration.create(RuuviTagRealm.className(), value: ["uuid": uuid, "name": realName, "version": version, "mac": mac])
+                            
+                            if let temperature = oldObject?["temperature"] as? Double,
+                                let humidity = oldObject?["humidity"] as? Double,
+                                let pressure = oldObject?["pressure"] as? Double,
+                                let accelerationX = oldObject?["accelerationX"] as? Double,
+                                let accelerationY = oldObject?["accelerationY"] as? Double,
+                                let accelerationZ = oldObject?["accelerationZ"] as? Double,
+                                let rssi = oldObject?["rssi"] as? Int,
+                                let voltage = oldObject?["voltage"] as? Double,
+                                let movementCounter = oldObject?["movementCounter"] as? Int,
+                                let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
+                                let txPower = oldObject?["txPower"] as? Int,
+                                let updatedAt = oldObject?["updatedAt"] as? NSDate {
+                             migration.create(RuuviTagDataRealm.className(), value: ["ruuviTag": ruuviTag, "date": updatedAt, "rssi": rssi, "celsius": temperature, "humidity": humidity, "pressure": pressure, "accelerationX": accelerationX, "accelerationY": accelerationY, "accelerationZ": accelerationZ, "voltage": voltage, "movementCounter": movementCounter, "measurementSequenceNumber": measurementSequenceNumber, "txPower": txPower])
+                            }
                         }
                         
                         if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
