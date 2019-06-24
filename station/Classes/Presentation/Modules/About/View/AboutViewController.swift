@@ -50,6 +50,15 @@ extension AboutViewController {
         super.viewDidAppear(animated)
         aboutTextView.layoutManager.allowsNonContiguousLayout = false
     }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { (context) in
+            UIView.setAnimationsEnabled(false)
+            self.aboutTextView.scrollRangeToVisible(NSMakeRange(0, 0))
+            UIView.setAnimationsEnabled(true)
+        })
+    }
 }
 
 // MARK: - UITextViewDelegate
