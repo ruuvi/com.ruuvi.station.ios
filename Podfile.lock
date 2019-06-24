@@ -1,13 +1,13 @@
 PODS:
-  - BTKit (0.0.3):
-    - BTKit/Devices (= 0.0.3)
-    - BTKit/Ruuvi (= 0.0.3)
-    - BTKit/Scanner (= 0.0.3)
-  - BTKit/Devices (0.0.3)
-  - BTKit/Ruuvi (0.0.3):
+  - BTKit (0.0.4):
+    - BTKit/Devices (= 0.0.4)
+    - BTKit/Ruuvi (= 0.0.4)
+    - BTKit/Scanner (= 0.0.4)
+  - BTKit/Devices (0.0.4)
+  - BTKit/Ruuvi (0.0.4):
     - BTKit/Devices
     - BTKit/Scanner
-  - BTKit/Scanner (0.0.3):
+  - BTKit/Scanner (0.0.4):
     - BTKit/Devices
   - Charts (3.3.0):
     - Charts/Core (= 3.3.0)
@@ -28,7 +28,7 @@ PODS:
   - Swinject (2.6.1)
 
 DEPENDENCIES:
-  - BTKit (from `../BTKit`)
+  - BTKit
   - Charts
   - Crashlytics
   - DateToolsSwift
@@ -42,6 +42,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - BTKit
     - Charts
     - Crashlytics
     - DateToolsSwift
@@ -54,8 +55,6 @@ SPEC REPOS:
     - Swinject
 
 EXTERNAL SOURCES:
-  BTKit:
-    :path: "../BTKit"
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
 
@@ -65,7 +64,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/LightRoute.git
 
 SPEC CHECKSUMS:
-  BTKit: 951ad054b441178643aff76c54c97ec0afbb1ddd
+  BTKit: 2efa2e4d64acac4e5d2b052f4145cd4e4a20def6
   Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
   Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
@@ -78,6 +77,6 @@ SPEC CHECKSUMS:
   RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
 
-PODFILE CHECKSUM: 8fb49cf62ce28daabfb7a1f4eec3232dd429d46c
+PODFILE CHECKSUM: e5b629f113d748f4765446f5ed73d5d625ed2f99
 
 COCOAPODS: 1.7.0
