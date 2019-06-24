@@ -3,7 +3,7 @@ use_frameworks!
 inhibit_all_warnings!
 
 target 'station' do
-  pod 'BTKit'
+  pod 'BTKit', :path => '../BTKit'
   pod 'Charts'
   pod 'Crashlytics'
   pod 'EmptyDataSet-Swift'
