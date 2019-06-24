@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let mainRouter = MainRouter.shared
             mainRouter.openDashboard()
         }
+        r.resolve(RuuviTagDaemon.self)?.startSavingBroadcasts()
         return true
     }
 
