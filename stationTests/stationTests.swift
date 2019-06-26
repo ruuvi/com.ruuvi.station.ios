@@ -26,7 +26,10 @@ class stationTests: XCTestCase {
         var set = Set<Int>()
         for _ in b.bgMinIndex...b.bgMaxIndex {
             let random = b.biasedToNotUsedRandom()
+            XCTAssert(random >= b.bgMinIndex)
+            XCTAssert(random <= b.bgMaxIndex)
             XCTAssert(!set.contains(random))
+            print(random)
             set.insert(random)
         }
     }
