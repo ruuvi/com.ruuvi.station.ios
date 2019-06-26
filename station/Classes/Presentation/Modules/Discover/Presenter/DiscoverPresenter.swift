@@ -151,6 +151,10 @@ extension DiscoverPresenter {
     private func startScanning() {
         scanToken = scanner.scan(self) { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
+                // when mode is changed, the device dhould be replaced
+                if let sameUUID = observer.ruuviTags.first(where: { $0.uuid == ruuviTag.uuid }), sameUUID != ruuviTag {
+                    observer.ruuviTags.remove(sameUUID)
+                }
                 observer.ruuviTags.update(with: ruuviTag)
             }
         }
