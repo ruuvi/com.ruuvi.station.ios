@@ -19,7 +19,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     func background(for uuid: String) -> UIImage? {
         let key = "BackgroundPersistenceUserDefaults.background." + uuid
         var id = UserDefaults.standard.integer(forKey: key)
-        if id > 0 {
+        if id >= bgMinIndex  {
             return UIImage(named: "bg\(id)")
         } else {
             id = biasedToNotUsedRandom()
