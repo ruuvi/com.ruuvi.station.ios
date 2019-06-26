@@ -53,6 +53,11 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         } else {
             result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
         }
+        
+        assert(result >= bgMinIndex)
+        assert(result <= bgMaxIndex)
+        assert(result - bgMinIndex < array.count)
+        
         array[result - bgMinIndex] += 1
         UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
         return result
