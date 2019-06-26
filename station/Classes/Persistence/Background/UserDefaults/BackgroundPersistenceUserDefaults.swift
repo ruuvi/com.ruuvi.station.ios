@@ -3,7 +3,7 @@ import UIKit
 class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     
     private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
-    let bgMinIndex = 1
+    let bgMinIndex = 1 // must be > 0
     let bgMaxIndex = 9
     
     private var usedBackgrounds: [Int] {
