@@ -21,9 +21,14 @@ class stationTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testBackgroundPersistenceUserDefaultsBGIsBiasedToNotUsed() {
+        let b = BackgroundPersistenceUserDefaults()
+        var set = Set<Int>()
+        for _ in b.bgMinIndex...b.bgMaxIndex {
+            let random = b.biasedToNotUsedRandom()
+            XCTAssert(!set.contains(random))
+            set.insert(random)
+        }
     }
     
     func testPerformanceExample() {
