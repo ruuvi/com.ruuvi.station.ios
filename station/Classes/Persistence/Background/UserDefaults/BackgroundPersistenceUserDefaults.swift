@@ -2,9 +2,11 @@ import UIKit
 
 class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     
-    private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
     let bgMinIndex = 1 // must be > 0
     let bgMaxIndex = 9
+    
+    private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
+    private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
     
     private var usedBackgrounds: [Int] {
         if let usedBackgrounds = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
@@ -17,7 +19,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     }
     
     func background(for uuid: String) -> UIImage? {
-        let key = "BackgroundPersistenceUserDefaults.background." + uuid
+        let key = bgUDKeyPrefix + uuid
         var id = UserDefaults.standard.integer(forKey: key)
         if id >= bgMinIndex  {
             return UIImage(named: "bg\(id)")
@@ -29,7 +31,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     }
     
     func setBackground(_ id: Int, for uuid: String) {
-        let key = "BackgroundPersistenceUserDefaults.background." + uuid
+        let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
         if id >= bgMinIndex && id <= bgMaxIndex {
             var array = usedBackgrounds
