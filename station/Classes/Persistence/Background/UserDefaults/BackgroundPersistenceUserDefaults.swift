@@ -3,8 +3,8 @@ import UIKit
 class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     
     private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
-    private let bgMinIndex = 1
-    private let bgMaxIndex = 9
+    let bgMinIndex = 1
+    let bgMaxIndex = 9
     
     private var usedBackgrounds: [Int] {
         if let usedBackgrounds = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
@@ -34,16 +34,20 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     }
     
     func biasedToNotUsedRandom() -> Int {
-        let array = usedBackgrounds
+        var array = usedBackgrounds
+        var result: Int
         if let min = array.min() {
             let indicies = array.enumerated().compactMap({ $1 == min ? $0 : nil })
             if indicies.count == 0 {
-                return Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
+                result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
             } else {
-                return indicies[0]
+                result = indicies.shuffled()[0]
             }
         } else {
-            return Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
+            result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
         }
+        array[result] += 1
+        UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
+        return result
     }
 }
