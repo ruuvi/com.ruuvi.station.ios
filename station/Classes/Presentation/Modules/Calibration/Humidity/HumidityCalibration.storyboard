@@ -41,7 +41,7 @@ Note that calibration data will be stored locally in your mobile device. After R
                                                         <state key="normal" title="Cancel"/>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="FDV-jR-dGE" firstAttribute="top" secondItem="VBn-yR-7nk" secondAttribute="top" id="ML5-e4-4jz"/>
                                                     <constraint firstAttribute="bottom" secondItem="FDV-jR-dGE" secondAttribute="bottom" id="dWF-zr-ejm"/>
@@ -57,7 +57,7 @@ Note that calibration data will be stored locally in your mobile device. After R
                                                         <state key="normal" title="Calibrate"/>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="l80-jo-gD9" firstAttribute="top" secondItem="yxl-bJ-M6d" secondAttribute="top" id="8tK-1Z-bne"/>
                                                     <constraint firstAttribute="bottom" secondItem="l80-jo-gD9" secondAttribute="bottom" id="Rg0-VF-a1L"/>
@@ -66,7 +66,7 @@ Note that calibration data will be stored locally in your mobile device. After R
                                                 </constraints>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="VBn-yR-7nk" firstAttribute="leading" secondItem="7Mk-I5-RvS" secondAttribute="leading" id="5vf-fN-kPz"/>
                                             <constraint firstItem="VBn-yR-7nk" firstAttribute="width" secondItem="yxl-bJ-M6d" secondAttribute="width" id="CeI-Aj-Gc8"/>

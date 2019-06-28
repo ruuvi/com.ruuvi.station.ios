@@ -29,7 +29,7 @@ class HumidityCalibrationPresentationController: UIPresentationController {
     }
     
     override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
-        return CGSize(width: 300, height: 400)
+        return CGSize(width: 300, height: 322)
     }
     
     override var frameOfPresentedViewInContainerView: CGRect {
