@@ -7,4 +7,5 @@ protocol HumidityCalibrationViewOutput {
     func viewDidTriggerCalibrate()
     func viewDidTriggerClearCalibration()
     func viewDidConfirmToClearHumidityOffset()
+    func viewDidConfirmToCalibrateHumidityOffset()
 }
