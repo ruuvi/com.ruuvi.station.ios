@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="i6c-PA-8UK">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="WUC-De-g7G">
+            <objects>
+                <viewController storyboardIdentifier="HumidityCalibrationViewController" id="i6c-PA-8UK" customClass="HumidityCalibrationViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uTz-eB-SxW">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="2DV-ll-hkB"/>
+                    </view>
+                    <size key="freeformSize" width="414" height="414"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TWg-KX-6EG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="SPd-TS-S3e" customClass="HumidityCalibrationInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="i6c-PA-8UK" id="Mt8-cY-rOX"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-313" y="163"/>
+        </scene>
+    </scenes>
+</document>
