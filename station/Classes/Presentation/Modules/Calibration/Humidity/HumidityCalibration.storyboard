@@ -89,6 +89,11 @@ Note that calibration data will be stored locally in your mobile device. After R
                                     <constraint firstAttribute="trailing" secondItem="RdK-QZ-1SS" secondAttribute="trailing" constant="20" id="oUl-Z4-Ewu"/>
                                     <constraint firstItem="7Mk-I5-RvS" firstAttribute="top" secondItem="RdK-QZ-1SS" secondAttribute="bottom" constant="8" id="rLV-CL-8TH"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
