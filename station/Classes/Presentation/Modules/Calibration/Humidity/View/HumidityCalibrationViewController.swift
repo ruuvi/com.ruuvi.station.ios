@@ -34,6 +34,15 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
+    
+    func showCalibrationConfirmationDialog() {
+        let controller = UIAlertController(title: "HumidityCalibration.CalibrationConfirmationAlert.title".localized(), message: "HumidityCalibration.CalibrationConfirmationAlert.message".localized(), preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToCalibrateHumidityOffset()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - IBActions

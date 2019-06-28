@@ -6,4 +6,5 @@ protocol HumidityCalibrationViewInput: ViewInput {
     var lastCalibrationDate: Date? { get set }
     
     func showClearCalibrationConfirmationDialog()
+    func showCalibrationConfirmationDialog()
 }

@@ -34,3 +34,5 @@
 "HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Are you sure?";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "You are going to clear humidity offset. This can't be undone. Tap \"Confirm\" to continue.";
+"HumidityCalibration.CalibrationConfirmationAlert.title" = "Are you sure?";
+"HumidityCalibration.CalibrationConfirmationAlert.message" = "You are going to calibrate humidity offset. Tap \"Confirm\" to continue";

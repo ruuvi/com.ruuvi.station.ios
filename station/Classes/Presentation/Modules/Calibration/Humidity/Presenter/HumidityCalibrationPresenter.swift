@@ -44,13 +44,17 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
         })
     }
     
-    func viewDidTriggerCalibrate() {
+    func viewDidConfirmToCalibrateHumidityOffset() {
         let update = calibrationService.calibrateHumiditySaltTest(currentValue: lastHumidityValue, for: ruuviTag)
         update.on(success: { [weak self] _ in
             self?.updateView()
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+    }
+    
+    func viewDidTriggerCalibrate() {
+        view.showCalibrationConfirmationDialog()
     }
 }
 
