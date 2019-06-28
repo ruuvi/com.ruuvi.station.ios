@@ -3,6 +3,8 @@ import Foundation
 protocol HumidityCalibrationViewOutput {
     func viewDidLoad()
     func viewDidTapOnDimmingView()
-    func viewDidTriggerCancel()
+    func viewDidTriggerClose()
     func viewDidTriggerCalibrate()
+    func viewDidTriggerClearCalibration()
+    func viewDidConfirmToClearHumidityOffset()
 }

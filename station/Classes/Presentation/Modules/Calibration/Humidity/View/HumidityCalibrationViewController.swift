@@ -1,5 +1,6 @@
 import UIKit
 import TTTAttributedLabel
+import Localize_Swift
 
 class HumidityCalibrationViewController: UIViewController {
     var output: HumidityCalibrationViewOutput!
@@ -24,12 +25,21 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func showClearCalibrationConfirmationDialog() {
+        let controller = UIAlertController(title: "HumidityCalibration.ClearCalibrationConfirmationAlert.title".localized(), message: "HumidityCalibration.ClearCalibrationConfirmationAlert.message".localized(), preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToClearHumidityOffset()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - IBActions
 extension HumidityCalibrationViewController {
-    @IBAction func cancelButtonTouchUpInside(_ sender: Any) {
-        output.viewDidTriggerCancel()
+    @IBAction func closeButtonTouchUpInside(_ sender: Any) {
+        output.viewDidTriggerClose()
     }
     
     @IBAction func calibrateButtonTouchUpInside(_ sender: Any) {
@@ -37,7 +47,7 @@ extension HumidityCalibrationViewController {
     }
     
     @IBAction func clearButtonTouchUpInside(_ sender: Any) {
-        
+        output.viewDidTriggerClearCalibration()
     }
 }
 
