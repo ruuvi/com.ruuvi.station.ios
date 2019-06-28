@@ -6,9 +6,12 @@ class HumidityCalibrationViewController: UIViewController {
     
     @IBOutlet weak var descriptionLabel: TTTAttributedLabel!
     @IBOutlet weak var oldHumidityLabel: UILabel!
+    @IBOutlet weak var lastCalibrationDateLabel: UILabel!
+    @IBOutlet weak var clearButton: UIButton!
     
     var oldHumidity: Double = 0 { didSet { updateUIOldHumidity() } }
     var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
+    var lastCalibrationDate: Date? { didSet { updateUILastCAlibrationDate() } }
     
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!
 }
@@ -31,6 +34,10 @@ extension HumidityCalibrationViewController {
     
     @IBAction func calibrateButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerCalibrate()
+    }
+    
+    @IBAction func clearButtonTouchUpInside(_ sender: Any) {
+        
     }
 }
 
@@ -58,6 +65,21 @@ extension HumidityCalibrationViewController {
     private func updateUI() {
         updateUIOldHumidity()
         updateUIHumidityOffset()
+        updateUILastCAlibrationDate()
+    }
+    
+    private func updateUILastCAlibrationDate() {
+        if isViewLoaded {
+            if let lastCalibrationDate = lastCalibrationDate {
+                let df = DateFormatter()
+                df.dateFormat = "dd MMMM yyyy"
+                lastCalibrationDateLabel.text = String(format: "HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
+                clearButton.isEnabled = true
+            } else {
+                lastCalibrationDateLabel.text = nil
+                clearButton.isEnabled = false
+            }
+        }
     }
     
     private func updateUIOldHumidity() {

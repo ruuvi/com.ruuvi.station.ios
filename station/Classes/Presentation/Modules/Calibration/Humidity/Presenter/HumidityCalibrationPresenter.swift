@@ -58,5 +58,6 @@ extension HumidityCalibrationPresenter {
     func updateView() {
         view.oldHumidity = lastHumidityValue
         view.humidityOffset = ruuviTag.humidityOffset
+        view.lastCalibrationDate = ruuviTag.humidityOffsetDate
     }
 }
