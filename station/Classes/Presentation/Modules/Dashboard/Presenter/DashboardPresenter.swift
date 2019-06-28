@@ -103,10 +103,11 @@ extension DashboardPresenter: DashboardViewOutput {
     
     func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel) {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            let update = calibrationService.calibrateHumiditySaltTest(currentValue: viewModel.humidity, for: ruuviTag)
-            update.on(failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            })
+            router.openHumidityCalibration(ruuviTag: ruuviTag)
+//            let update = calibrationService.calibrateHumiditySaltTest(currentValue: viewModel.humidity, for: ruuviTag)
+//            update.on(failure: { [weak self] (error) in
+//                self?.errorPresenter.present(error: error)
+//            })
         }
     }
     
