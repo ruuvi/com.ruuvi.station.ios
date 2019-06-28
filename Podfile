@@ -14,4 +14,5 @@ target 'station' do
   pod 'Localize-Swift'
   pod 'RealmSwift'
   pod 'Swinject'
+  pod 'TTTAttributedLabel'
 end
