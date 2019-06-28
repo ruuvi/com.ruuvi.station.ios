@@ -22,23 +22,24 @@
                                 <rect key="frame" x="0.0" y="44" width="300" height="322"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RdK-QZ-1SS" customClass="TTTAttributedLabel">
-                                        <rect key="frame" x="20" y="20" width="260" height="244"/>
-                                        <string key="text">In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home. 
-
-Note that calibration data will be stored locally in your mobile device. After Ruuvi Station uninstall &amp; install, you may need to recalibrate.</string>
+                                        <rect key="frame" x="20" y="20" width="260" height="122"/>
+                                        <string key="text">In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Mk-I5-RvS">
-                                        <rect key="frame" x="0.0" y="272" width="300" height="50"/>
+                                        <rect key="frame" x="0.0" y="266.5" width="300" height="55.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VBn-yR-7nk">
-                                                <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="150" height="55.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FDV-jR-dGE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="55.5"/>
                                                         <state key="normal" title="Cancel"/>
+                                                        <connections>
+                                                            <action selector="cancelButtonTouchUpInside:" destination="i6c-PA-8UK" eventType="touchUpInside" id="8Lw-wy-25T"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -50,11 +51,14 @@ Note that calibration data will be stored locally in your mobile device. After R
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxl-bJ-M6d">
-                                                <rect key="frame" x="150" y="0.0" width="150" height="50"/>
+                                                <rect key="frame" x="150" y="0.0" width="150" height="55.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l80-jo-gD9">
-                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="150" height="55.5"/>
                                                         <state key="normal" title="Calibrate"/>
+                                                        <connections>
+                                                            <action selector="calibrateButtonTouchUpInside:" destination="i6c-PA-8UK" eventType="touchUpInside" id="w2R-Gt-dkO"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -78,16 +82,99 @@ Note that calibration data will be stored locally in your mobile device. After R
                                             <constraint firstItem="yxl-bJ-M6d" firstAttribute="top" secondItem="7Mk-I5-RvS" secondAttribute="top" id="lYv-y7-neg"/>
                                         </constraints>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ybL-yI-MLP">
+                                        <rect key="frame" x="20" y="151" width="260" height="62.5"/>
+                                        <string key="text">Note that calibration data will be stored locally in your mobile device. After Ruuvi Station uninstall &amp; install, you may need to recalibrate.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6OJ-4L-yJY">
+                                        <rect key="frame" x="0.0" y="221.5" width="300" height="37"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QGR-3G-z1w">
+                                                <rect key="frame" x="0.0" y="0.0" width="135" height="37"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Old" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tmy-25-mgX">
+                                                        <rect key="frame" x="100" y="8" width="27" height="21"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="Tmy-25-mgX" secondAttribute="trailing" constant="8" id="EIY-m0-1rY"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Tmy-25-mgX" secondAttribute="bottom" constant="8" id="WAY-1q-2Yt"/>
+                                                    <constraint firstItem="Tmy-25-mgX" firstAttribute="top" secondItem="QGR-3G-z1w" secondAttribute="top" constant="8" id="aLh-Up-0mR"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qLY-yo-IAC">
+                                                <rect key="frame" x="165" y="0.0" width="135" height="37"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="75.00 %" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czn-h1-aWi">
+                                                        <rect key="frame" x="8" y="8" width="62" height="21"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="czn-h1-aWi" firstAttribute="leading" secondItem="qLY-yo-IAC" secondAttribute="leading" constant="8" id="2ep-m4-jcJ"/>
+                                                    <constraint firstItem="czn-h1-aWi" firstAttribute="top" secondItem="qLY-yo-IAC" secondAttribute="top" constant="8" id="BsY-Te-Zka"/>
+                                                    <constraint firstAttribute="bottom" secondItem="czn-h1-aWi" secondAttribute="bottom" constant="8" id="Mth-mJ-D2c"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CfM-Bi-YbO">
+                                                <rect key="frame" x="135" y="0.0" width="30" height="37"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="→" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tmQ-V0-X2z">
+                                                        <rect key="frame" x="7.5" y="8" width="15" height="21"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="tmQ-V0-X2z" firstAttribute="centerY" secondItem="CfM-Bi-YbO" secondAttribute="centerY" id="cKA-vh-VQ0"/>
+                                                    <constraint firstAttribute="width" constant="30" id="dTJ-sD-qbU"/>
+                                                    <constraint firstItem="tmQ-V0-X2z" firstAttribute="centerX" secondItem="CfM-Bi-YbO" secondAttribute="centerX" id="on5-e9-07M"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="QGR-3G-z1w" firstAttribute="leading" secondItem="6OJ-4L-yJY" secondAttribute="leading" id="2Yj-jm-dJK"/>
+                                            <constraint firstAttribute="bottom" secondItem="qLY-yo-IAC" secondAttribute="bottom" id="8bk-1h-m8X"/>
+                                            <constraint firstAttribute="bottom" secondItem="CfM-Bi-YbO" secondAttribute="bottom" id="EVC-JP-JMw"/>
+                                            <constraint firstItem="QGR-3G-z1w" firstAttribute="top" secondItem="6OJ-4L-yJY" secondAttribute="top" id="JTB-UR-IM6"/>
+                                            <constraint firstItem="CfM-Bi-YbO" firstAttribute="top" secondItem="6OJ-4L-yJY" secondAttribute="top" id="XT1-nt-bbG"/>
+                                            <constraint firstItem="QGR-3G-z1w" firstAttribute="width" secondItem="qLY-yo-IAC" secondAttribute="width" id="YcG-an-nN9"/>
+                                            <constraint firstAttribute="bottom" secondItem="QGR-3G-z1w" secondAttribute="bottom" id="ZaE-SP-hVJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="qLY-yo-IAC" secondAttribute="trailing" id="c5n-6f-BFo"/>
+                                            <constraint firstItem="qLY-yo-IAC" firstAttribute="top" secondItem="6OJ-4L-yJY" secondAttribute="top" id="gex-KZ-Bbf"/>
+                                            <constraint firstItem="CfM-Bi-YbO" firstAttribute="leading" secondItem="QGR-3G-z1w" secondAttribute="trailing" id="ir4-ZE-aSY"/>
+                                            <constraint firstItem="qLY-yo-IAC" firstAttribute="leading" secondItem="CfM-Bi-YbO" secondAttribute="trailing" id="mTE-qi-Ji0"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="7Mk-I5-RvS" firstAttribute="leading" secondItem="twU-mb-ZWH" secondAttribute="leading" id="BvS-AK-5sM"/>
                                     <constraint firstAttribute="trailing" secondItem="7Mk-I5-RvS" secondAttribute="trailing" id="MyJ-Lc-zDR"/>
                                     <constraint firstAttribute="bottom" secondItem="7Mk-I5-RvS" secondAttribute="bottom" id="S33-jm-UHq"/>
+                                    <constraint firstItem="ybL-yI-MLP" firstAttribute="top" secondItem="RdK-QZ-1SS" secondAttribute="bottom" constant="9" id="XMN-ad-dXh"/>
+                                    <constraint firstItem="ybL-yI-MLP" firstAttribute="leading" secondItem="RdK-QZ-1SS" secondAttribute="leading" id="Y1Q-Fc-NMa"/>
+                                    <constraint firstItem="ybL-yI-MLP" firstAttribute="trailing" secondItem="RdK-QZ-1SS" secondAttribute="trailing" id="YKp-IU-Dz5"/>
                                     <constraint firstItem="RdK-QZ-1SS" firstAttribute="leading" secondItem="twU-mb-ZWH" secondAttribute="leading" constant="20" id="fkn-le-7Y6"/>
+                                    <constraint firstItem="7Mk-I5-RvS" firstAttribute="top" secondItem="6OJ-4L-yJY" secondAttribute="bottom" constant="8" id="iO5-mk-7Fa"/>
                                     <constraint firstItem="RdK-QZ-1SS" firstAttribute="top" secondItem="twU-mb-ZWH" secondAttribute="top" constant="20" id="kya-WN-w4v"/>
                                     <constraint firstAttribute="trailing" secondItem="RdK-QZ-1SS" secondAttribute="trailing" constant="20" id="oUl-Z4-Ewu"/>
-                                    <constraint firstItem="7Mk-I5-RvS" firstAttribute="top" secondItem="RdK-QZ-1SS" secondAttribute="bottom" constant="8" id="rLV-CL-8TH"/>
+                                    <constraint firstItem="6OJ-4L-yJY" firstAttribute="leading" secondItem="twU-mb-ZWH" secondAttribute="leading" id="ogb-VA-cY1"/>
+                                    <constraint firstAttribute="trailing" secondItem="6OJ-4L-yJY" secondAttribute="trailing" id="qdl-7s-xpp"/>
+                                    <constraint firstItem="6OJ-4L-yJY" firstAttribute="top" secondItem="ybL-yI-MLP" secondAttribute="bottom" constant="8" id="tfq-vB-IOp"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -106,6 +193,10 @@ Note that calibration data will be stored locally in your mobile device. After R
                         <viewLayoutGuide key="safeArea" id="2DV-ll-hkB"/>
                     </view>
                     <size key="freeformSize" width="300" height="400"/>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="RdK-QZ-1SS" id="Cuj-1B-hue"/>
+                        <outlet property="oldHumidityLabel" destination="Tmy-25-mgX" id="YyW-XR-nvl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TWg-KX-6EG" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="SPd-TS-S3e" customClass="HumidityCalibrationInitializer" customModule="station" customModuleProvider="target">

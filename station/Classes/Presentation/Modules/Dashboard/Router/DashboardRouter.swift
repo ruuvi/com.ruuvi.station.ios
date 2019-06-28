@@ -65,7 +65,7 @@ class DashboardRouter: DashboardRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
     
-    func openHumidityCalibration(ruuviTag: RuuviTagRealm) {
+    func openHumidityCalibration(ruuviTag: RuuviTagRealm, lastHumidityValue: Double) {
         let factory = StoryboardFactory(storyboardName: "HumidityCalibration")
         try! transitionHandler
             .forStoryboard(factory: factory, to: HumidityCalibrationModuleInput.self)
@@ -74,7 +74,7 @@ class DashboardRouter: DashboardRouterInput {
                 viewController.modalPresentationStyle = .custom
             })
             .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag)
+                module.configure(ruuviTag: ruuviTag, lastHumidityValue: lastHumidityValue)
             })
     }
 }
