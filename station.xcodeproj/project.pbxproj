@@ -166,6 +166,8 @@
 		0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */; };
 		0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */; };
 		0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */; };
+		0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */; };
+		0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */; };
 		0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
 		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
@@ -364,6 +366,8 @@
 		0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationPresenter.swift; sourceTree = "<group>"; };
 		0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationInitializer.swift; sourceTree = "<group>"; };
 		0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationConfigurator.swift; sourceTree = "<group>"; };
+		0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationTransitioningDelegate.swift; sourceTree = "<group>"; };
+		0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationPresentationController.swift; sourceTree = "<group>"; };
 		0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistence.swift; sourceTree = "<group>"; };
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
@@ -1385,6 +1389,7 @@
 			children = (
 				0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */,
 				0EEC3F4922C5E16600C51D81 /* Assembly */,
+				0EEC3F5F22C5EC1500C51D81 /* Transition */,
 				0EEC3F4822C5E15D00C51D81 /* Presenter */,
 				0EEC3F4722C5E15800C51D81 /* Router */,
 				0EEC3F4622C5E15400C51D81 /* View */,
@@ -1427,6 +1432,15 @@
 				0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */,
 			);
 			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EEC3F5F22C5EC1500C51D81 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */,
+				0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */,
+			);
+			path = Transition;
 			sourceTree = "<group>";
 		};
 		0EFDD6CD22BBD95700EADFC6 /* Calibration */ = {
@@ -1882,6 +1896,7 @@
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
 				0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */,
+				0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */,
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				0E1C1DD322B3BF180032F6CA /* DashboardViewInput.swift in Sources */,
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
@@ -1908,6 +1923,7 @@
 				0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
+				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */,
 				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,
 				0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */,

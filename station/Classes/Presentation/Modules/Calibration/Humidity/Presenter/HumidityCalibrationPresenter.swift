@@ -6,5 +6,7 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
 }
 
 extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
-    
+    func viewDidTapOnDimmingView() {
+        router.dismiss()
+    }
 }
