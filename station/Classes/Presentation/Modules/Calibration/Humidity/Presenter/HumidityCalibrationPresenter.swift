@@ -27,14 +27,27 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
         router.dismiss()
     }
     
-    func viewDidTriggerCancel() {
+    func viewDidTriggerClose() {
         router.dismiss()
+    }
+    
+    func viewDidTriggerClearCalibration() {
+        view.showClearCalibrationConfirmationDialog()
+    }
+    
+    func viewDidConfirmToClearHumidityOffset() {
+        let clear = calibrationService.cleanHumidityCalibration(for: ruuviTag)
+        clear.on(success: { [weak self] _ in
+            self?.updateView()
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
     
     func viewDidTriggerCalibrate() {
         let update = calibrationService.calibrateHumiditySaltTest(currentValue: lastHumidityValue, for: ruuviTag)
         update.on(success: { [weak self] _ in
-            self?.router.dismiss()
+            self?.updateView()
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })

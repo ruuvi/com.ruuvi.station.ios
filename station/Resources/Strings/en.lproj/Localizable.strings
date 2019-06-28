@@ -1,5 +1,6 @@
 "Cancel" = "Cancel";
 "OK" = "OK";
+"Confirm" = "Confirm";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
@@ -31,3 +32,5 @@
 "HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
 "HumidityCalibration.VideoTutorials.link" = "video tutorials";
 "HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Are you sure?";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "You are going to clear humidity offset. This can't be undone. Tap \"Confirm\" to continue.";

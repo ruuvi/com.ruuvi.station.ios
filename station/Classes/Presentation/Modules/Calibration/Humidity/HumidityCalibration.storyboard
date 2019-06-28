@@ -57,9 +57,9 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FDV-jR-dGE">
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="51.5"/>
-                                                        <state key="normal" title="Cancel"/>
+                                                        <state key="normal" title="Close"/>
                                                         <connections>
-                                                            <action selector="cancelButtonTouchUpInside:" destination="i6c-PA-8UK" eventType="touchUpInside" id="8Lw-wy-25T"/>
+                                                            <action selector="closeButtonTouchUpInside:" destination="i6c-PA-8UK" eventType="touchUpInside" id="8Lw-wy-25T"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -186,6 +186,9 @@
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last calibration date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sp2-Bn-2dL">
                                         <rect key="frame" x="88" y="266.5" width="124" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="16" id="maL-ca-edX"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
