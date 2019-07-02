@@ -168,6 +168,16 @@
 		0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */; };
 		0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */; };
 		0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */; };
+		0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */; };
+		0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
+		0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
+		0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863222CBB0250026C7A5 /* TagSettingsViewOutput.swift */; };
+		0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863422CBB03A0026C7A5 /* TagSettingsRouterInput.swift */; };
+		0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863622CBB04E0026C7A5 /* TagSettingsRouter.swift */; };
+		0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863822CBB06C0026C7A5 /* TagSettingsModuleInput.swift */; };
+		0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863A22CBB08C0026C7A5 /* TagSettingsPresenter.swift */; };
+		0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */; };
+		0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */; };
 		0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
 		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
@@ -368,6 +378,16 @@
 		0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationConfigurator.swift; sourceTree = "<group>"; };
 		0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationTransitioningDelegate.swift; sourceTree = "<group>"; };
 		0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationPresentationController.swift; sourceTree = "<group>"; };
+		0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagSettings.storyboard; sourceTree = "<group>"; };
+		0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableViewController.swift; sourceTree = "<group>"; };
+		0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewInput.swift; sourceTree = "<group>"; };
+		0EF2863222CBB0250026C7A5 /* TagSettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewOutput.swift; sourceTree = "<group>"; };
+		0EF2863422CBB03A0026C7A5 /* TagSettingsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsRouterInput.swift; sourceTree = "<group>"; };
+		0EF2863622CBB04E0026C7A5 /* TagSettingsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsRouter.swift; sourceTree = "<group>"; };
+		0EF2863822CBB06C0026C7A5 /* TagSettingsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleInput.swift; sourceTree = "<group>"; };
+		0EF2863A22CBB08C0026C7A5 /* TagSettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsPresenter.swift; sourceTree = "<group>"; };
+		0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagSettingsTableInitializer.swift; sourceTree = "<group>"; };
+		0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableConfigurator.swift; sourceTree = "<group>"; };
 		0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistence.swift; sourceTree = "<group>"; };
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
@@ -507,6 +527,7 @@
 				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0E502FA422B2780300E8A6CC /* RuuviTag */,
 				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
+				0EF2862522CBAF280026C7A5 /* TagSettings */,
 				0E09671E22AE7F2600E85F48 /* Welcome */,
 			);
 			path = Modules;
@@ -1443,6 +1464,79 @@
 			path = Transition;
 			sourceTree = "<group>";
 		};
+		0EF2862522CBAF280026C7A5 /* TagSettings */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */,
+				0EF2862A22CBAF480026C7A5 /* Assembly */,
+				0EF2862922CBAF410026C7A5 /* Transition */,
+				0EF2862822CBAF3C0026C7A5 /* Presenter */,
+				0EF2862722CBAF370026C7A5 /* Router */,
+				0EF2862622CBAF320026C7A5 /* View */,
+			);
+			path = TagSettings;
+			sourceTree = "<group>";
+		};
+		0EF2862622CBAF320026C7A5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2862F22CBAFF10026C7A5 /* Table */,
+				0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */,
+				0EF2863222CBB0250026C7A5 /* TagSettingsViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0EF2862722CBAF370026C7A5 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2863422CBB03A0026C7A5 /* TagSettingsRouterInput.swift */,
+				0EF2863622CBB04E0026C7A5 /* TagSettingsRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0EF2862822CBAF3C0026C7A5 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2863822CBB06C0026C7A5 /* TagSettingsModuleInput.swift */,
+				0EF2863A22CBB08C0026C7A5 /* TagSettingsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0EF2862922CBAF410026C7A5 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
+		0EF2862A22CBAF480026C7A5 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2863E22CBB1110026C7A5 /* Table */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EF2862F22CBAFF10026C7A5 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		0EF2863E22CBB1110026C7A5 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */,
+				0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
 		0EFDD6CD22BBD95700EADFC6 /* Calibration */ = {
 			isa = PBXGroup;
 			children = (
@@ -1700,6 +1794,7 @@
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
 				0EEB20C722B7A7200015F9E0 /* Localizable.strings in Resources */,
 				0E09672822AE8D7A00E85F48 /* Discover.storyboard in Resources */,
+				0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
@@ -1805,6 +1900,7 @@
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
+				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
@@ -1841,6 +1937,7 @@
 				0E1C1DC622B396040032F6CA /* UIAlertController+Show.swift in Sources */,
 				0EEB211F22B8C5E70015F9E0 /* ChartViewOutput.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
+				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
@@ -1861,9 +1958,11 @@
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0EEB212B22B8C7B70015F9E0 /* ChartConfigurator.swift in Sources */,
+				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
+				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */,
@@ -1889,6 +1988,7 @@
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
+				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */,
@@ -1910,7 +2010,10 @@
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
 				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
 				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
+				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
+				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
+				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
@@ -1921,6 +2024,7 @@
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0E502FC822B2861F00E8A6CC /* RuuviTagAddDismissTransitionAnimation.swift in Sources */,
+				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
 				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
