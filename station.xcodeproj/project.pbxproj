@@ -97,6 +97,7 @@
 		0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */; };
 		0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48A22AFC77F006CB87C /* Pulsator.swift */; };
 		0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */; };
+		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
 		0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */; };
 		0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
@@ -311,6 +312,7 @@
 		0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorConfigurator.swift; sourceTree = "<group>"; };
 		0E70A48A22AFC77F006CB87C /* Pulsator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pulsator.swift; sourceTree = "<group>"; };
 		0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCollectionViewLayout.swift; sourceTree = "<group>"; };
+		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserDefaults.swift; sourceTree = "<group>"; };
 		0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPersistence.swift; sourceTree = "<group>"; };
@@ -497,6 +499,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DBC22B3920C0032F6CA /* Assembly */,
+				0EC50F4E22CCB91000172EEB /* Binding */,
 				0E70A45E22AF9558006CB87C /* Contract */,
 				0E09671B22AE76B700E85F48 /* Launch */,
 				0E70A46122AF958E006CB87C /* Localization */,
@@ -1094,6 +1097,14 @@
 				0E70A48A22AFC77F006CB87C /* Pulsator.swift */,
 			);
 			path = Pulsator;
+			sourceTree = "<group>";
+		};
+		0EC50F4E22CCB91000172EEB /* Binding */ = {
+			isa = PBXGroup;
+			children = (
+				0EC50F4F22CCB92000172EEB /* Observable.swift */,
+			);
+			path = Binding;
 			sourceTree = "<group>";
 		};
 		0EEB20BC22B76FED0015F9E0 /* UserDefaults */ = {
@@ -1957,6 +1968,7 @@
 				0E1C1DDF22B3C2330032F6CA /* DashboardPresenter.swift in Sources */,
 				0E1C1DC622B396040032F6CA /* UIAlertController+Show.swift in Sources */,
 				0EEB211F22B8C5E70015F9E0 /* ChartViewOutput.swift in Sources */,
+				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift in Sources */,
