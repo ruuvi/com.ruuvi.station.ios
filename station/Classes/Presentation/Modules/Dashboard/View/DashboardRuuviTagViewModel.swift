@@ -3,7 +3,7 @@ import UIKit
 struct DashboardRuuviTagViewModel {
     var uuid: String
     var name: String
-    var celsius: Double
+    var celsius: Double // Observable<Double?> = Observable<Double?>()
     var humidity: Double
     var pressure: Double
     var rssi: Int
@@ -16,7 +16,11 @@ struct DashboardRuuviTagViewModel {
     var date: Date = Date()
     
     var fahrenheit: Double {
-        return (celsius * 9.0/5.0) + 32.0
+//        if let celsius = celsius.value {
+            return (celsius * 9.0/5.0) + 32.0
+//        } else {
+//            return nil
+//        }
     }
 }
 

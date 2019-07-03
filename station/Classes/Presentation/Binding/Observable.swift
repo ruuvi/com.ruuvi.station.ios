@@ -1,18 +1,18 @@
 import Foundation
 
-class Observable<ObservedType> {
-    typealias Observer = (_ observable: Observable<ObservedType>, ObservedType?) -> Void
+class Observable<ObservedType: OptionalType> {
+    typealias Observer = (_ observable: Observable<ObservedType>, ObservedType.WrappedType?) -> Void
     
     private var observers: [Observer]
     
-    var value: ObservedType? {
+    var value: ObservedType.WrappedType? {
         didSet {
             notifyObservers(value)
         }
     }
     
     init(_ value: ObservedType? = nil) {
-        self.value = value
+        self.value = value?.asOptional
         observers = []
     }
     
@@ -20,7 +20,7 @@ class Observable<ObservedType> {
         self.observers.append(observer)
     }
     
-    private func notifyObservers(_ value: ObservedType?) {
+    private func notifyObservers(_ value: ObservedType.WrappedType?) {
         self.observers.forEach { [unowned self] (observer) in
             observer(self, value)
         }
