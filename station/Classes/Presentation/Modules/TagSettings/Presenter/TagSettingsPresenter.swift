@@ -19,7 +19,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
 // MARK: - TagSettingsViewOutput
 extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidAskToDismiss() {
-        
+        router.dismiss()
     }
 }
 
