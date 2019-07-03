@@ -53,6 +53,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     func setBackground(_ id: Int, for uuid: String) {
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
+        UserDefaults.standard.synchronize()
         NotificationCenter.default.post(name: .BackgroundPersistenceDidChangeBackground, object: nil, userInfo: [BackgroundPersistenceDidChangeBackgroundKey.uuid: uuid ])
         if id >= bgMinIndex && id <= bgMaxIndex {
             var array = usedBackgrounds
