@@ -61,12 +61,22 @@ IMAGE</string>
                                                                 <constraint firstAttribute="width" constant="40" id="drO-Bv-CSf"/>
                                                             </constraints>
                                                         </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQk-zp-2E5">
+                                                            <rect key="frame" x="0.0" y="0.0" width="68" height="56"/>
+                                                            <connections>
+                                                                <action selector="randomizeBackgroundButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="2CB-HK-t6G"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="kQk-zp-2E5" secondAttribute="trailing" id="9f9-PP-FAk"/>
+                                                        <constraint firstAttribute="bottom" secondItem="kQk-zp-2E5" secondAttribute="bottom" id="G8A-Do-uZl"/>
                                                         <constraint firstItem="B4S-p2-boh" firstAttribute="centerX" secondItem="TKu-0P-GT3" secondAttribute="centerX" id="ImQ-dA-mnp"/>
+                                                        <constraint firstItem="kQk-zp-2E5" firstAttribute="top" secondItem="TKu-0P-GT3" secondAttribute="top" id="c7q-U9-eOS"/>
                                                         <constraint firstAttribute="bottom" secondItem="B4S-p2-boh" secondAttribute="bottom" constant="8" id="hXN-uV-ZMl"/>
                                                         <constraint firstItem="B4S-p2-boh" firstAttribute="top" secondItem="TKu-0P-GT3" secondAttribute="top" constant="8" id="qqn-zY-710"/>
+                                                        <constraint firstItem="kQk-zp-2E5" firstAttribute="leading" secondItem="TKu-0P-GT3" secondAttribute="leading" id="uFP-4p-tbl"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w0P-tL-iSc">
@@ -80,11 +90,21 @@ IMAGE</string>
                                                                 <constraint firstAttribute="width" constant="40" id="zQ3-MS-a92"/>
                                                             </constraints>
                                                         </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Cn-6m8">
+                                                            <rect key="frame" x="0.0" y="0.0" width="68.5" height="56"/>
+                                                            <connections>
+                                                                <action selector="selectBackgroundButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="q3N-ya-eGE"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="h6u-bU-TTV" secondAttribute="bottom" constant="8" id="3tP-X8-OdW"/>
+                                                        <constraint firstItem="NA8-Cn-6m8" firstAttribute="leading" secondItem="w0P-tL-iSc" secondAttribute="leading" id="41U-fw-kli"/>
+                                                        <constraint firstItem="NA8-Cn-6m8" firstAttribute="top" secondItem="w0P-tL-iSc" secondAttribute="top" id="5eS-zV-mGz"/>
+                                                        <constraint firstAttribute="trailing" secondItem="NA8-Cn-6m8" secondAttribute="trailing" id="Kbf-PN-teJ"/>
                                                         <constraint firstItem="h6u-bU-TTV" firstAttribute="centerX" secondItem="w0P-tL-iSc" secondAttribute="centerX" id="ih5-EQ-u5E"/>
+                                                        <constraint firstAttribute="bottom" secondItem="NA8-Cn-6m8" secondAttribute="bottom" id="te7-dE-lJm"/>
                                                         <constraint firstItem="h6u-bU-TTV" firstAttribute="top" secondItem="w0P-tL-iSc" secondAttribute="top" constant="8" id="u2P-Si-VPI"/>
                                                     </constraints>
                                                 </view>
@@ -139,6 +159,9 @@ IMAGE</string>
                                             <integer key="value" value="20"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="removeThisRuuviTagButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="btN-AQ-GfZ"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -153,7 +176,7 @@ IMAGE</string>
                             </tableViewSection>
                             <tableViewSection headerTitle="NAME" id="ZI8-iX-26i">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Ltg-8j-gFv">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="Ltg-8j-gFv">
                                         <rect key="frame" x="0.0" y="296" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ltg-8j-gFv" id="pkh-BB-rHf">
@@ -171,6 +194,9 @@ IMAGE</string>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="JXe-xp-HbB" id="6fw-eM-aj6"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -218,7 +244,7 @@ IMAGE</string>
                             </tableViewSection>
                             <tableViewSection headerTitle="MORE INFO" id="mGB-9g-Z5c">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="5W6-6n-nIk">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="5W6-6n-nIk">
                                         <rect key="frame" x="0.0" y="496" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="5W6-6n-nIk" id="1eo-kf-fae">
@@ -246,7 +272,7 @@ IMAGE</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="2eK-Eg-wag">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="2eK-Eg-wag">
                                         <rect key="frame" x="0.0" y="540" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2eK-Eg-wag" id="nYr-wu-aMZ">
@@ -274,7 +300,7 @@ IMAGE</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="sYG-Zi-7Ww">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="sYG-Zi-7Ww">
                                         <rect key="frame" x="0.0" y="584" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sYG-Zi-7Ww" id="ImJ-sL-9YE">
@@ -302,7 +328,7 @@ IMAGE</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="N9T-p0-VEN">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="N9T-p0-VEN">
                                         <rect key="frame" x="0.0" y="628" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="N9T-p0-VEN" id="Bez-ji-guP">
@@ -330,7 +356,7 @@ IMAGE</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="3ty-Rr-uk1">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="3ty-Rr-uk1">
                                         <rect key="frame" x="0.0" y="672" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3ty-Rr-uk1" id="MES-3N-Mgq">
@@ -367,8 +393,23 @@ IMAGE</string>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Tag Settings" id="077-3J-vYo">
-                        <barButtonItem key="leftBarButtonItem" image="tag-settings-dismiss-icon" id="d8d-Ht-mRS"/>
+                        <barButtonItem key="leftBarButtonItem" image="tag-settings-dismiss-icon" id="d8d-Ht-mRS">
+                            <connections>
+                                <action selector="dismissBarButtonItemAction:" destination="JXe-xp-HbB" id="onb-BV-tEw"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="accelerationXValueLabel" destination="Z8D-DO-887" id="RM5-Lo-DoC"/>
+                        <outlet property="accelerationYValueLabel" destination="BZJ-uw-vfj" id="ecB-Eo-lOq"/>
+                        <outlet property="accelerationZValueLabel" destination="Chd-Uf-uiU" id="XBV-24-uzu"/>
+                        <outlet property="backgroundImageView" destination="PPK-KZ-0TC" id="1NZ-SW-ZHa"/>
+                        <outlet property="humidityOffsetDate" destination="h1w-an-ceI" id="Kcn-AW-TMy"/>
+                        <outlet property="macAddressTitleLabel" destination="rvA-8R-FuO" id="s46-qG-xlf"/>
+                        <outlet property="macAddressValueLabel" destination="WtD-WI-89V" id="3lA-Fg-rDb"/>
+                        <outlet property="tagNameTextField" destination="wsY-ah-PBa" id="jfa-8a-aDt"/>
+                        <outlet property="voltageValueLabel" destination="0QS-Je-2os" id="kRK-5R-yaN"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e12-8u-47A" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="tyv-K8-0GP" customClass="TagSettingsTableInitializer" customModule="station" customModuleProvider="target">
