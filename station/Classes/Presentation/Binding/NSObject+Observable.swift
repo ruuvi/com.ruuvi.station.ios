@@ -13,18 +13,20 @@ extension Optional: OptionalType {
 
 extension NSObjectProtocol where Self: NSObject  {
     
-    func observe<T: OptionalType>(for observable: Observable<T>, with: @escaping (Self,T.WrappedType?) -> ()) {
+    func bind<T: OptionalType>(_ observable: Observable<T>, block: @escaping (Self,T.WrappedType?) -> ()) {
+        block(self, observable.value?.asOptional)
         observable.bind { [unowned self] observable, value  in
             DispatchQueue.main.async { [unowned self] in
-                with(self, value?.asOptional)
+                block(self, value?.asOptional)
             }
         }
     }
     
-    func observe<T>(for observable: Observable<T>, with: @escaping (Self,T?) -> ()) {
+    func bind<T>(_ observable: Observable<T>, block: @escaping (Self,T?) -> ()) {
+        block(self, observable.value)
         observable.bind { [unowned self] observable, value  in
             DispatchQueue.main.async { [unowned self] in
-                with(self, value)
+                block(self, value)
             }
         }
     }

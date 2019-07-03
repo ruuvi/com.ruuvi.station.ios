@@ -70,9 +70,9 @@ extension TagSettingsTableViewController {
     }
     private func bindTagSettingsViewModel() {
         if isViewLoaded, let viewModel = viewModel {
-            backgroundImageView.observe(for: viewModel.background) { $0.image = $1 }
-            tagNameTextField.observe(for: viewModel.name) { $0.text = $1 }
-            humidityOffsetDateLabel.observe(for: viewModel.humidityOffsetDate) { (label, date) in
+            backgroundImageView.bind(viewModel.background) { $0.image = $1 }
+            tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+            humidityOffsetDateLabel.bind(viewModel.humidityOffsetDate) { (label, date) in
                 let df = DateFormatter()
                 df.dateFormat = "dd MMMM yyyy"
                 if let date = date {
