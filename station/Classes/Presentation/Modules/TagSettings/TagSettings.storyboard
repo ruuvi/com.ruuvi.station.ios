@@ -12,7 +12,6 @@
         <!--View Controller-->
         <scene sceneID="zZa-6b-ivF">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="e12-8u-47A" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="TagSettingsTableViewController" id="JXe-xp-HbB" customClass="TagSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ece-Kf-Sc4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -157,6 +156,7 @@ IMAGE</string>
                     </tableView>
                     <navigationItem key="navigationItem" title="Tag Settings" id="077-3J-vYo"/>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e12-8u-47A" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="tyv-K8-0GP" customClass="TagSettingsTableInitializer" customModule="station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="JXe-xp-HbB" id="U5C-d0-Q3H"/>
@@ -165,10 +165,10 @@ IMAGE</string>
             </objects>
             <point key="canvasLocation" x="57.971014492753625" y="154.6875"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Tag Settings Navigation Controller-->
         <scene sceneID="ySo-bB-xfl">
             <objects>
-                <navigationController id="YYp-du-G0Q" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TagSettingsNavigationController" id="YYp-du-G0Q" customClass="TagSettingsNavigationController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="z64-ry-3mA">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
