@@ -50,6 +50,7 @@ extension TagSettingsTableViewController {
     }
     
     @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {
+        output.viewDidAskToRandomizeBackground()
     }
     
     @IBAction func selectBackgroundButtonTouchUpInside(_ sender: Any) {

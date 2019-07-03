@@ -21,6 +21,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidAskToDismiss() {
         router.dismiss()
     }
+    
+    func viewDidAskToRandomizeBackground() {
+        let image = backgroundPersistence.setNextBackground(for: ruuviTag.uuid)
+        viewModel.background.value = image
+    }
 }
 
 // MARK: - Private
