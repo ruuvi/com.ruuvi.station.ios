@@ -18,16 +18,38 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
     
+    func setNextBackground(for uuid: String) -> UIImage? {
+        var id = backgroundId(for: uuid)
+        if id >= bgMinIndex && id < bgMaxIndex {
+            id += 1
+            setBackground(id, for: uuid)
+        } else if id >= bgMaxIndex {
+            id = bgMinIndex
+            setBackground(id, for: uuid)
+        } else {
+            id = biasedToNotUsedRandom()
+            let key = bgUDKeyPrefix + uuid
+            UserDefaults.standard.set(id, forKey: key)
+        }
+        return UIImage(named: "bg\(id)")
+    }
+    
     func background(for uuid: String) -> UIImage? {
-        let key = bgUDKeyPrefix + uuid
-        var id = UserDefaults.standard.integer(forKey: key)
+        var id = backgroundId(for: uuid)
         if id >= bgMinIndex  {
             return UIImage(named: "bg\(id)")
         } else {
             id = biasedToNotUsedRandom()
+            let key = bgUDKeyPrefix + uuid
             UserDefaults.standard.set(id, forKey: key)
             return UIImage(named: "bg\(id)")
         }
+    }
+    
+    func backgroundId(for uuid: String) -> Int {
+        let key = bgUDKeyPrefix + uuid
+        let id = UserDefaults.standard.integer(forKey: key)
+        return id
     }
     
     func setBackground(_ id: Int, for uuid: String) {
