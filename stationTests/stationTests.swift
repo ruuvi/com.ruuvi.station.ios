@@ -21,19 +21,6 @@ class stationTests: XCTestCase {
         super.tearDown()
     }
     
-    func testBackgroundPersistenceUserDefaultsBGIsBiasedToNotUsed() {
-        let b = BackgroundPersistenceUserDefaults()
-        var set = Set<Int>()
-        for _ in b.bgMinIndex...b.bgMaxIndex {
-            let random = b.biasedToNotUsedRandom()
-            XCTAssert(random >= b.bgMinIndex)
-            XCTAssert(random <= b.bgMaxIndex)
-            XCTAssert(!set.contains(random))
-            print(random)
-            set.insert(random)
-        }
-    }
-    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
