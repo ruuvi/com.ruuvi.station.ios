@@ -9,9 +9,11 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var voltageValueLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
-    @IBOutlet weak var humidityOffsetDate: UILabel!
+    @IBOutlet weak var humidityOffsetDateLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
+    
+    var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
@@ -32,6 +34,14 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
 // MARK: - IBActions
 extension TagSettingsTableViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bindViewModels()
+    }
+}
+    
+// MARK: - IBActions
+extension TagSettingsTableViewController {
     @IBAction func dismissBarButtonItemAction(_ sender: Any) {
     }
     
@@ -50,5 +60,27 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
+    }
+}
+
+// MARK: - Bindings
+extension TagSettingsTableViewController {
+    private func bindViewModels() {
+        bindTagSettingsViewModel()
+    }
+    private func bindTagSettingsViewModel() {
+        if isViewLoaded, let viewModel = viewModel {
+            backgroundImageView.observe(for: viewModel.background) { $0.image = $1 }
+            tagNameTextField.observe(for: viewModel.name) { $0.text = $1 }
+            humidityOffsetDateLabel.observe(for: viewModel.humidityOffsetDate) { (label, date) in
+                let df = DateFormatter()
+                df.dateFormat = "dd MMMM yyyy"
+                if let date = date {
+                    label.text = df.string(from: date)
+                } else {
+                    label.text = nil
+                }
+            }
+        }
     }
 }

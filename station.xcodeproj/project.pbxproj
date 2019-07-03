@@ -99,6 +99,7 @@
 		0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
+		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
 		0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */; };
 		0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
@@ -315,6 +316,7 @@
 		0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCollectionViewLayout.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
+		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserDefaults.swift; sourceTree = "<group>"; };
 		0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPersistence.swift; sourceTree = "<group>"; };
@@ -1105,6 +1107,7 @@
 			isa = PBXGroup;
 			children = (
 				0EC50F4F22CCB92000172EEB /* Observable.swift */,
+				0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */,
 			);
 			path = Binding;
 			sourceTree = "<group>";
@@ -2053,6 +2056,7 @@
 				0E53DA6422CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift in Sources */,
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
+				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
