@@ -14,8 +14,8 @@ struct DashboardRuuviTagViewModel {
     var mac: Observable<String?> = Observable<String?>()
     var humidityOffset: Observable<Double?> = Observable<Double?>(0)
     var humidityOffsetDate: Observable<Date?> = Observable<Date?>()
-    var date: Observable<Date?> = Observable<Date?>(Date())
-    var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>(.celsius)
+    var date: Observable<Date?> = Observable<Date?>()
+    var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     
     var fahrenheit: Double? {
         if let celsius = celsius.value {
