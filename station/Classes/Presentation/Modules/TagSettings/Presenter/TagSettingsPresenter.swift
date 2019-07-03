@@ -5,27 +5,29 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var router: TagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
     
-    private var ruuviTag: RuuviTagRealm!
+    private var ruuviTag: RuuviTagRealm! { didSet { setupViewModel() } }
+    private var viewModel: TagSettingsViewModel!
     
     func configure(ruuviTag: RuuviTagRealm) {
+        self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
-        setupViewModel()
+        view.viewModel = viewModel
     }
 
 }
 
 // MARK: - TagSettingsViewOutput
 extension TagSettingsPresenter: TagSettingsViewOutput {
-    
+    func viewDidAskToDismiss() {
+        
+    }
 }
 
 // MARK: - Private
 extension TagSettingsPresenter {
     private func setupViewModel() {
-        let viewModel = TagSettingsViewModel()
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
         viewModel.name.value = ruuviTag.name
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
-        view.viewModel = viewModel
     }
 }
