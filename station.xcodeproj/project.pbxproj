@@ -98,6 +98,7 @@
 		0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48A22AFC77F006CB87C /* Pulsator.swift */; };
 		0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
+		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
 		0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */; };
 		0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
@@ -313,6 +314,7 @@
 		0E70A48A22AFC77F006CB87C /* Pulsator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pulsator.swift; sourceTree = "<group>"; };
 		0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCollectionViewLayout.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserDefaults.swift; sourceTree = "<group>"; };
 		0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPersistence.swift; sourceTree = "<group>"; };
@@ -1509,6 +1511,7 @@
 			children = (
 				0E53DA6522CC962500BC6D64 /* Navigation */,
 				0EF2862F22CBAFF10026C7A5 /* Table */,
+				0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */,
 				0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */,
 				0EF2863222CBB0250026C7A5 /* TagSettingsViewOutput.swift */,
 			);
@@ -1964,6 +1967,7 @@
 				0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* TagSettingsNavigationController.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
+				0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */,
 				0EEB212522B8C64B0015F9E0 /* ChartModuleInput.swift in Sources */,
 				0E1C1DDF22B3C2330032F6CA /* DashboardPresenter.swift in Sources */,
 				0E1C1DC622B396040032F6CA /* UIAlertController+Show.swift in Sources */,
