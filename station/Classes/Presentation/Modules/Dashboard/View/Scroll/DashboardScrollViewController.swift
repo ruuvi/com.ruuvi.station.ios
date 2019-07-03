@@ -10,8 +10,7 @@ class DashboardScrollViewController: UIViewController {
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
-    var viewModels = [DashboardRuuviTagViewModel]() { didSet { updateUIRuuviTags() }  }
+    var viewModels = [DashboardRuuviTagViewModel]() { didSet { updateUIViewModels() }  }
     
     private var ruuviTagViews = [DashboardRuuviTagViewModel: DashboardRuuviTagView]()
     private var currentPage: Int {
@@ -40,58 +39,6 @@ extension DashboardScrollViewController: DashboardViewInput {
         present(alertVC, animated: true)
     }
     
-    func reload(viewModel: DashboardRuuviTagViewModel) {
-        if let view = ruuviTagViews[viewModel] {
-            configure(view: view, with: viewModel)
-            ruuviTagViews.removeValue(forKey: viewModel)
-            ruuviTagViews[viewModel] = view
-        }
-    }
-    
-    func showMenu(for viewModel: DashboardRuuviTagViewModel) {
-        var infoText = String(format: "Dashboard.settings.dataFormat.format".localized(), viewModel.version)
-        if let voltage = viewModel.voltage {
-            infoText.append(String(format: "Dashboard.settings.voltage.format".localized(), voltage))
-        }
-        if let humidityOffsetDate = viewModel.humidityOffsetDate {
-            let df = DateFormatter()
-            df.dateFormat = "dd MMMM yyyy"
-            infoText.append(String(format: "Dashboard.settings.humidityOffsetDate.format".localized(), df.string(from: humidityOffsetDate)))
-        }
-        let controller = UIAlertController(title: nil, message: infoText, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        controller.addAction(UIAlertAction(title: "Dashboard.settings.rename.title".localized(), style: .default, handler: { [weak self] (action) in
-            self?.output.viewDidAskToRename(viewModel: viewModel)
-        }))
-        controller.addAction(UIAlertAction(title: "Dashboard.settings.calibrateHumidity.title".localized(), style: .default, handler: { [weak self] (action) in
-            self?.output.viewDidAskToCalibrateHumidity(viewModel: viewModel)
-        }))
-        controller.addAction(UIAlertAction(title: "Dashboard.settings.remove.title".localized(), style: .destructive, handler: { [weak self] (action) in
-            self?.output.viewDidAskToRemove(viewModel: viewModel)
-        }))
-        present(controller, animated: true)
-    }
-    
-    func showRenameDialog(for viewModel: DashboardRuuviTagViewModel) {
-        let alert = UIAlertController(title: "Dashboard.settings.rename.title.EnterAName".localized(), message: nil, preferredStyle: .alert)
-        alert.addTextField { [weak self] (textField) in
-            textField.autocapitalizationType = UITextAutocapitalizationType.sentences
-            if viewModel.name == viewModel.uuid || viewModel.name == viewModel.mac {
-                textField.text = nil
-            } else {
-                textField.text = viewModel.name
-            }
-            textField.delegate = self
-        }
-        alert.addAction(UIAlertAction(title: "OK".localized(), style: .default, handler: { [weak alert, weak self] (action) in
-            let textField = alert?.textFields?[0]
-            if let text = textField?.text, !text.isEmpty {
-                self?.output.viewDidChangeName(of: viewModel, to: text)
-            }
-        }))
-        present(alert, animated: true)
-    }
-    
     func scroll(to index: Int) {
         let key = "DashboardScrollViewController.hasShownSwipeAlert"
         if viewModels.count > 1 && !UserDefaults.standard.bool(forKey: key) {
@@ -113,10 +60,7 @@ extension DashboardScrollViewController: DashboardViewInput {
 extension DashboardScrollViewController {
     @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
         if currentPage >= 0 && currentPage < viewModels.count {
-            let viewModel = viewModels[currentPage]
-            if let viewModel = ruuviTagViews.keys.first(where: { $0.uuid == viewModel.uuid }) {
-                output.viewDidTriggerSettings(for: viewModel)
-            }
+            output.viewDidTriggerSettings(for: viewModels[currentPage])
         }
     }
     
@@ -155,10 +99,7 @@ extension DashboardScrollViewController {
 extension DashboardScrollViewController: DashboardRuuviTagViewDelegate {
     func dashboardRuuviTag(view: DashboardRuuviTagView, didTapOnRSSI sender: Any?) {
         if currentPage >= 0 && currentPage < viewModels.count {
-            let viewModel = viewModels[currentPage]
-            if let viewModel = ruuviTagViews.keys.first(where: { $0.uuid == viewModel.uuid }) {
-                output.viewDidTapOnRSSI(for: viewModel)
-            }
+            output.viewDidTapOnRSSI(for: viewModels[currentPage])
         }
     }
 }
@@ -178,26 +119,82 @@ extension DashboardScrollViewController: UITextFieldDelegate {
 
 // MARK: - Configure view
 extension DashboardScrollViewController {
-    private func configure(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
-        view.nameLabel.text = viewModel.name.uppercased()
-        configureTemperature(view: view, with: viewModel)
-        view.humidityLabel.text = String(format: "%.2f", viewModel.humidity + viewModel.humidityOffset) + " %"
-        view.pressureLabel.text = "\(viewModel.pressure) hPa"
-        view.rssiLabel.text = "\(viewModel.rssi) dBm"
-        view.updatedAt = viewModel.date
-        view.backgroundImage.image = viewModel.background
+    private func bind(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
+        
+        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+        view.temperatureLabel.bind(viewModel.celsius, block: { label, celsius in
+            if let temperatureUnit = viewModel.temperatureUnit.value {
+                switch temperatureUnit {
+                case .celsius:
+                    if let celsius = celsius {
+                        label.text = String(format: "%.2f", celsius)
+                    } else {
+                        label.text = "N/A".localized()
+                    }
+                case .fahrenheit:
+                    if let fahrenheit = viewModel.fahrenheit {
+                        label.text = String(format: "%.2f", fahrenheit)
+                    } else {
+                        label.text = "N/A".localized()
+                    }
+                }
+            } else {
+                label.text = "N/A".localized()
+            }
+        })
+        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { label, temperatureUnit in
+            if let temperatureUnit = temperatureUnit {
+                switch temperatureUnit {
+                case .celsius:
+                    label.text = "°C".localized()
+                case .fahrenheit:
+                    label.text = "°F".localized()
+                }
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+        
+        let humidityBlock: ((UILabel, Double?) -> Void) = { label, humidity in
+            if let humidity = humidity, let humidityOffset = viewModel.humidityOffset.value {
+                label.text = String(format: "%.2f", humidity + humidityOffset) + " %"
+            } else if let humidity = humidity {
+                label.text = String(format: "%.2f", humidity) + " %"
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+        
+        view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.humidity, block: humidityBlock)
+        
+        view.pressureLabel.bind(viewModel.pressure) { label, pressure in
+            if let pressure = pressure {
+                label.text = "\(pressure)" + "hPa".localized()
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+        
+        view.rssiLabel.bind(viewModel.rssi) { label, rssi in
+            if let rssi = rssi {
+                label.text = "\(rssi)" + "dBm".localized()
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+        view.updatedLabel.bind(viewModel.date) { (label, date) in
+            if let date = date {
+                label.text = date.timeAgoSinceNow
+            } else {
+                label.text = "N/A".localized()
+            }
+            view.updatedAt = date
+        }
+        
+        view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
     }
     
-    private func configureTemperature(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
-        switch temperatureUnit {
-        case .celsius:
-            view.temperatureLabel.text = String(format: "%.2f", viewModel.celsius)
-            view.temperatureUnitLabel.text = "°C"
-        case .fahrenheit:
-            view.temperatureLabel.text = String(format: "%.2f", viewModel.fahrenheit)
-            view.temperatureUnitLabel.text = "°F"
-        }
-    }
 }
 
 // MARK: - View configuration
@@ -218,17 +215,10 @@ extension DashboardScrollViewController {
 // MARK: - Update UI
 extension DashboardScrollViewController {
     private func updateUI() {
-        updateUITemperatureUnit()
-        updateUIRuuviTags()
+        updateUIViewModels()
     }
     
-    private func updateUITemperatureUnit() {
-        if isViewLoaded {
-            ruuviTagViews.forEach({ configureTemperature(view: $1, with: $0) })
-        }
-    }
-    
-    private func updateUIRuuviTags() {
+    private func updateUIViewModels() {
         if isViewLoaded {
             ruuviTagViews.values.forEach({ $0.removeFromSuperview() })
             
@@ -240,7 +230,7 @@ extension DashboardScrollViewController {
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)
-                    configure(view: view, with: viewModel)
+                    bind(view: view, with: viewModel)
                     ruuviTagViews[viewModel] = view
                     leftView = view
                 }
