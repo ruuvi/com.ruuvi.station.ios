@@ -6,12 +6,11 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     
     private var ruuviTag: RuuviTagRealm! { didSet { setupViewModel() } }
-    private var viewModel: TagSettingsViewModel!
+    private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
     
     func configure(ruuviTag: RuuviTagRealm) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
-        view.viewModel = viewModel
     }
 
 }
@@ -23,8 +22,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
     
     func viewDidAskToRandomizeBackground() {
-        let image = backgroundPersistence.setNextBackground(for: ruuviTag.uuid)
-        viewModel.background.value = image
+        viewModel.background.value = backgroundPersistence.setNextBackground(for: ruuviTag.uuid)
     }
 }
 

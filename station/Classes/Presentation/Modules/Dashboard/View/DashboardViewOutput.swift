@@ -7,10 +7,5 @@ protocol DashboardViewOutput {
     func viewDidAppear()
     func viewDidTriggerMenu()
     func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel)
-    func viewDidAskToRemove(viewModel: DashboardRuuviTagViewModel)
-    func viewDidAskToRename(viewModel: DashboardRuuviTagViewModel)
-    func viewDidChangeName(of viewModel: DashboardRuuviTagViewModel, to name: String)
     func viewDidTapOnRSSI(for viewModel: DashboardRuuviTagViewModel)
-    func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel)
-    func viewDidAskToClearHumidityCalibration(viewModel: DashboardRuuviTagViewModel)
 }

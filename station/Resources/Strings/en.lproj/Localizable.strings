@@ -1,23 +1,20 @@
 "Cancel" = "Cancel";
 "OK" = "OK";
 "Confirm" = "Confirm";
+"N/A" = "N/A";
+"°C" = "°C";
+"°F" = "°F";
+"hPa" = "hPa";
+"dBm" = "dBm";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
 "ErrorPresenterAlert.OK" = "OK";
 
 // Dashboard
-"Dashboard.settings.dataFormat.format" = "Data format: %d";
-"Dashboard.settings.voltage.format" = "\nVoltage: %.2f V";
-"Dashboard.settings.remove.title" = "Remove";
-"Dashboard.settings.rename.title" = "Rename";
-"Dashboard.settings.rename.title.EnterAName" = "Enter a name";
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
-"Dashboard.settings.calibrateHumidity.title" = "Calibrate hygrometer";
-"Dashboard.settings.humidityOffsetDate.format" = "\nHygrometer calibration date: %@";
-"Dashboard.settings.cleanHumidityCalibration.title" = "Clear hygrometer calibration";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Tags" = "Tags";

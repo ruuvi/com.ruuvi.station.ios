@@ -9,8 +9,6 @@ class DashboardPresenter: DashboardModuleInput {
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
-    var ruuviTagPersistence: RuuviTagPersistence!
-    var calibrationService: CalibrationService!
     
     private let scanner = Ruuvi.scanner
     private var ruuviTagsToken: NotificationToken?
@@ -20,20 +18,20 @@ class DashboardPresenter: DashboardModuleInput {
     private var stateToken: ObservationToken?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
-            if let ruuviTags = ruuviTags {
-                view.viewModels = ruuviTags.map( {
-                    let last = lastValues[$0.uuid]?.0
-                    let lastDate = lastValues[$0.uuid]?.1
-                    let data = $0.data.last
-                    return DashboardRuuviTagViewModel(uuid: $0.uuid, name: $0.name, celsius: last?.celsius ?? data?.celsius ?? 0, humidity: last?.humidity ?? data?.humidity ?? 0, pressure: last?.pressure ?? data?.pressure ?? 0, rssi: last?.rssi ?? data?.rssi ?? 0, version: $0.version, voltage: last?.voltage ?? data?.voltage.value, background: backgroundPersistence.background(for: $0.uuid), mac: $0.mac, humidityOffset: $0.humidityOffset, humidityOffsetDate: $0.humidityOffsetDate, date: lastDate ?? data?.date ?? Date())
-                } )
-            } else {
-                view.viewModels = []
-            }
+            viewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardRuuviTagViewModel in
+                let viewModel = DashboardRuuviTagViewModel(ruuviTag)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
+                return viewModel
+            }) ?? []
             openDiscoverIfEmpty()
         }
     }
-    private var lastValues: [String:(RuuviTag,Date)] = [String:(RuuviTag,Date)]()
+    private var viewModels = [DashboardRuuviTagViewModel]() {
+        didSet {
+            view.viewModels = viewModels
+        }
+    }
     
     deinit {
         ruuviTagsToken?.invalidate()
@@ -50,7 +48,6 @@ class DashboardPresenter: DashboardModuleInput {
 
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
-        view.temperatureUnit = settings.temperatureUnit
         startObservingRuuviTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
@@ -75,31 +72,8 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel) {
-//        view.showMenu(for: viewModel)
-        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
             router.openTagSettings(ruuviTag: ruuviTag)
-        }
-    }
-    
-    func viewDidAskToRemove(viewModel: DashboardRuuviTagViewModel) {
-        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            let operation = ruuviTagPersistence.delete(ruuviTag: ruuviTag)
-            operation.on(failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            })
-        }
-    }
-    
-    func viewDidAskToRename(viewModel: DashboardRuuviTagViewModel) {
-        view.showRenameDialog(for: viewModel)
-    }
-    
-    func viewDidChangeName(of viewModel: DashboardRuuviTagViewModel, to name: String) {
-        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            let operation = ruuviTagPersistence.update(name: name, of: ruuviTag)
-            operation.on(failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            })
         }
     }
     
@@ -107,21 +81,6 @@ extension DashboardPresenter: DashboardViewOutput {
 //        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
 //            router.openChart(ruuviTag: ruuviTag, type: .rssi)
 //        }   
-    }
-    
-    func viewDidAskToCalibrateHumidity(viewModel: DashboardRuuviTagViewModel) {
-        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            router.openHumidityCalibration(ruuviTag: ruuviTag, lastHumidityValue: viewModel.humidity)
-        }
-    }
-    
-    func viewDidAskToClearHumidityCalibration(viewModel: DashboardRuuviTagViewModel) {
-        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
-            let clear = calibrationService.cleanHumidityCalibration(for: ruuviTag)
-            clear.on(failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            })
-        }
     }
 }
 
@@ -171,8 +130,7 @@ extension DashboardPresenter {
     
     private func startListeningToSettings() {
         settingsToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
-            guard let sSelf = self else { return }
-            sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
+            self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit} )
         }
     }
     
@@ -180,13 +138,14 @@ extension DashboardPresenter {
         observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()
         for viewModel in view.viewModels {
-            observeTokens.append(scanner.observe(self, uuid: viewModel.uuid) { [weak self] (observer, device) in
-                if let tagData = device.ruuvi?.tag {
-                    let model = DashboardRuuviTagViewModel(uuid: viewModel.uuid, name: viewModel.name, celsius: tagData.celsius, humidity: tagData.humidity, pressure: tagData.pressure, rssi: tagData.rssi, version: tagData.version, voltage: tagData.voltage, background: viewModel.background, mac: viewModel.mac, humidityOffset: viewModel.humidityOffset, humidityOffsetDate: viewModel.humidityOffsetDate, date: Date())
-                    observer.view.reload(viewModel: model)
-                    self?.lastValues[tagData.uuid] = (tagData,Date())
-                }
-            })
+            if let uuid = viewModel.uuid.value {
+                observeTokens.append(scanner.observe(self, uuid: uuid) { [weak self] (observer, device) in
+                    if let ruuviTag = device.ruuvi?.tag,
+                        let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
+                        viewModel.update(with: ruuviTag)
+                    }
+                })
+            }
         }
     }
     
@@ -217,9 +176,8 @@ extension DashboardPresenter {
     private func startObservingBackgroundChanges() {
         backgroundToken = NotificationCenter.default.addObserver(forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main) { [weak self] notification in
             if let userInfo = notification.userInfo, let uuid = userInfo[BackgroundPersistenceDidChangeBackgroundKey.uuid] as? String {
-                if var viewModel = self?.view.viewModels.first(where: { $0.uuid == uuid }) {
-                    viewModel.background = self?.backgroundPersistence.background(for: uuid)
-                    self?.view.reload(viewModel: viewModel)
+                if let viewModel = self?.view.viewModels.first(where: { $0.uuid.value == uuid }) {
+                    viewModel.background.value = self?.backgroundPersistence.background(for: uuid)
                 }
             }
         }

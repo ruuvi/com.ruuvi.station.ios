@@ -1,5 +1,6 @@
 import UIKit
 import DateToolsSwift
+import Localize_Swift
 
 protocol DashboardRuuviTagViewDelegate: class {
     func dashboardRuuviTag(view: DashboardRuuviTagView, didTapOnRSSI sender: Any?)
@@ -17,7 +18,7 @@ class DashboardRuuviTagView: UIView {
     @IBOutlet weak var rssiLabel: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
     
-    var updatedAt = Date()
+    var updatedAt: Date?
     
     private var timer: Timer?
     
@@ -28,7 +29,7 @@ class DashboardRuuviTagView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
-            self?.updatedLabel.text = self?.updatedAt.timeAgoSinceNow
+            self?.updatedLabel.text = self?.updatedAt?.timeAgoSinceNow ?? "N/A".localized()
         })
     }
     
