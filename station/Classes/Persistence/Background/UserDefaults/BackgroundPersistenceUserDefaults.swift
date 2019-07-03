@@ -28,20 +28,18 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
             setBackground(id, for: uuid)
         } else {
             id = biasedToNotUsedRandom()
-            let key = bgUDKeyPrefix + uuid
-            UserDefaults.standard.set(id, forKey: key)
+            setBackground(id, for: uuid)
         }
         return UIImage(named: "bg\(id)")
     }
     
     func background(for uuid: String) -> UIImage? {
         var id = backgroundId(for: uuid)
-        if id >= bgMinIndex  {
+        if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
             id = biasedToNotUsedRandom()
-            let key = bgUDKeyPrefix + uuid
-            UserDefaults.standard.set(id, forKey: key)
+            setBackground(id, for: uuid)
             return UIImage(named: "bg\(id)")
         }
     }
@@ -55,6 +53,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     func setBackground(_ id: Int, for uuid: String) {
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
+        NotificationCenter.default.post(name: .BackgroundPersistenceDidChangeBackground, object: nil, userInfo: [BackgroundPersistenceDidChangeBackgroundKey.uuid: uuid ])
         if id >= bgMinIndex && id <= bgMaxIndex {
             var array = usedBackgrounds
             array[id - bgMinIndex] += 1
@@ -63,7 +62,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     }
     
     func biasedToNotUsedRandom() -> Int {
-        var array = usedBackgrounds
+        let array = usedBackgrounds
         var result: Int
         if let min = array.min() {
             let indicies = array.enumerated().compactMap({ $1 == min ? $0 + bgMinIndex : nil })
@@ -80,8 +79,6 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         assert(result <= bgMaxIndex)
         assert(result - bgMinIndex < array.count)
         
-        array[result - bgMinIndex] += 1
-        UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
         return result
     }
 }
