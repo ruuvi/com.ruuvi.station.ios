@@ -70,7 +70,10 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel) {
-        view.showMenu(for: viewModel)
+//        view.showMenu(for: viewModel)
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid}) {
+            router.openTagSettings(ruuviTag: ruuviTag)
+        }
     }
     
     func viewDidAskToRemove(viewModel: DashboardRuuviTagViewModel) {

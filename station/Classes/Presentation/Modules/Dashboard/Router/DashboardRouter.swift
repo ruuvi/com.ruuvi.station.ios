@@ -9,6 +9,7 @@ class DashboardRouter: DashboardRouterInput {
     private lazy var chartTransitioningDelegate = ChartTransitioningDelegate()
     private var menuTableTransition: MenuTableTransitioningDelegate!
     private lazy var humidityCalibrationTransitioningDelegate = HumidityCalibrationTransitioningDelegate()
+    private lazy var tagSettingsTransitioningDelegate = TagSettingsTransitioningDelegate()
     
     func openChart(ruuviTag: RuuviTagRealm, type: ChartDataType) {
         let factory = StoryboardFactory(storyboardName: "Chart")
@@ -52,6 +53,16 @@ class DashboardRouter: DashboardRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: SettingsModuleInput.self)
             .perform()
+    }
+    
+    func openTagSettings(ruuviTag: RuuviTagRealm) {
+        let factory = StoryboardFactory(storyboardName: "TagSettings")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
+            .add(transitioningDelegate: tagSettingsTransitioningDelegate)
+            .then({ (module) -> Any? in
+                module.configure(ruuviTag: ruuviTag)
+            })
     }
     
     func openAbout() {
