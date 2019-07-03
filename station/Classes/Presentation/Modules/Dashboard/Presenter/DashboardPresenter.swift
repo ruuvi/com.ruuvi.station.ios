@@ -16,6 +16,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var settingsToken: NSObjectProtocol?
+    private var backgroundToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
@@ -41,6 +42,9 @@ class DashboardPresenter: DashboardModuleInput {
         if let settingsToken = settingsToken {
             NotificationCenter.default.removeObserver(settingsToken)
         }
+        if let backgroundToken = backgroundToken {
+            NotificationCenter.default.removeObserver(backgroundToken)
+        }
     }
 }
 
@@ -49,6 +53,7 @@ extension DashboardPresenter: DashboardViewOutput {
         view.temperatureUnit = settings.temperatureUnit
         startObservingRuuviTags()
         startListeningToSettings()
+        startObservingBackgroundChanges()
     }
     
     func viewWillAppear() {
@@ -205,6 +210,17 @@ extension DashboardPresenter {
                 self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
+            }
+        }
+    }
+    
+    private func startObservingBackgroundChanges() {
+        backgroundToken = NotificationCenter.default.addObserver(forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main) { [weak self] notification in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BackgroundPersistenceDidChangeBackgroundKey.uuid] as? String {
+                if var viewModel = self?.view.viewModels.first(where: { $0.uuid == uuid }) {
+                    viewModel.background = self?.backgroundPersistence.background(for: uuid)
+                    self?.view.reload(viewModel: viewModel)
+                }
             }
         }
     }
