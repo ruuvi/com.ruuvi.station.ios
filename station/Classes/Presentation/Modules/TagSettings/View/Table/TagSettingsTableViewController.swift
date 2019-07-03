@@ -43,6 +43,7 @@ extension TagSettingsTableViewController {
 // MARK: - IBActions
 extension TagSettingsTableViewController {
     @IBAction func dismissBarButtonItemAction(_ sender: Any) {
+        output.viewDidAskToDismiss()
     }
     
     @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
