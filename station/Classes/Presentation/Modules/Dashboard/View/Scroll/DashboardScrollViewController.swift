@@ -183,13 +183,13 @@ extension DashboardScrollViewController {
                 label.text = "N/A".localized()
             }
         }
-        view.updatedLabel.bind(viewModel.date) { (label, date) in
+        view.updatedLabel.bind(viewModel.date) { [weak view] (label, date) in
             if let date = date {
                 label.text = date.timeAgoSinceNow
             } else {
                 label.text = "N/A".localized()
             }
-            view.updatedAt = date
+            view?.updatedAt = date
         }
         
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
