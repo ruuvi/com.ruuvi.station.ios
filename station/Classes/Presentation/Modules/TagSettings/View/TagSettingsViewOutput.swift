@@ -6,4 +6,5 @@ protocol TagSettingsViewOutput {
     func viewDidAskToRemoveRuuviTag()
     func viewDidConfirmTagRemoval()
     func viewDidAskToCalibrateHumidity()
+    func viewDidChangeTag(name: String)
 }
