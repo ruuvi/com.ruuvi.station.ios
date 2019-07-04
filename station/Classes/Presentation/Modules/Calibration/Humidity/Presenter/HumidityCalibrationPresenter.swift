@@ -9,11 +9,11 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
     
     private let scanner = Ruuvi.scanner
     private var ruuviTag: RuuviTagRealm!
-    private var lastHumidityValue: Double!
+    private var humidity: Double!
     
-    func configure(ruuviTag: RuuviTagRealm, lastHumidityValue: Double) {
+    func configure(ruuviTag: RuuviTagRealm, humidity: Double) {
         self.ruuviTag = ruuviTag
-        self.lastHumidityValue = lastHumidityValue
+        self.humidity = humidity
         updateView()
     }
 }
@@ -45,7 +45,7 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
     }
     
     func viewDidConfirmToCalibrateHumidityOffset() {
-        let update = calibrationService.calibrateHumiditySaltTest(currentValue: lastHumidityValue, for: ruuviTag)
+        let update = calibrationService.calibrateHumiditySaltTest(currentValue: humidity, for: ruuviTag)
         update.on(success: { [weak self] _ in
             self?.updateView()
         }, failure: { [weak self] (error) in
@@ -63,7 +63,7 @@ extension HumidityCalibrationPresenter {
     private func startScanningHumidity() {
         scanner.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
             if let tag = device.ruuvi?.tag {
-                self?.lastHumidityValue = tag.humidity
+                self?.humidity = tag.humidity
                 self?.updateView()
             }
         }
@@ -73,7 +73,7 @@ extension HumidityCalibrationPresenter {
 // MARK: - Private
 extension HumidityCalibrationPresenter {
     func updateView() {
-        view.oldHumidity = lastHumidityValue
+        view.oldHumidity = humidity
         view.humidityOffset = ruuviTag.humidityOffset
         view.lastCalibrationDate = ruuviTag.humidityOffsetDate
     }

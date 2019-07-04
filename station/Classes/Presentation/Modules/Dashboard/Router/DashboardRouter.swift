@@ -8,7 +8,6 @@ class DashboardRouter: DashboardRouterInput {
     
     private lazy var chartTransitioningDelegate = ChartTransitioningDelegate()
     private var menuTableTransition: MenuTableTransitioningDelegate!
-    private lazy var humidityCalibrationTransitioningDelegate = HumidityCalibrationTransitioningDelegate()
     private lazy var tagSettingsTransitioningDelegate = TagSettingsTransitioningDelegate()
     
     func openChart(ruuviTag: RuuviTagRealm, type: ChartDataType) {
@@ -76,16 +75,4 @@ class DashboardRouter: DashboardRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
     
-    func openHumidityCalibration(ruuviTag: RuuviTagRealm, lastHumidityValue: Double) {
-        let factory = StoryboardFactory(storyboardName: "HumidityCalibration")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: HumidityCalibrationModuleInput.self)
-            .add(transitioningDelegate: humidityCalibrationTransitioningDelegate)
-            .apply(to: { (viewController) in
-                viewController.modalPresentationStyle = .custom
-            })
-            .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag, lastHumidityValue: lastHumidityValue)
-            })
-    }
 }
