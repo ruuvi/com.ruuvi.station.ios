@@ -112,8 +112,8 @@ extension TagSettingsTableViewController {
             
             let humidity = viewModel.humidity
             let humidityOffset = viewModel.humidityOffset
-            let humidityBlock: ((UILabel,Double?) -> Void) = { [unowned humidity, unowned humidityOffset] label, _ in
-                if let humidity = humidity.value, let humidityOffset = humidityOffset.value {
+            let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset] label, _ in
+                if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
                     if humidityOffset > 0 {
                         label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", humidity + humidityOffset))"
                     } else {
@@ -126,6 +126,28 @@ extension TagSettingsTableViewController {
             
             humidityLabel.bind(viewModel.humidity, block: humidityBlock)
             humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
+            
+            let uuid = viewModel.uuid
+            let mac = viewModel.mac
+            let macTitleLabel = macAddressTitleLabel
+            let macValueLabel = macAddressValueLabel
+            
+            let macBlock: ((UILabel,String?) -> Void) = { [weak uuid, weak mac, weak macTitleLabel, weak macValueLabel] _, _ in
+                if let mac = mac?.value {
+                    macTitleLabel?.text = "TagSettings.MACTitleLabel.MAC.text".localized()
+                    macValueLabel?.text = mac
+                } else if let uuid = uuid?.value {
+                    macTitleLabel?.text = "TagSettings.MACTitleLabel.UUID.text".localized()
+                    macValueLabel?.text = uuid
+                } else {
+                    macTitleLabel?.text = "TagSettings.MACTitleLabel.MAC.text".localized()
+                    macValueLabel?.text = "N/A".localized()
+                }
+            }
+            macAddressValueLabel.bind(viewModel.mac, block: macBlock)
+            macAddressValueLabel.bind(viewModel.mac, block: macBlock)
+            macAddressValueLabel.bind(viewModel.uuid, block: macBlock)
+            macAddressValueLabel.bind(viewModel.uuid, block: macBlock)
         }
     }
 }

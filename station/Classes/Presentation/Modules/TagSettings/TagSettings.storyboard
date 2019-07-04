@@ -252,13 +252,13 @@ IMAGE</string>
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAC Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rvA-8R-FuO">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="MAC Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rvA-8R-FuO">
                                                     <rect key="frame" x="20" y="11.5" width="104" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EC:4E:D6:F4:D4:6F" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WtD-WI-89V">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EC:4E:D6:F4:D4:6F" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="WtD-WI-89V">
                                                     <rect key="frame" x="244" y="11.5" width="150" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -267,8 +267,9 @@ IMAGE</string>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="rvA-8R-FuO" firstAttribute="centerY" secondItem="1eo-kf-fae" secondAttribute="centerY" id="BfC-oc-RO9"/>
+                                                <constraint firstItem="WtD-WI-89V" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rvA-8R-FuO" secondAttribute="trailing" constant="8" id="Nl4-6J-4CR"/>
                                                 <constraint firstItem="rvA-8R-FuO" firstAttribute="leading" secondItem="1eo-kf-fae" secondAttribute="leading" constant="20" id="Poh-iG-6sb"/>
-                                                <constraint firstItem="WtD-WI-89V" firstAttribute="centerY" secondItem="1eo-kf-fae" secondAttribute="centerY" id="cWO-F6-Yjj"/>
+                                                <constraint firstItem="WtD-WI-89V" firstAttribute="firstBaseline" secondItem="rvA-8R-FuO" secondAttribute="firstBaseline" id="fe3-T4-IYE"/>
                                                 <constraint firstAttribute="trailing" secondItem="WtD-WI-89V" secondAttribute="trailing" constant="20" id="kZ4-Fn-LOE"/>
                                             </constraints>
                                         </tableViewCellContentView>
