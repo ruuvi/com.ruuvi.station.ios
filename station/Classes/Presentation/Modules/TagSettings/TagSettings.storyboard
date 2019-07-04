@@ -405,9 +405,11 @@ IMAGE</string>
                         <outlet property="accelerationYValueLabel" destination="BZJ-uw-vfj" id="ecB-Eo-lOq"/>
                         <outlet property="accelerationZValueLabel" destination="Chd-Uf-uiU" id="XBV-24-uzu"/>
                         <outlet property="backgroundImageView" destination="PPK-KZ-0TC" id="1NZ-SW-ZHa"/>
+                        <outlet property="calibrationHumidityCell" destination="msV-Z2-Y6n" id="ROS-rZ-GD2"/>
                         <outlet property="humidityOffsetDateLabel" destination="h1w-an-ceI" id="Kcn-AW-TMy"/>
                         <outlet property="macAddressTitleLabel" destination="rvA-8R-FuO" id="s46-qG-xlf"/>
                         <outlet property="macAddressValueLabel" destination="WtD-WI-89V" id="3lA-Fg-rDb"/>
+                        <outlet property="tagNameCell" destination="Ltg-8j-gFv" id="ITi-X4-fhs"/>
                         <outlet property="tagNameTextField" destination="wsY-ah-PBa" id="jfa-8a-aDt"/>
                         <outlet property="voltageValueLabel" destination="0QS-Je-2os" id="kRK-5R-yaN"/>
                     </connections>

@@ -4,6 +4,8 @@ class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
     @IBOutlet weak var accelerationZValueLabel: UILabel!
+    @IBOutlet weak var tagNameCell: UITableViewCell!
+    @IBOutlet weak var calibrationHumidityCell: UITableViewCell!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var voltageValueLabel: UILabel!
@@ -68,6 +70,23 @@ extension TagSettingsTableViewController {
     
     @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
         viewModel?.name.value = tagNameTextField.text
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension TagSettingsTableViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+        if let cell = tableView.cellForRow(at: indexPath) {
+            switch cell {
+            case tagNameCell:
+                tagNameTextField.becomeFirstResponder()
+            case calibrationHumidityCell:
+                output.viewDidAskToCalibrateHumidity()
+            default:
+                break
+            }
+        }
     }
 }
 

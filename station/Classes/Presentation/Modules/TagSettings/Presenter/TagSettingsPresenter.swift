@@ -13,11 +13,11 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     func configure(ruuviTag: RuuviTagRealm) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
-//        viewModel.name.bind { [weak self] (observable, name) in
-//            if let name = name {
-//                self?.updateRuuviTag(name: name)
-//            }
-//        }
+        viewModel.name.bind { [weak self] (observable, name) in
+            if let name = name {
+                self?.updateRuuviTag(name: name)
+            }
+        }
     }
 }
 
@@ -43,13 +43,23 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
+    
+    func viewDidAskToCalibrateHumidity() {
+        
+    }
 }
 
 // MARK: - Private
 extension TagSettingsPresenter {
     private func setupViewModel() {
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
-        viewModel.name.value = ruuviTag.name
+        
+        if ruuviTag.name == ruuviTag.uuid || ruuviTag.name == ruuviTag.mac {
+            viewModel.name.value = nil
+        } else {
+            viewModel.name.value = ruuviTag.name
+        }
+        
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
     }
     
