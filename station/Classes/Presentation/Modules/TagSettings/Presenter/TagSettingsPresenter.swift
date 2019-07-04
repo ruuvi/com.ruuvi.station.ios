@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import BTKit
 
 class TagSettingsPresenter: TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -7,14 +8,17 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
-    
+
+    private let scanner = Ruuvi.scanner
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.humidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
     private var ruuviTagToken: NotificationToken?
+    private var observeToken: ObservationToken?
     
     deinit {
         ruuviTagToken?.invalidate()
+        observeToken?.invalidate()
     }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
@@ -22,6 +26,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
         self.ruuviTag = ruuviTag
         self.humidity = humidity
         startObservingRuuviTag()
+        startScanningRuuviTag()
     }
 }
 
@@ -89,5 +94,17 @@ extension TagSettingsPresenter {
                 self?.errorPresenter.present(error: error)
             }
         }
+    }
+    
+    private func startScanningRuuviTag() {
+        observeToken = scanner.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
+            if let tag = device.ruuvi?.tag {
+                self?.sync(device: tag)
+            }
+        })
+    }
+    
+    private func sync(device: RuuviTag) {
+        viewModel.humidity.value = device.humidity
     }
 }
