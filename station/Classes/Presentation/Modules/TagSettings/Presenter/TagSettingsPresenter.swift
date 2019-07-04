@@ -13,8 +13,12 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     func configure(ruuviTag: RuuviTagRealm) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
+        viewModel.name.bind { [weak self] (observable, name) in
+            if let name = name {
+                self?.updateRuuviTag(name: name)
+            }
+        }
     }
-
 }
 
 // MARK: - TagSettingsViewOutput
@@ -47,5 +51,12 @@ extension TagSettingsPresenter {
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
         viewModel.name.value = ruuviTag.name
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
+    }
+    
+    private func updateRuuviTag(name: String) {
+        let operation = ruuviTagService.update(name: name, of: ruuviTag)
+        operation.on(failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }

@@ -195,6 +195,7 @@ IMAGE</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                                                     <connections>
+                                                        <action selector="tagNameTextFieldEditingDidEnd:" destination="JXe-xp-HbB" eventType="editingDidEnd" id="MIZ-gV-tST"/>
                                                         <outlet property="delegate" destination="JXe-xp-HbB" id="6fw-eM-aj6"/>
                                                     </connections>
                                                 </textField>
