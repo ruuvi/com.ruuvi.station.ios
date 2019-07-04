@@ -54,13 +54,13 @@ class DashboardRouter: DashboardRouterInput {
             .perform()
     }
     
-    func openTagSettings(ruuviTag: RuuviTagRealm) {
+    func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
             .add(transitioningDelegate: tagSettingsTransitioningDelegate)
             .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag)
+                module.configure(ruuviTag: ruuviTag, humidity: humidity)
             })
     }
     

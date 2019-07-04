@@ -8,11 +8,13 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var errorPresenter: ErrorPresenter!
     
     private var ruuviTag: RuuviTagRealm! { didSet { setupViewModel() } }
+    private var humidity: Double? { didSet { viewModel.humidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
     
-    func configure(ruuviTag: RuuviTagRealm) {
+    func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
+        self.humidity = humidity
         viewModel.name.bind { [weak self] (observable, name) in
             if let name = name {
                 self?.updateRuuviTag(name: name)
