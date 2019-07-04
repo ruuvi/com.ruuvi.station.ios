@@ -11,7 +11,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var voltageValueLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
-    @IBOutlet weak var humidityOffsetDateLabel: UILabel!
+    @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
     
@@ -107,15 +107,23 @@ extension TagSettingsTableViewController {
         if isViewLoaded, let viewModel = viewModel {
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
-            humidityOffsetDateLabel.bind(viewModel.humidityOffsetDate) { (label, date) in
-                let df = DateFormatter()
-                df.dateFormat = "dd MMMM yyyy"
-                if let date = date {
-                    label.text = df.string(from: date)
+            
+            let humidity = viewModel.humidity
+            let humidityOffset = viewModel.humidityOffset
+            let humidityBlock: ((UILabel,Double?) -> Void) = { [unowned humidity, unowned humidityOffset] label, _ in
+                if let humidity = humidity.value, let humidityOffset = humidityOffset.value {
+                    if humidityOffset > 0 {
+                        label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", humidity + humidityOffset))"
+                    } else {
+                        label.text = nil
+                    }
                 } else {
                     label.text = nil
                 }
             }
+            
+            humidityLabel.bind(viewModel.humidity, block: humidityBlock)
+            humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
         }
     }
 }
