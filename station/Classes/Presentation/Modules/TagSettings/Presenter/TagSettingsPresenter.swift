@@ -78,6 +78,9 @@ extension TagSettingsPresenter {
             viewModel.name.value = ruuviTag.name
         }
         
+        viewModel.mac.value = ruuviTag.mac
+        viewModel.uuid.value = ruuviTag.uuid
+        
         viewModel.humidity.value = humidity
         viewModel.humidityOffset.value = ruuviTag.humidityOffset
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
