@@ -5,4 +5,5 @@ protocol TagSettingsViewOutput {
     func viewDidAskToRandomizeBackground()
     func viewDidAskToRemoveRuuviTag()
     func viewDidConfirmTagRemoval()
+    func viewDidAskToCalibrateHumidity()
 }
