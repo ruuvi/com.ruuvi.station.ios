@@ -30,6 +30,15 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func showTagRemovalConfirmationDialog() {
+        let controller = UIAlertController(title: "TagSettings.confirmTagRemovalDialog.title".localized(), message: "TagSettings.confirmTagRemovalDialog.message".localized(), preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmTagRemoval()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -47,6 +56,7 @@ extension TagSettingsTableViewController {
     }
     
     @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
+        output.viewDidAskToRemoveRuuviTag()
     }
     
     @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {

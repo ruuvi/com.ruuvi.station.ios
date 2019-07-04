@@ -10,4 +10,8 @@ class RuuviTagServiceImpl: RuuviTagService {
         let offsetData = calibrationService.humidityOffset(for: ruuviTag.uuid)
         return ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name, humidityOffset: offsetData.0, humidityOffsetDate: offsetData.1)
     }
+    
+    func delete(ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
+        return ruuviTagPersistence.delete(ruuviTag: ruuviTag)
+    }
 }
