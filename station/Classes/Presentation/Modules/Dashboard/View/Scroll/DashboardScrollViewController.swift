@@ -122,17 +122,22 @@ extension DashboardScrollViewController {
     private func bind(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
         
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        view.temperatureLabel.bind(viewModel.celsius, block: { label, celsius in
-            if let temperatureUnit = viewModel.temperatureUnit.value {
+        
+        let temperatureUnit = viewModel.temperatureUnit
+        let fahrenheit = viewModel.fahrenheit
+        let celsius = viewModel.celsius
+        
+        let temperatureBlock: ((UILabel,Double?) -> Void) = { [unowned temperatureUnit, unowned fahrenheit, unowned celsius] label, _ in
+            if let temperatureUnit = temperatureUnit.value {
                 switch temperatureUnit {
                 case .celsius:
-                    if let celsius = celsius {
+                    if let celsius = celsius.value {
                         label.text = String(format: "%.2f", celsius)
                     } else {
                         label.text = "N/A".localized()
                     }
                 case .fahrenheit:
-                    if let fahrenheit = viewModel.fahrenheit {
+                    if let fahrenheit = fahrenheit.value {
                         label.text = String(format: "%.2f", fahrenheit)
                     } else {
                         label.text = "N/A".localized()
@@ -141,22 +146,30 @@ extension DashboardScrollViewController {
             } else {
                 label.text = "N/A".localized()
             }
-        })
-        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { label, temperatureUnit in
-            if let temperatureUnit = temperatureUnit {
-                switch temperatureUnit {
-                case .celsius:
-                    label.text = "°C".localized()
-                case .fahrenheit:
-                    label.text = "°F".localized()
+        }
+        
+        if let temperatureLabel = view.temperatureLabel {
+            temperatureLabel.bind(viewModel.celsius, block: temperatureBlock)
+            temperatureLabel.bind(viewModel.fahrenheit, block: temperatureBlock)
+            
+            view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureLabel] label, temperatureUnit in
+                if let temperatureUnit = temperatureUnit {
+                    switch temperatureUnit {
+                    case .celsius:
+                        label.text = "°C".localized()
+                    case .fahrenheit:
+                        label.text = "°F".localized()
+                    }
+                } else {
+                    label.text = "N/A".localized()
                 }
-            } else {
-                label.text = "N/A".localized()
+                temperatureBlock(temperatureLabel, nil)
             }
         }
         
-        let humidityBlock: ((UILabel, Double?) -> Void) = { label, humidity in
-            if let humidity = humidity, let humidityOffset = viewModel.humidityOffset.value {
+        let humidityOffset = viewModel.humidityOffset
+        let humidityBlock: ((UILabel, Double?) -> Void) = { [unowned humidityOffset] label, humidity in
+            if let humidity = humidity, let humidityOffset = humidityOffset.value {
                 label.text = String(format: "%.2f", humidity + humidityOffset) + " %"
             } else if let humidity = humidity {
                 label.text = String(format: "%.2f", humidity) + " %"
