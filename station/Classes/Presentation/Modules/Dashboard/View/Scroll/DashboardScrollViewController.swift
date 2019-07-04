@@ -127,17 +127,17 @@ extension DashboardScrollViewController {
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         
-        let temperatureBlock: ((UILabel,Double?) -> Void) = { [unowned temperatureUnit, unowned fahrenheit, unowned celsius] label, _ in
-            if let temperatureUnit = temperatureUnit.value {
+        let temperatureBlock: ((UILabel,Double?) -> Void) = { [weak temperatureUnit, weak fahrenheit, weak celsius] label, _ in
+            if let temperatureUnit = temperatureUnit?.value {
                 switch temperatureUnit {
                 case .celsius:
-                    if let celsius = celsius.value {
+                    if let celsius = celsius?.value {
                         label.text = String(format: "%.2f", celsius)
                     } else {
                         label.text = "N/A".localized()
                     }
                 case .fahrenheit:
-                    if let fahrenheit = fahrenheit.value {
+                    if let fahrenheit = fahrenheit?.value {
                         label.text = String(format: "%.2f", fahrenheit)
                     } else {
                         label.text = "N/A".localized()
@@ -168,8 +168,8 @@ extension DashboardScrollViewController {
         }
         
         let humidityOffset = viewModel.humidityOffset
-        let humidityBlock: ((UILabel, Double?) -> Void) = { [unowned humidityOffset] label, humidity in
-            if let humidity = humidity, let humidityOffset = humidityOffset.value {
+        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak humidityOffset] label, humidity in
+            if let humidity = humidity, let humidityOffset = humidityOffset?.value {
                 label.text = String(format: "%.2f", humidity + humidityOffset) + " %"
             } else if let humidity = humidity {
                 label.text = String(format: "%.2f", humidity) + " %"

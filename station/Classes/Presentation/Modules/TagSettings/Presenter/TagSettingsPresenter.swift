@@ -47,7 +47,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
     
     func viewDidAskToCalibrateHumidity() {
-        
+        if let humidity = humidity {
+            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity)
+        }
     }
 }
 
@@ -62,6 +64,8 @@ extension TagSettingsPresenter {
             viewModel.name.value = ruuviTag.name
         }
         
+        viewModel.humidity.value = humidity
+        viewModel.humidityOffset.value = ruuviTag.humidityOffset
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
     }
     
