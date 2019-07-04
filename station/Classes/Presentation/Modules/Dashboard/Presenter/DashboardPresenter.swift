@@ -73,7 +73,7 @@ extension DashboardPresenter: DashboardViewOutput {
     
     func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel) {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
-            router.openTagSettings(ruuviTag: ruuviTag)
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.humidity.value)
         }
     }
     
