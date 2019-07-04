@@ -189,7 +189,7 @@ IMAGE</string>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bathroom" textAlignment="right" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="wsY-ah-PBa">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bathroom" textAlignment="right" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="wsY-ah-PBa">
                                                     <rect key="frame" x="102.5" y="11" width="291.5" height="21"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
