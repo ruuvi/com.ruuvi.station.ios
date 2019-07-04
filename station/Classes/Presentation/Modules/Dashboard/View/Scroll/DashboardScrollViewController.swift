@@ -170,7 +170,7 @@ extension DashboardScrollViewController {
         
         view.pressureLabel.bind(viewModel.pressure) { label, pressure in
             if let pressure = pressure {
-                label.text = "\(pressure)" + "hPa".localized()
+                label.text = "\(pressure)" + " " + "hPa".localized()
             } else {
                 label.text = "N/A".localized()
             }
@@ -178,7 +178,7 @@ extension DashboardScrollViewController {
         
         view.rssiLabel.bind(viewModel.rssi) { label, rssi in
             if let rssi = rssi {
-                label.text = "\(rssi)" + "dBm".localized()
+                label.text = "\(rssi)" + " " + "dBm".localized()
             } else {
                 label.text = "N/A".localized()
             }
