@@ -189,8 +189,8 @@ IMAGE</string>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bathroom" textAlignment="right" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="wsY-ah-PBa">
-                                                    <rect key="frame" x="102.5" y="11" width="291.5" height="21"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bathroom" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wsY-ah-PBa">
+                                                    <rect key="frame" x="110.5" y="11" width="283.5" height="21"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
@@ -200,7 +200,7 @@ IMAGE</string>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="wsY-ah-PBa" firstAttribute="leading" secondItem="5rU-pr-cVB" secondAttribute="trailing" constant="8" id="63s-7l-bke"/>
+                                                <constraint firstItem="wsY-ah-PBa" firstAttribute="leading" secondItem="5rU-pr-cVB" secondAttribute="trailing" constant="16" id="63s-7l-bke"/>
                                                 <constraint firstItem="5rU-pr-cVB" firstAttribute="centerY" secondItem="pkh-BB-rHf" secondAttribute="centerY" id="II3-fu-OOF"/>
                                                 <constraint firstAttribute="trailing" secondItem="wsY-ah-PBa" secondAttribute="trailing" constant="20" id="ciV-5L-1U4"/>
                                                 <constraint firstItem="5rU-pr-cVB" firstAttribute="leading" secondItem="pkh-BB-rHf" secondAttribute="leading" constant="20" id="qIc-1N-JAO"/>
