@@ -12,7 +12,7 @@ class DashboardScrollViewController: UIViewController {
     
     var viewModels = [DashboardRuuviTagViewModel]() { didSet { updateUIViewModels() }  }
     
-    private var ruuviTagViews = [DashboardRuuviTagViewModel: DashboardRuuviTagView]()
+    private var views = [DashboardRuuviTagView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
@@ -220,7 +220,8 @@ extension DashboardScrollViewController {
     
     private func updateUIViewModels() {
         if isViewLoaded {
-            ruuviTagViews.values.forEach({ $0.removeFromSuperview() })
+            views.forEach({ $0.removeFromSuperview() })
+            views.removeAll()
             
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
@@ -231,7 +232,7 @@ extension DashboardScrollViewController {
                     scrollView.addSubview(view)
                     position(view, leftView)
                     bind(view: view, with: viewModel)
-                    ruuviTagViews[viewModel] = view
+                    views.append(view)
                     leftView = view
                 }
                 scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal
