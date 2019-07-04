@@ -183,14 +183,14 @@ IMAGE</string>
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tag name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5rU-pr-cVB">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Tag name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5rU-pr-cVB">
                                                     <rect key="frame" x="20" y="11.5" width="74.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bathroom" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wsY-ah-PBa">
-                                                    <rect key="frame" x="102.5" y="11.5" width="291.5" height="21"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Bathroom" textAlignment="right" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="wsY-ah-PBa">
+                                                    <rect key="frame" x="102.5" y="11" width="291.5" height="21"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
@@ -204,7 +204,7 @@ IMAGE</string>
                                                 <constraint firstItem="5rU-pr-cVB" firstAttribute="centerY" secondItem="pkh-BB-rHf" secondAttribute="centerY" id="II3-fu-OOF"/>
                                                 <constraint firstAttribute="trailing" secondItem="wsY-ah-PBa" secondAttribute="trailing" constant="20" id="ciV-5L-1U4"/>
                                                 <constraint firstItem="5rU-pr-cVB" firstAttribute="leading" secondItem="pkh-BB-rHf" secondAttribute="leading" constant="20" id="qIc-1N-JAO"/>
-                                                <constraint firstItem="wsY-ah-PBa" firstAttribute="centerY" secondItem="pkh-BB-rHf" secondAttribute="centerY" id="vb3-b6-D6F"/>
+                                                <constraint firstItem="wsY-ah-PBa" firstAttribute="firstBaseline" secondItem="5rU-pr-cVB" secondAttribute="firstBaseline" id="zgS-70-DYd"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
