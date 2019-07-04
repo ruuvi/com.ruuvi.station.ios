@@ -6,6 +6,7 @@
 "°F" = "°F";
 "hPa" = "hPa";
 "dBm" = "dBm";
+"V" = "V"; // voltage
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
