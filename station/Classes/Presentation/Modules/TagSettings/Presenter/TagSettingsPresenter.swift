@@ -1,4 +1,5 @@
 import Foundation
+import RealmSwift
 
 class TagSettingsPresenter: TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -7,19 +8,20 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
     
-    private var ruuviTag: RuuviTagRealm! { didSet { setupViewModel() } }
+    private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.humidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
+    private var ruuviTagToken: NotificationToken?
+    
+    deinit {
+        ruuviTagToken?.invalidate()
+    }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
         self.humidity = humidity
-        viewModel.name.bind { [weak self] (observable, name) in
-            if let name = name {
-                self?.updateRuuviTag(name: name)
-            }
-        }
+        startObservingRuuviTag()
     }
 }
 
@@ -46,6 +48,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         })
     }
     
+    func viewDidChangeTag(name: String) {
+        let operation = ruuviTagService.update(name: name, of: ruuviTag)
+        operation.on(failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+    
     func viewDidAskToCalibrateHumidity() {
         if let humidity = humidity {
             router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity)
@@ -55,7 +64,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
 // MARK: - Private
 extension TagSettingsPresenter {
-    private func setupViewModel() {
+    private func syncViewModel() {
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
         
         if ruuviTag.name == ruuviTag.uuid || ruuviTag.name == ruuviTag.mac {
@@ -69,10 +78,16 @@ extension TagSettingsPresenter {
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
     }
     
-    private func updateRuuviTag(name: String) {
-        let operation = ruuviTagService.update(name: name, of: ruuviTag)
-        operation.on(failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        })
+    private func startObservingRuuviTag() {
+        ruuviTagToken = ruuviTag.observe { [weak self] (change) in
+            switch change {
+            case .change:
+                self?.syncViewModel()
+            case .deleted:
+                self?.router.dismiss()
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            }
+        }
     }
 }

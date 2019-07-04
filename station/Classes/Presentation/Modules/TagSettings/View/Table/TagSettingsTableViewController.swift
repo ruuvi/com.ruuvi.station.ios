@@ -69,7 +69,9 @@ extension TagSettingsTableViewController {
     }
     
     @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
-        viewModel?.name.value = tagNameTextField.text
+        if let name = tagNameTextField.text {
+            output.viewDidChangeTag(name: name)
+        }
     }
 }
 
