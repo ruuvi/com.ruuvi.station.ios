@@ -156,6 +156,30 @@ extension TagSettingsTableViewController {
                     label.text = "N/A".localized()
                 }
             }
+            
+            accelerationXValueLabel.bind(viewModel.accelerationX) { label, accelerationX in
+                if let accelerationX = accelerationX {
+                    label.text = String(format: "%.3f", accelerationX)
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
+            
+            accelerationYValueLabel.bind(viewModel.accelerationY) { label, accelerationY in
+                if let accelerationY = accelerationY {
+                    label.text = String(format: "%.3f", accelerationY)
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
+            
+            accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
+                if let accelerationZ = accelerationZ {
+                    label.text = String(format: "%.3f", accelerationZ)
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
         }
     }
 }
