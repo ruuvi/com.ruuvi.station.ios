@@ -13,11 +13,11 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     func configure(ruuviTag: RuuviTagRealm) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
-        viewModel.name.bind { [weak self] (observable, name) in
-            if let name = name {
-                self?.updateRuuviTag(name: name)
-            }
-        }
+//        viewModel.name.bind { [weak self] (observable, name) in
+//            if let name = name {
+//                self?.updateRuuviTag(name: name)
+//            }
+//        }
     }
 }
 
