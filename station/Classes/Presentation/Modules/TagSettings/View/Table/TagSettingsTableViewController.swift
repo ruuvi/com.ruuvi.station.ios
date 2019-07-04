@@ -148,6 +148,14 @@ extension TagSettingsTableViewController {
             macAddressValueLabel.bind(viewModel.mac, block: macBlock)
             macAddressValueLabel.bind(viewModel.uuid, block: macBlock)
             macAddressValueLabel.bind(viewModel.uuid, block: macBlock)
+            
+            voltageValueLabel.bind(viewModel.voltage) { label, voltage in
+                if let voltage = voltage {
+                    label.text = String(format: "%.3f", voltage) + " " + "V".localized()
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
         }
     }
 }

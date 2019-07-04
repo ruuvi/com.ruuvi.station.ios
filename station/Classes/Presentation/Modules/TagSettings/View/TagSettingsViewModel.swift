@@ -8,4 +8,5 @@ struct TagSettingsViewModel {
     let humidity: Observable<Double?> = Observable<Double?>()
     let humidityOffset: Observable<Double?> = Observable<Double?>()
     let humidityOffsetDate: Observable<Date?> = Observable<Date?>()
+    let voltage: Observable<Double?> = Observable<Double?>()
 }
