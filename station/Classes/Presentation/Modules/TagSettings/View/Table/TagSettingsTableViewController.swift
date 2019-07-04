@@ -65,6 +65,10 @@ extension TagSettingsTableViewController {
     
     @IBAction func selectBackgroundButtonTouchUpInside(_ sender: Any) {
     }
+    
+    @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
+        viewModel?.name.value = tagNameTextField.text
+    }
 }
 
 // MARK: - UITextFieldDelegate
