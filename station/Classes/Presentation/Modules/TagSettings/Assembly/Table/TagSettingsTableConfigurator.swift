@@ -13,6 +13,7 @@ class TagSettingsTableConfigurator {
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         
         view.output = presenter
     }

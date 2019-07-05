@@ -1,6 +1,6 @@
 import UIKit
 
-extension UIAlertController {
+extension UIViewController {
     
     func show() {
         present(animated: true, completion: nil)

@@ -7,4 +7,5 @@ protocol TagSettingsViewOutput {
     func viewDidConfirmTagRemoval()
     func viewDidAskToCalibrateHumidity()
     func viewDidChangeTag(name: String)
+    func viewDidAskToSelectBackground()
 }

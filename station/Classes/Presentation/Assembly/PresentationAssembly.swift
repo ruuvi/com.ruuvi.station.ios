@@ -12,5 +12,17 @@ class PresentationAssembly: Assembly {
             let presenter = ErrorPresenterAlert()
             return presenter
         }
+        
+        container.register(PermissionPresenter.self) { r in
+            let presenter = PermissionPresenterAlert()
+            return presenter
+        }
+        
+        container.register(PhotoPickerPresenter.self) { r in
+            let presenter = PhotoPickerPresenterSheet()
+            presenter.permissionsManager = r.resolve(PermissionsManager.self)
+            presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
+            return presenter
+        }
     }
 }
