@@ -70,5 +70,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Ruuvi Station needs to access your camera to enable this feature.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ruuvi Station needs to access your microphone to enable this feature.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ruuvi Station needs to access your camera roll to enable this feature.</string>
 </dict>
 </plist>

@@ -66,6 +66,7 @@ extension TagSettingsTableViewController {
     }
     
     @IBAction func selectBackgroundButtonTouchUpInside(_ sender: Any) {
+        output.viewDidAskToSelectBackground()
     }
     
     @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {

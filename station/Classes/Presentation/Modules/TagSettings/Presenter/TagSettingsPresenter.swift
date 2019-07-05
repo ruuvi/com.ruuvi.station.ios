@@ -8,7 +8,8 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
-
+    var photoPickerPresenter: PhotoPickerPresenter! { didSet { photoPickerPresenter.delegate = self  } }
+    
     private let scanner = Ruuvi.scanner
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.humidity.value = humidity } }
@@ -64,6 +65,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let humidity = humidity {
             router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity)
         }
+    }
+    
+    func viewDidAskToSelectBackground() {
+        photoPickerPresenter.pick()
+    }
+}
+
+// MARK: - PhotoPickerPresenterDelegate
+extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
+    func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
+        print(photo)
     }
 }
 
