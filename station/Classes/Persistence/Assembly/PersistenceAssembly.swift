@@ -5,11 +5,17 @@ class PersistenceAssembly: Assembly {
         
         container.register(BackgroundPersistence.self) { r in
             let persistence = BackgroundPersistenceUserDefaults()
+            persistence.imagePersistence = r.resolve(ImagePersistence.self)
             return persistence
         }
         
         container.register(CalibrationPersistence.self) { r in
             let persistence = CalibrationPersistenceUserDefaults()
+            return persistence
+        }
+        
+        container.register(ImagePersistence.self) { r in
+            let persistence = ImagePersistenceDocuments()
             return persistence
         }
         

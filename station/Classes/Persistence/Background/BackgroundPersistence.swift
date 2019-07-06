@@ -1,4 +1,5 @@
 import UIKit
+import Future
 
 extension Notification.Name {
     static let BackgroundPersistenceDidChangeBackground = Notification.Name("BackgroundPersistenceDidChangeBackground")
@@ -12,4 +13,5 @@ protocol BackgroundPersistence {
     func background(for uuid: String) -> UIImage?
     func setBackground(_ id: Int, for uuid: String)
     func setNextBackground(for uuid: String) -> UIImage?
+    func setCustomBackground(image: UIImage, for uuid: String) -> Future<URL,RUError>
 }

@@ -5,6 +5,8 @@ class ErrorPresenterAlert: ErrorPresenter {
     func present(error: Error) {
         if let ruError = error as? RUError {
             switch ruError {
+            case .core(let error):
+                presentAlert(error: error)
             case .persistence(let error):
                 presentAlert(error: error)
             }

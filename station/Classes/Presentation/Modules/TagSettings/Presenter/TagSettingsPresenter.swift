@@ -75,7 +75,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        print(photo)
+        let set = backgroundPersistence.setCustomBackground(image: photo, for: ruuviTag.uuid)
+        set.on(success: { [weak self] _ in
+            self?.viewModel.background.value = photo
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
