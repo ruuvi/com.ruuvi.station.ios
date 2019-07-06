@@ -20,7 +20,7 @@ class ImagePersistenceDocuments: ImagePersistence {
     func persist(image: UIImage, for uuid: String) -> Future<URL,RUError> {
         let promise = Promise<URL,RUError>()
         DispatchQueue.global().async {
-            if let data = image.pngData() {
+            if let data = image.jpegData(compressionQuality: 1.0) {
                 do {
                     let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
                     try data.write(to: url)
