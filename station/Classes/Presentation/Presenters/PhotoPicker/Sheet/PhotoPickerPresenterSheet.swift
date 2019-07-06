@@ -13,10 +13,12 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true)
-        if let photo = info[.originalImage] as? UIImage {
-            delegate?.photoPicker(presenter: self, didPick: photo)
-        }
+        picker.dismiss(animated: true, completion: { [weak self] in
+            guard let sSelf = self else { return }
+            if let photo = info[.originalImage] as? UIImage {
+                sSelf.delegate?.photoPicker(presenter: sSelf, didPick: photo)
+            }
+        })
     }
 }
 

@@ -17,6 +17,7 @@ extension RUError: LocalizedError {
 }
 
 enum CoreError: Error {
+    case failedToGetDocumentsDirectory
     case failedToGetPngRepresentation
 }
 
@@ -25,6 +26,8 @@ extension CoreError: LocalizedError {
         switch self {
         case .failedToGetPngRepresentation:
             return "CoreError.failedToGetPngRepresentation".localized()
+        case .failedToGetDocumentsDirectory:
+            return "CoreError.failedToGetDocumentsDirectory".localized()
         }
     }
 }
