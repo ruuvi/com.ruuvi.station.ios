@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.3</string>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>9</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -38,6 +38,12 @@
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>The app uses Bluetooth LE to read data from RuuviTag sensors.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Ruuvi Station needs to access your camera to enable this feature.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ruuvi Station needs to access your microphone to enable this feature.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ruuvi Station needs to access your camera roll to enable this feature.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Oswald-Bold.ttf</string>
@@ -70,11 +76,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Ruuvi Station needs to access your camera to enable this feature.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Ruuvi Station needs to access your microphone to enable this feature.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ruuvi Station needs to access your camera roll to enable this feature.</string>
 </dict>
 </plist>
