@@ -25,6 +25,16 @@ struct DashboardRuuviTagViewModel {
         version.value = ruuviTag.version
         humidityOffset.value = ruuviTag.humidityOffset
         humidityOffsetDate.value = ruuviTag.humidityOffsetDate
+        
+        celsius.value = ruuviTag.data.last?.celsius
+        fahrenheit.value = ruuviTag.data.last?.fahrenheit
+        humidity.value = ruuviTag.data.last?.humidity
+        pressure.value = ruuviTag.data.last?.pressure
+        
+        rssi.value = ruuviTag.data.last?.rssi
+        voltage.value = ruuviTag.data.last?.voltage.value
+        
+        date.value = ruuviTag.data.last?.date
     }
     
     func update(with ruuviTag: RuuviTag) {
