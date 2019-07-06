@@ -5,7 +5,7 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
     
-    private let saveInterval: TimeInterval = 10 // 5 * 60
+    private let saveInterval: TimeInterval = 5 * 60
     private var token: NotificationToken?
     private let scanner = Ruuvi.scanner
     private var observeTokens = [ObservationToken]()
