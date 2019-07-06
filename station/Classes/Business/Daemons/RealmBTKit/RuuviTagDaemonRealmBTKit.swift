@@ -5,10 +5,12 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
     
+    private let saveInterval: TimeInterval = 10 // 5 * 60
     private var token: NotificationToken?
     private let scanner = Ruuvi.scanner
     private var observeTokens = [ObservationToken]()
     private var realm: Realm!
+    private var savedDate = [String:Date]() // uuid:date
     
     func startSavingBroadcasts() {
         start { [weak self] in
@@ -53,7 +55,14 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     }
     
     @objc func persist(ruuviTagData: RuuviTagDataRealm) {
-        ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+        if let uuid = ruuviTagData.ruuviTag?.uuid, let date = savedDate[uuid] {
+            if Date().timeIntervalSince(date) > saveInterval {
+                ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+                savedDate[uuid] = Date()
+            }
+        } else {
+            ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+        }
     }
     
     deinit {
