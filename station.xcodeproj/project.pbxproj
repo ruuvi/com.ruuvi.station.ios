@@ -141,7 +141,7 @@
 		0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */; };
 		0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */; };
 		0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
-		0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift */; };
+		0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift */; };
 		0EEB211922B8C4B50015F9E0 /* Chart.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB211822B8C4B50015F9E0 /* Chart.storyboard */; };
 		0EEB211B22B8C5B70015F9E0 /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211A22B8C5B70015F9E0 /* ChartViewController.swift */; };
 		0EEB211D22B8C5CB0015F9E0 /* ChartViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211C22B8C5CB0015F9E0 /* ChartViewInput.swift */; };
@@ -368,7 +368,7 @@
 		0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemon.swift; sourceTree = "<group>"; };
 		0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessAssembly.swift; sourceTree = "<group>"; };
 		0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
-		0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemonBackgroundWorker.swift; sourceTree = "<group>"; };
+		0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemonRealmBTKit.swift; sourceTree = "<group>"; };
 		0EEB211822B8C4B50015F9E0 /* Chart.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chart.storyboard; sourceTree = "<group>"; };
 		0EEB211A22B8C5B70015F9E0 /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		0EEB211C22B8C5CB0015F9E0 /* ChartViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewInput.swift; sourceTree = "<group>"; };
@@ -1392,7 +1392,7 @@
 		0EEB210A22B7D8500015F9E0 /* RealmBTKit */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift */,
+				0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift */,
 			);
 			path = RealmBTKit;
 			sourceTree = "<group>";
@@ -2120,7 +2120,7 @@
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
-				0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */,
+				0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift in Sources */,
 				0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0EEB213722B8D6850015F9E0 /* ChartViewModel.swift in Sources */,

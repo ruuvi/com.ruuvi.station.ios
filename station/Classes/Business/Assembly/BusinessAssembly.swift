@@ -11,7 +11,7 @@ class BusinessAssembly: Assembly {
         }
         
         container.register(RuuviTagDaemon.self) { r in
-            let daemon = RuuviTagDaemonBackgroundWorker()
+            let daemon = RuuviTagDaemonRealmBTKit()
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }.inObjectScope(.container)
