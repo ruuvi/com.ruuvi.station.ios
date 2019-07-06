@@ -88,6 +88,8 @@
 		0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */; };
 		0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */; };
 		0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */; };
+		0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302422D0B19600B52E39 /* AppStateService.swift */; };
+		0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
@@ -315,6 +317,8 @@
 		0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPresenterAlert.swift; sourceTree = "<group>"; };
 		0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersistence.swift; sourceTree = "<group>"; };
 		0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersistenceDocuments.swift; sourceTree = "<group>"; };
+		0E5C302422D0B19600B52E39 /* AppStateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateService.swift; sourceTree = "<group>"; };
+		0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateServiceImpl.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
@@ -1087,6 +1091,23 @@
 			path = Documents;
 			sourceTree = "<group>";
 		};
+		0E5C302322D0B16300B52E39 /* AppState */ = {
+			isa = PBXGroup;
+			children = (
+				0E5C302622D0B1A200B52E39 /* Impl */,
+				0E5C302422D0B19600B52E39 /* AppStateService.swift */,
+			);
+			path = AppState;
+			sourceTree = "<group>";
+		};
+		0E5C302622D0B1A200B52E39 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
 		0E70A45E22AF9558006CB87C /* Contract */ = {
 			isa = PBXGroup;
 			children = (
@@ -1365,6 +1386,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
+				0E5C302322D0B16300B52E39 /* AppState */,
 				0EEB210922B7D8110015F9E0 /* Daemons */,
 				0EEB215E22BA610E0015F9E0 /* Migration */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
@@ -2143,6 +2165,7 @@
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
+				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
@@ -2178,6 +2201,7 @@
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
+				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,

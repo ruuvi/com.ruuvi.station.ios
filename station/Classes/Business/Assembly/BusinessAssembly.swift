@@ -3,6 +3,12 @@ import Swinject
 class BusinessAssembly: Assembly {
     func assemble(container: Container) {
         
+        container.register(AppStateService.self) { r in
+            let service = AppStateServiceImpl()
+            service.ruuviTagDaemon = r.resolve(RuuviTagDaemon.self)
+            return service
+        }.inObjectScope(.container)
+        
         container.register(CalibrationService.self) { r in
             let service = CalibrationServiceImpl()
             service.calibrationPersistence = r.resolve(CalibrationPersistence.self)
