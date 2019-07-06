@@ -4,36 +4,47 @@ import Future
 class ImagePersistenceDocuments: ImagePersistence {
     
     private let ext = ".png"
+    private let bgDir = "bg"
+    private var isBgDirCreated = false
     
     func fetch(uuid: String) -> UIImage? {
-        let url = getDocumentsDirectory().appendingPathComponent(uuid + ext)
+        guard let url = try? getBgDirectory().appendingPathComponent(uuid + ext) else { return nil }
         return UIImage(contentsOfFile: url.path)
     }
     
     func delete(uuid: String) {
-        let url = getDocumentsDirectory().appendingPathComponent(uuid + ext)
+        guard let url = try? getBgDirectory().appendingPathComponent(uuid + ext) else { return }
         try? FileManager.default.removeItem(at: url)
     }
     
     func persist(image: UIImage, for uuid: String) -> Future<URL,RUError> {
         let promise = Promise<URL,RUError>()
-        if let data = image.pngData() {
-            let url = getDocumentsDirectory().appendingPathComponent(uuid + ext)
-            do {
-                try data.write(to: url)
-                promise.succeed(value: url)
-            } catch {
-                promise.fail(error: .persistence(error))
+        DispatchQueue.global().async {
+            if let data = image.pngData() {
+                do {
+                    let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
+                    try data.write(to: url)
+                    promise.succeed(value: url)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            } else {
+                promise.fail(error: .core(.failedToGetPngRepresentation))
             }
-        } else {
-            promise.fail(error: .core(.failedToGetPngRepresentation))
         }
         return promise.future
     }
     
-    private func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
+    private func getBgDirectory() throws -> URL {
+        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            throw CoreError.failedToGetDocumentsDirectory
+        }
+        let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)
+        if !isBgDirCreated {
+            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+            isBgDirCreated = true
+        }
+        return dir
     }
     
 }
