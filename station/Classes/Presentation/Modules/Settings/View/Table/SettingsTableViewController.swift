@@ -4,7 +4,7 @@ class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
     
     @IBOutlet weak var useFahrenheitSwitch: UISwitch!
-    @IBOutlet weak var experimentalUXSwitch: UISwitch!
+    @IBOutlet weak var experimentalUXSwitch: UISwitch?
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var isExperimentalUX: Bool = false { didSet { updateUIIsExperimentalUX() } }
@@ -26,8 +26,8 @@ extension SettingsTableViewController {
         output.viewDidChange(temperatureUnit: useFahrenheitSwitch.isOn ? .fahrenheit : .celsius)
     }
     
-    @IBAction func experimentalUXValueChanged(_ sender: Any) {
-        output.viewDidChange(experimentalUX: experimentalUXSwitch.isOn)
+    @IBAction func experimentalUXValueChanged(_ sender: UISwitch) {
+        output.viewDidChange(experimentalUX: sender.isOn)
     }
     
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
@@ -53,7 +53,7 @@ extension SettingsTableViewController {
     
     private func updateUIIsExperimentalUX() {
         if isViewLoaded {
-            experimentalUXSwitch.isOn = isExperimentalUX
+            experimentalUXSwitch?.isOn = isExperimentalUX
         }
     }
     
