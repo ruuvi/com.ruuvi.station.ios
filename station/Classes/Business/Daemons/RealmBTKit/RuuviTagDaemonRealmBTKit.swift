@@ -55,13 +55,15 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     }
     
     @objc func persist(ruuviTagData: RuuviTagDataRealm) {
-        if let uuid = ruuviTagData.ruuviTag?.uuid, let date = savedDate[uuid] {
+        guard let uuid = ruuviTagData.ruuviTag?.uuid else { return }
+        if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
                 ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
                 savedDate[uuid] = Date()
             }
         } else {
             ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+            savedDate[uuid] = Date()
         }
     }
     
