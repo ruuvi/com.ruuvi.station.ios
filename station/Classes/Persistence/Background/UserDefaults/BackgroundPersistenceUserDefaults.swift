@@ -1,9 +1,12 @@
 import UIKit
+import Future
 
 class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     
-    let bgMinIndex = 1 // must be > 0
-    let bgMaxIndex = 9
+    var imagePersistence: ImagePersistence!
+    
+    private let bgMinIndex = 1 // must be > 0, 0 means custom background
+    private let bgMaxIndex = 9
     
     private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
@@ -38,16 +41,27 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
-            id = biasedToNotUsedRandom()
-            setBackground(id, for: uuid)
-            return UIImage(named: "bg\(id)")
+            if let custom = imagePersistence.fetch(uuid: uuid) {
+                return custom
+            } else {
+                id = biasedToNotUsedRandom()
+                setBackground(id, for: uuid)
+                return UIImage(named: "bg\(id)")
+            }
         }
     }
     
-    func backgroundId(for uuid: String) -> Int {
-        let key = bgUDKeyPrefix + uuid
-        let id = UserDefaults.standard.integer(forKey: key)
-        return id
+    func setCustomBackground(image: UIImage, for uuid: String) -> Future<URL,RUError> {
+        let promise = Promise<URL,RUError>()
+        let persist = imagePersistence.persist(image: image, for: uuid)
+        persist.on(success: { url in
+            self.setBackground(0, for: uuid)
+            NotificationCenter.default.post(name: .BackgroundPersistenceDidChangeBackground, object: nil, userInfo: [BackgroundPersistenceDidChangeBackgroundKey.uuid: uuid ])
+            promise.succeed(value: url)
+        }, failure: { (error) in
+            promise.fail(error: error)
+        })
+        return promise.future
     }
     
     func setBackground(_ id: Int, for uuid: String) {
@@ -62,7 +76,13 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
     
-    func biasedToNotUsedRandom() -> Int {
+    private func backgroundId(for uuid: String) -> Int {
+        let key = bgUDKeyPrefix + uuid
+        let id = UserDefaults.standard.integer(forKey: key)
+        return id
+    }
+    
+    private func biasedToNotUsedRandom() -> Int {
         let array = usedBackgrounds
         var result: Int
         if let min = array.min() {

@@ -86,6 +86,8 @@
 		0E5C301622CF640000B52E39 /* CoreAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301522CF640000B52E39 /* CoreAssembly.swift */; };
 		0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301922CF644900B52E39 /* PermissionPresenter.swift */; };
 		0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */; };
+		0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */; };
+		0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
@@ -311,6 +313,8 @@
 		0E5C301522CF640000B52E39 /* CoreAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAssembly.swift; sourceTree = "<group>"; };
 		0E5C301922CF644900B52E39 /* PermissionPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPresenter.swift; sourceTree = "<group>"; };
 		0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionPresenterAlert.swift; sourceTree = "<group>"; };
+		0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersistence.swift; sourceTree = "<group>"; };
+		0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersistenceDocuments.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
@@ -616,6 +620,7 @@
 				0E1C1DA922B387BE0032F6CA /* Assembly */,
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
+				0E5C301D22D0904800B52E39 /* Image */,
 				0E1C1D9322B362420032F6CA /* Realm */,
 				0E1C1D9922B364FC0032F6CA /* RuuviTag */,
 				0E1C1E1522B76F400032F6CA /* Settings */,
@@ -1063,6 +1068,23 @@
 				0E5C301B22CF646A00B52E39 /* PermissionPresenterAlert.swift */,
 			);
 			path = Alert;
+			sourceTree = "<group>";
+		};
+		0E5C301D22D0904800B52E39 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				0E5C302022D0907500B52E39 /* Documents */,
+				0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		0E5C302022D0907500B52E39 /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+				0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */,
+			);
+			path = Documents;
 			sourceTree = "<group>";
 		};
 		0E70A45E22AF9558006CB87C /* Contract */ = {
@@ -2099,6 +2121,7 @@
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonBackgroundWorker.swift in Sources */,
+				0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0EEB213722B8D6850015F9E0 /* ChartViewModel.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
@@ -2127,6 +2150,7 @@
 				0E53DA6022CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
+				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
 				0E502FB522B27B2800E8A6CC /* RuuviTagInitializer.swift in Sources */,
 				0EEB213522B8CE810015F9E0 /* ChartPresentationController.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,

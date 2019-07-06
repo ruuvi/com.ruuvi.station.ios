@@ -12,6 +12,9 @@
 "ErrorPresenterAlert.Error" = "Error";
 "ErrorPresenterAlert.OK" = "OK";
 
+// CoreError
+"CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
+
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
