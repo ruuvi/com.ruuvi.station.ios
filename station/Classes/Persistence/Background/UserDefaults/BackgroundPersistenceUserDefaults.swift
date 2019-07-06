@@ -33,6 +33,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
             id = biasedToNotUsedRandom()
             setBackground(id, for: uuid)
         }
+        imagePersistence.deleteBgIfExists(for: uuid)
         return UIImage(named: "bg\(id)")
     }
     
@@ -41,7 +42,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
-            if let custom = imagePersistence.fetch(uuid: uuid) {
+            if let custom = imagePersistence.fetchBg(for: uuid) {
                 return custom
             } else {
                 id = biasedToNotUsedRandom()
@@ -53,7 +54,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     
     func setCustomBackground(image: UIImage, for uuid: String) -> Future<URL,RUError> {
         let promise = Promise<URL,RUError>()
-        let persist = imagePersistence.persist(image: image, for: uuid)
+        let persist = imagePersistence.persistBg(image: image, for: uuid)
         persist.on(success: { url in
             self.setBackground(0, for: uuid)
             NotificationCenter.default.post(name: .BackgroundPersistenceDidChangeBackground, object: nil, userInfo: [BackgroundPersistenceDidChangeBackgroundKey.uuid: uuid ])
