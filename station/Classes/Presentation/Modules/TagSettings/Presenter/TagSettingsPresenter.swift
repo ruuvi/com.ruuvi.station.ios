@@ -38,7 +38,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
     
     func viewDidAskToRandomizeBackground() {
-        viewModel.background.value = backgroundPersistence.setNextBackground(for: ruuviTag.uuid)
+        viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: ruuviTag.uuid)
     }
     
     func viewDidAskToRemoveRuuviTag() {

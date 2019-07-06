@@ -21,7 +21,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
     
-    func setNextBackground(for uuid: String) -> UIImage? {
+    func setNextDefaultBackground(for uuid: String) -> UIImage? {
         var id = backgroundId(for: uuid)
         if id >= bgMinIndex && id < bgMaxIndex {
             id += 1
