@@ -134,7 +134,7 @@ extension RuuviTagViewController {
     private func updateUIUpdated() {
         if isViewLoaded {
             if let updated = updated {
-                updatedLabel.text = updated.timeAgoSinceNow
+                updatedLabel.text = updated.ruuviAgo
             } else {
                 updatedLabel.text = nil
             }

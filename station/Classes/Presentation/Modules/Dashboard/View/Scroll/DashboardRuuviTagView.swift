@@ -29,7 +29,7 @@ class DashboardRuuviTagView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
-            self?.updatedLabel.text = self?.updatedAt?.timeAgoSinceNow ?? "N/A".localized()
+            self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
         })
     }
     

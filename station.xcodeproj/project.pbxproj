@@ -197,6 +197,7 @@
 		0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863A22CBB08C0026C7A5 /* TagSettingsPresenter.swift */; };
 		0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */; };
 		0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */; };
+		0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */; };
 		0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
 		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
@@ -426,6 +427,7 @@
 		0EF2863A22CBB08C0026C7A5 /* TagSettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsPresenter.swift; sourceTree = "<group>"; };
 		0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagSettingsTableInitializer.swift; sourceTree = "<group>"; };
 		0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableConfigurator.swift; sourceTree = "<group>"; };
+		0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ruuvi.swift"; sourceTree = "<group>"; };
 		0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistence.swift; sourceTree = "<group>"; };
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 				0E1C1DC522B396040032F6CA /* UIViewController+Show.swift */,
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
 				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
+				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2139,6 +2142,7 @@
 				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
+				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
