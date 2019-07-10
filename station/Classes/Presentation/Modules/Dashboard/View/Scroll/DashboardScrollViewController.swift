@@ -198,7 +198,7 @@ extension DashboardScrollViewController {
         }
         view.updatedLabel.bind(viewModel.date) { [weak view] (label, date) in
             if let date = date {
-                label.text = date.timeAgoSinceNow
+                label.text = date.ruuviAgo
             } else {
                 label.text = "N/A".localized()
             }
