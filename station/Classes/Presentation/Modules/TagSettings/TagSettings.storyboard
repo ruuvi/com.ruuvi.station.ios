@@ -150,7 +150,7 @@ IMAGE</string>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
                                     <rect key="frame" x="105" y="9.5" width="204" height="41"/>
-                                    <color key="backgroundColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" red="0.082352941176470587" green="0.55294117647058827" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                     <inset key="contentEdgeInsets" minX="15" minY="12" maxX="15" maxY="12"/>
                                     <state key="normal" title="REMOVE THIS RUUVITAG"/>
