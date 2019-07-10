@@ -55,7 +55,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
     
     func viewDidChangeTag(name: String) {
-        let operation = ruuviTagService.update(name: name, of: ruuviTag)
+        let finalName = name.isEmpty ? (ruuviTag.mac ?? ruuviTag.uuid) : name
+        let operation = ruuviTagService.update(name: finalName, of: ruuviTag)
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
