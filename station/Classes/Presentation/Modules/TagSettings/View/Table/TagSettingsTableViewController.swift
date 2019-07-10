@@ -3,6 +3,7 @@ import UIKit
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var macAddressCell: UITableViewCell!
     @IBOutlet weak var accelerationZValueLabel: UILabel!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var calibrationHumidityCell: UITableViewCell!
@@ -37,6 +38,21 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         let controller = UIAlertController(title: "TagSettings.confirmTagRemovalDialog.title".localized(), message: "TagSettings.confirmTagRemovalDialog.message".localized(), preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmTagRemoval()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+    
+    func showMacAddressDetail() {
+        var title: String
+        if viewModel?.mac.value != nil {
+            title = "TagSettings.MacAlert.title".localized()
+        } else {
+            title = "TagSettings.UUIDAlert.title".localized()
+        }
+        let controller = UIAlertController(title: title, message: viewModel?.mac.value ?? viewModel?.uuid.value, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
+            UIPasteboard.general.string = self?.viewModel?.mac.value ?? self?.viewModel?.uuid.value
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
@@ -86,6 +102,8 @@ extension TagSettingsTableViewController {
                 tagNameTextField.becomeFirstResponder()
             case calibrationHumidityCell:
                 output.viewDidAskToCalibrateHumidity()
+            case macAddressCell:
+                output.viewDidTapOnMacAddress()
             default:
                 break
             }

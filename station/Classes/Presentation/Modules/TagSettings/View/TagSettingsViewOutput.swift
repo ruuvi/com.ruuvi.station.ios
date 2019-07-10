@@ -8,4 +8,5 @@ protocol TagSettingsViewOutput {
     func viewDidAskToCalibrateHumidity()
     func viewDidChangeTag(name: String)
     func viewDidAskToSelectBackground()
+    func viewDidTapOnMacAddress()
 }
