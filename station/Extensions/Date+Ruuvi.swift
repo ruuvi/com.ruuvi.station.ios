@@ -14,7 +14,9 @@ extension Date {
         var output = "Updated "
         // show date if the tag has not been seen for 24h
         if elapsed >= 24 * 60 * 60 {
-            output += self.description
+            let df = DateFormatter()
+            df.dateFormat = "EEE MMM dd HH:mm:ss ZZZZ yyyy"
+            output += df.string(from: self)
         } else {
             let seconds = elapsed % 60
             let minutes = (elapsed / 60) % 60
