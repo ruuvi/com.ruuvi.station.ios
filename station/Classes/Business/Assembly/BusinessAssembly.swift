@@ -33,6 +33,7 @@ class BusinessAssembly: Assembly {
             let service = RuuviTagServiceImpl()
             service.calibrationService = r.resolve(CalibrationService.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             return service
         }
     }

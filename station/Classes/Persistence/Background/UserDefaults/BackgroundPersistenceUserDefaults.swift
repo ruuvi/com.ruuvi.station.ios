@@ -21,6 +21,10 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
     
+    func deleteCustomBackground(for uuid: String) {
+        imagePersistence.deleteBgIfExists(for: uuid)
+    }
+    
     func setNextDefaultBackground(for uuid: String) -> UIImage? {
         var id = backgroundId(for: uuid)
         if id >= bgMinIndex && id < bgMaxIndex {
