@@ -54,12 +54,10 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewWillAppear() {
-        startScanningRuuviTags()
         startObservingBluetoothState()
     }
     
     func viewWillDisappear() {
-        stopScanningRuuviTags()
         stopObservingBluetoothState()
     }
     
@@ -147,11 +145,6 @@ extension DashboardPresenter {
                 })
             }
         }
-    }
-    
-    private func stopScanningRuuviTags() {
-        observeTokens.forEach( { $0.invalidate() } )
-        observeTokens.removeAll()
     }
     
     private func startObservingRuuviTags() {
