@@ -5,6 +5,7 @@ import Future
 class RuuviTagServiceImpl: RuuviTagService {
     var ruuviTagPersistence: RuuviTagPersistence!
     var calibrationService: CalibrationService!
+    var backgroundPersistence: BackgroundPersistence!
     
     func persist(ruuviTag: RuuviTag, name: String) -> Future<RuuviTag,RUError> {
         let offsetData = calibrationService.humidityOffset(for: ruuviTag.uuid)
@@ -12,6 +13,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     }
     
     func delete(ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
+        backgroundPersistence.deleteCustomBackground(for: ruuviTag.uuid)
         return ruuviTagPersistence.delete(ruuviTag: ruuviTag)
     }
     
