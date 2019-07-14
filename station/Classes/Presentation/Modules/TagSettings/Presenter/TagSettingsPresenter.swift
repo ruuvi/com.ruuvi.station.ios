@@ -102,6 +102,7 @@ extension TagSettingsPresenter {
         
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.uuid
+        viewModel.version.value = ruuviTag.version
         
         viewModel.humidity.value = humidity
         viewModel.humidityOffset.value = ruuviTag.humidityOffset
@@ -143,5 +144,6 @@ extension TagSettingsPresenter {
         viewModel.accelerationX.value = device.accelerationX
         viewModel.accelerationY.value = device.accelerationY
         viewModel.accelerationZ.value = device.accelerationZ
+        viewModel.version.value = device.version
     }
 }
