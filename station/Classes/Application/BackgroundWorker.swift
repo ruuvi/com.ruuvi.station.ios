@@ -31,6 +31,15 @@ class BackgroundWorker: NSObject {
     }
     
     public func stop() {
-        thread.cancel()
+        perform(#selector(stopThread),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
     }
+    
+    @objc func stopThread() {
+        Thread.exit()
+    }
+    
 }
