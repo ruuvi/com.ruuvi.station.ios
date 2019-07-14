@@ -12,4 +12,5 @@ struct TagSettingsViewModel {
     let accelerationX: Observable<Double?> = Observable<Double?>()
     let accelerationY: Observable<Double?> = Observable<Double?>()
     let accelerationZ: Observable<Double?> = Observable<Double?>()
+    let version: Observable<Int?> = Observable<Int?>()
 }

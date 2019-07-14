@@ -15,6 +15,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
+    @IBOutlet weak var dataFormatValueLabel: UILabel!
     
     var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
@@ -195,6 +196,14 @@ extension TagSettingsTableViewController {
             accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
                 if let accelerationZ = accelerationZ {
                     label.text = String(format: "%.3f", accelerationZ)
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
+            
+            dataFormatValueLabel.bind(viewModel.version) { (label, version) in
+                if let version = version {
+                    label.text = "\(version)"
                 } else {
                     label.text = "N/A".localized()
                 }
