@@ -57,3 +57,5 @@
 "TagSettings.MACTitleLabel.UUID.text" = "UUID";
 "TagSettings.MacAlert.title" = "MAC Address";
 "TagSettings.UUIDAlert.title" = "UUID";
+"TagSettings.UpdateDFU.text" = "Update firmware to see";
+"TagSettings.UpdateDFU.link" = "Update firmware to see";

@@ -1,4 +1,5 @@
 import UIKit
+import TTTAttributedLabel
 
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
@@ -16,6 +17,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
+    @IBOutlet weak var mcValueLabel: TTTAttributedLabel!
+    @IBOutlet weak var msnValueLabel: TTTAttributedLabel!
     
     var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
@@ -23,6 +26,7 @@ class TagSettingsTableViewController: UITableViewController {
         return UIStatusBarStyle.default
     }
     
+    private let updateDfuUrl = URL(string: "https://lab.ruuvi.com/dfu")!
 }
 
 // MARK: - TagSettingsViewInput
@@ -120,6 +124,15 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     }
 }
 
+// MARK: - TTTAttributedLabelDelegate
+extension TagSettingsTableViewController: TTTAttributedLabelDelegate {
+    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
+        if url.absoluteString == updateDfuUrl.absoluteString {
+            UIApplication.shared.open(url)
+        }
+    }
+}
+
 // MARK: - Bindings
 extension TagSettingsTableViewController {
     private func bindViewModels() {
@@ -208,6 +221,32 @@ extension TagSettingsTableViewController {
                     label.text = "N/A".localized()
                 }
             }
+            
+            mcValueLabel.bind(viewModel.movementCounter) { [weak self] (label, mc) in
+                if let mc = mc {
+                    label.text = "\(mc)"
+                } else {
+                    self?.configureUpdateDFU(label: label)
+                }
+            }
+            
+            msnValueLabel.bind(viewModel.measurementSequenceNumber) { [weak self] (label, msn) in
+                if let msn = msn {
+                    label.text = "\(msn)"
+                } else {
+                    self?.configureUpdateDFU(label: label)
+                }
+            }
         }
+    }
+    
+    private func configureUpdateDFU(label: TTTAttributedLabel) {
+        let text = "TagSettings.UpdateDFU.text".localized()
+        label.text = text
+        let link = "TagSettings.UpdateDFU.link".localized()
+        if let linkRange = text.range(of: link) {
+            label.addLink(to: updateDfuUrl, with: NSRange(linkRange, in: text))
+        }
+        label.delegate = self
     }
 }

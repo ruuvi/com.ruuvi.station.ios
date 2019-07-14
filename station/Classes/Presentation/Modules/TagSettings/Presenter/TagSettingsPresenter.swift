@@ -114,6 +114,8 @@ extension TagSettingsPresenter {
         viewModel.accelerationX.value = ruuviTag.data.last?.accelerationX.value
         viewModel.accelerationY.value = ruuviTag.data.last?.accelerationY.value
         viewModel.accelerationZ.value = ruuviTag.data.last?.accelerationZ.value
+        viewModel.movementCounter.value = ruuviTag.data.last?.movementCounter.value
+        viewModel.measurementSequenceNumber.value = ruuviTag.data.last?.measurementSequenceNumber.value
         
     }
     
@@ -146,5 +148,7 @@ extension TagSettingsPresenter {
         viewModel.accelerationZ.value = device.accelerationZ
         viewModel.version.value = device.version
         viewModel.mac.value = device.mac
+        viewModel.movementCounter.value = device.movementCounter
+        viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
     }
 }
