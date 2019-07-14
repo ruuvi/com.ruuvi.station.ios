@@ -107,7 +107,7 @@ extension TagSettingsPresenter {
         viewModel.humidityOffset.value = ruuviTag.humidityOffset
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
         
-        viewModel.humidity.value = ruuviTag.data.last?.humidity
+        viewModel.humidity.value = ruuviTag.data.last?.humidity.value
         
         viewModel.voltage.value = ruuviTag.data.last?.voltage.value
         viewModel.accelerationX.value = ruuviTag.data.last?.accelerationX.value

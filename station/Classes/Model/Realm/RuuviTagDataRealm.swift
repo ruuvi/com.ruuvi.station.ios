@@ -8,9 +8,9 @@ class RuuviTagDataRealm: Object {
     
     // all versions
     @objc dynamic var rssi: Int = 0
-    @objc dynamic var celsius: Double = 0.0
-    @objc dynamic var humidity: Double = 0.0
-    @objc dynamic var pressure: Double = 0.0
+    let celsius = RealmOptional<Double>()
+    let humidity = RealmOptional<Double>()
+    let pressure = RealmOptional<Double>()
     
     // v3 & v5
     let accelerationX = RealmOptional<Double>()
@@ -23,17 +23,21 @@ class RuuviTagDataRealm: Object {
     let measurementSequenceNumber = RealmOptional<Int>()
     let txPower = RealmOptional<Int>()
 
-    var fahrenheit: Double {
-        return (celsius * 9.0/5.0) + 32.0
+    var fahrenheit: Double? {
+        if let celsius = celsius.value {
+            return (celsius * 9.0/5.0) + 32.0
+        } else {
+            return nil
+        }
     }
     
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
         self.rssi = data.rssi
-        self.celsius = data.celsius
-        self.humidity = data.humidity
-        self.pressure = data.pressure
+        self.celsius.value = data.celsius
+        self.humidity.value = data.humidity
+        self.pressure.value = data.pressure
         self.accelerationX.value = data.accelerationX
         self.accelerationY.value = data.accelerationY
         self.accelerationZ.value = data.accelerationZ
