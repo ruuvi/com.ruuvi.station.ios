@@ -20,6 +20,34 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     }
     
     @discardableResult
+    func update(mac: String?, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        do {
+            try realm.write {
+                ruuviTag.mac = mac
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+    
+    @discardableResult
+    func update(version: Int, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        do {
+            try realm.write {
+                ruuviTag.version = version
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+    
+    @discardableResult
     func persist(ruuviTag: RuuviTagRealm, data: RuuviTag) -> Future<RuuviTag,RUError> {
         let promise = Promise<RuuviTag,RUError>()
         if ruuviTag.realm == context.bg {

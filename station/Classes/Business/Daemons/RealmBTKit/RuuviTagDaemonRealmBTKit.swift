@@ -12,6 +12,16 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     private var realm: Realm!
     private var savedDate = [String:Date]() // uuid:date
     
+    @objc private class RuuviTagDaemonPair: NSObject {
+        var ruuviTag: RuuviTagRealm
+        var device: RuuviTag
+        
+        init(ruuviTag: RuuviTagRealm, device: RuuviTag) {
+            self.ruuviTag = ruuviTag
+            self.device = device
+        }
+    }
+    
     func startSavingBroadcasts() {
         start { [weak self] in
             self?.realm = try! Realm()
@@ -43,6 +53,13 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
             observeTokens.append(scanner.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag {
+                    let pair = RuuviTagDaemonPair(ruuviTag: ruuviTag, device: tag)
+                    sSelf.perform(#selector(RuuviTagDaemonRealmBTKit.tryToUpdate(pair:)),
+                                  on: sSelf.thread,
+                                  with: pair,
+                                  waitUntilDone: false,
+                                  modes: [RunLoop.Mode.default.rawValue])
+                    
                     let tagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: tag)
                     sSelf.perform(#selector(RuuviTagDaemonRealmBTKit.persist(ruuviTagData:)),
                             on: sSelf.thread,
@@ -51,6 +68,15 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
                             modes: [RunLoop.Mode.default.rawValue])
                 }
             })
+        }
+    }
+    
+    @objc private func tryToUpdate(pair: RuuviTagDaemonPair) {
+        if pair.device.mac != pair.ruuviTag.mac {
+            ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
+        }
+        if pair.device.version != pair.ruuviTag.version {
+            ruuviTagPersistence.update(version: pair.device.version, of: pair.ruuviTag, realm: realm)
         }
     }
     
