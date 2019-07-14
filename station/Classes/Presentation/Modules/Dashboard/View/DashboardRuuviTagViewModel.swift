@@ -26,10 +26,10 @@ struct DashboardRuuviTagViewModel {
         humidityOffset.value = ruuviTag.humidityOffset
         humidityOffsetDate.value = ruuviTag.humidityOffsetDate
         
-        celsius.value = ruuviTag.data.last?.celsius
+        celsius.value = ruuviTag.data.last?.celsius.value
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
-        humidity.value = ruuviTag.data.last?.humidity
-        pressure.value = ruuviTag.data.last?.pressure
+        humidity.value = ruuviTag.data.last?.humidity.value
+        pressure.value = ruuviTag.data.last?.pressure.value
         
         rssi.value = ruuviTag.data.last?.rssi
         voltage.value = ruuviTag.data.last?.voltage.value
