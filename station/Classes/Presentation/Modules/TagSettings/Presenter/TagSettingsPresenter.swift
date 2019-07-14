@@ -145,5 +145,6 @@ extension TagSettingsPresenter {
         viewModel.accelerationY.value = device.accelerationY
         viewModel.accelerationZ.value = device.accelerationZ
         viewModel.version.value = device.version
+        viewModel.mac.value = device.mac
     }
 }
