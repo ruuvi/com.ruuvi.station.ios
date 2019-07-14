@@ -19,6 +19,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var dataFormatValueLabel: UILabel!
     @IBOutlet weak var mcValueLabel: TTTAttributedLabel!
     @IBOutlet weak var msnValueLabel: TTTAttributedLabel!
+    @IBOutlet weak var txPowerValueLabel: TTTAttributedLabel!
     
     var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
@@ -233,6 +234,14 @@ extension TagSettingsTableViewController {
             msnValueLabel.bind(viewModel.measurementSequenceNumber) { [weak self] (label, msn) in
                 if let msn = msn {
                     label.text = "\(msn)"
+                } else {
+                    self?.configureUpdateDFU(label: label)
+                }
+            }
+            
+            txPowerValueLabel.bind(viewModel.txPower) { [weak self] (label, txPower) in
+                if let txPower = txPower {
+                    label.text = "\(txPower)"
                 } else {
                     self?.configureUpdateDFU(label: label)
                 }

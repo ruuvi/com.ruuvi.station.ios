@@ -116,7 +116,7 @@ extension TagSettingsPresenter {
         viewModel.accelerationZ.value = ruuviTag.data.last?.accelerationZ.value
         viewModel.movementCounter.value = ruuviTag.data.last?.movementCounter.value
         viewModel.measurementSequenceNumber.value = ruuviTag.data.last?.measurementSequenceNumber.value
-        
+        viewModel.txPower.value = ruuviTag.data.last?.txPower.value
     }
     
     private func startObservingRuuviTag() {
@@ -150,5 +150,6 @@ extension TagSettingsPresenter {
         viewModel.mac.value = device.mac
         viewModel.movementCounter.value = device.movementCounter
         viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
+        viewModel.txPower.value = device.txPower
     }
 }
