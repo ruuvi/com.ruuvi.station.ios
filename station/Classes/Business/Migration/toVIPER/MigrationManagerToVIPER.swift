@@ -53,14 +53,14 @@ class MigrationManagerToVIPER: MigrationManager {
                     })
                 } else if oldSchemaVersion < 3 {
                     migration.enumerateObjects(ofType: RuuviTagDataRealm.className()) { oldObject, newObject in
-                        if let value = oldObject?["celsius"] as? Double, let optional = newObject?["celsius"] as? RealmOptional<Double> {
-                            optional.value = value
+                        if let value = oldObject?["celsius"] as? Double {
+                            newObject?["celsius"] = value
                         }
-                        if let value = oldObject?["humidity"] as? Double, let optional = newObject?["humidity"] as? RealmOptional<Double> {
-                            optional.value = value
+                        if let value = oldObject?["humidity"] as? Double {
+                            newObject?["humidity"] = value
                         }
-                        if let value = oldObject?["pressure"] as? Double, let optional = newObject?["pressure"] as? RealmOptional<Double> {
-                            optional.value = value
+                        if let value = oldObject?["pressure"] as? Double {
+                            newObject?["pressure"] = value
                         }
                     }
                 }
