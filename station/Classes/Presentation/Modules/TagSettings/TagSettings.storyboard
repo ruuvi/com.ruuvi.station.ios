@@ -14,7 +14,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="TagSettingsTableViewController" id="JXe-xp-HbB" customClass="TagSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="ece-Kf-Sc4">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="ZpM-rL-1lz">
@@ -145,7 +145,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="778" width="414" height="60"/>
+                            <rect key="frame" x="0.0" y="866" width="414" height="60"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
@@ -414,6 +414,64 @@ IMAGE</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="ouw-OZ-scM">
+                                        <rect key="frame" x="0.0" y="760" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ouw-OZ-scM" id="Syh-sH-ymF">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movement counter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uge-Z2-Th9">
+                                                    <rect key="frame" x="20" y="11.5" width="144" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XlI-8R-mzR" customClass="TTTAttributedLabel">
+                                                    <rect key="frame" x="386" y="11.5" width="8" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="uge-Z2-Th9" firstAttribute="centerY" secondItem="Syh-sH-ymF" secondAttribute="centerY" id="iJH-tQ-hJ3"/>
+                                                <constraint firstAttribute="trailing" secondItem="XlI-8R-mzR" secondAttribute="trailing" constant="20" id="nTS-vO-AGI"/>
+                                                <constraint firstItem="XlI-8R-mzR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uge-Z2-Th9" secondAttribute="trailing" constant="8" id="opM-lL-njR"/>
+                                                <constraint firstItem="uge-Z2-Th9" firstAttribute="leading" secondItem="Syh-sH-ymF" secondAttribute="leading" constant="20" id="q1j-3g-yYr"/>
+                                                <constraint firstItem="XlI-8R-mzR" firstAttribute="centerY" secondItem="Syh-sH-ymF" secondAttribute="centerY" id="qJE-X2-2dk"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="7CC-az-fpL">
+                                        <rect key="frame" x="0.0" y="804" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7CC-az-fpL" id="7h3-zC-7ir">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Measurement sequence number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="40B-Fr-4YX">
+                                                    <rect key="frame" x="20" y="11.5" width="248" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BDV-Du-PWf" customClass="TTTAttributedLabel">
+                                                    <rect key="frame" x="386" y="11.5" width="8" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="40B-Fr-4YX" firstAttribute="leading" secondItem="7h3-zC-7ir" secondAttribute="leading" constant="20" id="37Z-Zb-yFP"/>
+                                                <constraint firstItem="BDV-Du-PWf" firstAttribute="centerY" secondItem="7h3-zC-7ir" secondAttribute="centerY" id="4iL-7F-aeU"/>
+                                                <constraint firstItem="40B-Fr-4YX" firstAttribute="centerY" secondItem="7h3-zC-7ir" secondAttribute="centerY" id="ZMb-oD-5C6"/>
+                                                <constraint firstAttribute="trailing" secondItem="BDV-Du-PWf" secondAttribute="trailing" constant="20" id="plZ-be-5zU"/>
+                                                <constraint firstItem="BDV-Du-PWf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="40B-Fr-4YX" secondAttribute="trailing" constant="8" id="z4F-j9-ABA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -429,6 +487,7 @@ IMAGE</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <size key="freeformSize" width="414" height="1024"/>
                     <connections>
                         <outlet property="accelerationXValueLabel" destination="Z8D-DO-887" id="RM5-Lo-DoC"/>
                         <outlet property="accelerationYValueLabel" destination="BZJ-uw-vfj" id="ecB-Eo-lOq"/>
@@ -440,6 +499,8 @@ IMAGE</string>
                         <outlet property="macAddressCell" destination="5W6-6n-nIk" id="65i-v0-kqJ"/>
                         <outlet property="macAddressTitleLabel" destination="rvA-8R-FuO" id="s46-qG-xlf"/>
                         <outlet property="macAddressValueLabel" destination="WtD-WI-89V" id="3lA-Fg-rDb"/>
+                        <outlet property="mcValueLabel" destination="XlI-8R-mzR" id="4Tb-WI-xwc"/>
+                        <outlet property="msnValueLabel" destination="BDV-Du-PWf" id="I1g-0z-NB5"/>
                         <outlet property="tagNameCell" destination="Ltg-8j-gFv" id="ITi-X4-fhs"/>
                         <outlet property="tagNameTextField" destination="wsY-ah-PBa" id="jfa-8a-aDt"/>
                         <outlet property="voltageValueLabel" destination="0QS-Je-2os" id="kRK-5R-yaN"/>
