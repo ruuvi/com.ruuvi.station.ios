@@ -1,4 +1,5 @@
 import Swinject
+import BTKit
 
 class BusinessAssembly: Assembly {
     func assemble(container: Container) {
@@ -18,6 +19,7 @@ class BusinessAssembly: Assembly {
         
         container.register(RuuviTagDaemon.self) { r in
             let daemon = RuuviTagDaemonRealmBTKit()
+            daemon.scanner = r.resolve(BTScanner.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }.inObjectScope(.container)

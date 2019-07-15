@@ -9,8 +9,8 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! { didSet { photoPickerPresenter.delegate = self  } }
+    var scanner: BTScanner!
     
-    private let scanner = Ruuvi.scanner
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.humidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }

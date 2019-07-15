@@ -9,8 +9,8 @@ class DashboardPresenter: DashboardModuleInput {
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
+    var scanner: BTScanner!
     
-    private let scanner = Ruuvi.scanner
     private var ruuviTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var settingsToken: NSObjectProtocol?
