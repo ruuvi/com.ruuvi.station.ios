@@ -1,4 +1,5 @@
 import Foundation
+import BTKit
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -14,6 +15,7 @@ class TagSettingsTableConfigurator {
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
+        presenter.scanner = r.resolve(BTScanner.self)
         
         view.output = presenter
     }

@@ -1,4 +1,5 @@
 import UIKit
+import BTKit
 
 class DashboardScrollConfigurator {
     func configure(view: DashboardScrollViewController) {
@@ -15,6 +16,7 @@ class DashboardScrollConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(Settings.self)
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+        presenter.scanner = r.resolve(BTScanner.self)
         
         let menu = UIStoryboard(name: "Menu", bundle: .main).instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom

@@ -8,8 +8,8 @@ class DiscoverPresenter: DiscoverModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var ruuviTagService: RuuviTagService!
+    var scanner: BTScanner!
     
-    private let scanner = Ruuvi.scanner
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
         didSet {

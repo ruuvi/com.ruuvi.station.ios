@@ -1,4 +1,5 @@
 import Foundation
+import BTKit
 
 class DiscoverPulsatorConfigurator {
     func configure(view: DiscoverPulsatorViewController) {
@@ -13,6 +14,7 @@ class DiscoverPulsatorConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
+        presenter.scanner = r.resolve(BTScanner.self)
         
         view.output = presenter
     }

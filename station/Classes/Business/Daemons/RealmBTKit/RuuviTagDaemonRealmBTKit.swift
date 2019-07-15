@@ -4,10 +4,10 @@ import RealmSwift
 class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
+    var scanner: BTScanner!
     
     private let saveInterval: TimeInterval = 5 * 60
     private var token: NotificationToken?
-    private let scanner = Ruuvi.scanner
     private var observeTokens = [ObservationToken]()
     private var realm: Realm!
     private var savedDate = [String:Date]() // uuid:date

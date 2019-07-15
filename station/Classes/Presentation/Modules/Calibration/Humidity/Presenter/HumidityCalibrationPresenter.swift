@@ -6,8 +6,8 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
     var router: HumidityCalibrationRouterInput!
     var calibrationService: CalibrationService!
     var errorPresenter: ErrorPresenter!
+    var scanner: BTScanner!
     
-    private let scanner = Ruuvi.scanner
     private var ruuviTag: RuuviTagRealm!
     private var humidity: Double!
     
