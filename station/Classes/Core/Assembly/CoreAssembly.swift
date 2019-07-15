@@ -6,7 +6,7 @@ class CoreAssembly: Assembly {
         
         container.register(BTScanner.self) { r in
             return Ruuvi.scanner
-        }
+        }.inObjectScope(.container)
         
         container.register(PermissionsManager.self) { (r)  in
             let manager = PermissionsManagerImpl()
