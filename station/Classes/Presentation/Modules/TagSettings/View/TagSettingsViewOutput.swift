@@ -10,4 +10,5 @@ protocol TagSettingsViewOutput {
     func viewDidAskToSelectBackground()
     func viewDidTapOnMacAddress()
     func viewDidTapOnUUID()
+    func viewDidAskToLearnMoreAboutFirmwareUpdate()
 }

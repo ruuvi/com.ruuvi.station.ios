@@ -6,4 +6,5 @@ protocol TagSettingsViewInput: ViewInput {
     func showTagRemovalConfirmationDialog()
     func showMacAddressDetail()
     func showUUIDDetail()
+    func showUpdateFirmwareDialog()
 }

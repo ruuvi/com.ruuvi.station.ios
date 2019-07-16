@@ -1,5 +1,4 @@
 import UIKit
-import TTTAttributedLabel
 
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
@@ -18,17 +17,15 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
-    @IBOutlet weak var mcValueLabel: TTTAttributedLabel!
-    @IBOutlet weak var msnValueLabel: TTTAttributedLabel!
-    @IBOutlet weak var txPowerValueLabel: TTTAttributedLabel!
+    @IBOutlet weak var mcValueLabel: UILabel!
+    @IBOutlet weak var msnValueLabel: UILabel!
+    @IBOutlet weak var txPowerValueLabel: UILabel!
     
     var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
     }
-    
-    private let updateDfuUrl = URL(string: "https://lab.ruuvi.com/dfu")!
 }
 
 // MARK: - TagSettingsViewInput
@@ -51,7 +48,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
     
     func showMacAddressDetail() {
-        let title = "TagSettings.MacAlert.title".localized()
+        let title = "TagSettings.Mac.Alert.title".localized()
         let controller = UIAlertController(title: title, message: viewModel?.mac.value, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
             if let mac = self?.viewModel?.mac.value {
@@ -63,12 +60,23 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
     
     func showUUIDDetail() {
-        let title = "TagSettings.UUIDAlert.title".localized()
+        let title = "TagSettings.UUID.Alert.title".localized()
         let controller = UIAlertController(title: title, message: viewModel?.uuid.value, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
             if let uuid = self?.viewModel?.uuid.value {
                 UIPasteboard.general.string = uuid
             }
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+    
+    func showUpdateFirmwareDialog() {
+        let title = "TagSettings.UpdateFirmware.Alert.title".localized()
+        let message = "TagSettings.UpdateFirmware.Alert.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidAskToLearnMoreAboutFirmwareUpdate()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
@@ -134,15 +142,6 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
-    }
-}
-
-// MARK: - TTTAttributedLabelDelegate
-extension TagSettingsTableViewController: TTTAttributedLabelDelegate {
-    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
-        if url.absoluteString == updateDfuUrl.absoluteString {
-            UIApplication.shared.open(url)
-        }
     }
 }
 
@@ -229,39 +228,29 @@ extension TagSettingsTableViewController {
                 }
             }
             
-            mcValueLabel.bind(viewModel.movementCounter) { [weak self] (label, mc) in
+            mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
                 if let mc = mc {
                     label.text = "\(mc)"
                 } else {
-                    self?.configureUpdateDFU(label: label)
+                    label.text = "N/A".localized()
                 }
             }
             
-            msnValueLabel.bind(viewModel.measurementSequenceNumber) { [weak self] (label, msn) in
+            msnValueLabel.bind(viewModel.measurementSequenceNumber) { (label, msn) in
                 if let msn = msn {
                     label.text = "\(msn)"
                 } else {
-                    self?.configureUpdateDFU(label: label)
+                    label.text = "N/A".localized()
                 }
             }
             
-            txPowerValueLabel.bind(viewModel.txPower) { [weak self] (label, txPower) in
+            txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
                 if let txPower = txPower {
                     label.text = "\(txPower)"
                 } else {
-                    self?.configureUpdateDFU(label: label)
+                    label.text = "N/A".localized()
                 }
             }
         }
-    }
-    
-    private func configureUpdateDFU(label: TTTAttributedLabel) {
-        let text = "TagSettings.UpdateDFU.text".localized()
-        label.text = text
-        let link = "TagSettings.UpdateDFU.link".localized()
-        if let linkRange = text.range(of: link) {
-            label.addLink(to: updateDfuUrl, with: NSRange(linkRange, in: text))
-        }
-        label.delegate = self
     }
 }
