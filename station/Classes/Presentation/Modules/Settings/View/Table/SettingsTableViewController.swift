@@ -3,10 +3,12 @@ import UIKit
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
     
+    @IBOutlet weak var absoluteHumiditySwitch: UISwitch!
     @IBOutlet weak var useFahrenheitSwitch: UISwitch!
     @IBOutlet weak var experimentalUXSwitch: UISwitch?
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
+    var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
     var isExperimentalUX: Bool = false { didSet { updateUIIsExperimentalUX() } }
 }
 
@@ -24,6 +26,10 @@ extension SettingsTableViewController: SettingsViewInput {
 extension SettingsTableViewController {
     @IBAction func useFahrenheitSwitchValueChanged(_ sender: Any) {
         output.viewDidChange(temperatureUnit: useFahrenheitSwitch.isOn ? .fahrenheit : .celsius)
+    }
+    
+    @IBAction func absuluteHumiditySwitchValueChanged(_ sender: Any) {
+        output.viewDidChange(humidityUnit: absoluteHumiditySwitch.isOn ? .gm3 : .percent)
     }
     
     @IBAction func experimentalUXValueChanged(_ sender: UISwitch) {
@@ -48,7 +54,14 @@ extension SettingsTableViewController {
 extension SettingsTableViewController {
     private func updateUI() {
         updateUITemperatureUnit()
+        updateUIHumidityUnit()
         updateUIIsExperimentalUX()
+    }
+    
+    private func updateUIHumidityUnit() {
+        if isViewLoaded {
+            absoluteHumiditySwitch.isOn = humidityUnit == .gm3
+        }
     }
     
     private func updateUIIsExperimentalUX() {

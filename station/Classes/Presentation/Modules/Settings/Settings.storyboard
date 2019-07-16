@@ -48,6 +48,34 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="iOW-rD-oc1">
+                                        <rect key="frame" x="0.0" y="99.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iOW-rD-oc1" id="N12-SR-K62">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use absolute humidity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bGS-es-4BZ">
+                                                    <rect key="frame" x="20" y="11.5" width="171" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Zl-SS-gXS">
+                                                    <rect key="frame" x="345" y="6" width="49" height="31"/>
+                                                    <connections>
+                                                        <action selector="absuluteHumiditySwitchValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="hOi-SO-MxH"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="1Zl-SS-gXS" secondAttribute="trailing" constant="22" id="PUj-JL-9GJ"/>
+                                                <constraint firstItem="bGS-es-4BZ" firstAttribute="leading" secondItem="N12-SR-K62" secondAttribute="leading" constant="20" id="ihi-hR-nS2"/>
+                                                <constraint firstItem="1Zl-SS-gXS" firstAttribute="centerY" secondItem="N12-SR-K62" secondAttribute="centerY" id="lJs-4E-Nde"/>
+                                                <constraint firstItem="bGS-es-4BZ" firstAttribute="centerY" secondItem="N12-SR-K62" secondAttribute="centerY" id="wME-GW-Gj9"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -64,6 +92,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="absoluteHumiditySwitch" destination="1Zl-SS-gXS" id="mDS-Jq-6KG"/>
                         <outlet property="useFahrenheitSwitch" destination="GGg-TC-AXn" id="Ezn-3U-xoA"/>
                     </connections>
                 </tableViewController>
