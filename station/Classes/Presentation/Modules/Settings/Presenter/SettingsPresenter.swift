@@ -10,11 +10,16 @@ class SettingsPresenter: SettingsModuleInput {
 extension SettingsPresenter: SettingsViewOutput {
     func viewDidLoad() {
         view.temperatureUnit = settings.temperatureUnit
+        view.humidityUnit = settings.humidityUnit
         view.isExperimentalUX = settings.experimentalUX
     }
     
     func viewDidChange(temperatureUnit: TemperatureUnit) {
         settings.temperatureUnit = temperatureUnit
+    }
+    
+    func viewDidChange(humidityUnit: HumidityUnit) {
+        settings.humidityUnit = humidityUnit
     }
     
     func viewDidChange(experimentalUX: Bool) {
