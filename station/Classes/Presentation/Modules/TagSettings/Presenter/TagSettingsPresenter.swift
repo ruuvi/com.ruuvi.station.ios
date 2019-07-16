@@ -73,11 +73,19 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
     
     func viewDidTapOnMacAddress() {
-        view.showMacAddressDetail()
+        if viewModel.mac.value != nil {
+            view.showMacAddressDetail()
+        } else {
+            view.showUpdateFirmwareDialog()
+        }
     }
     
     func viewDidTapOnUUID() {
         view.showUUIDDetail()
+    }
+    
+    func viewDidAskToLearnMoreAboutFirmwareUpdate() {
+        UIApplication.shared.open(URL(string: "https://lab.ruuvi.com/dfu")!)
     }
 }
 
