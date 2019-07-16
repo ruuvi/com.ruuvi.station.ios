@@ -167,19 +167,41 @@ extension DashboardScrollViewController {
             }
         }
         
-        let humidityOffset = viewModel.humidityOffset
-        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak humidityOffset] label, humidity in
-            if let humidity = humidity, let humidityOffset = humidityOffset?.value {
-                label.text = String(format: "%.2f", humidity + humidityOffset) + " %"
-            } else if let humidity = humidity {
-                label.text = String(format: "%.2f", humidity) + " %"
+        let hu = viewModel.humidityUnit
+        let rh = viewModel.relativeHumidity
+        let ah = viewModel.absoluteHumidity
+        let ho = viewModel.humidityOffset
+        
+        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho] label, _ in
+            if let hu = hu?.value {
+                switch hu {
+                case .percent:
+                    if let rh = rh?.value, let ho = ho?.value {
+                        label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
+                    } else if let rh = rh?.value {
+                        label.text = String(format: "%.2f", rh) + " " + "%".localized()
+                    } else {
+                        label.text = "N/A".localized()
+                    }
+                case .gm3:
+                    if let ah = ah?.value {
+                        label.text = String(format: "%.2f", ah) + " " + "g/m³".localized()
+                    } else {
+                        label.text = "N/A".localized()
+                    }
+                }
             } else {
                 label.text = "N/A".localized()
             }
+            
         }
         
-        view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
         view.humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.absoluteHumidity, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.humidityUnit) { (label, temperatureUnit) in
+            humidityBlock(label, nil)
+        }
         
         view.pressureLabel.bind(viewModel.pressure) { label, pressure in
             if let pressure = pressure {

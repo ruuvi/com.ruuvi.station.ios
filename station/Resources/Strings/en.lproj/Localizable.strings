@@ -8,6 +8,8 @@
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
+"%" = "%";
+"g/m³" = "g/m³";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
