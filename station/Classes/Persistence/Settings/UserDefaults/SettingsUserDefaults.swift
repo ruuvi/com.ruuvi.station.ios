@@ -2,6 +2,20 @@ import Foundation
 
 class SettingsUserDegaults: Settings {
     
+    var humidityUnit: HumidityUnit {
+        get {
+            return useAbsoluteHumidity ? .gm3 : .percent
+        }
+        set {
+            useAbsoluteHumidity = newValue == .gm3
+            NotificationCenter
+                .default
+                .post(name: .HumidityUnitDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+    
     var temperatureUnit: TemperatureUnit {
         get {
             return useFahrenheit ? .fahrenheit : .celsius
@@ -45,4 +59,14 @@ class SettingsUserDegaults: Settings {
         }
     }
     private let useFahrenheitUDKey = "SettingsUserDegaults.useFahrenheit"
+    
+    private var useAbsoluteHumidity: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: useAbsoluteHumidityUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: useAbsoluteHumidityUDKey)
+        }
+    }
+    private let useAbsoluteHumidityUDKey = "SettingsUserDegaults.useAbsoluteHumidity"
 }

@@ -19,6 +19,7 @@ struct DashboardRuuviTagViewModel {
     var humidityOffsetDate: Observable<Date?> = Observable<Date?>()
     var date: Observable<Date?> = Observable<Date?>()
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
+    var humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
     
     init(_ ruuviTag: RuuviTagRealm) {
         uuid.value = ruuviTag.uuid
