@@ -87,6 +87,24 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidAskToLearnMoreAboutFirmwareUpdate() {
         UIApplication.shared.open(URL(string: "https://lab.ruuvi.com/dfu")!)
     }
+    
+    func viewDidTapOnTxPower() {
+        if viewModel.txPower.value == nil {
+            view.showUpdateFirmwareDialog()
+        }
+    }
+    
+    func viewDidTapOnMovementCounter() {
+        if viewModel.movementCounter.value == nil {
+            view.showUpdateFirmwareDialog()
+        }
+    }
+    
+    func viewDidTapOnMeasurementSequenceNumber() {
+        if viewModel.measurementSequenceNumber.value == nil {
+            view.showUpdateFirmwareDialog()
+        }
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
