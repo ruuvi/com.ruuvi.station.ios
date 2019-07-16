@@ -3,6 +3,9 @@ import UIKit
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var msnCell: UITableViewCell!
+    @IBOutlet weak var mcCell: UITableViewCell!
+    @IBOutlet weak var txPowerCell: UITableViewCell!
     @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
     @IBOutlet weak var tagNameCell: UITableViewCell!
@@ -130,6 +133,12 @@ extension TagSettingsTableViewController {
                 output.viewDidTapOnMacAddress()
             case uuidCell:
                 output.viewDidTapOnUUID()
+            case txPowerCell:
+                output.viewDidTapOnTxPower()
+            case mcCell:
+                output.viewDidTapOnMovementCounter()
+            case msnCell:
+                output.viewDidTapOnMeasurementSequenceNumber()
             default:
                 break
             }

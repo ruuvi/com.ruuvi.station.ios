@@ -11,4 +11,7 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnMacAddress()
     func viewDidTapOnUUID()
     func viewDidAskToLearnMoreAboutFirmwareUpdate()
+    func viewDidTapOnTxPower()
+    func viewDidTapOnMovementCounter()
+    func viewDidTapOnMeasurementSequenceNumber()
 }
