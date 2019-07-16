@@ -72,7 +72,7 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
     }
     
     @objc private func tryToUpdate(pair: RuuviTagDaemonPair) {
-        if pair.device.mac != pair.ruuviTag.mac {
+        if pair.device.mac != nil && pair.device.mac != pair.ruuviTag.mac {
             ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
         }
         if pair.device.version != pair.ruuviTag.version {
