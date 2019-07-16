@@ -164,7 +164,7 @@ extension TagSettingsTableViewController {
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
             
-            let humidity = viewModel.humidity
+            let humidity = viewModel.relativeHumidity
             let humidityOffset = viewModel.humidityOffset
             let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset] label, _ in
                 if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
@@ -178,7 +178,7 @@ extension TagSettingsTableViewController {
                 }
             }
             
-            humidityLabel.bind(viewModel.humidity, block: humidityBlock)
+            humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
             humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
             
             uuidValueLabel.bind(viewModel.uuid) { label, uuid in
