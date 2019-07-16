@@ -33,7 +33,7 @@ struct DashboardRuuviTagViewModel {
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
         relativeHumidity.value = ruuviTag.data.last?.humidity.value
         if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
-            absoluteHumidity.value = Humidity(c: c, rh: rh).ah
+            absoluteHumidity.value = Humidity(c: c, rh: rh + ruuviTag.humidityOffset).ah
         } else {
             absoluteHumidity.value = nil
         }
@@ -52,7 +52,11 @@ struct DashboardRuuviTagViewModel {
         fahrenheit.value = ruuviTag.fahrenheit
         relativeHumidity.value = ruuviTag.humidity
         if let c = ruuviTag.celsius, let rh = ruuviTag.humidity {
-            absoluteHumidity.value = Humidity(c: c, rh: rh).ah
+            if let ho = humidityOffset.value {
+                absoluteHumidity.value = Humidity(c: c, rh: rh + ho).ah
+            } else {
+                absoluteHumidity.value = Humidity(c: c, rh: rh).ah
+            }
         } else {
             absoluteHumidity.value = nil
         }
