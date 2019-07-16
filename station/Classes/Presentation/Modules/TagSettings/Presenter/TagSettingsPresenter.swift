@@ -114,9 +114,17 @@ extension TagSettingsPresenter {
         viewModel.accelerationX.value = ruuviTag.data.last?.accelerationX.value
         viewModel.accelerationY.value = ruuviTag.data.last?.accelerationY.value
         viewModel.accelerationZ.value = ruuviTag.data.last?.accelerationZ.value
-        viewModel.movementCounter.value = ruuviTag.data.last?.movementCounter.value
-        viewModel.measurementSequenceNumber.value = ruuviTag.data.last?.measurementSequenceNumber.value
-        viewModel.txPower.value = ruuviTag.data.last?.txPower.value
+        
+        // version 5 supports mc, msn, txPower
+        if ruuviTag.version == 5 {
+            viewModel.movementCounter.value = ruuviTag.data.last(where: { $0.movementCounter.value != nil })?.movementCounter.value
+            viewModel.measurementSequenceNumber.value = ruuviTag.data.last(where: { $0.measurementSequenceNumber.value != nil })?.measurementSequenceNumber.value
+            viewModel.txPower.value = ruuviTag.data.last(where: { $0.txPower.value != nil })?.txPower.value
+        } else {
+            viewModel.movementCounter.value = nil
+            viewModel.measurementSequenceNumber.value = nil
+            viewModel.txPower.value = nil
+        }
     }
     
     private func startObservingRuuviTag() {
