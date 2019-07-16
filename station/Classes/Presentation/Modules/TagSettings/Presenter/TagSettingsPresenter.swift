@@ -12,7 +12,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var scanner: BTScanner!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
-    private var humidity: Double? { didSet { viewModel.humidity.value = humidity } }
+    private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
     private var ruuviTagToken: NotificationToken?
     private var observeToken: ObservationToken?
@@ -134,11 +134,11 @@ extension TagSettingsPresenter {
         viewModel.uuid.value = ruuviTag.uuid
         viewModel.version.value = ruuviTag.version
         
-        viewModel.humidity.value = humidity
+        viewModel.relativeHumidity.value = humidity
         viewModel.humidityOffset.value = ruuviTag.humidityOffset
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
         
-        viewModel.humidity.value = ruuviTag.data.last?.humidity.value
+        viewModel.relativeHumidity.value = ruuviTag.data.last?.humidity.value
         
         viewModel.voltage.value = ruuviTag.data.last?.voltage.value
         viewModel.accelerationX.value = ruuviTag.data.last?.accelerationX.value
@@ -179,7 +179,7 @@ extension TagSettingsPresenter {
     }
     
     private func sync(device: RuuviTag) {
-        viewModel.humidity.value = device.humidity
+        viewModel.relativeHumidity.value = device.humidity
         viewModel.voltage.value = device.voltage
         viewModel.accelerationX.value = device.accelerationX
         viewModel.accelerationY.value = device.accelerationY
