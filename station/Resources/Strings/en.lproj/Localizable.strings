@@ -53,8 +53,6 @@
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
 "TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this RuuviTag?";
-"TagSettings.MACTitleLabel.MAC.text" = "MAC Address";
-"TagSettings.MACTitleLabel.UUID.text" = "UUID";
 "TagSettings.MacAlert.title" = "MAC Address";
 "TagSettings.UUIDAlert.title" = "UUID";
 "TagSettings.UpdateDFU.text" = "Update firmware to see";

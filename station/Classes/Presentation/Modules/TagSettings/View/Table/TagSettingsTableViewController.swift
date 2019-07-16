@@ -4,14 +4,15 @@ import TTTAttributedLabel
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
-    @IBOutlet weak var accelerationZValueLabel: UILabel!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var calibrationHumidityCell: UITableViewCell!
-    @IBOutlet weak var accelerationYValueLabel: UILabel!
+    @IBOutlet weak var uuidValueLabel: UILabel!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
+    @IBOutlet weak var accelerationYValueLabel: UILabel!
+    @IBOutlet weak var accelerationZValueLabel: UILabel!
     @IBOutlet weak var voltageValueLabel: UILabel!
-    @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
@@ -50,15 +51,24 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
     
     func showMacAddressDetail() {
-        var title: String
-        if viewModel?.mac.value != nil {
-            title = "TagSettings.MacAlert.title".localized()
-        } else {
-            title = "TagSettings.UUIDAlert.title".localized()
-        }
-        let controller = UIAlertController(title: title, message: viewModel?.mac.value ?? viewModel?.uuid.value, preferredStyle: .alert)
+        let title = "TagSettings.MacAlert.title".localized()
+        let controller = UIAlertController(title: title, message: viewModel?.mac.value, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
-            UIPasteboard.general.string = self?.viewModel?.mac.value ?? self?.viewModel?.uuid.value
+            if let mac = self?.viewModel?.mac.value {
+                UIPasteboard.general.string = mac
+            }
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+    
+    func showUUIDDetail() {
+        let title = "TagSettings.UUIDAlert.title".localized()
+        let controller = UIAlertController(title: title, message: viewModel?.uuid.value, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Copy".localized(), style: .default, handler: { [weak self] _ in
+            if let uuid = self?.viewModel?.uuid.value {
+                UIPasteboard.general.string = uuid
+            }
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
@@ -110,6 +120,8 @@ extension TagSettingsTableViewController {
                 output.viewDidAskToCalibrateHumidity()
             case macAddressCell:
                 output.viewDidTapOnMacAddress()
+            case uuidCell:
+                output.viewDidTapOnUUID()
             default:
                 break
             }
@@ -161,27 +173,21 @@ extension TagSettingsTableViewController {
             humidityLabel.bind(viewModel.humidity, block: humidityBlock)
             humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
             
-            let uuid = viewModel.uuid
-            let mac = viewModel.mac
-            let macTitleLabel = macAddressTitleLabel
-            let macValueLabel = macAddressValueLabel
-            
-            let macBlock: ((UILabel,String?) -> Void) = { [weak uuid, weak mac, weak macTitleLabel, weak macValueLabel] _, _ in
-                if let mac = mac?.value {
-                    macTitleLabel?.text = "TagSettings.MACTitleLabel.MAC.text".localized()
-                    macValueLabel?.text = mac
-                } else if let uuid = uuid?.value {
-                    macTitleLabel?.text = "TagSettings.MACTitleLabel.UUID.text".localized()
-                    macValueLabel?.text = uuid
+            uuidValueLabel.bind(viewModel.uuid) { label, uuid in
+                if let uuid = uuid {
+                    label.text = uuid
                 } else {
-                    macTitleLabel?.text = "TagSettings.MACTitleLabel.MAC.text".localized()
-                    macValueLabel?.text = "N/A".localized()
+                    label.text = "N/A".localized()
                 }
             }
-            macAddressValueLabel.bind(viewModel.mac, block: macBlock)
-            macAddressValueLabel.bind(viewModel.mac, block: macBlock)
-            macAddressValueLabel.bind(viewModel.uuid, block: macBlock)
-            macAddressValueLabel.bind(viewModel.uuid, block: macBlock)
+            
+            macAddressValueLabel.bind(viewModel.mac) { label, mac in
+                if let mac = mac {
+                    label.text = mac
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
             
             voltageValueLabel.bind(viewModel.voltage) { label, voltage in
                 if let voltage = voltage {

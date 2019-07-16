@@ -75,6 +75,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidTapOnMacAddress() {
         view.showMacAddressDetail()
     }
+    
+    func viewDidTapOnUUID() {
+        view.showUUIDDetail()
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -155,9 +159,12 @@ extension TagSettingsPresenter {
         viewModel.accelerationY.value = device.accelerationY
         viewModel.accelerationZ.value = device.accelerationZ
         viewModel.version.value = device.version
-        viewModel.mac.value = device.mac
         viewModel.movementCounter.value = device.movementCounter
         viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
         viewModel.txPower.value = device.txPower
+        
+        if let mac = device.mac {
+            viewModel.mac.value = mac
+        }
     }
 }
