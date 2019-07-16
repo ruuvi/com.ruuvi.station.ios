@@ -13,7 +13,8 @@ class DashboardPresenter: DashboardModuleInput {
     
     private var ruuviTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
-    private var settingsToken: NSObjectProtocol?
+    private var temperatureUnitToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var ruuviTags: Results<RuuviTagRealm>? {
@@ -21,6 +22,7 @@ class DashboardPresenter: DashboardModuleInput {
             viewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardRuuviTagViewModel in
                 let viewModel = DashboardRuuviTagViewModel(ruuviTag)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 return viewModel
             }) ?? []
@@ -37,8 +39,11 @@ class DashboardPresenter: DashboardModuleInput {
         ruuviTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
         stateToken?.invalidate()
-        if let settingsToken = settingsToken {
+        if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
+        }
+        if let humidityUnitToken = humidityUnitToken {
+            NotificationCenter.default.removeObserver(humidityUnitToken)
         }
         if let backgroundToken = backgroundToken {
             NotificationCenter.default.removeObserver(backgroundToken)
@@ -127,9 +132,12 @@ extension DashboardPresenter {
     
     
     private func startListeningToSettings() {
-        settingsToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
-            self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit} )
+        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
+            self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit } )
         }
+        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
+            self?.viewModels.forEach( { $0.humidityUnit.value = self?.settings.humidityUnit } )
+        })
     }
     
     private func startScanningRuuviTags() {

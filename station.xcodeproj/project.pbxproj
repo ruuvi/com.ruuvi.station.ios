@@ -199,6 +199,7 @@
 		0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */; };
 		0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */; };
 		0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */; };
+		0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */; };
 		0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
 		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
@@ -428,6 +429,7 @@
 		0EF2863F22CBB1340026C7A5 /* TagSettingsTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagSettingsTableInitializer.swift; sourceTree = "<group>"; };
 		0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableConfigurator.swift; sourceTree = "<group>"; };
 		0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ruuvi.swift"; sourceTree = "<group>"; };
+		0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityUnit.swift; sourceTree = "<group>"; };
 		0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistence.swift; sourceTree = "<group>"; };
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
@@ -975,6 +977,7 @@
 		0E502FB822B27D3100E8A6CC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
+				0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */,
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
 				0E1C1D9F22B36C100032F6CA /* RUError.swift */,
 			);
@@ -2199,6 +2202,7 @@
 				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
 				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
+				0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */,
 				0E53DA6422CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift in Sources */,
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
