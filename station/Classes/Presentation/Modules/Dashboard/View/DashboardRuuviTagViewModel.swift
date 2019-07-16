@@ -1,5 +1,6 @@
 import UIKit
 import BTKit
+import Humidity
 
 struct DashboardRuuviTagViewModel {
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
@@ -7,6 +8,7 @@ struct DashboardRuuviTagViewModel {
     var celsius: Observable<Double?> = Observable<Double?>()
     var fahrenheit: Observable<Double?> = Observable<Double?>()
     var relativeHumidity: Observable<Double?> = Observable<Double?>()
+    var absoluteHumidity: Observable<Double?> = Observable<Double?>()
     var pressure: Observable<Double?> = Observable<Double?>()
     var rssi: Observable<Int?> = Observable<Int?>()
     var version: Observable<Int?> = Observable<Int?>()
@@ -29,6 +31,11 @@ struct DashboardRuuviTagViewModel {
         celsius.value = ruuviTag.data.last?.celsius.value
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
         relativeHumidity.value = ruuviTag.data.last?.humidity.value
+        if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
+            absoluteHumidity.value = Humidity(c: c, rh: rh).ah
+        } else {
+            absoluteHumidity.value = nil
+        }
         pressure.value = ruuviTag.data.last?.pressure.value
         
         rssi.value = ruuviTag.data.last?.rssi
@@ -43,6 +50,11 @@ struct DashboardRuuviTagViewModel {
         celsius.value = ruuviTag.celsius
         fahrenheit.value = ruuviTag.fahrenheit
         relativeHumidity.value = ruuviTag.humidity
+        if let c = ruuviTag.celsius, let rh = ruuviTag.humidity {
+            absoluteHumidity.value = Humidity(c: c, rh: rh).ah
+        } else {
+            absoluteHumidity.value = nil
+        }
         pressure.value = ruuviTag.pressure
         
         rssi.value = ruuviTag.rssi
