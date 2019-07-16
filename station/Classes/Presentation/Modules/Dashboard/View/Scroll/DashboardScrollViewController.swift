@@ -179,7 +179,7 @@ extension DashboardScrollViewController {
         }
         
         view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.humidity, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
         
         view.pressureLabel.bind(viewModel.pressure) { label, pressure in
             if let pressure = pressure {

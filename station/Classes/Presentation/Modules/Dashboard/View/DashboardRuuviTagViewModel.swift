@@ -6,7 +6,7 @@ struct DashboardRuuviTagViewModel {
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
     var fahrenheit: Observable<Double?> = Observable<Double?>()
-    var humidity: Observable<Double?> = Observable<Double?>()
+    var relativeHumidity: Observable<Double?> = Observable<Double?>()
     var pressure: Observable<Double?> = Observable<Double?>()
     var rssi: Observable<Int?> = Observable<Int?>()
     var version: Observable<Int?> = Observable<Int?>()
@@ -28,7 +28,7 @@ struct DashboardRuuviTagViewModel {
         
         celsius.value = ruuviTag.data.last?.celsius.value
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
-        humidity.value = ruuviTag.data.last?.humidity.value
+        relativeHumidity.value = ruuviTag.data.last?.humidity.value
         pressure.value = ruuviTag.data.last?.pressure.value
         
         rssi.value = ruuviTag.data.last?.rssi
@@ -42,7 +42,7 @@ struct DashboardRuuviTagViewModel {
         
         celsius.value = ruuviTag.celsius
         fahrenheit.value = ruuviTag.fahrenheit
-        humidity.value = ruuviTag.humidity
+        relativeHumidity.value = ruuviTag.humidity
         pressure.value = ruuviTag.pressure
         
         rssi.value = ruuviTag.rssi

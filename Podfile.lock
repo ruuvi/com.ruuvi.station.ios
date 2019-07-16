@@ -18,7 +18,7 @@ PODS:
   - EmptyDataSet-Swift (4.2.0)
   - Fabric (1.10.1)
   - FutureX (1.0)
-  - Humidity (0.0.3)
+  - Humidity (0.0.4)
   - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
   - Realm (3.16.1):
@@ -77,7 +77,7 @@ SPEC CHECKSUMS:
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Fabric: f6f21452846788bb44595d73e9909d79d328e617
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
-  Humidity: 2bb5e2962fc9fc353266cd93f1565af9f375e690
+  Humidity: 065d497aace239a7722371675901a022bfb53a25
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
   Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
