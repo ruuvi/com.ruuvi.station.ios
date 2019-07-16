@@ -18,6 +18,7 @@ PODS:
   - EmptyDataSet-Swift (4.2.0)
   - Fabric (1.10.1)
   - FutureX (1.0)
+  - Humidity (0.0.3)
   - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
   - Realm (3.16.1):
@@ -36,6 +37,7 @@ DEPENDENCIES:
   - EmptyDataSet-Swift
   - Fabric
   - FutureX
+  - Humidity
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
   - RealmSwift
@@ -51,6 +53,7 @@ SPEC REPOS:
     - EmptyDataSet-Swift
     - Fabric
     - FutureX
+    - Humidity
     - Localize-Swift
     - Realm
     - RealmSwift
@@ -74,6 +77,7 @@ SPEC CHECKSUMS:
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Fabric: f6f21452846788bb44595d73e9909d79d328e617
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
+  Humidity: 2bb5e2962fc9fc353266cd93f1565af9f375e690
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
   Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
@@ -81,6 +85,6 @@ SPEC CHECKSUMS:
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 069d85af7a799b1a39564c336f9beb4c34327b8c
+PODFILE CHECKSUM: 7adf9bb5a04f3bc2e04d731400f5f549bf4302fc
 
 COCOAPODS: 1.7.4
