@@ -55,24 +55,30 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Absolute Humidity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bGS-es-4BZ">
-                                                    <rect key="frame" x="20" y="11.5" width="141" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Humidity Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bGS-es-4BZ">
+                                                    <rect key="frame" x="20" y="11.5" width="104.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Zl-SS-gXS">
-                                                    <rect key="frame" x="345" y="6" width="49" height="31"/>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xSh-qv-HGb">
+                                                    <rect key="frame" x="269" y="8" width="125" height="29"/>
+                                                    <segments>
+                                                        <segment title="Rel"/>
+                                                        <segment title="Abs"/>
+                                                        <segment title="Dew"/>
+                                                    </segments>
                                                     <connections>
-                                                        <action selector="absuluteHumiditySwitchValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="hOi-SO-MxH"/>
+                                                        <action selector="humidityUnitSegmentedControlValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="Vcm-Vg-l8b"/>
                                                     </connections>
-                                                </switch>
+                                                </segmentedControl>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="1Zl-SS-gXS" secondAttribute="trailing" constant="22" id="PUj-JL-9GJ"/>
+                                                <constraint firstItem="xSh-qv-HGb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bGS-es-4BZ" secondAttribute="trailing" constant="8" id="eLc-gT-R35"/>
                                                 <constraint firstItem="bGS-es-4BZ" firstAttribute="leading" secondItem="N12-SR-K62" secondAttribute="leading" constant="20" id="ihi-hR-nS2"/>
-                                                <constraint firstItem="1Zl-SS-gXS" firstAttribute="centerY" secondItem="N12-SR-K62" secondAttribute="centerY" id="lJs-4E-Nde"/>
+                                                <constraint firstAttribute="trailing" secondItem="xSh-qv-HGb" secondAttribute="trailing" constant="20" id="kgU-Qh-wuS"/>
                                                 <constraint firstItem="bGS-es-4BZ" firstAttribute="centerY" secondItem="N12-SR-K62" secondAttribute="centerY" id="wME-GW-Gj9"/>
+                                                <constraint firstItem="xSh-qv-HGb" firstAttribute="centerY" secondItem="N12-SR-K62" secondAttribute="centerY" id="zhE-Z0-aQg"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -92,7 +98,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="absoluteHumiditySwitch" destination="1Zl-SS-gXS" id="mDS-Jq-6KG"/>
+                        <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
                         <outlet property="useFahrenheitSwitch" destination="GGg-TC-AXn" id="Ezn-3U-xoA"/>
                     </connections>
                 </tableViewController>

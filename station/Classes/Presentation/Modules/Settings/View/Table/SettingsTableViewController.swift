@@ -3,7 +3,7 @@ import UIKit
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
     
-    @IBOutlet weak var absoluteHumiditySwitch: UISwitch!
+    @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
     @IBOutlet weak var useFahrenheitSwitch: UISwitch!
     @IBOutlet weak var experimentalUXSwitch: UISwitch?
     
@@ -28,8 +28,17 @@ extension SettingsTableViewController {
         output.viewDidChange(temperatureUnit: useFahrenheitSwitch.isOn ? .fahrenheit : .celsius)
     }
     
-    @IBAction func absuluteHumiditySwitchValueChanged(_ sender: Any) {
-        output.viewDidChange(humidityUnit: absoluteHumiditySwitch.isOn ? .gm3 : .percent)
+    @IBAction func humidityUnitSegmentedControlValueChanged(_ sender: Any) {
+        switch humidityUnitSegmentedControl.selectedSegmentIndex {
+        case 0:
+            output.viewDidChange(humidityUnit: .percent)
+        case 1:
+            output.viewDidChange(humidityUnit: .gm3)
+        case 2:
+            output.viewDidChange(humidityUnit: .dew)
+        default:
+            break
+        }
     }
     
     @IBAction func experimentalUXValueChanged(_ sender: UISwitch) {
@@ -60,7 +69,14 @@ extension SettingsTableViewController {
     
     private func updateUIHumidityUnit() {
         if isViewLoaded {
-            absoluteHumiditySwitch.isOn = humidityUnit == .gm3
+            switch humidityUnit {
+            case .percent:
+                humidityUnitSegmentedControl.selectedSegmentIndex = 0
+            case .gm3:
+                humidityUnitSegmentedControl.selectedSegmentIndex = 1
+            case .dew:
+                humidityUnitSegmentedControl.selectedSegmentIndex = 2
+            }
         }
     }
     

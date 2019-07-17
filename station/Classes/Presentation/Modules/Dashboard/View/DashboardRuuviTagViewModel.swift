@@ -9,6 +9,8 @@ struct DashboardRuuviTagViewModel {
     var fahrenheit: Observable<Double?> = Observable<Double?>()
     var relativeHumidity: Observable<Double?> = Observable<Double?>()
     var absoluteHumidity: Observable<Double?> = Observable<Double?>()
+    var dewPointCelsius: Observable<Double?> = Observable<Double?>()
+    var dewPointFahrenheit: Observable<Double?> = Observable<Double?>()
     var pressure: Observable<Double?> = Observable<Double?>()
     var rssi: Observable<Int?> = Observable<Int?>()
     var version: Observable<Int?> = Observable<Int?>()
@@ -33,9 +35,14 @@ struct DashboardRuuviTagViewModel {
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
         relativeHumidity.value = ruuviTag.data.last?.humidity.value
         if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
-            absoluteHumidity.value = Humidity(c: c, rh: (rh + ruuviTag.humidityOffset) / 100.0).ah
+            let h = Humidity(c: c, rh: (rh + ruuviTag.humidityOffset) / 100.0)
+            absoluteHumidity.value = h.ah
+            dewPointCelsius.value = h.Td
+            dewPointFahrenheit.value = h.TdF
         } else {
             absoluteHumidity.value = nil
+            dewPointCelsius.value = nil
+            dewPointFahrenheit.value = nil
         }
         pressure.value = ruuviTag.data.last?.pressure.value
         
@@ -53,12 +60,20 @@ struct DashboardRuuviTagViewModel {
         relativeHumidity.value = ruuviTag.humidity
         if let c = ruuviTag.celsius, let rh = ruuviTag.humidity {
             if let ho = humidityOffset.value {
-                absoluteHumidity.value = Humidity(c: c, rh: (rh + ho) / 100.0).ah
+                let h = Humidity(c: c, rh: (rh + ho) / 100.0)
+                absoluteHumidity.value = h.ah
+                dewPointCelsius.value = h.Td
+                dewPointFahrenheit.value = h.TdF
             } else {
-                absoluteHumidity.value = Humidity(c: c, rh: rh / 100.0).ah
+                let h = Humidity(c: c, rh: rh / 100.0)
+                absoluteHumidity.value = h.ah
+                dewPointCelsius.value = h.Td
+                dewPointFahrenheit.value = h.TdF
             }
         } else {
             absoluteHumidity.value = nil
+            dewPointCelsius.value = nil
+            dewPointFahrenheit.value = nil
         }
         pressure.value = ruuviTag.pressure
         

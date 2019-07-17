@@ -4,10 +4,24 @@ class SettingsUserDegaults: Settings {
     
     var humidityUnit: HumidityUnit {
         get {
-            return useAbsoluteHumidity ? .gm3 : .percent
+            switch humidityUnitInt {
+            case 1:
+                return .gm3
+            case 2:
+                return .dew
+            default:
+                return .percent
+            }
         }
         set {
-            useAbsoluteHumidity = newValue == .gm3
+            switch newValue {
+            case .percent:
+                humidityUnitInt = 0
+            case .gm3:
+                humidityUnitInt = 1
+            case .dew:
+                humidityUnitInt = 2
+            }
             NotificationCenter
                 .default
                 .post(name: .HumidityUnitDidChange,
@@ -60,13 +74,13 @@ class SettingsUserDegaults: Settings {
     }
     private let useFahrenheitUDKey = "SettingsUserDegaults.useFahrenheit"
     
-    private var useAbsoluteHumidity: Bool {
+    private var humidityUnitInt: Int {
         get {
-            return UserDefaults.standard.bool(forKey: useAbsoluteHumidityUDKey)
+            return UserDefaults.standard.integer(forKey: humidityUnitIntUDKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: useAbsoluteHumidityUDKey)
+            UserDefaults.standard.set(newValue, forKey: humidityUnitIntUDKey)
         }
     }
-    private let useAbsoluteHumidityUDKey = "SettingsUserDegaults.useAbsoluteHumidity"
+    private let humidityUnitIntUDKey = "SettingsUserDegaults.humidityUnitInt"
 }
