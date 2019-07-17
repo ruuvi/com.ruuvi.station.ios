@@ -171,8 +171,11 @@ extension DashboardScrollViewController {
         let rh = viewModel.relativeHumidity
         let ah = viewModel.absoluteHumidity
         let ho = viewModel.humidityOffset
+        let tu = viewModel.temperatureUnit
+        let dc = viewModel.dewPointCelsius
+        let df = viewModel.dewPointFahrenheit
         
-        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho] label, _ in
+        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df] label, _ in
             if let hu = hu?.value {
                 switch hu {
                 case .percent:
@@ -189,17 +192,38 @@ extension DashboardScrollViewController {
                     } else {
                         label.text = "N/A".localized()
                     }
+                case .dew:
+                    if let tu = tu?.value {
+                        switch tu {
+                        case .celsius:
+                            if let dc = dc?.value {
+                                label.text = String(format: "%.2f", dc) + " " + "°C".localized()
+                            } else {
+                                label.text = "N/A".localized()
+                            }
+                        case .fahrenheit:
+                            if let df = df?.value {
+                                label.text = String(format: "%.2f", df) + " " + "°F".localized()
+                            } else {
+                                label.text = "N/A".localized()
+                            }
+                        }
+                    } else {
+                        label.text = "N/A".localized()
+                    }
                 }
             } else {
                 label.text = "N/A".localized()
             }
-            
         }
         
         view.humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
         view.humidityLabel.bind(viewModel.absoluteHumidity, block: humidityBlock)
         view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.humidityUnit) { (label, temperatureUnit) in
+        view.humidityLabel.bind(viewModel.humidityUnit) { label, _ in
+            humidityBlock(label, nil)
+        }
+        view.humidityLabel.bind(viewModel.temperatureUnit) { label, _ in
             humidityBlock(label, nil)
         }
         
