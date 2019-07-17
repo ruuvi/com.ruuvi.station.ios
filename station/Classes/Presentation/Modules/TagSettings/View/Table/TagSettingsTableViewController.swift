@@ -3,6 +3,10 @@ import UIKit
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
+    @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
+    @IBOutlet weak var mcValueLabelTrailing: NSLayoutConstraint!
+    @IBOutlet weak var msnValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnCell: UITableViewCell!
     @IBOutlet weak var mcCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
@@ -144,6 +148,10 @@ extension TagSettingsTableViewController {
             }
         }
     }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        self.tableView(tableView, didSelectRowAt: indexPath)
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -189,11 +197,17 @@ extension TagSettingsTableViewController {
                 }
             }
             
-            macAddressValueLabel.bind(viewModel.mac) { label, mac in
+            let macCell = macAddressCell
+            let macTrailing = macValueLabelTrailing
+            macAddressValueLabel.bind(viewModel.mac) { [weak macCell, weak macTrailing] label, mac in
                 if let mac = mac {
                     label.text = mac
+                    macCell?.accessoryType = .none
+                    macTrailing?.constant = 16.0
                 } else {
                     label.text = "N/A".localized()
+                    macCell?.accessoryType = .detailButton
+                    macTrailing?.constant = 0.0
                 }
             }
             
@@ -237,27 +251,45 @@ extension TagSettingsTableViewController {
                 }
             }
             
-            mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
+            let mcWeakCell = mcCell
+            let mcTrailing = mcValueLabelTrailing
+            mcValueLabel.bind(viewModel.movementCounter) { [weak mcWeakCell, weak mcTrailing] (label, mc) in
                 if let mc = mc {
                     label.text = "\(mc)"
+                    mcWeakCell?.accessoryType = .none
+                    mcTrailing?.constant = 16.0
                 } else {
                     label.text = "N/A".localized()
+                    mcWeakCell?.accessoryType = .detailButton
+                    mcTrailing?.constant = 0
                 }
             }
             
-            msnValueLabel.bind(viewModel.measurementSequenceNumber) { (label, msn) in
+            let msnWeakCell = msnCell
+            let msnTrailing = msnValueLabelTrailing
+            msnValueLabel.bind(viewModel.measurementSequenceNumber) { [weak msnWeakCell, weak msnTrailing] (label, msn) in
                 if let msn = msn {
                     label.text = "\(msn)"
+                    msnWeakCell?.accessoryType = .none
+                    msnTrailing?.constant = 16.0
                 } else {
                     label.text = "N/A".localized()
+                    msnWeakCell?.accessoryType = .detailButton
+                    msnTrailing?.constant = 0.0
                 }
             }
             
-            txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
+            let txCell = txPowerCell
+            let txTrailing = txPowerValueLabelTrailing
+            txPowerValueLabel.bind(viewModel.txPower) { [weak txCell, weak txTrailing] (label, txPower) in
                 if let txPower = txPower {
                     label.text = "\(txPower)"
+                    txCell?.accessoryType = .none
+                    txTrailing?.constant = 16.0
                 } else {
                     label.text = "N/A".localized()
+                    txCell?.accessoryType = .detailButton
+                    txTrailing?.constant = 0.0
                 }
             }
         }
