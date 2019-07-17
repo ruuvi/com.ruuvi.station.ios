@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="GENERAL" id="gh8-AV-gmb">
+                            <tableViewSection headerTitle="GENERAL" footerTitle="Rel is for relative air humidity in %, Abs is for absolute air humidity in g/m³, Dew is for dew point in °." id="gh8-AV-gmb">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="8wV-qf-Kio">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="44"/>
