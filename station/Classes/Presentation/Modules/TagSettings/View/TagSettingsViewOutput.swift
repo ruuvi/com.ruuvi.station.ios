@@ -14,4 +14,5 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnTxPower()
     func viewDidTapOnMovementCounter()
     func viewDidTapOnMeasurementSequenceNumber()
+    func viewDidTapOnNoValuesView()
 }

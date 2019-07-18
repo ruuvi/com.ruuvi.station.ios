@@ -33,6 +33,8 @@ class TagSettingsTableViewController: UITableViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
     }
+    
+    private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
 }
 
 // MARK: - TagSettingsViewInput
@@ -94,6 +96,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 extension TagSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureViews()
         bindViewModels()
     }
 }
@@ -152,6 +155,24 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         self.tableView(tableView, didSelectRowAt: indexPath)
     }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 3 {
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier) as! TagSettingsMoreInfoHeaderFooterView
+            header.delegate = self
+            return header
+        } else {
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 3 {
+            return 44
+        } else {
+            return super.tableView(tableView, heightForHeaderInSection: section)
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -159,6 +180,21 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
+    }
+}
+
+// MARK: - TagSettingsMoreInfoHeaderFooterViewDelegate
+extension TagSettingsTableViewController: TagSettingsMoreInfoHeaderFooterViewDelegate {
+    func tagSettingsMoreInfo(headerView: TagSettingsMoreInfoHeaderFooterView, didTapOnInfo button: UIButton) {
+        output.viewDidTapOnNoValuesView()
+    }
+}
+
+// MARK: - View configuration
+extension TagSettingsTableViewController {
+    private func configureViews() {
+        let nib = UINib(nibName: "TagSettingsMoreInfoHeaderFooterView", bundle: nil)
+        tableView.register(nib, forHeaderFooterViewReuseIdentifier: moreInfoSectionHeaderReuseIdentifier)
     }
 }
 
