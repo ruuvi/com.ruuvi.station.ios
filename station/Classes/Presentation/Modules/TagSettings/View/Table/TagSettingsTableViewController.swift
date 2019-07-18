@@ -229,21 +229,15 @@ extension TagSettingsTableViewController {
                 if let uuid = uuid {
                     label.text = uuid
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
-            let macCell = macAddressCell
-            let macTrailing = macValueLabelTrailing
-            macAddressValueLabel.bind(viewModel.mac) { [weak macCell, weak macTrailing] label, mac in
+            macAddressValueLabel.bind(viewModel.mac) { label, mac in
                 if let mac = mac {
                     label.text = mac
-                    macCell?.accessoryType = .none
-                    macTrailing?.constant = 16.0
                 } else {
-                    label.text = "N/A".localized()
-                    macCell?.accessoryType = .detailButton
-                    macTrailing?.constant = 0.0
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
@@ -251,7 +245,7 @@ extension TagSettingsTableViewController {
                 if let voltage = voltage {
                     label.text = String(format: "%.3f", voltage) + " " + "V".localized()
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
@@ -259,7 +253,7 @@ extension TagSettingsTableViewController {
                 if let accelerationX = accelerationX {
                     label.text = String(format: "%.3f", accelerationX)
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
@@ -267,7 +261,7 @@ extension TagSettingsTableViewController {
                 if let accelerationY = accelerationY {
                     label.text = String(format: "%.3f", accelerationY)
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
@@ -275,7 +269,7 @@ extension TagSettingsTableViewController {
                 if let accelerationZ = accelerationZ {
                     label.text = String(format: "%.3f", accelerationZ)
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
@@ -283,49 +277,31 @@ extension TagSettingsTableViewController {
                 if let version = version {
                     label.text = "\(version)"
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
-            let mcWeakCell = mcCell
-            let mcTrailing = mcValueLabelTrailing
-            mcValueLabel.bind(viewModel.movementCounter) { [weak mcWeakCell, weak mcTrailing] (label, mc) in
+
+            mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
                 if let mc = mc {
                     label.text = "\(mc)"
-                    mcWeakCell?.accessoryType = .none
-                    mcTrailing?.constant = 16.0
                 } else {
-                    label.text = "N/A".localized()
-                    mcWeakCell?.accessoryType = .detailButton
-                    mcTrailing?.constant = 0
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
-            let msnWeakCell = msnCell
-            let msnTrailing = msnValueLabelTrailing
-            msnValueLabel.bind(viewModel.measurementSequenceNumber) { [weak msnWeakCell, weak msnTrailing] (label, msn) in
+            msnValueLabel.bind(viewModel.measurementSequenceNumber) { (label, msn) in
                 if let msn = msn {
                     label.text = "\(msn)"
-                    msnWeakCell?.accessoryType = .none
-                    msnTrailing?.constant = 16.0
                 } else {
-                    label.text = "N/A".localized()
-                    msnWeakCell?.accessoryType = .detailButton
-                    msnTrailing?.constant = 0.0
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
             
-            let txCell = txPowerCell
-            let txTrailing = txPowerValueLabelTrailing
-            txPowerValueLabel.bind(viewModel.txPower) { [weak txCell, weak txTrailing] (label, txPower) in
+            txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
                 if let txPower = txPower {
                     label.text = "\(txPower)"
-                    txCell?.accessoryType = .none
-                    txTrailing?.constant = 16.0
                 } else {
-                    label.text = "N/A".localized()
-                    txCell?.accessoryType = .detailButton
-                    txTrailing?.constant = 0.0
+                    label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
         }
