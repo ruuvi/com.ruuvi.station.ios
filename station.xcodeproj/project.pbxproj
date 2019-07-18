@@ -90,6 +90,8 @@
 		0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */; };
 		0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302422D0B19600B52E39 /* AppStateService.swift */; };
 		0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
+		0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
+		0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
@@ -322,6 +324,8 @@
 		0E5C302122D090A000B52E39 /* ImagePersistenceDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePersistenceDocuments.swift; sourceTree = "<group>"; };
 		0E5C302422D0B19600B52E39 /* AppStateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateService.swift; sourceTree = "<group>"; };
 		0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateServiceImpl.swift; sourceTree = "<group>"; };
+		0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsMoreInfoHeaderFooterView.swift; sourceTree = "<group>"; };
+		0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsMoreInfoHeaderFooterView.xib; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
@@ -1698,6 +1702,7 @@
 		0EF2862F22CBAFF10026C7A5 /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0EF4D0A522E0657F00947E04 /* SectionHeader */,
 				0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */,
 			);
 			path = Table;
@@ -1710,6 +1715,15 @@
 				0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */,
 			);
 			path = Table;
+			sourceTree = "<group>";
+		};
+		0EF4D0A522E0657F00947E04 /* SectionHeader */ = {
+			isa = PBXGroup;
+			children = (
+				0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */,
+				0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */,
+			);
+			path = SectionHeader;
 			sourceTree = "<group>";
 		};
 		0EFDD6CD22BBD95700EADFC6 /* Calibration */ = {
@@ -1982,6 +1996,7 @@
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				0EEB211922B8C4B50015F9E0 /* Chart.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
+				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2123,6 +2138,7 @@
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
+				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,

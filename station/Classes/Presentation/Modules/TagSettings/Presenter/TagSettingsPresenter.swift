@@ -105,6 +105,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             view.showUpdateFirmwareDialog()
         }
     }
+    
+    func viewDidTapOnNoValuesView() {
+        view.showUpdateFirmwareDialog()
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
