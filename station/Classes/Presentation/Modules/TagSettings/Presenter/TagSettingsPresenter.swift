@@ -188,7 +188,9 @@ extension TagSettingsPresenter {
         viewModel.accelerationX.value = device.accelerationX
         viewModel.accelerationY.value = device.accelerationY
         viewModel.accelerationZ.value = device.accelerationZ
-        viewModel.version.value = device.version
+        if viewModel.version.value != device.version {
+            viewModel.version.value = device.version
+        }
         viewModel.movementCounter.value = device.movementCounter
         viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
         viewModel.txPower.value = device.txPower

@@ -160,6 +160,7 @@ extension TagSettingsTableViewController {
         if section == 3 {
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier) as! TagSettingsMoreInfoHeaderFooterView
             header.delegate = self
+            header.noValuesView.isHidden = viewModel?.version.value == 5
             return header
         } else {
             return nil
@@ -205,6 +206,11 @@ extension TagSettingsTableViewController {
     }
     private func bindTagSettingsViewModel() {
         if isViewLoaded, let viewModel = viewModel {
+            
+            tableView.bind(viewModel.version) { (tableView, version) in
+                tableView.reloadData()
+            }
+            
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
             

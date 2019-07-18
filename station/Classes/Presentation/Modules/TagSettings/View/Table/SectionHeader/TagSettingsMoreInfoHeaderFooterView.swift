@@ -7,6 +7,7 @@ protocol TagSettingsMoreInfoHeaderFooterViewDelegate: class {
 class TagSettingsMoreInfoHeaderFooterView: UITableViewHeaderFooterView {
     weak var delegate: TagSettingsMoreInfoHeaderFooterViewDelegate?
     
+    @IBOutlet weak var noValuesView: UIView!
     
     @IBAction func noValuesButtonTouchUpInside(_ sender: UIButton) {
         delegate?.tagSettingsMoreInfo(headerView: self, didTapOnInfo: sender)
