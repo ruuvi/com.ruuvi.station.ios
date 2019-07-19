@@ -305,7 +305,7 @@ extension TagSettingsTableViewController {
             
             txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
                 if let txPower = txPower {
-                    label.text = "\(txPower)"
+                    label.text = "\(txPower)" + " " + "dBm".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
