@@ -145,11 +145,11 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" misplaced="YES" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="934" width="414" height="60"/>
+                            <rect key="frame" x="0.0" y="934" width="414" height="100"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
-                                    <rect key="frame" x="105" y="93.5" width="204" height="41"/>
+                                    <rect key="frame" x="105" y="8" width="204" height="41"/>
                                     <color key="backgroundColor" red="0.082352941176470587" green="0.55294117647058827" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                     <inset key="contentEdgeInsets" minX="15" minY="12" maxX="15" maxY="12"/>
@@ -166,7 +166,7 @@ IMAGE</string>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="dfl-wc-2o6" firstAttribute="centerY" secondItem="oC8-Vk-na9" secondAttribute="centerY" id="A7t-0h-ir4"/>
+                                <constraint firstItem="dfl-wc-2o6" firstAttribute="top" secondItem="oC8-Vk-na9" secondAttribute="top" constant="8" id="47b-uf-aHe"/>
                                 <constraint firstItem="dfl-wc-2o6" firstAttribute="centerX" secondItem="oC8-Vk-na9" secondAttribute="centerX" id="F4d-yF-8rl"/>
                             </constraints>
                         </view>
