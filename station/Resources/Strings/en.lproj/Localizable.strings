@@ -10,6 +10,7 @@
 "V" = "V"; // voltage
 "%" = "%";
 "g/m³" = "g/m³";
+"g" = "g"; // acceleration
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
