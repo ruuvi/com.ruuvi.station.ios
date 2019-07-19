@@ -257,7 +257,7 @@ extension TagSettingsTableViewController {
             
             accelerationXValueLabel.bind(viewModel.accelerationX) { label, accelerationX in
                 if let accelerationX = accelerationX {
-                    label.text = String(format: "%.3f", accelerationX)
+                    label.text = String(format: "%.3f", accelerationX) + " " + "g".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
@@ -265,7 +265,7 @@ extension TagSettingsTableViewController {
             
             accelerationYValueLabel.bind(viewModel.accelerationY) { label, accelerationY in
                 if let accelerationY = accelerationY {
-                    label.text = String(format: "%.3f", accelerationY)
+                    label.text = String(format: "%.3f", accelerationY) + " " + "g".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
@@ -273,7 +273,7 @@ extension TagSettingsTableViewController {
             
             accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
                 if let accelerationZ = accelerationZ {
-                    label.text = String(format: "%.3f", accelerationZ)
+                    label.text = String(format: "%.3f", accelerationZ) + " " + "g".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
