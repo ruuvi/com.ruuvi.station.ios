@@ -174,6 +174,10 @@ extension TagSettingsTableViewController {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
 }
 
 // MARK: - UITextFieldDelegate
