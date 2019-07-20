@@ -87,6 +87,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                             let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
                             realmTag.humidityOffset = humidityOffset
                             realmTag.humidityOffsetDate = humidityOffsetDate
+                            self.context.bg.add(realmTag, update: .all)
                             let tagData = RuuviTagDataRealm(ruuviTag: realmTag, data: ruuviTag)
                             self.context.bg.add(tagData)
                         } else {
@@ -109,6 +110,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     realmTag.humidityOffsetDate = humidityOffsetDate
                     let tagData = RuuviTagDataRealm(ruuviTag: realmTag, data: ruuviTag)
                     try self.context.bg.write {
+                        self.context.bg.add(realmTag, update: .all)
                         self.context.bg.add(tagData)
                     }
                 }
