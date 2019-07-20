@@ -1,13 +1,13 @@
 PODS:
-  - BTKit (0.0.9):
-    - BTKit/Devices (= 0.0.9)
-    - BTKit/Ruuvi (= 0.0.9)
-    - BTKit/Scanner (= 0.0.9)
-  - BTKit/Devices (0.0.9)
-  - BTKit/Ruuvi (0.0.9):
+  - BTKit (0.0.10):
+    - BTKit/Devices (= 0.0.10)
+    - BTKit/Ruuvi (= 0.0.10)
+    - BTKit/Scanner (= 0.0.10)
+  - BTKit/Devices (0.0.10)
+  - BTKit/Ruuvi (0.0.10):
     - BTKit/Devices
     - BTKit/Scanner
-  - BTKit/Scanner (0.0.9):
+  - BTKit/Scanner (0.0.10):
     - BTKit/Devices
   - Charts (3.3.0):
     - Charts/Core (= 3.3.0)
@@ -70,7 +70,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/LightRoute.git
 
 SPEC CHECKSUMS:
-  BTKit: f2e87de57fad99622e6f9d47f441b7f02fa2d4c2
+  BTKit: d94807b43b3c2d606872c7c9c04e6f80f809bbc1
   Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
   Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
   DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
