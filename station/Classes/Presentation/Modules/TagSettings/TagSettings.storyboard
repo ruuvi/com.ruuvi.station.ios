@@ -8,6 +8,11 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="zZa-6b-ivF">
@@ -31,16 +36,16 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="240"/>
                                         </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q2i-w5-k1y">
-                                            <rect key="frame" x="139" y="63.5" width="136.5" height="113"/>
+                                            <rect key="frame" x="133" y="63.5" width="148" height="113.5"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mAD-iq-75N">
-                                                    <rect key="frame" x="0.0" y="56" width="136.5" height="57"/>
+                                                    <rect key="frame" x="0.0" y="56" width="148" height="57.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K60-4C-oF8">
-                                                            <rect key="frame" x="8" y="8" width="120.5" height="41"/>
+                                                            <rect key="frame" x="8" y="8" width="132" height="41.5"/>
                                                             <string key="text">BACKGROUND
 IMAGE</string>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -54,10 +59,10 @@ IMAGE</string>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TKu-0P-GT3">
-                                                    <rect key="frame" x="0.0" y="0.0" width="68" height="56"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="74" height="56"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_refresh" translatesAutoresizingMaskIntoConstraints="NO" id="B4S-p2-boh">
-                                                            <rect key="frame" x="14" y="8" width="40" height="40"/>
+                                                            <rect key="frame" x="17" y="8" width="40" height="40"/>
                                                             <color key="tintColor" red="1" green="1" blue="1" alpha="0.90405607876712324" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="X8y-9s-CDy"/>
@@ -65,7 +70,7 @@ IMAGE</string>
                                                             </constraints>
                                                         </imageView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQk-zp-2E5">
-                                                            <rect key="frame" x="0.0" y="0.0" width="68" height="56"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="74" height="56"/>
                                                             <connections>
                                                                 <action selector="randomizeBackgroundButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="2CB-HK-t6G"/>
                                                             </connections>
@@ -83,10 +88,10 @@ IMAGE</string>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w0P-tL-iSc">
-                                                    <rect key="frame" x="68" y="0.0" width="68.5" height="56"/>
+                                                    <rect key="frame" x="74" y="0.0" width="74" height="56"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-bg-camera" translatesAutoresizingMaskIntoConstraints="NO" id="h6u-bU-TTV">
-                                                            <rect key="frame" x="17" y="10" width="34" height="34"/>
+                                                            <rect key="frame" x="20" y="10" width="34" height="34"/>
                                                             <color key="tintColor" white="1" alpha="0.90116652397260277" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="34" id="w1x-6U-Hc2"/>
@@ -94,7 +99,7 @@ IMAGE</string>
                                                             </constraints>
                                                         </imageView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NA8-Cn-6m8">
-                                                            <rect key="frame" x="0.0" y="0.0" width="68.5" height="56"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="74" height="56"/>
                                                             <connections>
                                                                 <action selector="selectBackgroundButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="q3N-ya-eGE"/>
                                                             </connections>
@@ -155,9 +160,9 @@ IMAGE</string>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
-                                    <rect key="frame" x="105" y="8" width="204" height="41"/>
+                                    <rect key="frame" x="81" y="8" width="252" height="45"/>
                                     <color key="backgroundColor" red="0.082352941176470587" green="0.55294117647058827" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="17"/>
                                     <inset key="contentEdgeInsets" minX="15" minY="12" maxX="15" maxY="12"/>
                                     <state key="normal" title="REMOVE THIS RUUVITAG"/>
                                     <userDefinedRuntimeAttributes>
