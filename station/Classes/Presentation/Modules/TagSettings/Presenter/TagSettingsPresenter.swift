@@ -109,6 +109,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidTapOnNoValuesView() {
         view.showUpdateFirmwareDialog()
     }
+    
+    func viewDidTapOnHumidityAccessoryButton() {
+        view.showHumidityIsClippedDialog()
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate

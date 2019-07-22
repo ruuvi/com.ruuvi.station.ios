@@ -3,6 +3,7 @@ import UIKit
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var mcValueLabelTrailing: NSLayoutConstraint!
@@ -90,6 +91,14 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
+    
+    func showHumidityIsClippedDialog() {
+        let title = "TagSettings.HumidityIsClipped.Alert.title".localized()
+        let message = "TagSettings.HumidityIsClipped.Alert.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -153,7 +162,14 @@ extension TagSettingsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        self.tableView(tableView, didSelectRowAt: indexPath)
+        if let cell = tableView.cellForRow(at: indexPath) {
+            switch cell {
+            case calibrationHumidityCell:
+                output.viewDidTapOnHumidityAccessoryButton()
+            default:
+                break
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -220,12 +236,26 @@ extension TagSettingsTableViewController {
             
             let humidity = viewModel.relativeHumidity
             let humidityOffset = viewModel.humidityOffset
-            let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset] label, _ in
+            let humidityCell = calibrationHumidityCell
+            let humidityTrailing = humidityLabelTrailing
+            
+            let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset, weak humidityCell, weak humidityTrailing] label, _ in
                 if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
                     if humidityOffset > 0 {
-                        label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", humidity + humidityOffset))"
+                        let shownHumidity = humidity + humidityOffset
+                        if shownHumidity > 100.0 {
+                            label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", 100.0))"
+                            humidityCell?.accessoryType = .detailButton
+                            humidityTrailing?.constant = 0
+                        } else {
+                            label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", shownHumidity))"
+                            humidityCell?.accessoryType = .none
+                            humidityTrailing?.constant = 16.0
+                        }
                     } else {
                         label.text = nil
+                        humidityCell?.accessoryType = .none
+                        humidityTrailing?.constant = 16.0
                     }
                 } else {
                     label.text = nil

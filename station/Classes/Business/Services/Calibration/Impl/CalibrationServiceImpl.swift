@@ -7,7 +7,7 @@ class CalibrationServiceImpl: CalibrationService {
     
     func calibrateHumiditySaltTest(currentValue: Double, for ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
         let date = Date()
-        let offset = 75 - currentValue
+        let offset = 120 - currentValue
         calibrationPersistence.setHumidity(date: date, offset: offset, for: ruuviTag.uuid)
         return ruuviTagPersistence.update(humidityOffset: offset, date: date, of: ruuviTag)
     }
