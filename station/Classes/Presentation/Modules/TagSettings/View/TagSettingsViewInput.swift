@@ -7,4 +7,5 @@ protocol TagSettingsViewInput: ViewInput {
     func showMacAddressDetail()
     func showUUIDDetail()
     func showUpdateFirmwareDialog()
+    func showHumidityIsClippedDialog()
 }
