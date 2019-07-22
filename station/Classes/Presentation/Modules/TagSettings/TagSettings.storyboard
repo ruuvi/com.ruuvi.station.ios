@@ -27,6 +27,9 @@
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg7" translatesAutoresizingMaskIntoConstraints="NO" id="PPK-KZ-0TC">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="240"/>
                                         </imageView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag_bg_layer" translatesAutoresizingMaskIntoConstraints="NO" id="sEu-tr-nrh">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="240"/>
+                                        </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q2i-w5-k1y">
                                             <rect key="frame" x="139" y="63.5" width="136.5" height="113"/>
                                             <subviews>
@@ -126,11 +129,15 @@ IMAGE</string>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstItem="sEu-tr-nrh" firstAttribute="width" secondItem="PPK-KZ-0TC" secondAttribute="width" id="8a3-J0-0I5"/>
+                                        <constraint firstItem="sEu-tr-nrh" firstAttribute="centerY" secondItem="PPK-KZ-0TC" secondAttribute="centerY" id="8lc-Tg-eJQ"/>
+                                        <constraint firstItem="sEu-tr-nrh" firstAttribute="centerX" secondItem="PPK-KZ-0TC" secondAttribute="centerX" id="ITo-kd-iaE"/>
                                         <constraint firstItem="Q2i-w5-k1y" firstAttribute="centerX" secondItem="DtU-h9-zYy" secondAttribute="centerX" id="NXw-kG-XjC"/>
                                         <constraint firstAttribute="trailing" secondItem="PPK-KZ-0TC" secondAttribute="trailing" id="QCo-8f-uDf"/>
                                         <constraint firstItem="PPK-KZ-0TC" firstAttribute="top" secondItem="DtU-h9-zYy" secondAttribute="top" id="TGN-qh-3Cq"/>
                                         <constraint firstAttribute="bottom" secondItem="PPK-KZ-0TC" secondAttribute="bottom" id="Zaf-zR-qHY"/>
                                         <constraint firstItem="PPK-KZ-0TC" firstAttribute="leading" secondItem="DtU-h9-zYy" secondAttribute="leading" id="dYm-VM-7of"/>
+                                        <constraint firstItem="sEu-tr-nrh" firstAttribute="height" secondItem="PPK-KZ-0TC" secondAttribute="height" id="fge-fD-jiv"/>
                                         <constraint firstItem="Q2i-w5-k1y" firstAttribute="centerY" secondItem="DtU-h9-zYy" secondAttribute="centerY" id="n4Q-Ec-lBe"/>
                                     </constraints>
                                 </view>
@@ -603,5 +610,6 @@ IMAGE</string>
         <image name="ic_refresh" width="24" height="24"/>
         <image name="icon-bg-camera" width="36" height="33"/>
         <image name="tag-settings-dismiss-icon" width="17" height="17"/>
+        <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>
