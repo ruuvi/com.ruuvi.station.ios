@@ -180,7 +180,12 @@ extension DashboardScrollViewController {
                 switch hu {
                 case .percent:
                     if let rh = rh?.value, let ho = ho?.value {
-                        label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
+                        let sh = rh + ho
+                        if sh <= 100.0 {
+                            label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
+                        } else {
+                            label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                        }
                     } else if let rh = rh?.value {
                         label.text = String(format: "%.2f", rh) + " " + "%".localized()
                     } else {

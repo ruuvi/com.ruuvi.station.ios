@@ -35,7 +35,11 @@ struct DashboardRuuviTagViewModel {
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
         relativeHumidity.value = ruuviTag.data.last?.humidity.value
         if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
-            let h = Humidity(c: c, rh: (rh + ruuviTag.humidityOffset) / 100.0)
+            var sh = rh + ruuviTag.humidityOffset
+            if sh > 100.0 {
+                sh = 100.0
+            }
+            let h = Humidity(c: c, rh: sh / 100.0)
             absoluteHumidity.value = h.ah
             dewPointCelsius.value = h.Td
             dewPointFahrenheit.value = h.TdF
@@ -60,7 +64,11 @@ struct DashboardRuuviTagViewModel {
         relativeHumidity.value = ruuviTag.humidity
         if let c = ruuviTag.celsius, let rh = ruuviTag.humidity {
             if let ho = humidityOffset.value {
-                let h = Humidity(c: c, rh: (rh + ho) / 100.0)
+                var sh = rh + ho
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                let h = Humidity(c: c, rh: sh / 100.0)
                 absoluteHumidity.value = h.ah
                 dewPointCelsius.value = h.Td
                 dewPointFahrenheit.value = h.TdF
