@@ -10,6 +10,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! { didSet { photoPickerPresenter.delegate = self  } }
     var scanner: BTScanner!
+    var calibrationService: CalibrationService!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
@@ -113,6 +114,15 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidTapOnHumidityAccessoryButton() {
         view.showHumidityIsClippedDialog()
     }
+    
+    func viewDidAskToFixHumidityAdjustment() {
+        if let humidity = humidity {
+            let operation = calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag)
+            operation.on(failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        }
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -187,7 +197,7 @@ extension TagSettingsPresenter {
     }
     
     private func sync(device: RuuviTag) {
-        viewModel.relativeHumidity.value = device.humidity
+        humidity = device.humidity
         viewModel.voltage.value = device.voltage
         viewModel.accelerationX.value = device.accelerationX
         viewModel.accelerationY.value = device.accelerationY
