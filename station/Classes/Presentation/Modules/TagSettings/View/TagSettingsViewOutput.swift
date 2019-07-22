@@ -16,4 +16,5 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
     func viewDidTapOnHumidityAccessoryButton()
+    func viewDidAskToFixHumidityAdjustment()
 }
