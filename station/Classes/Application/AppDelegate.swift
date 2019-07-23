@@ -1,6 +1,4 @@
 import UIKit
-import Fabric
-import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -9,8 +7,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateService: AppStateService!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        Crashlytics().debugMode = true
-        Fabric.with([Crashlytics.self])
         // Override point for customization after application launch.
         let r = AppAssembly.shared.assembler.resolver
         if let settings = r.resolve(Settings.self),
