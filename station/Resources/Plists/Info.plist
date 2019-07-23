@@ -36,6 +36,8 @@
 		<string>Oswald-ExtraLight.ttf</string>
 		<string>Muli-Regular.ttf</string>
 		<string>Muli-Bold.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

@@ -78,8 +78,12 @@ extension AboutViewController {
     private func boldifyTextView() {
         // this is stupid but for some reasons setting the font to bold in ib did not work
         let attrString = NSMutableAttributedString(attributedString: aboutTextView.attributedText)
+        let muliRegular = UIFont(name: "Muli-Regular", size: 16.0) ?? UIFont.systemFont(ofSize: 16)
+        let range = NSString(string: attrString.string).range(of: attrString.string)
+        attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
+        
         let makeBold = ["ABOUT / HELP", "OPERATIONS MANUAL", "TROUBLESHOOTING", "OPEN-SOURCE", "MORE TO READ"]
-        let boldFont = UIFont(name: "Muli-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
+        let boldFont = UIFont(name: "Montserrat-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
