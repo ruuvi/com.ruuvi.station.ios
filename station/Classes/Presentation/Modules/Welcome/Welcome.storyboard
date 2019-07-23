@@ -9,6 +9,14 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+        <array key="Muli-Regular.ttf">
+            <string>Muli-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="Nr4-nX-sRo">
@@ -35,22 +43,22 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To find nearby RuuviTags and receive live sensor data, press scan." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="nYg-3d-wZG">
-                                        <rect key="frame" x="82" y="210" width="250" height="61"/>
+                                        <rect key="frame" x="82" y="210" width="250" height="64.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="250" id="wd1-BN-NVb"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lZQ-4e-haS">
-                                        <rect key="frame" x="107" y="303" width="200" height="50"/>
+                                        <rect key="frame" x="107" y="306.5" width="200" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="9Hw-oO-Svh"/>
                                             <constraint firstAttribute="width" constant="200" id="a6z-b4-bc2"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="e26-t0-jkP"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
                                         <state key="normal" title="SCAN">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
