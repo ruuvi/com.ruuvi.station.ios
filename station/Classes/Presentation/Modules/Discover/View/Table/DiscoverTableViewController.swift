@@ -53,6 +53,10 @@ extension DiscoverTableViewController {
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerClose()
     }
+    
+    @IBAction func getMoreSensorsTableFooterViewButtonTouchUpInside(_ sender: Any) {
+        output.viewDidTapOnGetMoreSensors()
+    }
 }
 
 // MARK: - View lifecycle
@@ -123,6 +127,18 @@ extension DiscoverTableViewController: EmptyDataSetDelegate {
         if emptyDataSetView == getMoreSensorsEmptyDataSetView {
             output.viewDidTapOnGetMoreSensors()
         }
+    }
+    
+    func emptyDataSetWillAppear(_ scrollView: UIScrollView) {
+        tableView.tableFooterView?.isHidden = true
+    }
+    
+    func emptyDataSetDidDisappear(_ scrollView: UIScrollView) {
+        tableView.tableFooterView?.isHidden = false
+    }
+    
+    func verticalOffset(forEmptyDataSet scrollView: UIScrollView) -> CGFloat {
+        return -64
     }
 }
 
