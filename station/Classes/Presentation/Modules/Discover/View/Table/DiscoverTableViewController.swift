@@ -6,7 +6,7 @@ class DiscoverTableViewController: UITableViewController {
     
     var output: DiscoverViewOutput!
 
-    @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
+    @IBOutlet var closeBarButtonItem: UIBarButtonItem!
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
@@ -25,6 +25,8 @@ class DiscoverTableViewController: UITableViewController {
     }
     
     var isBluetoothEnabled: Bool = true { didSet { updateUIISBluetoothEnabled() } }
+    
+    var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
     
     private var emptyDataSetView: UIView?
     private let cellReuseIdentifier = "DiscoverTableViewCellReuseIdentifier"
@@ -187,7 +189,17 @@ extension DiscoverTableViewController {
     private func updateUI() {
         updateUIShownDevices()
         updateUIISBluetoothEnabled()
-        
+        updateUIIsCloseEnabled()
+    }
+    
+    private func updateUIIsCloseEnabled() {
+        if isViewLoaded {
+            if isCloseEnabled {
+                navigationItem.leftBarButtonItem = closeBarButtonItem
+            } else {
+                navigationItem.leftBarButtonItem = nil
+            }
+        }
     }
     
     private func updateUIISBluetoothEnabled() {
