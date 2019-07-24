@@ -12,6 +12,7 @@ class DiscoverPulsatorViewController: UIViewController {
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
     var savedDevicesUUIDs: [String] = [String]()
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
+    var isCloseEnabled: Bool = false
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent

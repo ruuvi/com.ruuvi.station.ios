@@ -14,6 +14,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
         didSet {
             view.savedDevicesUUIDs = persistedRuuviTags.map( { $0.uuid })
+            view.isCloseEnabled = persistedRuuviTags.count > 0
         }
     }
     private var reloadTimer: Timer?
