@@ -15,6 +15,7 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
         
         switch (pan.state) {
         case .began:
+            if translation.x > 0 { return } // don't start gesture
             manager.isInteractive = true
             manager.menu.dismiss(animated: true)
         case .changed:
