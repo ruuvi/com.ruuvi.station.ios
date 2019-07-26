@@ -190,9 +190,12 @@ extension DashboardPresenter {
                 self?.startScanningWebTags()
             case .update(let webTags, _, let insertions, _):
                 self?.webTags = webTags
-//                if let index = insertions.last {
-//                    self?.view.scroll(to: index)
-//                }
+                if let ii = insertions.last {
+                    let uuid = webTags[ii].uuid
+                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                        self?.view.scroll(to: index)
+                    }
+                }
                 self?.startScanningWebTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
@@ -209,9 +212,12 @@ extension DashboardPresenter {
                 self?.startScanningRuuviTags()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
-//                if let index = insertions.last {
-//                    self?.view.scroll(to: index)
-//                }
+                if let ii = insertions.last {
+                    let uuid = ruuviTags[ii].uuid
+                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                        self?.view.scroll(to: index)
+                    }
+                }
                 self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
