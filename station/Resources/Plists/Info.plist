@@ -30,6 +30,10 @@
 	<string>Ruuvi Station needs to access your microphone to enable this feature.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Ruuvi Station needs to access your camera roll to enable this feature.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ruuvi Station needs to access your location in order to enable this feature.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Ruuvi Station needs to access your location in order to enable this feature.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Oswald-Bold.ttf</string>
