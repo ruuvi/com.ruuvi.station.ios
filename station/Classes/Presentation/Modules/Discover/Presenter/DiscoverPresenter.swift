@@ -41,6 +41,7 @@ class DiscoverPresenter: DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
+        view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap)]
         view.isBluetoothEnabled = scanner.bluetoothState == .poweredOn
         if !view.isBluetoothEnabled && !isOpenedFromWelcome {
             view.showBluetoothDisabled()
@@ -82,6 +83,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 self?.errorPresenter.present(error: error)
             })
         }
+    }
+    
+    func viewDidChoose(webTag: DiscoverWebTagViewModel) {
+        
     }
     
     func viewDidTriggerContinue() {

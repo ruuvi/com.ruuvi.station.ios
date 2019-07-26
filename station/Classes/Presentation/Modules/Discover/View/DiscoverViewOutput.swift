@@ -7,6 +7,7 @@ protocol DiscoverViewOutput {
     func viewDidSelect(device: DiscoverDeviceViewModel)
     func viewDidTriggerContinue()
     func viewDidChoose(device: DiscoverDeviceViewModel)
+    func viewDidChoose(webTag: DiscoverWebTagViewModel)
     func viewDidTapOnGetMoreSensors()
     func viewDidTriggerClose()
 }
