@@ -3,6 +3,8 @@ import Photos
 
 class PermissionsManagerImpl: PermissionsManager {
     
+    var locationManager: LocationManager!
+    
     var isPhotoLibraryPermissionGranted: Bool {
         get {
             return PHPhotoLibrary.authorizationStatus() == .authorized
@@ -12,6 +14,12 @@ class PermissionsManagerImpl: PermissionsManager {
     var isCameraPermissionGranted: Bool {
         get {
             return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
+        }
+    }
+    
+    var isLocationPermissionGranted: Bool {
+        get {
+            return locationManager.isLocationPermissionGranted
         }
     }
     
@@ -25,6 +33,14 @@ class PermissionsManagerImpl: PermissionsManager {
     
     func requestCameraPermission(completion: ((Bool) -> Void)?) {
         AVCaptureDevice.requestAccess(for: .video) { (granted) in
+            DispatchQueue.main.async {
+                completion?(granted)
+            }
+        }
+    }
+    
+    func requestLocationPermission(completion: ((Bool) -> Void)?) {
+        locationManager.requestLocationPermission { (granted) in
             DispatchQueue.main.async {
                 completion?(granted)
             }

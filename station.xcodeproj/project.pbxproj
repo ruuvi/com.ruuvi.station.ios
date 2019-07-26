@@ -118,6 +118,8 @@
 		0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */; };
 		0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */; };
 		0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
+		0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AA22EB1CCB0015ADE2 /* LocationManager.swift */; };
+		0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -360,6 +362,8 @@
 		0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagPersistence.swift; sourceTree = "<group>"; };
 		0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagPersistenceRealm.swift; sourceTree = "<group>"; };
 		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
+		0E9F97AA22EB1CCB0015ADE2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerImpl.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -1059,6 +1063,7 @@
 			isa = PBXGroup;
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
+				0E9F97A922EB1CBC0015ADE2 /* Location */,
 				0E5C300D22CF633600B52E39 /* Permissions */,
 			);
 			path = Core;
@@ -1314,6 +1319,23 @@
 			children = (
 			);
 			path = OpenWeatherMap;
+			sourceTree = "<group>";
+		};
+		0E9F97A922EB1CBC0015ADE2 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97AC22EB1CE10015ADE2 /* Impl */,
+				0E9F97AA22EB1CCB0015ADE2 /* LocationManager.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
+		0E9F97AC22EB1CE10015ADE2 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */,
+			);
+			path = Impl;
 			sourceTree = "<group>";
 		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
@@ -2216,6 +2238,7 @@
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
+				0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */,
 				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
 				0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */,
 				0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */,
@@ -2249,6 +2272,7 @@
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
 				0E53DA6222CC93EB00BC6D64 /* TagSettingsDismissTransitionAnimation.swift in Sources */,
+				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,

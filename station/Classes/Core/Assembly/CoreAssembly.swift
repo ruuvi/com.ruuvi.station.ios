@@ -8,8 +8,14 @@ class CoreAssembly: Assembly {
             return Ruuvi.scanner
         }.inObjectScope(.container)
         
+        container.register(LocationManager.self) { r in
+            let manager = LocationManagerImpl()
+            return manager
+        }.inObjectScope(.container)
+        
         container.register(PermissionsManager.self) { (r)  in
             let manager = PermissionsManagerImpl()
+            manager.locationManager = r.resolve(LocationManager.self)
             return manager
         }.inObjectScope(.container)
         
