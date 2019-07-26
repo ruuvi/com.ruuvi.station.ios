@@ -39,12 +39,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <view key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" id="Zgc-HN-yFj">
-                            <rect key="frame" x="0.0" y="72" width="414" height="150"/>
+                        <view key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" id="Zgc-HN-yFj">
+                            <rect key="frame" x="0.0" y="116" width="414" height="150"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0v4-V1-W6B">
-                                    <rect key="frame" x="100.5" y="53.5" width="213" height="43"/>
+                                    <rect key="frame" x="100.5" y="201.5" width="213" height="43"/>
                                     <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
                                     <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
@@ -76,7 +76,7 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverTableViewCellReuseIdentifier" id="L0Y-10-bMg" customClass="DiscoverTableViewCell" customModule="station" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverDeviceTableViewCellReuseIdentifier" id="L0Y-10-bMg" customClass="DiscoverDeviceTableViewCell" customModule="station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L0Y-10-bMg" id="iPH-xW-e3d">
@@ -108,6 +108,30 @@
                                 <connections>
                                     <outlet property="identifierLabel" destination="SH5-FF-pqY" id="OSx-Xx-7Fd"/>
                                     <outlet property="rssiImageView" destination="Mrr-n1-s1j" id="gZG-k1-EBk"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverWebTagTableViewCellReuseIdentifier" id="Pdq-EP-b1c" customClass="DiscoverWebTagTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="72" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pdq-EP-b1c" id="eOI-nm-VVw">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Web Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="leK-zi-nm8">
+                                            <rect key="frame" x="20" y="11.5" width="374" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="leK-zi-nm8" firstAttribute="leading" secondItem="eOI-nm-VVw" secondAttribute="leading" constant="20" id="9E2-ez-kcx"/>
+                                        <constraint firstItem="leK-zi-nm8" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="GZ3-Br-euO"/>
+                                        <constraint firstAttribute="trailing" secondItem="leK-zi-nm8" secondAttribute="trailing" constant="20" id="MDk-iV-PJF"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="nameLabel" destination="leK-zi-nm8" id="cyv-CP-UqV"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

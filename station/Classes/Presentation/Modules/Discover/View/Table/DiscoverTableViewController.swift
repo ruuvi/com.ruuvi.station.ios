@@ -2,6 +2,13 @@ import UIKit
 import BTKit
 import EmptyDataSet_Swift
 
+enum DiscoverTableSection: Int {
+    case webTag = 0
+    case device = 1
+    
+    static var count = 2
+}
+
 class DiscoverTableViewController: UITableViewController {
     
     var output: DiscoverViewOutput!
@@ -10,6 +17,8 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
+    
+    var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
     
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet {
             shownDevices = devices
@@ -29,7 +38,8 @@ class DiscoverTableViewController: UITableViewController {
     var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
     
     private var emptyDataSetView: UIView?
-    private let cellReuseIdentifier = "DiscoverTableViewCellReuseIdentifier"
+    private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
+    private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
     private var shownDevices:  [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
 }
 
@@ -87,28 +97,67 @@ extension DiscoverTableViewController {
 
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return DiscoverTableSection.count
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return shownDevices.count
+        switch section {
+        case DiscoverTableSection.webTag.rawValue:
+            return webTags.count
+        case DiscoverTableSection.device.rawValue:
+            return shownDevices.count
+        default:
+            return 0
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! DiscoverTableViewCell
-        let tag = shownDevices[indexPath.row]
-        configure(cell: cell, with: tag)
-        return cell
+        switch indexPath.section {
+        case DiscoverTableSection.webTag.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier, for: indexPath) as! DiscoverWebTagTableViewCell
+            let tag = webTags[indexPath.row]
+            configure(cell: cell, with: tag)
+            return cell
+        case DiscoverTableSection.device.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier, for: indexPath) as! DiscoverDeviceTableViewCell
+            let tag = shownDevices[indexPath.row]
+            configure(cell: cell, with: tag)
+            return cell
+        default:
+            fatalError()
+        }
     }
 }
 
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row < shownDevices.count {
-            output.viewDidChoose(device: shownDevices[indexPath.row])
+        switch indexPath.section {
+        case DiscoverTableSection.webTag.rawValue:
+            if indexPath.row < webTags.count {
+                output.viewDidChoose(webTag: webTags[indexPath.row])
+            }
+        case DiscoverTableSection.device.rawValue:
+            if indexPath.row < shownDevices.count {
+                output.viewDidChoose(device: shownDevices[indexPath.row])
+            }
+        default:
+            break
         }
+        
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Tags".localized() : nil
+        switch section {
+        case DiscoverTableSection.webTag.rawValue:
+            return webTags.count > 0 ? "DiscoverTable.SectionTitle.WebTags".localized() : nil
+        case DiscoverTableSection.device.rawValue:
+            return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+        default:
+            return nil
+        }
+        
     }
 }
 
@@ -146,7 +195,11 @@ extension DiscoverTableViewController: EmptyDataSetDelegate {
 
 // MARK: - Cell configuration
 extension DiscoverTableViewController {
-    private func configure(cell: DiscoverTableViewCell, with device: DiscoverDeviceViewModel) {
+    private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverWebTagViewModel) {
+        cell.nameLabel.text = tag.provider.displayName
+    }
+    
+    private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverDeviceViewModel) {
         
         // identifier
         if let mac = device.mac {

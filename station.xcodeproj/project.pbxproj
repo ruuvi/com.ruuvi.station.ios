@@ -11,7 +11,7 @@
 		0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */; };
 		0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
 		0E09672822AE8D7A00E85F48 /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09672722AE8D7A00E85F48 /* Discover.storyboard */; };
-		0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672B22AE94F000E85F48 /* DiscoverTableViewCell.swift */; };
+		0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */; };
 		0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9022B35D6A0032F6CA /* Worker.swift */; };
 		0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9422B3624F0032F6CA /* RealmContext.swift */; };
 		0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */; };
@@ -109,6 +109,10 @@
 		0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */; };
 		0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48A22AFC77F006CB87C /* Pulsator.swift */; };
 		0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */; };
+		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
+		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
+		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
+		0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -244,7 +248,7 @@
 		0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0E09672422AE897000E85F48 /* CALayer+IB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+IB.swift"; sourceTree = "<group>"; };
 		0E09672722AE8D7A00E85F48 /* Discover.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Discover.storyboard; sourceTree = "<group>"; };
-		0E09672B22AE94F000E85F48 /* DiscoverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewCell.swift; sourceTree = "<group>"; };
+		0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		0E1C1D9022B35D6A0032F6CA /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		0E1C1D9422B3624F0032F6CA /* RealmContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmContext.swift; sourceTree = "<group>"; };
 		0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmContextImpl.swift; sourceTree = "<group>"; };
@@ -342,6 +346,10 @@
 		0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorConfigurator.swift; sourceTree = "<group>"; };
 		0E70A48A22AFC77F006CB87C /* Pulsator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pulsator.swift; sourceTree = "<group>"; };
 		0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCollectionViewLayout.swift; sourceTree = "<group>"; };
+		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
+		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
+		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
+		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -688,6 +696,7 @@
 			children = (
 				0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */,
 				0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */,
+				0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -984,6 +993,7 @@
 				0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */,
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
 				0E1C1D9F22B36C100032F6CA /* RUError.swift */,
+				0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -1149,6 +1159,7 @@
 				0E70A47E22AFA31E006CB87C /* Pulsator */,
 				0E70A46A22AF96C5006CB87C /* Table */,
 				0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */,
+				0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */,
 				0E70A46D22AF9763006CB87C /* DiscoverViewInput.swift */,
 				0E70A46F22AF9790006CB87C /* DiscoverViewOutput.swift */,
 			);
@@ -1158,7 +1169,8 @@
 		0E70A46A22AF96C5006CB87C /* Table */ = {
 			isa = PBXGroup;
 			children = (
-				0E09672B22AE94F000E85F48 /* DiscoverTableViewCell.swift */,
+				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
+				0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */,
 				0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */,
 			);
 			path = Table;
@@ -2132,6 +2144,7 @@
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
+				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
@@ -2140,7 +2153,7 @@
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0EEB212B22B8C7B70015F9E0 /* ChartConfigurator.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
-				0E09672C22AE94F000E85F48 /* DiscoverTableViewCell.swift in Sources */,
+				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
@@ -2158,8 +2171,10 @@
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
+				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
+				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
 				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,
 				0E502FC622B285E700E8A6CC /* RuuviTagAddPresentTransitionAnimation.swift in Sources */,
@@ -2220,6 +2235,7 @@
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
+				0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */,
 				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */,
 				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,

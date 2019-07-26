@@ -26,7 +26,8 @@
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Tags" = "Tags";
+"DiscoverTable.SectionTitle.Devices" = "Tags";
+"DiscoverTable.SectionTitle.WebTags" = "Web";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 
@@ -65,3 +66,6 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
+
+// WeatherProvider
+"WeatherProvider.OpenWeatherMap.displayName" = "Open Weather Map";

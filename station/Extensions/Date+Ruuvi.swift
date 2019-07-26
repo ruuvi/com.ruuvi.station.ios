@@ -1,11 +1,3 @@
-//
-//  Date+Ruuvi.swift
-//  station
-//
-//  Created by Rinat Enikeev on 7/10/19.
-//  Copyright © 2019 Ruuvi Innovations Oy. All rights reserved.
-//
-
 import Foundation
 
 extension Date {
