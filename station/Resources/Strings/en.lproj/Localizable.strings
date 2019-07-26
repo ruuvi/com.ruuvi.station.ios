@@ -47,6 +47,7 @@
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station needs to access your camera to enable this feature.";
+"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station needs to access your location to enable this feature.";
 "PermissionPresenter.settings" = "Settings";
 
 // PhotoPicker

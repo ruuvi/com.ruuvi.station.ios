@@ -11,6 +11,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var webTagService: WebTagService!
     var scanner: BTScanner!
     var permissionsManager: PermissionsManager!
+    var permissionPresenter: PermissionPresenter!
     
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
@@ -87,16 +88,17 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidChoose(webTag: DiscoverWebTagViewModel) {
-        let operation = webTagService.add(provider: webTag.provider)
-        operation.on(success: { [weak self] _ in
-            if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                self?.router.openDashboard()
-            } else {
-                self?.router.dismiss()
+        if permissionsManager.isLocationPermissionGranted {
+            persistWebTag(with: webTag.provider)
+        } else {
+            permissionsManager.requestLocationPermission { [weak self] (granted) in
+                if granted {
+                    self?.persistWebTag(with: webTag.provider)
+                } else {
+                    self?.permissionPresenter.presentNoLocationPermission()
+                }
             }
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        }
     }
     
     func viewDidTriggerContinue() {
@@ -122,6 +124,20 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
 // MARK: - Private
 extension DiscoverPresenter {
+    
+    private func persistWebTag(with provider: WeatherProvider) {
+        let operation = webTagService.add(provider: provider)
+        operation.on(success: { [weak self] _ in
+            if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
+                self?.router.openDashboard()
+            } else {
+                self?.router.dismiss()
+            }
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+    
     private func startObservingPersistedRuuviTags() {
         persistedRuuviTags = realmContext.main.objects(RuuviTagRealm.self)
         persistedRuuviTagsToken = persistedRuuviTags.observe { [weak self] (change) in

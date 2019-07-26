@@ -11,7 +11,7 @@ class CoreAssembly: Assembly {
         container.register(LocationManager.self) { r in
             let manager = LocationManagerImpl()
             return manager
-        }.inObjectScope(.container)
+        }
         
         container.register(PermissionsManager.self) { (r)  in
             let manager = PermissionsManagerImpl()

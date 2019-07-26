@@ -12,6 +12,11 @@ class LocationManagerImpl: NSObject, LocationManager {
         }
     }
     
+    var isLocationPermissionDenied: Bool {
+        return !CLLocationManager.locationServicesEnabled()
+            || CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .denied
+    }
+    
     private var locationManager: CLLocationManager
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
     private var getCurrentLocationCallback: ((CLLocation?) -> Void)?
@@ -27,6 +32,8 @@ class LocationManagerImpl: NSObject, LocationManager {
     func requestLocationPermission(completion: ((Bool) -> Void)?) {
         if isLocationPermissionGranted {
             completion?(true)
+        } else if isLocationPermissionDenied {
+            completion?(false)
         } else {
             requestLocationPermissionCallback = completion
             locationManager.requestWhenInUseAuthorization()
@@ -48,6 +55,10 @@ extension LocationManagerImpl: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
         getCurrentLocationCallback?(locations.last)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error.localizedDescription)
     }
     
 }
