@@ -10,7 +10,7 @@ class DashboardScrollViewController: UIViewController {
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var viewModels = [DashboardRuuviTagViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [DashboardTagViewModel]() { didSet { updateUIViewModels() }  }
     
     private var views = [DashboardRuuviTagView]()
     private var currentPage: Int {
@@ -119,7 +119,7 @@ extension DashboardScrollViewController: UITextFieldDelegate {
 
 // MARK: - Configure view
 extension DashboardScrollViewController {
-    private func bind(view: DashboardRuuviTagView, with viewModel: DashboardRuuviTagViewModel) {
+    private func bind(view: DashboardRuuviTagView, with viewModel: DashboardTagViewModel) {
         
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         

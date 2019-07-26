@@ -12,24 +12,23 @@ class DashboardPresenter: DashboardModuleInput {
     var scanner: BTScanner!
     
     private var ruuviTagsToken: NotificationToken?
+    private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
-    private var ruuviTags: Results<RuuviTagRealm>? {
+    private var webTags: Results<WebTagRealm>? {
         didSet {
-            viewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardRuuviTagViewModel in
-                let viewModel = DashboardRuuviTagViewModel(ruuviTag)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
-                viewModel.humidityUnit.value = settings.humidityUnit
-                viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
-                return viewModel
-            }) ?? []
-            openDiscoverIfEmpty()
+            syncViewModels()
         }
     }
-    private var viewModels = [DashboardRuuviTagViewModel]() {
+    private var ruuviTags: Results<RuuviTagRealm>? {
+        didSet {
+            syncViewModels()
+        }
+    }
+    private var viewModels = [DashboardTagViewModel]() {
         didSet {
             view.viewModels = viewModels
         }
@@ -37,6 +36,7 @@ class DashboardPresenter: DashboardModuleInput {
     
     deinit {
         ruuviTagsToken?.invalidate()
+        webTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
         stateToken?.invalidate()
         if let settingsToken = temperatureUnitToken {
@@ -54,6 +54,7 @@ class DashboardPresenter: DashboardModuleInput {
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
+        startObservingWebTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
     }
@@ -74,13 +75,13 @@ extension DashboardPresenter: DashboardViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel) {
+    func viewDidTriggerSettings(for viewModel: DashboardTagViewModel) {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         }
     }
     
-    func viewDidTapOnRSSI(for viewModel: DashboardRuuviTagViewModel) {
+    func viewDidTapOnRSSI(for viewModel: DashboardTagViewModel) {
 //        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
 //            router.openChart(ruuviTag: ruuviTag, type: .rssi)
 //        }
@@ -112,6 +113,27 @@ extension DashboardPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
+    private func syncViewModels() {
+        if ruuviTags != nil && webTags != nil {
+            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardTagViewModel in
+                let viewModel = DashboardTagViewModel(ruuviTag)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.humidityUnit.value = settings.humidityUnit
+                viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
+                return viewModel
+            }) ?? []
+            let webViewModels = webTags?.compactMap({ (webTag) -> DashboardTagViewModel in
+                let viewModel = DashboardTagViewModel(webTag)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.humidityUnit.value = settings.humidityUnit
+                viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
+                return viewModel
+            }) ?? []
+            viewModels = ruuviViewModels + webViewModels
+            openDiscoverIfEmpty()
+        }
+    }
+    
     private func openDiscoverIfEmpty() {
         if view.viewModels.count == 0 {
             router.openDiscover()
@@ -155,6 +177,29 @@ extension DashboardPresenter {
         }
     }
     
+    private func startScanningWebTags() {
+        
+    }
+    
+    private func startObservingWebTags() {
+        webTags = realmContext.main.objects(WebTagRealm.self)
+        webTagsToken = webTags?.observe({ [weak self] (change) in
+            switch change {
+            case .initial(let webTags):
+                self?.webTags = webTags
+                self?.startScanningWebTags()
+            case .update(let webTags, _, let insertions, _):
+                self?.webTags = webTags
+//                if let index = insertions.last {
+//                    self?.view.scroll(to: index)
+//                }
+                self?.startScanningWebTags()
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            }
+        })
+    }
+    
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
@@ -164,9 +209,9 @@ extension DashboardPresenter {
                 self?.startScanningRuuviTags()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
-                if let index = insertions.last {
-                    self?.view.scroll(to: index)
-                }
+//                if let index = insertions.last {
+//                    self?.view.scroll(to: index)
+//                }
                 self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)

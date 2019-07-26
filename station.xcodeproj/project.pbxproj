@@ -126,7 +126,7 @@
 		0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */; };
 		0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
 		0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C322B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift */; };
-		0EEB20C622B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C522B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift */; };
+		0EEB20C622B7915C0015F9E0 /* DashboardTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C522B7915C0015F9E0 /* DashboardTagViewModel.swift */; };
 		0EEB20C722B7A7200015F9E0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CA22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift */; };
 		0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */; };
@@ -367,7 +367,7 @@
 		0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserDefaults.swift; sourceTree = "<group>"; };
 		0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPersistence.swift; sourceTree = "<group>"; };
 		0EEB20C322B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPersistenceUserDefaults.swift; sourceTree = "<group>"; };
-		0EEB20C522B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRuuviTagViewModel.swift; sourceTree = "<group>"; };
+		0EEB20C522B7915C0015F9E0 /* DashboardTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTagViewModel.swift; sourceTree = "<group>"; };
 		0EEB20C822B7A7200015F9E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0EEB20CA22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableEmbededViewController.swift; sourceTree = "<group>"; };
 		0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuModuleOutput.swift; sourceTree = "<group>"; };
@@ -808,7 +808,7 @@
 				0E1C1DD622B3BF760032F6CA /* Scroll */,
 				0E1C1DD222B3BF180032F6CA /* DashboardViewInput.swift */,
 				0E1C1DD422B3BF3A0032F6CA /* DashboardViewOutput.swift */,
-				0EEB20C522B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift */,
+				0EEB20C522B7915C0015F9E0 /* DashboardTagViewModel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2173,7 +2173,7 @@
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
-				0EEB20C622B7915C0015F9E0 /* DashboardRuuviTagViewModel.swift in Sources */,
+				0EEB20C622B7915C0015F9E0 /* DashboardTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
