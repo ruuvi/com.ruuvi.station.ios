@@ -117,6 +117,7 @@
 		0E9F979C22EB0A3F0015ADE2 /* WebTagServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979B22EB0A3F0015ADE2 /* WebTagServiceImpl.swift */; };
 		0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */; };
 		0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */; };
+		0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -358,6 +359,7 @@
 		0E9F979B22EB0A3F0015ADE2 /* WebTagServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagServiceImpl.swift; sourceTree = "<group>"; };
 		0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagPersistence.swift; sourceTree = "<group>"; };
 		0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagPersistenceRealm.swift; sourceTree = "<group>"; };
+		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -523,6 +525,7 @@
 				0EEB210722B7D8020015F9E0 /* Business */,
 				0E5C300C22CF632500B52E39 /* Core */,
 				0E1C1DA122B36CE70032F6CA /* Model */,
+				0E9F97A322EB1B290015ADE2 /* Networking */,
 				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E09671922AE764200E85F48 /* Presentation */,
 			);
@@ -1279,6 +1282,38 @@
 				0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */,
 			);
 			path = Realm;
+			sourceTree = "<group>";
+		};
+		0E9F97A322EB1B290015ADE2 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97A422EB1B320015ADE2 /* Assembly */,
+				0E9F97A522EB1B380015ADE2 /* Weather */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		0E9F97A422EB1B320015ADE2 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E9F97A522EB1B380015ADE2 /* Weather */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97A622EB1B6C0015ADE2 /* OpenWeatherMap */,
+			);
+			path = Weather;
+			sourceTree = "<group>";
+		};
+		0E9F97A622EB1B6C0015ADE2 /* OpenWeatherMap */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = OpenWeatherMap;
 			sourceTree = "<group>";
 		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
@@ -2294,6 +2329,7 @@
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
 				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E502FCA22B2864E00E8A6CC /* RuuviTagAddPresentationController.swift in Sources */,
+				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				0EEB212322B8C6180015F9E0 /* ChartRouter.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
