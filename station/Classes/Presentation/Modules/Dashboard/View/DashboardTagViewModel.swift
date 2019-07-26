@@ -2,7 +2,13 @@ import UIKit
 import BTKit
 import Humidity
 
-struct DashboardRuuviTagViewModel {
+enum DashboardTagType {
+    case ruuvi
+    case web
+}
+
+struct DashboardTagViewModel {
+    var type: DashboardTagType = .ruuvi
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
@@ -23,7 +29,14 @@ struct DashboardRuuviTagViewModel {
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     var humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
     
+    init(_ webTag: WebTagRealm) {
+        type = .web
+        uuid.value = webTag.uuid
+        name.value = webTag.provider.displayName
+    }
+    
     init(_ ruuviTag: RuuviTagRealm) {
+        type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
         mac.value = ruuviTag.mac
@@ -94,14 +107,14 @@ struct DashboardRuuviTagViewModel {
     }
 }
 
-extension DashboardRuuviTagViewModel: Hashable {
+extension DashboardTagViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid.value)
     }
 }
 
-extension DashboardRuuviTagViewModel: Equatable {
-    public static func ==(lhs: DashboardRuuviTagViewModel, rhs: DashboardRuuviTagViewModel) -> Bool {
+extension DashboardTagViewModel: Equatable {
+    public static func ==(lhs: DashboardTagViewModel, rhs: DashboardTagViewModel) -> Bool {
         return lhs.uuid.value == rhs.uuid.value
     }
 }

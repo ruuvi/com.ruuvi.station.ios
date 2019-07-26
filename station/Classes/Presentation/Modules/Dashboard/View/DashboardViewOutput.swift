@@ -6,6 +6,6 @@ protocol DashboardViewOutput {
     func viewWillDisappear()
     func viewDidAppear()
     func viewDidTriggerMenu()
-    func viewDidTriggerSettings(for viewModel: DashboardRuuviTagViewModel)
-    func viewDidTapOnRSSI(for viewModel: DashboardRuuviTagViewModel)
+    func viewDidTriggerSettings(for viewModel: DashboardTagViewModel)
+    func viewDidTapOnRSSI(for viewModel: DashboardTagViewModel)
 }
