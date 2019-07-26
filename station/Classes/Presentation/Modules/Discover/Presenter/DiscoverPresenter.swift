@@ -10,6 +10,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var ruuviTagService: RuuviTagService!
     var webTagService: WebTagService!
     var scanner: BTScanner!
+    var permissionsManager: PermissionsManager!
     
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
