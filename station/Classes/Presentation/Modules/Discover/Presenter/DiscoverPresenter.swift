@@ -8,6 +8,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var ruuviTagService: RuuviTagService!
+    var webTagService: WebTagService!
     var scanner: BTScanner!
     
     private var ruuviTags = Set<RuuviTag>()
@@ -78,7 +79,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 } else {
                     self?.router.dismiss()
                 }
-                
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
@@ -86,7 +86,16 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidChoose(webTag: DiscoverWebTagViewModel) {
-        
+        let operation = webTagService.add(provider: webTag.provider)
+        operation.on(success: { [weak self] _ in
+            if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
+                self?.router.openDashboard()
+            } else {
+                self?.router.dismiss()
+            }
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
     
     func viewDidTriggerContinue() {

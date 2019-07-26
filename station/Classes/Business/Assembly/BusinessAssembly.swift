@@ -38,5 +38,11 @@ class BusinessAssembly: Assembly {
             service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             return service
         }
+        
+        container.register(WebTagService.self) { r in
+            let service = WebTagServiceImpl()
+            service.webTagPersistence = r.resolve(WebTagPersistence.self)
+            return service
+        }
     }
 }
