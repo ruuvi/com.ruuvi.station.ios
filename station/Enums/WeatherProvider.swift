@@ -1,14 +1,7 @@
 import Foundation
 
-enum WeatherProvider {
-    case openWeatherMap
-    
-    var name: String {
-        switch self {
-        case .openWeatherMap:
-            return "openWeatherMap"
-        }
-    }
+enum WeatherProvider: String {
+    case openWeatherMap = "openWeatherMap"
     
     var displayName: String {
         switch self {

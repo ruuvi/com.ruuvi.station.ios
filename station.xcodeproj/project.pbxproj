@@ -113,6 +113,10 @@
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
 		0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */; };
+		0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979822EB055D0015ADE2 /* WebTagService.swift */; };
+		0E9F979C22EB0A3F0015ADE2 /* WebTagServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979B22EB0A3F0015ADE2 /* WebTagServiceImpl.swift */; };
+		0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */; };
+		0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -350,6 +354,10 @@
 		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
 		0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagTableViewCell.swift; sourceTree = "<group>"; };
+		0E9F979822EB055D0015ADE2 /* WebTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagService.swift; sourceTree = "<group>"; };
+		0E9F979B22EB0A3F0015ADE2 /* WebTagServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagServiceImpl.swift; sourceTree = "<group>"; };
+		0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagPersistence.swift; sourceTree = "<group>"; };
+		0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagPersistenceRealm.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -645,6 +653,7 @@
 				0E1C1D9322B362420032F6CA /* Realm */,
 				0E1C1D9922B364FC0032F6CA /* RuuviTag */,
 				0E1C1E1522B76F400032F6CA /* Settings */,
+				0E9F979D22EB0AF80015ADE2 /* WebTag */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1238,6 +1247,40 @@
 			path = Pulsator;
 			sourceTree = "<group>";
 		};
+		0E9F979722EB054B0015ADE2 /* WebTag */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F979A22EB0A2E0015ADE2 /* Impl */,
+				0E9F979822EB055D0015ADE2 /* WebTagService.swift */,
+			);
+			path = WebTag;
+			sourceTree = "<group>";
+		};
+		0E9F979A22EB0A2E0015ADE2 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F979B22EB0A3F0015ADE2 /* WebTagServiceImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
+		0E9F979D22EB0AF80015ADE2 /* WebTag */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97A022EB0B300015ADE2 /* Realm */,
+				0E9F979E22EB0B0E0015ADE2 /* WebTagPersistence.swift */,
+			);
+			path = WebTag;
+			sourceTree = "<group>";
+		};
+		0E9F97A022EB0B300015ADE2 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
 			isa = PBXGroup;
 			children = (
@@ -1760,6 +1803,7 @@
 			children = (
 				0EFDD6D222BBD9C300EADFC6 /* Calibration */,
 				0EFDD6DA22BBDDBF00EADFC6 /* RuuviTag */,
+				0E9F979722EB054B0015ADE2 /* WebTag */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2093,6 +2137,7 @@
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
+				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
@@ -2132,6 +2177,7 @@
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
+				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				0EEB213322B8CE650015F9E0 /* ChartDismissTransitionAnimation.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
@@ -2190,6 +2236,7 @@
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
 				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
+				0E9F979C22EB0A3F0015ADE2 /* WebTagServiceImpl.swift in Sources */,
 				0E53DA6022CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
@@ -2264,6 +2311,7 @@
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
 				0EEB212F22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift in Sources */,
 				0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */,
+				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
 				0E502FB222B27AA800E8A6CC /* RuuviTagPresenter.swift in Sources */,
 				0EEB211B22B8C5B70015F9E0 /* ChartViewController.swift in Sources */,
 			);
