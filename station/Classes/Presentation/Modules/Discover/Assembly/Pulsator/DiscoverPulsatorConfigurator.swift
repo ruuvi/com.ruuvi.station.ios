@@ -16,6 +16,7 @@ class DiscoverPulsatorConfigurator {
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
+        presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.scanner = r.resolve(BTScanner.self)
         
         view.output = presenter
