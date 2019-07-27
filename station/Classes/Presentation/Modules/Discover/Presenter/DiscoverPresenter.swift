@@ -17,7 +17,13 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
         didSet {
             view.savedDevicesUUIDs = persistedRuuviTags.map( { $0.uuid })
-            view.isCloseEnabled = persistedRuuviTags.count > 0
+            updateCloseButtonVisibilityState()
+        }
+    }
+    private var persistedWebTags: Results<WebTagRealm>! {
+        didSet {
+            view.savedWebTagProviders = persistedWebTags.map( { $0.provider } )
+            updateCloseButtonVisibilityState()
         }
     }
     private var reloadTimer: Timer?
@@ -25,6 +31,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var stateToken: ObservationToken?
     private var lostToken: ObservationToken?
     private var persistedRuuviTagsToken: NotificationToken?
+    private var persistedWebTagsToken: NotificationToken?
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
     private var isOpenedFromWelcome: Bool = true
     
@@ -34,6 +41,7 @@ class DiscoverPresenter: DiscoverModuleInput {
         stateToken?.invalidate()
         lostToken?.invalidate()
         persistedRuuviTagsToken?.invalidate()
+        persistedWebTagsToken?.invalidate()
     }
     
     func configure(isOpenedFromWelcome: Bool) {
@@ -50,6 +58,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             view.showBluetoothDisabled()
         }
         startObservingPersistedRuuviTags()
+        startObservingPersistedWebTags()
     }
     
     func viewWillAppear() {
@@ -138,6 +147,20 @@ extension DiscoverPresenter {
         })
     }
     
+    private func startObservingPersistedWebTags() {
+        persistedWebTags = realmContext.main.objects(WebTagRealm.self)
+        persistedWebTagsToken = persistedWebTags.observe({ [weak self] (change) in
+            switch change {
+            case .initial(let persistedWebTags):
+                self?.persistedWebTags = persistedWebTags
+            case .update(let persistedWebTags, _, _, _):
+                self?.persistedWebTags = persistedWebTags
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            }
+        })
+    }
+    
     private func startObservingPersistedRuuviTags() {
         persistedRuuviTags = realmContext.main.objects(RuuviTagRealm.self)
         persistedRuuviTagsToken = persistedRuuviTags.observe { [weak self] (change) in
@@ -213,6 +236,12 @@ extension DiscoverPresenter {
             } else {
                 return DiscoverDeviceViewModel(uuid: ruuviTag.uuid, rssi: ruuviTag.rssi, mac: ruuviTag.mac, name: nil, logo: ruuviLogoImage)
             }
+        }
+    }
+    
+    private func updateCloseButtonVisibilityState() {
+        if persistedRuuviTags != nil && persistedWebTags != nil {
+            view.isCloseEnabled = persistedRuuviTags.count > 0 || persistedWebTags.count > 0
         }
     }
 }
