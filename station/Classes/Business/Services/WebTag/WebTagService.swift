@@ -8,6 +8,21 @@ protocol WebTagService {
     
     func loadData(from provider: WeatherProvider) -> Future<WebTagData,RUError>
     
+    @discardableResult
+    func observe<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken
+    
+}
+
+class WebTagServiceObservationToken {
+    private let cancellationClosure: () -> Void
+    
+    init(cancellationClosure: @escaping () -> Void) {
+        self.cancellationClosure = cancellationClosure
+    }
+    
+    public func invalidate() {
+        cancellationClosure()
+    }
 }
 
 struct WebTagData {

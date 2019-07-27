@@ -1,6 +1,6 @@
 import Foundation
 
-enum WeatherProvider: String {
+enum WeatherProvider: String, CaseIterable {
     case openWeatherMap = "openWeatherMap"
     
     var displayName: String {
