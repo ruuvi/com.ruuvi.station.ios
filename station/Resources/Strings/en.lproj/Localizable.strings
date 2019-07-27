@@ -60,7 +60,7 @@
 "PhotoPicker.Sheet.camera" = "Take Picture";
 
 // OWMError
-"OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response. Check if you entered valid API Key in Networking.plist file."
+"OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response. Check if you entered valid API Key in Networking.plist file.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
