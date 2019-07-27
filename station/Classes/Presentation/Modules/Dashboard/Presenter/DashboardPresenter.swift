@@ -12,7 +12,7 @@ class DashboardPresenter: DashboardModuleInput {
     var scanner: BTScanner!
     var webTagService: WebTagService!
     
-    private let webTagObserveInterval: TimeInterval = 60
+    private let webTagObserveInterval: TimeInterval = 10
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
@@ -175,10 +175,15 @@ extension DashboardPresenter {
         })
     }
     
+    func restartScanning() {
+        startScanningRuuviTags()
+        startScanningWebTags()
+    }
+    
     private func startScanningRuuviTags() {
         observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()
-        for viewModel in view.viewModels {
+        for viewModel in viewModels {
             if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
                 observeTokens.append(scanner.observe(self, uuid: uuid) { [weak self] (observer, device) in
                     if let ruuviTag = device.ruuvi?.tag,
@@ -193,7 +198,7 @@ extension DashboardPresenter {
     private func startScanningWebTags() {
         webTagObserveTokens.forEach({ $0.invalidate() })
         webTagObserveTokens.removeAll()
-        let webViewModels = view.viewModels.filter({ $0.type == .web })
+        let webViewModels = viewModels.filter({ $0.type == .web })
         for provider in WeatherProvider.allCases {
             let viewModels = webViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
@@ -214,7 +219,7 @@ extension DashboardPresenter {
             switch change {
             case .initial(let webTags):
                 self?.webTags = webTags
-                self?.startScanningWebTags()
+                self?.restartScanning()
             case .update(let webTags, _, let insertions, _):
                 self?.webTags = webTags
                 if let ii = insertions.last {
@@ -223,7 +228,7 @@ extension DashboardPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.startScanningWebTags()
+                self?.restartScanning()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
@@ -236,7 +241,7 @@ extension DashboardPresenter {
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags
-                self?.startScanningRuuviTags()
+                self?.restartScanning()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
@@ -245,7 +250,7 @@ extension DashboardPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.startScanningRuuviTags()
+                self?.restartScanning()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }

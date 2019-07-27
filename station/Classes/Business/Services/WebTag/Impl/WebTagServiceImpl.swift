@@ -25,9 +25,13 @@ class WebTagServiceImpl: WebTagService {
             }
             if let operation = self?.loadData(from: provider) {
                 operation.on(success: { data in
-                    closure(observer, data, nil)
+                    if timer.isValid {
+                        closure(observer, data, nil)
+                    }
                 }, failure: { (error) in
-                    closure(observer, nil, error)
+                    if timer.isValid {
+                        closure(observer, nil, error)
+                    }
                 })
             } else {
                 timer.invalidate()
