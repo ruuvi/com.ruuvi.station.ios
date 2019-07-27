@@ -15,6 +15,31 @@ class WebTagServiceImpl: WebTagService {
         return webTagPersistence.remove(webTag: webTag)
     }
     
+    @discardableResult
+    func observe<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken {
+        
+        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
+            guard let observer = observer else {
+                timer.invalidate()
+                return
+            }
+            if let operation = self?.loadData(from: provider) {
+                operation.on(success: { data in
+                    closure(observer, data, nil)
+                }, failure: { (error) in
+                    closure(observer, nil, error)
+                })
+            } else {
+                timer.invalidate()
+            }
+        }
+        timer.fire()
+        
+        return WebTagServiceObservationToken {
+            timer.invalidate()
+        }
+    }
+    
     func loadData(from provider: WeatherProvider) -> Future<WebTagData,RUError> {
         let promise = Promise<WebTagData,RUError>()
         locationManager.getCurrentLocation { (location) in

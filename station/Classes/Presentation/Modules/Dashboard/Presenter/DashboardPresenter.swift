@@ -12,9 +12,11 @@ class DashboardPresenter: DashboardModuleInput {
     var scanner: BTScanner!
     var webTagService: WebTagService!
     
+    private let webTagObserveInterval: TimeInterval = 60
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
+    private var webTagObserveTokens = [WebTagServiceObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -39,6 +41,7 @@ class DashboardPresenter: DashboardModuleInput {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
+        webTagObserveTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
@@ -188,13 +191,18 @@ extension DashboardPresenter {
     }
     
     private func startScanningWebTags() {
-        for viewModel in view.viewModels {
-            if viewModel.type == .web, let provider = viewModel.provider {
-                let load = webTagService.loadData(from: provider)
-                load.on(success: { (data) in
-                    viewModel.update(data)
-                }, failure: { [weak self] (error) in
-                    self?.errorPresenter.present(error: error)
+        webTagObserveTokens.forEach({ $0.invalidate() })
+        webTagObserveTokens.removeAll()
+        let webViewModels = view.viewModels.filter({ $0.type == .web })
+        for provider in WeatherProvider.allCases {
+            let viewModels = webViewModels.filter({ $0.provider == provider })
+            if viewModels.count > 0 {
+                webTagObserveTokens.append(webTagService.observe(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                    if let data = data {
+                        viewModels.forEach({ $0.update(data)})
+                    } else if let error = error {
+                        observer.errorPresenter.present(error: error)
+                    }
                 })
             }
         }
