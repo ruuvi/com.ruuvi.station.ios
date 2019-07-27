@@ -2,6 +2,7 @@
 "OK" = "OK";
 "Copy" = "Copy";
 "Confirm" = "Confirm";
+"Remove" = "Remove";
 "N/A" = "N/A";
 "°C" = "°C";
 "°F" = "°F";
@@ -26,6 +27,7 @@
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"Dashboard.WebTagSettings.title" = "Settings";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Tags";
