@@ -11,6 +11,10 @@ class WebTagServiceImpl: WebTagService {
         return webTagPersistence.persist(provider: provider)
     }
     
+    func remove(webTag: WebTagRealm) -> Future<Bool,RUError> {
+        return webTagPersistence.remove(webTag: webTag)
+    }
+    
     func loadData(from provider: WeatherProvider) -> Future<WebTagData,RUError> {
         let promise = Promise<WebTagData,RUError>()
         locationManager.getCurrentLocation { (location) in
