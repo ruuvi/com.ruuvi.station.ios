@@ -42,6 +42,18 @@ struct DashboardTagViewModel {
         fahrenheit.value = webTagData.fahrenheit
         pressure.value = webTagData.pressure
         relativeHumidity.value = webTagData.humidity
+        
+        if let c = webTagData.celsius, let rh = webTagData.humidity {
+            let h = Humidity(c: c, rh: rh / 100.0)
+            absoluteHumidity.value = h.ah
+            dewPointCelsius.value = h.Td
+            dewPointFahrenheit.value = h.TdF
+        } else {
+            absoluteHumidity.value = nil
+            dewPointCelsius.value = nil
+            dewPointFahrenheit.value = nil
+        }
+        
         date.value = Date()
     }
     
