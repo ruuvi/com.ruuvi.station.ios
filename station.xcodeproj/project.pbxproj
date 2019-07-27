@@ -120,6 +120,9 @@
 		0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AA22EB1CCB0015ADE2 /* LocationManager.swift */; };
 		0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */; };
+		0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AF22EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift */; };
+		0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */; };
+		0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -364,6 +367,9 @@
 		0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingAssembly.swift; sourceTree = "<group>"; };
 		0E9F97AA22EB1CCB0015ADE2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerImpl.swift; sourceTree = "<group>"; };
+		0E9F97AF22EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherMapAPI.swift; sourceTree = "<group>"; };
+		0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherMapAPIURLSession.swift; sourceTree = "<group>"; };
+		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -1302,6 +1308,7 @@
 			isa = PBXGroup;
 			children = (
 				0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */,
+				0E9F97B422EC44930015ADE2 /* Networking.plist */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -1317,6 +1324,8 @@
 		0E9F97A622EB1B6C0015ADE2 /* OpenWeatherMap */ = {
 			isa = PBXGroup;
 			children = (
+				0E9F97B122EC40130015ADE2 /* URLSession */,
+				0E9F97AF22EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift */,
 			);
 			path = OpenWeatherMap;
 			sourceTree = "<group>";
@@ -1336,6 +1345,14 @@
 				0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */,
 			);
 			path = Impl;
+			sourceTree = "<group>";
+		};
+		0E9F97B122EC40130015ADE2 /* URLSession */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */,
+			);
+			path = URLSession;
 			sourceTree = "<group>";
 		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
@@ -2089,6 +2106,7 @@
 			files = (
 				6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */,
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
+				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Dashboard.storyboard in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
 				0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */,
@@ -2255,6 +2273,7 @@
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
+				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
 				0EEB212B22B8C7B70015F9E0 /* ChartConfigurator.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
@@ -2366,6 +2385,7 @@
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
+				0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,

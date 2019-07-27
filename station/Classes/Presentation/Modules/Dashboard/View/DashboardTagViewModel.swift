@@ -28,11 +28,21 @@ struct DashboardTagViewModel {
     var date: Observable<Date?> = Observable<Date?>()
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     var humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
+    var provider: WeatherProvider?
     
     init(_ webTag: WebTagRealm) {
         type = .web
         uuid.value = webTag.uuid
         name.value = webTag.provider.displayName
+        provider = webTag.provider
+    }
+    
+    func update(_ webTagData: WebTagData) {
+        celsius.value = webTagData.celsius
+        fahrenheit.value = webTagData.fahrenheit
+        pressure.value = webTagData.pressure
+        relativeHumidity.value = webTagData.humidity
+        date.value = Date()
     }
     
     init(_ ruuviTag: RuuviTagRealm) {

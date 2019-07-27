@@ -9,6 +9,10 @@ class ErrorPresenterAlert: ErrorPresenter {
                 presentAlert(error: error)
             case .persistence(let error):
                 presentAlert(error: error)
+            case .networking(let error):
+                presentAlert(error: error)
+            case .parse(let error):
+                presentAlert(error: error)
             }
         } else {
             presentAlert(error: error)

@@ -13,5 +13,6 @@ target 'station' do
   pod 'Localize-Swift'
   pod 'RealmSwift'
   pod 'Swinject'
+  pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
   pod 'TTTAttributedLabel'
 end

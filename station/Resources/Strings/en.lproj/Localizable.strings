@@ -19,6 +19,8 @@
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
 "CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
+"CoreError.failedToGetCurrentLocation" = "Failed to get current location";
+"CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
