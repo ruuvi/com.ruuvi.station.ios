@@ -19,15 +19,24 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
+    var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
+        didSet {
+            shownWebTags = webTags
+                .filter({ !savedWebTagProviders.contains($0.provider) })
+                .sorted(by: { $0.provider.displayName < $1.provider.displayName })
+        }
+    }
     
-    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet {
+    var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() {
+        didSet {
             shownDevices = devices
                 .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
                 .sorted(by: { $0.rssi > $1.rssi })
         }
     }
-    var savedDevicesUUIDs: [String] = [String]() { didSet {
-        shownDevices = devices
+    var savedDevicesUUIDs: [String] = [String]() {
+        didSet {
+            shownDevices = devices
             .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
             .sorted(by: { $0.rssi > $1.rssi })
         }
@@ -40,7 +49,8 @@ class DiscoverTableViewController: UITableViewController {
     private var emptyDataSetView: UIView?
     private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
     private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
-    private var shownDevices:  [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
+    private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
+    private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() { didSet { updateUIShownWebTags() } }
 }
 
 // MARK: - DiscoverViewInput
@@ -104,7 +114,7 @@ extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case DiscoverTableSection.webTag.rawValue:
-            return webTags.count
+            return shownWebTags.count
         case DiscoverTableSection.device.rawValue:
             return shownDevices.count
         default:
@@ -116,7 +126,7 @@ extension DiscoverTableViewController {
         switch indexPath.section {
         case DiscoverTableSection.webTag.rawValue:
             let cell = tableView.dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier, for: indexPath) as! DiscoverWebTagTableViewCell
-            let tag = webTags[indexPath.row]
+            let tag = shownWebTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case DiscoverTableSection.device.rawValue:
@@ -135,8 +145,8 @@ extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case DiscoverTableSection.webTag.rawValue:
-            if indexPath.row < webTags.count {
-                output.viewDidChoose(webTag: webTags[indexPath.row])
+            if indexPath.row < shownWebTags.count {
+                output.viewDidChoose(webTag: shownWebTags[indexPath.row])
             }
         case DiscoverTableSection.device.rawValue:
             if indexPath.row < shownDevices.count {
@@ -151,7 +161,7 @@ extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case DiscoverTableSection.webTag.rawValue:
-            return webTags.count > 0 ? "DiscoverTable.SectionTitle.WebTags".localized() : nil
+            return shownWebTags.count > 0 ? "DiscoverTable.SectionTitle.WebTags".localized() : nil
         case DiscoverTableSection.device.rawValue:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         default:
@@ -241,6 +251,7 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     private func updateUI() {
         updateUIShownDevices()
+        updateUIShownWebTags()
         updateUIISBluetoothEnabled()
         updateUIIsCloseEnabled()
     }
@@ -263,6 +274,12 @@ extension DiscoverTableViewController {
     }
     
     private func updateUIShownDevices() {
+        if isViewLoaded {
+            tableView.reloadData()
+        }
+    }
+    
+    private func updateUIShownWebTags() {
         if isViewLoaded {
             tableView.reloadData()
         }

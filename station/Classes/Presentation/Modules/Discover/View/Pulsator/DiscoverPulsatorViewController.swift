@@ -10,6 +10,7 @@ class DiscoverPulsatorViewController: UIViewController {
     @IBOutlet weak var btDisabledImageView: UIImageView!
     
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
+    var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]()
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() { didSet { updateUIDevices() } }
     var savedDevicesUUIDs: [String] = [String]()
     var isBluetoothEnabled: Bool = false { didSet { updateUIISBluetoothEnabled() } }
