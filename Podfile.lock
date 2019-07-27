@@ -24,6 +24,8 @@ PODS:
   - RealmSwift (3.16.1):
     - Realm (= 3.16.1)
   - Swinject (2.6.1)
+  - SwinjectPropertyLoader (1.0.0):
+    - Swinject (~> 2.6.0)
   - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
@@ -37,6 +39,7 @@ DEPENDENCIES:
   - Localize-Swift
   - RealmSwift
   - Swinject
+  - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
   - TTTAttributedLabel
 
 SPEC REPOS:
@@ -56,11 +59,16 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
+  SwinjectPropertyLoader:
+    :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 CHECKOUT OPTIONS:
   LightRoute:
     :commit: c537a7afacc290504bc73c4a893957a4e1932fb7
     :git: https://github.com/rinat-enikeev/LightRoute.git
+  SwinjectPropertyLoader:
+    :commit: 8861237b6edc95065d23256b16c92afc240b9b20
+    :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
   BTKit: d94807b43b3c2d606872c7c9c04e6f80f809bbc1
@@ -74,8 +82,9 @@ SPEC CHECKSUMS:
   Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
   RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
+  SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 0b76d13af940bc89fd0d571173a6be160bc41fea
+PODFILE CHECKSUM: 744c618b9e45da053b95ebbe4879a19cd5cec739
 
 COCOAPODS: 1.7.4

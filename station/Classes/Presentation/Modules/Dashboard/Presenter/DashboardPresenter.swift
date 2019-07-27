@@ -10,6 +10,7 @@ class DashboardPresenter: DashboardModuleInput {
     var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
     var scanner: BTScanner!
+    var webTagService: WebTagService!
     
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
@@ -166,7 +167,7 @@ extension DashboardPresenter {
         observeTokens.forEach( { $0.invalidate() } )
         observeTokens.removeAll()
         for viewModel in view.viewModels {
-            if let uuid = viewModel.uuid.value {
+            if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
                 observeTokens.append(scanner.observe(self, uuid: uuid) { [weak self] (observer, device) in
                     if let ruuviTag = device.ruuvi?.tag,
                         let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
@@ -178,7 +179,16 @@ extension DashboardPresenter {
     }
     
     private func startScanningWebTags() {
-        
+        for viewModel in view.viewModels {
+            if viewModel.type == .web, let provider = viewModel.provider {
+                let load = webTagService.loadData(from: provider)
+                load.on(success: { (data) in
+                    viewModel.update(data)
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+            }
+        }
     }
     
     private func startObservingWebTags() {
