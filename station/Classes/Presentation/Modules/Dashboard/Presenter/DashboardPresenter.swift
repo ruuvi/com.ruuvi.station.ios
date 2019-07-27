@@ -12,7 +12,7 @@ class DashboardPresenter: DashboardModuleInput {
     var scanner: BTScanner!
     var webTagService: WebTagService!
     
-    private let webTagObserveInterval: TimeInterval = 10
+    private let webTagObserveInterval: TimeInterval = 30 // sec
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
