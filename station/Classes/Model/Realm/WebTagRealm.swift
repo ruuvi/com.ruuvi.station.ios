@@ -1,6 +1,7 @@
 import RealmSwift
 
 class WebTagRealm: Object {
+    @objc dynamic var name: String = ""
     @objc dynamic var uuid: String = ""
     @objc dynamic var providerString: String = WeatherProvider.openWeatherMap.rawValue
     
@@ -20,5 +21,6 @@ class WebTagRealm: Object {
         self.init()
         self.uuid = uuid
         self.providerString = provider.rawValue
+        self.name = provider.displayName
     }
 }

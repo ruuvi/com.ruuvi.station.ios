@@ -71,6 +71,9 @@ IMAGE</string>
                                                         </imageView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xmO-fY-mJH">
                                                             <rect key="frame" x="0.0" y="0.0" width="74" height="56"/>
+                                                            <connections>
+                                                                <action selector="randomizeBackgroundButtonTouchUpInside:" destination="NzI-p7-FEP" eventType="touchUpInside" id="DNb-8R-1As"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -97,6 +100,9 @@ IMAGE</string>
                                                         </imageView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rut-3X-Wne">
                                                             <rect key="frame" x="0.0" y="0.0" width="74" height="56"/>
+                                                            <connections>
+                                                                <action selector="selectBackgroundButtonTouchUpInside:" destination="NzI-p7-FEP" eventType="touchUpInside" id="6BF-Db-a2t"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -224,6 +230,10 @@ IMAGE</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="backgroundImageView" destination="ehU-xd-ddr" id="ah3-VQ-C09"/>
+                        <outlet property="tagNameTextField" destination="PNI-Wm-pcd" id="Wz3-66-q2h"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4k-YF-pYJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="OmS-Xb-ggr" customClass="WebTagSettingsTableInitializer" customModule="station" customModuleProvider="target">
