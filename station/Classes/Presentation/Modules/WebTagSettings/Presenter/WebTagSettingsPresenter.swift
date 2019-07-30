@@ -12,5 +12,7 @@ class WebTagSettingsPresenter: WebTagSettingsModuleInput {
 }
 
 extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
-    
+    func viewDidAskToDismiss() {
+        router.dismiss()
+    }
 }
