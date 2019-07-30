@@ -7,5 +7,4 @@ protocol DashboardViewInput: ViewInput {
     
     func scroll(to index: Int)
     func showBluetoothDisabled()
-    func showSettings(for webTag: WebTagRealm)
 }

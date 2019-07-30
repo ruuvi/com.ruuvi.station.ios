@@ -1,11 +1,11 @@
 import UIKit
 
-class TagSettingsTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+class SwipeDownToDismissTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
-    let interactionControllerForDismissal = TagSettingsDismissInteractiveTransition()
+    let interactionControllerForDismissal = SwipeDownToDismissInteractiveTransition()
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return TagSettingsDismissTransitionAnimation()
+        return SwipeDownToDismissTransitionAnimation()
     }
     
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {

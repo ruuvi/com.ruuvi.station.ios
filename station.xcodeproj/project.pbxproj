@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
+		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
+		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
+		0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2D22F0569000BD4E9C /* WebTagSettingsTableViewController.swift */; };
+		0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2F22F057CC00BD4E9C /* WebTagSettingsRouterInput.swift */; };
+		0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3122F057DD00BD4E9C /* WebTagSettingsRouter.swift */; };
+		0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3322F057FC00BD4E9C /* WebTagSettingsModuleInput.swift */; };
+		0E046F3622F0581E00BD4E9C /* WebTagSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3522F0581E00BD4E9C /* WebTagSettingsPresenter.swift */; };
+		0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */; };
+		0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */; };
 		0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */; };
 		0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */; };
 		0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
@@ -76,10 +86,10 @@
 		0E502FCA22B2864E00E8A6CC /* RuuviTagAddPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FC922B2864E00E8A6CC /* RuuviTagAddPresentationController.swift */; };
 		0E502FCD22B2876A00E8A6CC /* RuuviTagRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FCC22B2876A00E8A6CC /* RuuviTagRouter.swift */; };
 		0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FCE22B2877900E8A6CC /* RuuviTagRouterInput.swift */; };
-		0E53DA6022CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA5F22CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift */; };
-		0E53DA6222CC93EB00BC6D64 /* TagSettingsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6122CC93EB00BC6D64 /* TagSettingsDismissTransitionAnimation.swift */; };
-		0E53DA6422CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6322CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift */; };
-		0E53DA6722CC964200BC6D64 /* TagSettingsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6622CC964200BC6D64 /* TagSettingsNavigationController.swift */; };
+		0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */; };
+		0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */; };
+		0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */; };
+		0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */; };
 		0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
 		0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
 		0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */; };
@@ -254,6 +264,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WebTagSettings.storyboard; sourceTree = "<group>"; };
+		0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewInput.swift; sourceTree = "<group>"; };
+		0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewOutput.swift; sourceTree = "<group>"; };
+		0E046F2D22F0569000BD4E9C /* WebTagSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsTableViewController.swift; sourceTree = "<group>"; };
+		0E046F2F22F057CC00BD4E9C /* WebTagSettingsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsRouterInput.swift; sourceTree = "<group>"; };
+		0E046F3122F057DD00BD4E9C /* WebTagSettingsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsRouter.swift; sourceTree = "<group>"; };
+		0E046F3322F057FC00BD4E9C /* WebTagSettingsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsModuleInput.swift; sourceTree = "<group>"; };
+		0E046F3522F0581E00BD4E9C /* WebTagSettingsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsPresenter.swift; sourceTree = "<group>"; };
+		0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsTableInitializer.swift; sourceTree = "<group>"; };
+		0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsTableConfigurator.swift; sourceTree = "<group>"; };
 		0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
 		0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0E09672422AE897000E85F48 /* CALayer+IB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+IB.swift"; sourceTree = "<group>"; };
@@ -323,10 +343,10 @@
 		0E502FC922B2864E00E8A6CC /* RuuviTagAddPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagAddPresentationController.swift; sourceTree = "<group>"; };
 		0E502FCC22B2876A00E8A6CC /* RuuviTagRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRouter.swift; sourceTree = "<group>"; };
 		0E502FCE22B2877900E8A6CC /* RuuviTagRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRouterInput.swift; sourceTree = "<group>"; };
-		0E53DA5F22CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTransitioningDelegate.swift; sourceTree = "<group>"; };
-		0E53DA6122CC93EB00BC6D64 /* TagSettingsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
-		0E53DA6322CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsDismissInteractiveTransition.swift; sourceTree = "<group>"; };
-		0E53DA6622CC964200BC6D64 /* TagSettingsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsNavigationController.swift; sourceTree = "<group>"; };
+		0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitioningDelegate.swift; sourceTree = "<group>"; };
+		0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitionAnimation.swift; sourceTree = "<group>"; };
+		0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissInteractiveTransition.swift; sourceTree = "<group>"; };
+		0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissNavigationController.swift; sourceTree = "<group>"; };
 		0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenterSheet.swift; sourceTree = "<group>"; };
 		0E5C300E22CF634300B52E39 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManagerImpl.swift; sourceTree = "<group>"; };
@@ -517,6 +537,90 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E046F2022F049C500BD4E9C /* WebTagSettings */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */,
+				0E046F2522F049F000BD4E9C /* Assembly */,
+				0E046F2322F049E200BD4E9C /* Presenter */,
+				0E046F2222F049DE00BD4E9C /* Router */,
+				0E046F2122F049D900BD4E9C /* View */,
+			);
+			path = WebTagSettings;
+			sourceTree = "<group>";
+		};
+		0E046F2122F049D900BD4E9C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F2C22F0563E00BD4E9C /* Table */,
+				0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */,
+				0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0E046F2222F049DE00BD4E9C /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F2F22F057CC00BD4E9C /* WebTagSettingsRouterInput.swift */,
+				0E046F3122F057DD00BD4E9C /* WebTagSettingsRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0E046F2322F049E200BD4E9C /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F3322F057FC00BD4E9C /* WebTagSettingsModuleInput.swift */,
+				0E046F3522F0581E00BD4E9C /* WebTagSettingsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0E046F2522F049F000BD4E9C /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F3922F05A9300BD4E9C /* Table */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E046F2C22F0563E00BD4E9C /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F2D22F0569000BD4E9C /* WebTagSettingsTableViewController.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		0E046F3722F0585E00BD4E9C /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F3822F0589000BD4E9C /* SwipeDownToDismiss */,
+			);
+			path = Transitions;
+			sourceTree = "<group>";
+		};
+		0E046F3822F0589000BD4E9C /* SwipeDownToDismiss */ = {
+			isa = PBXGroup;
+			children = (
+				0E53DA6622CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift */,
+				0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */,
+				0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */,
+				0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */,
+			);
+			path = SwipeDownToDismiss;
+			sourceTree = "<group>";
+		};
+		0E046F3922F05A9300BD4E9C /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */,
+				0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
 		0E09671522AE74CB00E85F48 /* Application */ = {
 			isa = PBXGroup;
 			children = (
@@ -571,6 +675,7 @@
 				0E70A46122AF958E006CB87C /* Localization */,
 				0E1C1DAC22B38F220032F6CA /* Presenters */,
 				0E70A46422AF960B006CB87C /* Theme */,
+				0E046F3722F0585E00BD4E9C /* Transitions */,
 				0E09671C22AE76CC00E85F48 /* Modules */,
 			);
 			path = Presentation;
@@ -605,6 +710,7 @@
 				0E502FA422B2780300E8A6CC /* RuuviTag */,
 				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
 				0EF2862522CBAF280026C7A5 /* TagSettings */,
+				0E046F2022F049C500BD4E9C /* WebTagSettings */,
 				0E09671E22AE7F2600E85F48 /* Welcome */,
 			);
 			path = Modules;
@@ -1055,14 +1161,6 @@
 				0E502FCC22B2876A00E8A6CC /* RuuviTagRouter.swift */,
 			);
 			path = Router;
-			sourceTree = "<group>";
-		};
-		0E53DA6522CC962500BC6D64 /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				0E53DA6622CC964200BC6D64 /* TagSettingsNavigationController.swift */,
-			);
-			path = Navigation;
 			sourceTree = "<group>";
 		};
 		0E5C300C22CF632500B52E39 /* Core */ = {
@@ -1772,7 +1870,6 @@
 			children = (
 				0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */,
 				0EF2862A22CBAF480026C7A5 /* Assembly */,
-				0EF2862922CBAF410026C7A5 /* Transition */,
 				0EF2862822CBAF3C0026C7A5 /* Presenter */,
 				0EF2862722CBAF370026C7A5 /* Router */,
 				0EF2862622CBAF320026C7A5 /* View */,
@@ -1783,7 +1880,6 @@
 		0EF2862622CBAF320026C7A5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0E53DA6522CC962500BC6D64 /* Navigation */,
 				0EF2862F22CBAFF10026C7A5 /* Table */,
 				0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */,
 				0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */,
@@ -1808,16 +1904,6 @@
 				0EF2863A22CBB08C0026C7A5 /* TagSettingsPresenter.swift */,
 			);
 			path = Presenter;
-			sourceTree = "<group>";
-		};
-		0EF2862922CBAF410026C7A5 /* Transition */ = {
-			isa = PBXGroup;
-			children = (
-				0E53DA5F22CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift */,
-				0E53DA6122CC93EB00BC6D64 /* TagSettingsDismissTransitionAnimation.swift */,
-				0E53DA6322CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift */,
-			);
-			path = Transition;
 			sourceTree = "<group>";
 		};
 		0EF2862A22CBAF480026C7A5 /* Assembly */ = {
@@ -2128,6 +2214,7 @@
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
+				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2214,9 +2301,11 @@
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
+				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
+				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
@@ -2231,13 +2320,14 @@
 				0EEB213922B8D7BC0015F9E0 /* DateValueFormatter.swift in Sources */,
 				0E502FAE22B27A4E00E8A6CC /* RuuviTagViewOutput.swift in Sources */,
 				0EEB212122B8C6040015F9E0 /* ChartRouterInput.swift in Sources */,
+				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				0E502FB722B27B5D00E8A6CC /* RuuviTagConfigurator.swift in Sources */,
-				0E53DA6722CC964200BC6D64 /* TagSettingsNavigationController.swift in Sources */,
+				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
 				0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */,
 				0EEB212522B8C64B0015F9E0 /* ChartModuleInput.swift in Sources */,
@@ -2250,6 +2340,7 @@
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
+				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
@@ -2271,6 +2362,7 @@
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E502FCF22B2877900E8A6CC /* RuuviTagRouterInput.swift in Sources */,
+				0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
@@ -2290,10 +2382,11 @@
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
-				0E53DA6222CC93EB00BC6D64 /* TagSettingsDismissTransitionAnimation.swift in Sources */,
+				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
+				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
@@ -2307,6 +2400,7 @@
 				0EEB211D22B8C5CB0015F9E0 /* ChartViewInput.swift in Sources */,
 				0EEB212922B8C78A0015F9E0 /* ChartInitializer.swift in Sources */,
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
+				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
@@ -2315,7 +2409,7 @@
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
 				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
 				0E9F979C22EB0A3F0015ADE2 /* WebTagServiceImpl.swift in Sources */,
-				0E53DA6022CC93A700BC6D64 /* TagSettingsTransitioningDelegate.swift in Sources */,
+				0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
@@ -2341,7 +2435,7 @@
 				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
 				0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */,
-				0E53DA6422CC943900BC6D64 /* TagSettingsDismissInteractiveTransition.swift in Sources */,
+				0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
 				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
@@ -2363,6 +2457,7 @@
 				0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */,
 				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */,
+				0E046F3622F0581E00BD4E9C /* WebTagSettingsPresenter.swift in Sources */,
 				0E1C1DFE22B3FFFC0032F6CA /* MenuModuleInput.swift in Sources */,
 				0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */,
 				0E1C1DE822B3C2B60032F6CA /* DashboardScrollInitializer.swift in Sources */,
@@ -2379,6 +2474,7 @@
 				0E502FAA22B278F500E8A6CC /* RuuviTagViewController.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */,
+				0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* DashboardRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* DashboardRouterInput.swift in Sources */,

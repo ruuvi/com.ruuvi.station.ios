@@ -83,7 +83,7 @@ extension DashboardPresenter: DashboardViewOutput {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
-            view.showSettings(for: webTag)
+            router.openWebTagSettings(webTag: webTag)
         }
     }
     
@@ -91,13 +91,6 @@ extension DashboardPresenter: DashboardViewOutput {
 //        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
 //            router.openChart(ruuviTag: ruuviTag, type: .rssi)
 //        }
-    }
-    
-    func viewDidAskToRemove(webTag: WebTagRealm) {
-        let operation = webTagService.remove(webTag: webTag)
-        operation.on(failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        })
     }
 }
 
