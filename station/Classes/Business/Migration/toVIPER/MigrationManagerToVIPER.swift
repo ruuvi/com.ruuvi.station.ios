@@ -7,7 +7,7 @@ class MigrationManagerToVIPER: MigrationManager {
     
     func migrateIfNeeded() {
         let config = Realm.Configuration(
-            schemaVersion: 3,
+            schemaVersion: 4,
             migrationBlock: { migration, oldSchemaVersion in
                 if (oldSchemaVersion < 2) {
                     migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, newObject) in
@@ -63,6 +63,12 @@ class MigrationManagerToVIPER: MigrationManager {
                             newObject?["pressure"] = value
                         }
                     }
+                } else if oldSchemaVersion < 4 {
+                    migration.enumerateObjects(ofType: WebTagRealm.className(), { (oldObject, newObject) in
+                        if let providerString = oldObject?["providerString"] as? String, let provider = WeatherProvider(rawValue: providerString) {
+                            newObject?["name"] = provider.displayName
+                        }
+                    })
                 }
         })
         

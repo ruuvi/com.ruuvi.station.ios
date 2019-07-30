@@ -104,7 +104,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
 }
 
-// MARK: - IBActions
+// MARK: - View lifecycle
 extension TagSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
