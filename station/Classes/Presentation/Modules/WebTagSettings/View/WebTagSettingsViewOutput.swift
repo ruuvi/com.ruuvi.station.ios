@@ -5,4 +5,6 @@ protocol WebTagSettingsViewOutput {
     func viewDidAskToRandomizeBackground()
     func viewDidAskToSelectBackground()
     func viewDidChangeTag(name: String)
+    func viewDidAskToRemoveWebTag()
+    func viewDidConfirmTagRemoval()
 }

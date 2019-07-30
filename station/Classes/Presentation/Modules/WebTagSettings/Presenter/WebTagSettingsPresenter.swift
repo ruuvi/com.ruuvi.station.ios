@@ -44,6 +44,19 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
+    
+    func viewDidAskToRemoveWebTag() {
+        view.showTagRemovalConfirmationDialog()
+    }
+    
+    func viewDidConfirmTagRemoval() {
+        let operation = webTagService.remove(webTag: webTag)
+        operation.on(success: { [weak self] _ in
+            self?.router.dismiss()
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
