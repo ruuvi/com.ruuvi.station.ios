@@ -33,7 +33,7 @@ struct DashboardTagViewModel {
     init(_ webTag: WebTagRealm) {
         type = .web
         uuid.value = webTag.uuid
-        name.value = webTag.provider.displayName
+        name.value = webTag.name
         provider = webTag.provider
     }
     

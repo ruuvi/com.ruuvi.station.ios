@@ -47,4 +47,30 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
+    
+    func update(name: String, of webTag: WebTagRealm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        if webTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        webTag.name = name
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    webTag.name = name
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
 }

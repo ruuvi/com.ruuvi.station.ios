@@ -13,6 +13,7 @@ class WebTagSettingsTableConfigurator {
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.webTagService = r.resolve(WebTagService.self)
         
         view.output = presenter
     }

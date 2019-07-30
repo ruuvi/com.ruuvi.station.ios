@@ -5,6 +5,7 @@ class WebTagSettingsPresenter: WebTagSettingsModuleInput {
     var router: WebTagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
     var errorPresenter: ErrorPresenter!
+    var webTagService: WebTagService!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
             photoPickerPresenter.delegate = self
@@ -34,6 +35,14 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     
     func viewDidAskToSelectBackground() {
         photoPickerPresenter.pick()
+    }
+    
+    func viewDidChangeTag(name: String) {
+        let finalName = name.isEmpty ? webTag.provider.displayName : name
+        let operation = webTagService.update(name: finalName, of: webTag)
+        operation.on(failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 

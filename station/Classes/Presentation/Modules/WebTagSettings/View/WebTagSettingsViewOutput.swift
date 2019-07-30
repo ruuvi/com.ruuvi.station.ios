@@ -4,4 +4,5 @@ protocol WebTagSettingsViewOutput {
     func viewDidAskToDismiss()
     func viewDidAskToRandomizeBackground()
     func viewDidAskToSelectBackground()
+    func viewDidChangeTag(name: String)
 }
