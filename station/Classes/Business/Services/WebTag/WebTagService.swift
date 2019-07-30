@@ -5,6 +5,7 @@ protocol WebTagService {
     
     func add(provider: WeatherProvider) -> Future<WeatherProvider,RUError>
     func remove(webTag: WebTagRealm) -> Future<Bool,RUError>
+    func update(name: String, of webTag: WebTagRealm) -> Future<Bool,RUError>
     
     func loadData(from provider: WeatherProvider) -> Future<WebTagData,RUError>
     

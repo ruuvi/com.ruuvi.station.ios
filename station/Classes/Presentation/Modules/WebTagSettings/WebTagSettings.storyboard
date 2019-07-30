@@ -176,6 +176,10 @@ IMAGE</string>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                                    <connections>
+                                                        <action selector="tagNameTextFieldEditingDidEnd:" destination="NzI-p7-FEP" eventType="editingDidEnd" id="lEa-PW-Amb"/>
+                                                        <outlet property="delegate" destination="NzI-p7-FEP" id="l4r-t4-Owa"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -232,6 +236,7 @@ IMAGE</string>
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundImageView" destination="ehU-xd-ddr" id="ah3-VQ-C09"/>
+                        <outlet property="tagNameCell" destination="CHg-xn-GrS" id="USS-CE-b8i"/>
                         <outlet property="tagNameTextField" destination="PNI-Wm-pcd" id="Wz3-66-q2h"/>
                     </connections>
                 </tableViewController>
