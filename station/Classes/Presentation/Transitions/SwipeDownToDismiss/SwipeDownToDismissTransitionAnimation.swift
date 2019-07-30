@@ -1,6 +1,6 @@
 import UIKit
 
-class TagSettingsDismissTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+class SwipeDownToDismissTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
     
     private lazy var dimmingView: UIView = {
         let view = UIView()

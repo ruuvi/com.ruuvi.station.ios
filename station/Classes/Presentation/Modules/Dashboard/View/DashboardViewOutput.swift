@@ -8,5 +8,4 @@ protocol DashboardViewOutput {
     func viewDidTriggerMenu()
     func viewDidTriggerSettings(for viewModel: DashboardTagViewModel)
     func viewDidTapOnRSSI(for viewModel: DashboardTagViewModel)
-    func viewDidAskToRemove(webTag: WebTagRealm)
 }

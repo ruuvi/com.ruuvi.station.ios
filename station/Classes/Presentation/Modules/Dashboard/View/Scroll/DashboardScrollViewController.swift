@@ -55,14 +55,6 @@ extension DashboardScrollViewController: DashboardViewInput {
         }
     }
     
-    func showSettings(for webTag: WebTagRealm) {
-        let controller = UIAlertController(title: "Dashboard.WebTagSettings.title".localized(), message: nil, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: "Remove".localized(), style: .destructive, handler: { [weak self] _ in
-            self?.output.viewDidAskToRemove(webTag: webTag)
-        }))
-        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(controller, animated: true)
-    }
 }
 
 // MARK: - IBActions

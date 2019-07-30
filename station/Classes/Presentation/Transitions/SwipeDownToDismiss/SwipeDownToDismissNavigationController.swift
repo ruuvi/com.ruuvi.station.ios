@@ -1,8 +1,8 @@
 import UIKit
 
-class TagSettingsNavigationController: UINavigationController, UIGestureRecognizerDelegate {
+class SwipeDownToDismissNavigationController: UINavigationController, UIGestureRecognizerDelegate {
     lazy var panGR: UIPanGestureRecognizer = {
-        let panGR = UIPanGestureRecognizer(target: self, action: #selector(TagSettingsNavigationController.handlePanGesture(_:)))
+        let panGR = UIPanGestureRecognizer(target: self, action: #selector(SwipeDownToDismissNavigationController.handlePanGesture(_:)))
         panGR.delegate = self
         panGR.isEnabled = true
         return panGR
@@ -18,7 +18,7 @@ class TagSettingsNavigationController: UINavigationController, UIGestureRecogniz
     }
     
     @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
-        if let transition = transitioningDelegate as? TagSettingsTransitioningDelegate {
+        if let transition = transitioningDelegate as? SwipeDownToDismissTransitioningDelegate {
             let interactor = transition.interactionControllerForDismissal
             let percentThreshold:CGFloat = 0.3
             
@@ -31,7 +31,7 @@ class TagSettingsNavigationController: UINavigationController, UIGestureRecogniz
             
             switch sender.state {
             case .began:
-                if let tagSettings = topViewController as? TagSettingsTableViewController,
+                if let tagSettings = topViewController as? UITableViewController,
                     tagSettings.tableView.contentOffset.y <= 0 {
                     interactor.hasStarted = true
                     dismiss(animated: true)
