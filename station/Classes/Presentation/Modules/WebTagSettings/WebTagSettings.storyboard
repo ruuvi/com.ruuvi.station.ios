@@ -217,7 +217,13 @@ IMAGE</string>
                             <outlet property="delegate" destination="NzI-p7-FEP" id="HV5-dD-eNA"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Web Tag Settings" id="60f-mZ-Uba"/>
+                    <navigationItem key="navigationItem" title="Web Tag Settings" id="60f-mZ-Uba">
+                        <barButtonItem key="leftBarButtonItem" image="tag-settings-dismiss-icon" id="1wp-cO-Jg3">
+                            <connections>
+                                <action selector="dismissBarButtonItemAction:" destination="NzI-p7-FEP" id="3Cc-5O-3Sg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4k-YF-pYJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="OmS-Xb-ggr" customClass="WebTagSettingsTableInitializer" customModule="station" customModuleProvider="target">
@@ -249,6 +255,7 @@ IMAGE</string>
         <image name="bg7" width="960" height="1440"/>
         <image name="ic_refresh" width="24" height="24"/>
         <image name="icon-bg-camera" width="36" height="33"/>
+        <image name="tag-settings-dismiss-icon" width="17" height="17"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>
