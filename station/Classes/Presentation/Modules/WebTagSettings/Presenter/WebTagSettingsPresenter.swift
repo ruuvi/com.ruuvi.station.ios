@@ -1,9 +1,15 @@
-import Foundation
+import UIKit
 
 class WebTagSettingsPresenter: WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
     var router: WebTagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
+    var errorPresenter: ErrorPresenter!
+    var photoPickerPresenter: PhotoPickerPresenter! {
+        didSet {
+            photoPickerPresenter.delegate = self
+        }
+    }
     
     private var webTag: WebTagRealm! {
         didSet {
@@ -23,11 +29,23 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
     
     func viewDidAskToRandomizeBackground() {
-        
+        view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid)
     }
     
     func viewDidAskToSelectBackground() {
-        
+        photoPickerPresenter.pick()
+    }
+}
+
+// MARK: - PhotoPickerPresenterDelegate
+extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
+    func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
+        let set = backgroundPersistence.setCustomBackground(image: photo, for: webTag.uuid)
+        set.on(success: { [weak self] _ in
+            self?.view.viewModel.background.value = photo
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
