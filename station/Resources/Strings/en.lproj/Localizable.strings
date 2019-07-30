@@ -76,3 +76,7 @@
 
 // WeatherProvider
 "WeatherProvider.OpenWeatherMap.displayName" = "Open Weather Map";
+
+// WebTagSettings
+"WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
+"WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";

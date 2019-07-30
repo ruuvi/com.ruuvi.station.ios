@@ -19,6 +19,16 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func showTagRemovalConfirmationDialog() {
+        let controller = UIAlertController(title: "WebTagSettings.confirmTagRemovalDialog.title".localized(), message: "WebTagSettings.confirmTagRemovalDialog.message".localized(), preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmTagRemoval()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+    
 }
 
 // MARK: - IBActions
@@ -39,6 +49,10 @@ extension WebTagSettingsTableViewController {
         if let name = tagNameTextField.text {
             output.viewDidChangeTag(name: name)
         }
+    }
+    
+    @IBAction func removeThisWebTagButtonTouchUpInside(_ sender: Any) {
+        output.viewDidAskToRemoveWebTag()
     }
 }
 
