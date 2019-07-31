@@ -13,6 +13,10 @@ class ErrorPresenterAlert: ErrorPresenter {
                 presentAlert(error: error)
             case .parse(let error):
                 presentAlert(error: error)
+            case .map(let error):
+                presentAlert(error: error)
+            case .unexpected(let error):
+                presentAlert(error: error)
             }
         } else {
             presentAlert(error: error)

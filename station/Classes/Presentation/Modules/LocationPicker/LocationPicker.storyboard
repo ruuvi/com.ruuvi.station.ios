@@ -10,22 +10,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
-        <scene sceneID="SBY-9k-fJ0">
-            <objects>
-                <navigationController id="xJi-5V-8hs" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MZQ-Mx-YhP">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="OPB-2U-HF7" kind="relationship" relationship="rootViewController" id="TjG-bR-tk1"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EI9-7w-tJi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-390" y="-190"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="741-cx-xC3">
             <objects>
@@ -51,6 +35,7 @@
                         <barButtonItem key="leftBarButtonItem" image="location-picker-pin-icon" id="pxn-fh-ZoR"/>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="Ljc-6U-rzS"/>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="juk-60-qeH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="pZu-fG-wkq" customClass="LocationPickerAppleInitializer" customModule="station" customModuleProvider="target">

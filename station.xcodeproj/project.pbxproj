@@ -28,6 +28,8 @@
 		0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5422F182BF00BD4E9C /* LocationPickerPresenter.swift */; };
 		0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5722F182F500BD4E9C /* LocationPickerAppleInitializer.swift */; };
 		0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5922F1832600BD4E9C /* LocationPickerAppleConfigurator.swift */; };
+		0E046F5D22F18EC100BD4E9C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5C22F18EC100BD4E9C /* LocationService.swift */; };
+		0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */; };
 		0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */; };
 		0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */; };
 		0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
@@ -296,6 +298,8 @@
 		0E046F5422F182BF00BD4E9C /* LocationPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerPresenter.swift; sourceTree = "<group>"; };
 		0E046F5722F182F500BD4E9C /* LocationPickerAppleInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerAppleInitializer.swift; sourceTree = "<group>"; };
 		0E046F5922F1832600BD4E9C /* LocationPickerAppleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerAppleConfigurator.swift; sourceTree = "<group>"; };
+		0E046F5C22F18EC100BD4E9C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServiceApple.swift; sourceTree = "<group>"; };
 		0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
 		0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0E09672422AE897000E85F48 /* CALayer+IB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+IB.swift"; sourceTree = "<group>"; };
@@ -705,6 +709,23 @@
 			children = (
 				0E046F5722F182F500BD4E9C /* LocationPickerAppleInitializer.swift */,
 				0E046F5922F1832600BD4E9C /* LocationPickerAppleConfigurator.swift */,
+			);
+			path = Apple;
+			sourceTree = "<group>";
+		};
+		0E046F5B22F18EB000BD4E9C /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F5E22F18EE900BD4E9C /* Apple */,
+				0E046F5C22F18EC100BD4E9C /* LocationService.swift */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
+		0E046F5E22F18EE900BD4E9C /* Apple */ = {
+			isa = PBXGroup;
+			children = (
+				0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */,
 			);
 			path = Apple;
 			sourceTree = "<group>";
@@ -2051,6 +2072,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD6D222BBD9C300EADFC6 /* Calibration */,
+				0E046F5B22F18EB000BD4E9C /* Location */,
 				0EFDD6DA22BBDDBF00EADFC6 /* RuuviTag */,
 				0E9F979722EB054B0015ADE2 /* WebTag */,
 			);
@@ -2373,6 +2395,7 @@
 			files = (
 				0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */,
 				0E1C1E1122B756B40032F6CA /* DashboardRuuviTagView.swift in Sources */,
+				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
 				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
@@ -2553,6 +2576,7 @@
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
+				0E046F5D22F18EC100BD4E9C /* LocationService.swift in Sources */,
 				0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */,
 				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E046F3F22F0702D00BD4E9C /* WebTagSettingsViewModel.swift in Sources */,
