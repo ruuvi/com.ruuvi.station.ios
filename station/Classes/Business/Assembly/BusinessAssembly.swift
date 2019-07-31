@@ -17,12 +17,10 @@ class BusinessAssembly: Assembly {
             return service
         }
         
-        container.register(RuuviTagDaemon.self) { r in
-            let daemon = RuuviTagDaemonRealmBTKit()
-            daemon.scanner = r.resolve(BTScanner.self)
-            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            return daemon
-        }.inObjectScope(.container)
+        container.register(LocationService.self) { r in
+            let service = LocationServiceApple()
+            return service
+        }
         
         container.register(MigrationManager.self) { r in
             let manager = MigrationManagerToVIPER()
@@ -30,6 +28,14 @@ class BusinessAssembly: Assembly {
             manager.settings = r.resolve(Settings.self)
             return manager
         }
+        
+        container.register(RuuviTagDaemon.self) { r in
+            let daemon = RuuviTagDaemonRealmBTKit()
+            daemon.scanner = r.resolve(BTScanner.self)
+            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            return daemon
+        }.inObjectScope(.container)
+        
         
         container.register(RuuviTagService.self) { r in
             let service = RuuviTagServiceImpl()

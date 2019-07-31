@@ -74,6 +74,9 @@
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
 
+// UnexpectedError
+"UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
+
 // WeatherProvider
 "WeatherProvider.OpenWeatherMap.displayName" = "Open Weather Map";
 

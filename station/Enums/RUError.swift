@@ -5,6 +5,8 @@ enum RUError: Error {
     case persistence(Error)
     case networking(Error)
     case parse(Error)
+    case map(Error)
+    case unexpected(UnexpectedError)
 }
 
 extension RUError: LocalizedError {
@@ -17,6 +19,10 @@ extension RUError: LocalizedError {
         case .networking(let error):
             return error.localizedDescription
         case .parse(let error):
+            return error.localizedDescription
+        case .map(let error):
+            return error.localizedDescription
+        case .unexpected(let error):
             return error.localizedDescription
         }
     }
@@ -40,6 +46,19 @@ extension CoreError: LocalizedError {
             return "CoreError.failedToGetPngRepresentation".localized()
         case .failedToGetDocumentsDirectory:
             return "CoreError.failedToGetDocumentsDirectory".localized()
+        }
+    }
+}
+
+enum UnexpectedError: Error {
+    case callbackErrorAndResultAreNil
+}
+
+extension UnexpectedError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .callbackErrorAndResultAreNil:
+            return "UnexpectedError.callbackErrorAndResultAreNil".localized()
         }
     }
 }
