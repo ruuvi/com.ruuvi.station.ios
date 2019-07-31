@@ -13,10 +13,12 @@ class RuuviTagPresenter: RuuviTagModuleInput {
     private var ruuviTag: RuuviTag! { didSet { updateViewFromRuuviTag() } }
     private var isSaving: Bool = false {
         didSet {
-            if isSaving {
-                activityPresenter.increment()
-            } else {
-                activityPresenter.decrement()
+            if isSaving != oldValue {
+                if isSaving {
+                    activityPresenter.increment()
+                } else {
+                    activityPresenter.decrement()
+                }
             }
         }
     }

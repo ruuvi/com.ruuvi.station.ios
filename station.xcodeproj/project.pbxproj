@@ -30,6 +30,7 @@
 		0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5922F1832600BD4E9C /* LocationPickerAppleConfigurator.swift */; };
 		0E046F5D22F18EC100BD4E9C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5C22F18EC100BD4E9C /* LocationService.swift */; };
 		0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */; };
+		0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F6122F193B300BD4E9C /* LocationPickerModuleOutput.swift */; };
 		0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */; };
 		0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */; };
 		0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
@@ -300,6 +301,7 @@
 		0E046F5922F1832600BD4E9C /* LocationPickerAppleConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerAppleConfigurator.swift; sourceTree = "<group>"; };
 		0E046F5C22F18EC100BD4E9C /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServiceApple.swift; sourceTree = "<group>"; };
+		0E046F6122F193B300BD4E9C /* LocationPickerModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerModuleOutput.swift; sourceTree = "<group>"; };
 		0E09671F22AE7F5C00E85F48 /* Welcome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
 		0E09672122AE7FCF00E85F48 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0E09672422AE897000E85F48 /* CALayer+IB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+IB.swift"; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 			isa = PBXGroup;
 			children = (
 				0E046F5222F182AB00BD4E9C /* LocationPickerModuleInput.swift */,
+				0E046F6122F193B300BD4E9C /* LocationPickerModuleOutput.swift */,
 				0E046F5422F182BF00BD4E9C /* LocationPickerPresenter.swift */,
 			);
 			path = Presenter;
@@ -2567,6 +2570,7 @@
 				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
+				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
