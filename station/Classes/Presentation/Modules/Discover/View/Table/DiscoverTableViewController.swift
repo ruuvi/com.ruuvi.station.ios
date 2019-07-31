@@ -22,7 +22,13 @@ class DiscoverTableViewController: UITableViewController {
     var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
         didSet {
             shownWebTags = webTags
-                .filter({ !savedWebTagProviders.contains($0.provider) })
+                .filter({
+                    if hideAlreadyAddedWebProviders {
+                        return !savedWebTagProviders.contains($0.provider)
+                    } else {
+                        return true
+                    }
+                })
                 .sorted(by: { $0.provider.displayName < $1.provider.displayName })
         }
     }
@@ -46,6 +52,7 @@ class DiscoverTableViewController: UITableViewController {
     
     var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
     
+    private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
     private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
