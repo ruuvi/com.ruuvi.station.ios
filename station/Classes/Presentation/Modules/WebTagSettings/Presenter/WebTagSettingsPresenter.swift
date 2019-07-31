@@ -78,7 +78,7 @@ extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
 // MARK: - LocationPickerModuleOutput
 extension WebTagSettingsPresenter: LocationPickerModuleOutput {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
-        print(location)
+        view.viewModel.location.value = location
     }
 }
 
