@@ -156,7 +156,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oqj-rp-dBd">
-                            <rect key="frame" x="0.0" y="357.5" width="414" height="100"/>
+                            <rect key="frame" x="0.0" y="457.5" width="414" height="100"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="udR-S3-e8A">
@@ -219,6 +219,38 @@ IMAGE</string>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="MORE INFO" id="gbe-iT-FAt">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="hQf-Gu-PPo">
+                                        <rect key="frame" x="0.0" y="395.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hQf-Gu-PPo" id="5Sv-7R-KLh">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1s6-W8-Oue">
+                                                    <rect key="frame" x="20" y="11.5" width="66" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mbw-j0-4bQ">
+                                                    <rect key="frame" x="339" y="11.5" width="59" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="1s6-W8-Oue" firstAttribute="leading" secondItem="5Sv-7R-KLh" secondAttribute="leading" constant="20" id="2ON-xJ-Pot"/>
+                                                <constraint firstItem="Mbw-j0-4bQ" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="GKt-rO-MpO"/>
+                                                <constraint firstItem="1s6-W8-Oue" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="q2B-8L-Dvk"/>
+                                                <constraint firstAttribute="trailing" secondItem="Mbw-j0-4bQ" secondAttribute="trailing" constant="16" id="xxy-g2-b0Z"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="NzI-p7-FEP" id="4Oe-lA-q3J"/>
@@ -234,6 +266,7 @@ IMAGE</string>
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundImageView" destination="ehU-xd-ddr" id="ah3-VQ-C09"/>
+                        <outlet property="locationCell" destination="hQf-Gu-PPo" id="KDJ-Rd-eai"/>
                         <outlet property="tagNameCell" destination="CHg-xn-GrS" id="USS-CE-b8i"/>
                         <outlet property="tagNameTextField" destination="PNI-Wm-pcd" id="Wz3-66-q2h"/>
                     </connections>
