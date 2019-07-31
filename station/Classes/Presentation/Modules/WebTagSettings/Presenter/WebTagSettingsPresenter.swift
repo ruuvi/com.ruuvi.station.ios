@@ -59,7 +59,7 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
     
     func viewDidAskToSelectLocation() {
-        
+        router.openLocationPicker(output: self)
     }
 }
 
@@ -72,6 +72,13 @@ extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+    }
+}
+
+// MARK: - LocationPickerModuleOutput
+extension WebTagSettingsPresenter: LocationPickerModuleOutput {
+    func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
+        print(location)
     }
 }
 

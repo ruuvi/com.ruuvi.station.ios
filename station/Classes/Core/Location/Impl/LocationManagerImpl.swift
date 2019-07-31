@@ -25,7 +25,7 @@ class LocationManagerImpl: NSObject, LocationManager {
         locationManager = CLLocationManager()
         super.init()
         locationManager.delegate = self
-        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.distanceFilter = 100
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
     
