@@ -4,7 +4,7 @@ class WebTagRealm: Object {
     @objc dynamic var name: String = ""
     @objc dynamic var uuid: String = ""
     @objc dynamic var providerString: String = WeatherProvider.openWeatherMap.rawValue
-    let data = LinkingObjects(fromType: WebTagLocationRealm.self, property: "webTag")
+    @objc dynamic var location: WebTagLocationRealm?
     
     var provider: WeatherProvider {
         if let provider = WeatherProvider(rawValue: providerString) {
@@ -28,7 +28,7 @@ class WebTagRealm: Object {
 
 class WebTagLocationRealm: Object {
     
-    @objc dynamic var webTag: WebTagRealm?
+    let webTags = LinkingObjects(fromType: WebTagRealm.self, property: "location")
     
     @objc dynamic var city: String?
     @objc dynamic var country: String?
