@@ -57,6 +57,10 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
+    
+    func viewDidAskToSelectLocation() {
+        
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate

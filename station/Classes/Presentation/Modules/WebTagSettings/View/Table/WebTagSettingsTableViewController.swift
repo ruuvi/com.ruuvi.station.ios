@@ -6,6 +6,7 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
+    @IBOutlet weak var locationCell: UITableViewCell!
     
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
 }
@@ -72,6 +73,8 @@ extension WebTagSettingsTableViewController {
             switch cell {
             case tagNameCell:
                 tagNameTextField.becomeFirstResponder()
+            case locationCell:
+                output.viewDidAskToSelectLocation()
             default:
                 break
             }
