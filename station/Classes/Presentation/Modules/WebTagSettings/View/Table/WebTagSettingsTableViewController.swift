@@ -7,6 +7,7 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var locationCell: UITableViewCell!
+    @IBOutlet weak var locationValueLabel: UILabel!
     
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
 }
@@ -98,5 +99,6 @@ extension WebTagSettingsTableViewController {
     private func bindViewModel() {
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+        locationValueLabel.bind(viewModel.location, block: { $0.text = $1?.cityCommaCountry })
     }
 }
