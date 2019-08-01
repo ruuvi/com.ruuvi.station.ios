@@ -234,8 +234,21 @@ IMAGE</string>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xy5-kO-ie0">
+                                                    <rect key="frame" x="362" y="4" width="36" height="36"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="xy5-kO-ie0" secondAttribute="height" multiplier="1:1" id="0eY-0x-mUc"/>
+                                                        <constraint firstAttribute="width" constant="36" id="Ti5-fw-xrv"/>
+                                                    </constraints>
+                                                    <color key="tintColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <inset key="imageEdgeInsets" minX="10" minY="5" maxX="0.0" maxY="5"/>
+                                                    <state key="normal" image="small-cross-clear-icon"/>
+                                                    <connections>
+                                                        <action selector="clearLocationButtonTouchUpInside:" destination="NzI-p7-FEP" eventType="touchUpInside" id="4kn-FS-lnf"/>
+                                                    </connections>
+                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mbw-j0-4bQ">
-                                                    <rect key="frame" x="339" y="11.5" width="59" height="21"/>
+                                                    <rect key="frame" x="303" y="11.5" width="59" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -243,10 +256,12 @@ IMAGE</string>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="1s6-W8-Oue" firstAttribute="leading" secondItem="5Sv-7R-KLh" secondAttribute="leading" constant="20" id="2ON-xJ-Pot"/>
+                                                <constraint firstItem="xy5-kO-ie0" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="CKN-pj-YpK"/>
                                                 <constraint firstItem="Mbw-j0-4bQ" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="GKt-rO-MpO"/>
                                                 <constraint firstItem="Mbw-j0-4bQ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1s6-W8-Oue" secondAttribute="trailing" constant="8" id="ITx-Tb-uNh"/>
+                                                <constraint firstItem="xy5-kO-ie0" firstAttribute="leading" secondItem="Mbw-j0-4bQ" secondAttribute="trailing" id="QIS-5f-DZC"/>
                                                 <constraint firstItem="1s6-W8-Oue" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="q2B-8L-Dvk"/>
-                                                <constraint firstAttribute="trailing" secondItem="Mbw-j0-4bQ" secondAttribute="trailing" constant="16" id="xxy-g2-b0Z"/>
+                                                <constraint firstAttribute="trailing" secondItem="xy5-kO-ie0" secondAttribute="trailing" constant="16" id="ykj-gx-xEX"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -267,6 +282,8 @@ IMAGE</string>
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundImageView" destination="ehU-xd-ddr" id="ah3-VQ-C09"/>
+                        <outlet property="clearLocationButton" destination="xy5-kO-ie0" id="DMP-qJ-dIF"/>
+                        <outlet property="clearLocationButtonWidth" destination="Ti5-fw-xrv" id="ucs-5k-o6n"/>
                         <outlet property="locationCell" destination="hQf-Gu-PPo" id="KDJ-Rd-eai"/>
                         <outlet property="locationValueLabel" destination="Mbw-j0-4bQ" id="Ddn-dK-jvZ"/>
                         <outlet property="tagNameCell" destination="CHg-xn-GrS" id="USS-CE-b8i"/>
@@ -303,6 +320,7 @@ IMAGE</string>
         <image name="bg7" width="960" height="1440"/>
         <image name="ic_refresh" width="24" height="24"/>
         <image name="icon-bg-camera" width="36" height="33"/>
+        <image name="small-cross-clear-icon" width="36" height="36"/>
         <image name="tag-settings-dismiss-icon" width="17" height="17"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
