@@ -70,7 +70,11 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
     
     func viewDidAskToClearLocation() {
-        view.viewModel.location.value = nil
+        view.showClearLocationConfirmationDialog()
+    }
+    
+    func viewDidConfirmToClearLocation() {
+        
     }
 }
 

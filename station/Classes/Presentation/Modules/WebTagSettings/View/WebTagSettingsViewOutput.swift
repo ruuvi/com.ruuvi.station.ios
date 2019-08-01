@@ -9,4 +9,5 @@ protocol WebTagSettingsViewOutput {
     func viewDidConfirmTagRemoval()
     func viewDidAskToSelectLocation()
     func viewDidAskToClearLocation()
+    func viewDidConfirmToClearLocation()
 }
