@@ -8,42 +8,43 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
     
     func loadCurrent(longitude: Double, latitude: Double) -> Future<OWMData,RUError> {
         let promise = Promise<OWMData,RUError>()
-        
         let string = baseUrl + "weather?lat=\(latitude)&lon=\(longitude)&APPID=\(apiKey)"
-        let url = URL(string: string)!
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                promise.fail(error: .networking(error))
-            } else {
-                if let data = data {
-                    do {
-                        guard let json = try JSONSerialization.jsonObject(with:
-                            data, options: []) as? [String: Any] else {
+        if let url = URL(string: string) {
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let error = error {
+                    promise.fail(error: .networking(error))
+                } else {
+                    if let data = data {
+                        do {
+                            guard let json = try JSONSerialization.jsonObject(with:
+                                data, options: []) as? [String: Any] else {
+                                    promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                                    return
+                            }
+                            guard let main = json["main"] as? [String: Any] else {
                                 promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
                                 return
+                            }
+                            let kelvin = main["temp"] as? Double
+                            let humidity = main["humidity"] as? Double
+                            let pressure = main["pressure"] as? Double
+                            let data = OWMData(kelvin: kelvin, humidity: humidity, pressure: pressure)
+                            promise.succeed(value: data)
+                        } catch let error {
+                            promise.fail(error: .networking(error))
                         }
-                        guard let main = json["main"] as? [String: Any] else {
-                            promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
-                            return
-                        }
-                        let kelvin = main["temp"] as? Double
-                        let humidity = main["humidity"] as? Double
-                        let pressure = main["pressure"] as? Double
-                        let data = OWMData(kelvin: kelvin, humidity: humidity, pressure: pressure)
-                        promise.succeed(value: data)
-                    } catch let error {
-                        promise.fail(error: .networking(error))
+                    } else {
+                        promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
                     }
-                } else {
-                    promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
                 }
             }
+            task.resume()
+        } else {
+            promise.fail(error: .expected(.missingOpenWeatherMapAPIKey))
         }
-        task.resume()
-        
         return promise.future
     }
 }

@@ -6,6 +6,7 @@ enum RUError: Error {
     case networking(Error)
     case parse(Error)
     case map(Error)
+    case expected(ExpectedError)
     case unexpected(UnexpectedError)
 }
 
@@ -21,6 +22,8 @@ extension RUError: LocalizedError {
         case .parse(let error):
             return error.localizedDescription
         case .map(let error):
+            return error.localizedDescription
+        case .expected(let error):
             return error.localizedDescription
         case .unexpected(let error):
             return error.localizedDescription
@@ -46,6 +49,19 @@ extension CoreError: LocalizedError {
             return "CoreError.failedToGetPngRepresentation".localized()
         case .failedToGetDocumentsDirectory:
             return "CoreError.failedToGetDocumentsDirectory".localized()
+        }
+    }
+}
+
+enum ExpectedError: Error {
+    case missingOpenWeatherMapAPIKey
+}
+
+extension ExpectedError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .missingOpenWeatherMapAPIKey:
+            return "ExpectedError.missingOpenWeatherMapAPIKey".localized()
         }
     }
 }
