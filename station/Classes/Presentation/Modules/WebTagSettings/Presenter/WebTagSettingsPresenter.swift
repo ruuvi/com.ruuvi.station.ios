@@ -74,7 +74,10 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
     
     func viewDidConfirmToClearLocation() {
-        
+        let operation = webTagService.clearLocation(of: webTag)
+        operation.on(failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
