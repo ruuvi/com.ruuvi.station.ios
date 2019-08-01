@@ -68,6 +68,10 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     func viewDidAskToSelectLocation() {
         router.openLocationPicker(output: self)
     }
+    
+    func viewDidAskToClearLocation() {
+        view.viewModel.location.value = nil
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate

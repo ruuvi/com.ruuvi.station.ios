@@ -8,6 +8,8 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var tagNameCell: UITableViewCell!
     @IBOutlet weak var locationCell: UITableViewCell!
     @IBOutlet weak var locationValueLabel: UILabel!
+    @IBOutlet weak var clearLocationButton: UIButton!
+    @IBOutlet weak var clearLocationButtonWidth: NSLayoutConstraint!
     
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
 }
@@ -56,6 +58,10 @@ extension WebTagSettingsTableViewController {
     @IBAction func removeThisWebTagButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRemoveWebTag()
     }
+    
+    @IBAction func clearLocationButtonTouchUpInside(_ sender: Any) {
+        output.viewDidAskToClearLocation()
+    }
 }
 
 // MARK: - View lifecycle
@@ -99,8 +105,12 @@ extension WebTagSettingsTableViewController {
     private func bindViewModel() {
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         tagNameTextField.bind(viewModel.name) { $0.text = $1 }
-        locationValueLabel.bind(viewModel.location, block: {
-            $0.text = $1?.cityCommaCountry ?? "WebTagSettings.Location.Current".localized()
+        let clearButton = clearLocationButton
+        let clearWidth = clearLocationButtonWidth
+        locationValueLabel.bind(viewModel.location, block: { [weak clearButton, weak clearWidth] label, location in
+            label.text = location?.cityCommaCountry ?? "WebTagSettings.Location.Current".localized()
+            clearButton?.isHidden = location == nil
+            clearWidth?.constant = location == nil ? 0 : 36
         })
     }
 }
