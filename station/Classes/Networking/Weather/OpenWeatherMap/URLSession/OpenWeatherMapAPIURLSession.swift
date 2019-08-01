@@ -3,7 +3,7 @@ import Future
 
 class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
     
-    var apiKey: String = "provide your api key in the Networking.plist file"
+    var apiKey: String = "provide api key in the /Classes/Networking/Assembly/Networking.plist file, NOT HERE!"
     var baseUrl: String = "https://api.openweathermap.org/data/2.5/"
     
     func loadCurrent(longitude: Double, latitude: Double) -> Future<OWMData,RUError> {
