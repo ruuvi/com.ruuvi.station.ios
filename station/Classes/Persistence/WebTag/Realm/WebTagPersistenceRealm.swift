@@ -5,6 +5,38 @@ class WebTagPersistenceRealm: WebTagPersistence {
     
     var context: RealmContext!
     
+    func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        if webTag.realm == context.bg {
+            context.bgWorker.enqueue {
+                do {
+                    try self.context.bg.write {
+                        if let oldLocation = webTag.location {
+                            self.context.bg.delete(oldLocation)
+                        }
+                        webTag.location = nil
+                    }
+                    promise.succeed(value: true)
+                } catch {
+                    promise.fail(error: .persistence(error))
+                }
+            }
+        } else {
+            do {
+                try context.main.write {
+                    if let oldLocation = webTag.location {
+                        self.context.main.delete(oldLocation)
+                    }
+                    webTag.location = nil
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    
     func update(location: Location, of webTag: WebTagRealm) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
         if webTag.realm == context.bg {
