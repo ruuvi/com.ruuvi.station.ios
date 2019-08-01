@@ -244,6 +244,7 @@ IMAGE</string>
                                             <constraints>
                                                 <constraint firstItem="1s6-W8-Oue" firstAttribute="leading" secondItem="5Sv-7R-KLh" secondAttribute="leading" constant="20" id="2ON-xJ-Pot"/>
                                                 <constraint firstItem="Mbw-j0-4bQ" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="GKt-rO-MpO"/>
+                                                <constraint firstItem="Mbw-j0-4bQ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1s6-W8-Oue" secondAttribute="trailing" constant="8" id="ITx-Tb-uNh"/>
                                                 <constraint firstItem="1s6-W8-Oue" firstAttribute="centerY" secondItem="5Sv-7R-KLh" secondAttribute="centerY" id="q2B-8L-Dvk"/>
                                                 <constraint firstAttribute="trailing" secondItem="Mbw-j0-4bQ" secondAttribute="trailing" constant="16" id="xxy-g2-b0Z"/>
                                             </constraints>

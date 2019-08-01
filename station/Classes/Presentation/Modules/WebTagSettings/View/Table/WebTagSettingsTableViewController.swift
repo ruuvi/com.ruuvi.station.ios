@@ -99,6 +99,8 @@ extension WebTagSettingsTableViewController {
     private func bindViewModel() {
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         tagNameTextField.bind(viewModel.name) { $0.text = $1 }
-        locationValueLabel.bind(viewModel.location, block: { $0.text = $1?.cityCommaCountry })
+        locationValueLabel.bind(viewModel.location, block: {
+            $0.text = $1?.cityCommaCountry ?? "WebTagSettings.Location.Current".localized()
+        })
     }
 }

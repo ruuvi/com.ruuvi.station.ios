@@ -83,3 +83,4 @@
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
 "WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";
+"WebTagSettings.Location.Current" = "Current";
