@@ -75,6 +75,17 @@ extension DiscoverTableViewController: DiscoverViewInput {
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
+    
+    func showSelectLocationSourceDialog(for webTag: DiscoverWebTagViewModel) {
+        let controller = UIAlertController(title: "DiscoverTable.SelectLocationSourceAlert.title".localized(), message: "DiscoverTable.SelectLocationSourceAlert.message".localized(), preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "DiscoverTable.SelectLocationSourceAlert.Buttons.current".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidSelectCurrentLocation(for: webTag)
+        }))
+        controller.addAction(UIAlertAction(title: "DiscoverTable.SelectLocationSourceAlert.Buttons.manually".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidSelectManualLocationSource(for: webTag)
+        }))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - IBActions
