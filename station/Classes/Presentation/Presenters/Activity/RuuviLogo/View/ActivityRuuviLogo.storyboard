@@ -18,25 +18,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo_dark_bg_pdf" translatesAutoresizingMaskIntoConstraints="NO" id="glI-nS-lBZ">
-                                <rect key="frame" x="192" y="438" width="30" height="30"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ruuvi_logo_for_activity_presenter" translatesAutoresizingMaskIntoConstraints="NO" id="glI-nS-lBZ">
+                                <rect key="frame" x="175" y="421" width="64" height="64"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="5zY-lr-CXu"/>
-                                    <constraint firstAttribute="width" constant="30" id="UHD-uf-a0d"/>
+                                    <constraint firstAttribute="height" constant="64" id="5zY-lr-CXu"/>
+                                    <constraint firstAttribute="width" constant="64" id="UHD-uf-a0d"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kT8-7U-VJi" customClass="ActivitySpinnerView" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="184" y="430" width="46" height="46"/>
+                                <rect key="frame" x="167" y="413" width="80" height="80"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="46" id="2cW-tq-vCU"/>
-                                    <constraint firstAttribute="height" constant="46" id="JHU-pb-YYp"/>
+                                    <constraint firstAttribute="width" constant="80" id="2cW-tq-vCU"/>
+                                    <constraint firstAttribute="height" constant="80" id="JHU-pb-YYp"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.6990582191780822" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kT8-7U-VJi" firstAttribute="centerX" secondItem="glI-nS-lBZ" secondAttribute="centerX" id="5H7-m1-M1S"/>
                             <constraint firstItem="glI-nS-lBZ" firstAttribute="centerX" secondItem="Tca-VA-aKC" secondAttribute="centerX" id="Ees-HG-cGy"/>
@@ -56,6 +56,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ruuvi_logo_dark_bg_pdf" width="1000" height="1000"/>
+        <image name="ruuvi_logo_for_activity_presenter" width="1001" height="1000"/>
     </resources>
 </document>
