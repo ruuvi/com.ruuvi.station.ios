@@ -195,7 +195,7 @@ extension DashboardPresenter {
         for provider in WeatherProvider.allCases {
             let viewModels = webViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
-                webTagObserveTokens.append(webTagService.observe(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                webTagObserveTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                     if let data = data {
                         viewModels.forEach({ $0.update(data)})
                     } else if let error = error {

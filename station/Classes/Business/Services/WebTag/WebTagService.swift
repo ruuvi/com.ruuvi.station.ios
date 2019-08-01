@@ -9,10 +9,10 @@ protocol WebTagService {
     func update(location: Location, of webTag: WebTagRealm) -> Future<Bool,RUError>
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError>
     
-    func loadData(from provider: WeatherProvider) -> Future<WebTagData,RUError>
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WebTagData,RUError>
     
     @discardableResult
-    func observe<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken
     
 }
 
