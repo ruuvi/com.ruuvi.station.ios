@@ -38,7 +38,7 @@ class DashboardRouter: DashboardRouterInput {
     }
     
     func openDiscover() {
-        let restorationId = settings.experimentalUX ? "DiscoverPulsatorViewController" : "DiscoverTableNavigationController"
+        let restorationId = "DiscoverTableNavigationController"
         let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
         try! transitionHandler
             .forStoryboard(factory: factory, to: DiscoverModuleInput.self)

@@ -127,12 +127,6 @@
 		0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47422AF9978006CB87C /* DiscoverPresenter.swift */; };
 		0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47A22AF9BE2006CB87C /* DiscoverTableInitializer.swift */; };
 		0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */; };
-		0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47F22AFA335006CB87C /* DiscoverPulsatorViewController.swift */; };
-		0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48122AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift */; };
-		0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48422AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift */; };
-		0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */; };
-		0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48A22AFC77F006CB87C /* Pulsator.swift */; };
-		0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
@@ -400,12 +394,6 @@
 		0E70A47422AF9978006CB87C /* DiscoverPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPresenter.swift; sourceTree = "<group>"; };
 		0E70A47A22AF9BE2006CB87C /* DiscoverTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableInitializer.swift; sourceTree = "<group>"; };
 		0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableConfigurator.swift; sourceTree = "<group>"; };
-		0E70A47F22AFA335006CB87C /* DiscoverPulsatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorViewController.swift; sourceTree = "<group>"; };
-		0E70A48122AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorCollectionViewCell.swift; sourceTree = "<group>"; };
-		0E70A48422AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorInitializer.swift; sourceTree = "<group>"; };
-		0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPulsatorConfigurator.swift; sourceTree = "<group>"; };
-		0E70A48A22AFC77F006CB87C /* Pulsator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pulsator.swift; sourceTree = "<group>"; };
-		0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCollectionViewLayout.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
@@ -1394,7 +1382,6 @@
 		0E70A46922AF96B9006CB87C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0E70A47E22AFA31E006CB87C /* Pulsator */,
 				0E70A46A22AF96C5006CB87C /* Table */,
 				0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */,
 				0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */,
@@ -1426,7 +1413,6 @@
 		0E70A47622AF9B69006CB87C /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
-				0E70A48322AFC4E8006CB87C /* Pulsator */,
 				0E70A47922AF9BC6006CB87C /* Table */,
 			);
 			path = Assembly;
@@ -1439,41 +1425,6 @@
 				0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */,
 			);
 			path = Table;
-			sourceTree = "<group>";
-		};
-		0E70A47E22AFA31E006CB87C /* Pulsator */ = {
-			isa = PBXGroup;
-			children = (
-				0E70A48C22B1FFAE006CB87C /* CircleCollectionViewLayout.swift */,
-				0E70A48122AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift */,
-				0E70A47F22AFA335006CB87C /* DiscoverPulsatorViewController.swift */,
-			);
-			path = Pulsator;
-			sourceTree = "<group>";
-		};
-		0E70A48322AFC4E8006CB87C /* Pulsator */ = {
-			isa = PBXGroup;
-			children = (
-				0E70A48422AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift */,
-				0E70A48622AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift */,
-			);
-			path = Pulsator;
-			sourceTree = "<group>";
-		};
-		0E70A48822AFC75D006CB87C /* ThirdParty */ = {
-			isa = PBXGroup;
-			children = (
-				0E70A48922AFC773006CB87C /* Pulsator */,
-			);
-			path = ThirdParty;
-			sourceTree = "<group>";
-		};
-		0E70A48922AFC773006CB87C /* Pulsator */ = {
-			isa = PBXGroup;
-			children = (
-				0E70A48A22AFC77F006CB87C /* Pulsator.swift */,
-			);
-			path = Pulsator;
 			sourceTree = "<group>";
 		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
@@ -2176,7 +2127,6 @@
 				0E502FB822B27D3100E8A6CC /* Enums */,
 				0E09672322AE895600E85F48 /* Extensions */,
 				0E09671722AE762900E85F48 /* Resources */,
-				0E70A48822AFC75D006CB87C /* ThirdParty */,
 			);
 			path = station;
 			sourceTree = "<group>";
@@ -2491,7 +2441,6 @@
 				0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
 				0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */,
-				0E70A48D22B1FFAF006CB87C /* CircleCollectionViewLayout.swift in Sources */,
 				0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */,
 				0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */,
 				0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */,
@@ -2526,7 +2475,6 @@
 				0EEB213722B8D6850015F9E0 /* ChartViewModel.swift in Sources */,
 				0E502FB022B27A7800E8A6CC /* RuuviTagModuleInput.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
-				0E70A48722AFC52B006CB87C /* DiscoverPulsatorConfigurator.swift in Sources */,
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
@@ -2578,20 +2526,17 @@
 				0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */,
 				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
-				0E70A48522AFC4FF006CB87C /* DiscoverPulsatorInitializer.swift in Sources */,
 				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
 				0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */,
 				0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
-				0E70A48222AFC36E006CB87C /* DiscoverPulsatorCollectionViewCell.swift in Sources */,
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
 				0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
-				0E70A48022AFA335006CB87C /* DiscoverPulsatorViewController.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
@@ -2638,7 +2583,6 @@
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
 				0EEB212F22B8CDAB0015F9E0 /* ChartTransitioningDelegate.swift in Sources */,
-				0E70A48B22AFC77F006CB87C /* Pulsator.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
 				0E502FB222B27AA800E8A6CC /* RuuviTagPresenter.swift in Sources */,
 				0EEB211B22B8C5B70015F9E0 /* ChartViewController.swift in Sources */,
