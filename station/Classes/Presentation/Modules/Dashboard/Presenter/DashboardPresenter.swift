@@ -17,7 +17,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
-    private var webTagObserveTokens = [WPSObservationToken]()
+    private var wpsTokens = [WPSObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -42,7 +42,7 @@ class DashboardPresenter: DashboardModuleInput {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
-        webTagObserveTokens.forEach({ $0.invalidate() })
+        wpsTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
@@ -190,13 +190,13 @@ extension DashboardPresenter {
     }
     
     private func startScanningWebTags() {
-        webTagObserveTokens.forEach({ $0.invalidate() })
-        webTagObserveTokens.removeAll()
+        wpsTokens.forEach({ $0.invalidate() })
+        wpsTokens.removeAll()
         let webViewModels = viewModels.filter({ $0.type == .web })
         for provider in WeatherProvider.allCases {
             let viewModels = webViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
-                webTagObserveTokens.append(weatherProviderService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                wpsTokens.append(weatherProviderService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                     if let data = data {
                         viewModels.forEach({ $0.update(data)})
                     } else if let error = error {
