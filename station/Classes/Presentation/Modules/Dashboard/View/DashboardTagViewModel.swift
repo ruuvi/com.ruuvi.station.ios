@@ -37,13 +37,13 @@ struct DashboardTagViewModel {
         provider = webTag.provider
     }
     
-    func update(_ webTagData: WebTagData) {
-        celsius.value = webTagData.celsius
-        fahrenheit.value = webTagData.fahrenheit
-        pressure.value = webTagData.pressure
-        relativeHumidity.value = webTagData.humidity
+    func update(_ wpsData: WPSData) {
+        celsius.value = wpsData.celsius
+        fahrenheit.value = wpsData.fahrenheit
+        pressure.value = wpsData.pressure
+        relativeHumidity.value = wpsData.humidity
         
-        if let c = webTagData.celsius, let rh = webTagData.humidity {
+        if let c = wpsData.celsius, let rh = wpsData.humidity {
             let h = Humidity(c: c, rh: rh / 100.0)
             absoluteHumidity.value = h.ah
             dewPointCelsius.value = h.Td

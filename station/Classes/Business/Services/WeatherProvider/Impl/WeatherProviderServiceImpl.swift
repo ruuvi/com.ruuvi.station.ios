@@ -7,7 +7,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     var locationManager: LocationManager!
     
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken {
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> WPSObservationToken {
         
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
@@ -30,13 +30,13 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         }
         timer.fire()
         
-        return WebTagServiceObservationToken {
+        return WPSObservationToken {
             timer.invalidate()
         }
     }
     
-    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WebTagData,RUError> {
-        let promise = Promise<WebTagData,RUError>()
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WPSData,RUError> {
+        let promise = Promise<WPSData,RUError>()
         locationManager.getCurrentLocation { (location) in
             if let location = location {
                 let lon = location.coordinate.longitude
@@ -49,7 +49,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                         if let kelvin = data.kelvin {
                             celsius = kelvin - 273.15
                         }
-                        let result = WebTagData(celsius: celsius, humidity: data.humidity, pressure: data.pressure)
+                        let result = WPSData(celsius: celsius, humidity: data.humidity, pressure: data.pressure)
                         promise.succeed(value: result)
                     }, failure: { (error) in
                         promise.fail(error: error)

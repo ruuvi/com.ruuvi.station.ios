@@ -1,14 +1,7 @@
 import Foundation
 import Future
 
-protocol WeatherProviderService {
-    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WebTagData,RUError>
-    
-    @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken
-}
-
-class WebTagServiceObservationToken {
+class WPSObservationToken {
     private let cancellationClosure: () -> Void
     
     init(cancellationClosure: @escaping () -> Void) {
@@ -20,7 +13,7 @@ class WebTagServiceObservationToken {
     }
 }
 
-struct WebTagData {
+struct WPSData {
     var celsius: Double?
     var humidity: Double?
     var pressure: Double?
@@ -32,5 +25,12 @@ struct WebTagData {
             return nil
         }
     }
+}
+
+protocol WeatherProviderService {
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WPSData,RUError>
+    
+    @discardableResult
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> WPSObservationToken
 }
 
