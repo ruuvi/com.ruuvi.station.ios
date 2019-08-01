@@ -193,8 +193,9 @@ extension DashboardPresenter {
         wpsTokens.forEach({ $0.invalidate() })
         wpsTokens.removeAll()
         let webViewModels = viewModels.filter({ $0.type == .web })
+        let currentLocationWebViewModels = webViewModels.filter({ $0.location == nil })
         for provider in WeatherProvider.allCases {
-            let viewModels = webViewModels.filter({ $0.provider == provider })
+            let viewModels = currentLocationWebViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
                 wpsTokens.append(weatherProviderService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                     if let data = data {
@@ -204,6 +205,17 @@ extension DashboardPresenter {
                     }
                 })
             }
+        }
+        let locationBasedWebViewModels = webViewModels.filter({ $0.location != nil })
+        for viewModel in locationBasedWebViewModels {
+            guard let location = viewModel.location, let provider = viewModel.provider else { break }
+            wpsTokens.append(weatherProviderService.observeData(self, coordinate: location.coordinate, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                if let data = data {
+                    viewModel.update(data)
+                } else if let error = error {
+                    observer.errorPresenter.present(error: error)
+                }
+            })
         }
     }
     

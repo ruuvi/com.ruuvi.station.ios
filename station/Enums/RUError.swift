@@ -52,6 +52,7 @@ extension CoreError: LocalizedError {
 
 enum UnexpectedError: Error {
     case callbackErrorAndResultAreNil
+    case callerDeinitedDuringOperation
 }
 
 extension UnexpectedError: LocalizedError {
@@ -59,6 +60,8 @@ extension UnexpectedError: LocalizedError {
         switch self {
         case .callbackErrorAndResultAreNil:
             return "UnexpectedError.callbackErrorAndResultAreNil".localized()
+        case .callerDeinitedDuringOperation:
+            return "UnexpectedError.callerDeinitedDuringOperation".localized()
         }
     }
 }
