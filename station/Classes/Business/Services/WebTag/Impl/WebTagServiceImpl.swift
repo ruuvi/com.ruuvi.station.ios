@@ -28,14 +28,14 @@ class WebTagServiceImpl: WebTagService {
     }
     
     @discardableResult
-    func observe<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken {
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken {
         
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
                 timer.invalidate()
                 return
             }
-            if let operation = self?.loadData(from: provider) {
+            if let operation = self?.loadCurrentLocationData(from: provider) {
                 operation.on(success: { data in
                     if timer.isValid {
                         closure(observer, data, nil)
@@ -56,7 +56,7 @@ class WebTagServiceImpl: WebTagService {
         }
     }
     
-    func loadData(from provider: WeatherProvider) -> Future<WebTagData,RUError> {
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WebTagData,RUError> {
         let promise = Promise<WebTagData,RUError>()
         locationManager.getCurrentLocation { (location) in
             if let location = location {
