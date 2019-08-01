@@ -34,6 +34,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var persistedWebTagsToken: NotificationToken?
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
     private var isOpenedFromWelcome: Bool = true
+    private var lastSelectedWebTag: DiscoverWebTagViewModel?
     
     deinit {
         reloadTimer?.invalidate()
@@ -115,7 +116,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidSelectManualLocationSource(for webTag: DiscoverWebTagViewModel) {
-        
+        lastSelectedWebTag = webTag
+        router.openLocationPicker(output: self)
     }
     
     func viewDidTriggerContinue() {
@@ -136,6 +138,24 @@ extension DiscoverPresenter: DiscoverViewOutput {
         } else {
             router.dismiss()
         }
+    }
+}
+
+// MARK: - LocationPickerModuleOutput
+extension DiscoverPresenter: LocationPickerModuleOutput {
+    func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
+        guard let webTag = lastSelectedWebTag else { return }
+        let operation = webTagService.add(provider: webTag.provider, location: location)
+        operation.on(success: { [weak self] _ in
+            if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
+                self?.router.openDashboard()
+            } else {
+                self?.router.dismiss()
+            }
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+        })
+        lastSelectedWebTag = nil
     }
 }
 

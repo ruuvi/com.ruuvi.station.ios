@@ -81,6 +81,31 @@ class WebTagPersistenceRealm: WebTagPersistence {
         return promise.future
     }
     
+    func persist(provider: WeatherProvider, location: Location) -> Future<WeatherProvider,RUError> {
+        let promise = Promise<WeatherProvider,RUError>()
+        context.bgWorker.enqueue {
+            let uuid = UUID().uuidString
+            let webTag = WebTagRealm(uuid: uuid, provider: provider)
+            webTag.name = location.city ?? location.country ?? provider.displayName
+            let webTagLocation = WebTagLocationRealm()
+            webTagLocation.city = location.city
+            webTagLocation.country = location.country
+            webTagLocation.latitude = location.coordinate.latitude
+            webTagLocation.longitude = location.coordinate.longitude
+            do {
+                try self.context.bg.write {
+                    self.context.bg.add(webTag, update: .all)
+                    self.context.bg.add(webTagLocation)
+                    webTag.location = webTagLocation
+                }
+                promise.succeed(value: provider)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    
     func persist(provider: WeatherProvider) -> Future<WeatherProvider,RUError> {
         let promise = Promise<WeatherProvider,RUError>()
         context.bgWorker.enqueue {
