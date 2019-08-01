@@ -17,7 +17,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
-    private var webTagObserveTokens = [WebTagServiceObservationToken]()
+    private var webTagObserveTokens = [WPSObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
