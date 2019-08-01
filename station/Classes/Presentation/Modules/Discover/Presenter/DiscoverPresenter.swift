@@ -97,6 +97,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidChoose(webTag: DiscoverWebTagViewModel) {
+        view.showSelectLocationSourceDialog(for: webTag)
+    }
+    
+    func viewDidSelectCurrentLocation(for webTag: DiscoverWebTagViewModel) {
         if permissionsManager.isLocationPermissionGranted {
             persistWebTag(with: webTag.provider)
         } else {
@@ -108,6 +112,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 }
             }
         }
+    }
+    
+    func viewDidSelectManualLocationSource(for webTag: DiscoverWebTagViewModel) {
+        
     }
     
     func viewDidTriggerContinue() {
