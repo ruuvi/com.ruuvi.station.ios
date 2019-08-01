@@ -33,6 +33,15 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         present(controller, animated: true)
     }
     
+    func showClearLocationConfirmationDialog() {
+        let controller = UIAlertController(title: "WebTagSettings.confirmClearLocationDialog.title".localized(), message: "WebTagSettings.confirmClearLocationDialog.message".localized(), preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToClearLocation()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
+    
 }
 
 // MARK: - IBActions
