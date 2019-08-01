@@ -5,6 +5,10 @@ class WebTagServiceImpl: WebTagService {
     
     var webTagPersistence: WebTagPersistence!
     
+    func add(provider: WeatherProvider, location: Location) -> Future<WeatherProvider,RUError> {
+        return webTagPersistence.persist(provider: provider, location: location)
+    }
+    
     func add(provider: WeatherProvider) -> Future<WeatherProvider,RUError> {
         return webTagPersistence.persist(provider: provider)
     }

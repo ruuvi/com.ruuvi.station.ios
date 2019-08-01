@@ -31,6 +31,15 @@ class DiscoverRouter: DiscoverRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
     
+    func openLocationPicker(output: LocationPickerModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "LocationPicker")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: LocationPickerModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(output: output)
+            })
+    }
+    
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
     }
