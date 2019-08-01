@@ -23,6 +23,10 @@ class WebTagServiceImpl: WebTagService {
         return webTagPersistence.update(location: location, of: webTag)
     }
     
+    func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError> {
+        return webTagPersistence.clearLocation(of: webTag)
+    }
+    
     @discardableResult
     func observe<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WebTagData?, RUError?) -> Void) -> WebTagServiceObservationToken {
         
