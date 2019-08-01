@@ -1,4 +1,5 @@
 import UIKit
+import RealmSwift
 
 class WebTagSettingsPresenter: WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
@@ -12,14 +13,20 @@ class WebTagSettingsPresenter: WebTagSettingsModuleInput {
         }
     }
     
+    private var webTagToken: NotificationToken?
     private var webTag: WebTagRealm! {
         didSet {
             syncViewModel()
         }
     }
     
+    deinit {
+        webTagToken?.invalidate()
+    }
+    
     func configure(webTag: WebTagRealm) {
         self.webTag = webTag
+        startObservingWebTag()
     }
 }
 
@@ -78,12 +85,29 @@ extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
 // MARK: - LocationPickerModuleOutput
 extension WebTagSettingsPresenter: LocationPickerModuleOutput {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
-        view.viewModel.location.value = location
+        let operation = webTagService.update(location: location, of: webTag)
+        operation.on(failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
 // MARK: - Private
 extension WebTagSettingsPresenter {
+    private func startObservingWebTag() {
+        webTagToken = webTag.observe({ [weak self] (change) in
+            switch change {
+            case .change:
+                self?.syncViewModel()
+            case .deleted:
+                self?.router.dismiss()
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            }
+        })
+    }
+    
+    
     private func syncViewModel() {
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
         
@@ -94,5 +118,10 @@ extension WebTagSettingsPresenter {
         }
 
         view.viewModel.uuid.value = webTag.uuid
+        if let webTagLocation = webTag.location {
+            view.viewModel.location.value = webTagLocation.location
+        } else {
+            view.viewModel.location.value = nil
+        }
     }
 }
