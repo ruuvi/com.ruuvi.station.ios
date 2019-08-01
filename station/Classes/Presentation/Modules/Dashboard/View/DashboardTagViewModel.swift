@@ -29,12 +29,14 @@ struct DashboardTagViewModel {
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     var humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
     var provider: WeatherProvider?
+    var location: Location?
     
     init(_ webTag: WebTagRealm) {
         type = .web
         uuid.value = webTag.uuid
         name.value = webTag.name
         provider = webTag.provider
+        location = webTag.location?.location
     }
     
     func update(_ wpsData: WPSData) {

@@ -76,6 +76,7 @@
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
+"UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 
 // WeatherProvider
 "WeatherProvider.OpenWeatherMap.displayName" = "Open Weather Map";
