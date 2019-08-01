@@ -98,7 +98,7 @@ class ActivitySpinnerView : UIView {
         let animation = CAKeyframeAnimation(keyPath: "strokeColor")
         animation.keyTimes = (0 ... count).map { NSNumber(value: CFTimeInterval($0) / CFTimeInterval(count)) }
         animation.values = (0 ... count).map { _ in
-            UIColor(red: 0.0/255.0, green: 162.0/255.0, blue: 237.0/255.0, alpha: 1.0).cgColor
+            UIColor.white.cgColor
         }
         animation.duration = duration
         animation.calculationMode = .linear

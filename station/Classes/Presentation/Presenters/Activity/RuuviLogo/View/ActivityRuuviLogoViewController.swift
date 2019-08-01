@@ -9,7 +9,7 @@ class ActivityRuuviLogoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        logoImageView.tintColor = UIColor(red: 0.0/255.0, green: 162.0/255.0, blue: 237.0/255.0, alpha: 1.0)
+        logoImageView.tintColor = UIColor.white
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
