@@ -15,6 +15,8 @@ class ErrorPresenterAlert: ErrorPresenter {
                 presentAlert(error: error)
             case .map(let error):
                 presentAlert(error: error)
+            case .expected(let error):
+                presentAlert(error: error)
             case .unexpected(let error):
                 presentAlert(error: error)
             }
