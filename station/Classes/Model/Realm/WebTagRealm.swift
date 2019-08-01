@@ -1,4 +1,5 @@
 import RealmSwift
+import CoreLocation
 
 class WebTagRealm: Object {
     @objc dynamic var name: String = ""
@@ -34,4 +35,16 @@ class WebTagLocationRealm: Object {
     @objc dynamic var country: String?
     @objc dynamic var latitude: Double = 0
     @objc dynamic var longitude: Double = 0
+}
+
+extension WebTagLocationRealm {
+    var location: Location {
+        return LocationWebTag(city: city, country: country, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+    }
+}
+
+private struct LocationWebTag: Location {
+    var city: String?
+    var country: String?
+    var coordinate: CLLocationCoordinate2D
 }
