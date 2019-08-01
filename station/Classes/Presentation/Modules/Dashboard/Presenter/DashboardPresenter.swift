@@ -11,6 +11,7 @@ class DashboardPresenter: DashboardModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     var scanner: BTScanner!
     var webTagService: WebTagService!
+    var weatherProviderService: WeatherProviderService!
     
     private let webTagObserveInterval: TimeInterval = 30 // sec
     private var ruuviTagsToken: NotificationToken?
@@ -195,7 +196,7 @@ extension DashboardPresenter {
         for provider in WeatherProvider.allCases {
             let viewModels = webViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
-                webTagObserveTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                webTagObserveTokens.append(weatherProviderService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                     if let data = data {
                         viewModels.forEach({ $0.update(data)})
                     } else if let error = error {

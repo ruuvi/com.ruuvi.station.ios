@@ -45,11 +45,16 @@ class BusinessAssembly: Assembly {
             return service
         }
         
+        container.register(WeatherProviderService.self) { r in
+            let service = WeatherProviderServiceImpl()
+            service.owmApi = r.resolve(OpenWeatherMapAPI.self)
+            service.locationManager = r.resolve(LocationManager.self)
+            return service
+        }
+        
         container.register(WebTagService.self) { r in
             let service = WebTagServiceImpl()
             service.webTagPersistence = r.resolve(WebTagPersistence.self)
-            service.owmApi = r.resolve(OpenWeatherMapAPI.self)
-            service.locationManager = r.resolve(LocationManager.self)
             return service
         }
     }
