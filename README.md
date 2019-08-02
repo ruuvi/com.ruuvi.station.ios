@@ -26,11 +26,29 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 RuuviTag is an advanced open-source sensor beacon platform designed to fulfill the needs of business customers, developers, makers, students, and can even be used in your home and as part of your personal endeavours. The device is set up to work as soon as you take it out of its box and is ready to be deployed to where you need it. Whether you need a beehive monitor in your backyard, or an industrial mesh network asset tracking system, RuuviTag gets you covered.
 
+## Features
+
+- [x] Temperature (°C, °F)
+- [x] Humidity (relative in %, absolute in g/m³)
+- [x] Dew Point (°C, °F)
+- [x] Air Pressure (hPa)
+- [x] Acceleration (g)
+
+## Requirements
+
+- iOS 10.0+
+- Xcode 10.3
+
 ## How to build
 
 1. Clone the repo
 2. cd into repo and run: ```pod install```
 3. Build with Xcode
+
+## Contribute
+
+We would love you for the contribution to **Ruuvi Station**, check the ``LICENSE`` file for more info.
+
 
 [swift-image]:https://img.shields.io/badge/swift-5.0-orange.svg
 [swift-url]: https://swift.org/
