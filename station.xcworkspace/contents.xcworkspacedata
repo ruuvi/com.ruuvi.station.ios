@@ -19,5 +19,11 @@
       <FileRef
          location = "group:Download_on_the_App_Store_Badge.svg">
       </FileRef>
+      <FileRef
+         location = "group:/Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/docs/screenshot0.jpeg">
+      </FileRef>
+      <FileRef
+         location = "group:/Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/docs/screenshot1.jpeg">
+      </FileRef>
    </Group>
 </Workspace>
