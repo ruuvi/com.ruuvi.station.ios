@@ -25,5 +25,8 @@
       <FileRef
          location = "group:/Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/docs/screenshot1.jpeg">
       </FileRef>
+      <FileRef
+         location = "group:/Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/docs/screenshot2.jpeg">
+      </FileRef>
    </Group>
 </Workspace>
