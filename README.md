@@ -13,7 +13,9 @@ With this app you can easily monitor [RuuviTag](https://ruuvi.com/index.php?id=2
   <img src="/docs/screenshot2.jpeg?raw=true" alt="Ruuvi Station for iOS" width="200"/>
 </p>
 
-<center>[![Get it from AppStore](docs/Download_on_the_App_Store_Badge.svg?raw=true&sanitize=true)](https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8)</center>
+<p align="center">
+  [![Get it from AppStore](docs/Download_on_the_App_Store_Badge.svg?raw=true&sanitize=true)](https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8)
+</p>
 
 # How to build
 
