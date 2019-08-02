@@ -1,19 +1,21 @@
-# com.ruuvi.station.ios
-iOS Ruuvi Station
-
 # Ruuvi Station
+> Easy tool to listen multiple RuuviTags at the same time.
 
-RuuviTag scanner, datalogger/gateway
+[![Swift Version][swift-image]][swift-url]
+[![License][license-image]][license-url]
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-With this app you can easily monitor RuuviTag bluetooth sensors https://ruuvi.com/index.php?id=2.
-It can also be used as a gateway for your tags, lettings you see and log sensor readings in the cloud.
+With this app you can easily monitor [RuuviTag](https://ruuvi.com/index.php?id=2) bluetooth sensors.
 
-See https://lab.ruuvi.com/ruuvi-station/
-
-Available on Apple App Store: https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8
+[![Get it from AppStore](docs/Download_on_the_App_Store_Badge.svg?raw=true&sanitize=true)](https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8)
 
 # How to build
 
 1. Clone the repo
 2. cd into repo and run: ```pod install```
 3. Build with Xcode
+
+[swift-image]:https://img.shields.io/badge/swift-5.0-orange.svg
+[swift-url]: https://swift.org/
+[license-image]: https://img.shields.io/badge/License-BSD-blue.svg
+[license-url]: LICENSE

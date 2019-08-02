@@ -13,4 +13,11 @@
    <FileRef
       location = "group:LICENSE">
    </FileRef>
+   <Group
+      location = "group:docs"
+      name = "docs">
+      <FileRef
+         location = "group:Download_on_the_App_Store_Badge.svg">
+      </FileRef>
+   </Group>
 </Workspace>
