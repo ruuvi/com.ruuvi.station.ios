@@ -61,9 +61,9 @@ We would love you for the contribution to **Ruuvi Station**, check the ``LICENSE
 
 
 <!-- Please don't remove this: Grab your social icons from https://github.com/carlsednaoui/gitsocial -->
-[![Twitter][http://i.imgur.com/tXSoThF.png]][https://twitter.com/ruuvicom]
-[![Facebook][http://i.imgur.com/P3YfQoD.png]][https://www.facebook.com/ruuvi.cc/]
-[![Github][http://i.imgur.com/0o48UoR.png]][https://github.com/ruuvi]
+[![Twitter][http://i.imgur.com/tXSoThF.png]](https://twitter.com/ruuvicom)
+[![Facebook][http://i.imgur.com/P3YfQoD.png]](https://www.facebook.com/ruuvi.cc/)
+[![Github][http://i.imgur.com/0o48UoR.png]](https://github.com/ruuvi)
 
 [swift-image]:https://img.shields.io/badge/swift-5.0-orange.svg
 [swift-url]: https://swift.org/
