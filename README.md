@@ -53,7 +53,7 @@ Join our [Telegram](https://t.me/ruuvicom) community. Feel free to ask ``@renatu
 
 ## How to buy
 
-You can [order](https://shop.ruuvi.com/product/ruuvitag-1-pack/) a [RuuviTag](https://ruuvi.com/index.php?id=2) on the [Ruuvi website](https://ruuvi.com). 
+You can order RuuviTag sensors [online](https://shop.ruuvi.com). Find more info about the devices on [Ruuvi.com](https://ruuvi.com). 
 
 ## Contribute
 
