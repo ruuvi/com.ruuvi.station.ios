@@ -24,7 +24,7 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 <img src="/docs/ruuvitag2.jpg?raw=true" alt="RuuviTag" width="200"/>
 </p>
 
-RuuviTag is an advanced open-source sensor beacon platform designed to fulfill the needs of business customers, developers, makers, students, and can even be used in your home and as part of your personal endeavours. The device is set up to work as soon as you take it out of its box and is ready to be deployed to where you need it. Whether you need a beehive monitor in your backyard, or an industrial mesh network asset tracking system, RuuviTag gets you covered.
+[RuuviTag](https://ruuvi.com/index.php?id=2) is an advanced open-source sensor beacon platform designed to fulfill the needs of business customers, developers, makers, students, and can even be used in your home and as part of your personal endeavours. The device is set up to work as soon as you take it out of its box and is ready to be deployed to where you need it. Whether you need a beehive monitor in your backyard, or an industrial mesh network asset tracking system, RuuviTag gets you covered.
 
 ## Features
 
