@@ -47,9 +47,9 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## Get in touch
 
-Join [Slack](http://slack.ruuvi.com) community. Feel free to ask ``@rinat`` about iOS code.  
+Join our [Slack](http://slack.ruuvi.com) community. Feel free to ask ``@rinat`` about iOS code.  
 
-Join [Telegram](t.me/ruuvicom) community. Feel free to ask ``@renatus87`` about iOS code. 
+Join our [Telegram](t.me/ruuvicom) community. Feel free to ask ``@renatus87`` about iOS code. 
 
 ## How to buy
 
