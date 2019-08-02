@@ -4,7 +4,7 @@
 [![License][license-image]][license-url]
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8) on the AppStore. You can observe the weather parameters, such as temperature, humidity, air pressure (and more) right on your iOS device. Ruuvi Station is a companion app for open-source IOT BLE devices made by Ruuvi, such as [RuuviTag](https://ruuvi.com/index.php?id=2).   
+Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/app/ruuvi-station/id1384475885?mt=8) on the AppStore. You can observe the weather parameters, such as temperature, humidity, air pressure (and more) right on your iOS device. Ruuvi Station is a companion app for open-source IOT BLE devices made by [Ruuvi](https://ruuvi.com), such as [RuuviTag](https://ruuvi.com/index.php?id=2).   
 
 <p align="center">
   <img src="/docs/screenshot0.jpeg?raw=true" alt="Ruuvi Station for iOS" width="200"/>
