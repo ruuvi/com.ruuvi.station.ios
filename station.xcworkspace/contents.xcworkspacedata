@@ -28,5 +28,14 @@
       <FileRef
          location = "group:/Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/docs/screenshot2.jpeg">
       </FileRef>
+      <FileRef
+         location = "group:ruuvitag-enclosure-open.jpg">
+      </FileRef>
+      <FileRef
+         location = "group:ruuvitag1.jpg">
+      </FileRef>
+      <FileRef
+         location = "group:ruuvitag2.jpg">
+      </FileRef>
    </Group>
 </Workspace>
