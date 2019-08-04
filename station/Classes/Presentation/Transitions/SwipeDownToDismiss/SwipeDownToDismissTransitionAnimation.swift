@@ -22,6 +22,9 @@ class SwipeDownToDismissTransitionAnimation: NSObject, UIViewControllerAnimatedT
         }
         let containerView = transitionContext.containerView
         
+        // Fix layout bug in iOS 9+
+        toVC.view.frame = transitionContext.finalFrame(for: toVC)
+        
         containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
         dimmingView.frame = containerView.bounds
         containerView.insertSubview(dimmingView, belowSubview: fromVC.view)

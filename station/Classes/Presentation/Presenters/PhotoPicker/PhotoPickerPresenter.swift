@@ -6,5 +6,5 @@ protocol PhotoPickerPresenterDelegate: class {
 
 protocol PhotoPickerPresenter {
     var delegate: PhotoPickerPresenterDelegate? { get set }
-    func pick()
+    func pick(sourceView: UIView?)
 }
