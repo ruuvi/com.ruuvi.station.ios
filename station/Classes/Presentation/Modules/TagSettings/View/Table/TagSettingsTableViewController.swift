@@ -127,8 +127,8 @@ extension TagSettingsTableViewController {
         output.viewDidAskToRandomizeBackground()
     }
     
-    @IBAction func selectBackgroundButtonTouchUpInside(_ sender: Any) {
-        output.viewDidAskToSelectBackground()
+    @IBAction func selectBackgroundButtonTouchUpInside(_ sender: UIButton) {
+        output.viewDidAskToSelectBackground(sourceView: sender)
     }
     
     @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {

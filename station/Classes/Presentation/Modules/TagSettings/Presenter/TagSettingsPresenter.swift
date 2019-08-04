@@ -69,8 +69,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
     }
     
-    func viewDidAskToSelectBackground() {
-        photoPickerPresenter.pick()
+    func viewDidAskToSelectBackground(sourceView: UIView) {
+        photoPickerPresenter.pick(sourceView: sourceView)
     }
     
     func viewDidTapOnMacAddress() {

@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol TagSettingsViewOutput {
     func viewDidAskToDismiss()
@@ -7,7 +7,7 @@ protocol TagSettingsViewOutput {
     func viewDidConfirmTagRemoval()
     func viewDidAskToCalibrateHumidity()
     func viewDidChangeTag(name: String)
-    func viewDidAskToSelectBackground()
+    func viewDidAskToSelectBackground(sourceView: UIView)
     func viewDidTapOnMacAddress()
     func viewDidTapOnUUID()
     func viewDidAskToLearnMoreAboutFirmwareUpdate()
