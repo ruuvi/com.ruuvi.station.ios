@@ -1,9 +1,9 @@
-import Foundation
+import UIKit
 
 protocol WebTagSettingsViewOutput {
     func viewDidAskToDismiss()
     func viewDidAskToRandomizeBackground()
-    func viewDidAskToSelectBackground()
+    func viewDidAskToSelectBackground(sourceView: UIView)
     func viewDidChangeTag(name: String)
     func viewDidAskToRemoveWebTag()
     func viewDidConfirmTagRemoval()

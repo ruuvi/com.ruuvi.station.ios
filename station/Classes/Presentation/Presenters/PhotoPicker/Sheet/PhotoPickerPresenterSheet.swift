@@ -4,8 +4,10 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     weak var delegate: PhotoPickerPresenterDelegate?
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
+    var sourceView: UIView?
     
-    func pick() {
+    func pick(sourceView: UIView?) {
+        self.sourceView = sourceView
         showSourceDialog()
     }
 }
@@ -38,6 +40,13 @@ extension PhotoPickerPresenterSheet {
         sheet.addAction(library)
         sheet.addAction(camera)
         sheet.addAction(cancel)
+        if let presenter = sheet.popoverPresentationController {
+            presenter.sourceView = sourceView
+            if let bounds = sourceView?.bounds {
+                presenter.sourceRect = bounds
+            }
+            presenter.permittedArrowDirections = .up
+        }
         viewController.present(sheet, animated: true)
     }
     

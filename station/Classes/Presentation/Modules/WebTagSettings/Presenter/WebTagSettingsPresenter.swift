@@ -40,8 +40,8 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
         view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid)
     }
     
-    func viewDidAskToSelectBackground() {
-        photoPickerPresenter.pick()
+    func viewDidAskToSelectBackground(sourceView: UIView) {
+        photoPickerPresenter.pick(sourceView: sourceView)
     }
     
     func viewDidChangeTag(name: String) {
