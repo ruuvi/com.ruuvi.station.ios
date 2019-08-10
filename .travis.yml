@@ -1,0 +1,10 @@
+language: swift
+osx_image: xcode10.2
+xcode_workspace: station.xcworkspace
+xcode_scheme: station
+script:
+  - xcodebuild clean build -sdk iphonesimulator -workspace station.xcworkspace -scheme station CODE_SIGNING_REQUIRED=NO
+before_install:
+  - rvm use system
+  - sudo gem install cocoapods 
+  - pod repo update
