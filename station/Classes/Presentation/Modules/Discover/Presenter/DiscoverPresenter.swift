@@ -160,9 +160,13 @@ extension DiscoverPresenter {
     }
     
     private func startReloading() {
-        reloadTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
+        reloadTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { [weak self] (timer) in
             self?.updateViewDevices()
         })
+        // don't wait for timer, reload after 0.5 sec
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.updateViewDevices()
+        }
     }
     
     private func stopReloading() {
