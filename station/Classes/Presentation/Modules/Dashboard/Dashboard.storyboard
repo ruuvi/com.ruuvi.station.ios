@@ -29,8 +29,9 @@
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </scrollView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_white" translatesAutoresizingMaskIntoConstraints="NO" id="HLP-h6-z2n">
-                                <rect key="frame" x="52" y="33" width="271" height="26"/>
+                                <rect key="frame" x="92.5" y="33" width="190" height="26"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="190" id="DEs-lK-e0D"/>
                                     <constraint firstAttribute="height" constant="26" id="HVh-SA-VNX"/>
                                 </constraints>
                             </imageView>
@@ -63,27 +64,47 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="HLP-h6-z2n" firstAttribute="centerX" secondItem="X3t-5y-1HP" secondAttribute="centerX" id="0Cw-ET-wea"/>
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="3Pm-gn-oGH"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="5yA-u0-zfd"/>
                             <constraint firstAttribute="bottom" secondItem="VHk-jU-Dq6" secondAttribute="bottom" id="6Xr-rF-R9l"/>
+                            <constraint firstItem="HLP-h6-z2n" firstAttribute="leading" secondItem="QWq-xL-Hcm" secondAttribute="trailing" constant="194.5" id="7X5-wW-Nrq">
+                                <variation key="heightClass=compact" constant="20"/>
+                            </constraint>
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="bottom" secondItem="Gfm-eP-ACx" secondAttribute="bottom" id="Gb6-3L-UWE"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="Mfb-Vu-nnk"/>
-                            <constraint firstItem="HLP-h6-z2n" firstAttribute="leading" secondItem="QWq-xL-Hcm" secondAttribute="trailing" constant="8" id="RF1-zc-Xbe"/>
                             <constraint firstItem="QWq-xL-Hcm" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="8" id="RQ0-hb-Xef"/>
                             <constraint firstItem="HLP-h6-z2n" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="13" id="SRy-5q-Yd4"/>
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="V7f-vw-dMc"/>
                             <constraint firstItem="X3t-5y-1HP" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="W5Z-O7-utY"/>
+                            <constraint firstItem="HLP-h6-z2n" firstAttribute="centerX" secondItem="X3t-5y-1HP" secondAttribute="centerX" id="XlM-Wj-Fjz"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="top" secondItem="Gfm-eP-ACx" secondAttribute="top" id="d9J-0G-FsY"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="feH-91-mwv"/>
                             <constraint firstItem="QWq-xL-Hcm" firstAttribute="leading" secondItem="cQV-kG-itc" secondAttribute="leading" constant="8" id="fhL-7b-Yzk"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="trailing" secondItem="Gfm-eP-ACx" secondAttribute="trailing" id="ns4-Pg-hDK"/>
                             <constraint firstItem="VHk-jU-Dq6" firstAttribute="leading" secondItem="Gfm-eP-ACx" secondAttribute="leading" id="smU-BS-OQh"/>
                             <constraint firstItem="uwL-6G-spH" firstAttribute="bottom" secondItem="Gfm-eP-ACx" secondAttribute="bottom" id="tlr-1u-nRQ"/>
-                            <constraint firstItem="tie-KF-CFy" firstAttribute="leading" secondItem="HLP-h6-z2n" secondAttribute="trailing" constant="8" id="uI9-TI-wI1"/>
                             <constraint firstItem="tie-KF-CFy" firstAttribute="top" secondItem="cQV-kG-itc" secondAttribute="top" constant="8" id="uzA-HY-q8T"/>
                             <constraint firstItem="cQV-kG-itc" firstAttribute="trailing" secondItem="tie-KF-CFy" secondAttribute="trailing" constant="8" id="wWH-Tq-W9K"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cQV-kG-itc"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="0Cw-ET-wea"/>
+                                <exclude reference="7X5-wW-Nrq"/>
+                                <exclude reference="XlM-Wj-Fjz"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="7X5-wW-Nrq"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="constraints">
+                                <include reference="XlM-Wj-Fjz"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Ruuvi Station" id="Utr-nt-Tul">
                         <barButtonItem key="leftBarButtonItem" title="Menu" id="Erq-Xy-rVP">
@@ -108,7 +129,7 @@
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="-97.101449275362327" y="-583.25892857142856"/>
+            <point key="canvasLocation" x="-98.400000000000006" y="-583.3583208395803"/>
         </scene>
     </scenes>
     <resources>
