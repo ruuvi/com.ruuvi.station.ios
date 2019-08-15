@@ -119,17 +119,9 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TJU-tC-COt">
-                    <rect key="frame" x="16" y="775" width="382" height="50"/>
-                    <connections>
-                        <action selector="rssiButtonTouchUpInside:" destination="O00-Hz-n75" eventType="touchUpInside" id="5xj-L4-LSF"/>
-                    </connections>
-                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="TJU-tC-COt" firstAttribute="top" secondItem="tnh-8q-eCb" secondAttribute="top" id="08l-vp-BxH"/>
-                <constraint firstItem="TJU-tC-COt" firstAttribute="trailing" secondItem="2Pk-nL-gnn" secondAttribute="trailing" id="2w0-Bm-rzF"/>
                 <constraint firstItem="l6K-wF-oLr" firstAttribute="trailing" secondItem="O00-Hz-n75" secondAttribute="trailing" id="3Qd-gf-j3k"/>
                 <constraint firstItem="tnh-8q-eCb" firstAttribute="top" secondItem="Drw-j1-Iq5" secondAttribute="bottom" constant="8" id="3ae-jp-VVQ"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="2Pk-nL-gnn" secondAttribute="trailing" constant="16" id="3eN-Cn-NsE"/>
@@ -147,11 +139,9 @@
                 <constraint firstItem="bjH-UG-dwW" firstAttribute="centerX" secondItem="O00-Hz-n75" secondAttribute="centerX" id="Vz2-dY-ye7"/>
                 <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="2Pk-nL-gnn" secondAttribute="bottom" constant="8" id="WoG-4F-aYr"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="UNY-cv-I7Q" secondAttribute="trailing" constant="16" id="XOY-gT-U3y"/>
-                <constraint firstItem="TJU-tC-COt" firstAttribute="bottom" secondItem="tnh-8q-eCb" secondAttribute="bottom" id="YtT-4m-MtP"/>
                 <constraint firstItem="2Pk-nL-gnn" firstAttribute="top" secondItem="A5Y-2H-mT9" secondAttribute="bottom" constant="8" id="dUS-Uo-s9Z"/>
                 <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="tnh-8q-eCb" secondAttribute="bottom" constant="8" id="gHH-uB-cHP"/>
                 <constraint firstItem="tya-ss-bXe" firstAttribute="top" secondItem="bjH-UG-dwW" secondAttribute="bottom" constant="84" id="gqV-xc-pFf"/>
-                <constraint firstItem="TJU-tC-COt" firstAttribute="leading" secondItem="tnh-8q-eCb" secondAttribute="leading" id="hh2-mk-AXg"/>
                 <constraint firstItem="Drw-j1-Iq5" firstAttribute="leading" secondItem="27w-ik-OkD" secondAttribute="leading" constant="16" id="kDt-TA-aOe"/>
                 <constraint firstItem="tnh-8q-eCb" firstAttribute="leading" secondItem="27w-ik-OkD" secondAttribute="leading" constant="16" id="kXR-4s-P0m"/>
                 <constraint firstItem="k0F-ZD-XNB" firstAttribute="top" secondItem="bjH-UG-dwW" secondAttribute="bottom" constant="80" id="l30-rL-upq"/>

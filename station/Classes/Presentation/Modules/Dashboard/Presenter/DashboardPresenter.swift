@@ -26,7 +26,11 @@ class DashboardPresenter: DashboardModuleInput {
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 return viewModel
             }) ?? []
-            openDiscoverIfEmpty()
+            
+            // if empty dashboard - open discover scene
+            if viewModels.count == 0 {
+                router.openDiscover()
+            }
         }
     }
     private var viewModels = [DashboardRuuviTagViewModel]() {
@@ -66,10 +70,6 @@ extension DashboardPresenter: DashboardViewOutput {
         stopObservingBluetoothState()
     }
     
-    func viewDidAppear() {
-        openDiscoverIfEmpty()
-    }
-    
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
@@ -78,10 +78,6 @@ extension DashboardPresenter: DashboardViewOutput {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         }
-    }
-    
-    func viewDidTapOnRSSI(for viewModel: DashboardRuuviTagViewModel) {
-        // do nothing yet
     }
 }
 
@@ -110,12 +106,6 @@ extension DashboardPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
-    private func openDiscoverIfEmpty() {
-        if view.viewModels.count == 0 {
-            router.openDiscover()
-        }
-    }
-    
     private func startObservingBluetoothState() {
         stateToken = scanner.state(self, closure: { (observer, state) in
             if state != .poweredOn {
