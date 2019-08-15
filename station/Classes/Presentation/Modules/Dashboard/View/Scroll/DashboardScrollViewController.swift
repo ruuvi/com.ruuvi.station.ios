@@ -1,6 +1,5 @@
 import UIKit
 import Localize_Swift
-import DateToolsSwift
 
 class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!

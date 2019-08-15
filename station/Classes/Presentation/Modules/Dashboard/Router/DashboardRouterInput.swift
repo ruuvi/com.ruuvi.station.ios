@@ -6,7 +6,6 @@ protocol DashboardRouterInput {
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
-    func openChart(ruuviTag: RuuviTagRealm, type: ChartDataType)
     func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?)
     func openWebTagSettings(webTag: WebTagRealm)
 }
