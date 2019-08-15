@@ -1,12 +1,7 @@
 import UIKit
 import Localize_Swift
 
-protocol DashboardRuuviTagViewDelegate: class {
-    func dashboardRuuviTag(view: DashboardRuuviTagView, didTapOnRSSI sender: Any?)
-}
-
 class DashboardRuuviTagView: UIView {
-    weak var delegate: DashboardRuuviTagViewDelegate?
     
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -31,9 +26,4 @@ class DashboardRuuviTagView: UIView {
             self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
         })
     }
-    
-    @IBAction func rssiButtonTouchUpInside(_ sender: Any) {
-        delegate?.dashboardRuuviTag(view: self, didTapOnRSSI: sender)
-    }
-    
 }
