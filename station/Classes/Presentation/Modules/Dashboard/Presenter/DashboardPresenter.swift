@@ -72,10 +72,6 @@ extension DashboardPresenter: DashboardViewOutput {
         stopObservingBluetoothState()
     }
     
-    func viewDidAppear() {
-        openDiscoverIfEmpty()
-    }
-    
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
@@ -86,10 +82,6 @@ extension DashboardPresenter: DashboardViewOutput {
         } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openWebTagSettings(webTag: webTag)
         }
-    }
-    
-    func viewDidTapOnRSSI(for viewModel: DashboardTagViewModel) {
-        // do nothing yet
     }
 }
 
@@ -118,6 +110,7 @@ extension DashboardPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension DashboardPresenter {
+
     private func syncViewModels() {
         if ruuviTags != nil && webTags != nil {
             let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardTagViewModel in
@@ -135,16 +128,14 @@ extension DashboardPresenter {
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
-            openDiscoverIfEmpty()
+            
+            // if no tags, open discover
+            if viewModels.count == 0 {
+                router.openDiscover()
+            }
         }
     }
-    
-    private func openDiscoverIfEmpty() {
-        if view.viewModels.count == 0 {
-            router.openDiscover()
-        }
-    }
-    
+
     private func startObservingBluetoothState() {
         stateToken = scanner.state(self, closure: { (observer, state) in
             if state != .poweredOn {
