@@ -4,8 +4,6 @@ inhibit_all_warnings!
 
 target 'station' do
   pod 'BTKit'
-  pod 'Charts'
-  pod 'DateToolsSwift'
   pod 'EmptyDataSet-Swift'
   pod 'FutureX'
   pod 'Humidity'

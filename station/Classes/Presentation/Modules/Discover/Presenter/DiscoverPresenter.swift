@@ -62,12 +62,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
         stopObservingLost()
     }
     
-    func viewDidSelect(device: DiscoverDeviceViewModel) {
-        if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
-            router.open(ruuviTag: ruuviTag)
-        }
-    }
-    
     func viewDidChoose(device: DiscoverDeviceViewModel) {
         if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
             let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: ruuviTag.mac ?? ruuviTag.uuid)

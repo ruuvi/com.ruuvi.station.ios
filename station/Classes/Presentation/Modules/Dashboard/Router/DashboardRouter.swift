@@ -6,21 +6,8 @@ class DashboardRouter: DashboardRouterInput {
     
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
     
-    private lazy var chartTransitioningDelegate = ChartTransitioningDelegate()
     private var menuTableTransition: MenuTableTransitioningDelegate!
     private lazy var tagSettingsTransitioningDelegate = TagSettingsTransitioningDelegate()
-    
-    func openChart(ruuviTag: RuuviTagRealm, type: ChartDataType) {
-        let factory = StoryboardFactory(storyboardName: "Chart")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: ChartModuleInput.self)
-            .add(transitioningDelegate: chartTransitioningDelegate)
-            .apply(to: { (viewController) in
-                viewController.modalPresentationStyle = .custom
-            }).then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag, type: type)
-            })
-    }
     
     func openMenu(output: MenuModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Menu")
