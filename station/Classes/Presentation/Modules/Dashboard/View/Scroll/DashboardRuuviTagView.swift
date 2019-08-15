@@ -1,5 +1,4 @@
 import UIKit
-import DateToolsSwift
 import Localize_Swift
 
 protocol DashboardRuuviTagViewDelegate: class {

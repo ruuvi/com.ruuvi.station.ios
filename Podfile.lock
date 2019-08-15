@@ -9,10 +9,6 @@ PODS:
     - BTKit/Scanner
   - BTKit/Scanner (0.0.10):
     - BTKit/Devices
-  - Charts (3.3.0):
-    - Charts/Core (= 3.3.0)
-  - Charts/Core (3.3.0)
-  - DateToolsSwift (4.0.0)
   - EmptyDataSet-Swift (4.2.0)
   - FutureX (1.0)
   - Humidity (0.0.6)
@@ -30,8 +26,6 @@ PODS:
 
 DEPENDENCIES:
   - BTKit
-  - Charts
-  - DateToolsSwift
   - EmptyDataSet-Swift
   - FutureX
   - Humidity
@@ -45,8 +39,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - BTKit
-    - Charts
-    - DateToolsSwift
     - EmptyDataSet-Swift
     - FutureX
     - Humidity
@@ -72,8 +64,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BTKit: d94807b43b3c2d606872c7c9c04e6f80f809bbc1
-  Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
-  DateToolsSwift: 875d97ff9e3a5d54abdd67a269b3f51c757b71ab
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
   Humidity: 3b003f1218a58782176a5af031987de87668b516
@@ -85,6 +75,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 744c618b9e45da053b95ebbe4879a19cd5cec739
+PODFILE CHECKSUM: 58d52104e2ecc4835a0ae934e8cf137dd58f80f1
 
-COCOAPODS: 1.7.4
+COCOAPODS: 1.7.5

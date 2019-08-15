@@ -89,9 +89,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTapOnRSSI(for viewModel: DashboardTagViewModel) {
-//        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value}) {
-//            router.openChart(ruuviTag: ruuviTag, type: .rssi)
-//        }
+        // do nothing yet
     }
 }
 
