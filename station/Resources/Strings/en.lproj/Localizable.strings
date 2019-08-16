@@ -64,6 +64,7 @@
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
 "OWMError.apiLimitExceeded" = "API limit exceeded";
 "OWMError.notAHttpResponse" = "Not a HTTP response";
+"OWMError.invalidApiKey" = "Invalid API Key";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
