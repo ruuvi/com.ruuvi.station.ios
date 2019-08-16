@@ -7,4 +7,5 @@ protocol DashboardViewInput: ViewInput {
     
     func scroll(to index: Int)
     func showBluetoothDisabled()
+    func showWebTagAPILimitExceededError()
 }
