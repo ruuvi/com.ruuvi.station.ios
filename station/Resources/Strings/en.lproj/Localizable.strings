@@ -33,10 +33,10 @@
 "DiscoverTable.SectionTitle.WebTags" = "Location-based";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
-"DiscoverTable.SelectLocationSourceAlert.title" = "Location";
-"DiscoverTable.SelectLocationSourceAlert.message" = "Would you like to pick a location manually or use your current location?";
-"DiscoverTable.SelectLocationSourceAlert.Buttons.current" = "Current";
-"DiscoverTable.SelectLocationSourceAlert.Buttons.manually" = "Manually";
+
+// DiscoverWebTagViewModel
+"DiscoverWebTagViewModel.LocationType.current" = "Current";
+"DiscoverWebTagViewModel.LocationType.manual" = "Manually";
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";

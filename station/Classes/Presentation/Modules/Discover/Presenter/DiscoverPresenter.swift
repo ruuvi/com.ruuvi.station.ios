@@ -53,7 +53,8 @@ class DiscoverPresenter: DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap)]
+        view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current),
+                        DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual)]
         view.isBluetoothEnabled = scanner.bluetoothState == .poweredOn
         if !view.isBluetoothEnabled && !isOpenedFromWelcome {
             view.showBluetoothDisabled()
@@ -92,26 +93,23 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
     
     func viewDidChoose(webTag: DiscoverWebTagViewModel) {
-        view.showSelectLocationSourceDialog(for: webTag)
-    }
-    
-    func viewDidSelectCurrentLocation(for webTag: DiscoverWebTagViewModel) {
-        if permissionsManager.isLocationPermissionGranted {
-            persistWebTag(with: webTag.provider)
-        } else {
-            permissionsManager.requestLocationPermission { [weak self] (granted) in
-                if granted {
-                    self?.persistWebTag(with: webTag.provider)
-                } else {
-                    self?.permissionPresenter.presentNoLocationPermission()
+        switch webTag.locationType {
+        case .current:
+            if permissionsManager.isLocationPermissionGranted {
+                persistWebTag(with: webTag.provider)
+            } else {
+                permissionsManager.requestLocationPermission { [weak self] (granted) in
+                    if granted {
+                        self?.persistWebTag(with: webTag.provider)
+                    } else {
+                        self?.permissionPresenter.presentNoLocationPermission()
+                    }
                 }
             }
+        case .manual:
+            lastSelectedWebTag = webTag
+            router.openLocationPicker(output: self)
         }
-    }
-    
-    func viewDidSelectManualLocationSource(for webTag: DiscoverWebTagViewModel) {
-        lastSelectedWebTag = webTag
-        router.openLocationPicker(output: self)
     }
     
     func viewDidTriggerContinue() {
