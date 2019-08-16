@@ -36,6 +36,7 @@ enum CoreError: Error {
     case failedToGetPngRepresentation
     case failedToGetCurrentLocation
     case failedToGetDataFromResponse
+    case noLocationPermission
 }
 
 extension CoreError: LocalizedError {
@@ -49,6 +50,8 @@ extension CoreError: LocalizedError {
             return "CoreError.failedToGetPngRepresentation".localized()
         case .failedToGetDocumentsDirectory:
             return "CoreError.failedToGetDocumentsDirectory".localized()
+        case .noLocationPermission:
+            return "CoreError.noLocationPermission".localized()
         }
     }
 }

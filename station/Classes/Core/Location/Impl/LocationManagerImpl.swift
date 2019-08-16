@@ -1,7 +1,6 @@
 import Foundation
-
-import Foundation
 import CoreLocation
+import Future
 
 class LocationManagerImpl: NSObject, LocationManager {
     
@@ -19,7 +18,7 @@ class LocationManagerImpl: NSObject, LocationManager {
     
     private var locationManager: CLLocationManager
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
-    private var getCurrentLocationCallback: ((CLLocation?) -> Void)?
+    private var getCurrentLocationPromise: Promise<CLLocation,RUError>?
     
     override init() {
         locationManager = CLLocationManager()
@@ -40,9 +39,16 @@ class LocationManagerImpl: NSObject, LocationManager {
         }
     }
     
-    func getCurrentLocation(completion: ((CLLocation?) -> Void)?) {
-        getCurrentLocationCallback = completion
-        locationManager.startUpdatingLocation()
+    func getCurrentLocation() -> Future<CLLocation,RUError> {
+        let promise = Promise<CLLocation,RUError>()
+        if isLocationPermissionDenied {
+            promise.fail(error: .core(.noLocationPermission))
+            return promise.future
+        } else {
+            getCurrentLocationPromise = promise
+            locationManager.startUpdatingLocation()
+            return promise.future
+        }
     }
 }
 
@@ -54,7 +60,11 @@ extension LocationManagerImpl: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
-        getCurrentLocationCallback?(locations.last)
+        if let location = locations.last {
+            getCurrentLocationPromise?.succeed(value: location)
+        } else {
+            getCurrentLocationPromise?.fail(error: .core(.failedToGetCurrentLocation))
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

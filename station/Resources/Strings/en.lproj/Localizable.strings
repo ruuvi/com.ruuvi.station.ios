@@ -22,6 +22,7 @@
 "CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
 "CoreError.failedToGetCurrentLocation" = "Failed to get current location";
 "CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
+"CoreError.noLocationPermission" = "Missing permission for Location Services";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
