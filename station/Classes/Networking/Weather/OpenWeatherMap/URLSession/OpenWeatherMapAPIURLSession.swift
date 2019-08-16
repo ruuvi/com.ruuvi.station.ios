@@ -21,6 +21,8 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
                         let status = httpResponse.statusCode
                         if status == 429 {
                             promise.fail(error: .parse(OWMError.apiLimitExceeded))
+                        } else if status == 401 {
+                            promise.fail(error: .parse(OWMError.invalidApiKey))
                         } else {
                             if let data = data {
                                 do {

@@ -14,6 +14,7 @@ struct OWMData {
 enum OWMError: Error {
     case failedToParseOpenWeatherMapResponse
     case apiLimitExceeded
+    case invalidApiKey
     case notAHttpResponse
 }
 
@@ -26,6 +27,8 @@ extension OWMError: LocalizedError {
             return "OWMError.apiLimitExceeded".localized()
         case .notAHttpResponse:
             return "OWMError.notAHttpResponse".localized()
+        case .invalidApiKey:
+            return "OWMError.invalidApiKey".localized()
         }
     }
 }
