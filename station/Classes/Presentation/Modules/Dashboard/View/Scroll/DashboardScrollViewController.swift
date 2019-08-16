@@ -87,6 +87,15 @@ extension DashboardScrollViewController {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
     }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        let page = CGFloat(currentPage)
+        let width = size.width
+        coordinator.animate(alongsideTransition: { [weak self] (context) -> Void in
+            self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
+        })
+        super.viewWillTransition(to: size, with: coordinator)
+    }
 }
 
 // MARK: - UITextFieldDelegate
