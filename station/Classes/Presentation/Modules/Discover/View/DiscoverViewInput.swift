@@ -9,5 +9,4 @@ protocol DiscoverViewInput: ViewInput {
     var isCloseEnabled: Bool { get set }
     
     func showBluetoothDisabled()
-    func showSelectLocationSourceDialog(for webTag: DiscoverWebTagViewModel)
 }

@@ -9,6 +9,4 @@ protocol DiscoverViewOutput {
     func viewDidChoose(webTag: DiscoverWebTagViewModel)
     func viewDidTapOnGetMoreSensors()
     func viewDidTriggerClose()
-    func viewDidSelectCurrentLocation(for webTag: DiscoverWebTagViewModel)
-    func viewDidSelectManualLocationSource(for webTag: DiscoverWebTagViewModel)
 }
