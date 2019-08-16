@@ -45,7 +45,11 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
     
     func viewDidChangeTag(name: String) {
-        let finalName = name.isEmpty ? webTag.provider.displayName : name
+        let finalName = name.isEmpty ?
+                        (webTag.location == nil
+                            ? WebTagLocationSource.current.title
+                            : WebTagLocationSource.manual.title)
+                        : name
         let operation = webTagService.update(name: finalName, of: webTag)
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
@@ -122,7 +126,7 @@ extension WebTagSettingsPresenter {
     private func syncViewModel() {
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
         
-        if webTag.name == webTag.provider.displayName {
+        if webTag.name == WebTagLocationSource.manual.title {
             view.viewModel.name.value = nil
         } else {
             view.viewModel.name.value = webTag.name

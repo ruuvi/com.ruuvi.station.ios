@@ -29,7 +29,7 @@ class DiscoverTableViewController: UITableViewController {
                         return true
                     }
                 })
-                .sorted(by: { $0.provider.displayName < $1.provider.displayName })
+                .sorted(by: { $0.locationType.title < $1.locationType.title })
         }
     }
     
@@ -213,7 +213,7 @@ extension DiscoverTableViewController: EmptyDataSetDelegate {
 // MARK: - Cell configuration
 extension DiscoverTableViewController {
     private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverWebTagViewModel) {
-        cell.nameLabel.text = tag.localizedTitle
+        cell.nameLabel.text = tag.locationType.title
     }
     
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverDeviceViewModel) {
