@@ -65,8 +65,10 @@ class MigrationManagerToVIPER: MigrationManager {
                     }
                 } else if oldSchemaVersion < 4 {
                     migration.enumerateObjects(ofType: WebTagRealm.className(), { (oldObject, newObject) in
-                        if let providerString = oldObject?["providerString"] as? String, let provider = WeatherProvider(rawValue: providerString) {
-                            newObject?["name"] = provider.displayName
+                        if let location = oldObject?["location"] as? WebTagLocationRealm, let city = location.city {
+                            newObject?["name"] = city
+                        } else {
+                            newObject?["name"] = ""
                         }
                     })
                 } else if oldSchemaVersion < 5 {

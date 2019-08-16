@@ -86,7 +86,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
-            webTag.name = location.city ?? location.country ?? provider.displayName
+            webTag.name = location.city ?? location.country ?? WebTagLocationSource.manual.title
             let webTagLocation = WebTagLocationRealm()
             webTagLocation.city = location.city
             webTagLocation.country = location.country
@@ -111,6 +111,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
+            webTag.name = WebTagLocationSource.current.title
             do {
                 try self.context.bg.write {
                     self.context.bg.add(webTag, update: .all)

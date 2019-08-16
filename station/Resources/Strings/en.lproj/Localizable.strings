@@ -35,10 +35,6 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 
-// DiscoverWebTagViewModel
-"DiscoverWebTagViewModel.LocationType.current" = "Current";
-"DiscoverWebTagViewModel.LocationType.manual" = "Manually";
-
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
 
@@ -82,8 +78,9 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 
-// WeatherProvider
-"WeatherProvider.OpenWeatherMap.displayName" = "Open Weather Map";
+// WebTagLocationSource
+"WebTagLocationSource.current" = "Current";
+"WebTagLocationSource.manual" = "Manually";
 
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";

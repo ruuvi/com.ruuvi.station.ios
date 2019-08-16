@@ -23,7 +23,6 @@ class WebTagRealm: Object {
         self.init()
         self.uuid = uuid
         self.providerString = provider.rawValue
-        self.name = provider.displayName
     }
 }
 
