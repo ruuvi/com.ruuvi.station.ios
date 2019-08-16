@@ -29,8 +29,8 @@
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Tags";
-"DiscoverTable.SectionTitle.WebTags" = "Web";
+"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
+"DiscoverTable.SectionTitle.WebTags" = "Location-based";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.SelectLocationSourceAlert.title" = "Location";
