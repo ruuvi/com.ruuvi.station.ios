@@ -77,16 +77,17 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
     }
     
     private func obtainCurrentLocation() {
-        locationManager.getCurrentLocation { [weak self] (location) in
-            if let location = location {
-                let reverseGeoCode = self?.locationService.reverseGeocode(coordinate: location.coordinate)
-                reverseGeoCode?.on(success: { (locations) in
-                    self?.view.selectedLocation = locations.last
-                }, failure: { (error) in
-                    self?.errorPresenter.present(error: error)
-                })
-            }
-        }
+        let op = locationManager.getCurrentLocation()
+        op.on(success: { [weak self] (location) in
+            let reverseGeoCode = self?.locationService.reverseGeocode(coordinate: location.coordinate)
+            reverseGeoCode?.on(success: { (locations) in
+                self?.view.selectedLocation = locations.last
+            }, failure: { (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
 }

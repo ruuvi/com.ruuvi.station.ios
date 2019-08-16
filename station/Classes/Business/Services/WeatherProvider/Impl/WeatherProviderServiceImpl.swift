@@ -66,21 +66,20 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     
     func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WPSData,RUError> {
         let promise = Promise<WPSData,RUError>()
-        locationManager.getCurrentLocation { [weak self] (location) in
-            if let location = location {
-                guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
-                    promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
-                    return
-                }
-                op.on(success: { (data) in
-                    promise.succeed(value: data)
-                }, failure: { (error) in
-                    promise.fail(error: error)
-                })
-            } else {
-                promise.fail(error: .core(.failedToGetCurrentLocation))
+        let current = locationManager.getCurrentLocation()
+        current.on(success: { [weak self] (location) in
+            guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
+                promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
+                return
             }
-        }
+            op.on(success: { (data) in
+                promise.succeed(value: data)
+            }, failure: { (error) in
+                promise.fail(error: error)
+            })
+        }, failure: { (error) in
+            promise.fail(error: error)
+        })
         return promise.future
     }
     

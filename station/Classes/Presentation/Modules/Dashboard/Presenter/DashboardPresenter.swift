@@ -12,6 +12,7 @@ class DashboardPresenter: DashboardModuleInput {
     var scanner: BTScanner!
     var webTagService: WebTagService!
     var weatherProviderService: WeatherProviderService!
+    var permissionPresenter: PermissionPresenter!
     
     private let webTagObserveInterval: TimeInterval = 30 // sec
     private var ruuviTagsToken: NotificationToken?
@@ -190,7 +191,11 @@ extension DashboardPresenter {
                     if let data = data {
                         viewModels.forEach({ $0.update(data)})
                     } else if let error = error {
-                        observer.errorPresenter.present(error: error)
+                        if case .core(let coreError) = error, coreError == .noLocationPermission {
+                            observer.permissionPresenter.presentNoLocationPermission()
+                        } else {
+                            observer.errorPresenter.present(error: error)
+                        }
                     }
                 })
             }
