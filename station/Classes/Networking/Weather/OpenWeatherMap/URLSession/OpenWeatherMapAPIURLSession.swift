@@ -17,27 +17,36 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
                 if let error = error {
                     promise.fail(error: .networking(error))
                 } else {
-                    if let data = data {
-                        do {
-                            guard let json = try JSONSerialization.jsonObject(with:
-                                data, options: []) as? [String: Any] else {
-                                    promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
-                                    return
-                            }
-                            guard let main = json["main"] as? [String: Any] else {
+                    if let httpResponse = response as? HTTPURLResponse {
+                        let status = httpResponse.statusCode
+                        if status == 429 {
+                            promise.fail(error: .parse(OWMError.apiLimitExceeded))
+                        } else {
+                            if let data = data {
+                                do {
+                                    guard let json = try JSONSerialization.jsonObject(with:
+                                        data, options: []) as? [String: Any] else {
+                                            promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                                            return
+                                    }
+                                    guard let main = json["main"] as? [String: Any] else {
+                                        promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                                        return
+                                    }
+                                    let kelvin = main["temp"] as? Double
+                                    let humidity = main["humidity"] as? Double
+                                    let pressure = main["pressure"] as? Double
+                                    let data = OWMData(kelvin: kelvin, humidity: humidity, pressure: pressure)
+                                    promise.succeed(value: data)
+                                } catch let error {
+                                    promise.fail(error: .networking(error))
+                                }
+                            } else {
                                 promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
-                                return
                             }
-                            let kelvin = main["temp"] as? Double
-                            let humidity = main["humidity"] as? Double
-                            let pressure = main["pressure"] as? Double
-                            let data = OWMData(kelvin: kelvin, humidity: humidity, pressure: pressure)
-                            promise.succeed(value: data)
-                        } catch let error {
-                            promise.fail(error: .networking(error))
                         }
                     } else {
-                        promise.fail(error: .parse(OWMError.failedToParseOpenWeatherMapResponse))
+                        promise.fail(error: .parse(OWMError.notAHttpResponse))
                     }
                 }
             }

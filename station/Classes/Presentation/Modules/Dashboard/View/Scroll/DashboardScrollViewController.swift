@@ -31,6 +31,12 @@ extension DashboardScrollViewController: DashboardViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func showWebTagAPILimitExceededError() {
+        let alertVC = UIAlertController(title: "Dashboard.WebTagAPILimitExcededError.Alert.title".localized(), message: "Dashboard.WebTagAPILimitExcededError.Alert.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 
     func showBluetoothDisabled() {
         let alertVC = UIAlertController(title: "Dashboard.BluetoothDisabledAlert.title".localized(), message: "Dashboard.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)

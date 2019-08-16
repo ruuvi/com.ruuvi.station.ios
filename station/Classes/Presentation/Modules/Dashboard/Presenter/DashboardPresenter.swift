@@ -193,6 +193,8 @@ extension DashboardPresenter {
                     } else if let error = error {
                         if case .core(let coreError) = error, coreError == .noLocationPermission {
                             observer.permissionPresenter.presentNoLocationPermission()
+                        } else if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
+                            observer.view.showWebTagAPILimitExceededError()
                         } else {
                             observer.errorPresenter.present(error: error)
                         }
@@ -207,7 +209,11 @@ extension DashboardPresenter {
                 if let data = data {
                     viewModel.update(data)
                 } else if let error = error {
-                    observer.errorPresenter.present(error: error)
+                    if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
+                        observer.view.showWebTagAPILimitExceededError()
+                    } else {
+                        observer.errorPresenter.present(error: error)
+                    }
                 }
             })
         }

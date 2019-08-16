@@ -28,6 +28,8 @@
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
+"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
@@ -60,6 +62,8 @@
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
+"OWMError.apiLimitExceeded" = "API limit exceeded";
+"OWMError.notAHttpResponse" = "Not a HTTP response";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
