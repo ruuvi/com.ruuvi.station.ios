@@ -14,7 +14,7 @@ class DashboardPresenter: DashboardModuleInput {
     var weatherProviderService: WeatherProviderService!
     var permissionPresenter: PermissionPresenter!
     
-    private let webTagObserveInterval: TimeInterval = 30 // sec
+    private let webTagObserveInterval: TimeInterval = 60 // sec
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
