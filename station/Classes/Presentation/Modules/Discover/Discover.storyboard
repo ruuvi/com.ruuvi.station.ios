@@ -140,7 +140,7 @@
                             <outlet property="delegate" destination="KWd-e4-kyA" id="ZTC-ZM-aua"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Add a New RuuviTag" id="idW-IY-zqC">
+                    <navigationItem key="navigationItem" title="Add a New Sensor" id="idW-IY-zqC">
                         <barButtonItem key="leftBarButtonItem" title="Close" id="wzL-rj-N05">
                             <connections>
                                 <action selector="closeBarButtonItemAction:" destination="KWd-e4-kyA" id="uh8-hb-uaZ"/>
