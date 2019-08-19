@@ -13,6 +13,9 @@
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 
+// About
+"About.Version.text" = "Version";
+
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
 "ErrorPresenterAlert.OK" = "OK";

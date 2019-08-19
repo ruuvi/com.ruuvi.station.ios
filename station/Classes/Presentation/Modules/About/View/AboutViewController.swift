@@ -4,6 +4,7 @@ class AboutViewController: UIViewController {
     var output: AboutViewOutput!
     
     @IBOutlet weak var aboutTextView: UITextView!
+    @IBOutlet weak var versionLabel: UILabel!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
@@ -73,6 +74,16 @@ extension AboutViewController: UITextViewDelegate {
 extension AboutViewController {
     private func configureViews() {
         boldifyTextView()
+        configureVersionLabel()
+    }
+    
+    private func configureVersionLabel() {
+        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
+            let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            versionLabel.text = "About.Version.text".localized() + " " + appVersion + "(" + buildVersion + ")"
+        } else {
+            versionLabel.text = nil
+        }
     }
     
     private func boldifyTextView() {
