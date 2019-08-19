@@ -33,6 +33,8 @@ class ErrorPresenterAlert: ErrorPresenter {
         let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
         let action = UIAlertAction(title: "ErrorPresenterAlert.OK".localized(), style: .cancel, handler: nil)
         alert.addAction(action)
-        alert.show()
+        DispatchQueue.main.async {
+            alert.show()
+        }
     }
 }
