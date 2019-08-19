@@ -80,7 +80,7 @@ extension AboutViewController {
     private func configureVersionLabel() {
         if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
             let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            versionLabel.text = "Version " + appVersion + "(" + buildVersion + ")"
+            versionLabel.text = "About.Version.text".localized() + " " + appVersion + "(" + buildVersion + ")"
         } else {
             versionLabel.text = nil
         }
