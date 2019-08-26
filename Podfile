@@ -5,6 +5,7 @@ inhibit_all_warnings!
 target 'station' do
   pod 'BTKit'
   pod 'EmptyDataSet-Swift'
+  pod 'Firebase/Messaging'
   pod 'FutureX'
   pod 'Humidity'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
