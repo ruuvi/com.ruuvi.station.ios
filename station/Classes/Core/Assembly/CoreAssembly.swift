@@ -13,11 +13,15 @@ class CoreAssembly: Assembly {
             return manager
         }
         
-        container.register(PermissionsManager.self) { (r)  in
+        container.register(PermissionsManager.self) { r in
             let manager = PermissionsManagerImpl()
             manager.locationManager = r.resolve(LocationManager.self)
             return manager
         }.inObjectScope(.container)
         
+        container.register(PushNotificationsManager.self) { r in
+            let manager = PushNotificationsManagerImpl()
+            return manager
+        }
     }
 }
