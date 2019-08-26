@@ -3,6 +3,15 @@ import UserNotifications
 
 class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
     
+    var pnTokenData: Data? {
+        get {
+            return UserDefaults.standard.data(forKey: pnTokenDataUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: pnTokenDataUDKey)
+        }
+    }
+    
     func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
@@ -51,7 +60,8 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
         }
     }
     
-    private let didAskForRemoteNotificationPermissionUDKey = "didAskForRemoteNotificationPermissionUDKey"
+    private let pnTokenDataUDKey = "PushNotificationsManagerImpl.pnTokenDataUDKey"
+    private let didAskForRemoteNotificationPermissionUDKey = "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
     private var didAskForRemoteNotificationPermission: Bool {
         get {
             return UserDefaults.standard.bool(forKey: didAskForRemoteNotificationPermissionUDKey)

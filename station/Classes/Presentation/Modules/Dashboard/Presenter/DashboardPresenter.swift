@@ -13,6 +13,7 @@ class DashboardPresenter: DashboardModuleInput {
     var webTagService: WebTagService!
     var weatherProviderService: WeatherProviderService!
     var permissionPresenter: PermissionPresenter!
+    var pushNotificationsManager: PushNotificationsManager!
     
     private let webTagObserveInterval: TimeInterval = 60 // sec
     private var ruuviTagsToken: NotificationToken?
@@ -63,6 +64,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingWebTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
+        pushNotificationsManager.registerForRemoteNotifications()
     }
     
     func viewWillAppear() {
