@@ -10,10 +10,66 @@ PODS:
   - BTKit/Scanner (0.0.10):
     - BTKit/Devices
   - EmptyDataSet-Swift (4.2.0)
+  - Firebase/CoreOnly (6.7.0):
+    - FirebaseCore (= 6.2.1)
+  - Firebase/Messaging (6.7.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 4.1.3)
+  - FirebaseAnalyticsInterop (1.4.0)
+  - FirebaseCore (6.2.1):
+    - FirebaseCoreDiagnostics (~> 1.0)
+    - FirebaseCoreDiagnosticsInterop (~> 1.0)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Logger (~> 6.2)
+  - FirebaseCoreDiagnostics (1.0.1):
+    - FirebaseCoreDiagnosticsInterop (~> 1.0)
+    - GoogleDataTransportCCTSupport (~> 1.0)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Logger (~> 6.2)
+  - FirebaseCoreDiagnosticsInterop (1.0.0)
+  - FirebaseInstanceID (4.2.3):
+    - FirebaseCore (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
+  - FirebaseMessaging (4.1.3):
+    - FirebaseAnalyticsInterop (~> 1.3)
+    - FirebaseCore (~> 6.2)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.2)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Reachability (~> 6.2)
+    - GoogleUtilities/UserDefaults (~> 6.2)
+    - Protobuf (~> 3.1)
   - FutureX (1.0)
+  - GoogleDataTransport (1.1.2)
+  - GoogleDataTransportCCTSupport (1.0.2):
+    - GoogleDataTransport (~> 1.1)
+    - nanopb
+  - GoogleUtilities/AppDelegateSwizzler (6.2.5):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (6.2.5)
+  - GoogleUtilities/Logger (6.2.5):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/Network (6.2.5):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (6.2.5)"
+  - GoogleUtilities/Reachability (6.2.5):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (6.2.5):
+    - GoogleUtilities/Logger
   - Humidity (0.0.6)
   - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
+  - nanopb (0.3.901):
+    - nanopb/decode (= 0.3.901)
+    - nanopb/encode (= 0.3.901)
+  - nanopb/decode (0.3.901)
+  - nanopb/encode (0.3.901)
+  - Protobuf (3.9.0)
   - Realm (3.16.1):
     - Realm/Headers (= 3.16.1)
   - Realm/Headers (3.16.1)
@@ -27,6 +83,7 @@ PODS:
 DEPENDENCIES:
   - BTKit
   - EmptyDataSet-Swift
+  - Firebase/Messaging
   - FutureX
   - Humidity
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
@@ -40,9 +97,21 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - BTKit
     - EmptyDataSet-Swift
+    - Firebase
+    - FirebaseAnalyticsInterop
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseCoreDiagnosticsInterop
+    - FirebaseInstanceID
+    - FirebaseMessaging
     - FutureX
+    - GoogleDataTransport
+    - GoogleDataTransportCCTSupport
+    - GoogleUtilities
     - Humidity
     - Localize-Swift
+    - nanopb
+    - Protobuf
     - Realm
     - RealmSwift
     - Swinject
@@ -65,16 +134,28 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   BTKit: d94807b43b3c2d606872c7c9c04e6f80f809bbc1
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
+  Firebase: 291d7b0a7b393f252358083b5d224884126fa46d
+  FirebaseAnalyticsInterop: d48b6ab67bcf016a05e55b71fc39c61c0cb6b7f3
+  FirebaseCore: 32b48f41c84a56fbde73b35ed01a830b3b6dc048
+  FirebaseCoreDiagnostics: 4c04ae09d0ab027c30179828c6bb47764df1bd13
+  FirebaseCoreDiagnosticsInterop: 6829da2b8d1fc795ff1bd99df751d3788035d2cb
+  FirebaseInstanceID: 8b42755db950682e7de0d167bc6fb26a57b244af
+  FirebaseMessaging: 930e4cce01f8f1e634cfdd1881db471fb61be883
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
+  GoogleDataTransport: 9c3d63ed82f882a9a74d4be67dd7ad01bf046102
+  GoogleDataTransportCCTSupport: 6b545f7149111180763dc18c6f372c963de4a310
+  GoogleUtilities: e7dc37039b19df7fe543479d3e4a02ac8d11bb69
   Humidity: 3b003f1218a58782176a5af031987de87668b516
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
+  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
   RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
   SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 58d52104e2ecc4835a0ae934e8cf137dd58f80f1
+PODFILE CHECKSUM: 07424a62539e8853d7e700a323054a141cd0e5a4
 
 COCOAPODS: 1.7.5
