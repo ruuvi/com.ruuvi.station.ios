@@ -10,11 +10,25 @@ PODS:
   - BTKit/Scanner (0.0.10):
     - BTKit/Devices
   - EmptyDataSet-Swift (4.2.0)
+  - Firebase/Analytics (6.7.0):
+    - Firebase/Core
+  - Firebase/Core (6.7.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 6.1.1)
   - Firebase/CoreOnly (6.7.0):
     - FirebaseCore (= 6.2.1)
   - Firebase/Messaging (6.7.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.1.3)
+  - FirebaseAnalytics (6.1.1):
+    - FirebaseCore (~> 6.2)
+    - FirebaseInstanceID (~> 4.2)
+    - GoogleAppMeasurement (= 6.1.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 0.3)
   - FirebaseAnalyticsInterop (1.4.0)
   - FirebaseCore (6.2.1):
     - FirebaseCoreDiagnostics (~> 1.0)
@@ -41,6 +55,12 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 6.2)
     - Protobuf (~> 3.1)
   - FutureX (1.0)
+  - GoogleAppMeasurement (6.1.1):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 0.3)
   - GoogleDataTransport (1.1.2)
   - GoogleDataTransportCCTSupport (1.0.2):
     - GoogleDataTransport (~> 1.1)
@@ -52,6 +72,8 @@ PODS:
   - GoogleUtilities/Environment (6.2.5)
   - GoogleUtilities/Logger (6.2.5):
     - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (6.2.5):
+    - GoogleUtilities/Logger
   - GoogleUtilities/Network (6.2.5):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
@@ -83,6 +105,7 @@ PODS:
 DEPENDENCIES:
   - BTKit
   - EmptyDataSet-Swift
+  - Firebase/Analytics
   - Firebase/Messaging
   - FutureX
   - Humidity
@@ -98,6 +121,7 @@ SPEC REPOS:
     - BTKit
     - EmptyDataSet-Swift
     - Firebase
+    - FirebaseAnalytics
     - FirebaseAnalyticsInterop
     - FirebaseCore
     - FirebaseCoreDiagnostics
@@ -105,6 +129,7 @@ SPEC REPOS:
     - FirebaseInstanceID
     - FirebaseMessaging
     - FutureX
+    - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
@@ -135,6 +160,7 @@ SPEC CHECKSUMS:
   BTKit: d94807b43b3c2d606872c7c9c04e6f80f809bbc1
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Firebase: 291d7b0a7b393f252358083b5d224884126fa46d
+  FirebaseAnalytics: 843c7f64a8f9c79f0d03281197ebe7bb1d58d477
   FirebaseAnalyticsInterop: d48b6ab67bcf016a05e55b71fc39c61c0cb6b7f3
   FirebaseCore: 32b48f41c84a56fbde73b35ed01a830b3b6dc048
   FirebaseCoreDiagnostics: 4c04ae09d0ab027c30179828c6bb47764df1bd13
@@ -142,6 +168,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 8b42755db950682e7de0d167bc6fb26a57b244af
   FirebaseMessaging: 930e4cce01f8f1e634cfdd1881db471fb61be883
   FutureX: bce2431bf4dd505d4782336e8ea70be204d00ae4
+  GoogleAppMeasurement: 86a82f0e1f20b8eedf8e20326530138fd71409de
   GoogleDataTransport: 9c3d63ed82f882a9a74d4be67dd7ad01bf046102
   GoogleDataTransportCCTSupport: 6b545f7149111180763dc18c6f372c963de4a310
   GoogleUtilities: e7dc37039b19df7fe543479d3e4a02ac8d11bb69
@@ -156,6 +183,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 07424a62539e8853d7e700a323054a141cd0e5a4
+PODFILE CHECKSUM: 993ffcc3ac122e0a3fa33041e02d65abced9a520
 
 COCOAPODS: 1.7.5
