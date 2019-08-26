@@ -9,6 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        Messaging.messaging().delegate = self
         // Override point for customization after application launch.
         let r = AppAssembly.shared.assembler.resolver
         if let settings = r.resolve(Settings.self),
@@ -49,3 +50,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 }
 
+// MARK: - Push Notifications
+extension AppDelegate {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let r = AppAssembly.shared.assembler.resolver
+        if var pnManager = r.resolve(PushNotificationsManager.self) {
+            pnManager.pnTokenData = deviceToken
+        }
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print(error.localizedDescription)
+    }
+}
+
+// MARK: - MessagingDelegate
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
+    }
+}

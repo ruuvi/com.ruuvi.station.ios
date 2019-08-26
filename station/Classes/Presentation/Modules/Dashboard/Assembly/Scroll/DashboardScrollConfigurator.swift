@@ -20,6 +20,7 @@ class DashboardScrollConfigurator {
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.weatherProviderService = r.resolve(WeatherProviderService.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
+        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         
         let menu = UIStoryboard(name: "Menu", bundle: .main).instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom
