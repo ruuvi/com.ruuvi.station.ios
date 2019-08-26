@@ -133,6 +133,7 @@
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
 		0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
 		0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */; };
+		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
 		0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
@@ -371,6 +372,7 @@
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
 		0EC50F5522CCE46D00172EEB /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenter.swift; sourceTree = "<group>"; };
+		0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderService.swift; sourceTree = "<group>"; };
 		0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderServiceImpl.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -730,6 +732,7 @@
 		0E09671A22AE769F00E85F48 /* Plists */ = {
 			isa = PBXGroup;
 			children = (
+				0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */,
 				64333D3420B0C45A00CDF4B6 /* Info.plist */,
 			);
 			path = Plists;
@@ -2087,6 +2090,7 @@
 			files = (
 				6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */,
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
+				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Dashboard.storyboard in Resources */,
