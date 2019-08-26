@@ -1,7 +1,7 @@
 import UIKit
 import UserNotifications
 
-class PushNotificationsManagerImpl: NSObject {
+class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
     
     func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
         if #available(iOS 10.0, *) {
