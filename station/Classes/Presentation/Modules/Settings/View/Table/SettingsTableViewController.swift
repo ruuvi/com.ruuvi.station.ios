@@ -4,12 +4,10 @@ class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
     
     @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var useFahrenheitSwitch: UISwitch!
-    @IBOutlet weak var experimentalUXSwitch: UISwitch?
+    @IBOutlet weak var temperatureUnitSegmentedControl: UISegmentedControl!
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
-    var isExperimentalUX: Bool = false { didSet { updateUIIsExperimentalUX() } }
 }
 
 // MARK: - SettingsViewInput
@@ -24,8 +22,18 @@ extension SettingsTableViewController: SettingsViewInput {
 
 // MARK: - IBActions
 extension SettingsTableViewController {
-    @IBAction func useFahrenheitSwitchValueChanged(_ sender: Any) {
-        output.viewDidChange(temperatureUnit: useFahrenheitSwitch.isOn ? .fahrenheit : .celsius)
+    
+    @IBAction func temperatureUnitSegmentedControlValueChanged(_ sender: Any) {
+        switch temperatureUnitSegmentedControl.selectedSegmentIndex {
+        case 0:
+            output.viewDidChange(temperatureUnit: .kelvin)
+        case 1:
+            output.viewDidChange(temperatureUnit: .celsius)
+        case 2:
+            output.viewDidChange(temperatureUnit: .fahrenheit)
+        default:
+            break
+        }
     }
     
     @IBAction func humidityUnitSegmentedControlValueChanged(_ sender: Any) {
@@ -39,10 +47,6 @@ extension SettingsTableViewController {
         default:
             break
         }
-    }
-    
-    @IBAction func experimentalUXValueChanged(_ sender: UISwitch) {
-        output.viewDidChange(experimentalUX: sender.isOn)
     }
     
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
@@ -64,7 +68,6 @@ extension SettingsTableViewController {
     private func updateUI() {
         updateUITemperatureUnit()
         updateUIHumidityUnit()
-        updateUIIsExperimentalUX()
     }
     
     private func updateUIHumidityUnit() {
@@ -80,15 +83,16 @@ extension SettingsTableViewController {
         }
     }
     
-    private func updateUIIsExperimentalUX() {
-        if isViewLoaded {
-            experimentalUXSwitch?.isOn = isExperimentalUX
-        }
-    }
-    
     private func updateUITemperatureUnit() {
         if isViewLoaded {
-            useFahrenheitSwitch.isOn = temperatureUnit == .fahrenheit
+            switch temperatureUnit {
+            case .kelvin:
+                temperatureUnitSegmentedControl.selectedSegmentIndex = 0
+            case .celsius:
+                temperatureUnitSegmentedControl.selectedSegmentIndex = 1
+            case .fahrenheit:
+                temperatureUnitSegmentedControl.selectedSegmentIndex = 2
+            }
         }
     }
 }

@@ -32,10 +32,29 @@ class SettingsUserDegaults: Settings {
     
     var temperatureUnit: TemperatureUnit {
         get {
-            return useFahrenheit ? .fahrenheit : .celsius
+            switch temperatureUnitInt {
+            case 0:
+                return useFahrenheit ? .fahrenheit : .celsius
+            case 1:
+                return .kelvin
+            case 2:
+                return .celsius
+            case 3:
+                return .fahrenheit
+            default:
+                return .celsius
+            }
         }
         set {
             useFahrenheit = newValue == .fahrenheit
+            switch newValue {
+            case .kelvin:
+                temperatureUnitInt = 1
+            case .celsius:
+                temperatureUnitInt = 2
+            case .fahrenheit:
+                temperatureUnitInt = 3
+            }
             NotificationCenter
                 .default
                 .post(name: .TemperatureUnitDidChange,
@@ -54,16 +73,6 @@ class SettingsUserDegaults: Settings {
     }
     private let welcomeShownUDKey = "SettingsUserDegaults.welcomeShown"
     
-    var experimentalUX: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: experimentalUXUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: experimentalUXUDKey)
-        }
-    }
-    private let experimentalUXUDKey = "SettingsUserDegaults.experimentalUX"
-    
     private var useFahrenheit: Bool {
         get {
             return UserDefaults.standard.bool(forKey: useFahrenheitUDKey)
@@ -73,6 +82,28 @@ class SettingsUserDegaults: Settings {
         }
     }
     private let useFahrenheitUDKey = "SettingsUserDegaults.useFahrenheit"
+    
+    
+    private var temperatureUnitInt: Int {
+        get {
+            let int = UserDefaults.standard.integer(forKey: temperatureUnitIntUDKey)
+            if int == 0 {
+                if useFahrenheit {
+                    temperatureUnit = .fahrenheit
+                    return 3
+                } else {
+                    temperatureUnit = .celsius
+                    return 2
+                }
+            } else {
+                return int
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: temperatureUnitIntUDKey)
+        }
+    }
+    private let temperatureUnitIntUDKey = "SettingsUserDegaults.temperatureUnitIntUDKey"
     
     private var humidityUnitInt: Int {
         get {

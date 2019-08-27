@@ -27,24 +27,30 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use Fahrenheit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vN3-8D-6Uc">
-                                                    <rect key="frame" x="20" y="11.5" width="116" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vN3-8D-6Uc">
+                                                    <rect key="frame" x="20" y="11.5" width="133" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="GGg-TC-AXn">
-                                                    <rect key="frame" x="345" y="6" width="49" height="31"/>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="xCo-14-Jo8">
+                                                    <rect key="frame" x="267" y="8" width="127" height="29"/>
+                                                    <segments>
+                                                        <segment title="K" width="42"/>
+                                                        <segment title="C" width="42"/>
+                                                        <segment title="F" width="41"/>
+                                                    </segments>
                                                     <connections>
-                                                        <action selector="useFahrenheitSwitchValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="XDw-OK-5Oa"/>
+                                                        <action selector="temperatureUnitSegmentedControlValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="3JY-HB-Rli"/>
                                                     </connections>
-                                                </switch>
+                                                </segmentedControl>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="vN3-8D-6Uc" firstAttribute="leading" secondItem="1v3-GZ-kVI" secondAttribute="leading" constant="20" id="0eH-eY-kSZ"/>
-                                                <constraint firstItem="GGg-TC-AXn" firstAttribute="centerY" secondItem="1v3-GZ-kVI" secondAttribute="centerY" id="315-rn-WWo"/>
                                                 <constraint firstItem="vN3-8D-6Uc" firstAttribute="centerY" secondItem="1v3-GZ-kVI" secondAttribute="centerY" id="7AA-TD-nfY"/>
-                                                <constraint firstAttribute="trailing" secondItem="GGg-TC-AXn" secondAttribute="trailing" constant="22" id="m9m-jJ-fH5"/>
+                                                <constraint firstAttribute="trailing" secondItem="xCo-14-Jo8" secondAttribute="trailing" constant="20" id="DVg-fg-AC6"/>
+                                                <constraint firstItem="xCo-14-Jo8" firstAttribute="centerY" secondItem="1v3-GZ-kVI" secondAttribute="centerY" id="Tz6-lr-JCB"/>
+                                                <constraint firstItem="xCo-14-Jo8" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vN3-8D-6Uc" secondAttribute="trailing" constant="8" id="iPX-ts-ws5"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -99,7 +105,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
-                        <outlet property="useFahrenheitSwitch" destination="GGg-TC-AXn" id="Ezn-3U-xoA"/>
+                        <outlet property="temperatureUnitSegmentedControl" destination="xCo-14-Jo8" id="bFj-VL-KLy"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ur-UI-uvS" userLabel="First Responder" sceneMemberID="firstResponder"/>
