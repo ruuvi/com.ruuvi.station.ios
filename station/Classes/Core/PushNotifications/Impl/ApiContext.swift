@@ -23,7 +23,9 @@ class ApiContext {
             )
         ]
         let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
+        var headers = SessionManager.defaultHTTPHeaders
+        headers["Content-Type"] = "application/json"
+        configuration.httpAdditionalHeaders = headers
         self.sessionManager = SessionManager(
             configuration: configuration,
             serverTrustPolicyManager: ServerTrustPolicyManager(
