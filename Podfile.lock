@@ -1,13 +1,13 @@
 PODS:
-  - BTKit (0.0.10):
-    - BTKit/Devices (= 0.0.10)
-    - BTKit/Ruuvi (= 0.0.10)
-    - BTKit/Scanner (= 0.0.10)
-  - BTKit/Devices (0.0.10)
-  - BTKit/Ruuvi (0.0.10):
+  - BTKit (0.0.13):
+    - BTKit/Devices (= 0.0.13)
+    - BTKit/Ruuvi (= 0.0.13)
+    - BTKit/Scanner (= 0.0.13)
+  - BTKit/Devices (0.0.13)
+  - BTKit/Ruuvi (0.0.13):
     - BTKit/Devices
     - BTKit/Scanner
-  - BTKit/Scanner (0.0.10):
+  - BTKit/Scanner (0.0.13):
     - BTKit/Devices
   - EmptyDataSet-Swift (4.2.0)
   - Firebase/Analytics (6.7.0):
@@ -83,7 +83,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.2.5):
     - GoogleUtilities/Logger
-  - Humidity (0.0.6)
+  - Humidity (0.0.7)
   - LightRoute (2.1.20)
   - Localize-Swift (2.0.0)
   - nanopb (0.3.901):
@@ -157,7 +157,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: d94807b43b3c2d606872c7c9c04e6f80f809bbc1
+  BTKit: 12041aab378b799a619f720885dbe1cc0e9bbc0e
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Firebase: 291d7b0a7b393f252358083b5d224884126fa46d
   FirebaseAnalytics: 843c7f64a8f9c79f0d03281197ebe7bb1d58d477
@@ -172,7 +172,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 9c3d63ed82f882a9a74d4be67dd7ad01bf046102
   GoogleDataTransportCCTSupport: 6b545f7149111180763dc18c6f372c963de4a310
   GoogleUtilities: e7dc37039b19df7fe543479d3e4a02ac8d11bb69
-  Humidity: 3b003f1218a58782176a5af031987de87668b516
+  Humidity: b6fcbbfeda1a001bbe40116a1ddf4272c9c58bd8
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
   Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48

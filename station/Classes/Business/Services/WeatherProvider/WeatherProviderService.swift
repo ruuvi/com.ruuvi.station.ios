@@ -26,6 +26,14 @@ struct WPSData {
             return nil
         }
     }
+    
+    var kelvin: Double? {
+        if let celsius = celsius {
+            return celsius + 273.15
+        } else {
+            return nil
+        }
+    }
 }
 
 protocol WeatherProviderService {

@@ -129,8 +129,9 @@ extension DashboardScrollViewController {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
+        let kelvin = viewModel.kelvin
         
-        let temperatureBlock: ((UILabel,Double?) -> Void) = { [weak temperatureUnit, weak fahrenheit, weak celsius] label, _ in
+        let temperatureBlock: ((UILabel,Double?) -> Void) = { [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
                 switch temperatureUnit {
                 case .celsius:
@@ -145,6 +146,12 @@ extension DashboardScrollViewController {
                     } else {
                         label.text = "N/A".localized()
                     }
+                case .kelvin:
+                    if let kelvin = kelvin?.value {
+                        label.text = String(format: "%.2f", kelvin)
+                    } else {
+                        label.text = "N/A".localized()
+                    }
                 }
             } else {
                 label.text = "N/A".localized()
@@ -154,6 +161,7 @@ extension DashboardScrollViewController {
         if let temperatureLabel = view.temperatureLabel {
             temperatureLabel.bind(viewModel.celsius, block: temperatureBlock)
             temperatureLabel.bind(viewModel.fahrenheit, block: temperatureBlock)
+            temperatureLabel.bind(viewModel.kelvin, block: temperatureBlock)
             
             view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureLabel] label, temperatureUnit in
                 if let temperatureUnit = temperatureUnit {
@@ -162,6 +170,8 @@ extension DashboardScrollViewController {
                         label.text = "°C".localized()
                     case .fahrenheit:
                         label.text = "°F".localized()
+                    case .kelvin:
+                        label.text = "°K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
@@ -177,8 +187,9 @@ extension DashboardScrollViewController {
         let tu = viewModel.temperatureUnit
         let dc = viewModel.dewPointCelsius
         let df = viewModel.dewPointFahrenheit
+        let dk = viewModel.dewPointKelvin
         
-        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df] label, _ in
+        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df, weak dk] label, _ in
             if let hu = hu?.value {
                 switch hu {
                 case .percent:
@@ -212,6 +223,12 @@ extension DashboardScrollViewController {
                         case .fahrenheit:
                             if let df = df?.value {
                                 label.text = String(format: "%.2f", df) + " " + "°F".localized()
+                            } else {
+                                label.text = "N/A".localized()
+                            }
+                        case .kelvin:
+                            if let dk = dk?.value {
+                                label.text = String(format: "%.2f", dk) + " " + "°K".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
