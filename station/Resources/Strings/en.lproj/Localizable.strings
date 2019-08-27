@@ -6,6 +6,7 @@
 "N/A" = "N/A";
 "°C" = "°C";
 "°F" = "°F";
+"°K" = "°K";
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage

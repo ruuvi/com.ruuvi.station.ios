@@ -31,6 +31,14 @@ class RuuviTagDataRealm: Object {
         }
     }
     
+    var kelvin: Double? {
+        if let celsius = celsius.value {
+            return celsius + 273.15
+        } else {
+            return nil
+        }
+    }
+    
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
