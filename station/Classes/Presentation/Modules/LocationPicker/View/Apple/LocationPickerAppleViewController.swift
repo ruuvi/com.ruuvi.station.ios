@@ -46,6 +46,10 @@ extension LocationPickerAppleViewController {
             output.viewDidLongPressOnMap(at: coordinate)
         }
     }
+    
+    @objc func mapViewTapHandler(_ gr: UIGestureRecognizer) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 // MARK: - View lifecycle
@@ -69,6 +73,10 @@ extension LocationPickerAppleViewController: MKMapViewDelegate {
             return view
         }
     }
+    
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        searchBar.resignFirstResponder()
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -91,6 +99,9 @@ extension LocationPickerAppleViewController {
         let gr = UILongPressGestureRecognizer(target: self, action: #selector(LocationPickerAppleViewController.mapViewLongPressHandler(_:)))
         gr.minimumPressDuration = 0.3
         mapView.addGestureRecognizer(gr)
+        
+        let tr = UITapGestureRecognizer(target: self, action: #selector(LocationPickerAppleViewController.mapViewTapHandler(_:)))
+        mapView.addGestureRecognizer(tr)
     }
 }
 
