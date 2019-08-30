@@ -89,7 +89,7 @@ extension LocationPickerAppleViewController {
         navigationItem.titleView = searchBar
         
         let gr = UILongPressGestureRecognizer(target: self, action: #selector(LocationPickerAppleViewController.mapViewLongPressHandler(_:)))
-        gr.minimumPressDuration = 1
+        gr.minimumPressDuration = 0.3
         mapView.addGestureRecognizer(gr)
     }
 }
