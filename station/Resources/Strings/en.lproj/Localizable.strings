@@ -97,3 +97,7 @@
 "WebTagSettings.Location.Current" = "Current";
 "WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
 "WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
+
+// Welcome
+"Welcome.description.text" = "To find nearby RuuviTags and receive live sensor data, press scan.";
+"Welcome.scan.title" = "SCAN";
