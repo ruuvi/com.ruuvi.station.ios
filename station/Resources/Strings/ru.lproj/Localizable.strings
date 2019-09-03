@@ -1,0 +1,103 @@
+"Cancel" = "Cancel";
+"OK" = "OK";
+"Copy" = "Copy";
+"Confirm" = "Confirm";
+"Remove" = "Remove";
+"N/A" = "N/A";
+"°C" = "°C";
+"°F" = "°F";
+"°K" = "°K";
+"hPa" = "hPa";
+"dBm" = "dBm";
+"V" = "V"; // voltage
+"%" = "%";
+"g/m³" = "g/m³";
+"g" = "g"; // acceleration
+
+// About
+"About.Version.text" = "Version";
+
+// ErrorPresenterAlert
+"ErrorPresenterAlert.Error" = "Error";
+"ErrorPresenterAlert.OK" = "OK";
+
+// CoreError
+"CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
+"CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
+"CoreError.failedToGetCurrentLocation" = "Failed to get current location";
+"CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
+"CoreError.noLocationPermission" = "Missing permission for Location Services";
+
+// Dashboard
+"Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
+"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
+"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
+"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
+
+// DiscoverTable
+"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
+"DiscoverTable.SectionTitle.WebTags" = "Location-based";
+"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+
+// ExpectedError
+"ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
+
+// HumidityCalibration
+"HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
+"HumidityCalibration.VideoTutorials.link" = "video tutorials";
+"HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Are you sure?";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "You are going to clear humidity offset. This can't be undone. Tap \"Confirm\" to continue.";
+"HumidityCalibration.CalibrationConfirmationAlert.title" = "Are you sure?";
+"HumidityCalibration.CalibrationConfirmationAlert.message" = "You are going to calibrate humidity offset. Tap \"Confirm\" to continue";
+
+// PermissionPresenter
+"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";
+"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station needs to access your camera to enable this feature.";
+"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station needs to access your location to enable this feature.";
+"PermissionPresenter.settings" = "Settings";
+
+// PhotoPicker
+"PhotoPicker.Sheet.message" = "Pick a photo";
+"PhotoPicker.Sheet.library" = "Choose from library";
+"PhotoPicker.Sheet.camera" = "Take Picture";
+
+// OWMError
+"OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
+"OWMError.apiLimitExceeded" = "API limit exceeded";
+"OWMError.notAHttpResponse" = "Not a HTTP response";
+"OWMError.invalidApiKey" = "Invalid API Key";
+
+// TagSettings
+"TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
+"TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this RuuviTag?";
+"TagSettings.Mac.Alert.title" = "MAC Address";
+"TagSettings.UUID.Alert.title" = "UUID";
+"TagSettings.UpdateFirmware.Alert.title" = "RAWv2 mode is required";
+"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on your RuuviTag.\nOr update your RuuviTag with the latest firmware.";
+"TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Learn more";
+"TagSettings.EmptyValue.sign" = "-";
+"TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
+"TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
+"TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
+
+// UnexpectedError
+"UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
+"UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
+
+// WebTagLocationSource
+"WebTagLocationSource.current" = "Current";
+"WebTagLocationSource.manual" = "Manually";
+
+// WebTagSettings
+"WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
+"WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";
+"WebTagSettings.Location.Current" = "Current";
+"WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
+"WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
+
+// Welcome
+"Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";
+"Welcome.scan.title" = "СКАНИРОВАТЬ";
