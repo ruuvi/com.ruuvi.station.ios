@@ -30,3 +30,11 @@ extension WelcomeViewController {
         output.viewDidTriggerScan()
     }
 }
+
+// MARK: - View lifecycle
+extension WelcomeViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupLocalization()
+    }
+}
