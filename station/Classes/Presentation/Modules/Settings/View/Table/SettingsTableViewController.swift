@@ -1,10 +1,17 @@
 import UIKit
 
+private enum SettingsTableSection: Int {
+    case general = 0
+}
+
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
     
     @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
     @IBOutlet weak var temperatureUnitSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var humidityUnitLabel: UILabel!
+    @IBOutlet weak var temperatureUnitLabel: UILabel!
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
@@ -13,8 +20,16 @@ class SettingsTableViewController: UITableViewController {
 // MARK: - SettingsViewInput
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
-        
+        navigationItem.title = "Settings.navigationItem.title".localized()
+        closeBarButtonItem.title = "Settings.BarButtonItem.Close.title".localized()
+        temperatureUnitLabel.text = "Settings.Label.TemperatureUnit.text".localized()
+        humidityUnitLabel.text = "Settings.Label.HumidityUnit.text".localized()
+        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(), forSegmentAt: 0)
+        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(), forSegmentAt: 1)
+        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(), forSegmentAt: 2)
+        tableView.reloadData()
     }
+    
     func apply(theme: Theme) {
         
     }
@@ -58,8 +73,30 @@ extension SettingsTableViewController {
 extension SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         updateUI()
         output.viewDidLoad()
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension SettingsTableViewController {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case SettingsTableSection.general.rawValue:
+            return "Settings.SectionHeader.General.title".localized()
+        default:
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case SettingsTableSection.general.rawValue:
+            return "Settings.SectionFooter.General.title".localized()
+        default:
+            return nil
+        }
     }
 }
 
