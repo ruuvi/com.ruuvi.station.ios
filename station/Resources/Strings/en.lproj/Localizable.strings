@@ -21,7 +21,17 @@
 
 // About
 "About.Version.text" = "Version";
-
+"About.AboutHelp.header" = "ABOUT / HELP";
+"About.AboutHelp.contents" = "Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.";
+"About.OperationsManual.header" = "OPERATIONS MANUAL";
+"About.OperationsManual.contents" = "We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals";
+"About.Troubleshooting.header" = "TROUBLESHOOTING";
+"About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles";
+"About.OpenSource.header" = "OPEN-SOURCE";
+"About.OpenSource.contents" = "Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi";
+"About.More.header" = "MORE TO READ";
+"About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
+ 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
 "ErrorPresenterAlert.OK" = "OK";
