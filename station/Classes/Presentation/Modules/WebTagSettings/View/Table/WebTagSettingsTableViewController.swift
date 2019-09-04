@@ -33,6 +33,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         tagNameTitleLabel.text = "WebTagSettings.Label.TagName.text".localized()
         locationTitleLabel.text = "WebTagSettings.Label.Location.text".localized()
         removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
+        tableView.reloadData()
     }
     
     func apply(theme: Theme) {
