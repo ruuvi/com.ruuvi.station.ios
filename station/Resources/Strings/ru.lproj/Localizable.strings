@@ -53,7 +53,7 @@
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 
 // HumidityCalibration
-"HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с хлоридом натрия (поваренная соль). Посмотрите обучающие видео о том, как легко сделать это дома. ";
+"HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с поваренной солью. Посмотрите обучающие видео о том, как легко сделать это дома. ";
 "HumidityCalibration.VideoTutorials.link" = "обучающие видео";
 "HumidityCalibration.lastCalibrationDate.format" = "Откалибровано: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Вы уверены?";
@@ -90,6 +90,21 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
 "TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Исправить";
+"TagSettings.navigationItem.title" = "Настройки";
+"TagSettings.backgroundImageLabel.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
+"TagSettings.tagNameTitleLabel.text" = "Имя";
+"TagSettings.humidityTitleLabel.text" = "Влажность";
+"TagSettings.uuidTitleLabel.text" = "UUID";
+"TagSettings.macAddressTitleLabel.text" = "MAC Адрес";
+"TagSettings.dataFormatTitleLabel.text" = "Формат Данных";
+"TagSettings.batteryVoltageTitleLabel.text" = "Напряжение Батареи";
+"TagSettings.accelerationXTitleLabel.text" = "Ускорение по X";
+"TagSettings.accelerationYTitleLabel.text" = "Ускорение по Y";
+"TagSettings.accelerationZTitleLabel.text" = "Ускорение по Z";
+"TagSettings.txPowerTitleLabel.text" = "Мощность Передачи";
+"TagSettings.mcTitleLabel.text" = "Счетчик Движения";
+"TagSettings.msnTitleLabel.text" = "Порядковый номер измерения";
+"TagSettings.removeThisRuuviTagButton.text" = "УДАЛИТЬ ЭТОТ RUUVITAG";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";

@@ -28,6 +28,20 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var mcValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
     @IBOutlet weak var txPowerValueLabel: UILabel!
+    @IBOutlet weak var backgroundImageLabel: UILabel!
+    @IBOutlet weak var tagNameTitleLabel: UILabel!
+    @IBOutlet weak var humidityTitleLabel: UILabel!
+    @IBOutlet weak var uuidTitleLabel: UILabel!
+    @IBOutlet weak var macAddressTitleLabel: UILabel!
+    @IBOutlet weak var dataFormatTitleLabel: UILabel!
+    @IBOutlet weak var batteryVoltageTitleLabel: UILabel!
+    @IBOutlet weak var accelerationXTitleLabel: UILabel!
+    @IBOutlet weak var accelerationYTitleLabel: UILabel!
+    @IBOutlet weak var accelerationZTitleLabel: UILabel!
+    @IBOutlet weak var txPowerTitleLabel: UILabel!
+    @IBOutlet weak var mcTitleLabel: UILabel!
+    @IBOutlet weak var msnTitleLabel: UILabel!
+    @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     
     var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
@@ -41,7 +55,21 @@ class TagSettingsTableViewController: UITableViewController {
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
     func localize() {
-        
+        navigationItem.title = "TagSettings.navigationItem.title".localized()
+        backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
+        tagNameTitleLabel.text = "TagSettings.tagNameTitleLabel.text".localized()
+        humidityTitleLabel.text = "TagSettings.humidityTitleLabel.text".localized()
+        uuidTitleLabel.text = "TagSettings.uuidTitleLabel.text".localized()
+        macAddressTitleLabel.text = "TagSettings.macAddressTitleLabel.text".localized()
+        dataFormatTitleLabel.text = "TagSettings.dataFormatTitleLabel.text".localized()
+        batteryVoltageTitleLabel.text = "TagSettings.batteryVoltageTitleLabel.text".localized()
+        accelerationXTitleLabel.text = "TagSettings.accelerationXTitleLabel.text".localized()
+        accelerationYTitleLabel.text = "TagSettings.accelerationYTitleLabel.text".localized()
+        accelerationZTitleLabel.text = "TagSettings.accelerationZTitleLabel.text".localized()
+        txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
+        mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
+        msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
+        removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
     }
     
     func apply(theme: Theme) {
@@ -108,6 +136,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 extension TagSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         configureViews()
         bindViewModels()
     }

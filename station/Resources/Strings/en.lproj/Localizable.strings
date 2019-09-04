@@ -90,6 +90,21 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
+"TagSettings.navigationItem.title" = "Tag Settings";
+"TagSettings.backgroundImageLabel.text" = "BACKGROUND\nIMAGE";
+"TagSettings.tagNameTitleLabel.text" = "Tag Name";
+"TagSettings.humidityTitleLabel.text" = "Humidity";
+"TagSettings.uuidTitleLabel.text" = "UUID";
+"TagSettings.macAddressTitleLabel.text" = "MAC Address";
+"TagSettings.dataFormatTitleLabel.text" = "Data Format";
+"TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";
+"TagSettings.accelerationXTitleLabel.text" = "Acceleration X";
+"TagSettings.accelerationYTitleLabel.text" = "Acceleration Y";
+"TagSettings.accelerationZTitleLabel.text" = "Acceleration Z";
+"TagSettings.txPowerTitleLabel.text" = "Tx Power";
+"TagSettings.mcTitleLabel.text" = "Movement Counter";
+"TagSettings.msnTitleLabel.text" = "Measurement Sequence Number";
+"TagSettings.removeThisRuuviTagButton.text" = "REMOVE THIS RUUVITAG";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
