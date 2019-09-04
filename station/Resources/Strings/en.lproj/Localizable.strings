@@ -6,7 +6,7 @@
 "N/A" = "N/A";
 "°C" = "°C";
 "°F" = "°F";
-"°K" = "°K";
+"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
