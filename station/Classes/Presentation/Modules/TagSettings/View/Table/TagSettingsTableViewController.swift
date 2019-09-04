@@ -77,6 +77,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
+        tableView.reloadData()
     }
     
     func apply(theme: Theme) {
