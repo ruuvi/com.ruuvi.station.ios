@@ -396,6 +396,7 @@
 		0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableInitializer.swift; sourceTree = "<group>"; };
 		0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableConfigurator.swift; sourceTree = "<group>"; };
 		0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
+		0EBAF0832320120F0025A191 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -2212,6 +2213,7 @@
 				en,
 				Base,
 				ru,
+				fi,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
@@ -2567,6 +2569,7 @@
 			children = (
 				0EEB20C822B7A7200015F9E0 /* en */,
 				0E9D0AAF231E9BD800C6BDA7 /* ru */,
+				0EBAF0832320120F0025A191 /* fi */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
