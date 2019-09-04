@@ -17,6 +17,8 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
     @IBOutlet weak var btDisabledImageView: UIImageView!
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
+    @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
+    @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
     
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
     var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
@@ -63,7 +65,11 @@ class DiscoverTableViewController: UITableViewController {
 // MARK: - DiscoverViewInput
 extension DiscoverTableViewController: DiscoverViewInput {
     func localize() {
+        navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
+        getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
+        getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
         
+        closeBarButtonItem.title = "DiscoverTable.Close.barButtonItem.title".localized()
     }
     
     func apply(theme: Theme) {
@@ -93,6 +99,7 @@ extension DiscoverTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         configureViews()
         updateUI()
         output.viewDidLoad()
