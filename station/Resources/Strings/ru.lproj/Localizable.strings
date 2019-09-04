@@ -127,7 +127,7 @@
 "WebTagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот Веб Таг?";
 "WebTagSettings.Location.Current" = "Текущий";
 "WebTagSettings.confirmClearLocationDialog.title" = "Очистить месторасположение";
-"WebTagSettings.confirmClearLocationDialog.message" = "Вы уверены, что хотите очистить месторасположение для этого Веб Тага? Будет использовано текущее месторасположение.";
+"WebTagSettings.confirmClearLocationDialog.message" = "Вы уверены, что хотите очистить месторасположение? Будет использовано текущее месторасположение.";
 "WebTagSettings.navigationItem.title" = "Настройки";
 "WebTagSettings.Label.BackgroundImage.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
 "WebTagSettings.Label.TagName.text" = "Имя";
