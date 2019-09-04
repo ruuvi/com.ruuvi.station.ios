@@ -111,6 +111,8 @@
 "TagSettings.removeThisRuuviTagButton.text" = "УДАЛИТЬ ЭТОТ RUUVITAG";
 "TagSettings.Label.noValues.text" = "НЕТ ЗНАЧЕНИЙ?";
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
+"TagSettings.SectionHeader.Name.title" = "ИМЯ";
+"TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";

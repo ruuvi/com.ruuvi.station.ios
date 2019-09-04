@@ -111,6 +111,8 @@
 "TagSettings.removeThisRuuviTagButton.text" = "REMOVE THIS RUUVITAG";
 "TagSettings.Label.noValues.text" = "NO VALUES?";
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
+"TagSettings.SectionHeader.Name.title" = "NAME";
+"TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

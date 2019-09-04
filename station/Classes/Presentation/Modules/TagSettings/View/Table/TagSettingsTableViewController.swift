@@ -1,5 +1,12 @@
 import UIKit
 
+private enum TagSettingsTableSection: Int {
+    case image = 0
+    case name = 1
+    case calibration = 2
+    case moreInfo = 3
+}
+
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
@@ -193,6 +200,17 @@ extension TagSettingsTableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case TagSettingsTableSection.name.rawValue:
+            return "TagSettings.SectionHeader.Name.title".localized()
+        case TagSettingsTableSection.calibration.rawValue:
+            return "TagSettings.SectionHeader.Calibration.title".localized()
+        default:
+            return nil
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
@@ -205,7 +223,7 @@ extension TagSettingsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 3 {
+        if section == TagSettingsTableSection.moreInfo.rawValue {
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier) as! TagSettingsMoreInfoHeaderFooterView
             header.delegate = self
             header.noValuesView.isHidden = viewModel?.version.value == 5
