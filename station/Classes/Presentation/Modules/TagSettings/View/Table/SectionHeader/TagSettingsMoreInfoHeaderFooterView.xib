@@ -66,6 +66,8 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
+                <outlet property="moreInfoLabel" destination="pW2-kT-jvU" id="An0-HE-1Hh"/>
+                <outlet property="noValuesLabel" destination="6D4-fi-vcl" id="PUv-Pq-Fs6"/>
                 <outlet property="noValuesView" destination="Di1-0i-uiW" id="Up1-bp-KIv"/>
             </connections>
             <point key="canvasLocation" x="47.826086956521742" y="11.049107142857142"/>

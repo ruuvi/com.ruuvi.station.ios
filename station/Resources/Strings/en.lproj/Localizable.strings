@@ -109,6 +109,8 @@
 "TagSettings.mcTitleLabel.text" = "Movement Counter";
 "TagSettings.msnTitleLabel.text" = "Measurement Sequence Number";
 "TagSettings.removeThisRuuviTagButton.text" = "REMOVE THIS RUUVITAG";
+"TagSettings.Label.noValues.text" = "NO VALUES?";
+"TagSettings.Label.moreInfo.text" = "MORE INFO";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
