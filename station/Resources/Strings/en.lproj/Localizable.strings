@@ -13,6 +13,11 @@
 "%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
+"Updated" = "Updated"; // time ago string
+"h" = "h"; // time ago string, hours
+"min" = "min"; // time ago string, minutes
+"s" = "s"; // time ago string, seconds
+"ago" = "ago"; // time ago string
 
 // About
 "About.Version.text" = "Version";

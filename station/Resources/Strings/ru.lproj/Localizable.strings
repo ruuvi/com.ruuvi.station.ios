@@ -13,6 +13,11 @@
 "%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
+"Updated" = "Обновлено"; // time ago string
+"h" = "ч"; // time ago string, hours
+"min" = "мин"; // time ago string, minutes
+"s" = "с"; // time ago string, seconds
+"ago" = "назад"; // time ago string
 
 // About
 "About.Version.text" = "Version";
