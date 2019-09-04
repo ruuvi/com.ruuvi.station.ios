@@ -182,8 +182,12 @@
                     </tableView>
                     <connections>
                         <outlet property="aboutCell" destination="5jP-lL-ZsG" id="Fn2-zH-noK"/>
+                        <outlet property="aboutHelpLabel" destination="vBO-sF-6UM" id="UOa-EJ-On5"/>
+                        <outlet property="addANewSensorLabel" destination="nMq-BK-yrq" id="ypm-F4-8KI"/>
                         <outlet property="addRuuviTagCell" destination="7M8-AE-dVG" id="XHE-LM-utr"/>
+                        <outlet property="appSettingsLabel" destination="Zj9-0b-xPj" id="mnX-OE-YGf"/>
                         <outlet property="getMoreSensorsCell" destination="Q41-gm-NmA" id="yQD-Eu-H6g"/>
+                        <outlet property="getMoreSensorsLabel" destination="XGm-sP-Ekg" id="cdM-jH-MGT"/>
                         <outlet property="settingsCell" destination="Whs-Vz-g1g" id="A61-3K-Zae"/>
                     </connections>
                 </tableViewController>

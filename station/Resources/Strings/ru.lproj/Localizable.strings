@@ -65,6 +65,12 @@
 "HumidityCalibration.Button.Close.title" = "Закрыть";
 "HumidityCalibration.Label.note.text" = "Данные для калибровки будут сохранены локально. Если вы переустановите приложение будет нужно произвести калибровку заново.";
 
+// Menu
+"Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
+"Menu.Label.AppSettings.text" = "Настройки";
+"Menu.Label.AboutHelp.text" = "О Приложении";
+"Menu.Label.GetMoreSensors.text" = "Больше Сенсоров";
+
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
