@@ -2,6 +2,7 @@ import UIKit
 
 private enum SettingsTableSection: Int {
     case general = 0
+    case application = 1
 }
 
 class SettingsTableViewController: UITableViewController {
@@ -12,9 +13,13 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var humidityUnitLabel: UILabel!
     @IBOutlet weak var temperatureUnitLabel: UILabel!
+    @IBOutlet weak var languageValueLabel: UILabel!
+    @IBOutlet weak var languageTitleLabel: UILabel!
+    @IBOutlet weak var languageCell: UITableViewCell!
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
+    var language: Language = .english { didSet { updateUILanguage() } }
 }
 
 // MARK: - SettingsViewInput
@@ -27,6 +32,8 @@ extension SettingsTableViewController: SettingsViewInput {
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(), forSegmentAt: 0)
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(), forSegmentAt: 1)
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(), forSegmentAt: 2)
+        languageTitleLabel.text = "Settings.Label.Language.text".localized()
+        updateUILanguage()
         tableView.reloadData()
     }
     
@@ -85,6 +92,8 @@ extension SettingsTableViewController {
         switch section {
         case SettingsTableSection.general.rawValue:
             return "Settings.SectionHeader.General.title".localized()
+        case SettingsTableSection.application.rawValue:
+            return "Settings.SectionHeader.Application.title".localized()
         default:
             return nil
         }
@@ -98,6 +107,17 @@ extension SettingsTableViewController {
             return nil
         }
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) {
+            switch cell {
+            case languageCell:
+                output.viewDidTapOnLanguage()
+            default:
+                break
+            }
+        }
+    }
 }
 
 // MARK: - Update UI
@@ -105,6 +125,13 @@ extension SettingsTableViewController {
     private func updateUI() {
         updateUITemperatureUnit()
         updateUIHumidityUnit()
+        updateUILanguage()
+    }
+    
+    private func updateUILanguage() {
+        if isViewLoaded {
+            languageValueLabel.text = language.name
+        }
     }
     
     private func updateUIHumidityUnit() {

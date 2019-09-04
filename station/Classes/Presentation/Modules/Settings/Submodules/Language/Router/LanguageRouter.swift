@@ -1,6 +1,6 @@
 import LightRoute
 
-class SettingsRouter: SettingsRouterInput {
+class LanguageRouter: LanguageRouterInput {
     weak var transitionHandler: TransitionHandler!
     
     func dismiss() {

@@ -5,4 +5,5 @@ protocol SettingsViewOutput {
     func viewDidChange(temperatureUnit: TemperatureUnit)
     func viewDidChange(humidityUnit: HumidityUnit)
     func viewDidTriggerClose()
+    func viewDidTapOnLanguage()
 }

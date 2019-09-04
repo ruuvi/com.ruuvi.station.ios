@@ -2,6 +2,27 @@ import Foundation
 
 class SettingsUserDegaults: Settings {
     
+    var language: Language {
+        get {
+            if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
+                return Language(rawValue: savedCode) ?? .english
+            } else if let regionCode = Locale.current.regionCode {
+                return Language(rawValue: regionCode) ?? .english
+            } else {
+                return .english
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: languageUDKey)
+            NotificationCenter
+                .default
+                .post(name: .LanguageDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+    private let languageUDKey = "SettingsUserDegaults.languageUDKey"
+    
     var humidityUnit: HumidityUnit {
         get {
             switch humidityUnitInt {
@@ -82,7 +103,6 @@ class SettingsUserDegaults: Settings {
         }
     }
     private let useFahrenheitUDKey = "SettingsUserDegaults.useFahrenheit"
-    
     
     private var temperatureUnitInt: Int {
         get {

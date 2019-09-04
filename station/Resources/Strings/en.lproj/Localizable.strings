@@ -75,6 +75,10 @@
 "HumidityCalibration.Button.Close.title" = "Close";
 "HumidityCalibration.Label.note.text" = "Note that calibration data will be stored locally in your mobile device. After Ruuvi Station uninstall & install, you may need to recalibrate.";
 
+// Language
+"Language.English" = "English";
+"Language.Russian" = "Русский";
+
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
 "Menu.Label.AppSettings.text" = "App Settings";
@@ -102,6 +106,8 @@
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
+"Settings.SectionHeader.Application.title" = "APPLICATION";
+"Settings.Label.Language.text" = "Language";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

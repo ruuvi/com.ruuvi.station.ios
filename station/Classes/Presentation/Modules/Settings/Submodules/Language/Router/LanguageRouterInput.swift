@@ -1,5 +1,5 @@
 import Foundation
 
-protocol SettingsRouterInput {
+protocol LanguageRouterInput {
     func dismiss()
 }
