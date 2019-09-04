@@ -124,6 +124,11 @@
 "WebTagSettings.Location.Current" = "Текущий";
 "WebTagSettings.confirmClearLocationDialog.title" = "Очистить месторасположение";
 "WebTagSettings.confirmClearLocationDialog.message" = "Вы уверены, что хотите очистить месторасположение для этого Веб Тага? Будет использовано текущее месторасположение.";
+"WebTagSettings.navigationItem.title" = "Настройки";
+"WebTagSettings.Label.BackgroundImage.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
+"WebTagSettings.Label.TagName.text" = "Имя";
+"WebTagSettings.Label.Location.text" = "Месторасположение";
+"WebTagSettings.Button.Remove.title" = "УДАЛИТЬ";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";

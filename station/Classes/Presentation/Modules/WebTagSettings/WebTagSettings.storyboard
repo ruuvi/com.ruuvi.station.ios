@@ -281,13 +281,17 @@ IMAGE</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backgroundImageLabel" destination="BRG-I9-Ezp" id="5mD-IE-GZJ"/>
                         <outlet property="backgroundImageView" destination="ehU-xd-ddr" id="ah3-VQ-C09"/>
                         <outlet property="clearLocationButton" destination="xy5-kO-ie0" id="DMP-qJ-dIF"/>
                         <outlet property="clearLocationButtonWidth" destination="Ti5-fw-xrv" id="ucs-5k-o6n"/>
                         <outlet property="locationCell" destination="hQf-Gu-PPo" id="KDJ-Rd-eai"/>
+                        <outlet property="locationTitleLabel" destination="1s6-W8-Oue" id="xSS-9l-vZ6"/>
                         <outlet property="locationValueLabel" destination="Mbw-j0-4bQ" id="Ddn-dK-jvZ"/>
+                        <outlet property="removeThisWebTagButton" destination="udR-S3-e8A" id="1He-v3-iUG"/>
                         <outlet property="tagNameCell" destination="CHg-xn-GrS" id="USS-CE-b8i"/>
                         <outlet property="tagNameTextField" destination="PNI-Wm-pcd" id="Wz3-66-q2h"/>
+                        <outlet property="tagNameTitleLabel" destination="Cgq-f8-wPO" id="uK9-aT-f4S"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4k-YF-pYJ" userLabel="First Responder" sceneMemberID="firstResponder"/>

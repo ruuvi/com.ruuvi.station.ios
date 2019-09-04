@@ -124,6 +124,11 @@
 "WebTagSettings.Location.Current" = "Current";
 "WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
 "WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
+"WebTagSettings.navigationItem.title" = "Web Tag Settings";
+"WebTagSettings.Label.BackgroundImage.text" = "BACKGROUND\nIMAGE";
+"WebTagSettings.Label.TagName.text" = "Tag Name";
+"WebTagSettings.Label.Location.text" = "Location";
+"WebTagSettings.Button.Remove.title" = "REMOVE THIS WEB TAG";
 
 // Welcome
 "Welcome.description.text" = "To find nearby RuuviTags and receive live sensor data, press scan.";
