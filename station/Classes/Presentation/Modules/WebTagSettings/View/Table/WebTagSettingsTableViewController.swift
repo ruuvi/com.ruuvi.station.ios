@@ -10,6 +10,12 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var locationValueLabel: UILabel!
     @IBOutlet weak var clearLocationButton: UIButton!
     @IBOutlet weak var clearLocationButtonWidth: NSLayoutConstraint!
+    @IBOutlet weak var backgroundImageLabel: UILabel!
+    @IBOutlet weak var tagNameTitleLabel: UILabel!
+    @IBOutlet weak var removeThisWebTagButton: UIButton!
+    @IBOutlet weak var locationTitleLabel: UILabel!
+    
+    
     
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
 }
@@ -17,7 +23,11 @@ class WebTagSettingsTableViewController: UITableViewController {
 // MARK: - WebTagSettingsViewInput
 extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
     func localize() {
-        
+        navigationItem.title = "WebTagSettings.navigationItem.title".localized()
+        backgroundImageLabel.text = "WebTagSettings.Label.BackgroundImage.text".localized()
+        tagNameTitleLabel.text = "WebTagSettings.Label.TagName.text".localized()
+        locationTitleLabel.text = "WebTagSettings.Label.Location.text".localized()
+        removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
     }
     
     func apply(theme: Theme) {
@@ -77,6 +87,7 @@ extension WebTagSettingsTableViewController {
 extension WebTagSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         bindViewModel()
     }
 }
