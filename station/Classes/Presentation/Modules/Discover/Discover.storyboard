@@ -151,7 +151,9 @@
                         <outlet property="btDisabledEmptyDataSetView" destination="g64-7X-j0B" id="BHv-gg-CGX"/>
                         <outlet property="btDisabledImageView" destination="0Oj-Ez-KU2" id="SUr-ff-9TM"/>
                         <outlet property="closeBarButtonItem" destination="wzL-rj-N05" id="38R-M9-MDJ"/>
+                        <outlet property="getMoreSensorsEmptyDataSetButton" destination="Fwc-BS-iKB" id="7Es-MS-Uf3"/>
                         <outlet property="getMoreSensorsEmptyDataSetView" destination="QrL-fM-HUZ" id="GlA-pj-S1F"/>
+                        <outlet property="getMoreSensorsFooterButton" destination="0v4-V1-W6B" id="Sgy-ZK-NDL"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F67-h2-RM0" userLabel="First Responder" sceneMemberID="firstResponder"/>

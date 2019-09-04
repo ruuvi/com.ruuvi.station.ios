@@ -36,10 +36,13 @@
 "Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
-"DiscoverTable.SectionTitle.WebTags" = "Location-based";
-"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
+"DiscoverTable.SectionTitle.WebTags" = "Локационные";
+"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необхожим bluetooth чтобы слушать RuuviTags. Откройте Настройки и включите Bluetooth.";
+"DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
+"DiscoverTable.GetMoreSensors.button.title" = "БОЛЬШЕ СЕНСОРОВ";
+"DiscoverTable.Close.barButtonItem.title" = "Закрыть";
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
@@ -88,8 +91,8 @@
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 
 // WebTagLocationSource
-"WebTagLocationSource.current" = "Current";
-"WebTagLocationSource.manual" = "Manually";
+"WebTagLocationSource.current" = "Текущая";
+"WebTagLocationSource.manual" = "Вручную";
 
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
