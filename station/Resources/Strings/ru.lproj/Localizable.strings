@@ -52,7 +52,7 @@
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
-"DiscoverTable.SectionTitle.WebTags" = "Локационные";
+"DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
@@ -146,13 +146,13 @@
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 
 // WebTagLocationSource
-"WebTagLocationSource.current" = "Текущая";
-"WebTagLocationSource.manual" = "Вручную";
+"WebTagLocationSource.current" = "Ваше текущее месторасположение";
+"WebTagLocationSource.manual" = "Выбрать месторасположение на карте";
 
 // WebTagSettings
-"WebTagSettings.confirmTagRemovalDialog.title" = "Удалить Веб Таг";
-"WebTagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот Веб Таг?";
-"WebTagSettings.Location.Current" = "Текущий";
+"WebTagSettings.confirmTagRemovalDialog.title" = "Удалить";
+"WebTagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить?";
+"WebTagSettings.Location.Current" = "Ваше текущее месторасположение";
 "WebTagSettings.confirmClearLocationDialog.title" = "Очистить месторасположение";
 "WebTagSettings.confirmClearLocationDialog.message" = "Вы уверены, что хотите очистить месторасположение? Будет использовано текущее месторасположение.";
 "WebTagSettings.navigationItem.title" = "Настройки";

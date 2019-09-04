@@ -52,7 +52,7 @@
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
-"DiscoverTable.SectionTitle.WebTags" = "Location-based";
+"DiscoverTable.SectionTitle.WebTags" = "Virtual Sensors";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.NavigationItem.title" = "Add a New Sensor";
@@ -146,13 +146,13 @@
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 
 // WebTagLocationSource
-"WebTagLocationSource.current" = "Current";
-"WebTagLocationSource.manual" = "Manually";
+"WebTagLocationSource.current" = "Your current location";
+"WebTagLocationSource.manual" = "Pick from the map";
 
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
 "WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";
-"WebTagSettings.Location.Current" = "Current";
+"WebTagSettings.Location.Current" = "Your current location";
 "WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
 "WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
 "WebTagSettings.navigationItem.title" = "Web Tag Settings";
