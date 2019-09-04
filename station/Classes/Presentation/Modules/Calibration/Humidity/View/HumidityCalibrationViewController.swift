@@ -9,10 +9,13 @@ class HumidityCalibrationViewController: UIViewController {
     @IBOutlet weak var oldHumidityLabel: UILabel!
     @IBOutlet weak var lastCalibrationDateLabel: UILabel!
     @IBOutlet weak var clearButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var noteLabel: UILabel!
+    @IBOutlet weak var calibrateButton: UIButton!
     
     var oldHumidity: Double = 0 { didSet { updateUIOldHumidity() } }
     var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
-    var lastCalibrationDate: Date? { didSet { updateUILastCAlibrationDate() } }
+    var lastCalibrationDate: Date? { didSet { updateUILastCalibrationDate() } }
     
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!
 }
@@ -20,7 +23,12 @@ class HumidityCalibrationViewController: UIViewController {
 // MARK: - HumidityCalibrationViewInput
 extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
     func localize() {
-        
+        configureDescriptionLabel()
+        updateUILastCalibrationDate()
+        noteLabel.text = "HumidityCalibration.Label.note.text".localized()
+        clearButton.setTitle("HumidityCalibration.Button.Clear.title".localized(), for: .normal)
+        calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
+        closeButton.setTitle("HumidityCalibration.Button.Close.title".localized(), for: .normal)
     }
     func apply(theme: Theme) {
         
@@ -64,6 +72,7 @@ extension HumidityCalibrationViewController {
 extension HumidityCalibrationViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         configureViews()
         updateUI()
         output.viewDidLoad()
@@ -84,10 +93,10 @@ extension HumidityCalibrationViewController {
     private func updateUI() {
         updateUIOldHumidity()
         updateUIHumidityOffset()
-        updateUILastCAlibrationDate()
+        updateUILastCalibrationDate()
     }
     
-    private func updateUILastCAlibrationDate() {
+    private func updateUILastCalibrationDate() {
         if isViewLoaded {
             if let lastCalibrationDate = lastCalibrationDate {
                 let df = DateFormatter()
@@ -117,6 +126,10 @@ extension HumidityCalibrationViewController {
 // MARK: - View configuration
 extension HumidityCalibrationViewController {
     private func configureViews() {
+        configureDescriptionLabel()
+    }
+    
+    private func configureDescriptionLabel() {
         let text = "HumidityCalibration.Description.text".localized()
         descriptionLabel.text = text
         let link = "HumidityCalibration.VideoTutorials.link".localized()
