@@ -34,11 +34,11 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="xCo-14-Jo8">
-                                                    <rect key="frame" x="267" y="8" width="127" height="29"/>
+                                                    <rect key="frame" x="266" y="8" width="128" height="29"/>
                                                     <segments>
                                                         <segment title="K" width="42"/>
                                                         <segment title="C" width="42"/>
-                                                        <segment title="F" width="41"/>
+                                                        <segment title="F" width="42"/>
                                                     </segments>
                                                     <connections>
                                                         <action selector="temperatureUnitSegmentedControlValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="3JY-HB-Rli"/>
@@ -68,11 +68,11 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xSh-qv-HGb">
-                                                    <rect key="frame" x="269" y="8" width="125" height="29"/>
+                                                    <rect key="frame" x="266" y="8" width="128" height="29"/>
                                                     <segments>
-                                                        <segment title="Rel"/>
-                                                        <segment title="Abs"/>
-                                                        <segment title="Dew"/>
+                                                        <segment title="Rel" width="42"/>
+                                                        <segment title="Abs" width="42"/>
+                                                        <segment title="Dew" width="42"/>
                                                     </segments>
                                                     <connections>
                                                         <action selector="humidityUnitSegmentedControlValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="Vcm-Vg-l8b"/>
@@ -104,7 +104,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
+                        <outlet property="humidityUnitLabel" destination="bGS-es-4BZ" id="3Ok-bN-3Le"/>
                         <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
+                        <outlet property="temperatureUnitLabel" destination="vN3-8D-6Uc" id="BFX-XU-8Na"/>
                         <outlet property="temperatureUnitSegmentedControl" destination="xCo-14-Jo8" id="bFj-VL-KLy"/>
                     </connections>
                 </tableViewController>

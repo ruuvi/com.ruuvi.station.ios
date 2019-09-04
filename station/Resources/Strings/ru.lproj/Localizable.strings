@@ -82,6 +82,17 @@
 "PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
 "PhotoPicker.Sheet.camera" = "Сделать фото";
 
+// Settings
+"Settings.navigationItem.title" = "Настройки";
+"Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
+"Settings.SectionFooter.General.title" = "Отн означает относительную влажность воздуха в %, Абс означает абсолютную влажность воздуха в г/м³, ТР означает точку росы в градусах °.";
+"Settings.BarButtonItem.Close.title" = "Закрыть";
+"Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
+"Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
+"Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
+"Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
+"Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
+
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
