@@ -135,7 +135,7 @@
 "TagSettings.txPowerTitleLabel.text" = "Tx Power";
 "TagSettings.mcTitleLabel.text" = "Movement Counter";
 "TagSettings.msnTitleLabel.text" = "Measurement Sequence Number";
-"TagSettings.removeThisRuuviTagButton.text" = "REMOVE THIS RUUVITAG";
+"TagSettings.removeThisRuuviTagButton.text" = "REMOVE";
 "TagSettings.Label.noValues.text" = "NO VALUES?";
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
 "TagSettings.SectionHeader.Name.title" = "NAME";

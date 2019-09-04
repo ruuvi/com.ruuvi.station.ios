@@ -135,7 +135,7 @@
 "TagSettings.txPowerTitleLabel.text" = "Мощность Передачи";
 "TagSettings.mcTitleLabel.text" = "Счетчик Движения";
 "TagSettings.msnTitleLabel.text" = "Порядковый номер измерения";
-"TagSettings.removeThisRuuviTagButton.text" = "УДАЛИТЬ ЭТОТ RUUVITAG";
+"TagSettings.removeThisRuuviTagButton.text" = "УДАЛИТЬ";
 "TagSettings.Label.noValues.text" = "НЕТ ЗНАЧЕНИЙ?";
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
