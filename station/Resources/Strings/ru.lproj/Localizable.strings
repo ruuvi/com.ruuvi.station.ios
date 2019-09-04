@@ -20,23 +20,23 @@
 "ago" = "назад"; // time ago string
 
 // About
-"About.Version.text" = "Version";
+"About.Version.text" = "Версия";
 
 // ErrorPresenterAlert
-"ErrorPresenterAlert.Error" = "Error";
+"ErrorPresenterAlert.Error" = "Ошибка";
 "ErrorPresenterAlert.OK" = "OK";
 
 // CoreError
-"CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
-"CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
-"CoreError.failedToGetCurrentLocation" = "Failed to get current location";
-"CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
-"CoreError.noLocationPermission" = "Missing permission for Location Services";
+"CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
+"CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
+"CoreError.failedToGetCurrentLocation" = "Не удалось получить текущее месторасположение";
+"CoreError.failedToGetDataFromResponse" = "Не удалось получить данные из ответа";
+"CoreError.noLocationPermission" = "Не удалось получить разрешение на использование геолокации";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTags. Откройте Настройки и включите Bluetooth.";
+"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "Dashboard.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
 "Dashboard.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
 
@@ -44,67 +44,67 @@
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
 "DiscoverTable.SectionTitle.WebTags" = "Локационные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTags. Откройте Настройки и включите Bluetooth.";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
 "DiscoverTable.GetMoreSensors.button.title" = "БОЛЬШЕ СЕНСОРОВ";
 "DiscoverTable.Close.barButtonItem.title" = "Закрыть";
 
 // ExpectedError
-"ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
+"ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 
 // HumidityCalibration
-"HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
-"HumidityCalibration.VideoTutorials.link" = "video tutorials";
-"HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";
-"HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Are you sure?";
-"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "You are going to clear humidity offset. This can't be undone. Tap \"Confirm\" to continue.";
-"HumidityCalibration.CalibrationConfirmationAlert.title" = "Are you sure?";
-"HumidityCalibration.CalibrationConfirmationAlert.message" = "You are going to calibrate humidity offset. Tap \"Confirm\" to continue";
+"HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с хлоридом натрия (поваренная соль). Посмотрите обучающие видео о том, как легко сделать это дома. ";
+"HumidityCalibration.VideoTutorials.link" = "обучающие видео";
+"HumidityCalibration.lastCalibrationDate.format" = "Откалибровано: %@";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Вы уверены?";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Вы собираетесь очистить смещение для влажности. Вы не сможете откатить изменения. Нажмите \"Подтвердить\" для продолжения";
+"HumidityCalibration.CalibrationConfirmationAlert.title" = "Вы уверены?";
+"HumidityCalibration.CalibrationConfirmationAlert.message" = "Вы собираетесь откалибровать смещение для влажности. Нажмите \"Подтвердить\" для продолжения";
 
 // PermissionPresenter
-"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";
-"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station needs to access your camera to enable this feature.";
-"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station needs to access your location to enable this feature.";
-"PermissionPresenter.settings" = "Settings";
+"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";
+"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
+"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
+"PermissionPresenter.settings" = "Настройки";
 
 // PhotoPicker
-"PhotoPicker.Sheet.message" = "Pick a photo";
-"PhotoPicker.Sheet.library" = "Choose from library";
-"PhotoPicker.Sheet.camera" = "Take Picture";
+"PhotoPicker.Sheet.message" = "Выбрать фотографию";
+"PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
+"PhotoPicker.Sheet.camera" = "Сделать фото";
 
 // OWMError
-"OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
-"OWMError.apiLimitExceeded" = "API limit exceeded";
-"OWMError.notAHttpResponse" = "Not a HTTP response";
-"OWMError.invalidApiKey" = "Invalid API Key";
+"OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
+"OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
+"OWMError.notAHttpResponse" = "Не HTTP ответ";
+"OWMError.invalidApiKey" = "Некорректный API-ключ";
 
 // TagSettings
-"TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
-"TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this RuuviTag?";
-"TagSettings.Mac.Alert.title" = "MAC Address";
+"TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
+"TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот RuuviTag?";
+"TagSettings.Mac.Alert.title" = "MAC адрес";
 "TagSettings.UUID.Alert.title" = "UUID";
-"TagSettings.UpdateFirmware.Alert.title" = "RAWv2 mode is required";
-"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on your RuuviTag.\nOr update your RuuviTag with the latest firmware.";
-"TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Learn more";
+"TagSettings.UpdateFirmware.Alert.title" = "Режим RAWv2 необходим";
+"TagSettings.UpdateFirmware.Alert.message" = "Для того, чтобы увидеть отсутствующие значения:\nЕсли вы используете последнюю прошивку, включите RAWv2 режим нажатием кнопки \"B\" на вашем RuuviTag.\nИли обновите ваш RuuviTag с последней прошивкой.";
+"TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Узнать больше";
 "TagSettings.EmptyValue.sign" = "-";
-"TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
-"TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
-"TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
+"TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
+"TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";
+"TagSettings.HumidityIsClipped.Alert.Fix.button" = "Исправить";
 
 // UnexpectedError
-"UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
-"UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
+"UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
+"UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Текущая";
 "WebTagLocationSource.manual" = "Вручную";
 
 // WebTagSettings
-"WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
-"WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";
-"WebTagSettings.Location.Current" = "Current";
-"WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
-"WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
+"WebTagSettings.confirmTagRemovalDialog.title" = "Удалить Веб Таг";
+"WebTagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот Веб Таг?";
+"WebTagSettings.Location.Current" = "Текущий";
+"WebTagSettings.confirmClearLocationDialog.title" = "Очистить месторасположение";
+"WebTagSettings.confirmClearLocationDialog.message" = "Вы уверены, что хотите очистить месторасположение для этого Веб Тага? Будет использовано текущее месторасположение.";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";
