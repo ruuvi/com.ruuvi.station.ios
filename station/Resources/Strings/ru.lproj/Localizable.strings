@@ -109,6 +109,8 @@
 "TagSettings.mcTitleLabel.text" = "Счетчик Движения";
 "TagSettings.msnTitleLabel.text" = "Порядковый номер измерения";
 "TagSettings.removeThisRuuviTagButton.text" = "УДАЛИТЬ ЭТОТ RUUVITAG";
+"TagSettings.Label.noValues.text" = "НЕТ ЗНАЧЕНИЙ?";
+"TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
