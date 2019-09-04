@@ -1,5 +1,10 @@
 import UIKit
 
+private enum WebTagSettingsSection: Int {
+    case name = 0
+    case moreInfo = 1
+}
+
 class WebTagSettingsTableViewController: UITableViewController {
     var output: WebTagSettingsViewOutput!
     
@@ -110,6 +115,17 @@ extension WebTagSettingsTableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case WebTagSettingsSection.name.rawValue:
+            return "WebTagSettings.SectionHeader.Name.title".localized()
+        case WebTagSettingsSection.moreInfo.rawValue:
+            return "WebTagSettings.SectionHeader.MoreInfo.title".localized()
+        default:
+            return nil
+        }
     }
 }
 // MARK: - UITextFieldDelegate

@@ -133,6 +133,8 @@
 "WebTagSettings.Label.TagName.text" = "Имя";
 "WebTagSettings.Label.Location.text" = "Месторасположение";
 "WebTagSettings.Button.Remove.title" = "УДАЛИТЬ";
+"WebTagSettings.SectionHeader.Name.title" = "ИМЯ";
+"WebTagSettings.SectionHeader.MoreInfo.title" = "ДОПОЛНИТЕЛЬНО";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";
