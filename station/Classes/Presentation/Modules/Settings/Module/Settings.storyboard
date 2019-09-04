@@ -90,6 +90,38 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="APPLICATION" footerTitle="" id="vKQ-W7-fyO">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="7Hf-la-egS">
+                                        <rect key="frame" x="0.0" y="235" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Hf-la-egS" id="tmL-RI-Hh0">
+                                            <rect key="frame" x="0.0" y="0.0" width="376" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Language" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4i-sU-siT">
+                                                    <rect key="frame" x="20" y="11.5" width="76" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="English" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhK-Ub-ply">
+                                                    <rect key="frame" x="312" y="11.5" width="56" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="B4i-sU-siT" firstAttribute="leading" secondItem="tmL-RI-Hh0" secondAttribute="leading" constant="20" id="CwQ-k6-6VS"/>
+                                                <constraint firstItem="mhK-Ub-ply" firstAttribute="centerY" secondItem="tmL-RI-Hh0" secondAttribute="centerY" id="cJm-L4-bgT"/>
+                                                <constraint firstItem="B4i-sU-siT" firstAttribute="centerY" secondItem="tmL-RI-Hh0" secondAttribute="centerY" id="gf2-1E-GmQ"/>
+                                                <constraint firstItem="mhK-Ub-ply" firstAttribute="trailing" secondItem="tmL-RI-Hh0" secondAttribute="trailingMargin" id="mSt-SJ-OtC"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Vxh-DE-JMT" id="Qox-7b-1rn"/>
@@ -97,6 +129,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="zVX-j9-FXb">
+                        <barButtonItem key="backBarButtonItem" title=" " id="hHD-hc-87e"/>
                         <barButtonItem key="leftBarButtonItem" title="Close" id="lsn-T2-IDJ">
                             <connections>
                                 <action selector="closeBarButtonItemAction:" destination="Vxh-DE-JMT" id="Woh-5e-gHl"/>
@@ -107,6 +140,9 @@
                         <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
                         <outlet property="humidityUnitLabel" destination="bGS-es-4BZ" id="3Ok-bN-3Le"/>
                         <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
+                        <outlet property="languageCell" destination="7Hf-la-egS" id="RhN-Ls-L2H"/>
+                        <outlet property="languageTitleLabel" destination="B4i-sU-siT" id="3li-U5-kZZ"/>
+                        <outlet property="languageValueLabel" destination="mhK-Ub-ply" id="xdk-hx-RX7"/>
                         <outlet property="temperatureUnitLabel" destination="vN3-8D-6Uc" id="BFX-XU-8Na"/>
                         <outlet property="temperatureUnitSegmentedControl" destination="xCo-14-Jo8" id="bFj-VL-KLy"/>
                     </connections>

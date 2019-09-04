@@ -5,7 +5,7 @@ class LocalizationService {
     
     var localization: String? = Locale.current.regionCode {
         didSet {
-            if let localization = localization {
+            if let localization = localization?.lowercased() {
                 Localize.setCurrentLanguage(localization)
             }
         }

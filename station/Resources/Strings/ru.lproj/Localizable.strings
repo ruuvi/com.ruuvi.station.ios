@@ -75,6 +75,10 @@
 "HumidityCalibration.Button.Close.title" = "Закрыть";
 "HumidityCalibration.Label.note.text" = "Данные для калибровки будут сохранены локально. Если вы переустановите приложение будет нужно произвести калибровку заново.";
 
+// Language
+"Language.English" = "English";
+"Language.Russian" = "Русский";
+
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
 "Menu.Label.AppSettings.text" = "Настройки";
@@ -102,6 +106,8 @@
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
+"Settings.SectionHeader.Application.title" = "ПРИЛОЖЕНИЕ";
+"Settings.Label.Language.text" = "Язык";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";

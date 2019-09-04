@@ -129,6 +129,18 @@
 		0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */; };
 		0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
 		0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */; };
+		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
+		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
+		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
+		0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06F232007740025A191 /* LanguageViewOutput.swift */; };
+		0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF071232007910025A191 /* LanguageTableViewController.swift */; };
+		0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */; };
+		0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF076232007D80025A191 /* LanguageRouter.swift */; };
+		0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF078232008140025A191 /* LanguageModuleInput.swift */; };
+		0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07A232008420025A191 /* LanguagePresenter.swift */; };
+		0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */; };
+		0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */; };
+		0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -372,6 +384,18 @@
 		0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherMapAPIURLSession.swift; sourceTree = "<group>"; };
 		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
 		0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagLocationSource.swift; sourceTree = "<group>"; };
+		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
+		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
+		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
+		0EBAF06F232007740025A191 /* LanguageViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewOutput.swift; sourceTree = "<group>"; };
+		0EBAF071232007910025A191 /* LanguageTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewController.swift; sourceTree = "<group>"; };
+		0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageRouterInput.swift; sourceTree = "<group>"; };
+		0EBAF076232007D80025A191 /* LanguageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageRouter.swift; sourceTree = "<group>"; };
+		0EBAF078232008140025A191 /* LanguageModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageModuleInput.swift; sourceTree = "<group>"; };
+		0EBAF07A232008420025A191 /* LanguagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguagePresenter.swift; sourceTree = "<group>"; };
+		0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableInitializer.swift; sourceTree = "<group>"; };
+		0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableConfigurator.swift; sourceTree = "<group>"; };
+		0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -1138,6 +1162,7 @@
 				0E1C1D9F22B36C100032F6CA /* RUError.swift */,
 				0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */,
 				0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */,
+				0EBAF064232002A00025A191 /* Language.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -1406,6 +1431,92 @@
 			path = URLSession;
 			sourceTree = "<group>";
 		};
+		0EBAF062232000F50025A191 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB20D022B7C6F30015F9E0 /* Settings.storyboard */,
+				0EEB20DB22B7C83E0015F9E0 /* Assembly */,
+				0EEB20DA22B7C8380015F9E0 /* Presenter */,
+				0EEB20D922B7C8330015F9E0 /* Router */,
+				0EEB20CF22B7C6E40015F9E0 /* View */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		0EBAF063232001080025A191 /* Submodules */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF066232005600025A191 /* Language */,
+			);
+			path = Submodules;
+			sourceTree = "<group>";
+		};
+		0EBAF066232005600025A191 /* Language */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF06B232006E00025A191 /* Language.storyboard */,
+				0EBAF06A232005740025A191 /* Assembly */,
+				0EBAF0692320056F0025A191 /* Presenter */,
+				0EBAF0682320056B0025A191 /* Router */,
+				0EBAF067232005670025A191 /* View */,
+			);
+			path = Language;
+			sourceTree = "<group>";
+		};
+		0EBAF067232005670025A191 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF073232007940025A191 /* Table */,
+				0EBAF06D232007510025A191 /* LanguageViewInput.swift */,
+				0EBAF06F232007740025A191 /* LanguageViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0EBAF0682320056B0025A191 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF074232007CC0025A191 /* LanguageRouterInput.swift */,
+				0EBAF076232007D80025A191 /* LanguageRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0EBAF0692320056F0025A191 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF078232008140025A191 /* LanguageModuleInput.swift */,
+				0EBAF07A232008420025A191 /* LanguagePresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0EBAF06A232005740025A191 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF07C2320085F0025A191 /* Table */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0EBAF073232007940025A191 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */,
+				0EBAF071232007910025A191 /* LanguageTableViewController.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		0EBAF07C2320085F0025A191 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */,
+				0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
 			isa = PBXGroup;
 			children = (
@@ -1495,11 +1606,8 @@
 		0EEB20CE22B7C6DA0015F9E0 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB20D022B7C6F30015F9E0 /* Settings.storyboard */,
-				0EEB20DB22B7C83E0015F9E0 /* Assembly */,
-				0EEB20DA22B7C8380015F9E0 /* Presenter */,
-				0EEB20D922B7C8330015F9E0 /* Router */,
-				0EEB20CF22B7C6E40015F9E0 /* View */,
+				0EBAF062232000F50025A191 /* Module */,
+				0EBAF063232001080025A191 /* Submodules */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2136,6 +2244,7 @@
 				0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
+				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
 				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
@@ -2234,9 +2343,11 @@
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
+				0EBAF065232002A00025A191 /* Language.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
+				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
@@ -2281,7 +2392,9 @@
 				0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
+				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
+				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
@@ -2298,6 +2411,7 @@
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
+				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
@@ -2315,7 +2429,9 @@
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
+				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
 				0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */,
+				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
@@ -2325,6 +2441,7 @@
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
+				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
 				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
@@ -2345,6 +2462,7 @@
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				0E1C1DD322B3BF180032F6CA /* DashboardViewInput.swift in Sources */,
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
+				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
@@ -2367,6 +2485,7 @@
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
+				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
@@ -2388,6 +2507,7 @@
 				0EEC3F5322C5E21300C51D81 /* HumidityCalibrationRouterInput.swift in Sources */,
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
+				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
 				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
