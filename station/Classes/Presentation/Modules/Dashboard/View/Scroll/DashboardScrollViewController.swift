@@ -171,7 +171,7 @@ extension DashboardScrollViewController {
                     case .fahrenheit:
                         label.text = "°F".localized()
                     case .kelvin:
-                        label.text = "°K".localized()
+                        label.text = "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
@@ -228,7 +228,7 @@ extension DashboardScrollViewController {
                             }
                         case .kelvin:
                             if let dk = dk?.value {
-                                label.text = String(format: "%.2f", dk) + " " + "°K".localized()
+                                label.text = String(format: "%.2f", dk) + " " + "K".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
