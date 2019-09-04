@@ -558,29 +558,43 @@ IMAGE</string>
                     </navigationItem>
                     <size key="freeformSize" width="414" height="1124"/>
                     <connections>
+                        <outlet property="accelerationXTitleLabel" destination="m72-Vk-CUl" id="1oZ-xn-wQh"/>
                         <outlet property="accelerationXValueLabel" destination="Z8D-DO-887" id="RM5-Lo-DoC"/>
+                        <outlet property="accelerationYTitleLabel" destination="7Fy-xd-Pdk" id="t3c-Xd-K6G"/>
                         <outlet property="accelerationYValueLabel" destination="BZJ-uw-vfj" id="ecB-Eo-lOq"/>
+                        <outlet property="accelerationZTitleLabel" destination="ZgW-sk-LGk" id="8Uh-OP-Obi"/>
                         <outlet property="accelerationZValueLabel" destination="Chd-Uf-uiU" id="XBV-24-uzu"/>
+                        <outlet property="backgroundImageLabel" destination="K60-4C-oF8" id="PW8-0e-kwo"/>
                         <outlet property="backgroundImageView" destination="PPK-KZ-0TC" id="1NZ-SW-ZHa"/>
+                        <outlet property="batteryVoltageTitleLabel" destination="Wim-BP-74w" id="6Vj-s0-VH2"/>
                         <outlet property="calibrationHumidityCell" destination="msV-Z2-Y6n" id="ROS-rZ-GD2"/>
+                        <outlet property="dataFormatTitleLabel" destination="xc8-l2-erG" id="ZUz-Au-6fH"/>
                         <outlet property="dataFormatValueLabel" destination="rWn-Du-rat" id="ReW-Ye-M97"/>
                         <outlet property="humidityLabel" destination="h1w-an-ceI" id="Kcn-AW-TMy"/>
                         <outlet property="humidityLabelTrailing" destination="af2-sb-o1z" id="jl6-uI-e1R"/>
+                        <outlet property="humidityTitleLabel" destination="l91-kJ-VAO" id="m6y-LI-f6w"/>
                         <outlet property="macAddressCell" destination="5W6-6n-nIk" id="65i-v0-kqJ"/>
+                        <outlet property="macAddressTitleLabel" destination="rvA-8R-FuO" id="BTX-w1-l1a"/>
                         <outlet property="macAddressValueLabel" destination="WtD-WI-89V" id="3lA-Fg-rDb"/>
                         <outlet property="macValueLabelTrailing" destination="kZ4-Fn-LOE" id="0Qa-U1-fxx"/>
                         <outlet property="mcCell" destination="ouw-OZ-scM" id="Cs6-bC-O5y"/>
+                        <outlet property="mcTitleLabel" destination="uge-Z2-Th9" id="JcO-0P-as3"/>
                         <outlet property="mcValueLabel" destination="XlI-8R-mzR" id="4Tb-WI-xwc"/>
                         <outlet property="mcValueLabelTrailing" destination="nTS-vO-AGI" id="8GJ-yc-Ck0"/>
                         <outlet property="msnCell" destination="7CC-az-fpL" id="GK8-nE-ADe"/>
+                        <outlet property="msnTitleLabel" destination="40B-Fr-4YX" id="uEB-T5-6P0"/>
                         <outlet property="msnValueLabel" destination="BDV-Du-PWf" id="I1g-0z-NB5"/>
                         <outlet property="msnValueLabelTrailing" destination="plZ-be-5zU" id="r03-dP-4ih"/>
+                        <outlet property="removeThisRuuviTagButton" destination="dfl-wc-2o6" id="4Jd-nv-rA2"/>
                         <outlet property="tagNameCell" destination="Ltg-8j-gFv" id="ITi-X4-fhs"/>
                         <outlet property="tagNameTextField" destination="wsY-ah-PBa" id="jfa-8a-aDt"/>
+                        <outlet property="tagNameTitleLabel" destination="5rU-pr-cVB" id="svL-c0-SM3"/>
                         <outlet property="txPowerCell" destination="XcN-id-Y5e" id="NzX-l5-SKf"/>
+                        <outlet property="txPowerTitleLabel" destination="9z1-8W-BSJ" id="2UL-jA-tVG"/>
                         <outlet property="txPowerValueLabel" destination="fKD-IO-Ovr" id="2gL-vR-F92"/>
                         <outlet property="txPowerValueLabelTrailing" destination="mlt-cl-6Rz" id="wGy-rQ-ZQv"/>
                         <outlet property="uuidCell" destination="gsA-fe-X4K" id="ejM-Gn-9Ht"/>
+                        <outlet property="uuidTitleLabel" destination="CsF-ma-M4T" id="EFC-GP-EmK"/>
                         <outlet property="uuidValueLabel" destination="LK1-u4-1tB" id="IPY-v8-jxD"/>
                         <outlet property="voltageValueLabel" destination="0QS-Je-2os" id="kRK-5R-yaN"/>
                     </connections>
