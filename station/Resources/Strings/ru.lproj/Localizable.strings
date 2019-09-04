@@ -34,17 +34,17 @@
 "CoreError.noLocationPermission" = "Missing permission for Location Services";
 
 // Dashboard
-"Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
+"Dashboard.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
+"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth выключен";
+"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTags. Откройте Настройки и включите Bluetooth.";
+"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
+"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
 "DiscoverTable.SectionTitle.WebTags" = "Локационные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необхожим bluetooth чтобы слушать RuuviTags. Откройте Настройки и включите Bluetooth.";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTags. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
 "DiscoverTable.GetMoreSensors.button.title" = "БОЛЬШЕ СЕНСОРОВ";
 "DiscoverTable.Close.barButtonItem.title" = "Закрыть";
