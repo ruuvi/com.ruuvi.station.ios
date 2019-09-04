@@ -21,6 +21,16 @@
 
 // About
 "About.Version.text" = "Версия";
+"About.AboutHelp.header" = "О ПРИЛОЖЕНИИ";
+"About.AboutHelp.contents" = "Ruuvi Station - простой в использовании, но мощный инструмент для работы с вашими Ruuvi сенсорами.";
+"About.OperationsManual.header" = "РУКОВОДСТВО";
+"About.OperationsManual.contents" = "Мы разработали приложение так, чтобы оно было интуитивно понятным. В то же время, руководства доступны здесь: ruuvi.com/manuals";
+"About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
+"About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем, здесь: ruuvi.com/troubles";
+"About.OpenSource.header" = "ОТКРЫТЫЙ ИСХОДНЫЙ КОД";
+"About.OpenSource.contents" = "Как и RuuviTag, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
+"About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
+"About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
