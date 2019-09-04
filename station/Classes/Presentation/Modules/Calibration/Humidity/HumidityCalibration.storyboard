@@ -230,9 +230,12 @@
                     </view>
                     <size key="freeformSize" width="300" height="420"/>
                     <connections>
+                        <outlet property="calibrateButton" destination="l80-jo-gD9" id="PZU-Jy-bW5"/>
                         <outlet property="clearButton" destination="t3Y-bf-N6z" id="LHE-0q-b8C"/>
+                        <outlet property="closeButton" destination="FDV-jR-dGE" id="fc1-ZR-bzZ"/>
                         <outlet property="descriptionLabel" destination="RdK-QZ-1SS" id="Cuj-1B-hue"/>
                         <outlet property="lastCalibrationDateLabel" destination="sp2-Bn-2dL" id="cKD-Z2-inj"/>
+                        <outlet property="noteLabel" destination="ybL-yI-MLP" id="Mwj-Ur-1kb"/>
                         <outlet property="oldHumidityLabel" destination="Tmy-25-mgX" id="YyW-XR-nvl"/>
                     </connections>
                 </viewController>

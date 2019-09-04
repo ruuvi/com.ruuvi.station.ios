@@ -60,6 +60,10 @@
 "HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Вы собираетесь очистить смещение для влажности. Вы не сможете откатить изменения. Нажмите \"Подтвердить\" для продолжения";
 "HumidityCalibration.CalibrationConfirmationAlert.title" = "Вы уверены?";
 "HumidityCalibration.CalibrationConfirmationAlert.message" = "Вы собираетесь откалибровать смещение для влажности. Нажмите \"Подтвердить\" для продолжения";
+"HumidityCalibration.Button.Clear.title" = "Очистить";
+"HumidityCalibration.Button.Calibrate.title" = "Калибровать";
+"HumidityCalibration.Button.Close.title" = "Закрыть";
+"HumidityCalibration.Label.note.text" = "Данные для калибровки будут сохранены локально. Если вы переустановите приложение будет нужно произвести калибровку заново.";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";
