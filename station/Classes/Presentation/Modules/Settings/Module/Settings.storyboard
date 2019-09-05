@@ -37,8 +37,8 @@
                                                     <rect key="frame" x="266" y="8" width="128" height="29"/>
                                                     <segments>
                                                         <segment title="K" width="42"/>
-                                                        <segment title="C" width="42"/>
-                                                        <segment title="F" width="42"/>
+                                                        <segment title="°C" width="42"/>
+                                                        <segment title="°F" width="42"/>
                                                     </segments>
                                                     <connections>
                                                         <action selector="temperatureUnitSegmentedControlValueChanged:" destination="Vxh-DE-JMT" eventType="valueChanged" id="3JY-HB-Rli"/>
