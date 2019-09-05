@@ -1,8 +1,8 @@
-"Cancel" = "Cancel";
+"Cancel" = "Peruuta";
 "OK" = "OK";
-"Copy" = "Copy";
-"Confirm" = "Confirm";
-"Remove" = "Remove";
+"Copy" = "Kopioi";
+"Confirm" = "Vahvista";
+"Remove" = "Poista";
 "N/A" = "N/A";
 "°C" = "°C";
 "°F" = "°F";
@@ -13,101 +13,102 @@
 "%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
-"Updated" = "Updated"; // time ago string
+"Updated" = "Päivitetty"; // time ago string
 "h" = "h"; // time ago string, hours
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
-"ago" = "ago"; // time ago string
+"ago" = "sitten"; // time ago string
 
 // About
-"About.Version.text" = "Version";
-"About.AboutHelp.header" = "ABOUT / HELP";
-"About.AboutHelp.contents" = "Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.";
-"About.OperationsManual.header" = "OPERATIONS MANUAL";
-"About.OperationsManual.contents" = "We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals";
-"About.Troubleshooting.header" = "TROUBLESHOOTING";
-"About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles";
-"About.OpenSource.header" = "OPEN-SOURCE";
-"About.OpenSource.contents" = "Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi";
-"About.More.header" = "MORE TO READ";
-"About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
+"About.Version.text" = "Versio";
+"About.AboutHelp.header" = "TIETOA / APUA";
+"About.AboutHelp.contents" = "Ruuvi Station on helppokäyttöinen sovellus Ruuvin tuotteiden hallinnointiin. Aloita lisäämällä antureita.";
+"About.OperationsManual.header" = "KÄYTTÖOHJE";
+"About.OperationsManual.contents" = "Olemme suunnitelleet ohjelman ja laitteemme mahdollisimman helppokäyttöiseksi, mutta myös ohjeet ovat saatavilla osoitteessa ruuvi.com/manuals";
+"About.Troubleshooting.header" = "VIANETSINTÄ";
+"About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset:  ruuvi.com/troubles";
+"About.OpenSource.header" = "AVOIN LÄHDEKOODI";
+"About.OpenSource.contents" = "Kuten muutkin Ruuvin tuotteet, myös Ruuvi Station perustuu avoimeen lähdekoodiin: github.com/ruuvi";
+"About.More.header" = "LUE LISÄÄ";
+"About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
  
 // ErrorPresenterAlert
-"ErrorPresenterAlert.Error" = "Error";
+"ErrorPresenterAlert.Error" = "Virhe";
 "ErrorPresenterAlert.OK" = "OK";
 
 // CoreError
-"CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
-"CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
-"CoreError.failedToGetCurrentLocation" = "Failed to get current location";
-"CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
-"CoreError.noLocationPermission" = "Missing permission for Location Services";
+"CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
+"CoreError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
+"CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";
+"CoreError.failedToGetDataFromResponse" = "Vastaus ei sisällä tietoa";
+"CoreError.noLocationPermission" = "Oikeus paikkatietoon puuttuu";
 
 // Dashboard
-"Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
+"Dashboard.SwipeAlert.title" = "Pyyhkäise sivulle löytääksesi muut laitteet.";
+"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
+"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
+"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
+"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
-"DiscoverTable.SectionTitle.WebTags" = "Virtual Sensors";
-"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
-"DiscoverTable.NavigationItem.title" = "Add a New Sensor";
-"DiscoverTable.GetMoreSensors.button.title" = "GET MORE SENSORS";
-"DiscoverTable.Close.barButtonItem.title" = "Close";
+"DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Bluetooth-laitteet";
+"DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
+"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
+"DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
+"DiscoverTable.GetMoreSensors.button.title" = "OSTA LISÄÄ ANTUREITA";
+"DiscoverTable.Close.barButtonItem.title" = "Sulje";
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
 
 // HumidityCalibration
-"HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
-"HumidityCalibration.VideoTutorials.link" = "video tutorials";
-"HumidityCalibration.lastCalibrationDate.format" = "Calibrated: %@";
-"HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Are you sure?";
-"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "You are going to clear humidity offset. This can't be undone. Tap \"Confirm\" to continue.";
-"HumidityCalibration.CalibrationConfirmationAlert.title" = "Are you sure?";
-"HumidityCalibration.CalibrationConfirmationAlert.message" = "You are going to calibrate humidity offset. Tap \"Confirm\" to continue";
-"HumidityCalibration.Button.Clear.title" = "Clear";
-"HumidityCalibration.Button.Calibrate.title" = "Calibrate";
-"HumidityCalibration.Button.Close.title" = "Close";
-"HumidityCalibration.Label.note.text" = "Note that calibration data will be stored locally in your mobile device. After Ruuvi Station uninstall & install, you may need to recalibrate.";
+"HumidityCalibration.Description.text" = "Mitataksesi ilmankosteutta mahdollisimman tarkasti, suosittelemme kalibrointia suolaliuoksen avulla. Katso täältä video-ohjeita kalibroinnista kotikonstein.";
+"HumidityCalibration.VideoTutorials.link" = "video-ohjeita";
+"HumidityCalibration.lastCalibrationDate.format" = "Kalibroitu: %@";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Oletko varma?";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Olet nollaamassa kalibrointia. Tätä ei voida peruuttaa. Klikkaa \"Vahvista\" jatkaaksesi.";
+"HumidityCalibration.CalibrationConfirmationAlert.title" = "Oletko varma?";
+"HumidityCalibration.CalibrationConfirmationAlert.message" = "Olet kalibroimassa kosteusanturia. Klikkaa \"Vahvista\" jatkaaksesi.";
+"HumidityCalibration.Button.Clear.title" = "Pyyhi";
+"HumidityCalibration.Button.Calibrate.title" = "Kalibroi";
+"HumidityCalibration.Button.Close.title" = "Sulje";
+"HumidityCalibration.Label.note.text" = "Huomaathan, että kalibrointitieto tallennetaan paikallisesti mobiililaitteeseesi. Kalibrointi joudutaan suorittamaan uudelleen ohjelman poistamisen ja uudelleenasennuksen jälkeen.";
 
 // Language
 "Language.English" = "English";
+"Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
 
 // Menu
-"Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
-"Menu.Label.AppSettings.text" = "App Settings";
-"Menu.Label.AboutHelp.text" = "About / Help";
-"Menu.Label.GetMoreSensors.text" = "Get More Sensors";
+"Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
+"Menu.Label.AppSettings.text" = "Asetukset";
+"Menu.Label.AboutHelp.text" = "Tietoa / Apua";
+"Menu.Label.GetMoreSensors.text" = "Osta lisää antureita";
 
 // PermissionPresenter
-"PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";
-"PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station needs to access your camera to enable this feature.";
-"PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station needs to access your location to enable this feature.";
-"PermissionPresenter.settings" = "Settings";
+"PermissionPresenter.NoPhotoLibraryAccess.message" = "Tämä ominaisuus vaatii oikeuden gallerian käyttöön.";
+"PermissionPresenter.NoCameraAccess.message" = "Tämä ominaisuus vaatii oikeuden kameran käyttöön.";
+"PermissionPresenter.NoLocationAccess.message" = "Tämä ominaisuus vaatii oikeuden paikkatiedon käyttöön.";
+"PermissionPresenter.settings" = "Asetukset";
 
 // PhotoPicker
-"PhotoPicker.Sheet.message" = "Pick a photo";
-"PhotoPicker.Sheet.library" = "Choose from library";
-"PhotoPicker.Sheet.camera" = "Take Picture";
+"PhotoPicker.Sheet.message" = "Valitse kuva";
+"PhotoPicker.Sheet.library" = "Valitse kirjastosta";
+"PhotoPicker.Sheet.camera" = "Ota kuva";
 
 // Settings
-"Settings.navigationItem.title" = "Settings";
-"Settings.SectionHeader.General.title" = "GENERAL";
-"Settings.SectionFooter.General.title" = "Rel is for relative air humidity in %, Abs is for absolute air humidity in g/m³, Dew is for dew point in °.";
-"Settings.BarButtonItem.Close.title" = "Close";
-"Settings.Label.TemperatureUnit.text" = "Temperature Unit";
-"Settings.Label.HumidityUnit.text" = "Humidity Unit";
-"Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
-"Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
-"Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
-"Settings.SectionHeader.Application.title" = "APPLICATION";
-"Settings.Label.Language.text" = "Language";
+"Settings.navigationItem.title" = "Asetukset";
+"Settings.SectionHeader.General.title" = "YLEISET";
+"Settings.SectionFooter.General.title" = "Suht. on suhteellinen ilmankosteus (%), Abs. on absoluuttinen ilmankosteus (g/m³), Kast. on kastepiste (°).";
+"Settings.BarButtonItem.Close.title" = "Sulje";
+"Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
+"Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
+"Settings.SegmentedControl.Humidity.Relative.title" = "Suht.";
+"Settings.SegmentedControl.Humidity.Absolute.title" = "Abs.";
+"Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
+"Settings.SectionHeader.Application.title" = "OHJELMA";
+"Settings.Label.Language.text" = "Kieli";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
@@ -116,59 +117,59 @@
 "OWMError.invalidApiKey" = "Invalid API Key";
 
 // TagSettings
-"TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
-"TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this RuuviTag?";
-"TagSettings.Mac.Alert.title" = "MAC Address";
+"TagSettings.confirmTagRemovalDialog.title" = "Poista";
+"TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän laitteen?";
+"TagSettings.Mac.Alert.title" = "MAC-osoite";
 "TagSettings.UUID.Alert.title" = "UUID";
-"TagSettings.UpdateFirmware.Alert.title" = "RAWv2 mode is required";
-"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on your RuuviTag.\nOr update your RuuviTag with the latest firmware.";
-"TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Learn more";
+"TagSettings.UpdateFirmware.Alert.title" = "RAWv2-formaatti vaaditaan";
+"TagSettings.UpdateFirmware.Alert.message" = "Nähdäksesi puuttuvat arvot, päivitä laitteesi firmware-ohjelmisto.";
+"TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Lue lisää";
 "TagSettings.EmptyValue.sign" = "-";
-"TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
-"TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
-"TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
-"TagSettings.navigationItem.title" = "Tag Settings";
-"TagSettings.backgroundImageLabel.text" = "BACKGROUND\nIMAGE";
-"TagSettings.tagNameTitleLabel.text" = "Tag Name";
-"TagSettings.humidityTitleLabel.text" = "Humidity";
+"TagSettings.HumidityIsClipped.Alert.title" = "Kosteus on säädetty";
+"TagSettings.HumidityIsClipped.Alert.message" = "Kalibroinnin jälkeinen kosteusarvo on suurempi kuin 100%. Tämä ei käy järkeen, joten maksimiarvona näytetään 100%.";
+"TagSettings.HumidityIsClipped.Alert.Fix.button" = "Korjaa";
+"TagSettings.navigationItem.title" = "Laitteen asetukset";
+"TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
+"TagSettings.tagNameTitleLabel.text" = "Laitteen nimi";
+"TagSettings.humidityTitleLabel.text" = "Kosteus";
 "TagSettings.uuidTitleLabel.text" = "UUID";
-"TagSettings.macAddressTitleLabel.text" = "MAC Address";
-"TagSettings.dataFormatTitleLabel.text" = "Data Format";
-"TagSettings.batteryVoltageTitleLabel.text" = "Battery Voltage";
-"TagSettings.accelerationXTitleLabel.text" = "Acceleration X";
-"TagSettings.accelerationYTitleLabel.text" = "Acceleration Y";
-"TagSettings.accelerationZTitleLabel.text" = "Acceleration Z";
-"TagSettings.txPowerTitleLabel.text" = "Tx Power";
-"TagSettings.mcTitleLabel.text" = "Movement Counter";
-"TagSettings.msnTitleLabel.text" = "Measurement Sequence Number";
-"TagSettings.removeThisRuuviTagButton.text" = "REMOVE";
-"TagSettings.Label.noValues.text" = "NO VALUES?";
-"TagSettings.Label.moreInfo.text" = "MORE INFO";
-"TagSettings.SectionHeader.Name.title" = "NAME";
-"TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
+"TagSettings.macAddressTitleLabel.text" = "MAC-osoite";
+"TagSettings.dataFormatTitleLabel.text" = "Dataformaatti";
+"TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";
+"TagSettings.accelerationXTitleLabel.text" = "Kiihtyvyys X";
+"TagSettings.accelerationYTitleLabel.text" = "Kiihtyvyys Y";
+"TagSettings.accelerationZTitleLabel.text" = "Kiihtyvyys Z";
+"TagSettings.txPowerTitleLabel.text" = "Lähetysteho";
+"TagSettings.mcTitleLabel.text" = "Liikelaskuri";
+"TagSettings.msnTitleLabel.text" = "Mittausjärjestysnumero";
+"TagSettings.removeThisRuuviTagButton.text" = "POISTA";
+"TagSettings.Label.noValues.text" = "EI ARVOJA?";
+"TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
+"TagSettings.SectionHeader.Name.title" = "NIMI";
+"TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 
 // WebTagLocationSource
-"WebTagLocationSource.current" = "Your current location";
-"WebTagLocationSource.manual" = "Pick from the map";
+"WebTagLocationSource.current" = "Nykyinen sijaintisi";
+"WebTagLocationSource.manual" = "Valitse kartalta";
 
 // WebTagSettings
-"WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
-"WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";
-"WebTagSettings.Location.Current" = "Your current location";
-"WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
-"WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
-"WebTagSettings.navigationItem.title" = "Web Tag Settings";
-"WebTagSettings.Label.BackgroundImage.text" = "BACKGROUND\nIMAGE";
-"WebTagSettings.Label.TagName.text" = "Tag Name";
-"WebTagSettings.Label.Location.text" = "Location";
-"WebTagSettings.Button.Remove.title" = "REMOVE THIS WEB TAG";
-"WebTagSettings.SectionHeader.Name.title" = "NAME";
-"WebTagSettings.SectionHeader.MoreInfo.title" = "MORE INFO";
+"WebTagSettings.confirmTagRemovalDialog.title" = "Poista";
+"WebTagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa?";
+"WebTagSettings.Location.Current" = "Nykyinen sijaintisi";
+"WebTagSettings.confirmClearLocationDialog.title" = "Poista sijainti";
+"WebTagSettings.confirmClearLocationDialog.message" = "Oletko varma, että haluat poistaa tämän sijainnin ja käyttää nykyistä sijaintiasi?";
+"WebTagSettings.navigationItem.title" = "Asetukset";
+"WebTagSettings.Label.BackgroundImage.text" = "TAUSTAKUVA";
+"WebTagSettings.Label.TagName.text" = "Nimi";
+"WebTagSettings.Label.Location.text" = "Paikka";
+"WebTagSettings.Button.Remove.title" = "POISTA";
+"WebTagSettings.SectionHeader.Name.title" = "NIMI";
+"WebTagSettings.SectionHeader.MoreInfo.title" = "LISÄTIETOA";
 
 // Welcome
-"Welcome.description.text" = "To find nearby RuuviTags and receive live sensor data, press scan.";
-"Welcome.scan.title" = "SCAN";
+"Welcome.description.text" = "Löytääksesi lähistöllä olevat anturit, klikkaa skannaa.";
+"Welcome.scan.title" = "SKANNAA";
