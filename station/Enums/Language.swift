@@ -3,6 +3,7 @@ import Foundation
 enum Language: String, CaseIterable {
     case english = "EN"
     case russian = "RU"
+    case finnish = "FI"
 }
 
 extension Language {
@@ -12,6 +13,8 @@ extension Language {
             return "Language.English".localized()
         case .russian:
             return "Language.Russian".localized()
+        case .finnish:
+            return "Language.Finnish".localized()
         }
     }
 }
