@@ -85,7 +85,7 @@ PODS:
     - GoogleUtilities/Logger
   - Humidity (0.0.7)
   - LightRoute (2.1.20)
-  - Localize-Swift (2.0.0)
+  - Localize-Swift (3.0.0)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -174,7 +174,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: e7dc37039b19df7fe543479d3e4a02ac8d11bb69
   Humidity: b6fcbbfeda1a001bbe40116a1ddf4272c9c58bd8
   LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
-  Localize-Swift: c798ec9286494866f7068f85f7c71283ac5bdab4
+  Localize-Swift: 1363ec008c6972dced79a80ac72c71d14e98db44
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
