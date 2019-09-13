@@ -7,6 +7,8 @@ class WebTagRealm: Object {
     @objc dynamic var providerString: String = WeatherProvider.openWeatherMap.rawValue
     @objc dynamic var location: WebTagLocationRealm?
     
+    let data = LinkingObjects(fromType: WebTagDataRealm.self, property: "webTag")
+    
     var provider: WeatherProvider {
         if let provider = WeatherProvider(rawValue: providerString) {
             return provider

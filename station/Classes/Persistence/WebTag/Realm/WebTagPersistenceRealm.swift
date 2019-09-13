@@ -1,5 +1,6 @@
 import RealmSwift
 import Future
+import CoreLocation
 
 class WebTagPersistenceRealm: WebTagPersistence {
     
@@ -169,6 +170,50 @@ class WebTagPersistenceRealm: WebTagPersistence {
                     webTag.name = name
                 }
                 promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    
+    @discardableResult
+    func persistCurrentLocation(data: WPSData) -> Future<WPSData,RUError> {
+        let promise = Promise<WPSData,RUError>()
+        context.bgWorker.enqueue {
+            let currentLocationWebTags = self.context.bg.objects(WebTagRealm.self).filter("location == nil")
+            do {
+                try currentLocationWebTags.forEach({ (webTag) in
+                    if !webTag.isInvalidated {
+                        let tagData = WebTagDataRealm(webTag: webTag, data: data)
+                        try self.context.bg.write {
+                            self.context.bg.add(tagData)
+                        }
+                    }
+                })
+                promise.succeed(value: data)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    
+    @discardableResult
+    func persist(coordinate: CLLocationCoordinate2D, data: WPSData) -> Future<WPSData,RUError> {
+        let promise = Promise<WPSData,RUError>()
+        context.bgWorker.enqueue {
+            let webTags = self.context.bg.objects(WebTagRealm.self).filter("location != nil AND location.latitude == %@ AND location.longitude == %@", coordinate.latitude, coordinate.longitude)
+            do {
+                try webTags.forEach({ (webTag) in
+                    if !webTag.isInvalidated {
+                        let tagData = WebTagDataRealm(webTag: webTag, data: data)
+                        try self.context.bg.write {
+                            self.context.bg.add(tagData)
+                        }
+                    }
+                })
+                promise.succeed(value: data)
             } catch {
                 promise.fail(error: .persistence(error))
             }

@@ -2,18 +2,6 @@ import Foundation
 import Future
 import CoreLocation
 
-class WPSObservationToken {
-    private let cancellationClosure: () -> Void
-    
-    init(cancellationClosure: @escaping () -> Void) {
-        self.cancellationClosure = cancellationClosure
-    }
-    
-    public func invalidate() {
-        cancellationClosure()
-    }
-}
-
 struct WPSData {
     var celsius: Double?
     var humidity: Double?
@@ -42,9 +30,9 @@ protocol WeatherProviderService {
     func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WPSData,RUError>
     
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> WPSObservationToken
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken
     
     @discardableResult
-    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> WPSObservationToken
+    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken
 }
 

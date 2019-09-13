@@ -8,7 +8,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     var locationManager: LocationManager!
     
     @discardableResult
-    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> WPSObservationToken {
+    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
                 timer.invalidate()
@@ -30,13 +30,13 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         }
         timer.fire()
         
-        return WPSObservationToken {
+        return RUObservationToken {
             timer.invalidate()
         }
     }
     
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> WPSObservationToken {
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
         
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
@@ -59,7 +59,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         }
         timer.fire()
         
-        return WPSObservationToken {
+        return RUObservationToken {
             timer.invalidate()
         }
     }
