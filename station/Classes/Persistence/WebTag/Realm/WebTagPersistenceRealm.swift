@@ -187,7 +187,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
                     if !webTag.isInvalidated {
                         let tagData = WebTagDataRealm(webTag: webTag, data: data)
                         try self.context.bg.write {
-                            self.context.bg.add(tagData)
+                            if !webTag.isInvalidated {
+                                self.context.bg.add(tagData)
+                            }
                         }
                     }
                 })
@@ -209,7 +211,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
                     if !webTag.isInvalidated {
                         let tagData = WebTagDataRealm(webTag: webTag, data: data)
                         try self.context.bg.write {
-                            self.context.bg.add(tagData)
+                            if !webTag.isInvalidated {
+                                self.context.bg.add(tagData)
+                            }
                         }
                     }
                 })
