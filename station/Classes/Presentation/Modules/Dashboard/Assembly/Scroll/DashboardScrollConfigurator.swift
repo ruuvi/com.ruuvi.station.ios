@@ -18,7 +18,6 @@ class DashboardScrollConfigurator {
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.scanner = r.resolve(BTScanner.self)
         presenter.webTagService = r.resolve(WebTagService.self)
-        presenter.weatherProviderService = r.resolve(WeatherProviderService.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         

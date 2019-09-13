@@ -55,6 +55,7 @@ class BusinessAssembly: Assembly {
         container.register(WebTagService.self) { r in
             let service = WebTagServiceImpl()
             service.webTagPersistence = r.resolve(WebTagPersistence.self)
+            service.weatherProviderService = r.resolve(WeatherProviderService.self)
             return service
         }
     }

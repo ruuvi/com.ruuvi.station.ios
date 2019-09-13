@@ -129,6 +129,8 @@
 		0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */; };
 		0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E9F97B422EC44930015ADE2 /* Networking.plist */; };
 		0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */; };
+		0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */; };
+		0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -384,6 +386,8 @@
 		0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeatherMapAPIURLSession.swift; sourceTree = "<group>"; };
 		0E9F97B422EC44930015ADE2 /* Networking.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Networking.plist; sourceTree = "<group>"; };
 		0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagLocationSource.swift; sourceTree = "<group>"; };
+		0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
+		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -723,6 +727,7 @@
 				0E9F97A322EB1B290015ADE2 /* Networking */,
 				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E09671922AE764200E85F48 /* Presentation */,
+				0EA31069232B75E700BC8CF5 /* Util */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -906,6 +911,7 @@
 				0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */,
 				0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */,
 				0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */,
+				0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -1430,6 +1436,14 @@
 				0E9F97B222EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift */,
 			);
 			path = URLSession;
+			sourceTree = "<group>";
+		};
+		0EA31069232B75E700BC8CF5 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		0EBAF062232000F50025A191 /* Module */ = {
@@ -2395,6 +2409,7 @@
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
+				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
@@ -2415,6 +2430,7 @@
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
+				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,

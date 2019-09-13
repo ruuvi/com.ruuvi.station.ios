@@ -11,7 +11,6 @@ class DashboardPresenter: DashboardModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     var scanner: BTScanner!
     var webTagService: WebTagService!
-    var weatherProviderService: WeatherProviderService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
     
@@ -19,7 +18,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var observeTokens = [ObservationToken]()
-    private var wpsTokens = [WPSObservationToken]()
+    private var wsTokens = [RUObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -44,7 +43,7 @@ class DashboardPresenter: DashboardModuleInput {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
-        wpsTokens.forEach({ $0.invalidate() })
+        wsTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
@@ -182,14 +181,14 @@ extension DashboardPresenter {
     }
     
     private func startScanningWebTags() {
-        wpsTokens.forEach({ $0.invalidate() })
-        wpsTokens.removeAll()
+        wsTokens.forEach({ $0.invalidate() })
+        wsTokens.removeAll()
         let webViewModels = viewModels.filter({ $0.type == .web })
         let currentLocationWebViewModels = webViewModels.filter({ $0.location == nil })
         for provider in WeatherProvider.allCases {
             let viewModels = currentLocationWebViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
-                wpsTokens.append(weatherProviderService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                wsTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                     if let data = data {
                         viewModels.forEach({ $0.update(data)})
                     } else if let error = error {
@@ -207,7 +206,7 @@ extension DashboardPresenter {
         let locationBasedWebViewModels = webViewModels.filter({ $0.location != nil })
         for viewModel in locationBasedWebViewModels {
             guard let location = viewModel.location, let provider = viewModel.provider else { break }
-            wpsTokens.append(weatherProviderService.observeData(self, coordinate: location.coordinate, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+            wsTokens.append(webTagService.observeData(self, coordinate: location.coordinate, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                 if let data = data {
                     viewModel.update(data)
                 } else if let error = error {

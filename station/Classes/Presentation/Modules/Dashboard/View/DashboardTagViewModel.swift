@@ -37,6 +37,25 @@ struct DashboardTagViewModel {
         type = .web
         uuid.value = webTag.uuid
         name.value = webTag.name
+        celsius.value = webTag.data.last?.celsius.value
+        fahrenheit.value = webTag.data.last?.fahrenheit
+        kelvin.value = webTag.data.last?.kelvin
+        relativeHumidity.value = webTag.data.last?.humidity.value
+        
+        if let c = webTag.data.last?.celsius.value, let rh = webTag.data.last?.humidity.value {
+            let h = Humidity(c: c, rh: rh / 100.0)
+            absoluteHumidity.value = h.ah
+            dewPointCelsius.value = h.Td
+            dewPointFahrenheit.value = h.TdF
+            dewPointKelvin.value = h.TdK
+        } else {
+            absoluteHumidity.value = nil
+            dewPointCelsius.value = nil
+            dewPointFahrenheit.value = nil
+            dewPointKelvin.value = nil
+        }
+        pressure.value = webTag.data.last?.pressure.value
+        date.value = webTag.data.last?.date
         provider = webTag.provider
         location = webTag.location?.location
     }

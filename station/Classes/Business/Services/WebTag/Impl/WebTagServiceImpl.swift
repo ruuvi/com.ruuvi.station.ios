@@ -1,9 +1,11 @@
 import Foundation
 import Future
+import CoreLocation
 
 class WebTagServiceImpl: WebTagService {
     
     var webTagPersistence: WebTagPersistence!
+    var weatherProviderService: WeatherProviderService!
     
     func add(provider: WeatherProvider, location: Location) -> Future<WeatherProvider,RUError> {
         return webTagPersistence.persist(provider: provider, location: location)
@@ -29,4 +31,23 @@ class WebTagServiceImpl: WebTagService {
         return webTagPersistence.clearLocation(of: webTag)
     }
 
+    @discardableResult
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
+        return weatherProviderService.observeCurrentLocationData(observer, provider: provider, interval: interval, closure: { [weak self] (observer, data, error) in
+            if let data = data {
+                self?.webTagPersistence.persistCurrentLocation(data: data)
+            }
+            closure(observer, data, error)
+        })
+    }
+    
+    @discardableResult
+    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
+        return weatherProviderService.observeData(observer, coordinate: coordinate, provider: provider, interval: interval, closure: { [weak self] (observer, data, error) in
+            if let data = data {
+                self?.webTagPersistence.persist(coordinate: coordinate, data: data)
+            }
+            closure(observer, data, error)
+        })
+    }
 }

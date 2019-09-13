@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import CoreLocation
 
 protocol WebTagPersistence {
     func persist(provider: WeatherProvider) -> Future<WeatherProvider,RUError>
@@ -8,4 +9,8 @@ protocol WebTagPersistence {
     func update(name: String, of webTag: WebTagRealm) -> Future<Bool,RUError>
     func update(location: Location, of webTag: WebTagRealm) -> Future<Bool,RUError>
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError>
+    @discardableResult
+    func persistCurrentLocation(data: WPSData) -> Future<WPSData,RUError>
+    @discardableResult
+    func persist(coordinate: CLLocationCoordinate2D, data: WPSData) -> Future<WPSData,RUError>
 }
