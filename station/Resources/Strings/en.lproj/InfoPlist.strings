@@ -1,0 +1,6 @@
+NSBluetoothPeripheralUsageDescription = "The app uses Bluetooth LE to read data from RuuviTag sensors.";
+NSCameraUsageDescription = "Ruuvi Station needs to access your camera to enable this feature.";
+NSLocationAlwaysUsageDescription = "Ruuvi Station needs to access your location in order to enable this feature.";
+NSLocationWhenInUseUsageDescription = "Ruuvi Station needs to access your location in order to enable this feature.";
+NSMicrophoneUsageDescription = "Ruuvi Station needs to access your microphone to enable this feature.";
+NSPhotoLibraryUsageDescription = "Ruuvi Station needs to access your camera roll to enable this feature.";
