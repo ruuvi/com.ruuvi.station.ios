@@ -15,7 +15,7 @@ class WelcomeViewController: UIViewController {
 
 extension WelcomeViewController: WelcomeViewInput {
     func localize() {
-        descriptionLabel.text = "Welcome.description.text".localized()
+        configureDescriptionLabel()
         scanButton.setTitle("Welcome.scan.title".localized(), for: .normal)
     }
     
@@ -36,5 +36,22 @@ extension WelcomeViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
+        configureViews()
+    }
+}
+
+// MARK: - View configuration
+extension WelcomeViewController {
+    private func configureViews() {
+        configureDescriptionLabel()
+    }
+    
+    private func configureDescriptionLabel() {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 8
+        paragraphStyle.alignment = .center
+        let attrString = NSMutableAttributedString(string: "Welcome.description.text".localized())
+        attrString.addAttribute(.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        descriptionLabel.attributedText = attrString
     }
 }
