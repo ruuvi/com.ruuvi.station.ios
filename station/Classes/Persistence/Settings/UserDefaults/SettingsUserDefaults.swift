@@ -6,7 +6,7 @@ class SettingsUserDegaults: Settings {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
                 return Language(rawValue: savedCode) ?? .english
-            } else if let regionCode = Locale.current.regionCode {
+            } else if let regionCode = Locale.current.languageCode {
                 return Language(rawValue: regionCode) ?? .english
             } else {
                 return .english

@@ -3,7 +3,7 @@ import Localize_Swift
 class LocalizationService {
     static let shared = LocalizationService()
     
-    var localization: String? = Locale.current.regionCode {
+    var localization: String? = Locale.current.languageCode {
         didSet {
             if let localization = localization?.lowercased() {
                 Localize.setCurrentLanguage(localization)
