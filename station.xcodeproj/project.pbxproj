@@ -86,6 +86,7 @@
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
+		0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E53A3F3232DFC6200ACED49 /* InfoPlist.strings */; };
 		0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */; };
 		0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */; };
 		0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */; };
@@ -342,6 +343,9 @@
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
+		0E53A3F2232DFC6200ACED49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0E53A3F4232DFC6400ACED49 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0E53A3F5232DFC6500ACED49 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitioningDelegate.swift; sourceTree = "<group>"; };
 		0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissInteractiveTransition.swift; sourceTree = "<group>"; };
@@ -992,6 +996,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEB20C922B7A7200015F9E0 /* Localizable.strings */,
+				0E53A3F3232DFC6200ACED49 /* InfoPlist.strings */,
 			);
 			path = Strings;
 			sourceTree = "<group>";
@@ -2262,6 +2267,7 @@
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
+				0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */,
 				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				0E1C1E1322B756D30032F6CA /* DashboardRuuviTagView.xib in Resources */,
@@ -2580,6 +2586,16 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		0E53A3F3232DFC6200ACED49 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0E53A3F2232DFC6200ACED49 /* en */,
+				0E53A3F4232DFC6400ACED49 /* ru */,
+				0E53A3F5232DFC6500ACED49 /* fi */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		0EEB20C922B7A7200015F9E0 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
