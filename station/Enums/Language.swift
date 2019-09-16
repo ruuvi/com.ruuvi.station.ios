@@ -1,9 +1,9 @@
 import Foundation
 
 enum Language: String, CaseIterable {
-    case english = "EN"
-    case russian = "RU"
-    case finnish = "FI"
+    case english = "en"
+    case russian = "ru"
+    case finnish = "fi"
 }
 
 extension Language {
