@@ -161,7 +161,8 @@
                 <outlet property="humidityLabel" destination="XwV-cb-60i" id="ETY-XG-Dbv"/>
                 <outlet property="nameLabel" destination="bjH-UG-dwW" id="Mvh-u2-RLu"/>
                 <outlet property="pressureLabel" destination="A5Y-2H-mT9" id="uh9-NZ-vo8"/>
-                <outlet property="rssiLabel" destination="2Pk-nL-gnn" id="fGI-Ty-sqh"/>
+                <outlet property="rssiCityImageView" destination="tnh-8q-eCb" id="BHv-p6-C6H"/>
+                <outlet property="rssiCityLabel" destination="2Pk-nL-gnn" id="fGI-Ty-sqh"/>
                 <outlet property="temperatureLabel" destination="k0F-ZD-XNB" id="7GP-Kp-6qD"/>
                 <outlet property="temperatureUnitLabel" destination="tya-ss-bXe" id="qTu-Fa-TPk"/>
                 <outlet property="updatedLabel" destination="UNY-cv-I7Q" id="1vH-9E-e1K"/>
