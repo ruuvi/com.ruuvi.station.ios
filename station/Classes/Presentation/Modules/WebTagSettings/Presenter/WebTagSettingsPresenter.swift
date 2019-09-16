@@ -138,5 +138,7 @@ extension WebTagSettingsPresenter {
         } else {
             view.viewModel.location.value = nil
         }
+        
+        view.isNameChangedEnabled = view.viewModel.location.value != nil
     }
 }

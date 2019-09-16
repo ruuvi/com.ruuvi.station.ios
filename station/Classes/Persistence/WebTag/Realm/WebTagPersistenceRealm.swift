@@ -16,6 +16,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                             self.context.bg.delete(oldLocation)
                         }
                         webTag.location = nil
+                        webTag.name = WebTagLocationSource.current.title
                     }
                     promise.succeed(value: true)
                 } catch {
@@ -29,6 +30,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                         self.context.main.delete(oldLocation)
                     }
                     webTag.location = nil
+                    webTag.name = WebTagLocationSource.current.title
                 }
                 promise.succeed(value: true)
             } catch {
@@ -54,6 +56,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                         newLocation.longitude = location.coordinate.longitude
                         self.context.bg.add(newLocation)
                         webTag.location = newLocation
+                        webTag.name = location.city ?? location.country ?? WebTagLocationSource.manual.title
                     }
                     promise.succeed(value: true)
                 } catch {
@@ -73,6 +76,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                     newLocation.longitude = location.coordinate.longitude
                     self.context.main.add(newLocation)
                     webTag.location = newLocation
+                    webTag.name = location.city ?? location.country ?? WebTagLocationSource.manual.title
                 }
                 promise.succeed(value: true)
             } catch {
