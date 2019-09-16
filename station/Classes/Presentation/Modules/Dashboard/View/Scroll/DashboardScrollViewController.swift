@@ -260,13 +260,28 @@ extension DashboardScrollViewController {
             }
         }
         
-        view.rssiCityLabel.bind(viewModel.rssi) { label, rssi in
-            if let rssi = rssi {
-                label.text = "\(rssi)" + " " + "dBm".localized()
-            } else {
-                label.text = "N/A".localized()
+        switch viewModel.type {
+        case .ruuvi:
+            view.rssiCityLabel.bind(viewModel.rssi) { label, rssi in
+                if let rssi = rssi {
+                    label.text = "\(rssi)" + " " + "dBm".localized()
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
+        case .web:
+            let location = viewModel.location
+            view.rssiCityLabel.bind(viewModel.currentLocation) { [weak location] (label, currentLocation) in
+                if let location = location?.value {
+                    label.text = location.city ?? location.country
+                } else if let currentLocation = currentLocation {
+                    label.text = currentLocation.city ?? currentLocation.country
+                } else {
+                    label.text = "N/A".localized()
+                }
             }
         }
+        
         view.updatedLabel.bind(viewModel.date) { [weak view] (label, date) in
             if let date = date {
                 label.text = date.ruuviAgo
@@ -277,6 +292,13 @@ extension DashboardScrollViewController {
         }
         
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
+        
+        switch viewModel.type {
+        case .ruuvi:
+            view.rssiCityImageView.image = UIImage(named: "icon-measure-signal")
+        case .web:
+            view.rssiCityImageView.image = UIImage(named: "icon-measure-location")
+        }
     }
     
 }

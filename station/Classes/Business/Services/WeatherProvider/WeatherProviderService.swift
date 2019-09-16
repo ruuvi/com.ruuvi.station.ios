@@ -27,10 +27,10 @@ struct WPSData {
 protocol WeatherProviderService {
     
     func loadData(coordinate: CLLocationCoordinate2D, provider: WeatherProvider) -> Future<WPSData,RUError>
-    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WPSData,RUError>
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<(Location,WPSData),RUError>
     
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken
     
     @discardableResult
     func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken

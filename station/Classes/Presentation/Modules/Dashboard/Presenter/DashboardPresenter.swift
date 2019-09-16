@@ -188,9 +188,9 @@ extension DashboardPresenter {
         for provider in WeatherProvider.allCases {
             let viewModels = currentLocationWebViewModels.filter({ $0.provider == provider })
             if viewModels.count > 0 {
-                wsTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
+                wsTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, location, error) in
                     if let data = data {
-                        viewModels.forEach({ $0.update(data)})
+                        viewModels.forEach({ $0.update(data, current: location)})
                     } else if let error = error {
                         if case .core(let coreError) = error, coreError == .noLocationPermission {
                             observer.permissionPresenter.presentNoLocationPermission()
@@ -208,7 +208,7 @@ extension DashboardPresenter {
             guard let location = viewModel.location.value, let provider = viewModel.provider else { break }
             wsTokens.append(webTagService.observeData(self, coordinate: location.coordinate, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
                 if let data = data {
-                    viewModel.update(data)
+                    viewModel.update(data, current: nil)
                 } else if let error = error {
                     if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
                         observer.view.showWebTagAPILimitExceededError()
