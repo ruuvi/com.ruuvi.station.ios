@@ -260,7 +260,7 @@ extension DashboardScrollViewController {
             }
         }
         
-        view.rssiLabel.bind(viewModel.rssi) { label, rssi in
+        view.rssiCityLabel.bind(viewModel.rssi) { label, rssi in
             if let rssi = rssi {
                 label.text = "\(rssi)" + " " + "dBm".localized()
             } else {

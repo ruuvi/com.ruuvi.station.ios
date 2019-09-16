@@ -9,8 +9,9 @@ class DashboardRuuviTagView: UIView {
     @IBOutlet weak var temperatureUnitLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var pressureLabel: UILabel!
-    @IBOutlet weak var rssiLabel: UILabel!
+    @IBOutlet weak var rssiCityLabel: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
+    @IBOutlet weak var rssiCityImageView: UIImageView!
     
     var updatedAt: Date?
     
