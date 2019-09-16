@@ -154,7 +154,7 @@
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
-"WebTagLocationSource.manual" = "Выбрать месторасположение на карте";
+"WebTagLocationSource.manual" = "Месторасположение на карте";
 
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Удалить";

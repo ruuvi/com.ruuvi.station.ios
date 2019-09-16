@@ -118,19 +118,29 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Web Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="leK-zi-nm8">
-                                            <rect key="frame" x="20" y="11.5" width="374" height="21"/>
+                                            <rect key="frame" x="54" y="12" width="340" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lwX-5x-n5V">
+                                            <rect key="frame" x="20" y="9" width="26" height="26"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="26" id="1MJ-sP-ORf"/>
+                                                <constraint firstAttribute="width" constant="26" id="Okb-N5-4c3"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="leK-zi-nm8" firstAttribute="leading" secondItem="eOI-nm-VVw" secondAttribute="leading" constant="20" id="9E2-ez-kcx"/>
                                         <constraint firstItem="leK-zi-nm8" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="GZ3-Br-euO"/>
+                                        <constraint firstItem="lwX-5x-n5V" firstAttribute="leading" secondItem="eOI-nm-VVw" secondAttribute="leading" constant="20" id="Gnp-LK-fJk"/>
                                         <constraint firstAttribute="trailing" secondItem="leK-zi-nm8" secondAttribute="trailing" constant="20" id="MDk-iV-PJF"/>
+                                        <constraint firstItem="leK-zi-nm8" firstAttribute="leading" secondItem="lwX-5x-n5V" secondAttribute="trailing" constant="8" id="cNt-lS-1mh"/>
+                                        <constraint firstItem="lwX-5x-n5V" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="xEV-Xe-rdc"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="iconImageView" destination="lwX-5x-n5V" id="s8L-wX-6bc"/>
                                     <outlet property="nameLabel" destination="leK-zi-nm8" id="cyv-CP-UqV"/>
                                 </connections>
                             </tableViewCell>
