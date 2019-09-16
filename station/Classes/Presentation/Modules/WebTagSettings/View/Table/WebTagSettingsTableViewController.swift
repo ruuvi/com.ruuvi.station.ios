@@ -20,7 +20,7 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var removeThisWebTagButton: UIButton!
     @IBOutlet weak var locationTitleLabel: UILabel!
     
-    
+    var isNameChangedEnabled: Bool = true { didSet { updateUIIsNamaChangeEnabled() } }
     
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
 }
@@ -95,6 +95,7 @@ extension WebTagSettingsTableViewController {
         super.viewDidLoad()
         setupLocalization()
         bindViewModel()
+        updateUI()
     }
 }
 
@@ -134,6 +135,19 @@ extension WebTagSettingsTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
+    }
+}
+
+// MARK: - Update UI
+extension WebTagSettingsTableViewController {
+    private func updateUI() {
+        updateUIIsNamaChangeEnabled()
+    }
+    
+    private func updateUIIsNamaChangeEnabled() {
+        if isViewLoaded {
+            tagNameTextField.isEnabled = isNameChangedEnabled
+        }
     }
 }
 
