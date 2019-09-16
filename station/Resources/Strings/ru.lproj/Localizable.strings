@@ -56,7 +56,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
-"DiscoverTable.GetMoreSensors.button.title" = "БОЛЬШЕ СЕНСОРОВ";
+"DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
 "DiscoverTable.Close.barButtonItem.title" = "Закрыть";
 
 // ExpectedError

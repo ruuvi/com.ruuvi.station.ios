@@ -56,8 +56,10 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.NavigationItem.title" = "Add a New Sensor";
-"DiscoverTable.GetMoreSensors.button.title" = "GET MORE SENSORS";
+"DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
 "DiscoverTable.Close.barButtonItem.title" = "Close";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "(No devices on Bluetooth range)";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";

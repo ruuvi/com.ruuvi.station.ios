@@ -40,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <view key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" id="Zgc-HN-yFj">
-                            <rect key="frame" x="0.0" y="116" width="414" height="150"/>
+                            <rect key="frame" x="0.0" y="160" width="414" height="150"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0v4-V1-W6B">
@@ -76,8 +76,42 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverDeviceTableViewCellReuseIdentifier" id="L0Y-10-bMg" customClass="DiscoverDeviceTableViewCell" customModule="station" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverWebTagTableViewCellReuseIdentifier" id="Pdq-EP-b1c" customClass="DiscoverWebTagTableViewCell" customModule="station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pdq-EP-b1c" id="eOI-nm-VVw">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Web Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="leK-zi-nm8">
+                                            <rect key="frame" x="54" y="12" width="340" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lwX-5x-n5V">
+                                            <rect key="frame" x="20" y="9" width="26" height="26"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="26" id="1MJ-sP-ORf"/>
+                                                <constraint firstAttribute="width" constant="26" id="Okb-N5-4c3"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="leK-zi-nm8" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="GZ3-Br-euO"/>
+                                        <constraint firstItem="lwX-5x-n5V" firstAttribute="leading" secondItem="eOI-nm-VVw" secondAttribute="leading" constant="20" id="Gnp-LK-fJk"/>
+                                        <constraint firstAttribute="trailing" secondItem="leK-zi-nm8" secondAttribute="trailing" constant="20" id="MDk-iV-PJF"/>
+                                        <constraint firstItem="leK-zi-nm8" firstAttribute="leading" secondItem="lwX-5x-n5V" secondAttribute="trailing" constant="8" id="cNt-lS-1mh"/>
+                                        <constraint firstItem="lwX-5x-n5V" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="xEV-Xe-rdc"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="iconImageView" destination="lwX-5x-n5V" id="s8L-wX-6bc"/>
+                                    <outlet property="nameLabel" destination="leK-zi-nm8" id="cyv-CP-UqV"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverDeviceTableViewCellReuseIdentifier" id="L0Y-10-bMg" customClass="DiscoverDeviceTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="72" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L0Y-10-bMg" id="iPH-xW-e3d">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -110,38 +144,28 @@
                                     <outlet property="rssiImageView" destination="Mrr-n1-s1j" id="gZG-k1-EBk"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverWebTagTableViewCellReuseIdentifier" id="Pdq-EP-b1c" customClass="DiscoverWebTagTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="72" width="414" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverNoDevicesTableViewCellReuseIdentifier" id="GNJ-iL-zEl" customClass="DiscoverNoDevicesTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="116" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pdq-EP-b1c" id="eOI-nm-VVw">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GNJ-iL-zEl" id="Egl-A0-XSc">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Web Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="leK-zi-nm8">
-                                            <rect key="frame" x="54" y="12" width="340" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(No devices on Bluetooth range)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CDA-YP-FqC">
+                                            <rect key="frame" x="20" y="11.5" width="374" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lwX-5x-n5V">
-                                            <rect key="frame" x="20" y="9" width="26" height="26"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="26" id="1MJ-sP-ORf"/>
-                                                <constraint firstAttribute="width" constant="26" id="Okb-N5-4c3"/>
-                                            </constraints>
-                                        </imageView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="leK-zi-nm8" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="GZ3-Br-euO"/>
-                                        <constraint firstItem="lwX-5x-n5V" firstAttribute="leading" secondItem="eOI-nm-VVw" secondAttribute="leading" constant="20" id="Gnp-LK-fJk"/>
-                                        <constraint firstAttribute="trailing" secondItem="leK-zi-nm8" secondAttribute="trailing" constant="20" id="MDk-iV-PJF"/>
-                                        <constraint firstItem="leK-zi-nm8" firstAttribute="leading" secondItem="lwX-5x-n5V" secondAttribute="trailing" constant="8" id="cNt-lS-1mh"/>
-                                        <constraint firstItem="lwX-5x-n5V" firstAttribute="centerY" secondItem="eOI-nm-VVw" secondAttribute="centerY" id="xEV-Xe-rdc"/>
+                                        <constraint firstItem="CDA-YP-FqC" firstAttribute="centerY" secondItem="Egl-A0-XSc" secondAttribute="centerY" id="RgX-gL-bHm"/>
+                                        <constraint firstItem="CDA-YP-FqC" firstAttribute="leading" secondItem="Egl-A0-XSc" secondAttribute="leading" constant="20" id="fhC-gY-gOL"/>
+                                        <constraint firstAttribute="trailing" secondItem="CDA-YP-FqC" secondAttribute="trailing" constant="20" id="zj8-Np-z5v"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="iconImageView" destination="lwX-5x-n5V" id="s8L-wX-6bc"/>
-                                    <outlet property="nameLabel" destination="leK-zi-nm8" id="cyv-CP-UqV"/>
+                                    <outlet property="descriptionLabel" destination="CDA-YP-FqC" id="094-Eg-cb0"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

@@ -5,8 +5,9 @@ import EmptyDataSet_Swift
 enum DiscoverTableSection: Int {
     case webTag = 0
     case device = 1
+    case noDevices = 2
     
-    static var count = 2
+    static var count = 3
 }
 
 class DiscoverTableViewController: UITableViewController {
@@ -58,6 +59,7 @@ class DiscoverTableViewController: UITableViewController {
     private var emptyDataSetView: UIView?
     private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
     private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
+    private let noDevicesCellReuseIdentifier = "DiscoverNoDevicesTableViewCellReuseIdentifier"
     private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
     private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() { didSet { updateUIShownWebTags() } }
 }
@@ -131,6 +133,8 @@ extension DiscoverTableViewController {
             return shownWebTags.count
         case DiscoverTableSection.device.rawValue:
             return shownDevices.count
+        case DiscoverTableSection.noDevices.rawValue:
+            return shownDevices.count == 0 ? 1 : 0
         default:
             return 0
         }
@@ -148,6 +152,10 @@ extension DiscoverTableViewController {
             let tag = shownDevices[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
+        case DiscoverTableSection.noDevices.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier, for: indexPath) as! DiscoverNoDevicesTableViewCell
+            cell.descriptionLabel.text = isBluetoothEnabled ? "DiscoverTable.NoDevicesSection.NotFound.text".localized() : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
+            return cell
         default:
             fatalError()
         }
@@ -157,6 +165,7 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case DiscoverTableSection.webTag.rawValue:
             if indexPath.row < shownWebTags.count {
@@ -178,6 +187,8 @@ extension DiscoverTableViewController {
             return shownWebTags.count > 0 ? "DiscoverTable.SectionTitle.WebTags".localized() : nil
         case DiscoverTableSection.device.rawValue:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+        case DiscoverTableSection.noDevices.rawValue:
+            return shownDevices.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         default:
             return nil
         }
