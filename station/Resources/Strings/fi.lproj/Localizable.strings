@@ -58,6 +58,8 @@
 "DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA LISÄÄ ANTUREITA";
 "DiscoverTable.Close.barButtonItem.title" = "Sulje";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "(No devices on Bluetooth range)";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
