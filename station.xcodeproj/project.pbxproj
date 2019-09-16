@@ -87,6 +87,7 @@
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
 		0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E53A3F3232DFC6200ACED49 /* InfoPlist.strings */; };
+		0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */; };
 		0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */; };
 		0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */; };
 		0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */; };
@@ -346,6 +347,7 @@
 		0E53A3F2232DFC6200ACED49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53A3F4232DFC6400ACED49 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53A3F5232DFC6500ACED49 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverNoDevicesTableViewCell.swift; sourceTree = "<group>"; };
 		0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitioningDelegate.swift; sourceTree = "<group>"; };
 		0E53DA6122CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E53DA6322CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissInteractiveTransition.swift; sourceTree = "<group>"; };
@@ -1316,8 +1318,9 @@
 		0E70A46A22AF96C5006CB87C /* Table */ = {
 			isa = PBXGroup;
 			children = (
-				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
 				0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */,
+				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
+				0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */,
 				0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */,
 			);
 			path = Table;
@@ -2537,6 +2540,7 @@
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
+				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */,
 				0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */,
