@@ -6,6 +6,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     
     var owmApi: OpenWeatherMapAPI!
     var locationManager: LocationManager!
+    var locationService: LocationService!
     
     @discardableResult
     func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
@@ -36,7 +37,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     }
     
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
         
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
@@ -44,13 +45,13 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                 return
             }
             if let operation = self?.loadCurrentLocationData(from: provider) {
-                operation.on(success: { data in
+                operation.on(success: { result in
                     if timer.isValid {
-                        closure(observer, data, nil)
+                        closure(observer, result.1, result.0, nil)
                     }
                 }, failure: { (error) in
                     if timer.isValid {
-                        closure(observer, nil, error)
+                        closure(observer, nil, nil, error)
                     }
                 })
             } else {
@@ -64,19 +65,37 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         }
     }
     
-    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<WPSData,RUError> {
-        let promise = Promise<WPSData,RUError>()
-        let current = locationManager.getCurrentLocation()
-        current.on(success: { [weak self] (location) in
-            guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<(Location,WPSData),RUError> {
+        let promise = Promise<(Location,WPSData),RUError>()
+        let coordinate = locationManager.getCurrentLocation()
+        
+        coordinate.on(success: { [weak self] (coordinate) in
+            guard let location = self?.locationService.reverseGeocode(coordinate: coordinate.coordinate) else {
                 promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
                 return
             }
-            op.on(success: { (data) in
-                promise.succeed(value: data)
+            
+            location.on(success: { (locations) in
+                guard let location = locations.last else {
+                    promise.fail(error: .unexpected(.failedToReverseGeocodeCoordinate))
+                    return
+                }
+            
+                guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
+                    promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
+                    return
+                }
+                
+                op.on(success: { (data) in
+                    promise.succeed(value: (location,data))
+                }, failure: { (error) in
+                    promise.fail(error: error)
+                })
+                
             }, failure: { (error) in
                 promise.fail(error: error)
             })
+            
         }, failure: { (error) in
             promise.fail(error: error)
         })

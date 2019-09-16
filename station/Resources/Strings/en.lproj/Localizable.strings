@@ -153,6 +153,7 @@
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
+"UnexpectedError.failedToReverseGeocodeCoordinate" = "Failed to reverse geocode location";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your current location";

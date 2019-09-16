@@ -30,8 +30,9 @@ struct DashboardTagViewModel {
     var date: Observable<Date?> = Observable<Date?>()
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     var humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
-    var provider: WeatherProvider?
     var location: Observable<Location?> = Observable<Location?>()
+    var currentLocation: Observable<Location?> = Observable<Location?>()
+    var provider: WeatherProvider?
     
     init(_ webTag: WebTagRealm) {
         type = .web
@@ -60,7 +61,7 @@ struct DashboardTagViewModel {
         provider = webTag.provider
     }
     
-    func update(_ wpsData: WPSData) {
+    func update(_ wpsData: WPSData, current: Location?) {
         celsius.value = wpsData.celsius
         fahrenheit.value = wpsData.fahrenheit
         kelvin.value = wpsData.kelvin
@@ -79,7 +80,7 @@ struct DashboardTagViewModel {
             dewPointFahrenheit.value = nil
             dewPointKelvin.value = nil
         }
-        
+        currentLocation.value = current
         date.value = Date()
     }
     

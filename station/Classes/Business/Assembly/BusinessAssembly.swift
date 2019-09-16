@@ -49,6 +49,7 @@ class BusinessAssembly: Assembly {
             let service = WeatherProviderServiceImpl()
             service.owmApi = r.resolve(OpenWeatherMapAPI.self)
             service.locationManager = r.resolve(LocationManager.self)
+            service.locationService = r.resolve(LocationService.self)
             return service
         }
         

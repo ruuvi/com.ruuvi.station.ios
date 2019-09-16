@@ -72,6 +72,7 @@ extension ExpectedError: LocalizedError {
 enum UnexpectedError: Error {
     case callbackErrorAndResultAreNil
     case callerDeinitedDuringOperation
+    case failedToReverseGeocodeCoordinate
 }
 
 extension UnexpectedError: LocalizedError {
@@ -81,6 +82,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.callbackErrorAndResultAreNil".localized()
         case .callerDeinitedDuringOperation:
             return "UnexpectedError.callerDeinitedDuringOperation".localized()
+        case .failedToReverseGeocodeCoordinate:
+            return "UnexpectedError.failedToReverseGeocodeCoordinate".localized()
         }
     }
 }
