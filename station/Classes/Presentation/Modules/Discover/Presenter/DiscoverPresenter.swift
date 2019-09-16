@@ -53,8 +53,8 @@ class DiscoverPresenter: DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current),
-                        DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual)]
+        view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current, icon: UIImage(named: "icon-webtag-current")),
+                        DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual, icon: UIImage(named: "icon-webtag-map"))]
         view.isBluetoothEnabled = scanner.bluetoothState == .poweredOn
         if !view.isBluetoothEnabled && !isOpenedFromWelcome {
             view.showBluetoothDisabled()

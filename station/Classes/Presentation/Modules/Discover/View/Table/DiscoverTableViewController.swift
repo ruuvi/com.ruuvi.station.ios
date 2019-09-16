@@ -221,6 +221,7 @@ extension DiscoverTableViewController: EmptyDataSetDelegate {
 extension DiscoverTableViewController {
     private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverWebTagViewModel) {
         cell.nameLabel.text = tag.locationType.title
+        cell.iconImageView.image = tag.icon
     }
     
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverDeviceViewModel) {
