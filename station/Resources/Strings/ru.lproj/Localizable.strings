@@ -58,6 +58,8 @@
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
 "DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
 "DiscoverTable.Close.barButtonItem.title" = "Закрыть";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
