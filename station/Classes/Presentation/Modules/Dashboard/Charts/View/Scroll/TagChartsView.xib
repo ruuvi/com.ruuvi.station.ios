@@ -43,13 +43,13 @@
                 <constraint firstItem="40X-75-l2S" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0HC-NS-4S2"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1Vq-sJ-wNn"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="6SF-UU-U4I"/>
-                <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="91x-Vt-9zY"/>
+                <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="91x-Vt-9zY"/>
                 <constraint firstAttribute="bottom" secondItem="hh5-fd-vAK" secondAttribute="bottom" id="9n8-kp-faL"/>
-                <constraint firstItem="hh5-fd-vAK" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="CLV-YU-UuC"/>
+                <constraint firstItem="hh5-fd-vAK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="CLV-YU-UuC"/>
                 <constraint firstAttribute="bottom" secondItem="40X-75-l2S" secondAttribute="bottom" id="GTO-3p-nda"/>
-                <constraint firstItem="hh5-fd-vAK" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Xd5-a8-Dlp"/>
+                <constraint firstItem="hh5-fd-vAK" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Xd5-a8-Dlp"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="iQR-ym-0ev"/>
-                <constraint firstItem="40X-75-l2S" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="zGK-sv-g8J"/>
+                <constraint firstItem="40X-75-l2S" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="zGK-sv-g8J"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
