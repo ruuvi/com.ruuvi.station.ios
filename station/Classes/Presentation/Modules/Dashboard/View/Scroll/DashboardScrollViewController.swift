@@ -70,6 +70,12 @@ extension DashboardScrollViewController {
         }
     }
     
+    @IBAction func chartsButtonTouchUpInside(_ sender: Any) {
+        if currentPage >= 0 && currentPage < viewModels.count {
+            output.viewDidTriggerChart(for: viewModels[currentPage])
+        }
+    }
+    
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerMenu()
     }

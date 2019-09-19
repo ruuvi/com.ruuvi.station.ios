@@ -85,6 +85,10 @@ extension DashboardPresenter: DashboardViewOutput {
             router.openWebTagSettings(webTag: webTag)
         }
     }
+    
+    func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
+        print("open charts")
+    }
 }
 
 // MARK: - MenuModuleOutput
