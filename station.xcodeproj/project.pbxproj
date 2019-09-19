@@ -827,7 +827,6 @@
 				0E09671D22AE76D800E85F48 /* Main */,
 				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
-				0E8FD0B823335D3600FFA577 /* TagCharts */,
 				0EF2862522CBAF280026C7A5 /* TagSettings */,
 				0E046F2022F049C500BD4E9C /* WebTagSettings */,
 				0E09671E22AE7F2600E85F48 /* Welcome */,
@@ -1033,11 +1032,8 @@
 		0E1C1DCE22B3BDAE0032F6CA /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
-				0E1C1DD022B3BDFC0032F6CA /* Dashboard.storyboard */,
-				0E1C1DE522B3C2900032F6CA /* Assembly */,
-				0E1C1DDB22B3C1F30032F6CA /* Presenter */,
-				0E1C1DE022B3C24F0032F6CA /* Router */,
-				0E1C1DCF22B3BDBB0032F6CA /* View */,
+				0E8FD0D823336E8E00FFA577 /* Cards */,
+				0E8FD0D923336EB200FFA577 /* Charts */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -1379,19 +1375,6 @@
 			path = Table;
 			sourceTree = "<group>";
 		};
-		0E8FD0B823335D3600FFA577 /* TagCharts */ = {
-			isa = PBXGroup;
-			children = (
-				0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */,
-				0E8FD0BD23335D5800FFA577 /* Assembly */,
-				0E8FD0BC23335D5200FFA577 /* Transition */,
-				0E8FD0BB23335D4C00FFA577 /* Presenter */,
-				0E8FD0BA23335D4700FFA577 /* Router */,
-				0E8FD0B923335D4300FFA577 /* View */,
-			);
-			path = TagCharts;
-			sourceTree = "<group>";
-		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1437,6 +1420,31 @@
 				0E8FD0D02333679800FFA577 /* TagChartsConfigurator.swift */,
 			);
 			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E8FD0D823336E8E00FFA577 /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+				0E1C1DD022B3BDFC0032F6CA /* Dashboard.storyboard */,
+				0E1C1DE522B3C2900032F6CA /* Assembly */,
+				0E1C1DDB22B3C1F30032F6CA /* Presenter */,
+				0E1C1DE022B3C24F0032F6CA /* Router */,
+				0E1C1DCF22B3BDBB0032F6CA /* View */,
+			);
+			path = Cards;
+			sourceTree = "<group>";
+		};
+		0E8FD0D923336EB200FFA577 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */,
+				0E8FD0BD23335D5800FFA577 /* Assembly */,
+				0E8FD0BC23335D5200FFA577 /* Transition */,
+				0E8FD0BB23335D4C00FFA577 /* Presenter */,
+				0E8FD0BA23335D4700FFA577 /* Router */,
+				0E8FD0B923335D4300FFA577 /* View */,
+			);
+			path = Charts;
 			sourceTree = "<group>";
 		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
