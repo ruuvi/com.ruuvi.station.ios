@@ -1,6 +1,6 @@
 import UIKit
 
-class TagChartsViewController: UIViewController {
+class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
     
     @IBOutlet weak var settingsButton: UIBarButtonItem!
@@ -8,7 +8,7 @@ class TagChartsViewController: UIViewController {
     
 }
 
-extension TagChartsViewController: TagChartsViewInput {
+extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         
     }
@@ -19,7 +19,7 @@ extension TagChartsViewController: TagChartsViewInput {
 }
 
 // MARK: - IBActions
-extension TagChartsViewController {
+extension TagChartsScrollViewController {
     @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
         
     }
