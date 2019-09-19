@@ -10,7 +10,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
-    private var uuid: String!
+    private var initialUUID: String?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -33,7 +33,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     
     func configure(uuid: String) {
-        self.uuid = uuid
+        self.initialUUID = uuid
     }
 }
 
@@ -68,6 +68,11 @@ extension TagChartsPresenter {
             if viewModels.count == 0 {
                 router.openDiscover()
             }
+            
+            if let index = viewModels.firstIndex(where: { $0.uuid.value == initialUUID }) {
+                view.scroll(to: index, immediately: true)
+                initialUUID = nil
+            }
         }
     }
     
@@ -80,8 +85,7 @@ extension TagChartsPresenter {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
-            case .initial(let ruuviTags):
-                self?.ruuviTags = ruuviTags
+            case .initial:
                 self?.restartScanning()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
@@ -102,8 +106,7 @@ extension TagChartsPresenter {
         webTags = realmContext.main.objects(WebTagRealm.self)
         webTagsToken = webTags?.observe({ [weak self] (change) in
             switch change {
-            case .initial(let webTags):
-                self?.webTags = webTags
+            case .initial:
                 self?.restartScanning()
             case .update(let webTags, _, let insertions, _):
                 self?.webTags = webTags
