@@ -88,7 +88,7 @@ extension DashboardPresenter: DashboardViewOutput {
     
     func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
         if let uuid = viewModel.uuid.value {
-            router.openTagCharts(uuid: uuid)
+            router.openTagCharts(uuid: uuid, output: self)
         }
     }
 }
@@ -113,6 +113,15 @@ extension DashboardPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
         router.openRuuviWebsite()
+    }
+}
+
+// MARK: - TagChartsModuleOutput
+extension DashboardPresenter: TagChartsModuleOutput {
+    func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
+        if let index = viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+            view.scroll(to: index, immediately: true)
+        }
     }
 }
 

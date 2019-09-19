@@ -63,6 +63,13 @@ extension TagChartsScrollViewController {
     }
 }
 
+// MARK: - Update UI
+extension TagChartsScrollViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        output.viewDidScroll(to: currentPage)
+    }
+}
+
 // MARK: - View configuration
 extension TagChartsScrollViewController {
     
