@@ -116,15 +116,15 @@
 		0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47A22AF9BE2006CB87C /* DiscoverTableInitializer.swift */; };
 		0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */; };
 		0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */; };
-		0E8FD0C123335D8400FFA577 /* TagChartsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsViewController.swift */; };
+		0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
 		0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */; };
 		0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C423335DBF00FFA577 /* TagChartsViewOutput.swift */; };
 		0E8FD0C7233366DC00FFA577 /* TagChartsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C6233366DC00FFA577 /* TagChartsRouterInput.swift */; };
 		0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C8233366F000FFA577 /* TagChartsRouter.swift */; };
 		0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */; };
 		0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */; };
-		0E8FD0CF2333676C00FFA577 /* TagChartsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CE2333676C00FFA577 /* TagChartsInitializer.swift */; };
-		0E8FD0D12333679800FFA577 /* TagChartsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D02333679800FFA577 /* TagChartsConfigurator.swift */; };
+		0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CE2333676C00FFA577 /* TagChartsScrollInitializer.swift */; };
+		0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D02333679800FFA577 /* TagChartsScrollConfigurator.swift */; };
 		0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D223336B4200FFA577 /* TagChartsTransitioningDelegate.swift */; };
 		0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */; };
 		0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */; };
@@ -389,15 +389,15 @@
 		0E70A47A22AF9BE2006CB87C /* DiscoverTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableInitializer.swift; sourceTree = "<group>"; };
 		0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableConfigurator.swift; sourceTree = "<group>"; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
-		0E8FD0C023335D8400FFA577 /* TagChartsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewController.swift; sourceTree = "<group>"; };
+		0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollViewController.swift; sourceTree = "<group>"; };
 		0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewInput.swift; sourceTree = "<group>"; };
 		0E8FD0C423335DBF00FFA577 /* TagChartsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewOutput.swift; sourceTree = "<group>"; };
 		0E8FD0C6233366DC00FFA577 /* TagChartsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsRouterInput.swift; sourceTree = "<group>"; };
 		0E8FD0C8233366F000FFA577 /* TagChartsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsRouter.swift; sourceTree = "<group>"; };
 		0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsModuleInput.swift; sourceTree = "<group>"; };
 		0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsPresenter.swift; sourceTree = "<group>"; };
-		0E8FD0CE2333676C00FFA577 /* TagChartsInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsInitializer.swift; sourceTree = "<group>"; };
-		0E8FD0D02333679800FFA577 /* TagChartsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsConfigurator.swift; sourceTree = "<group>"; };
+		0E8FD0CE2333676C00FFA577 /* TagChartsScrollInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollInitializer.swift; sourceTree = "<group>"; };
+		0E8FD0D02333679800FFA577 /* TagChartsScrollConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollConfigurator.swift; sourceTree = "<group>"; };
 		0E8FD0D223336B4200FFA577 /* TagChartsTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitioningDelegate.swift; sourceTree = "<group>"; };
 		0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsPresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
@@ -1378,9 +1378,9 @@
 		0E8FD0B923335D4300FFA577 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0E8FD0DA23336FCA00FFA577 /* Scroll */,
 				0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */,
 				0E8FD0C423335DBF00FFA577 /* TagChartsViewOutput.swift */,
-				0E8FD0C023335D8400FFA577 /* TagChartsViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1416,8 +1416,7 @@
 		0E8FD0BD23335D5800FFA577 /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
-				0E8FD0CE2333676C00FFA577 /* TagChartsInitializer.swift */,
-				0E8FD0D02333679800FFA577 /* TagChartsConfigurator.swift */,
+				0E8FD0DB2333704400FFA577 /* Scroll */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -1445,6 +1444,23 @@
 				0E8FD0B923335D4300FFA577 /* View */,
 			);
 			path = Charts;
+			sourceTree = "<group>";
+		};
+		0E8FD0DA23336FCA00FFA577 /* Scroll */ = {
+			isa = PBXGroup;
+			children = (
+				0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */,
+			);
+			path = Scroll;
+			sourceTree = "<group>";
+		};
+		0E8FD0DB2333704400FFA577 /* Scroll */ = {
+			isa = PBXGroup;
+			children = (
+				0E8FD0CE2333676C00FFA577 /* TagChartsScrollInitializer.swift */,
+				0E8FD0D02333679800FFA577 /* TagChartsScrollConfigurator.swift */,
+			);
+			path = Scroll;
 			sourceTree = "<group>";
 		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
@@ -2512,7 +2528,7 @@
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
 				0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */,
 				0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */,
-				0E8FD0C123335D8400FFA577 /* TagChartsViewController.swift in Sources */,
+				0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */,
 				0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */,
 				0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
@@ -2520,7 +2536,7 @@
 				0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */,
 				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
 				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
-				0E8FD0D12333679800FFA577 /* TagChartsConfigurator.swift in Sources */,
+				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
@@ -2625,7 +2641,7 @@
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
-				0E8FD0CF2333676C00FFA577 /* TagChartsInitializer.swift in Sources */,
+				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,

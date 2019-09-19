@@ -1,7 +1,7 @@
 import Foundation
 
-class TagChartsConfigurator {
-    func configure(view: TagChartsViewController) {
+class TagChartsScrollConfigurator {
+    func configure(view: TagChartsScrollViewController) {
         let router = TagChartsRouter()
         router.transitionHandler = view
         
