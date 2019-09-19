@@ -87,10 +87,8 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
-            router.openTagCharts(ruuviTag: ruuviTag)
-        } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
-            // TODO: open web tag charts
+        if let uuid = viewModel.uuid.value {
+            router.openTagCharts(uuid: uuid)
         }
     }
 }

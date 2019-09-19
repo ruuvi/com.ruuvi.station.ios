@@ -69,7 +69,7 @@ class DashboardRouter: DashboardRouterInput {
             .perform()
     }
     
-    func openTagCharts(ruuviTag: RuuviTagRealm) {
+    func openTagCharts(uuid: String) {
         let factory = StoryboardFactory(storyboardName: "TagCharts")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagChartsModuleInput.self)
@@ -78,7 +78,7 @@ class DashboardRouter: DashboardRouterInput {
                 viewController.modalPresentationStyle = .custom
             })
             .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag)
+                module.configure(uuid: uuid)
             })
     }
     
