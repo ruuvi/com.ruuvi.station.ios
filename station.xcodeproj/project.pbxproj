@@ -81,8 +81,8 @@
 		0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0A22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift */; };
 		0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0C22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift */; };
 		0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
-		0E1C1E1122B756B40032F6CA /* DashboardRuuviTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* DashboardRuuviTagView.swift */; };
-		0E1C1E1322B756D30032F6CA /* DashboardRuuviTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* DashboardRuuviTagView.xib */; };
+		0E1C1E1122B756B40032F6CA /* DashboardTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */; };
+		0E1C1E1322B756D30032F6CA /* DashboardTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -129,6 +129,8 @@
 		0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */; };
 		0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */; };
 		0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */; };
+		0E8FD0DF2333797300FFA577 /* TagChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DE2333797300FFA577 /* TagChartsView.swift */; };
+		0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E02333799B00FFA577 /* TagChartsView.xib */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
@@ -353,8 +355,8 @@
 		0E1C1E0A22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTablePresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E1C1E0C22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTablePresentationController.swift; sourceTree = "<group>"; };
-		0E1C1E1022B756B40032F6CA /* DashboardRuuviTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRuuviTagView.swift; sourceTree = "<group>"; };
-		0E1C1E1222B756D30032F6CA /* DashboardRuuviTagView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DashboardRuuviTagView.xib; sourceTree = "<group>"; };
+		0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTagView.swift; sourceTree = "<group>"; };
+		0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DashboardTagView.xib; sourceTree = "<group>"; };
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
@@ -403,6 +405,8 @@
 		0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsPresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewModel.swift; sourceTree = "<group>"; };
+		0E8FD0DE2333797300FFA577 /* TagChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsView.swift; sourceTree = "<group>"; };
+		0E8FD0E02333799B00FFA577 /* TagChartsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagChartsView.xib; sourceTree = "<group>"; };
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
@@ -1054,8 +1058,8 @@
 		0E1C1DD622B3BF760032F6CA /* Scroll */ = {
 			isa = PBXGroup;
 			children = (
-				0E1C1E1222B756D30032F6CA /* DashboardRuuviTagView.xib */,
-				0E1C1E1022B756B40032F6CA /* DashboardRuuviTagView.swift */,
+				0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */,
+				0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */,
 				0E1C1DD922B3C1AF0032F6CA /* DashboardScrollViewController.swift */,
 			);
 			path = Scroll;
@@ -1452,6 +1456,8 @@
 		0E8FD0DA23336FCA00FFA577 /* Scroll */ = {
 			isa = PBXGroup;
 			children = (
+				0E8FD0E02333799B00FFA577 /* TagChartsView.xib */,
+				0E8FD0DE2333797300FFA577 /* TagChartsView.swift */,
 				0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */,
 			);
 			path = Scroll;
@@ -2388,7 +2394,7 @@
 				0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */,
 				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
-				0E1C1E1322B756D30032F6CA /* DashboardRuuviTagView.xib in Resources */,
+				0E1C1E1322B756D30032F6CA /* DashboardTagView.xib in Resources */,
 				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
@@ -2396,6 +2402,7 @@
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
+				0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2463,7 +2470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */,
-				0E1C1E1122B756B40032F6CA /* DashboardRuuviTagView.swift in Sources */,
+				0E1C1E1122B756B40032F6CA /* DashboardTagView.swift in Sources */,
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
@@ -2588,6 +2595,7 @@
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
 				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,
 				0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */,
+				0E8FD0DF2333797300FFA577 /* TagChartsView.swift in Sources */,
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
