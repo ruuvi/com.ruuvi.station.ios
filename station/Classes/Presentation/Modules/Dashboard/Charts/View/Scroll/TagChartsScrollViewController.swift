@@ -8,6 +8,7 @@ class TagChartsScrollViewController: UIViewController {
     
 }
 
+// MARK: - TagChartsViewInput
 extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         
@@ -30,5 +31,13 @@ extension TagChartsScrollViewController {
     
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         
+    }
+}
+
+// MARK: - View lifecycle
+extension TagChartsScrollViewController {
+    func viewDidLoad() {
+        super.viewDidLoad()
+        output.viewDidLoad()
     }
 }

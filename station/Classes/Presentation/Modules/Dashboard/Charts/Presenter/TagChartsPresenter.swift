@@ -12,6 +12,11 @@ class TagChartsPresenter: TagChartsModuleInput {
 }
 
 extension TagChartsPresenter: TagChartsViewOutput {
+    
+    func viewDidLoad() {
+        
+    }
+    
     func viewDidTriggerDashboard() {
         router.dismiss()
     }
