@@ -6,6 +6,7 @@ class TagChartsScrollViewController: UIViewController {
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     
+    var viewModels = [TagChartsViewModel]()
 }
 
 // MARK: - TagChartsViewInput
@@ -16,6 +17,14 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     
     func apply(theme: Theme) {
         
+    }
+    
+    func scroll(to index: Int) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let sSelf = self else { return }
+            let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
+            sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+        }
     }
 }
 
@@ -36,7 +45,7 @@ extension TagChartsScrollViewController {
 
 // MARK: - View lifecycle
 extension TagChartsScrollViewController {
-    func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         output.viewDidLoad()
     }
