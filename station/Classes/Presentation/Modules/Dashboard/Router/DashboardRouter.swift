@@ -68,6 +68,15 @@ class DashboardRouter: DashboardRouterInput {
             .perform()
     }
     
+    func openTagCharts(ruuviTag: RuuviTagRealm) {
+        let factory = StoryboardFactory(storyboardName: "TagCharts")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: TagChartsModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(ruuviTag: ruuviTag)
+            })
+    }
+    
     func openRuuviWebsite() {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }

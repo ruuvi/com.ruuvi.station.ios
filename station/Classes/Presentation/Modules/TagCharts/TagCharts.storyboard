@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="5Ri-Gw-eZL">
+            <objects>
+                <viewController storyboardIdentifier="TagChartsViewController" id="Zl9-xI-Y92" customClass="TagChartsViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ceB-eX-jxA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg9" translatesAutoresizingMaskIntoConstraints="NO" id="cpa-Qi-Dhz">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="APW-oc-hoK">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbe-Ju-Xdg">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jMb-BW-FfY">
+                                <rect key="frame" x="297" y="33" width="26" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="26" id="FQw-LI-KaR"/>
+                                    <constraint firstAttribute="height" constant="26" id="w5R-Ej-KnM"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" backgroundImage="icon-dashboard-button"/>
+                                <connections>
+                                    <action selector="dashboardButtonTouchUpInside:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="KA0-ap-oTM"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_white" translatesAutoresizingMaskIntoConstraints="NO" id="YoH-aD-scc">
+                                <rect key="frame" x="92.5" y="33" width="190" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="E62-pd-10A"/>
+                                    <constraint firstAttribute="width" constant="190" id="ba4-Ba-Q9J"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yVc-EN-JgQ">
+                                <rect key="frame" x="8" y="28" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="K13-2n-2YW"/>
+                                    <constraint firstAttribute="width" constant="36" id="i2E-EZ-wxt"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="baseline_menu_white_48pt"/>
+                                <connections>
+                                    <action selector="menuButtonTouchUpInside:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="JnD-Lf-kbH"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kd9-Ut-wHm">
+                                <rect key="frame" x="331" y="28" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="50r-66-xpV"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="36" id="JG8-eM-m8n"/>
+                                    <constraint firstAttribute="width" constant="36" id="O2C-Sc-vW5"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="36" id="auq-CH-SDT"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="baseline_settings_white_48pt"/>
+                                <connections>
+                                    <action selector="settingsButtonTouchUpInside:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="pHS-At-qNT"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="yVc-EN-JgQ" firstAttribute="leading" secondItem="7JW-Bt-vav" secondAttribute="leading" constant="8" id="9LS-ky-gzT"/>
+                            <constraint firstItem="yVc-EN-JgQ" firstAttribute="top" secondItem="7JW-Bt-vav" secondAttribute="top" constant="8" id="9SC-IC-hIu"/>
+                            <constraint firstItem="Kd9-Ut-wHm" firstAttribute="leading" secondItem="jMb-BW-FfY" secondAttribute="trailing" constant="8" id="BOp-kB-f7m"/>
+                            <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="trailing" secondItem="ceB-eX-jxA" secondAttribute="trailing" id="HXD-e1-BzR"/>
+                            <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="PKu-54-jOd"/>
+                            <constraint firstItem="YoH-aD-scc" firstAttribute="centerX" secondItem="Hbe-Ju-Xdg" secondAttribute="centerX" id="RdT-h9-7Ne"/>
+                            <constraint firstItem="YoH-aD-scc" firstAttribute="centerX" secondItem="Hbe-Ju-Xdg" secondAttribute="centerX" id="UTg-wi-uwg"/>
+                            <constraint firstItem="YoH-aD-scc" firstAttribute="leading" secondItem="yVc-EN-JgQ" secondAttribute="trailing" constant="194.5" id="Uwb-DI-1It">
+                                <variation key="heightClass=compact" constant="20"/>
+                            </constraint>
+                            <constraint firstItem="Kd9-Ut-wHm" firstAttribute="top" secondItem="7JW-Bt-vav" secondAttribute="top" constant="8" id="bhe-3r-7hq"/>
+                            <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="boM-YJ-rfA"/>
+                            <constraint firstItem="APW-oc-hoK" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="c3E-vy-tTt"/>
+                            <constraint firstItem="APW-oc-hoK" firstAttribute="trailing" secondItem="ceB-eX-jxA" secondAttribute="trailing" id="cVG-EZ-38Z"/>
+                            <constraint firstItem="cpa-Qi-Dhz" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="djY-tR-lv7"/>
+                            <constraint firstItem="Kd9-Ut-wHm" firstAttribute="centerY" secondItem="jMb-BW-FfY" secondAttribute="centerY" id="eQA-hp-fhU"/>
+                            <constraint firstItem="cpa-Qi-Dhz" firstAttribute="trailing" secondItem="ceB-eX-jxA" secondAttribute="trailing" id="gW2-xn-oGT"/>
+                            <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="bottom" secondItem="ceB-eX-jxA" secondAttribute="bottom" id="hQT-Ms-YtB"/>
+                            <constraint firstAttribute="bottom" secondItem="APW-oc-hoK" secondAttribute="bottom" id="iTh-YR-9BU"/>
+                            <constraint firstItem="APW-oc-hoK" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="jxr-wT-Sb7"/>
+                            <constraint firstItem="cpa-Qi-Dhz" firstAttribute="bottom" secondItem="ceB-eX-jxA" secondAttribute="bottom" id="mzo-xl-a4z"/>
+                            <constraint firstItem="YoH-aD-scc" firstAttribute="top" secondItem="7JW-Bt-vav" secondAttribute="top" constant="13" id="n7M-d3-rM9"/>
+                            <constraint firstItem="7JW-Bt-vav" firstAttribute="trailing" secondItem="Kd9-Ut-wHm" secondAttribute="trailing" constant="8" id="yPk-HI-dui"/>
+                            <constraint firstItem="cpa-Qi-Dhz" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="yXK-px-bhV"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="7JW-Bt-vav"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="RdT-h9-7Ne"/>
+                                <exclude reference="Uwb-DI-1It"/>
+                                <exclude reference="UTg-wi-uwg"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="Uwb-DI-1It"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="constraints">
+                                <include reference="UTg-wi-uwg"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="Ruuvi Station" id="Jh2-HP-UF6">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" id="Vi8-bi-nR6">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="IjX-tL-pmu">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="removeClick:" destination="Zl9-xI-Y92" id="QK3-44-cnC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="scrollView" destination="Hbe-Ju-Xdg" id="JIE-45-X1C"/>
+                        <outlet property="settingsButton" destination="IjX-tL-pmu" id="5pC-kJ-VWs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lM4-Y1-4JR" sceneMemberID="firstResponder"/>
+                <customObject id="vzF-KX-20C" customClass="TagChartsInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="Zl9-xI-Y92" id="P7n-9U-kKD"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-98.400000000000006" y="-583.3583208395803"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="baseline_menu_white_48pt" width="48" height="48"/>
+        <image name="baseline_settings_white_48pt" width="48" height="48"/>
+        <image name="bg9" width="960" height="1440"/>
+        <image name="gradient_layer" width="359" height="641"/>
+        <image name="icon-dashboard-button" width="18" height="18"/>
+        <image name="logo_white" width="721" height="101"/>
+    </resources>
+</document>
