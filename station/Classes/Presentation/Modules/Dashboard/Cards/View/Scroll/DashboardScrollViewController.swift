@@ -11,7 +11,7 @@ class DashboardScrollViewController: UIViewController {
     
     var viewModels = [DashboardTagViewModel]() { didSet { updateUIViewModels() }  }
     
-    private var views = [DashboardRuuviTagView]()
+    private var views = [DashboardTagView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
@@ -128,7 +128,7 @@ extension DashboardScrollViewController: UITextFieldDelegate {
 
 // MARK: - Configure view
 extension DashboardScrollViewController {
-    private func bind(view: DashboardRuuviTagView, with viewModel: DashboardTagViewModel) {
+    private func bind(view: DashboardTagView, with viewModel: DashboardTagViewModel) {
         
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         
@@ -338,7 +338,7 @@ extension DashboardScrollViewController {
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
-                    let view = Bundle.main.loadNibNamed("DashboardRuuviTagView", owner: self, options: nil)?.first as! DashboardRuuviTagView
+                    let view = Bundle.main.loadNibNamed("DashboardTagView", owner: self, options: nil)?.first as! DashboardTagView
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)
@@ -352,7 +352,7 @@ extension DashboardScrollViewController {
         }
     }
     
-    private func position(_ view: DashboardRuuviTagView, _ leftView: UIView) {
+    private func position(_ view: DashboardTagView, _ leftView: UIView) {
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: leftView, attribute: leftView == scrollView ? .leading : .trailing, multiplier: 1.0, constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))

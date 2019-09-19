@@ -1,7 +1,7 @@
 import UIKit
 import Localize_Swift
 
-class DashboardRuuviTagView: UIView {
+class DashboardTagView: UIView {
     
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
