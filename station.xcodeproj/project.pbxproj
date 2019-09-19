@@ -131,6 +131,7 @@
 		0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */; };
 		0E8FD0DF2333797300FFA577 /* TagChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DE2333797300FFA577 /* TagChartsView.swift */; };
 		0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E02333799B00FFA577 /* TagChartsView.xib */; };
+		0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
@@ -407,6 +408,7 @@
 		0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewModel.swift; sourceTree = "<group>"; };
 		0E8FD0DE2333797300FFA577 /* TagChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsView.swift; sourceTree = "<group>"; };
 		0E8FD0E02333799B00FFA577 /* TagChartsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagChartsView.xib; sourceTree = "<group>"; };
+		0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsModuleOutput.swift; sourceTree = "<group>"; };
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
@@ -1405,6 +1407,7 @@
 			isa = PBXGroup;
 			children = (
 				0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */,
+				0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */,
 				0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */,
 			);
 			path = Presenter;
@@ -2636,6 +2639,7 @@
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
 				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
+				0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */,
 				0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */,
 				0E53DA6422CC943900BC6D64 /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,

@@ -8,6 +8,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var errorPresenter: ErrorPresenter!
     var backgroundPersistence: BackgroundPersistence!
     
+    private var output: TagChartsModuleOutput?
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var initialUUID: String?
@@ -32,8 +33,9 @@ class TagChartsPresenter: TagChartsModuleInput {
         webTagsToken?.invalidate()
     }
     
-    func configure(uuid: String) {
+    func configure(uuid: String, output: TagChartsModuleOutput) {
         self.initialUUID = uuid
+        self.output = output
     }
 }
 
@@ -46,6 +48,12 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewDidTriggerDashboard() {
         router.dismiss()
+    }
+    
+    func viewDidScroll(to index: Int) {
+        if viewModels.count > index, let uuid = viewModels[index].uuid.value {
+            output?.tagCharts(module: self, didScrollTo: uuid)
+        }
     }
 }
 

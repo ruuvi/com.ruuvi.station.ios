@@ -8,5 +8,5 @@ protocol DashboardRouterInput {
     func openRuuviWebsite()
     func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?)
     func openWebTagSettings(webTag: WebTagRealm)
-    func openTagCharts(uuid: String)
+    func openTagCharts(uuid: String, output: TagChartsModuleOutput)
 }
