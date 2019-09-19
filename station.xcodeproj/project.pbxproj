@@ -125,6 +125,9 @@
 		0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */; };
 		0E8FD0CF2333676C00FFA577 /* TagChartsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CE2333676C00FFA577 /* TagChartsInitializer.swift */; };
 		0E8FD0D12333679800FFA577 /* TagChartsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D02333679800FFA577 /* TagChartsConfigurator.swift */; };
+		0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D223336B4200FFA577 /* TagChartsTransitioningDelegate.swift */; };
+		0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */; };
+		0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
@@ -395,6 +398,9 @@
 		0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsPresenter.swift; sourceTree = "<group>"; };
 		0E8FD0CE2333676C00FFA577 /* TagChartsInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsInitializer.swift; sourceTree = "<group>"; };
 		0E8FD0D02333679800FFA577 /* TagChartsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsConfigurator.swift; sourceTree = "<group>"; };
+		0E8FD0D223336B4200FFA577 /* TagChartsTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitioningDelegate.swift; sourceTree = "<group>"; };
+		0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsPresentTransitionAnimation.swift; sourceTree = "<group>"; };
+		0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
@@ -1417,6 +1423,9 @@
 		0E8FD0BC23335D5200FFA577 /* Transition */ = {
 			isa = PBXGroup;
 			children = (
+				0E8FD0D223336B4200FFA577 /* TagChartsTransitioningDelegate.swift */,
+				0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */,
+				0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */,
 			);
 			path = Transition;
 			sourceTree = "<group>";
@@ -2448,6 +2457,7 @@
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language.swift in Sources */,
+				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
@@ -2475,6 +2485,7 @@
 				0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
+				0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */,
 				0E1C1DDF22B3C2330032F6CA /* DashboardPresenter.swift in Sources */,
 				0E5C301622CF640000B52E39 /* CoreAssembly.swift in Sources */,
@@ -2519,6 +2530,7 @@
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
+				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,

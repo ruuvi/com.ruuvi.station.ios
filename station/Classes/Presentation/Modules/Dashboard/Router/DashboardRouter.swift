@@ -8,6 +8,7 @@ class DashboardRouter: DashboardRouterInput {
     
     private var menuTableTransition: MenuTableTransitioningDelegate!
     private lazy var swipeToDismissTransitioningDelegate = SwipeDownToDismissTransitioningDelegate()
+    private lazy var tagChartsTransitioningDelegate = TagChartsTransitioningDelegate()
     
     func openMenu(output: MenuModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Menu")
@@ -72,6 +73,10 @@ class DashboardRouter: DashboardRouterInput {
         let factory = StoryboardFactory(storyboardName: "TagCharts")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagChartsModuleInput.self)
+            .add(transitioningDelegate: tagChartsTransitioningDelegate)
+            .apply(to: { (viewController) in
+                viewController.modalPresentationStyle = .custom
+            })
             .then({ (module) -> Any? in
                 module.configure(ruuviTag: ruuviTag)
             })
