@@ -79,76 +79,97 @@ extension TagChartsScrollViewController: ChartViewDelegate {
 // MARK: - View configuration
 extension TagChartsScrollViewController {
     
+    private func configure(_ chartView: LineChartView) {
+        chartView.delegate = self
+        
+        chartView.chartDescription?.enabled = false
+        
+        chartView.dragEnabled = true
+        chartView.setScaleEnabled(true)
+        chartView.pinchZoomEnabled = false
+        chartView.highlightPerDragEnabled = false
+        
+        chartView.backgroundColor = .clear
+        
+        chartView.legend.enabled = false
+        
+        let xAxis = chartView.xAxis
+        xAxis.labelPosition = .bottom
+        xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+        xAxis.labelTextColor = UIColor.white
+        xAxis.drawAxisLineEnabled = false
+        xAxis.drawGridLinesEnabled = true
+        xAxis.centerAxisLabelsEnabled = false
+        xAxis.granularity = 300
+        xAxis.valueFormatter = DateValueFormatter()
+        xAxis.granularityEnabled = true
+        
+        let leftAxis = chartView.leftAxis
+        leftAxis.labelPosition = .outsideChart
+        leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+        leftAxis.drawGridLinesEnabled = true
+        
+        leftAxis.labelTextColor = UIColor.white
+        
+        chartView.rightAxis.enabled = false
+        chartView.legend.form = .line
+    }
+    
+    private func configure(_ set: LineChartDataSet) {
+        set.axisDependency = .left
+        set.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
+        set.lineWidth = 1.5
+        set.drawCirclesEnabled = true
+        set.circleRadius = 2
+        set.drawValuesEnabled = false
+        set.fillAlpha = 0.26
+        set.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
+        set.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
+        set.drawCircleHoleEnabled = false
+        set.drawFilledEnabled = true
+        set.highlightEnabled = false
+    }
+    
+    private func split(_ values: [TagChartsPoint]) -> [IChartDataSet]? {
+        let interval: TimeInterval = 60 * 60
+        var points = [ChartDataEntry]()
+        var sets = [IChartDataSet]()
+        var prevoiusValue: TimeInterval = Date.distantPast.timeIntervalSince1970
+        for value in values {
+            if value.date.timeIntervalSince1970 - prevoiusValue < interval {
+                points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
+            } else {
+                let set = LineChartDataSet(entries: points, label: "Temperature")
+                configure(set)
+                sets.append(set)
+                points = [ChartDataEntry]()
+            }
+            prevoiusValue = value.date.timeIntervalSince1970
+        }
+        let set = LineChartDataSet(entries: points, label: "Temperature")
+        configure(set)
+        sets.append(set)
+        return sets
+    }
+    
+    private func zoomAndScrollToLast24h(_ values: [TagChartsPoint], _ chartView: LineChartView) {
+        if let firstX = values.first?.date.timeIntervalSince1970,
+            let lastX = values.last?.date.timeIntervalSince1970 {
+            let scaleX = CGFloat((lastX - firstX) / (60 * 60 * 24))
+            chartView.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
+            chartView.moveViewToX(lastX - (60 * 60 * 24))
+        }
+    }
+    
     private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
         view.temperatureChart.bind(viewModel.temperature) { [weak self] (chartView, values) in
             if let values = values {
-                chartView.delegate = self
-                
-                chartView.chartDescription?.enabled = false
-                
-                chartView.dragEnabled = true
-                chartView.setScaleEnabled(true)
-                chartView.pinchZoomEnabled = false
-                chartView.highlightPerDragEnabled = false
-                
-                chartView.backgroundColor = .clear
-                
-                chartView.legend.enabled = false
-                
-                let xAxis = chartView.xAxis
-                xAxis.labelPosition = .bottom
-                xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-                xAxis.labelTextColor = UIColor.white
-                xAxis.drawAxisLineEnabled = false
-                xAxis.drawGridLinesEnabled = true
-                xAxis.centerAxisLabelsEnabled = false
-                xAxis.granularity = 300
-                xAxis.valueFormatter = DateValueFormatter()
-                xAxis.granularityEnabled = true
-                
-                let leftAxis = chartView.leftAxis
-                leftAxis.labelPosition = .outsideChart
-                leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-                leftAxis.drawGridLinesEnabled = true
-                
-                leftAxis.labelTextColor = UIColor.white
-                
-                chartView.rightAxis.enabled = false
-                chartView.legend.form = .line
-                
-                let points = values.map { (point) -> ChartDataEntry in
-                    return ChartDataEntry(x: point.date.timeIntervalSince1970, y: point.value)
-                }
-                
-                let set1 = LineChartDataSet(entries: points, label: "Temperature")
-                set1.axisDependency = .left
-                set1.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
-                set1.lineWidth = 1.5
-                set1.drawCirclesEnabled = true
-                set1.circleRadius = 2
-                set1.drawValuesEnabled = false
-                set1.fillAlpha = 0.26
-                set1.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
-                set1.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
-                set1.drawCircleHoleEnabled = false
-                set1.drawFilledEnabled = true
-                set1.highlightEnabled = false
-                
-                let data = LineChartData(dataSet: set1)
-                data.setValueTextColor(.white)
-                data.setValueFont(.systemFont(ofSize: 9, weight: .light))
-                
+                self?.configure(chartView)
+                let data = LineChartData(dataSets: self?.split(values))
                 chartView.data = data
-                
-                if let firstX = values.first?.date.timeIntervalSince1970,
-                    let lastX = values.last?.date.timeIntervalSince1970 {
-                    let scaleX = CGFloat((lastX - firstX) / (60 * 60 * 24))
-                    chartView.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
-                    chartView.moveViewToX(lastX - (60 * 60 * 24))
-                }
-                
+                self?.zoomAndScrollToLast24h(values, chartView)
             } else {
                 print("// TODO: show no values for chart")
             }
