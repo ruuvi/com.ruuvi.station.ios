@@ -13,6 +13,7 @@ class TagChartsScrollConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+        presenter.settings = r.resolve(Settings.self)
         
         view.output = presenter
     }

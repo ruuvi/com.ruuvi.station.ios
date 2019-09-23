@@ -101,6 +101,7 @@
                 <outlet property="nameLabel" destination="wQo-IQ-Rfz" id="ClI-hy-hSG"/>
                 <outlet property="pressureChart" destination="5f1-Br-0jw" id="kdq-tl-jcc"/>
                 <outlet property="temperatureChart" destination="wd6-XB-uzY" id="rPK-YS-Oda"/>
+                <outlet property="temperatureUnitLabel" destination="7zR-db-SZm" id="U00-IW-4jS"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
         </view>
