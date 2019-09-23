@@ -1,4 +1,5 @@
 import UIKit
+import Charts
 
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
@@ -70,12 +71,90 @@ extension TagChartsScrollViewController: UIScrollViewDelegate {
     }
 }
 
+// MARK: - ChartViewDelegate
+extension TagChartsScrollViewController: ChartViewDelegate {
+    
+}
+
 // MARK: - View configuration
 extension TagChartsScrollViewController {
     
     private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
+        view.temperatureChart.bind(viewModel.temperature) { [weak self] (chartView, values) in
+            if let values = values {
+                chartView.delegate = self
+                
+                chartView.chartDescription?.enabled = false
+                
+                chartView.dragEnabled = true
+                chartView.setScaleEnabled(true)
+                chartView.pinchZoomEnabled = false
+                chartView.highlightPerDragEnabled = false
+                
+                chartView.backgroundColor = .clear
+                
+                chartView.legend.enabled = false
+                
+                let xAxis = chartView.xAxis
+                xAxis.labelPosition = .bottom
+                xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+                xAxis.labelTextColor = UIColor.white
+                xAxis.drawAxisLineEnabled = false
+                xAxis.drawGridLinesEnabled = true
+                xAxis.centerAxisLabelsEnabled = false
+                xAxis.granularity = 300
+                xAxis.valueFormatter = DateValueFormatter()
+                xAxis.granularityEnabled = true
+                
+                let leftAxis = chartView.leftAxis
+                leftAxis.labelPosition = .outsideChart
+                leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
+                leftAxis.drawGridLinesEnabled = true
+                
+                leftAxis.labelTextColor = UIColor.white
+                
+                chartView.rightAxis.enabled = false
+                chartView.legend.form = .line
+                
+                let points = values.map { (point) -> ChartDataEntry in
+                    return ChartDataEntry(x: point.date.timeIntervalSince1970, y: point.value)
+                }
+                
+                let set1 = LineChartDataSet(entries: points, label: "Temperature")
+                set1.axisDependency = .left
+                set1.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
+                set1.lineWidth = 1.5
+                set1.drawCirclesEnabled = true
+                set1.circleRadius = 2
+                set1.drawValuesEnabled = false
+                set1.fillAlpha = 0.26
+                set1.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
+                set1.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
+                set1.drawCircleHoleEnabled = false
+                set1.drawFilledEnabled = true
+                set1.highlightEnabled = false
+                
+                let data = LineChartData(dataSet: set1)
+                data.setValueTextColor(.white)
+                data.setValueFont(.systemFont(ofSize: 9, weight: .light))
+                
+                chartView.data = data
+                
+                if let firstX = values.first?.date.timeIntervalSince1970,
+                    let lastX = values.last?.date.timeIntervalSince1970 {
+                    let scaleX = CGFloat((lastX - firstX) / (60 * 60 * 24))
+                    chartView.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
+                    chartView.moveViewToX(lastX - (60 * 60 * 24))
+                }
+                
+            } else {
+                print("// TODO: show no values for chart")
+            }
+        }
+        
+        
     }
     
 }

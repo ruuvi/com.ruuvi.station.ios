@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,6 +25,10 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag_bg_layer" translatesAutoresizingMaskIntoConstraints="NO" id="40X-75-l2S" userLabel="Background Overlay">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                 </imageView>
+                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="em1-nB-mq5">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wQo-IQ-Rfz">
                     <rect key="frame" x="57" y="104" width="300" height="21"/>
                     <constraints>
@@ -37,25 +39,70 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="DMQ-s0-DdM">
+                    <rect key="frame" x="0.0" y="145" width="414" height="751"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wd6-XB-uzY" customClass="LineChartView" customModule="Charts">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="250.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zR-db-SZm">
+                                    <rect key="frame" x="339.5" y="8" width="66.5" height="13.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="7zR-db-SZm" firstAttribute="top" secondItem="wd6-XB-uzY" secondAttribute="top" constant="8" id="RrP-Td-aP1"/>
+                                <constraint firstAttribute="trailing" secondItem="7zR-db-SZm" secondAttribute="trailing" constant="8" id="TLf-nt-STl"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNS-4I-3XP" customClass="LineChartView" customModule="Charts">
+                            <rect key="frame" x="0.0" y="250.5" width="414" height="250"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f1-Br-0jw" customClass="LineChartView" customModule="Charts">
+                            <rect key="frame" x="0.0" y="500.5" width="414" height="250.5"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="wd6-XB-uzY" firstAttribute="height" secondItem="KNS-4I-3XP" secondAttribute="height" id="Ldv-pu-Tjr"/>
+                        <constraint firstItem="KNS-4I-3XP" firstAttribute="height" secondItem="5f1-Br-0jw" secondAttribute="height" id="Wat-oL-OLe"/>
+                    </constraints>
+                </stackView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="40X-75-l2S" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0HC-NS-4S2"/>
+                <constraint firstAttribute="bottom" secondItem="DMQ-s0-DdM" secondAttribute="bottom" id="0Kr-br-Hqu"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1Vq-sJ-wNn"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="6SF-UU-U4I"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="91x-Vt-9zY"/>
                 <constraint firstAttribute="bottom" secondItem="hh5-fd-vAK" secondAttribute="bottom" id="9n8-kp-faL"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="CLV-YU-UuC"/>
+                <constraint firstItem="em1-nB-mq5" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="FpX-O5-k6T"/>
                 <constraint firstAttribute="bottom" secondItem="40X-75-l2S" secondAttribute="bottom" id="GTO-3p-nda"/>
+                <constraint firstItem="em1-nB-mq5" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="VvW-e4-CPN"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Xd5-a8-Dlp"/>
+                <constraint firstItem="em1-nB-mq5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="adr-C1-lX9"/>
+                <constraint firstItem="DMQ-s0-DdM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="di8-Hg-LyS"/>
+                <constraint firstItem="DMQ-s0-DdM" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="gKc-0G-Zaf"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="iQR-ym-0ev"/>
+                <constraint firstAttribute="bottom" secondItem="em1-nB-mq5" secondAttribute="bottom" id="vHW-1j-m0M"/>
+                <constraint firstItem="DMQ-s0-DdM" firstAttribute="top" secondItem="wQo-IQ-Rfz" secondAttribute="bottom" constant="20" id="vVG-eJ-jLl"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="zGK-sv-g8J"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="backgroundImage" destination="hh5-fd-vAK" id="zcI-We-9Fa"/>
+                <outlet property="humidityChart" destination="KNS-4I-3XP" id="0FN-rk-PeR"/>
                 <outlet property="nameLabel" destination="wQo-IQ-Rfz" id="ClI-hy-hSG"/>
+                <outlet property="pressureChart" destination="5f1-Br-0jw" id="kdq-tl-jcc"/>
+                <outlet property="temperatureChart" destination="wd6-XB-uzY" id="rPK-YS-Oda"/>
             </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="130.58035714285714"/>
         </view>
     </objects>
     <resources>
