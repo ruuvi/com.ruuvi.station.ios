@@ -1,4 +1,5 @@
 import UIKit
+import Humidity
 
 enum TagChartsType {
     case ruuvi
@@ -53,11 +54,28 @@ struct TagChartsViewModel {
                 return nil
             }
         })
+        
+        humidityOffset.value = ruuviTag.humidityOffset
+        
         relativeHumidity.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
             if let value = $0.humidity.value {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
+            }
+        })
+        
+        absoluteHumidity.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                var sh = rh + ruuviTag.humidityOffset
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                let h = Humidity(c: c, rh: sh / 100.0)
+                return TagChartsPoint(date: $0.date, value: h.ah)
+            } else {
+                 return nil
             }
         })
     }
@@ -92,6 +110,15 @@ struct TagChartsViewModel {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
+            }
+        })
+        absoluteHumidity.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                let h = Humidity(c: c, rh: rh / 100.0)
+                return TagChartsPoint(date: $0.date, value: h.ah)
+            } else {
+                 return nil
             }
         })
     }
