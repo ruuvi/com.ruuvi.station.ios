@@ -164,7 +164,7 @@ extension TagChartsScrollViewController {
     private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
-        view.temperatureChart.bind(viewModel.temperature) { [weak self] (chartView, values) in
+        view.temperatureChart.bind(viewModel.celsius) { [weak self] (chartView, values) in
             if let values = values {
                 self?.configure(chartView)
                 let data = LineChartData(dataSets: self?.split(values))
