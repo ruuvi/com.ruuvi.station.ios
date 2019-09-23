@@ -15,13 +15,13 @@ struct TagChartsViewModel {
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
     var name: Observable<String?> = Observable<String?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
-    var temperature: Observable<[TagChartsPoint]?> = Observable<[TagChartsPoint]?>()
+    var celsius: Observable<[TagChartsPoint]?> = Observable<[TagChartsPoint]?>()
     
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
-        temperature.value = ruuviTag.data.compactMap( {
+        celsius.value = ruuviTag.data.compactMap( {
             if let value = $0.celsius.value {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
@@ -34,7 +34,7 @@ struct TagChartsViewModel {
         type = .web
         uuid.value = webTag.uuid
         name.value = webTag.name
-        temperature.value = webTag.data.compactMap( {
+        celsius.value = webTag.data.compactMap( {
             if let value = $0.celsius.value {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
