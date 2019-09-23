@@ -7,10 +7,14 @@ class TagChartsPresenter: TagChartsModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var backgroundPersistence: BackgroundPersistence!
+    var settings: Settings!
     
     private var output: TagChartsModuleOutput?
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
+    private var temperatureUnitToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
+    private var backgroundToken: NSObjectProtocol?
     private var initialUUID: String?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
@@ -31,6 +35,15 @@ class TagChartsPresenter: TagChartsModuleInput {
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
+        if let settingsToken = temperatureUnitToken {
+            NotificationCenter.default.removeObserver(settingsToken)
+        }
+        if let humidityUnitToken = humidityUnitToken {
+            NotificationCenter.default.removeObserver(humidityUnitToken)
+        }
+        if let backgroundToken = backgroundToken {
+            NotificationCenter.default.removeObserver(backgroundToken)
+        }
     }
     
     func configure(uuid: String, output: TagChartsModuleOutput) {
@@ -44,6 +57,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
         startObservingWebTags()
+        startListeningToSettings()
+        startObservingBackgroundChanges()
     }
     
     func viewDidTriggerDashboard() {
@@ -63,11 +78,15 @@ extension TagChartsPresenter {
             let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
                 let viewModel = TagChartsViewModel(ruuviTag)
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.humidityUnit.value = settings.humidityUnit
                 return viewModel
             }) ?? []
             let webViewModels = webTags?.compactMap({ (webTag) -> TagChartsViewModel in
                 let viewModel = TagChartsViewModel(webTag)
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.humidityUnit.value = settings.humidityUnit
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
@@ -129,6 +148,25 @@ extension TagChartsPresenter {
                 self?.errorPresenter.present(error: error)
             }
         })
+    }
+    
+    private func startListeningToSettings() {
+        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
+            self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit } )
+        }
+        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
+            self?.viewModels.forEach( { $0.humidityUnit.value = self?.settings.humidityUnit } )
+        })
+    }
+    
+    private func startObservingBackgroundChanges() {
+        backgroundToken = NotificationCenter.default.addObserver(forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main) { [weak self] notification in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BackgroundPersistenceDidChangeBackgroundKey.uuid] as? String {
+                if let viewModel = self?.view.viewModels.first(where: { $0.uuid.value == uuid }) {
+                    viewModel.background.value = self?.backgroundPersistence.background(for: uuid)
+                }
+            }
+        }
     }
     
 }

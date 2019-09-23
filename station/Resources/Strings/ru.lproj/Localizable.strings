@@ -118,6 +118,9 @@
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
 "OWMError.invalidApiKey" = "Некорректный API-ключ";
 
+// TagCharts
+"TagCharts.NoChartData.text" = "Нет данных для построения графика";
+
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
 "TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот RuuviTag?";

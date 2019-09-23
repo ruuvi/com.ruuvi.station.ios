@@ -118,6 +118,9 @@
 "OWMError.notAHttpResponse" = "Not a HTTP response";
 "OWMError.invalidApiKey" = "Invalid API Key";
 
+// TagCharts
+"TagCharts.NoChartData.text" = "No chart data available";
+
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
 "TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän laitteen?";

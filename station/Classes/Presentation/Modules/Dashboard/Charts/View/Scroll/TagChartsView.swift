@@ -7,4 +7,5 @@ class TagChartsView: UIView {
     @IBOutlet weak var temperatureChart: LineChartView!
     @IBOutlet weak var humidityChart: LineChartView!
     @IBOutlet weak var pressureChart: LineChartView!
+    @IBOutlet weak var temperatureUnitLabel: UILabel!
 }

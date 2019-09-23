@@ -18,7 +18,11 @@ class TagChartsScrollViewController: UIViewController {
 // MARK: - TagChartsViewInput
 extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
-        
+        views.forEach( {
+            $0.temperatureChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.humidityChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.pressureChart.noDataText = "TagCharts.NoChartData.text".localized()
+        } )
     }
     
     func apply(theme: Theme) {
@@ -113,6 +117,9 @@ extension TagChartsScrollViewController {
         
         chartView.rightAxis.enabled = false
         chartView.legend.form = .line
+        
+        chartView.noDataTextColor = UIColor.white
+        chartView.noDataText = "TagCharts.NoChartData.text".localized()
     }
     
     private func configure(_ set: LineChartDataSet) {
@@ -156,25 +163,67 @@ extension TagChartsScrollViewController {
         if let firstX = values.first?.date.timeIntervalSince1970,
             let lastX = values.last?.date.timeIntervalSince1970 {
             let scaleX = CGFloat((lastX - firstX) / (60 * 60 * 24))
+            chartView.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
             chartView.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
             chartView.moveViewToX(lastX - (60 * 60 * 24))
+        }
+    }
+    
+    private func configureData(chartView: LineChartView, values: [TagChartsPoint]?) {
+        if let values = values {
+            configure(chartView)
+            let data = LineChartData(dataSets: split(values))
+            chartView.data = data
+            zoomAndScrollToLast24h(values, chartView)
         }
     }
     
     private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
-        view.temperatureChart.bind(viewModel.celsius) { [weak self] (chartView, values) in
-            if let values = values {
-                self?.configure(chartView)
-                let data = LineChartData(dataSets: self?.split(values))
-                chartView.data = data
-                self?.zoomAndScrollToLast24h(values, chartView)
+        
+        let temperatureUnit = viewModel.temperatureUnit
+        let fahrenheit = viewModel.fahrenheit
+        let celsius = viewModel.celsius
+        let kelvin = viewModel.kelvin
+        let temperatureChart = view.temperatureChart
+        
+        let temperatureBlock: ((LineChartView,[TagChartsPoint]?) -> Void) = { [weak self, weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] chartView, _ in
+            if let temperatureUnit = temperatureUnit?.value {
+                switch temperatureUnit {
+                case .celsius:
+                    self?.configureData(chartView: chartView, values: celsius?.value)
+                case .fahrenheit:
+                    self?.configureData(chartView: chartView, values: fahrenheit?.value)
+                case .kelvin:
+                    self?.configureData(chartView: chartView, values: kelvin?.value)
+                }
             } else {
-                print("// TODO: show no values for chart")
+                self?.configureData(chartView: chartView, values: nil)
             }
         }
         
+        view.temperatureChart.bind(viewModel.celsius, block: temperatureBlock)
+        view.temperatureChart.bind(viewModel.fahrenheit, block: temperatureBlock)
+        view.temperatureChart.bind(viewModel.kelvin, block: temperatureBlock)
+        
+        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureChart] label, temperatureUnit in
+            if let temperatureUnit = temperatureUnit {
+                switch temperatureUnit {
+                case .celsius:
+                    label.text = "°C".localized()
+                case .fahrenheit:
+                    label.text = "°F".localized()
+                case .kelvin:
+                    label.text = "K".localized()
+                }
+            } else {
+                label.text = "N/A".localized()
+            }
+            if let temperatureChart = temperatureChart {
+                temperatureBlock(temperatureChart, nil)
+            }
+        }
         
     }
     

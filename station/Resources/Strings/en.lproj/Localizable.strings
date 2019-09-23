@@ -118,6 +118,9 @@
 "OWMError.notAHttpResponse" = "Not a HTTP response";
 "OWMError.invalidApiKey" = "Invalid API Key";
 
+// TagCharts
+"TagCharts.NoChartData.text" = "No chart data available";
+
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
 "TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this RuuviTag?";
