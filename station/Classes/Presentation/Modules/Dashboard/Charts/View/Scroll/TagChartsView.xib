@@ -40,10 +40,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="DMQ-s0-DdM">
-                    <rect key="frame" x="0.0" y="145" width="414" height="751"/>
+                    <rect key="frame" x="0.0" y="145" width="414" height="717"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wd6-XB-uzY" customClass="LineChartView" customModule="Charts">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="250.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="239"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zR-db-SZm">
                                     <rect key="frame" x="314.5" y="8" width="91.5" height="13.5"/>
@@ -59,7 +59,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNS-4I-3XP" customClass="LineChartView" customModule="Charts">
-                            <rect key="frame" x="0.0" y="250.5" width="414" height="250"/>
+                            <rect key="frame" x="0.0" y="239" width="414" height="239"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Humidity Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iwe-nR-ska">
                                     <rect key="frame" x="334.5" y="8" width="71.5" height="13.5"/>
@@ -75,7 +75,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f1-Br-0jw" customClass="LineChartView" customModule="Charts">
-                            <rect key="frame" x="0.0" y="500.5" width="414" height="250.5"/>
+                            <rect key="frame" x="0.0" y="478" width="414" height="239"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pressure Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PqV-fU-Itv">
                                     <rect key="frame" x="335" y="8" width="71" height="13.5"/>
@@ -100,15 +100,15 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="40X-75-l2S" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0HC-NS-4S2"/>
-                <constraint firstAttribute="bottom" secondItem="DMQ-s0-DdM" secondAttribute="bottom" id="0Kr-br-Hqu"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="DMQ-s0-DdM" secondAttribute="bottom" id="0Kr-br-Hqu"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1Vq-sJ-wNn"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="6SF-UU-U4I"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="91x-Vt-9zY"/>
                 <constraint firstAttribute="bottom" secondItem="hh5-fd-vAK" secondAttribute="bottom" id="9n8-kp-faL"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="CLV-YU-UuC"/>
-                <constraint firstItem="em1-nB-mq5" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="FpX-O5-k6T"/>
+                <constraint firstItem="em1-nB-mq5" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="FpX-O5-k6T"/>
                 <constraint firstAttribute="bottom" secondItem="40X-75-l2S" secondAttribute="bottom" id="GTO-3p-nda"/>
-                <constraint firstItem="em1-nB-mq5" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="VvW-e4-CPN"/>
+                <constraint firstItem="em1-nB-mq5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VvW-e4-CPN"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Xd5-a8-Dlp"/>
                 <constraint firstItem="em1-nB-mq5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="adr-C1-lX9"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="di8-Hg-LyS"/>
