@@ -134,6 +134,19 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
     
     func viewDidConfirmToDeleteHistory(for viewModel: TagChartsViewModel) {
+        switch viewModel.type {
+        case .ruuvi:
+            if let uuid = viewModel.uuid.value {
+                let op = ruuviTagService.clearHistory(uuid: uuid)
+                op.on(success: { [weak self] _ in
+                    self?.syncViewModels()
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+            }
+        case .web:
+            break
+        }
         
     }
 }

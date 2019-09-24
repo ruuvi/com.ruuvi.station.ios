@@ -7,4 +7,5 @@ protocol RuuviTagService {
     func delete(ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
     func update(name: String, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
     func loadHistory(uuid: String, from: Date) -> Future<Bool,RUError>
+    func clearHistory(uuid: String) -> Future<Bool,RUError>
 }
