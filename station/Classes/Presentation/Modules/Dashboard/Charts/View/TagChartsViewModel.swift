@@ -33,21 +33,22 @@ struct TagChartsViewModel {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
-        celsius.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        let data = ruuviTag.data.sorted(byKeyPath: "date")
+        celsius.value = data.compactMap({
             if let value = $0.celsius.value {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
             }
         })
-        fahrenheit.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        fahrenheit.value = data.compactMap({
             if let value = $0.fahrenheit {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
             }
         })
-        kelvin.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        kelvin.value = data.compactMap({
             if let value = $0.kelvin {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
@@ -58,7 +59,7 @@ struct TagChartsViewModel {
         let ho = ruuviTag.humidityOffset
         humidityOffset.value = ho
         
-        relativeHumidity.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        relativeHumidity.value = data.compactMap({
             if let rh = $0.humidity.value {
                 var sh = rh + ho
                 if sh > 100.0 {
@@ -70,7 +71,7 @@ struct TagChartsViewModel {
             }
         })
         
-        absoluteHumidity.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        absoluteHumidity.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 var sh = rh + ho
@@ -83,7 +84,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        dewPointCelsius.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        dewPointCelsius.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 var sh = rh + ho
@@ -100,7 +101,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        dewPointFahrenheit.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        dewPointFahrenheit.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 var sh = rh + ho
@@ -117,7 +118,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        dewPointKelvin.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        dewPointKelvin.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 var sh = rh + ho
@@ -134,7 +135,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        pressure.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+        pressure.value = data.compactMap({
             if let pressure = $0.pressure.value {
                 return TagChartsPoint(date: $0.date, value: pressure)
             } else {
@@ -147,35 +148,36 @@ struct TagChartsViewModel {
         type = .web
         uuid.value = webTag.uuid
         name.value = webTag.name
-        celsius.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        let data = webTag.data.sorted(byKeyPath: "date")
+        celsius.value = data.compactMap({
             if let value = $0.celsius.value {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
             }
         })
-        fahrenheit.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        fahrenheit.value = data.compactMap({
             if let value = $0.fahrenheit {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
             }
         })
-        kelvin.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        kelvin.value = data.compactMap({
             if let value = $0.kelvin {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
             }
         })
-        relativeHumidity.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        relativeHumidity.value = data.compactMap({
             if let value = $0.humidity.value {
                 return TagChartsPoint(date: $0.date, value: value)
             } else {
                 return nil
             }
         })
-        absoluteHumidity.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        absoluteHumidity.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 let h = Humidity(c: c, rh: rh / 100.0)
@@ -184,7 +186,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        dewPointCelsius.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        dewPointCelsius.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 let h = Humidity(c: c, rh: rh / 100.0)
@@ -197,7 +199,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        dewPointFahrenheit.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        dewPointFahrenheit.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 let h = Humidity(c: c, rh: rh / 100.0)
@@ -210,7 +212,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        dewPointKelvin.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        dewPointKelvin.value = data.compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
                 let h = Humidity(c: c, rh: rh / 100.0)
@@ -223,7 +225,7 @@ struct TagChartsViewModel {
                  return nil
             }
         })
-        pressure.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+        pressure.value = data.compactMap({
             if let pressure = $0.pressure.value {
                 return TagChartsPoint(date: $0.date, value: pressure)
             } else {
