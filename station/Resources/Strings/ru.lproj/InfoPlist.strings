@@ -1,4 +1,5 @@
 NSBluetoothPeripheralUsageDescription = "Приложение использует Bluetooth LE, чтобы читать данные с сенсоров.";
+NSBluetoothAlwaysUsageDescription = "Приложение использует Bluetooth LE, чтобы читать данные с сенсоров.";
 NSCameraUsageDescription = "Ruuvi Station необходим доступ к камере, чтобы использовать эту функцию.";
 NSLocationAlwaysUsageDescription = "Ruuvi Station необходим доступ к локационным сервисам, чтобы использовать эту функцию.";
 NSLocationWhenInUseUsageDescription = "Ruuvi Station необходим доступ к локационным сервисам, чтобы использовать эту функцию.";
