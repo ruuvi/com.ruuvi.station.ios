@@ -1,14 +1,5 @@
 PODS:
-  - BTKit (0.0.13):
-    - BTKit/Devices (= 0.0.13)
-    - BTKit/Ruuvi (= 0.0.13)
-    - BTKit/Scanner (= 0.0.13)
-  - BTKit/Devices (0.0.13)
-  - BTKit/Ruuvi (0.0.13):
-    - BTKit/Devices
-    - BTKit/Scanner
-  - BTKit/Scanner (0.0.13):
-    - BTKit/Devices
+  - BTKit (0.0.18)
   - EmptyDataSet-Swift (4.2.0)
   - Firebase/Analytics (6.7.0):
     - Firebase/Core
@@ -157,7 +148,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: 12041aab378b799a619f720885dbe1cc0e9bbc0e
+  BTKit: c4e86aa404dc33d8d04452a69ac6480bc6fa548f
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Firebase: 291d7b0a7b393f252358083b5d224884126fa46d
   FirebaseAnalytics: 843c7f64a8f9c79f0d03281197ebe7bb1d58d477
