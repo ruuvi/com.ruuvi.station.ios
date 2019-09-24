@@ -28,6 +28,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var stateToken: ObservationToken?
+    private var ruuviTagDataTokens = [NotificationToken]()
+    private var webTagDataTokens = [NotificationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -52,6 +54,8 @@ class TagChartsPresenter: TagChartsModuleInput {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         stateToken?.invalidate()
+        ruuviTagDataTokens.forEach({ $0.invalidate() })
+        webTagDataTokens.forEach({ $0.invalidate() })
         if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
         }
@@ -117,9 +121,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         case .ruuvi:
             if let uuid = viewModel.uuid.value {
                 let op = ruuviTagService.loadHistory(uuid: uuid, from: Date.distantPast)
-                op.on(success: { [weak self] _ in
-                    self?.syncViewModels()
-                }, failure: { [weak self] (error) in
+                op.on(failure: { [weak self] (error) in
                     self?.errorPresenter.present(error: error)
                 })
             }
@@ -138,9 +140,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         case .ruuvi:
             if let uuid = viewModel.uuid.value {
                 let op = ruuviTagService.clearHistory(uuid: uuid)
-                op.on(success: { [weak self] _ in
-                    self?.syncViewModels()
-                }, failure: { [weak self] (error) in
+                op.on(failure: { [weak self] (error) in
                     self?.errorPresenter.present(error: error)
                 })
             }
@@ -206,9 +206,36 @@ extension TagChartsPresenter {
         }
     }
     
-    private func restartScanning() {
-//        startScanningRuuviTags()
-//        startScanningWebTags()
+    private func restartObservingData() {
+        ruuviTagDataTokens.forEach({ $0.invalidate() })
+        ruuviTagDataTokens.removeAll()
+        ruuviTags?.forEach({ (ruuviTag) in
+            ruuviTagDataTokens.append(ruuviTag.data.observe { [weak self] (change) in
+                switch change {
+                case .update:
+                    self?.syncViewModels()
+                case .error(let error):
+                    self?.errorPresenter.present(error: error)
+                default:
+                    break
+                }
+            })
+        })
+        
+        webTagDataTokens.forEach({ $0.invalidate() })
+        webTagDataTokens.removeAll()
+        webTags?.forEach({ (webTag) in
+            webTagDataTokens.append(webTag.data.observe({ [weak self] (change) in
+                switch change {
+                case .update:
+                    self?.syncViewModels()
+                case .error(let error):
+                    self?.errorPresenter.present(error: error)
+                default:
+                    break
+                }
+            }))
+        })
     }
     
     private func startObservingRuuviTags() {
@@ -216,7 +243,7 @@ extension TagChartsPresenter {
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
             case .initial:
-                self?.restartScanning()
+                self?.restartObservingData()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
@@ -225,7 +252,7 @@ extension TagChartsPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.restartScanning()
+                self?.restartObservingData()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
@@ -237,7 +264,7 @@ extension TagChartsPresenter {
         webTagsToken = webTags?.observe({ [weak self] (change) in
             switch change {
             case .initial:
-                self?.restartScanning()
+                self?.restartObservingData()
             case .update(let webTags, _, let insertions, _):
                 self?.webTags = webTags
                 if let ii = insertions.last {
@@ -246,7 +273,7 @@ extension TagChartsPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.restartScanning()
+                self?.restartObservingData()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
