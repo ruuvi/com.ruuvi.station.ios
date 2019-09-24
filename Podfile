@@ -3,7 +3,7 @@ use_frameworks!
 inhibit_all_warnings!
 
 target 'station' do
-  pod 'BTKit', :path => '../BTKit'
+  pod 'BTKit'
   pod 'Charts'
   pod 'EmptyDataSet-Swift'
   pod 'Firebase/Messaging'
