@@ -301,6 +301,11 @@ extension TagChartsScrollViewController {
         view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
         view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
         
+        view.pressureChart.bind(viewModel.pressure) { [weak self] chartView, pressure in
+            self?.configureData(chartView: chartView, values: pressure)
+        }
+        
+        view.pressureUnitLabel.text = "hPa".localized()
     }
     
 }
