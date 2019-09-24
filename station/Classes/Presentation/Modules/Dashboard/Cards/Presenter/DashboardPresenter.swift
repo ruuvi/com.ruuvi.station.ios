@@ -132,16 +132,16 @@ extension DashboardPresenter {
         if ruuviTags != nil && webTags != nil {
             let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardTagViewModel in
                 let viewModel = DashboardTagViewModel(ruuviTag)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
                 return viewModel
             }) ?? []
             let webViewModels = webTags?.compactMap({ (webTag) -> DashboardTagViewModel in
                 let viewModel = DashboardTagViewModel(webTag)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
+                viewModel.temperatureUnit.value = settings.temperatureUnit
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
