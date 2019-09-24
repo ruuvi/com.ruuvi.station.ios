@@ -172,9 +172,9 @@ extension DashboardScrollViewController {
         }
         
         if let temperatureLabel = view.temperatureLabel {
-            temperatureLabel.bind(viewModel.celsius, block: temperatureBlock)
-            temperatureLabel.bind(viewModel.fahrenheit, block: temperatureBlock)
-            temperatureLabel.bind(viewModel.kelvin, block: temperatureBlock)
+            temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
+            temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
+            temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
             
             view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureLabel] label, temperatureUnit in
                 if let temperatureUnit = temperatureUnit {
@@ -255,13 +255,13 @@ extension DashboardScrollViewController {
             }
         }
         
-        view.humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.absoluteHumidity, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.dewPointCelsius, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.dewPointFahrenheit, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.dewPointKelvin, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.humidityUnit) { label, _ in
+        view.humidityLabel.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.dewPointFahrenheit, fire: false, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.dewPointKelvin, fire: false, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.humidityOffset, fire: false, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.humidityUnit, fire: false) { label, _ in
             humidityBlock(label, nil)
         }
         view.humidityLabel.bind(viewModel.temperatureUnit) { label, _ in
