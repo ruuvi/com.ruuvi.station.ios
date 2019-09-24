@@ -257,6 +257,9 @@ extension DashboardScrollViewController {
         
         view.humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
         view.humidityLabel.bind(viewModel.absoluteHumidity, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.dewPointCelsius, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.dewPointFahrenheit, block: humidityBlock)
+        view.humidityLabel.bind(viewModel.dewPointKelvin, block: humidityBlock)
         view.humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
         view.humidityLabel.bind(viewModel.humidityUnit) { label, _ in
             humidityBlock(label, nil)
