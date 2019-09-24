@@ -20,8 +20,11 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         views.forEach( {
             $0.temperatureChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.temperatureChart.noDataTextColor = .white
             $0.humidityChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.humidityChart.noDataTextColor = .white
             $0.pressureChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.pressureChart.noDataTextColor = .white
         } )
     }
     
@@ -92,6 +95,8 @@ extension TagChartsScrollViewController {
 extension TagChartsScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
+        updateUI()
         output.viewDidLoad()
     }
     

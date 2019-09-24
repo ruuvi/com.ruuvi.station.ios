@@ -95,6 +95,7 @@ extension DashboardScrollViewController {
         configureViews()
         updateUI()
         configureViews()
+        setupLocalization()
         output.viewDidLoad()
     }
     
