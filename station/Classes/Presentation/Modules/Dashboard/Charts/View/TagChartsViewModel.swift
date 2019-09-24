@@ -78,6 +78,64 @@ struct TagChartsViewModel {
                  return nil
             }
         })
+        dewPointCelsius.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                var sh = rh + ruuviTag.humidityOffset
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                let h = Humidity(c: c, rh: sh / 100.0)
+                if let Td = h.Td {
+                    return TagChartsPoint(date: $0.date, value: Td)
+                } else {
+                    return nil
+                }
+            } else {
+                 return nil
+            }
+        })
+        dewPointFahrenheit.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                var sh = rh + ruuviTag.humidityOffset
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                let h = Humidity(c: c, rh: sh / 100.0)
+                if let TdF = h.TdF {
+                    return TagChartsPoint(date: $0.date, value: TdF)
+                } else {
+                    return nil
+                }
+            } else {
+                 return nil
+            }
+        })
+        dewPointKelvin.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                var sh = rh + ruuviTag.humidityOffset
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                let h = Humidity(c: c, rh: sh / 100.0)
+                if let TdK = h.TdK {
+                    return TagChartsPoint(date: $0.date, value: TdK)
+                } else {
+                    return nil
+                }
+            } else {
+                 return nil
+            }
+        })
+        pressure.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
+            if let pressure = $0.pressure.value {
+                return TagChartsPoint(date: $0.date, value: pressure)
+            } else {
+                return nil
+            }
+        })
     }
     
     init(_ webTag: WebTagRealm) {
@@ -119,6 +177,52 @@ struct TagChartsViewModel {
                 return TagChartsPoint(date: $0.date, value: h.ah)
             } else {
                  return nil
+            }
+        })
+        dewPointCelsius.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                let h = Humidity(c: c, rh: rh / 100.0)
+                if let Td = h.Td {
+                    return TagChartsPoint(date: $0.date, value: Td)
+                } else {
+                    return nil
+                }
+            } else {
+                 return nil
+            }
+        })
+        dewPointFahrenheit.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                let h = Humidity(c: c, rh: rh / 100.0)
+                if let TdF = h.TdF {
+                    return TagChartsPoint(date: $0.date, value: TdF)
+                } else {
+                    return nil
+                }
+            } else {
+                 return nil
+            }
+        })
+        dewPointKelvin.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+            if let c = $0.celsius.value,
+                let rh = $0.humidity.value {
+                let h = Humidity(c: c, rh: rh / 100.0)
+                if let TdK = h.TdK {
+                    return TagChartsPoint(date: $0.date, value: TdK)
+                } else {
+                    return nil
+                }
+            } else {
+                 return nil
+            }
+        })
+        pressure.value = webTag.data.sorted(byKeyPath: "date").compactMap({
+            if let pressure = $0.pressure.value {
+                return TagChartsPoint(date: $0.date, value: pressure)
+            } else {
+                return nil
             }
         })
     }
