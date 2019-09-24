@@ -410,6 +410,7 @@ extension TagChartsScrollViewController {
                 }
                 scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal
                     , toItem: scrollView, attribute: .trailing, multiplier: 1.0, constant: 0.0))
+                localize()
             }
         }
     }
