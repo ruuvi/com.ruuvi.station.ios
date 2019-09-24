@@ -8,4 +8,6 @@ protocol TagChartsViewOutput {
     func viewDidTriggerMenu()
     func viewDidScroll(to index: Int)
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel)
+    func viewDidAskToSync(with viewModel: TagChartsViewModel)
+    func viewDidConfirmToSync(with viewModel: TagChartsViewModel)
 }
