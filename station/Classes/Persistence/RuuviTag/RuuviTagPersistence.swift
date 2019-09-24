@@ -23,4 +23,7 @@ protocol RuuviTagPersistence {
     
     @discardableResult
     func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool,RUError>
+    
+    @discardableResult
+    func clearHistory(uuid: String) -> Future<Bool,RUError>
 }

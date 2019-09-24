@@ -77,4 +77,8 @@ class RuuviTagServiceImpl: RuuviTagService {
         }
         return promise.future
     }
+    
+    func clearHistory(uuid: String) -> Future<Bool,RUError> {
+        return ruuviTagPersistence.clearHistory(uuid: uuid)
+    }
 }
