@@ -58,11 +58,11 @@
 "DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA LISÄÄ ANTUREITA";
 "DiscoverTable.Close.barButtonItem.title" = "Sulje";
-"DiscoverTable.NoDevicesSection.NotFound.text" = "(No devices on Bluetooth range)";
-"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja laitteita Bluetooth-verkon alueella";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth poissa käytöstä";
 
 // ExpectedError
-"ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
+"ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Mitataksesi ilmankosteutta mahdollisimman tarkasti, suosittelemme kalibrointia suolaliuoksen avulla. Katso täältä video-ohjeita kalibroinnista kotikonstein.";
@@ -113,10 +113,10 @@
 "Settings.Label.Language.text" = "Kieli";
 
 // OWMError
-"OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
-"OWMError.apiLimitExceeded" = "API limit exceeded";
-"OWMError.notAHttpResponse" = "Not a HTTP response";
-"OWMError.invalidApiKey" = "Invalid API Key";
+"OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
+"OWMError.apiLimitExceeded" = "API-raja ylittyi";
+"OWMError.notAHttpResponse" = "Vastaus ei ole HTTP-muodossa";
+"OWMError.invalidApiKey" = "API-avain ei kelpaa";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
@@ -151,9 +151,9 @@
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
 
 // UnexpectedError
-"UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
-"UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
-"UnexpectedError.failedToReverseGeocodeCoordinate" = "Failed to reverse geocode location";
+"UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
+"UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
+"UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
