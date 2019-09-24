@@ -54,4 +54,13 @@ class RuuviTagDataRealm: Object {
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
     }
+    
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
+        self.init()
+        self.ruuviTag = ruuviTag
+        self.date = data.date
+        self.celsius.value = data.temperature
+        self.humidity.value = data.humidity
+        self.pressure.value = data.pressure
+    }
 }

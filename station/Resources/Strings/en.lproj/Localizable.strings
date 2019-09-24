@@ -32,6 +32,9 @@
 "About.More.header" = "MORE TO READ";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
  
+// Bluetooth Error
+"BluetoothError.disconnected" = "Disconnected";
+
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
 "ErrorPresenterAlert.OK" = "OK";
@@ -42,6 +45,8 @@
 "CoreError.failedToGetCurrentLocation" = "Failed to get current location";
 "CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
 "CoreError.noLocationPermission" = "Missing permission for Location Services";
+"CoreError.objectNotFound" = "Object not found";
+"CoreError.objectInvalidated" = "Object invalidated";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
@@ -127,6 +132,7 @@
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
+"TagCharts.DisconnectedDialog.title" = "Disconnected";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";

@@ -32,6 +32,9 @@
 "About.More.header" = "LUE LISÄÄ";
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
  
+// Bluetooth Error
+"BluetoothError.disconnected" = "Disconnected";
+
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";
 "ErrorPresenterAlert.OK" = "OK";
@@ -42,6 +45,8 @@
 "CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";
 "CoreError.failedToGetDataFromResponse" = "Vastaus ei sisällä tietoa";
 "CoreError.noLocationPermission" = "Oikeus paikkatietoon puuttuu";
+"CoreError.objectNotFound" = "Object not found";
+"CoreError.objectInvalidated" = "Object invalidated";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Pyyhkäise sivulle löytääksesi muut laitteet.";
@@ -127,6 +132,7 @@
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
+"TagCharts.DisconnectedDialog.title" = "Disconnected";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
