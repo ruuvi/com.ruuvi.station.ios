@@ -69,12 +69,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         }))
         present(alertVC, animated: true)
     }
-    
-    func showDisconnected(from viewModel: TagChartsViewModel) {
-        let alertVC = UIAlertController(title: "TagCharts.DisconnectedDialog.title".localized(), message: viewModel.name.value, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
 }
 
 // MARK: - IBActions

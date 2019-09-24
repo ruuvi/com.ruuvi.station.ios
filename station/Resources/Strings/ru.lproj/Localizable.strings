@@ -132,7 +132,6 @@
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
-"TagCharts.DisconnectedDialog.title" = "Соединение сброшено";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
