@@ -5,7 +5,7 @@ class CoreAssembly: Assembly {
     func assemble(container: Container) {
         
         container.register(BTScanner.self) { r in
-            return Ruuvi.scanner
+            return BTKit.scanner
         }.inObjectScope(.container)
         
         container.register(LocationManager.self) { r in
