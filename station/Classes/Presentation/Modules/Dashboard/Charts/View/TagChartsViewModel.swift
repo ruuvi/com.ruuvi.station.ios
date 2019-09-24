@@ -55,11 +55,16 @@ struct TagChartsViewModel {
             }
         })
         
-        humidityOffset.value = ruuviTag.humidityOffset
+        let ho = ruuviTag.humidityOffset
+        humidityOffset.value = ho
         
         relativeHumidity.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
-            if let value = $0.humidity.value {
-                return TagChartsPoint(date: $0.date, value: value)
+            if let rh = $0.humidity.value {
+                var sh = rh + ho
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                return TagChartsPoint(date: $0.date, value: sh)
             } else {
                 return nil
             }
@@ -68,7 +73,7 @@ struct TagChartsViewModel {
         absoluteHumidity.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
-                var sh = rh + ruuviTag.humidityOffset
+                var sh = rh + ho
                 if sh > 100.0 {
                     sh = 100.0
                 }
@@ -81,7 +86,7 @@ struct TagChartsViewModel {
         dewPointCelsius.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
-                var sh = rh + ruuviTag.humidityOffset
+                var sh = rh + ho
                 if sh > 100.0 {
                     sh = 100.0
                 }
@@ -98,7 +103,7 @@ struct TagChartsViewModel {
         dewPointFahrenheit.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
-                var sh = rh + ruuviTag.humidityOffset
+                var sh = rh + ho
                 if sh > 100.0 {
                     sh = 100.0
                 }
@@ -115,7 +120,7 @@ struct TagChartsViewModel {
         dewPointKelvin.value = ruuviTag.data.sorted(byKeyPath: "date").compactMap({
             if let c = $0.celsius.value,
                 let rh = $0.humidity.value {
-                var sh = rh + ruuviTag.humidityOffset
+                var sh = rh + ho
                 if sh > 100.0 {
                     sh = 100.0
                 }

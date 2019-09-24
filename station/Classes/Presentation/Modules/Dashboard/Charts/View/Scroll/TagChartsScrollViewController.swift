@@ -203,9 +203,9 @@ extension TagChartsScrollViewController {
             }
         }
         
-        view.temperatureChart.bind(viewModel.celsius, block: temperatureBlock)
-        view.temperatureChart.bind(viewModel.fahrenheit, block: temperatureBlock)
-        view.temperatureChart.bind(viewModel.kelvin, block: temperatureBlock)
+        view.temperatureChart.bind(viewModel.celsius, fire: false, block: temperatureBlock)
+        view.temperatureChart.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
+        view.temperatureChart.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
         
         view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureChart] label, temperatureUnit in
             if let temperatureUnit = temperatureUnit {
@@ -224,6 +224,82 @@ extension TagChartsScrollViewController {
                 temperatureBlock(temperatureChart, nil)
             }
         }
+     
+        
+        let hu = viewModel.humidityUnit
+        let rh = viewModel.relativeHumidity
+        let ah = viewModel.absoluteHumidity
+        let tu = viewModel.temperatureUnit
+        let dc = viewModel.dewPointCelsius
+        let df = viewModel.dewPointFahrenheit
+        let dk = viewModel.dewPointKelvin
+        let humidityUnit = viewModel.humidityUnit
+        let humidityChart = view.humidityChart
+        
+        let humidityBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = { [weak self, weak hu, weak rh, weak ah, weak tu, weak dc, weak df, weak dk] chartView, _ in
+            if let hu = hu?.value {
+                switch hu {
+                case .percent:
+                    self?.configureData(chartView: chartView, values: rh?.value)
+                case .gm3:
+                    self?.configureData(chartView: chartView, values: ah?.value)
+                case .dew:
+                    if let tu = tu?.value {
+                        switch tu {
+                        case .celsius:
+                            self?.configureData(chartView: chartView, values: dc?.value)
+                        case .fahrenheit:
+                            self?.configureData(chartView: chartView, values: df?.value)
+                        case .kelvin:
+                            self?.configureData(chartView: chartView, values: dk?.value)
+                        }
+                    }
+                }
+            }
+        }
+        
+        view.humidityChart.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
+        view.humidityChart.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
+        view.humidityChart.bind(viewModel.dewPointKelvin, fire: false, block: humidityBlock)
+        view.humidityChart.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
+        view.humidityChart.bind(viewModel.dewPointFahrenheit, fire: false, block: humidityBlock)
+        view.humidityChart.bind(viewModel.humidityUnit, fire: false) { chartView, _ in
+            humidityBlock(chartView, nil)
+        }
+        view.humidityChart.bind(viewModel.temperatureUnit, fire: false, block: { chartView, _ in
+            humidityBlock(chartView, nil)
+        })
+        
+        let humidityUnitBlock: ((UILabel, Any) -> Void) = { [weak humidityChart, weak temperatureUnit, weak humidityUnit] label, _ in
+            if let humidityUnit = humidityUnit?.value {
+                switch humidityUnit {
+                case .percent:
+                    label.text = "%".localized()
+                case .dew:
+                    if let temperatureUnit = temperatureUnit?.value {
+                        switch temperatureUnit {
+                        case .celsius:
+                            label.text = "°C".localized()
+                        case .fahrenheit:
+                            label.text = "°F".localized()
+                        case .kelvin:
+                            label.text = "K".localized()
+                        }
+                    } else {
+                        label.text = "N/A".localized()
+                    }
+                case .gm3:
+                    label.text = "g/m³".localized()
+                }
+            } else {
+                label.text = "N/A".localized()
+            }
+            if let humidityChart = humidityChart {
+                humidityBlock(humidityChart, nil)
+            }
+        }
+        view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
+        view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
         
     }
     

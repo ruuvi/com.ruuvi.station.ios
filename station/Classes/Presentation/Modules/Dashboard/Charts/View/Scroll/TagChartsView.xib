@@ -45,8 +45,8 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wd6-XB-uzY" customClass="LineChartView" customModule="Charts">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="250.5"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zR-db-SZm">
-                                    <rect key="frame" x="339.5" y="8" width="66.5" height="13.5"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zR-db-SZm">
+                                    <rect key="frame" x="314.5" y="8" width="91.5" height="13.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -60,11 +60,35 @@
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNS-4I-3XP" customClass="LineChartView" customModule="Charts">
                             <rect key="frame" x="0.0" y="250.5" width="414" height="250"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Humidity Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iwe-nR-ska">
+                                    <rect key="frame" x="334.5" y="8" width="71.5" height="13.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="iwe-nR-ska" firstAttribute="top" secondItem="KNS-4I-3XP" secondAttribute="top" constant="8" id="8u1-rS-PA3"/>
+                                <constraint firstAttribute="trailing" secondItem="iwe-nR-ska" secondAttribute="trailing" constant="8" id="HGg-bE-6Lx"/>
+                            </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f1-Br-0jw" customClass="LineChartView" customModule="Charts">
                             <rect key="frame" x="0.0" y="500.5" width="414" height="250.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pressure Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PqV-fU-Itv">
+                                    <rect key="frame" x="335" y="8" width="71" height="13.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="PqV-fU-Itv" secondAttribute="trailing" constant="8" id="cnL-kz-dqG"/>
+                                <constraint firstItem="PqV-fU-Itv" firstAttribute="top" secondItem="5f1-Br-0jw" secondAttribute="top" constant="8" id="ikg-iB-btr"/>
+                            </constraints>
                         </view>
                     </subviews>
                     <constraints>
@@ -98,8 +122,10 @@
             <connections>
                 <outlet property="backgroundImage" destination="hh5-fd-vAK" id="zcI-We-9Fa"/>
                 <outlet property="humidityChart" destination="KNS-4I-3XP" id="0FN-rk-PeR"/>
+                <outlet property="humidityUnitLabel" destination="iwe-nR-ska" id="Fd4-RD-Aln"/>
                 <outlet property="nameLabel" destination="wQo-IQ-Rfz" id="ClI-hy-hSG"/>
                 <outlet property="pressureChart" destination="5f1-Br-0jw" id="kdq-tl-jcc"/>
+                <outlet property="pressureUnitLabel" destination="PqV-fU-Itv" id="r7b-tL-B82"/>
                 <outlet property="temperatureChart" destination="wd6-XB-uzY" id="rPK-YS-Oda"/>
                 <outlet property="temperatureUnitLabel" destination="7zR-db-SZm" id="U00-IW-4jS"/>
             </connections>
