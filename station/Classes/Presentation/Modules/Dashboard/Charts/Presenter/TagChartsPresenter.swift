@@ -81,6 +81,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.dismiss()
     }
     
+    func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
+        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value?.last?.value)
+        } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
+            router.openWebTagSettings(webTag: webTag)
+        }
+    }
+    
     func viewDidScroll(to index: Int) {
         if viewModels.count > index, let uuid = viewModels[index].uuid.value {
             output?.tagCharts(module: self, didScrollTo: uuid)

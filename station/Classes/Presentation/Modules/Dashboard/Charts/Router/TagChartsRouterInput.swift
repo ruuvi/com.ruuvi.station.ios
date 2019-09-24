@@ -7,4 +7,6 @@ protocol TagChartsRouterInput {
     func openAbout()
     func openRuuviWebsite()
     func openMenu(output: MenuModuleOutput)
+    func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?)
+    func openWebTagSettings(webTag: WebTagRealm)
 }
