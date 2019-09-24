@@ -73,6 +73,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
         stopObservingBluetoothState()
     }
     
+    func viewDidTriggerMenu() {
+        router.openMenu(output: self)
+    }
+    
     func viewDidTriggerDashboard() {
         router.dismiss()
     }
@@ -84,6 +88,30 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 }
 
+// MARK: - MenuModuleOutput
+extension TagChartsPresenter: MenuModuleOutput {
+    func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
+        module.dismiss()
+        router.openDiscover()
+    }
+    
+    func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
+        module.dismiss()
+        router.openSettings()
+    }
+    
+    func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
+        module.dismiss()
+        router.openAbout()
+    }
+    
+    func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
+        module.dismiss()
+        router.openRuuviWebsite()
+    }
+}
+
+// MARK: - Private
 extension TagChartsPresenter {
     private func syncViewModels() {
         if ruuviTags != nil && webTags != nil {

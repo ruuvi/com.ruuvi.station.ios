@@ -62,7 +62,7 @@ extension TagChartsScrollViewController {
     }
     
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
-        
+        output.viewDidTriggerMenu()
     }
 }
 
