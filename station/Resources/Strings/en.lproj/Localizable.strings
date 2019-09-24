@@ -122,6 +122,8 @@
 "TagCharts.NoChartData.text" = "No chart data available";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"TagCharts.SyncConfirmationDialog.title" = "Are you sure?";
+"TagCharts.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the tag?";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";

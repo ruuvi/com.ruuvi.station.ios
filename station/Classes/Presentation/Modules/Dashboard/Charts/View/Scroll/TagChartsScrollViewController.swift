@@ -49,6 +49,16 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
+    
+    func showSyncConfirmationDialog(with viewModel: TagChartsViewModel) {
+        let alertVC = UIAlertController(title: "TagCharts.SyncConfirmationDialog.title".localized(), message: "TagCharts.SyncConfirmationDialog.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToSync(with: viewModel)
+            
+        }))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -107,6 +117,24 @@ extension TagChartsScrollViewController: UIScrollViewDelegate {
 // MARK: - ChartViewDelegate
 extension TagChartsScrollViewController: ChartViewDelegate {
     
+}
+
+// MARK: - TagChartsViewDelegate
+extension TagChartsScrollViewController: TagChartsViewDelegate {
+    func tagCharts(view: TagChartsView, sync sender: Any) {
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidAskToSync(with: viewModels[index])
+        }
+    }
+    
+    func tagCharts(view: TagChartsView, delete sender: Any) {
+        
+    }
+    
+    func tagCharts(view: TagChartsView, upload sender: Any) {
+        
+    }
 }
 
 // MARK: - View configuration
@@ -354,6 +382,7 @@ extension TagChartsScrollViewController {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
                     let view = Bundle.main.loadNibNamed("TagChartsView", owner: self, options: nil)?.first as! TagChartsView
+                    view.delegate = self
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)

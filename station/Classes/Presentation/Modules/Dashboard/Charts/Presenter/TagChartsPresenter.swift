@@ -94,6 +94,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
             output?.tagCharts(module: self, didScrollTo: uuid)
         }
     }
+    
+    func viewDidAskToSync(with viewModel: TagChartsViewModel) {
+        view.showSyncConfirmationDialog(with: viewModel)
+    }
+    
+    func viewDidConfirmToSync(with viewModel: TagChartsViewModel) {
+        
+    }
 }
 
 // MARK: - MenuModuleOutput

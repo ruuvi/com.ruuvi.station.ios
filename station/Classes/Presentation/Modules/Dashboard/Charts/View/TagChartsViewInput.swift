@@ -4,6 +4,7 @@ protocol TagChartsViewInput: ViewInput {
     var viewModels: [TagChartsViewModel] { get set }
     
     func showBluetoothDisabled()
+    func showSyncConfirmationDialog(with viewModel: TagChartsViewModel)
     func scroll(to index: Int, immediately: Bool)
 }
 
