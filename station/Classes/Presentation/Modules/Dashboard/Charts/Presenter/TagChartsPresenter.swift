@@ -102,6 +102,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidConfirmToSync(with viewModel: TagChartsViewModel) {
         
     }
+    
+    func viewDidAskToDeleteHistory(for viewModel: TagChartsViewModel) {
+        view.showDeleteHistoryConfirmationDialog(for: viewModel)
+    }
+    
+    func viewDidConfirmToDeleteHistory(for viewModel: TagChartsViewModel) {
+        
+    }
 }
 
 // MARK: - MenuModuleOutput

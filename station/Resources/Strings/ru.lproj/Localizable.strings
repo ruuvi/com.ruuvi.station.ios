@@ -122,8 +122,11 @@
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
-"TagCharts.SyncConfirmationDialog.title" = "Are you sure?";
-"TagCharts.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the tag?";
+"TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
+"TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
+"TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
+"TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";

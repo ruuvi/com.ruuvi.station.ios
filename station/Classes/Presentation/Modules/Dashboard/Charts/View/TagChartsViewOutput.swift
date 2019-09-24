@@ -10,4 +10,6 @@ protocol TagChartsViewOutput {
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel)
     func viewDidAskToSync(with viewModel: TagChartsViewModel)
     func viewDidConfirmToSync(with viewModel: TagChartsViewModel)
+    func viewDidAskToDeleteHistory(for viewModel: TagChartsViewModel)
+    func viewDidConfirmToDeleteHistory(for viewModel: TagChartsViewModel)
 }

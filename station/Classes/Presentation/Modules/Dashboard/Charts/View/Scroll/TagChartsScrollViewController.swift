@@ -59,6 +59,16 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         }))
         present(alertVC, animated: true)
     }
+    
+    func showDeleteHistoryConfirmationDialog(for viewModel: TagChartsViewModel) {
+        let alertVC = UIAlertController(title: "TagCharts.DeleteHistoryConfirmationDialog.title".localized(), message: "TagCharts.DeleteHistoryConfirmationDialog.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToDeleteHistory(for: viewModel)
+            
+        }))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -129,7 +139,10 @@ extension TagChartsScrollViewController: TagChartsViewDelegate {
     }
     
     func tagCharts(view: TagChartsView, delete sender: Any) {
-        
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidAskToDeleteHistory(for: viewModels[index])
+        }
     }
     
     func tagCharts(view: TagChartsView, upload sender: Any) {
