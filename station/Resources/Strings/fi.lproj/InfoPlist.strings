@@ -1,4 +1,5 @@
 NSBluetoothPeripheralUsageDescription = "Sovellus käyttää Bluetooth LE -yhteyttä RuuviTag-laitteiden tietojen lukemiseen.";
+NSBluetoothAlwaysUsageDescription = "Sovellus käyttää Bluetooth LE -yhteyttä RuuviTag-laitteiden tietojen lukemiseen.";
 NSCameraUsageDescription = "Tämän ominaisuuden käyttäminen vaatii kameran käyttöoikeuden sallimisen.";
 NSLocationAlwaysUsageDescription = "Tämän ominaisuuden käyttäminen vaatii sijaintipalvelun käytön sallimisen.";
 NSLocationWhenInUseUsageDescription = "Tämän ominaisuuden käyttäminen vaatii sijaintipalvelun käytön sallimisen.";
