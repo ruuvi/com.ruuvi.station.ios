@@ -20,4 +20,7 @@ protocol RuuviTagPersistence {
     
     @discardableResult
     func update(version: Int, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool,RUError>
+    
+    @discardableResult
+    func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool,RUError>
 }

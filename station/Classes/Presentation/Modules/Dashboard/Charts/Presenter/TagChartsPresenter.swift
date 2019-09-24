@@ -10,7 +10,20 @@ class TagChartsPresenter: TagChartsModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
     var scanner: BTScanner!
+    var activityPresenter: ActivityPresenter!
+    var ruuviTagService: RuuviTagService!
     
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading != oldValue {
+                if isLoading {
+                    activityPresenter.increment()
+                } else {
+                    activityPresenter.decrement()
+                }
+            }
+        }
+    }
     private var output: TagChartsModuleOutput?
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
@@ -100,6 +113,19 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
     
     func viewDidConfirmToSync(with viewModel: TagChartsViewModel) {
+        switch viewModel.type {
+        case .ruuvi:
+            if let uuid = viewModel.uuid.value {
+                let op = ruuviTagService.loadHistory(uuid: uuid, from: Date.distantPast)
+                op.on(success: { [weak self] _ in
+                    self?.syncViewModels()
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+            }
+        case .web:
+            break
+        }
         
     }
     

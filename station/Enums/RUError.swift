@@ -1,4 +1,5 @@
 import Foundation
+import BTKit
 
 enum RUError: Error {
     case core(CoreError)
@@ -6,6 +7,8 @@ enum RUError: Error {
     case networking(Error)
     case parse(Error)
     case map(Error)
+    case bluetooth(BluetoothError)
+    case btkit(BTError)
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
 }
@@ -27,6 +30,23 @@ extension RUError: LocalizedError {
             return error.localizedDescription
         case .unexpected(let error):
             return error.localizedDescription
+        case .btkit(let error):
+            return error.localizedDescription
+        case .bluetooth(let error):
+            return error.localizedDescription
+        }
+    }
+}
+
+enum BluetoothError: Error {
+    case disconnected
+}
+
+extension BluetoothError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .disconnected:
+            return "BluetoothError.disconnected".localized()
         }
     }
 }
@@ -37,6 +57,8 @@ enum CoreError: Error {
     case failedToGetCurrentLocation
     case failedToGetDataFromResponse
     case noLocationPermission
+    case objectNotFound
+    case objectInvalidated
 }
 
 extension CoreError: LocalizedError {
@@ -52,6 +74,10 @@ extension CoreError: LocalizedError {
             return "CoreError.failedToGetDocumentsDirectory".localized()
         case .noLocationPermission:
             return "CoreError.noLocationPermission".localized()
+        case .objectNotFound:
+            return "CoreError.objectNotFound".localized()
+        case .objectInvalidated:
+            return "CoreError.objectInvalidated".localized()
         }
     }
 }
