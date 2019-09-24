@@ -43,6 +43,12 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             }
         }
     }
+    
+    func showBluetoothDisabled() {
+        let alertVC = UIAlertController(title: "TagCharts.BluetoothDisabledAlert.title".localized(), message: "TagCharts.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -65,6 +71,16 @@ extension TagChartsScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         output.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        output.viewWillDisappear()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

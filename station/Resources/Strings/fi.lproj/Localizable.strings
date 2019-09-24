@@ -120,6 +120,8 @@
 
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";
+"TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
+"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";

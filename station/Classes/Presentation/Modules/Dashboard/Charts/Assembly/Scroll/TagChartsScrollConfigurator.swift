@@ -1,4 +1,5 @@
 import Foundation
+import BTKit
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
@@ -14,6 +15,7 @@ class TagChartsScrollConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.settings = r.resolve(Settings.self)
+        presenter.scanner = r.resolve(BTScanner.self)
         
         view.output = presenter
     }
