@@ -24,6 +24,8 @@
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>The app uses Bluetooth LE to read data from RuuviTag sensors.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>The app uses Bluetooth LE to read data from RuuviTag sensors.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Ruuvi Station needs to access your camera to enable this feature.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
