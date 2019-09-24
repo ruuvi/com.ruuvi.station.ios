@@ -3,6 +3,7 @@ import Foundation
 protocol TagChartsViewInput: ViewInput {
     var viewModels: [TagChartsViewModel] { get set }
     
+    func showBluetoothDisabled()
     func scroll(to index: Int, immediately: Bool)
 }
 

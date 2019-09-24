@@ -120,6 +120,8 @@
 
 // TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
+"TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
+"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";

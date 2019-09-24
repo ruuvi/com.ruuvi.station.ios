@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import BTKit
 
 class TagChartsPresenter: TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -8,10 +9,12 @@ class TagChartsPresenter: TagChartsModuleInput {
     var errorPresenter: ErrorPresenter!
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
+    var scanner: BTScanner!
     
     private var output: TagChartsModuleOutput?
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
+    private var stateToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -35,6 +38,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
+        stateToken?.invalidate()
         if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
         }
@@ -59,6 +63,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingWebTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
+    }
+    
+    func viewWillAppear() {
+        startObservingBluetoothState()
+    }
+    
+    func viewWillDisappear() {
+        stopObservingBluetoothState()
     }
     
     func viewDidTriggerDashboard() {
@@ -103,7 +115,7 @@ extension TagChartsPresenter {
         }
     }
     
-    func restartScanning() {
+    private func restartScanning() {
 //        startScanningRuuviTags()
 //        startScanningWebTags()
     }
@@ -169,4 +181,15 @@ extension TagChartsPresenter {
         }
     }
     
+    private func startObservingBluetoothState() {
+        stateToken = scanner.state(self, closure: { (observer, state) in
+            if state != .poweredOn {
+                observer.view.showBluetoothDisabled()
+            }
+        })
+    }
+    
+    private func stopObservingBluetoothState() {
+        stateToken?.invalidate()
+    }
 }
