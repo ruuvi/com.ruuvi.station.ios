@@ -4,6 +4,7 @@ class TagChartsRouter: TagChartsRouterInput {
     weak var transitionHandler: TransitionHandler!
     
     private var menuTableTransition: MenuTableTransitioningDelegate!
+    private lazy var swipeToDismissTransitioningDelegate = SwipeDownToDismissTransitioningDelegate()
     
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
@@ -50,5 +51,25 @@ class TagChartsRouter: TagChartsRouterInput {
     
     func openRuuviWebsite() {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
+    }
+    
+    func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?) {
+        let factory = StoryboardFactory(storyboardName: "TagSettings")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
+            .add(transitioningDelegate: swipeToDismissTransitioningDelegate)
+            .then({ (module) -> Any? in
+                module.configure(ruuviTag: ruuviTag, humidity: humidity)
+            })
+    }
+    
+    func openWebTagSettings(webTag: WebTagRealm) {
+        let factory = StoryboardFactory(storyboardName: "WebTagSettings")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
+            .add(transitioningDelegate: swipeToDismissTransitioningDelegate)
+            .then({ (module) -> Any? in
+                module.configure(webTag: webTag)
+            })
     }
 }

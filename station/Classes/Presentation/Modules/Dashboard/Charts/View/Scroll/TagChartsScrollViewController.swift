@@ -54,7 +54,9 @@ extension TagChartsScrollViewController: TagChartsViewInput {
 // MARK: - IBActions
 extension TagChartsScrollViewController {
     @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
-        
+        if currentPage >= 0 && currentPage < viewModels.count {
+            output.viewDidTriggerSettings(for: viewModels[currentPage])
+        }
     }
     
     @IBAction func dashboardButtonTouchUpInside(_ sender: Any) {
