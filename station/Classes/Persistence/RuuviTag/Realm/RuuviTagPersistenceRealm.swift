@@ -245,7 +245,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                         if !existingTag.isInvalidated {
                             for log in logs {
                                 let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log)
-                                self.context.bg.add(tagData)
+                                self.context.bg.add(tagData, update: .modified)
                             }
                             promise.succeed(value: true)
                         } else {

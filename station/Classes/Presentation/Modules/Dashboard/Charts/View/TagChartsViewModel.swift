@@ -34,7 +34,7 @@ struct TagChartsViewModel {
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
         let data = ruuviTag.data.sorted(byKeyPath: "date")
-        if data.count > 0 {
+        if data.count > 1 {
             celsius.value = data.compactMap({
                 if let value = $0.celsius.value {
                     return TagChartsPoint(date: $0.date, value: value)
@@ -166,7 +166,7 @@ struct TagChartsViewModel {
         uuid.value = webTag.uuid
         name.value = webTag.name
         let data = webTag.data.sorted(byKeyPath: "date")
-        if data.count > 0 {
+        if data.count > 1 {
             celsius.value = data.compactMap({
                 if let value = $0.celsius.value {
                     return TagChartsPoint(date: $0.date, value: value)

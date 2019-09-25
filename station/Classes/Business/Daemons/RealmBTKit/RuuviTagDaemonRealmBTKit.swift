@@ -59,11 +59,9 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
                                   with: pair,
                                   waitUntilDone: false,
                                   modes: [RunLoop.Mode.default.rawValue])
-                    
-                    let tagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: tag)
-                    sSelf.perform(#selector(RuuviTagDaemonRealmBTKit.persist(ruuviTagData:)),
+                    sSelf.perform(#selector(RuuviTagDaemonRealmBTKit.persist(pair:)),
                             on: sSelf.thread,
-                            with: tagData,
+                            with: pair,
                             waitUntilDone: false,
                             modes: [RunLoop.Mode.default.rawValue])
                 }
@@ -82,7 +80,8 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
         }
     }
     
-    @objc func persist(ruuviTagData: RuuviTagDataRealm) {
+    @objc private func persist(pair: RuuviTagDaemonPair) {
+        let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
         guard let uuid = ruuviTagData.ruuviTag?.uuid else { return }
         if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
