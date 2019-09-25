@@ -5,6 +5,7 @@ class RuuviTagDataRealm: Object {
     
     @objc dynamic var ruuviTag: RuuviTagRealm?
     @objc dynamic var date: Date = Date()
+    @objc dynamic var compoundKey: String = UUID().uuidString
     
     // all versions
     @objc dynamic var rssi: Int = 0
@@ -39,6 +40,10 @@ class RuuviTagDataRealm: Object {
         }
     }
     
+    override static func primaryKey() -> String? {
+        return "compoundKey"
+    }
+    
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
@@ -53,6 +58,7 @@ class RuuviTagDataRealm: Object {
         self.movementCounter.value = data.movementCounter
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
+        self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
     
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
@@ -62,5 +68,6 @@ class RuuviTagDataRealm: Object {
         self.celsius.value = data.temperature
         self.humidity.value = data.humidity
         self.pressure.value = data.pressure
+        self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
 }
