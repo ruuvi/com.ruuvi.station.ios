@@ -7,7 +7,6 @@ class DashboardRouter: DashboardRouterInput {
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
     
     private var menuTableTransition: MenuTableTransitioningDelegate!
-    private lazy var swipeToDismissTransitioningDelegate = SwipeDownToDismissTransitioningDelegate()
     private lazy var tagChartsTransitioningDelegate = TagChartsTransitioningDelegate()
     
     func openMenu(output: MenuModuleOutput) {
@@ -46,7 +45,6 @@ class DashboardRouter: DashboardRouterInput {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
-            .add(transitioningDelegate: swipeToDismissTransitioningDelegate)
             .then({ (module) -> Any? in
                 module.configure(ruuviTag: ruuviTag, humidity: humidity)
             })
@@ -56,7 +54,6 @@ class DashboardRouter: DashboardRouterInput {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
-            .add(transitioningDelegate: swipeToDismissTransitioningDelegate)
             .then({ (module) -> Any? in
                 module.configure(webTag: webTag)
             })
