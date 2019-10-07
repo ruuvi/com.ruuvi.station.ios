@@ -605,10 +605,10 @@ IMAGE</string>
             </objects>
             <point key="canvasLocation" x="57.971014492753625" y="154.6875"/>
         </scene>
-        <!--Swipe Down To Dismiss Navigation Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="ySo-bB-xfl">
             <objects>
-                <navigationController storyboardIdentifier="TagSettingsNavigationController" id="YYp-du-G0Q" customClass="SwipeDownToDismissNavigationController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TagSettingsNavigationController" id="YYp-du-G0Q" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="z64-ry-3mA">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
