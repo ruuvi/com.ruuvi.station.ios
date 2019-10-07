@@ -92,7 +92,6 @@ extension DashboardScrollViewController {
 extension DashboardScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureViews()
         updateUI()
         configureViews()
         setupLocalization()
