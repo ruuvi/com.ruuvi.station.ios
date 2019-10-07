@@ -71,8 +71,9 @@ class MigrationManagerToVIPER: MigrationManager {
                             newObject?["name"] = ""
                         }
                     })
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
                 } else if oldSchemaVersion < 5 {
-                    // do nothing
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
                 } else if oldSchemaVersion < 6 {
                     migration.deleteData(forType: RuuviTagDataRealm.className())
                 }
