@@ -61,7 +61,7 @@
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
 "DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
-"DiscoverTable.GetMoreSensors.button.title" = "OSTA LISÄÄ ANTUREITA";
+"DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
 "DiscoverTable.Close.barButtonItem.title" = "Sulje";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja laitteita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth poissa käytöstä";
