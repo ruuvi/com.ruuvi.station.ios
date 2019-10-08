@@ -92,6 +92,11 @@ extension LocationPickerAppleViewController: UISearchBarDelegate {
 // MARK: - View configuration
 extension LocationPickerAppleViewController {
     private func configureViews() {
+        if #available(iOS 13, *) {
+            let appearance = navigationController?.navigationBar.standardAppearance.copy()
+            navigationItem.standardAppearance = appearance
+        }
+        
         searchBar = UISearchBar(frame: .zero)
         searchBar.delegate = self
         navigationItem.titleView = searchBar
