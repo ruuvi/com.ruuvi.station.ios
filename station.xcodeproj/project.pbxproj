@@ -83,6 +83,7 @@
 		0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
 		0E1C1E1122B756B40032F6CA /* DashboardTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */; };
 		0E1C1E1322B756D30032F6CA /* DashboardTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */; };
+		0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -359,6 +360,7 @@
 		0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTablePresentationController.swift; sourceTree = "<group>"; };
 		0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTagView.swift; sourceTree = "<group>"; };
 		0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DashboardTagView.xib; sourceTree = "<group>"; };
+		0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRouterDelegate.swift; sourceTree = "<group>"; };
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
@@ -1082,6 +1084,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DE122B3C25F0032F6CA /* DashboardRouterInput.swift */,
+				0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */,
 				0E1C1DE322B3C2710032F6CA /* DashboardRouter.swift */,
 			);
 			path = Router;
@@ -2694,6 +2697,7 @@
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
+				0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */,
 				0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,

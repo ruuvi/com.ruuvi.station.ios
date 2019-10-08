@@ -125,6 +125,13 @@ extension DashboardPresenter: TagChartsModuleOutput {
     }
 }
 
+// MARK: - DashboardRouterDelegate
+extension DashboardPresenter: DashboardRouterDelegate {
+    func shouldDismissDiscover() -> Bool {
+        return viewModels.count > 0
+    }
+}
+
 // MARK: - Private
 extension DashboardPresenter {
 
