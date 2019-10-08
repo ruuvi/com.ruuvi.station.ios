@@ -33,12 +33,12 @@
         <scene sceneID="VXX-7k-D8o">
             <objects>
                 <tableViewController storyboardIdentifier="DiscoverTableViewController" id="KWd-e4-kyA" customClass="DiscoverTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="W8G-uS-rmw">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="W8G-uS-rmw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <view key="tableFooterView" clipsSubviews="YES" contentMode="scaleToFill" id="Zgc-HN-yFj">
-                            <rect key="frame" x="0.0" y="186.5" width="414" height="150"/>
+                            <rect key="frame" x="0.0" y="204" width="414" height="150"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0v4-V1-W6B">
@@ -56,26 +56,16 @@
                                         <action selector="getMoreSensorsTableFooterViewButtonTouchUpInside:" destination="KWd-e4-kyA" eventType="touchUpInside" id="vJW-F3-emx"/>
                                     </connections>
                                 </button>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2vM-dG-OeJ">
-                                    <rect key="frame" x="16" y="0.0" width="398" height="1"/>
-                                    <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="1" id="bAg-LJ-Y1e"/>
-                                    </constraints>
-                                </view>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
                                 <constraint firstItem="0v4-V1-W6B" firstAttribute="centerY" secondItem="Zgc-HN-yFj" secondAttribute="centerY" id="6ol-Hu-Uju"/>
-                                <constraint firstAttribute="trailing" secondItem="2vM-dG-OeJ" secondAttribute="trailing" id="7bJ-6e-fjA"/>
-                                <constraint firstItem="2vM-dG-OeJ" firstAttribute="leading" secondItem="Zgc-HN-yFj" secondAttribute="leading" constant="16" id="NzU-NZ-Hns"/>
-                                <constraint firstItem="2vM-dG-OeJ" firstAttribute="top" secondItem="Zgc-HN-yFj" secondAttribute="top" id="h6x-uq-LXD"/>
                                 <constraint firstItem="0v4-V1-W6B" firstAttribute="centerX" secondItem="Zgc-HN-yFj" secondAttribute="centerX" id="hye-7u-5WE"/>
                             </constraints>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverWebTagTableViewCellReuseIdentifier" id="Pdq-EP-b1c" customClass="DiscoverWebTagTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Pdq-EP-b1c" id="eOI-nm-VVw">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -109,7 +99,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverDeviceTableViewCellReuseIdentifier" id="L0Y-10-bMg" customClass="DiscoverDeviceTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="71.5" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="99" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L0Y-10-bMg" id="iPH-xW-e3d">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -143,7 +133,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverNoDevicesTableViewCellReuseIdentifier" id="GNJ-iL-zEl" customClass="DiscoverNoDevicesTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="115" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="142.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GNJ-iL-zEl" id="Egl-A0-XSc">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
