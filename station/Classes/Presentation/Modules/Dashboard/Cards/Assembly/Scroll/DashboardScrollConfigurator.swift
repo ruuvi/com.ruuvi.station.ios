@@ -21,6 +21,8 @@ class DashboardScrollConfigurator {
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         
+        router.delegate = presenter
+        
         let menu = UIStoryboard(name: "Menu", bundle: .main).instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom
         let menuTable = menu.topViewController as! MenuTableViewController

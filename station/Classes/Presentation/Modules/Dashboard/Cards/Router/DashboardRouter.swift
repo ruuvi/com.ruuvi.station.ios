@@ -1,7 +1,8 @@
 import LightRoute
 
-class DashboardRouter: DashboardRouterInput {
+class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: TransitionHandler!
+    weak var delegate: DashboardRouterDelegate!
     var settings: Settings!
     
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -29,6 +30,9 @@ class DashboardRouter: DashboardRouterInput {
         let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
         try! transitionHandler
             .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
+            .apply(to: { (viewController) in
+                viewController.presentationController?.delegate = self
+            })
             .then({ (module) -> Any? in
                 module.configure(isOpenedFromWelcome: false)
             })
@@ -83,4 +87,10 @@ class DashboardRouter: DashboardRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
     
+}
+
+extension DashboardRouter: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return delegate.shouldDismissDiscover()
+    }
 }
