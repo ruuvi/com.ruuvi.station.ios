@@ -35,6 +35,10 @@ extension LocationPickerAppleViewController {
         output.viewDidTriggerCancel()
     }
     
+    @IBAction func dismissBarButtonItemAction(_ sender: Any) {
+        output.viewDidTriggerDismiss()
+    }
+    
     @IBAction func pinBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerCurrentLocation()
     }

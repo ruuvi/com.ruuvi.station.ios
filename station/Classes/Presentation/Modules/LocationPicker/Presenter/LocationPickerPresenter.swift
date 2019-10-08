@@ -34,6 +34,10 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
         router.dismiss()
     }
     
+    func viewDidTriggerDismiss() {
+        router.dismiss()
+    }
+    
     func viewDidTriggerDone() {
         if let location = view.selectedLocation {
             output?.locationPicker(module: self, didPick: location)
