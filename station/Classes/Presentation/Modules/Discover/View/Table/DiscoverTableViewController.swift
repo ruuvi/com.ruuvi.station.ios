@@ -2,10 +2,20 @@ import UIKit
 import BTKit
 import EmptyDataSet_Swift
 
-enum DiscoverTableSection: Int, CaseIterable {
-    case webTag = 0
-    case device = 1
-    case noDevices = 2
+enum DiscoverTableSection {
+    case webTag
+    case device
+    case noDevices
+    
+    static var count = 2 // displayed simultaneously
+    
+    static func section(for index: Int, deviceCount: Int) -> DiscoverTableSection {
+        if deviceCount > 0 {
+            return index == 0 ? .webTag : .device
+        } else {
+            return index == 0 ? .webTag : .noDevices
+        }
+    }
 }
 
 class DiscoverTableViewController: UITableViewController {
@@ -122,35 +132,35 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return DiscoverTableSection.allCases.count
+        return DiscoverTableSection.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
-        case DiscoverTableSection.webTag.rawValue:
+        case .webTag:
             return shownWebTags.count
-        case DiscoverTableSection.device.rawValue:
+        case .device:
             return shownDevices.count
-        case DiscoverTableSection.noDevices.rawValue:
-            return shownDevices.count == 0 ? 1 : 0
-        default:
-            return 0
+        case .noDevices:
+            return 1
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case DiscoverTableSection.webTag.rawValue:
+        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
+        switch section {
+        case .webTag:
             let cell = tableView.dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier, for: indexPath) as! DiscoverWebTagTableViewCell
             let tag = shownWebTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
-        case DiscoverTableSection.device.rawValue:
+        case .device:
             let cell = tableView.dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier, for: indexPath) as! DiscoverDeviceTableViewCell
             let tag = shownDevices[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
-        case DiscoverTableSection.noDevices.rawValue:
+        case .noDevices:
             let cell = tableView.dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier, for: indexPath) as! DiscoverNoDevicesTableViewCell
             cell.descriptionLabel.text = isBluetoothEnabled ? "DiscoverTable.NoDevicesSection.NotFound.text".localized() : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
@@ -164,12 +174,13 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.section {
-        case DiscoverTableSection.webTag.rawValue:
+        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
+        switch section {
+        case .webTag:
             if indexPath.row < shownWebTags.count {
                 output.viewDidChoose(webTag: shownWebTags[indexPath.row])
             }
-        case DiscoverTableSection.device.rawValue:
+        case .device:
             if indexPath.row < shownDevices.count {
                 output.viewDidChoose(device: shownDevices[indexPath.row])
             }
@@ -180,12 +191,13 @@ extension DiscoverTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
-        case DiscoverTableSection.webTag.rawValue:
+        case .webTag:
             return shownWebTags.count > 0 ? "DiscoverTable.SectionTitle.WebTags".localized() : nil
-        case DiscoverTableSection.device.rawValue:
+        case .device:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
-        case DiscoverTableSection.noDevices.rawValue:
+        case .noDevices:
             return shownDevices.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         default:
             return nil
