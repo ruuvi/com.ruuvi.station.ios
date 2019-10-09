@@ -2,12 +2,10 @@ import UIKit
 import BTKit
 import EmptyDataSet_Swift
 
-enum DiscoverTableSection: Int {
+enum DiscoverTableSection: Int, CaseIterable {
     case webTag = 0
     case device = 1
     case noDevices = 2
-    
-    static var count = 3
 }
 
 class DiscoverTableViewController: UITableViewController {
@@ -124,7 +122,7 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return DiscoverTableSection.count
+        return DiscoverTableSection.allCases.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -264,6 +262,7 @@ extension DiscoverTableViewController {
     }
     
     private func configureTableView() {
+        tableView.rowHeight = 44
         tableView.emptyDataSetSource = self
         tableView.emptyDataSetDelegate = self
     }
