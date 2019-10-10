@@ -30,7 +30,7 @@ class BackgroundWorker: NSObject {
                 modes: [RunLoop.Mode.default.rawValue])
     }
     
-    public func stop() {
+    public func stopWork() {
         perform(#selector(stopThread),
                 on: thread,
                 with: nil,

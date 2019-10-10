@@ -1,7 +1,7 @@
 import BTKit
 import RealmSwift
 
-class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
+class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
     var scanner: BTScanner!
@@ -22,7 +22,7 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
         }
     }
     
-    func startSavingBroadcasts() {
+    func start() {
         start { [weak self] in
             self?.realm = try! Realm()
             
@@ -39,7 +39,7 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagDaemon {
         }
     }
     
-    func stopSavingBroadcasts() {
+    func stop() {
         observeTokens.forEach( { $0.invalidate() })
         observeTokens.removeAll()
         token?.invalidate()

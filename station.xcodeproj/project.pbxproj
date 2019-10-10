@@ -171,6 +171,8 @@
 		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */; };
+		0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */; };
+		0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */; };
 		0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
 		0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */; };
 		0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */; };
@@ -202,7 +204,7 @@
 		0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FE22B7D2DD0015F9E0 /* AboutPresenter.swift */; };
 		0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210022B7D2F50015F9E0 /* AboutInitializer.swift */; };
 		0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
-		0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */; };
+		0EEB210622B7D7C30015F9E0 /* RuuviTagBroadcastDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210522B7D7C30015F9E0 /* RuuviTagBroadcastDaemon.swift */; };
 		0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */; };
 		0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0EEB211222B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift */; };
@@ -453,6 +455,8 @@
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
 		0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManager.swift; sourceTree = "<group>"; };
 		0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManagerImpl.swift; sourceTree = "<group>"; };
+		0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectionDaemon.swift; sourceTree = "<group>"; };
+		0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectionDaemonBTKit.swift; sourceTree = "<group>"; };
 		0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderService.swift; sourceTree = "<group>"; };
 		0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderServiceImpl.swift; sourceTree = "<group>"; };
 		0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
@@ -484,7 +488,7 @@
 		0EEB20FE22B7D2DD0015F9E0 /* AboutPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPresenter.swift; sourceTree = "<group>"; };
 		0EEB210022B7D2F50015F9E0 /* AboutInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutInitializer.swift; sourceTree = "<group>"; };
 		0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutConfigurator.swift; sourceTree = "<group>"; };
-		0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemon.swift; sourceTree = "<group>"; };
+		0EEB210522B7D7C30015F9E0 /* RuuviTagBroadcastDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBroadcastDaemon.swift; sourceTree = "<group>"; };
 		0EEB210D22B7DF080015F9E0 /* BusinessAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessAssembly.swift; sourceTree = "<group>"; };
 		0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		0EEB211122B7E25E0015F9E0 /* RuuviTagDaemonRealmBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDaemonRealmBTKit.swift; sourceTree = "<group>"; };
@@ -1713,6 +1717,32 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
+		0ED23643234F193B00CE6AA3 /* Broadcast */ = {
+			isa = PBXGroup;
+			children = (
+				0EEB210A22B7D8500015F9E0 /* RealmBTKit */,
+				0EEB210522B7D7C30015F9E0 /* RuuviTagBroadcastDaemon.swift */,
+			);
+			path = Broadcast;
+			sourceTree = "<group>";
+		};
+		0ED23644234F194B00CE6AA3 /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				0ED23647234F19A200CE6AA3 /* ConnectionBTKit */,
+				0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */,
+			);
+			path = Connection;
+			sourceTree = "<group>";
+		};
+		0ED23647234F19A200CE6AA3 /* ConnectionBTKit */ = {
+			isa = PBXGroup;
+			children = (
+				0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */,
+			);
+			path = ConnectionBTKit;
+			sourceTree = "<group>";
+		};
 		0EDAC96622F2FF7500D0F6F2 /* WeatherProvider */ = {
 			isa = PBXGroup;
 			children = (
@@ -1889,8 +1919,8 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB210A22B7D8500015F9E0 /* RealmBTKit */,
-				0EEB210522B7D7C30015F9E0 /* RuuviTagDaemon.swift */,
+				0ED23643234F193B00CE6AA3 /* Broadcast */,
+				0ED23644234F194B00CE6AA3 /* Connection */,
 			);
 			path = Daemons;
 			sourceTree = "<group>";
@@ -2522,6 +2552,7 @@
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
+				0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */,
 				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
@@ -2593,6 +2624,7 @@
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
 				0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
+				0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
@@ -2644,7 +2676,7 @@
 				0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */,
 				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
-				0EEB210622B7D7C30015F9E0 /* RuuviTagDaemon.swift in Sources */,
+				0EEB210622B7D7C30015F9E0 /* RuuviTagBroadcastDaemon.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
 				0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */,
 				0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */,
