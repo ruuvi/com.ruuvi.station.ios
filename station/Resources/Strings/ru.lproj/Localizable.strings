@@ -44,7 +44,7 @@
 "CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
 "CoreError.failedToGetCurrentLocation" = "Не удалось получить текущее месторасположение";
 "CoreError.failedToGetDataFromResponse" = "Не удалось получить данные из ответа";
-"CoreError.noLocationPermission" = "Не удалось получить разрешение на использование геолокации";
+"CoreError.locationPermissionDenied" = "Не удалось получить разрешение на использование геолокации";
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
 

@@ -44,7 +44,7 @@
 "CoreError.failedToGetDocumentsDirectory" = "Failed to get background directory";
 "CoreError.failedToGetCurrentLocation" = "Failed to get current location";
 "CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
-"CoreError.noLocationPermission" = "Missing permission for Location Services";
+"CoreError.locationPermissionDenied" = "Missing permission for Location Services";
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 

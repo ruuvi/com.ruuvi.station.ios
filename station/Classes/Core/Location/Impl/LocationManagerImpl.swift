@@ -16,6 +16,10 @@ class LocationManagerImpl: NSObject, LocationManager {
             || CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .denied
     }
     
+    var isLocationPermissionNotDetermined: Bool {
+        return CLLocationManager.authorizationStatus() == .notDetermined
+    }
+    
     private var locationManager: CLLocationManager
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
     private var getCurrentLocationPromise: Promise<CLLocation,RUError>?
@@ -42,7 +46,7 @@ class LocationManagerImpl: NSObject, LocationManager {
     func getCurrentLocation() -> Future<CLLocation,RUError> {
         let promise = Promise<CLLocation,RUError>()
         if isLocationPermissionDenied {
-            promise.fail(error: .core(.noLocationPermission))
+            promise.fail(error: .core(.locationPermissionDenied))
             return promise.future
         } else {
             getCurrentLocationPromise = promise
