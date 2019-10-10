@@ -236,6 +236,30 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
     }
     
+    func update(lastSyncDate: Date, for uuid: String) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+               context.bgWorker.enqueue {
+                   do {
+                       if let existingTag = self.fetch(uuid: uuid) {
+                           try self.context.bg.write {
+                               if !existingTag.isInvalidated {
+                                   existingTag.logSyncDate = lastSyncDate
+                                   promise.succeed(value: true)
+                               } else {
+                                   promise.fail(error: .core(.objectInvalidated))
+                               }
+                           }
+                       } else {
+                           promise.fail(error: .core(.objectNotFound))
+                       }
+                   } catch {
+                       promise.fail(error: .persistence(error))
+                   }
+               }
+               
+               return promise.future
+    }
+    
     func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
         context.bgWorker.enqueue {

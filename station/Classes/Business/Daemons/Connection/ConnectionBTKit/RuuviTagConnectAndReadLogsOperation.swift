@@ -6,11 +6,9 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
     
     var uuid: String
     
-    private var ruuviTag: RuuviTagRealm
+    private var ruuviTagPersistence: RuuviTagPersistence!
     private var logSyncDate: Date?
     private var device: RuuviTag
-    private var realm: Realm
-    private var thread: Thread
     private var logToken: ObservationToken?
     private var connectToken: ObservationToken?
     private var disconnectToken: ObservationToken?
@@ -21,13 +19,11 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
         disconnectToken?.invalidate()
     }
     
-    init(ruuviTag: RuuviTagRealm, logSyncDate: Date?, device: RuuviTag, realm: Realm, thread: Thread) {
+    init(ruuviTagPersistence: RuuviTagPersistence, logSyncDate: Date?, device: RuuviTag) {
         uuid = device.uuid
-        self.ruuviTag = ruuviTag
+        self.ruuviTagPersistence = ruuviTagPersistence
         self.logSyncDate = logSyncDate
         self.device = device
-        self.realm = realm
-        self.thread = thread
     }
     
     override func main() {
@@ -45,26 +41,40 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
                     observer.logToken?.invalidate()
                     switch result {
                     case .success(let logs):
-                        print(logs)
+                        let opLogs = observer.ruuviTagPersistence.persist(logs: logs, for: observer.device.uuid)
+                        opLogs.on(success: { _ in
+                            let opDate =  observer.ruuviTagPersistence.update(lastSyncDate: Date(), for: observer.device.uuid)
+                            opDate.on(success: { _ in
+                                observer.disconnect()
+                            }, failure: { error in
+                                print(error.localizedDescription)
+                                observer.disconnect()
+                            })
+                        }, failure: { error in
+                            print(error.localizedDescription)
+                            observer.disconnect()
+                        })
                     case .failure(let error):
                         print(error.localizedDescription)
-                    }
-                    observer.disconnectToken = observer.device.disconnect(for: observer) { (observer, result) in
-                        observer.disconnectToken?.invalidate()
-                        switch result {
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                            observer.disconnectToken?.invalidate()
-                            observer.state = .finished
-                        default:
-                            observer.state = .finished
-                        }
+                        observer.disconnect()
                     }
                 }
             }
         })
-        
-        
+    }
+    
+    private func disconnect() {
+        disconnectToken = device.disconnect(for: self) { (observer, result) in
+            observer.disconnectToken?.invalidate()
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+                observer.disconnectToken?.invalidate()
+                observer.state = .finished
+            default:
+                observer.state = .finished
+            }
+        }
     }
     
 }

@@ -33,6 +33,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviTagConnectionDaemon.self) { r in
             let daemon = RuuviTagConnectionDaemonBTKit()
             daemon.scanner = BTKit.scanner
+            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }
         
