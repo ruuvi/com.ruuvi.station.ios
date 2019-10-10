@@ -20,6 +20,7 @@ class DashboardScrollConfigurator {
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        presenter.permissionsManager = r.resolve(PermissionsManager.self)
         
         router.delegate = presenter
         

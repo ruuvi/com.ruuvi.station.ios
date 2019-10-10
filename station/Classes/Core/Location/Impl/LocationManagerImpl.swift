@@ -48,6 +48,9 @@ class LocationManagerImpl: NSObject, LocationManager {
         if isLocationPermissionDenied {
             promise.fail(error: .core(.locationPermissionDenied))
             return promise.future
+        } else if isLocationPermissionNotDetermined {
+            promise.fail(error: .core(.locationPermissionNotDetermined))
+            return promise.future
         } else {
             getCurrentLocationPromise = promise
             locationManager.startUpdatingLocation()

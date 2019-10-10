@@ -45,6 +45,7 @@
 "CoreError.failedToGetCurrentLocation" = "Не удалось получить текущее месторасположение";
 "CoreError.failedToGetDataFromResponse" = "Не удалось получить данные из ответа";
 "CoreError.locationPermissionDenied" = "Не удалось получить разрешение на использование геолокации";
+"CoreError.locationPermissionNotDetermined" = "Права на использование локационных сервисов не определены";
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
 
