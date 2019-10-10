@@ -45,6 +45,7 @@
 "CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";
 "CoreError.failedToGetDataFromResponse" = "Vastaus ei sisällä tietoa";
 "CoreError.locationPermissionDenied" = "Oikeus paikkatietoon puuttuu";
+"CoreError.locationPermissionNotDetermined" = "Location permission authorization status is not determined";
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 

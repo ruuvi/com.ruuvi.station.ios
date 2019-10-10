@@ -13,6 +13,7 @@ class DashboardPresenter: DashboardModuleInput {
     var webTagService: WebTagService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
+    var permissionsManager: PermissionsManager!
     
     private let webTagObserveInterval: TimeInterval = 60 // sec
     private var ruuviTagsToken: NotificationToken?
@@ -216,6 +217,13 @@ extension DashboardPresenter {
                     } else if let error = error {
                         if case .core(let coreError) = error, coreError == .locationPermissionDenied {
                             observer.permissionPresenter.presentNoLocationPermission()
+                        } else if case .core(let coreError) = error, coreError == .locationPermissionNotDetermined {
+                            observer.permissionsManager.requestLocationPermission { [weak self] (granted) in
+                                if !granted {
+                                    self?.permissionPresenter.presentNoLocationPermission()
+                                }
+                            }
+                            
                         } else if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
                             observer.view.showWebTagAPILimitExceededError()
                         } else {

@@ -57,6 +57,7 @@ enum CoreError: Error {
     case failedToGetCurrentLocation
     case failedToGetDataFromResponse
     case locationPermissionDenied
+    case locationPermissionNotDetermined
     case objectNotFound
     case objectInvalidated
 }
@@ -74,6 +75,8 @@ extension CoreError: LocalizedError {
             return "CoreError.failedToGetDocumentsDirectory".localized()
         case .locationPermissionDenied:
             return "CoreError.locationPermissionDenied".localized()
+        case .locationPermissionNotDetermined:
+            return "CoreError.locationPermissionNotDetermined".localized()
         case .objectNotFound:
             return "CoreError.objectNotFound".localized()
         case .objectInvalidated:

@@ -45,6 +45,7 @@
 "CoreError.failedToGetCurrentLocation" = "Failed to get current location";
 "CoreError.failedToGetDataFromResponse" = "Failed to get data from response";
 "CoreError.locationPermissionDenied" = "Missing permission for Location Services";
+"CoreError.locationPermissionNotDetermined" = "Location permission authorization status is not determined";
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 
