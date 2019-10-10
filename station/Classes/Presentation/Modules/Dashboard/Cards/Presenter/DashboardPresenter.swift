@@ -58,6 +58,7 @@ class DashboardPresenter: DashboardModuleInput {
     }
 }
 
+// MARK: - DashboardViewOutput
 extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
