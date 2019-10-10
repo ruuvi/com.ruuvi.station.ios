@@ -321,7 +321,7 @@
 		0E1C1D9422B3624F0032F6CA /* RealmContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmContext.swift; sourceTree = "<group>"; };
 		0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmContextImpl.swift; sourceTree = "<group>"; };
 		0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistence.swift; sourceTree = "<group>"; };
-		0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistenceRealm.swift; sourceTree = "<group>"; };
+		0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistenceRealm.swift; sourceTree = "<group>"; usesTabs = 0; };
 		0E1C1D9F22B36C100032F6CA /* RUError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUError.swift; sourceTree = "<group>"; };
 		0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealm.swift; sourceTree = "<group>"; };
 		0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDataRealm.swift; sourceTree = "<group>"; };

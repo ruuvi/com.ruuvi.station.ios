@@ -5,10 +5,11 @@ import BTKit
 class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon {
     
     var scanner: BTScanner!
+    var ruuviTagPersistence: RuuviTagPersistence!
     
     private var scanToken: ObservationToken?
     private var realm: Realm!
-    private let syncInterval: TimeInterval = 5 * 60
+    private let syncInterval: TimeInterval = 60 * 60
     
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -53,7 +54,7 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
         let device = ruuviTagWrapped.device
         let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagConnectAndReadLogsOperation)?.uuid == device.uuid })
         if !operationIsAlreadyInQueue, !device.isConnected,  let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {
-            let operation = RuuviTagConnectAndReadLogsOperation(ruuviTag: ruuviTag, logSyncDate: ruuviTag.logSyncDate, device: device, realm: realm, thread: thread)
+            let operation = RuuviTagConnectAndReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, logSyncDate: ruuviTag.logSyncDate, device: device)
             queue.addOperation(operation)
         }
     }
