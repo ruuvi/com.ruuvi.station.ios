@@ -43,7 +43,7 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
         observeTokens.forEach( { $0.invalidate() })
         observeTokens.removeAll()
         token?.invalidate()
-        stop()
+        stopWork()
     }
     
     private func startObserving(ruuviTags: Results<RuuviTagRealm>) {

@@ -47,6 +47,7 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     func stop() {
         scanToken?.invalidate()
+        stopWork()
     }
     
     @objc private func onDidReceiveConnectableTagBroadcast(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
