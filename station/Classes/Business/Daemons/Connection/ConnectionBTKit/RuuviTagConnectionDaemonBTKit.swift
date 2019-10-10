@@ -7,6 +7,8 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     var scanner: BTScanner!
     
     private var scanToken: ObservationToken?
+    private var realm: Realm!
+    private let syncInterval: TimeInterval = 5 * 60
     
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -15,6 +17,14 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
         return queue
     }()
     
+    @objc private class RuuviTagConnectableDaemonWrapper: NSObject {
+        var device: RuuviTag
+        
+        init(device: RuuviTag) {
+            self.device = device
+        }
+    }
+    
     deinit {
         scanToken?.invalidate()
     }
@@ -22,9 +32,14 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     func start() {
         start { [weak self] in
             guard let sSelf = self else { return }
+            sSelf.realm = try! Realm()
             sSelf.scanToken = sSelf.scanner.scan(sSelf, options: [.callbackQueue(.untouch)]) { (observer, device) in
                 if let ruuviTag = device.ruuvi?.tag, ruuviTag.isConnectable {
-                    print("found connectable tag")
+                    sSelf.perform(#selector(RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagBroadcast(ruuviTagWrapped:)),
+                    on: sSelf.thread,
+                    with: RuuviTagConnectableDaemonWrapper(device: ruuviTag),
+                    waitUntilDone: false,
+                    modes: [RunLoop.Mode.default.rawValue])
                 }
             }
         }
@@ -32,6 +47,21 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     func stop() {
         scanToken?.invalidate()
+    }
+    
+    @objc private func onDidReceiveConnectableTagBroadcast(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
+        let device = ruuviTagWrapped.device
+        if !device.isConnected, let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {
+            print(device)
+        }
+    }
+    
+    private func needsToConnectAndLoadData(for ruuviTag: RuuviTagRealm) -> Bool {
+        if let logSyncDate = ruuviTag.logSyncDate {
+            return Date().timeIntervalSince(logSyncDate) > syncInterval
+        } else {
+            return true
+        }
     }
     
 }

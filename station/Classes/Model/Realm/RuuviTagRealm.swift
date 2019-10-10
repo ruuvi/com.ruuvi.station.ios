@@ -11,6 +11,8 @@ class RuuviTagRealm: Object {
     @objc dynamic var humidityOffset: Double = 0
     @objc dynamic var humidityOffsetDate: Date?
     
+    @objc dynamic var logSyncDate: Date?
+    
     let data = LinkingObjects(fromType: RuuviTagDataRealm.self, property: "ruuviTag")
     
     override static func primaryKey() -> String {
