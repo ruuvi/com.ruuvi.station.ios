@@ -164,8 +164,6 @@ extension DiscoverTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier, for: indexPath) as! DiscoverNoDevicesTableViewCell
             cell.descriptionLabel.text = isBluetoothEnabled ? "DiscoverTable.NoDevicesSection.NotFound.text".localized() : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
-        default:
-            fatalError()
         }
     }
 }
@@ -199,8 +197,6 @@ extension DiscoverTableViewController {
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:
             return shownDevices.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
-        default:
-            return nil
         }
         
     }

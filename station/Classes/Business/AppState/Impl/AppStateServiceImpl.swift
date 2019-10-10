@@ -2,10 +2,12 @@ import UIKit
 
 class AppStateServiceImpl: AppStateService {
     
-    var ruuviTagDaemon: RuuviTagDaemon!
+    var broadcastDaemon: RuuviTagBroadcastDaemon!
+    var connectionDaemon: RuuviTagConnectionDaemon!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-        ruuviTagDaemon.startSavingBroadcasts()
+        broadcastDaemon.start()
+        connectionDaemon.start()
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -17,10 +19,12 @@ class AppStateServiceImpl: AppStateService {
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
-        ruuviTagDaemon.stopSavingBroadcasts()
+        broadcastDaemon.stop()
+        connectionDaemon.stop()
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
-        ruuviTagDaemon.startSavingBroadcasts()
+        broadcastDaemon.start()
+        connectionDaemon.start()
     }
 }
