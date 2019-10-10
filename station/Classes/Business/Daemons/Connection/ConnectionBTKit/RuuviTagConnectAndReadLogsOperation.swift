@@ -28,7 +28,7 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
     
     override func main() {
         let from = logSyncDate ?? Date.distantPast
-        connectToken = device.connect(for: self, result: { (observer, result) in
+        connectToken = device.connect(for: self, options: [.callbackQueue(.untouch)], result: { (observer, result) in
             observer.connectToken?.invalidate()
             switch result {
             case .failure(let error):
@@ -37,7 +37,7 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
             case .disconnected:
                 observer.state = .finished
             default:
-                observer.logToken = observer.device.log(for: self, from: from) { (observer, result) in
+                observer.logToken = observer.device.log(for: observer, from: from, options: [.callbackQueue(.untouch)]) { (observer, result) in
                     observer.logToken?.invalidate()
                     switch result {
                     case .success(let logs):
@@ -64,7 +64,7 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
     }
     
     private func disconnect() {
-        disconnectToken = device.disconnect(for: self) { (observer, result) in
+        disconnectToken = device.disconnect(for: self, options: [.callbackQueue(.untouch)]) { (observer, result) in
             observer.disconnectToken?.invalidate()
             switch result {
             case .failure(let error):
