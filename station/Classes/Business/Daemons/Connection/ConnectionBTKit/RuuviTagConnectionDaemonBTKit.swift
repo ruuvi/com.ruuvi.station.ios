@@ -12,7 +12,6 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
-        queue.name = "Load data from connectable Ruuvi Tags Queue"
         queue.maxConcurrentOperationCount = 3
         return queue
     }()
@@ -52,8 +51,10 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     @objc private func onDidReceiveConnectableTagBroadcast(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
         let device = ruuviTagWrapped.device
-        if !device.isConnected, let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {
-            print(device)
+        let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagConnectAndReadLogsOperation)?.uuid == device.uuid })
+        if !operationIsAlreadyInQueue, !device.isConnected,  let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {
+            let operation = RuuviTagConnectAndReadLogsOperation(ruuviTag: ruuviTag, logSyncDate: ruuviTag.logSyncDate, device: device, realm: realm, thread: thread)
+            queue.addOperation(operation)
         }
     }
     
