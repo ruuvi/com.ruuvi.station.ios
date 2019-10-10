@@ -56,7 +56,7 @@ enum CoreError: Error {
     case failedToGetPngRepresentation
     case failedToGetCurrentLocation
     case failedToGetDataFromResponse
-    case noLocationPermission
+    case locationPermissionDenied
     case objectNotFound
     case objectInvalidated
 }
@@ -72,8 +72,8 @@ extension CoreError: LocalizedError {
             return "CoreError.failedToGetPngRepresentation".localized()
         case .failedToGetDocumentsDirectory:
             return "CoreError.failedToGetDocumentsDirectory".localized()
-        case .noLocationPermission:
-            return "CoreError.noLocationPermission".localized()
+        case .locationPermissionDenied:
+            return "CoreError.locationPermissionDenied".localized()
         case .objectNotFound:
             return "CoreError.objectNotFound".localized()
         case .objectInvalidated:

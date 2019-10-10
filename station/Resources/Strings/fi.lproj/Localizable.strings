@@ -44,7 +44,7 @@
 "CoreError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
 "CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";
 "CoreError.failedToGetDataFromResponse" = "Vastaus ei sisällä tietoa";
-"CoreError.noLocationPermission" = "Oikeus paikkatietoon puuttuu";
+"CoreError.locationPermissionDenied" = "Oikeus paikkatietoon puuttuu";
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 

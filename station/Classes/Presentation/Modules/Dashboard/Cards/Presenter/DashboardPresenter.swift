@@ -214,7 +214,7 @@ extension DashboardPresenter {
                     if let data = data {
                         viewModels.forEach({ $0.update(data, current: location)})
                     } else if let error = error {
-                        if case .core(let coreError) = error, coreError == .noLocationPermission {
+                        if case .core(let coreError) = error, coreError == .locationPermissionDenied {
                             observer.permissionPresenter.presentNoLocationPermission()
                         } else if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
                             observer.view.showWebTagAPILimitExceededError()
