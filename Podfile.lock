@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.0.19)
+  - BTKit (0.0.21)
   - Charts (3.3.0):
     - Charts/Core (= 3.3.0)
   - Charts/Core (3.3.0)
@@ -112,8 +112,7 @@ DEPENDENCIES:
   - TTTAttributedLabel
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - BTKit
+  https://github.com/CocoaPods/Specs.git:
     - Charts
     - EmptyDataSet-Swift
     - Firebase
@@ -137,6 +136,8 @@ SPEC REPOS:
     - RealmSwift
     - Swinject
     - TTTAttributedLabel
+  trunk:
+    - BTKit
 
 EXTERNAL SOURCES:
   LightRoute:
@@ -153,7 +154,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: c3aae8d0b1a7d1e8b2e3c2b273a3148665f969f6
+  BTKit: 771925b4db5c14e2a241cd976d0cc24d27b507f8
   Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
   EmptyDataSet-Swift: 1fa0b35f530a35f852ecb2b53564728b0c300aaf
   Firebase: 291d7b0a7b393f252358083b5d224884126fa46d
@@ -182,4 +183,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6bf783e648dde42862dfa0ba8501223ac92d3145
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.3
