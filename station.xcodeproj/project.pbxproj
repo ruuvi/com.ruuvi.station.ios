@@ -171,6 +171,19 @@
 		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */; };
+		0ECFF355235056DC0061D11B /* DaemonsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF354235056DC0061D11B /* DaemonsList.swift */; };
+		0ECFF35723505F8D0061D11B /* Daemons.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECFF35623505F8D0061D11B /* Daemons.storyboard */; };
+		0ECFF359235060EF0061D11B /* DaemonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF358235060EF0061D11B /* DaemonsViewController.swift */; };
+		0ECFF35B2350618E0061D11B /* DaemonsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35A2350618E0061D11B /* DaemonsModuleInput.swift */; };
+		0ECFF35E23506BC40061D11B /* DaemonsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */; };
+		0ECFF36023506BD60061D11B /* DaemonsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */; };
+		0ECFF36223506C050061D11B /* DaemonsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* DaemonsRow.swift */; };
+		0ECFF366235079F50061D11B /* DaemonsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF365235079F50061D11B /* DaemonsPresenter.swift */; };
+		0ECFF36823507A1A0061D11B /* DaemonsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36723507A1A0061D11B /* DaemonsRouterInput.swift */; };
+		0ECFF36A23507A3B0061D11B /* DaemonsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36923507A3B0061D11B /* DaemonsRouter.swift */; };
+		0ECFF36C23507BC00061D11B /* DaemonsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36B23507BC00061D11B /* DaemonsInitializer.swift */; };
+		0ECFF36E23507BF00061D11B /* DaemonsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36D23507BF00061D11B /* DaemonsConfigurator.swift */; };
+		0ECFF37023507CE80061D11B /* DaemonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36F23507CE80061D11B /* DaemonsViewModel.swift */; };
 		0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */; };
 		0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */; };
 		0ED2364D234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364C234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift */; };
@@ -178,6 +191,7 @@
 		0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
 		0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */; };
 		0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */; };
+		0EE5B47D23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47C23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
 		0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */; };
 		0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
@@ -457,6 +471,19 @@
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
 		0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManager.swift; sourceTree = "<group>"; };
 		0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManagerImpl.swift; sourceTree = "<group>"; };
+		0ECFF354235056DC0061D11B /* DaemonsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsList.swift; sourceTree = "<group>"; };
+		0ECFF35623505F8D0061D11B /* Daemons.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Daemons.storyboard; sourceTree = "<group>"; };
+		0ECFF358235060EF0061D11B /* DaemonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewController.swift; sourceTree = "<group>"; };
+		0ECFF35A2350618E0061D11B /* DaemonsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsModuleInput.swift; sourceTree = "<group>"; };
+		0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewOutput.swift; sourceTree = "<group>"; };
+		0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewInput.swift; sourceTree = "<group>"; };
+		0ECFF36123506C050061D11B /* DaemonsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsRow.swift; sourceTree = "<group>"; };
+		0ECFF365235079F50061D11B /* DaemonsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsPresenter.swift; sourceTree = "<group>"; };
+		0ECFF36723507A1A0061D11B /* DaemonsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsRouterInput.swift; sourceTree = "<group>"; };
+		0ECFF36923507A3B0061D11B /* DaemonsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsRouter.swift; sourceTree = "<group>"; };
+		0ECFF36B23507BC00061D11B /* DaemonsInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsInitializer.swift; sourceTree = "<group>"; };
+		0ECFF36D23507BF00061D11B /* DaemonsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsConfigurator.swift; sourceTree = "<group>"; };
+		0ECFF36F23507CE80061D11B /* DaemonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewModel.swift; sourceTree = "<group>"; };
 		0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectionDaemon.swift; sourceTree = "<group>"; };
 		0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectionDaemonBTKit.swift; sourceTree = "<group>"; };
 		0ED2364C234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectAndReadLogsOperation.swift; sourceTree = "<group>"; };
@@ -464,6 +491,7 @@
 		0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderService.swift; sourceTree = "<group>"; };
 		0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderServiceImpl.swift; sourceTree = "<group>"; };
 		0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
+		0EE5B47C23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsEnvironmentObject.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserDefaults.swift; sourceTree = "<group>"; };
 		0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPersistence.swift; sourceTree = "<group>"; };
@@ -1607,6 +1635,7 @@
 		0EBAF063232001080025A191 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				0ECFF34F235056770061D11B /* Daemons */,
 				0EBAF066232005600025A191 /* Language */,
 			);
 			path = Submodules;
@@ -1720,6 +1749,67 @@
 				0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */,
 			);
 			path = Impl;
+			sourceTree = "<group>";
+		};
+		0ECFF34F235056770061D11B /* Daemons */ = {
+			isa = PBXGroup;
+			children = (
+				0ECFF35623505F8D0061D11B /* Daemons.storyboard */,
+				0ECFF35C23506B8A0061D11B /* SwiftUI */,
+				0ECFF353235056920061D11B /* Assembly */,
+				0ECFF3522350568C0061D11B /* Presenter */,
+				0ECFF351235056870061D11B /* Router */,
+				0ECFF3502350567E0061D11B /* View */,
+			);
+			path = Daemons;
+			sourceTree = "<group>";
+		};
+		0ECFF3502350567E0061D11B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */,
+				0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */,
+				0ECFF358235060EF0061D11B /* DaemonsViewController.swift */,
+				0ECFF36F23507CE80061D11B /* DaemonsViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0ECFF351235056870061D11B /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0ECFF36723507A1A0061D11B /* DaemonsRouterInput.swift */,
+				0ECFF36923507A3B0061D11B /* DaemonsRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0ECFF3522350568C0061D11B /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0ECFF35A2350618E0061D11B /* DaemonsModuleInput.swift */,
+				0ECFF365235079F50061D11B /* DaemonsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0ECFF353235056920061D11B /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0ECFF36B23507BC00061D11B /* DaemonsInitializer.swift */,
+				0ECFF36D23507BF00061D11B /* DaemonsConfigurator.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0ECFF35C23506B8A0061D11B /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				0ECFF354235056DC0061D11B /* DaemonsList.swift */,
+				0ECFF36123506C050061D11B /* DaemonsRow.swift */,
+				0EE5B47C23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		0ED23643234F193B00CE6AA3 /* Broadcast */ = {
@@ -2423,6 +2513,7 @@
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
 				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
+				0ECFF35723505F8D0061D11B /* Daemons.storyboard in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Dashboard.storyboard in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
@@ -2530,6 +2621,7 @@
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
 				0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */,
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
+				0ECFF35B2350618E0061D11B /* DaemonsModuleInput.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
@@ -2541,6 +2633,7 @@
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
+				0ECFF355235056DC0061D11B /* DaemonsList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
@@ -2576,6 +2669,7 @@
 				0ED2364D234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
+				0ECFF37023507CE80061D11B /* DaemonsViewModel.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
@@ -2599,6 +2693,7 @@
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
+				0ECFF36823507A1A0061D11B /* DaemonsRouterInput.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
@@ -2612,6 +2707,7 @@
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
+				0EE5B47D23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
@@ -2631,14 +2727,17 @@
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
 				0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */,
+				0ECFF36023506BD60061D11B /* DaemonsViewInput.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
+				0ECFF36A23507A3B0061D11B /* DaemonsRouter.swift in Sources */,
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
 				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
 				0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */,
+				0ECFF35E23506BC40061D11B /* DaemonsViewOutput.swift in Sources */,
 				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
@@ -2705,6 +2804,7 @@
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
+				0ECFF36E23507BF00061D11B /* DaemonsConfigurator.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
@@ -2726,7 +2826,9 @@
 				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
+				0ECFF36223506C050061D11B /* DaemonsRow.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
+				0ECFF366235079F50061D11B /* DaemonsPresenter.swift in Sources */,
 				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */,
@@ -2741,7 +2843,9 @@
 				0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
+				0ECFF359235060EF0061D11B /* DaemonsViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
+				0ECFF36C23507BC00061D11B /* DaemonsInitializer.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2869,7 +2973,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2924,7 +3028,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -2950,6 +3054,81 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"sqlite3\"",
+					"-l\"z\"",
+					"-framework",
+					"\"BTKit\"",
+					"-framework",
+					"\"Charts\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"EmptyDataSet_Swift\"",
+					"-framework",
+					"\"FIRAnalyticsConnector\"",
+					"-framework",
+					"\"FirebaseAnalytics\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseCoreDiagnostics\"",
+					"-framework",
+					"\"FirebaseInstanceID\"",
+					"-framework",
+					"\"FirebaseMessaging\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"Future\"",
+					"-framework",
+					"\"GoogleAppMeasurement\"",
+					"-framework",
+					"\"GoogleDataTransport\"",
+					"-framework",
+					"\"GoogleDataTransportCCTSupport\"",
+					"-framework",
+					"\"GoogleUtilities\"",
+					"-framework",
+					"\"Humidity\"",
+					"-framework",
+					"\"LightRoute\"",
+					"-framework",
+					"\"Localize_Swift\"",
+					"-framework",
+					"\"Protobuf\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Realm\"",
+					"-framework",
+					"\"RealmSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"Swinject\"",
+					"-framework",
+					"\"SwinjectPropertyLoader\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"TTTAttributedLabel\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"nanopb\"",
+					"-weak_framework",
+					"\"UserNotifications\"",
+					"-weak_framework",
+					SwiftUI,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2974,6 +3153,81 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"sqlite3\"",
+					"-l\"z\"",
+					"-framework",
+					"\"BTKit\"",
+					"-framework",
+					"\"Charts\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"EmptyDataSet_Swift\"",
+					"-framework",
+					"\"FIRAnalyticsConnector\"",
+					"-framework",
+					"\"FirebaseAnalytics\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseCoreDiagnostics\"",
+					"-framework",
+					"\"FirebaseInstanceID\"",
+					"-framework",
+					"\"FirebaseMessaging\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"Future\"",
+					"-framework",
+					"\"GoogleAppMeasurement\"",
+					"-framework",
+					"\"GoogleDataTransport\"",
+					"-framework",
+					"\"GoogleDataTransportCCTSupport\"",
+					"-framework",
+					"\"GoogleUtilities\"",
+					"-framework",
+					"\"Humidity\"",
+					"-framework",
+					"\"LightRoute\"",
+					"-framework",
+					"\"Localize_Swift\"",
+					"-framework",
+					"\"Protobuf\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"Realm\"",
+					"-framework",
+					"\"RealmSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"Swinject\"",
+					"-framework",
+					"\"SwinjectPropertyLoader\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"TTTAttributedLabel\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"nanopb\"",
+					"-weak_framework",
+					"\"UserNotifications\"",
+					"-weak_framework",
+					SwiftUI,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.station;
 				PRODUCT_NAME = "$(TARGET_NAME)";

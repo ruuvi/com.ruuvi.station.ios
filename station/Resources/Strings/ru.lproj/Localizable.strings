@@ -49,6 +49,13 @@
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
 
+// Daemons
+"DaemonsRow.advertisement.section" = "ADVERTISEMENTS";
+"DaemonsRow.advertisement.title" = "Save advertisements";
+"DaemonsRow.connection.section" = "LOGS";
+"DaemonsRow.connection.title" = "Connect and sync logs";
+"Daemons.navigationItem.title" = "Daemons";
+
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth выключен";

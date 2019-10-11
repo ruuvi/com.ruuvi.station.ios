@@ -49,6 +49,13 @@
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 
+// Daemons
+"DaemonsRow.advertisement.section" = "ADVERTISEMENTS";
+"DaemonsRow.advertisement.title" = "Save advertisements";
+"DaemonsRow.connection.section" = "LOGS";
+"DaemonsRow.connection.title" = "Connect and sync logs";
+"Daemons.navigationItem.title" = "Daemons";
+
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Pyyhkäise sivulle löytääksesi muut laitteet.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";

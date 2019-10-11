@@ -94,6 +94,27 @@ class SettingsUserDegaults: Settings {
     }
     private let welcomeShownUDKey = "SettingsUserDegaults.welcomeShown"
     
+    var isAdvertisementDaemonOn: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: isAdvertisementDaemonOnUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: isAdvertisementDaemonOnUDKey)
+        }
+    }
+    private let isAdvertisementDaemonOnUDKey = "SettingsUserDegaults.isAdvertisementDaemonOn"
+    
+    var isConnectionDaemonOn: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: isConnectionDaemonOnUDKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: isConnectionDaemonOnUDKey)
+        }
+    }
+    private let isConnectionDaemonOnUDKey = "SettingsUserDegaults.isConnectionDaemonOn"
+    
+    
     private var useFahrenheit: Bool {
         get {
             return UserDefaults.standard.bool(forKey: useFahrenheitUDKey)

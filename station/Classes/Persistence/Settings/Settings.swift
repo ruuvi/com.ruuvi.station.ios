@@ -11,4 +11,6 @@ protocol Settings {
     var humidityUnit: HumidityUnit { get set }
     var welcomeShown: Bool { get set }
     var language: Language { get set }
+    var isAdvertisementDaemonOn: Bool { get set }
+    var isConnectionDaemonOn: Bool { get set }
 }

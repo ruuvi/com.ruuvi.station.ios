@@ -39,4 +39,8 @@ extension SettingsPresenter: SettingsViewOutput {
     func viewDidTapOnLanguage() {
         router.openLanguage()
     }
+    
+    func viewDidTapOnDaemons() {
+        router.openDaemons()
+    }
 }
