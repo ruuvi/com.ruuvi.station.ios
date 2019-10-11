@@ -49,6 +49,13 @@
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 
+// Daemons
+"DaemonsRow.advertisement.section" = "ADVERTISEMENTS";
+"DaemonsRow.advertisement.title" = "Save advertisements";
+"DaemonsRow.connection.section" = "LOGS";
+"DaemonsRow.connection.title" = "Connect and sync logs";
+"Daemons.navigationItem.title" = "Daemons";
+
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";

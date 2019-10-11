@@ -14,4 +14,14 @@ class SettingsRouter: SettingsRouterInput {
             .to(preferred: .navigation(style: .push))
             .perform()
     }
+    
+    func openDaemons() {
+        let factory = StoryboardFactory(storyboardName: "Daemons")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: DaemonsModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
 }
