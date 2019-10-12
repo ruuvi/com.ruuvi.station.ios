@@ -5,7 +5,8 @@ import SwiftUI
 class DaemonsViewModel: Identifiable {
     var id = UUID().uuidString
     var type: DaemonType = .advertisement
-    var isOn: Observable<Bool?> = Observable<Bool?>()
+    var isOn: Observable<Bool?> = Observable<Bool?>(true)
+    var interval: Observable<Int?> = Observable<Int?>(1)
     
     var title: String {
         switch type {

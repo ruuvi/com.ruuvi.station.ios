@@ -29,3 +29,22 @@ extension Optional where Wrapped == Bool {
         }
     }
 }
+
+extension Optional where Wrapped == Int {
+    var _bound: Int? {
+        get {
+            return self
+        }
+        set {
+            self = newValue
+        }
+    }
+    public var bound: Int {
+        get {
+            return _bound ?? 0
+        }
+        set {
+            _bound = newValue
+        }
+    }
+}

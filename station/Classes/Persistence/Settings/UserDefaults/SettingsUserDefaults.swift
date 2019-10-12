@@ -109,6 +109,12 @@ class SettingsUserDegaults: Settings {
         }
     }
     
+    @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
+    var connectionDaemonIntervalMinutes: Int
+    
+    @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
+    var advertisementDaemonIntervalMinutes: Int
+    
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
     

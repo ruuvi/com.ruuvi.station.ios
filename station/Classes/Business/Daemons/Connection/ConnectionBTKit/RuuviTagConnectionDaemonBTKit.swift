@@ -10,8 +10,10 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     private var scanToken: ObservationToken?
     private var realm: Realm!
-    private let syncInterval: TimeInterval = 60
     private var isOnToken: NSObjectProtocol?
+    private var syncInterval: TimeInterval {
+        return TimeInterval(settings.connectionDaemonIntervalMinutes * 60)
+    }
     
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()

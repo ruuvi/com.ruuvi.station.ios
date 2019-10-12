@@ -7,12 +7,14 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
     var scanner: BTScanner!
     var settings: Settings!
     
-    private let saveInterval: TimeInterval = 5 * 60
     private var token: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var realm: Realm!
     private var savedDate = [String:Date]() // uuid:date
     private var isOnToken: NSObjectProtocol?
+    private var saveInterval: TimeInterval {
+        return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
+    }
     
     @objc private class RuuviTagDaemonPair: NSObject {
         var ruuviTag: RuuviTagRealm

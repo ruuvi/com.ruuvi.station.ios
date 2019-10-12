@@ -15,4 +15,6 @@ protocol Settings {
     var language: Language { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var isConnectionDaemonOn: Bool { get set }
+    var connectionDaemonIntervalMinutes: Int { get set }
+    var advertisementDaemonIntervalMinutes: Int { get set }
 }
