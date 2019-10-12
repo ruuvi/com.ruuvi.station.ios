@@ -54,7 +54,7 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
             sSelf.realm = try! Realm()
             sSelf.scanToken = sSelf.scanner.scan(sSelf, options: [.callbackQueue(.untouch)]) { (observer, device) in
                 if let ruuviTag = device.ruuvi?.tag, ruuviTag.isConnectable {
-                    sSelf.perform(#selector(RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagBroadcast(ruuviTagWrapped:)),
+                    sSelf.perform(#selector(RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped:)),
                     on: sSelf.thread,
                     with: RuuviTagConnectableDaemonWrapper(device: ruuviTag),
                     waitUntilDone: false,
@@ -69,7 +69,7 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
         stopWork()
     }
     
-    @objc private func onDidReceiveConnectableTagBroadcast(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
+    @objc private func onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
         let device = ruuviTagWrapped.device
         let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagConnectAndReadLogsOperation)?.uuid == device.uuid })
         if !operationIsAlreadyInQueue, !device.isConnected,  let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {

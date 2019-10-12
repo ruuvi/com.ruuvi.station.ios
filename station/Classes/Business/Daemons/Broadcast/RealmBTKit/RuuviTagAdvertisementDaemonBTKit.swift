@@ -1,7 +1,7 @@
 import BTKit
 import RealmSwift
 
-class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
+class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
     var scanner: BTScanner!
@@ -79,12 +79,12 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag {
                     let pair = RuuviTagDaemonPair(ruuviTag: ruuviTag, device: tag)
-                    sSelf.perform(#selector(RuuviTagDaemonRealmBTKit.tryToUpdate(pair:)),
+                    sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.tryToUpdate(pair:)),
                                   on: sSelf.thread,
                                   with: pair,
                                   waitUntilDone: false,
                                   modes: [RunLoop.Mode.default.rawValue])
-                    sSelf.perform(#selector(RuuviTagDaemonRealmBTKit.persist(pair:)),
+                    sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.persist(pair:)),
                             on: sSelf.thread,
                             with: pair,
                             waitUntilDone: false,

@@ -3,7 +3,7 @@ import UIKit
 class AppStateServiceImpl: AppStateService {
     
     var settings: Settings!
-    var advertisementDaemon: RuuviTagBroadcastDaemon!
+    var advertisementDaemon: RuuviTagAdvertisementDaemon!
     var connectionDaemon: RuuviTagConnectionDaemon!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
