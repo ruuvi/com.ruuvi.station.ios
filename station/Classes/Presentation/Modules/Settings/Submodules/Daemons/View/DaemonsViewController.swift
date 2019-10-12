@@ -40,6 +40,7 @@ extension DaemonsViewController {
         }
     }
     
+    #if canImport(SwiftUI)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
             let env = DaemonsEnvironmentObject()
@@ -49,6 +50,11 @@ extension DaemonsViewController {
             return nil
         }
     }
+    #else
+    @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
+        return nil
+    }
+    #endif
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {

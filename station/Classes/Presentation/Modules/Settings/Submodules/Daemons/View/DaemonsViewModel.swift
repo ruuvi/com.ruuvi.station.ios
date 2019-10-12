@@ -1,8 +1,4 @@
 import Foundation
-#if canImport(SwiftUI) && canImport(Combine)
-import Combine
-import SwiftUI
-#endif
 
 class DaemonsViewModel: Identifiable {
     var id = UUID().uuidString
