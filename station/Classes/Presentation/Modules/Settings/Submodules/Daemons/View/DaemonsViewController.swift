@@ -5,6 +5,10 @@ class DaemonsViewController: UIViewController {
     var output: DaemonsViewOutput!
     
     var viewModels = [DaemonsViewModel]()
+    
+    @IBOutlet weak var tableContainer: UIView!
+    @IBOutlet weak var listContainer: UIView!
+    
 }
 
 // MARK: - DaemonsViewInput
@@ -23,6 +27,15 @@ extension DaemonsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
+        configureViews()
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if #available(iOS 13, *) {
+            return identifier == DaemonsEmbedSegue.list.rawValue
+        } else {
+            return identifier == DaemonsEmbedSegue.table.rawValue
+        }
     }
     
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
@@ -33,5 +46,13 @@ extension DaemonsViewController {
         } else {
             return nil
         }
+    }
+}
+
+// MARK: - Configure Views
+extension DaemonsViewController {
+    func configureViews() {
+        tableContainer.isHidden = !shouldPerformSegue(withIdentifier: DaemonsEmbedSegue.table.rawValue, sender: nil)
+        listContainer.isHidden = !shouldPerformSegue(withIdentifier: DaemonsEmbedSegue.list.rawValue, sender: nil)
     }
 }
