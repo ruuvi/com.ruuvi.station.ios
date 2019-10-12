@@ -1,5 +1,5 @@
 import UIKit
-#if canImport(SwiftUI)
+#if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 #endif
 
@@ -40,7 +40,7 @@ extension DaemonsViewController {
         }
     }
     
-    #if canImport(SwiftUI)
+    #if canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
             let env = DaemonsEnvironmentObject()
