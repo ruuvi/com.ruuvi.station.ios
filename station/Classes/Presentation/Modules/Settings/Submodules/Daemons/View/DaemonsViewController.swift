@@ -47,6 +47,17 @@ extension DaemonsViewController {
             return nil
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case DaemonsEmbedSegue.table.rawValue:
+            let table = segue.destination as! DaemonsTableViewController
+            table.output = output
+            table.viewModels = viewModels
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - Configure Views
