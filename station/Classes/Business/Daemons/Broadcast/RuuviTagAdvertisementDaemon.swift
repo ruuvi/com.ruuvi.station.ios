@@ -1,6 +1,6 @@
 import Foundation
 
-protocol RuuviTagBroadcastDaemon {
+protocol RuuviTagAdvertisementDaemon {
     func start()
     func stop()
 }

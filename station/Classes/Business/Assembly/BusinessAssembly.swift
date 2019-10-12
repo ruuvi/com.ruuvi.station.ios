@@ -7,7 +7,7 @@ class BusinessAssembly: Assembly {
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()
             service.settings = r.resolve(Settings.self)
-            service.advertisementDaemon = r.resolve(RuuviTagBroadcastDaemon.self)
+            service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
             return service
         }.inObjectScope(.container)
@@ -39,8 +39,8 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
         
-        container.register(RuuviTagBroadcastDaemon.self) { r in
-            let daemon = RuuviTagDaemonRealmBTKit()
+        container.register(RuuviTagAdvertisementDaemon.self) { r in
+            let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
             daemon.scanner = r.resolve(BTScanner.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
