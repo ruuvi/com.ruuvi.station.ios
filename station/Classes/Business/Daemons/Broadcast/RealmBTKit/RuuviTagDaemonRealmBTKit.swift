@@ -5,12 +5,14 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
     var scanner: BTScanner!
+    var settings: Settings!
     
     private let saveInterval: TimeInterval = 5 * 60
     private var token: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var realm: Realm!
     private var savedDate = [String:Date]() // uuid:date
+    private var isOnToken: NSObjectProtocol?
     
     @objc private class RuuviTagDaemonPair: NSObject {
         var ruuviTag: RuuviTagRealm
@@ -19,6 +21,27 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
         init(ruuviTag: RuuviTagRealm, device: RuuviTag) {
             self.ruuviTag = ruuviTag
             self.device = device
+        }
+    }
+    
+    deinit {
+        observeTokens.forEach( { $0.invalidate() })
+        observeTokens.removeAll()
+        token?.invalidate()
+        if let isOnToken = isOnToken {
+            NotificationCenter.default.removeObserver(isOnToken)
+        }
+    }
+    
+    override init() {
+        super.init()
+        isOnToken = NotificationCenter.default.addObserver(forName: .isAdvertisementDaemonOnDidChange, object: nil, queue: .main) { [weak self] _ in
+            guard let sSelf = self else { return }
+            if sSelf.settings.isAdvertisementDaemonOn {
+                sSelf.start()
+            } else {
+                sSelf.stop()
+            }
         }
     }
     
@@ -94,9 +117,4 @@ class RuuviTagDaemonRealmBTKit: BackgroundWorker, RuuviTagBroadcastDaemon {
         }
     }
     
-    deinit {
-        observeTokens.forEach( { $0.invalidate() })
-        observeTokens.removeAll()
-        token?.invalidate()
-    }
 }
