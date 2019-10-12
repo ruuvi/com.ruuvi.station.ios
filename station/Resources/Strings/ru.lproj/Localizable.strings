@@ -55,6 +55,8 @@
 "DaemonsRow.connection.section" = "LOGS";
 "DaemonsRow.connection.title" = "Connect and sync logs";
 "Daemons.navigationItem.title" = "Daemons";
+"Daemons.Interval.Every.string" = "Every";
+"Daemons.Interval.Min.string" = "min";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
