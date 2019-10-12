@@ -1758,7 +1758,6 @@
 			isa = PBXGroup;
 			children = (
 				0ECFF35623505F8D0061D11B /* Daemons.storyboard */,
-				0ECFF35C23506B8A0061D11B /* SwiftUI */,
 				0ECFF353235056920061D11B /* Assembly */,
 				0ECFF3522350568C0061D11B /* Presenter */,
 				0ECFF351235056870061D11B /* Router */,
@@ -1770,6 +1769,8 @@
 		0ECFF3502350567E0061D11B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0EE5B4802351AB3C00D5ED32 /* Table */,
+				0ECFF35C23506B8A0061D11B /* SwiftUI */,
 				0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */,
 				0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */,
 				0ECFF358235060EF0061D11B /* DaemonsViewController.swift */,
@@ -1857,6 +1858,13 @@
 				0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */,
 			);
 			path = Impl;
+			sourceTree = "<group>";
+		};
+		0EE5B4802351AB3C00D5ED32 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Table;
 			sourceTree = "<group>";
 		};
 		0EEB20BC22B76FED0015F9E0 /* UserDefaults */ = {
