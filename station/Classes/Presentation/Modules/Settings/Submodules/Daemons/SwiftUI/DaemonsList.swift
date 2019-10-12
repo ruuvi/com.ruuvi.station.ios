@@ -1,4 +1,5 @@
 import SwiftUI
+import Localize_Swift
 
 @available(iOS 13.0, *)
 struct DaemonsList: View {
@@ -15,7 +16,7 @@ struct DaemonsList: View {
                 Section(header: Text(daemon.section)) {
                     DaemonsRow(daemon: daemon)
                     if daemon.isOn.value.bound {
-                        Stepper("Every" + " " + "\(daemon.interval.value.bound)" + " " + "min", value: self.$env.daemons[self.index(of: daemon)].interval.value.bound, in: 1...1000)
+                        Stepper("Daemons.Interval.Every.string".localized() + " " + "\(daemon.interval.value.bound)" + " " + "Daemons.Interval.Min.string".localized(), value: self.$env.daemons[self.index(of: daemon)].interval.value.bound, in: 1...3600)
                     }
                 }
             }
