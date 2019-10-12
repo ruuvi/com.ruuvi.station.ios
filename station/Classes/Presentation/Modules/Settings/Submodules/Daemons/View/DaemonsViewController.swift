@@ -1,5 +1,7 @@
 import UIKit
+#if canImport(SwiftUI)
 import SwiftUI
+#endif
 
 class DaemonsViewController: UIViewController {
     var output: DaemonsViewOutput!
