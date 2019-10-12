@@ -1,7 +1,5 @@
 #if canImport(SwiftUI)
 import SwiftUI
-#endif
-
 import Localize_Swift
 
 @available(iOS 13.0, *)
@@ -34,3 +32,4 @@ struct DaemonsList_Previews: PreviewProvider {
         return DaemonsList().environmentObject(DaemonsEnvironmentObject())
     }
 }
+#endif
