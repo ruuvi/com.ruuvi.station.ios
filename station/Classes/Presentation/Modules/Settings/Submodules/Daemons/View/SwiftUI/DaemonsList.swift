@@ -1,4 +1,7 @@
+#if canImport(SwiftUI)
 import SwiftUI
+#endif
+
 import Localize_Swift
 
 @available(iOS 13.0, *)

@@ -1,4 +1,6 @@
+#if canImport(SwiftUI)
 import SwiftUI
+#endif
 
 @available(iOS 13.0, *)
 struct DaemonsRow: View {
