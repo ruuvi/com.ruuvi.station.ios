@@ -84,46 +84,17 @@ class SettingsUserDegaults: Settings {
         }
     }
     
-    var welcomeShown: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: welcomeShownUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: welcomeShownUDKey)
-        }
-    }
-    private let welcomeShownUDKey = "SettingsUserDegaults.welcomeShown"
+    @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
+    var welcomeShown: Bool
     
-    var isAdvertisementDaemonOn: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: isAdvertisementDaemonOnUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: isAdvertisementDaemonOnUDKey)
-        }
-    }
-    private let isAdvertisementDaemonOnUDKey = "SettingsUserDegaults.isAdvertisementDaemonOn"
+    @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
+    var isAdvertisementDaemonOn: Bool
     
-    var isConnectionDaemonOn: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: isConnectionDaemonOnUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: isConnectionDaemonOnUDKey)
-        }
-    }
-    private let isConnectionDaemonOnUDKey = "SettingsUserDegaults.isConnectionDaemonOn"
+    @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: true)
+    var isConnectionDaemonOn: Bool
     
-    
-    private var useFahrenheit: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: useFahrenheitUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: useFahrenheitUDKey)
-        }
-    }
-    private let useFahrenheitUDKey = "SettingsUserDegaults.useFahrenheit"
+    @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
+    private var useFahrenheit: Bool
     
     private var temperatureUnitInt: Int {
         get {
