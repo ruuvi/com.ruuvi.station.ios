@@ -6,10 +6,12 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     var scanner: BTScanner!
     var ruuviTagPersistence: RuuviTagPersistence!
+    var settings: Settings!
     
     private var scanToken: ObservationToken?
     private var realm: Realm!
     private let syncInterval: TimeInterval = 60
+    private var isOnToken: NSObjectProtocol?
     
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -27,6 +29,21 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     deinit {
         scanToken?.invalidate()
+        if let isOnToken = isOnToken {
+            NotificationCenter.default.removeObserver(isOnToken)
+        }
+    }
+    
+    override init() {
+        super.init()
+        isOnToken = NotificationCenter.default.addObserver(forName: .isConnectionDaemonOnDidChange, object: nil, queue: .main) { [weak self] _ in
+            guard let sSelf = self else { return }
+            if sSelf.settings.isConnectionDaemonOn {
+                sSelf.start()
+            } else {
+                sSelf.stop()
+            }
+        }
     }
     
     func start() {

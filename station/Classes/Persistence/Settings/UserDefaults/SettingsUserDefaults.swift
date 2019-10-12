@@ -88,10 +88,26 @@ class SettingsUserDegaults: Settings {
     var welcomeShown: Bool
     
     @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
-    var isAdvertisementDaemonOn: Bool
+    var isAdvertisementDaemonOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .isAdvertisementDaemonOnDidChange,
+                  object: self,
+                  userInfo: nil)
+        }
+    }
     
     @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: true)
-    var isConnectionDaemonOn: Bool
+    var isConnectionDaemonOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .isConnectionDaemonOnDidChange,
+                  object: self,
+                  userInfo: nil)
+        }
+    }
     
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool

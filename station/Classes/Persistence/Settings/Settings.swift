@@ -4,6 +4,8 @@ extension Notification.Name {
     static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
     static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
     static let LanguageDidChange = Notification.Name("LanguageDidChange")
+    static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
+    static let isConnectionDaemonOnDidChange = Notification.Name("isConnectionDaemonOnDidChange")
 }
 
 protocol Settings {
