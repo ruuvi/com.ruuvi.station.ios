@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KUd-sO-HYy">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KUd-sO-HYy">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,7 +50,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="W5P-a6-meh">
                         <leftBarButtonItems>
-                            <barButtonItem image="tag-settings-dismiss-icon" id="Al3-SL-ppI">
+                            <barButtonItem image="dismiss-modal-icon" id="Al3-SL-ppI">
                                 <connections>
                                     <action selector="dismissBarButtonItemAction:" destination="OPB-2U-HF7" id="uXb-h8-bKC"/>
                                 </connections>
@@ -92,7 +92,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
         <image name="location-picker-pin-icon" width="25" height="25"/>
-        <image name="tag-settings-dismiss-icon" width="17" height="17"/>
     </resources>
 </document>

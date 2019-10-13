@@ -148,7 +148,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="zVX-j9-FXb">
                         <barButtonItem key="backBarButtonItem" title=" " id="hHD-hc-87e"/>
-                        <barButtonItem key="leftBarButtonItem" title="Close" id="lsn-T2-IDJ">
+                        <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="lsn-T2-IDJ">
                             <connections>
                                 <action selector="closeBarButtonItemAction:" destination="Vxh-DE-JMT" id="Woh-5e-gHl"/>
                             </connections>
@@ -192,4 +192,7 @@
             <point key="canvasLocation" x="-699" y="138"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
+    </resources>
 </document>

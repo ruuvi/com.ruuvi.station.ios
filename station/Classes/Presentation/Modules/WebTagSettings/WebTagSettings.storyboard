@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D1d-zv-30m">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D1d-zv-30m">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -271,7 +271,7 @@ IMAGE</string>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Web Tag Settings" id="60f-mZ-Uba">
-                        <barButtonItem key="leftBarButtonItem" image="tag-settings-dismiss-icon" id="1wp-cO-Jg3">
+                        <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="1wp-cO-Jg3">
                             <connections>
                                 <action selector="dismissBarButtonItemAction:" destination="NzI-p7-FEP" id="3Cc-5O-3Sg"/>
                             </connections>
@@ -319,10 +319,10 @@ IMAGE</string>
     </scenes>
     <resources>
         <image name="bg7" width="960" height="1440"/>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
         <image name="ic_refresh" width="24" height="24"/>
         <image name="icon-bg-camera" width="36" height="33"/>
         <image name="small-cross-clear-icon" width="36" height="36"/>
-        <image name="tag-settings-dismiss-icon" width="17" height="17"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>
