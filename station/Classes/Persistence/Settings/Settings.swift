@@ -17,4 +17,6 @@ protocol Settings {
     var isConnectionDaemonOn: Bool { get set }
     var connectionDaemonIntervalMinutes: Int { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
+    var isWebTagDaemonOn: Bool { get set }
+    var webTagDaemonIntervalMinutes: Int { get set }
 }

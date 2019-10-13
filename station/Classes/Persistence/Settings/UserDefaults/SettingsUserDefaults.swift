@@ -109,6 +109,12 @@ class SettingsUserDegaults: Settings {
         }
     }
     
+    @UserDefault("SettingsUserDegaults.isWebTagSavingDataBehaviorOn", defaultValue: true)
+    var isWebTagDaemonOn: Bool
+    
+    @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 1)
+    var webTagDaemonIntervalMinutes: Int
+    
     @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
     var connectionDaemonIntervalMinutes: Int
     
