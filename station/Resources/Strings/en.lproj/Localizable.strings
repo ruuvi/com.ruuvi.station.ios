@@ -74,7 +74,6 @@
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.NavigationItem.title" = "Add a New Sensor";
 "DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
-"DiscoverTable.Close.barButtonItem.title" = "Close";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No devices on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 
@@ -120,7 +119,6 @@
 "Settings.navigationItem.title" = "Settings";
 "Settings.SectionHeader.General.title" = "GENERAL";
 "Settings.SectionFooter.General.title" = "Rel is for relative air humidity in %, Abs is for absolute air humidity in g/m³, Dew is for dew point in °.";
-"Settings.BarButtonItem.Close.title" = "Close";
 "Settings.Label.TemperatureUnit.text" = "Temperature Unit";
 "Settings.Label.HumidityUnit.text" = "Humidity Unit";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";

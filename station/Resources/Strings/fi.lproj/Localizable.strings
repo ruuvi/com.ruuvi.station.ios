@@ -74,7 +74,6 @@
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
 "DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
-"DiscoverTable.Close.barButtonItem.title" = "Sulje";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja laitteita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth poissa käytöstä";
 
@@ -120,7 +119,6 @@
 "Settings.navigationItem.title" = "Asetukset";
 "Settings.SectionHeader.General.title" = "YLEISET";
 "Settings.SectionFooter.General.title" = "Suht. on suhteellinen ilmankosteus (%), Abs. on absoluuttinen ilmankosteus (g/m³), Kast. on kastepiste (°).";
-"Settings.BarButtonItem.Close.title" = "Sulje";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Suht.";

@@ -78,8 +78,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
         getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
         getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
-        
-        closeBarButtonItem.title = "DiscoverTable.Close.barButtonItem.title".localized()
     }
     
     func apply(theme: Theme) {

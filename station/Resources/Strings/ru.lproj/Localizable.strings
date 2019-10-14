@@ -74,7 +74,6 @@
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
 "DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
-"DiscoverTable.Close.barButtonItem.title" = "Закрыть";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 
@@ -120,7 +119,6 @@
 "Settings.navigationItem.title" = "Настройки";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
 "Settings.SectionFooter.General.title" = "Отн означает относительную влажность воздуха в %, Абс означает абсолютную влажность воздуха в г/м³, ТР означает точку росы в градусах °.";
-"Settings.BarButtonItem.Close.title" = "Закрыть";
 "Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";

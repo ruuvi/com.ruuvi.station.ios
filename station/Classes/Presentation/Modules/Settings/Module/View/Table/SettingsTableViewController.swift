@@ -27,7 +27,6 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = "Settings.navigationItem.title".localized()
-        closeBarButtonItem.title = "Settings.BarButtonItem.Close.title".localized()
         temperatureUnitLabel.text = "Settings.Label.TemperatureUnit.text".localized()
         humidityUnitLabel.text = "Settings.Label.HumidityUnit.text".localized()
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(), forSegmentAt: 0)
