@@ -181,7 +181,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                         let location = WebTagLocationRealm(location: currentLocation)
                         try self.context.bg.write {
                             if !webTag.isInvalidated {
-                                self.context.bg.add(location, update: .all)
+                                self.context.bg.add(location, update: .modified)
                                 tagData.location = location
                                 self.context.bg.add(tagData)
                             }
@@ -208,7 +208,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                         let location = WebTagLocationRealm(location: location)
                         try self.context.bg.write {
                             if !webTag.isInvalidated {
-                                self.context.bg.add(location, update: .all)
+                                self.context.bg.add(location, update: .modified)
                                 tagData.location = location
                                 self.context.bg.add(tagData)
                             }
