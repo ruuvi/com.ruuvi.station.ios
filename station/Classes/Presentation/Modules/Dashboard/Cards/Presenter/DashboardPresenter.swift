@@ -23,6 +23,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var webTagDaemonFailureToken: NSObjectProtocol?
+    private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -57,6 +58,9 @@ class DashboardPresenter: DashboardModuleInput {
         }
         if let webTagDaemonFailureToken = webTagDaemonFailureToken {
             NotificationCenter.default.removeObserver(webTagDaemonFailureToken)
+        }
+        if let ruuviTagAdvertisementDaemonFailureToken = ruuviTagAdvertisementDaemonFailureToken{
+            NotificationCenter.default.removeObserver(ruuviTagAdvertisementDaemonFailureToken)
         }
     }
 }
@@ -301,6 +305,12 @@ extension DashboardPresenter {
                 }
             }
         }
+        
+        ruuviTagAdvertisementDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagAdvertisementDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let error = userInfo[WebTagDaemonDidFailKey.error] as? RUError {
+                self?.errorPresenter.present(error: error)
+            }
+        })
         
     }
 }
