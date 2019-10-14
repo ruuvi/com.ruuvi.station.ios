@@ -10,7 +10,7 @@ protocol WebTagPersistence {
     func update(location: Location, of webTag: WebTagRealm) -> Future<Bool,RUError>
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError>
     @discardableResult
-    func persistCurrentLocation(data: WPSData) -> Future<WPSData,RUError>
+    func persist(currentLocation: Location, data: WPSData) -> Future<WPSData,RUError>
     @discardableResult
-    func persist(coordinate: CLLocationCoordinate2D, data: WPSData) -> Future<WPSData,RUError>
+    func persist(location: Location, data: WPSData) -> Future<WPSData,RUError> 
 }
