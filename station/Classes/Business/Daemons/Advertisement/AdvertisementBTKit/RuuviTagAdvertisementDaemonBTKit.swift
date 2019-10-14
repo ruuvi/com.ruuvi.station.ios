@@ -58,7 +58,9 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                 case .update(let ruuviTags, _, _, _):
                     self?.startObserving(ruuviTags: ruuviTags)
                 case .error(let error):
-                    print(error.localizedDescription)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: RUError.persistence(error)])
+                    }
                 }
             })
         }
@@ -97,11 +99,23 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     @objc private func tryToUpdate(pair: RuuviTagDaemonPair) {
         if pair.device.version != pair.ruuviTag.version {
             let tagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
-            ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm)
-            ruuviTagPersistence.update(version: pair.device.version, of: pair.ruuviTag, realm: realm)
+            ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm).on( failure: { error in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                }
+            })
+            ruuviTagPersistence.update(version: pair.device.version, of: pair.ruuviTag, realm: realm).on( failure: { error in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                }
+            })
         }
         if pair.device.mac != nil && pair.device.mac != pair.ruuviTag.mac {
-            ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
+            ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm).on( failure: { error in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                }
+            })
         }
     }
     
@@ -110,11 +124,19 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         guard let uuid = ruuviTagData.ruuviTag?.uuid else { return }
         if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
-                ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+                ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                    }
+                })
                 savedDate[uuid] = Date()
             }
         } else {
-            ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+            ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                }
+            })
             savedDate[uuid] = Date()
         }
     }
