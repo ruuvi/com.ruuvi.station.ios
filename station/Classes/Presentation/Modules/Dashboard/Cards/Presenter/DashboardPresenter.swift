@@ -15,14 +15,14 @@ class DashboardPresenter: DashboardModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     
-    private let webTagObserveInterval: TimeInterval = 60 // sec
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
+    private var webTagsDataTokens = [NotificationToken]()
     private var observeTokens = [ObservationToken]()
-    private var wsTokens = [RUObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
+    private var webTagDaemonFailureToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -44,16 +44,19 @@ class DashboardPresenter: DashboardModuleInput {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         observeTokens.forEach( { $0.invalidate() } )
-        wsTokens.forEach({ $0.invalidate() })
+        webTagsDataTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
-        if let settingsToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(settingsToken)
+        if let temperatureUnitToken = temperatureUnitToken {
+            NotificationCenter.default.removeObserver(temperatureUnitToken)
         }
         if let humidityUnitToken = humidityUnitToken {
             NotificationCenter.default.removeObserver(humidityUnitToken)
         }
         if let backgroundToken = backgroundToken {
             NotificationCenter.default.removeObserver(backgroundToken)
+        }
+        if let webTagDaemonFailureToken = webTagDaemonFailureToken {
+            NotificationCenter.default.removeObserver(webTagDaemonFailureToken)
         }
     }
 }
@@ -63,8 +66,9 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
         startObservingWebTags()
-        startListeningToSettings()
+        startObservingSettingsChanges()
         startObservingBackgroundChanges()
+        startObservingDaemonsErrors()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -175,18 +179,13 @@ extension DashboardPresenter {
     }
     
     
-    private func startListeningToSettings() {
+    private func startObservingSettingsChanges() {
         temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
             self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit } )
         }
         humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
             self?.viewModels.forEach( { $0.humidityUnit.value = self?.settings.humidityUnit } )
         })
-    }
-    
-    func restartScanning() {
-        startScanningRuuviTags()
-        startScanningWebTags()
     }
     
     private func startScanningRuuviTags() {
@@ -204,51 +203,30 @@ extension DashboardPresenter {
         }
     }
     
-    private func startScanningWebTags() {
-        wsTokens.forEach({ $0.invalidate() })
-        wsTokens.removeAll()
-        let webViewModels = viewModels.filter({ $0.type == .web })
-        let currentLocationWebViewModels = webViewModels.filter({ $0.location.value == nil })
-        for provider in WeatherProvider.allCases {
-            let viewModels = currentLocationWebViewModels.filter({ $0.provider == provider })
-            if viewModels.count > 0 {
-                wsTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: webTagObserveInterval) { (observer, data, location, error) in
-                    if let data = data {
-                        viewModels.forEach({ $0.update(data, current: location)})
-                    } else if let error = error {
-                        if case .core(let coreError) = error, coreError == .locationPermissionDenied {
-                            observer.permissionPresenter.presentNoLocationPermission()
-                        } else if case .core(let coreError) = error, coreError == .locationPermissionNotDetermined {
-                            observer.permissionsManager.requestLocationPermission { [weak self] (granted) in
-                                if !granted {
-                                    self?.permissionPresenter.presentNoLocationPermission()
-                                }
-                            }
-                            
-                        } else if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
-                            observer.view.showWebTagAPILimitExceededError()
-                        } else {
-                            observer.errorPresenter.present(error: error)
-                        }
+    private func startObservingWebTagsData() {
+        webTagsDataTokens.forEach({ $0.invalidate() })
+        webTagsDataTokens.removeAll()
+        
+        webTags?.forEach({ webTag in
+            webTagsDataTokens.append(webTag.data.observe { [weak self] (change) in
+                switch change {
+                case .initial(let data):
+                    if let last = data.sorted(byKeyPath: "date").last {
+                        self?.viewModels
+                            .filter({ $0.uuid.value == webTag.uuid })
+                            .forEach( { $0.update(last)})
                     }
-                })
-            }
-        }
-        let locationBasedWebViewModels = webViewModels.filter({ $0.location.value != nil })
-        for viewModel in locationBasedWebViewModels {
-            guard let location = viewModel.location.value, let provider = viewModel.provider else { break }
-            wsTokens.append(webTagService.observeData(self, coordinate: location.coordinate, provider: provider, interval: webTagObserveInterval) { (observer, data, error) in
-                if let data = data {
-                    viewModel.update(data, current: nil)
-                } else if let error = error {
-                    if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
-                        observer.view.showWebTagAPILimitExceededError()
-                    } else {
-                        observer.errorPresenter.present(error: error)
+                case .update(let data, _, _, _):
+                    if let last = data.sorted(byKeyPath: "date").last {
+                        self?.viewModels
+                            .filter({ $0.uuid.value == webTag.uuid })
+                            .forEach( { $0.update(last)})
                     }
+                case .error(let error):
+                    self?.errorPresenter.present(error: error)
                 }
             })
-        }
+        })
     }
     
     private func startObservingWebTags() {
@@ -257,7 +235,7 @@ extension DashboardPresenter {
             switch change {
             case .initial(let webTags):
                 self?.webTags = webTags
-                self?.restartScanning()
+                self?.startObservingWebTagsData()
             case .update(let webTags, _, let insertions, _):
                 self?.webTags = webTags
                 if let ii = insertions.last {
@@ -266,7 +244,7 @@ extension DashboardPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.restartScanning()
+                self?.startObservingWebTagsData()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
@@ -279,7 +257,7 @@ extension DashboardPresenter {
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags
-                self?.restartScanning()
+                self?.startScanningRuuviTags()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
@@ -288,7 +266,7 @@ extension DashboardPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.restartScanning()
+                self?.startScanningRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
@@ -303,5 +281,26 @@ extension DashboardPresenter {
                 }
             }
         }
+    }
+    
+    func startObservingDaemonsErrors() {
+        webTagDaemonFailureToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonDidFail, object: nil, queue: .main) { [weak self] notification in
+            if let userInfo = notification.userInfo, let error = userInfo[WebTagDaemonDidFailKey.error] as? RUError {
+                if case .core(let coreError) = error, coreError == .locationPermissionDenied {
+                    self?.permissionPresenter.presentNoLocationPermission()
+                } else if case .core(let coreError) = error, coreError == .locationPermissionNotDetermined {
+                    self?.permissionsManager.requestLocationPermission { [weak self] (granted) in
+                        if !granted {
+                            self?.permissionPresenter.presentNoLocationPermission()
+                        }
+                    }
+                } else if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
+                    self?.view.showWebTagAPILimitExceededError()
+                } else {
+                    self?.errorPresenter.present(error: error)
+                }
+            }
+        }
+        
     }
 }

@@ -110,10 +110,26 @@ class SettingsUserDegaults: Settings {
     }
     
     @UserDefault("SettingsUserDegaults.isWebTagDaemonOn", defaultValue: true)
-    var isWebTagDaemonOn: Bool
+    var isWebTagDaemonOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .isWebTagDaemonOnDidChange,
+                  object: self,
+                  userInfo: nil)
+        }
+    }
     
-    @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 1)
-    var webTagDaemonIntervalMinutes: Int
+    @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 5)
+    var webTagDaemonIntervalMinutes: Int  {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .WebTagDaemonIntervalDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
     
     @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
     var connectionDaemonIntervalMinutes: Int

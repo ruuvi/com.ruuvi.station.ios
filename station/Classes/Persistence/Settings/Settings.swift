@@ -6,6 +6,8 @@ extension Notification.Name {
     static let LanguageDidChange = Notification.Name("LanguageDidChange")
     static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
     static let isConnectionDaemonOnDidChange = Notification.Name("isConnectionDaemonOnDidChange")
+    static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
+    static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
 }
 
 protocol Settings {

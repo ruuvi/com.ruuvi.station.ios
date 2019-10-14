@@ -57,6 +57,8 @@
 "Daemons.navigationItem.title" = "Daemons";
 "Daemons.Interval.Every.string" = "Every";
 "Daemons.Interval.Min.string" = "min";
+"DaemonsRow.webTags.title" = "Load and save from web";
+"DaemonsRow.webTags.section" = "WEB TAGS";
 
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Pyyhkäise sivulle löytääksesi muut laitteet.";

@@ -136,6 +136,8 @@
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E9D5F202351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift */; };
 		0E9D5F222351BE670076FFD8 /* DaemonsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */; };
+		0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
+		0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
@@ -438,6 +440,8 @@
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		0E9D5F1F2351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsStepperTableViewCell.swift; sourceTree = "<group>"; };
+		0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemon.swift; sourceTree = "<group>"; };
+		0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemonImpl.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
@@ -1533,6 +1537,23 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		0E9D5F232353624E0076FFD8 /* WebTag */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F242353625C0076FFD8 /* Impl */,
+				0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */,
+			);
+			path = WebTag;
+			sourceTree = "<group>";
+		};
+		0E9D5F242353625C0076FFD8 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
 			isa = PBXGroup;
 			children = (
@@ -1831,13 +1852,13 @@
 			path = SwiftUI;
 			sourceTree = "<group>";
 		};
-		0ED23643234F193B00CE6AA3 /* Broadcast */ = {
+		0ED23643234F193B00CE6AA3 /* Advertisement */ = {
 			isa = PBXGroup;
 			children = (
-				0EEB210A22B7D8500015F9E0 /* RealmBTKit */,
+				0EEB210A22B7D8500015F9E0 /* AdvertisementBTKit */,
 				0EEB210522B7D7C30015F9E0 /* RuuviTagAdvertisementDaemon.swift */,
 			);
-			path = Broadcast;
+			path = Advertisement;
 			sourceTree = "<group>";
 		};
 		0ED23644234F194B00CE6AA3 /* Connection */ = {
@@ -2043,18 +2064,19 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
-				0ED23643234F193B00CE6AA3 /* Broadcast */,
+				0ED23643234F193B00CE6AA3 /* Advertisement */,
 				0ED23644234F194B00CE6AA3 /* Connection */,
+				0E9D5F232353624E0076FFD8 /* WebTag */,
 			);
 			path = Daemons;
 			sourceTree = "<group>";
 		};
-		0EEB210A22B7D8500015F9E0 /* RealmBTKit */ = {
+		0EEB210A22B7D8500015F9E0 /* AdvertisementBTKit */ = {
 			isa = PBXGroup;
 			children = (
 				0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */,
 			);
-			path = RealmBTKit;
+			path = AdvertisementBTKit;
 			sourceTree = "<group>";
 		};
 		0EEB213A22B8FABD0015F9E0 /* Router */ = {
@@ -2682,6 +2704,7 @@
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
+				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
 				0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */,
 				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
@@ -2727,6 +2750,7 @@
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
+				0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */,
 				0E9D5F202351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift in Sources */,
 				0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,

@@ -1,10 +1,5 @@
 import Foundation
 
-enum DaemonType {
-    case advertisement
-    case connection
-}
-
 class DaemonsPresenter: NSObject, DaemonsModuleInput {
     weak var view: DaemonsViewInput!
     var router: DaemonsRouterInput!
@@ -19,7 +14,7 @@ class DaemonsPresenter: NSObject, DaemonsModuleInput {
             observer.settings.isAdvertisementDaemonOn = isOn ?? true
         }
         bind(advertisement.interval, fire: false) { observer, interval in
-            observer.settings.advertisementDaemonIntervalMinutes = interval ?? 1
+            observer.settings.advertisementDaemonIntervalMinutes = interval.bound
         }
         
         let connection = DaemonsViewModel()
@@ -27,13 +22,24 @@ class DaemonsPresenter: NSObject, DaemonsModuleInput {
         connection.isOn.value = settings.isConnectionDaemonOn
         connection.interval.value = settings.connectionDaemonIntervalMinutes
         bind(connection.isOn, fire: false) { (observer, isOn) in
-            observer.settings.isConnectionDaemonOn = isOn ?? true
+            observer.settings.isConnectionDaemonOn = isOn.bound
         }
         bind(connection.interval, fire: false) { observer, interval in
-            observer.settings.connectionDaemonIntervalMinutes = interval ?? 1
+            observer.settings.connectionDaemonIntervalMinutes = interval.bound
         }
         
-        view.viewModels = [advertisement, connection]
+        let webTags = DaemonsViewModel()
+        webTags.type = .webTags
+        webTags.isOn.value = settings.isWebTagDaemonOn
+        webTags.interval.value = settings.webTagDaemonIntervalMinutes
+        bind(webTags.isOn, fire: false) { observer, isOn in
+            observer.settings.isWebTagDaemonOn = isOn.bound
+        }
+        bind(webTags.interval, fire: false) { observer, interval in
+            observer.settings.webTagDaemonIntervalMinutes = interval.bound
+        }
+        
+        view.viewModels = [advertisement, connection, webTags]
     }
 }
 

@@ -9,6 +9,7 @@ class BusinessAssembly: Assembly {
             service.settings = r.resolve(Settings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
+            service.webTagDaemon = r.resolve(WebTagDaemon.self)
             return service
         }.inObjectScope(.container)
         
@@ -62,6 +63,14 @@ class BusinessAssembly: Assembly {
             service.locationManager = r.resolve(LocationManager.self)
             service.locationService = r.resolve(LocationService.self)
             return service
+        }
+        
+        container.register(WebTagDaemon.self) { r in
+            let daemon = WebTagDaemonImpl()
+            daemon.webTagService = r.resolve(WebTagService.self)
+            daemon.settings = r.resolve(Settings.self)
+            daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
+            return daemon
         }
         
         container.register(WebTagService.self) { r in

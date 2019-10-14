@@ -32,22 +32,12 @@ class WebTagServiceImpl: WebTagService {
     }
 
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
-        return weatherProviderService.observeCurrentLocationData(observer, provider: provider, interval: interval, closure: { [weak self] (observer, data, location, error) in
-            if let data = data {
-                self?.webTagPersistence.persistCurrentLocation(data: data)
-            }
-            closure(observer, data, location, error)
-        })
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, fire: Bool = true, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
+        return weatherProviderService.observeCurrentLocationData(observer, provider: provider, interval: interval, fire: fire, closure: closure)
     }
     
     @discardableResult
-    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
-        return weatherProviderService.observeData(observer, coordinate: coordinate, provider: provider, interval: interval, closure: { [weak self] (observer, data, error) in
-            if let data = data {
-                self?.webTagPersistence.persist(coordinate: coordinate, data: data)
-            }
-            closure(observer, data, error)
-        })
+    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, fire: Bool = true, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
+        return weatherProviderService.observeData(observer, coordinate: coordinate, provider: provider, interval: interval, fire: fire, closure: closure)
     }
 }

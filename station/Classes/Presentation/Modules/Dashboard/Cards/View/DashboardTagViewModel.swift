@@ -61,6 +61,29 @@ struct DashboardTagViewModel {
         provider = webTag.provider
     }
     
+    func update(_ data: WebTagDataRealm) {
+        celsius.value = data.celsius.value
+        fahrenheit.value = data.fahrenheit
+        kelvin.value = data.kelvin
+        pressure.value = data.pressure.value
+        relativeHumidity.value = data.humidity.value
+        
+        if let c = data.celsius.value, let rh = data.humidity.value {
+            let h = Humidity(c: c, rh: rh / 100.0)
+            absoluteHumidity.value = h.ah
+            dewPointCelsius.value = h.Td
+            dewPointFahrenheit.value = h.TdF
+            dewPointKelvin.value = h.TdK
+        } else {
+            absoluteHumidity.value = nil
+            dewPointCelsius.value = nil
+            dewPointFahrenheit.value = nil
+            dewPointKelvin.value = nil
+        }
+//        currentLocation.value = current
+        date.value = data.date
+    }
+    
     func update(_ wpsData: WPSData, current: Location?) {
         celsius.value = wpsData.celsius
         fahrenheit.value = wpsData.fahrenheit
