@@ -80,7 +80,7 @@ struct DashboardTagViewModel {
             dewPointFahrenheit.value = nil
             dewPointKelvin.value = nil
         }
-//        currentLocation.value = current
+        currentLocation.value = data.location?.location
         date.value = data.date
     }
     

@@ -3,6 +3,8 @@ import RealmSwift
 class WebTagDataRealm: Object {
     @objc dynamic var webTag: WebTagRealm?
     @objc dynamic var date: Date = Date()
+    @objc dynamic var location: WebTagLocationRealm?
+    
     let celsius = RealmOptional<Double>()
     let humidity = RealmOptional<Double>()
     let pressure = RealmOptional<Double>()

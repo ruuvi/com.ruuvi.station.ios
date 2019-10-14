@@ -36,6 +36,20 @@ class WebTagLocationRealm: Object {
     @objc dynamic var country: String?
     @objc dynamic var latitude: Double = 0
     @objc dynamic var longitude: Double = 0
+    @objc dynamic var compoundKey: String = UUID().uuidString
+    
+    override static func primaryKey() -> String? {
+        return "compoundKey"
+    }
+    
+    convenience init(location: Location) {
+        self.init()
+        city = location.city
+        country = location.country
+        latitude = location.coordinate.latitude
+        longitude = location.coordinate.longitude
+        compoundKey = "\(latitude)" + "\(longitude)"
+    }
 }
 
 extension WebTagLocationRealm {
