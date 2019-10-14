@@ -9,7 +9,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     var locationService: LocationService!
     
     @discardableResult
-    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
+    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval,  fire: Bool = true, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
                 timer.invalidate()
@@ -29,7 +29,10 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                 timer.invalidate()
             }
         }
-        timer.fire()
+        
+        if fire {
+            timer.fire()
+        }
         
         return RUObservationToken {
             timer.invalidate()
@@ -37,7 +40,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
     }
     
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, fire: Bool = true, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
         
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
@@ -58,7 +61,10 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                 timer.invalidate()
             }
         }
-        timer.fire()
+        
+        if fire {
+            timer.fire()
+        }
         
         return RUObservationToken {
             timer.invalidate()

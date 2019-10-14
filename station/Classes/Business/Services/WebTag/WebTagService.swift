@@ -12,7 +12,8 @@ protocol WebTagService {
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError>
     
     @discardableResult
-    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken
+    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, fire: Bool, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken 
+    
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, fire: Bool, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken
 }
