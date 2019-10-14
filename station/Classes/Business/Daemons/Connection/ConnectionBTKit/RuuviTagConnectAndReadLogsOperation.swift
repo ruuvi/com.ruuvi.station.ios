@@ -26,13 +26,15 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
         self.device = device
     }
     
-    override func main() {
+    override func main() {        
         let from = logSyncDate ?? Date.distantPast
         connectToken = device.connect(for: self, options: [.callbackQueue(.untouch)], result: { (observer, result) in
             observer.connectToken?.invalidate()
             switch result {
             case .failure(let error):
-                print(error.localizedDescription)
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagConnectionDaemonDidFail, object: nil, userInfo: [RuuviTagConnectionDaemonDidFailKey.error: RUError.btkit(error)])
+                }
                 observer.state = .finished
             case .disconnected:
                 observer.state = .finished
@@ -47,15 +49,21 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
                             opDate.on(success: { _ in
                                 observer.disconnect()
                             }, failure: { error in
-                                print(error.localizedDescription)
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .RuuviTagConnectionDaemonDidFail, object: nil, userInfo: [RuuviTagConnectionDaemonDidFailKey.error: error])
+                                }
                                 observer.disconnect()
                             })
                         }, failure: { error in
-                            print(error.localizedDescription)
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: .RuuviTagConnectionDaemonDidFail, object: nil, userInfo: [RuuviTagConnectionDaemonDidFailKey.error: error])
+                            }
                             observer.disconnect()
                         })
                     case .failure(let error):
-                        print(error.localizedDescription)
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: .RuuviTagConnectionDaemonDidFail, object: nil, userInfo: [RuuviTagConnectionDaemonDidFailKey.error: RUError.btkit(error)])
+                        }
                         observer.disconnect()
                     }
                 }
@@ -68,7 +76,9 @@ class RuuviTagConnectAndReadLogsOperation: AsyncOperation {
             observer.disconnectToken?.invalidate()
             switch result {
             case .failure(let error):
-                print(error.localizedDescription)
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagConnectionDaemonDidFail, object: nil, userInfo: [RuuviTagConnectionDaemonDidFailKey.error: RUError.btkit(error)])
+                }
                 observer.disconnectToken?.invalidate()
                 observer.state = .finished
             default:

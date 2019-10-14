@@ -24,6 +24,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var backgroundToken: NSObjectProtocol?
     private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
+    private var ruuviTagConnectionDaemonFailureToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -61,6 +62,9 @@ class DashboardPresenter: DashboardModuleInput {
         }
         if let ruuviTagAdvertisementDaemonFailureToken = ruuviTagAdvertisementDaemonFailureToken{
             NotificationCenter.default.removeObserver(ruuviTagAdvertisementDaemonFailureToken)
+        }
+        if let ruuviTagConnectionDaemonFailureToken = ruuviTagConnectionDaemonFailureToken {
+            NotificationCenter.default.removeObserver(ruuviTagConnectionDaemonFailureToken)
         }
     }
 }
@@ -307,7 +311,13 @@ extension DashboardPresenter {
         }
         
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagAdvertisementDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo, let error = userInfo[WebTagDaemonDidFailKey.error] as? RUError {
+            if let userInfo = notification.userInfo, let error = userInfo[RuuviTagAdvertisementDaemonDidFailKey.error] as? RUError {
+                self?.errorPresenter.present(error: error)
+            }
+        })
+        
+        ruuviTagConnectionDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagConnectionDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let error = userInfo[RuuviTagConnectionDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
