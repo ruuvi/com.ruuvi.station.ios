@@ -1,6 +1,7 @@
 import Foundation
 
-class RuuviTagBackgroundTaskDaemoniOS12: RuuviTagBackgroundTaskDaemon {
+class RuuviTagBackgroundAdvertisementTaskDaemoniOS12: RuuviTagBackgroundAdvertisementTaskDaemon {
+    
     func schedule() {
         print("scheduled")
     }

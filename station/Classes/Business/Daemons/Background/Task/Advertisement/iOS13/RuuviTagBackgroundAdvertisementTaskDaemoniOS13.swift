@@ -3,12 +3,12 @@ import BackgroundTasks
 import BTKit
 
 @available(iOS 13.0, *)
-class RuuviTagBackgroundTaskDaemoniOS13: RuuviTagBackgroundTaskDaemon {
+class RuuviTagBackgroundAdvertisementTaskDaemoniOS13: RuuviTagBackgroundAdvertisementTaskDaemon {
     
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
     
-    private let id = "com.ruuvi.station.RuuviTagBackgroundTaskDaemoniOS13"
-    private let queue = DispatchQueue(label: "RuuviTagBackgroundTaskDaemoniOS13", qos: .background)
+    private let id = "com.ruuvi.station.RuuviTagBackgroundAdvertisementTaskDaemoniOS13"
+    private let queue = DispatchQueue(label: "RuuviTagBackgroundAdvertisementTaskDaemoniOS13", qos: .background)
     
     func register() {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: id, using: queue) { task in

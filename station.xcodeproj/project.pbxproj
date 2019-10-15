@@ -138,9 +138,12 @@
 		0E9D5F222351BE670076FFD8 /* DaemonsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */; };
 		0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
 		0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
-		0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift */; };
-		0E9D5F3023557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift */; };
-		0E9D5F332355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift */; };
+		0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift */; };
+		0E9D5F3023557E990076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS13.swift */; };
+		0E9D5F332355A1AC0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS12.swift */; };
+		0E9D5F392355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F382355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift */; };
+		0E9D5F3C2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F3B2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift */; };
+		0E9D5F3F2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F3E2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
@@ -445,9 +448,12 @@
 		0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemon.swift; sourceTree = "<group>"; };
 		0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemonImpl.swift; sourceTree = "<group>"; };
-		0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundTaskDaemon.swift; sourceTree = "<group>"; };
-		0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundTaskDaemoniOS13.swift; sourceTree = "<group>"; };
-		0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundTaskDaemoniOS12.swift; sourceTree = "<group>"; };
+		0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementTaskDaemon.swift; sourceTree = "<group>"; };
+		0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementTaskDaemoniOS13.swift; sourceTree = "<group>"; };
+		0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementTaskDaemoniOS12.swift; sourceTree = "<group>"; };
+		0E9D5F382355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementProcessDaemon.swift; sourceTree = "<group>"; };
+		0E9D5F3B2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift; sourceTree = "<group>"; };
+		0E9D5F3E2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
@@ -1573,6 +1579,7 @@
 		0E9D5F2A2355799E0076FFD8 /* Background */ = {
 			isa = PBXGroup;
 			children = (
+				0E9D5F342355B3900076FFD8 /* Process */,
 				0E9D5F2B23557D050076FFD8 /* Task */,
 			);
 			path = Background;
@@ -1581,9 +1588,7 @@
 		0E9D5F2B23557D050076FFD8 /* Task */ = {
 			isa = PBXGroup;
 			children = (
-				0E9D5F312355A1900076FFD8 /* iOS12 */,
-				0E9D5F2E23557E7F0076FFD8 /* iOS13 */,
-				0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift */,
+				0E9D5F402355C5900076FFD8 /* Advertisement */,
 			);
 			path = Task;
 			sourceTree = "<group>";
@@ -1591,7 +1596,7 @@
 		0E9D5F2E23557E7F0076FFD8 /* iOS13 */ = {
 			isa = PBXGroup;
 			children = (
-				0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift */,
+				0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS13.swift */,
 			);
 			path = iOS13;
 			sourceTree = "<group>";
@@ -1599,9 +1604,53 @@
 		0E9D5F312355A1900076FFD8 /* iOS12 */ = {
 			isa = PBXGroup;
 			children = (
-				0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift */,
+				0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS12.swift */,
 			);
 			path = iOS12;
+			sourceTree = "<group>";
+		};
+		0E9D5F342355B3900076FFD8 /* Process */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F372355BD710076FFD8 /* Advertisement */,
+			);
+			path = Process;
+			sourceTree = "<group>";
+		};
+		0E9D5F372355BD710076FFD8 /* Advertisement */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F3D2355C1230076FFD8 /* iOS12 */,
+				0E9D5F3A2355BDD70076FFD8 /* iOS13 */,
+				0E9D5F382355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift */,
+			);
+			path = Advertisement;
+			sourceTree = "<group>";
+		};
+		0E9D5F3A2355BDD70076FFD8 /* iOS13 */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F3B2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift */,
+			);
+			path = iOS13;
+			sourceTree = "<group>";
+		};
+		0E9D5F3D2355C1230076FFD8 /* iOS12 */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F3E2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift */,
+			);
+			path = iOS12;
+			sourceTree = "<group>";
+		};
+		0E9D5F402355C5900076FFD8 /* Advertisement */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F312355A1900076FFD8 /* iOS12 */,
+				0E9D5F2E23557E7F0076FFD8 /* iOS13 */,
+				0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift */,
+			);
+			path = Advertisement;
 			sourceTree = "<group>";
 		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
@@ -2774,6 +2823,7 @@
 				0ECFF37023507CE80061D11B /* DaemonsViewModel.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
+				0E9D5F3C2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
@@ -2810,6 +2860,7 @@
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
+				0E9D5F392355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
 				0EE5B47D23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
@@ -2824,7 +2875,7 @@
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */,
-				0E9D5F3023557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift in Sources */,
+				0E9D5F3023557E990076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS13.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
@@ -2897,14 +2948,15 @@
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
-				0E9D5F332355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift in Sources */,
+				0E9D5F332355A1AC0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemoniOS12.swift in Sources */,
 				0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
-				0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift in Sources */,
+				0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift in Sources */,
+				0E9D5F3F2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift in Sources */,
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,

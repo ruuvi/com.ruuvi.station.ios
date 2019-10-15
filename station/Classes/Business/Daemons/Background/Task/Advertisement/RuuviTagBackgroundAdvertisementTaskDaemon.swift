@@ -1,6 +1,6 @@
 import Foundation
 
-protocol RuuviTagBackgroundTaskDaemon {
+protocol RuuviTagBackgroundAdvertisementTaskDaemon {
     func register()
     func schedule()
 }

@@ -10,7 +10,8 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
-            service.backgroundTaskDaemon = r.resolve(RuuviTagBackgroundTaskDaemon.self)
+            service.backgroundTaskDaemon = r.resolve(RuuviTagBackgroundAdvertisementTaskDaemon.self)
+            service.backgroundAdvertisementProcessDaemon = r.resolve(RuuviTagBackgroundAdvertisementProcessDaemon.self)
             return service
         }.inObjectScope(.container)
         
@@ -49,13 +50,24 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
         
-        container.register(RuuviTagBackgroundTaskDaemon.self) { r in
+        container.register(RuuviTagBackgroundAdvertisementProcessDaemon.self) { r in
             if #available(iOS 13.0, *) {
-                let daemon = RuuviTagBackgroundTaskDaemoniOS13()
+                let daemon = RuuviTagBackgroundAdvertisementProcessDaemoniOS13()
                 daemon.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
                 return daemon
             } else {
-                let daemon = RuuviTagBackgroundTaskDaemoniOS12()
+                let daemon = RuuviTagBackgroundAdvertisementProcessDaemoniOS12()
+                return daemon
+            }
+        }
+        
+        container.register(RuuviTagBackgroundAdvertisementTaskDaemon.self) { r in
+            if #available(iOS 13.0, *) {
+                let daemon = RuuviTagBackgroundAdvertisementTaskDaemoniOS13()
+                daemon.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
+                return daemon
+            } else {
+                let daemon = RuuviTagBackgroundAdvertisementTaskDaemoniOS12()
                 return daemon
             }
         }
