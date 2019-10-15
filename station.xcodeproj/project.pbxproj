@@ -1554,6 +1554,16 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
+		0E9D5F29235574330076FFD8 /* Foreground */ = {
+			isa = PBXGroup;
+			children = (
+				0ED23643234F193B00CE6AA3 /* Advertisement */,
+				0ED23644234F194B00CE6AA3 /* Connection */,
+				0E9D5F232353624E0076FFD8 /* WebTag */,
+			);
+			path = Foreground;
+			sourceTree = "<group>";
+		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
 			isa = PBXGroup;
 			children = (
@@ -2064,9 +2074,7 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
-				0ED23643234F193B00CE6AA3 /* Advertisement */,
-				0ED23644234F194B00CE6AA3 /* Connection */,
-				0E9D5F232353624E0076FFD8 /* WebTag */,
+				0E9D5F29235574330076FFD8 /* Foreground */,
 			);
 			path = Daemons;
 			sourceTree = "<group>";
