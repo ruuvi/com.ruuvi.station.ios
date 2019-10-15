@@ -10,6 +10,7 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
+            service.backgroundTaskDaemon = r.resolve(RuuviTagBackgroundTaskDaemon.self)
             return service
         }.inObjectScope(.container)
         
@@ -32,14 +33,6 @@ class BusinessAssembly: Assembly {
             return manager
         }
         
-        container.register(RuuviTagConnectionDaemon.self) { r in
-            let daemon = RuuviTagConnectionDaemonBTKit()
-            daemon.settings = r.resolve(Settings.self)
-            daemon.scanner = BTKit.scanner
-            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            return daemon
-        }.inObjectScope(.container)
-        
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
@@ -48,6 +41,24 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
         
+        container.register(RuuviTagConnectionDaemon.self) { r in
+            let daemon = RuuviTagConnectionDaemonBTKit()
+            daemon.settings = r.resolve(Settings.self)
+            daemon.scanner = BTKit.scanner
+            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            return daemon
+        }.inObjectScope(.container)
+        
+        container.register(RuuviTagBackgroundTaskDaemon.self) { r in
+            if #available(iOS 13.0, *) {
+                let daemon = RuuviTagBackgroundTaskDaemoniOS13()
+                daemon.scanner = BTKit.scanner
+                return daemon
+            } else {
+                let daemon = RuuviTagBackgroundTaskDaemoniOS12()
+                return daemon
+            }
+        }
         
         container.register(RuuviTagService.self) { r in
             let service = RuuviTagServiceImpl()

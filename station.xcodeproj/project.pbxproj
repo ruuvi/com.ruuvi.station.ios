@@ -138,6 +138,9 @@
 		0E9D5F222351BE670076FFD8 /* DaemonsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */; };
 		0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
 		0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
+		0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift */; };
+		0E9D5F3023557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift */; };
+		0E9D5F332355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
@@ -442,6 +445,9 @@
 		0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemon.swift; sourceTree = "<group>"; };
 		0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemonImpl.swift; sourceTree = "<group>"; };
+		0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundTaskDaemon.swift; sourceTree = "<group>"; };
+		0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundTaskDaemoniOS13.swift; sourceTree = "<group>"; };
+		0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundTaskDaemoniOS12.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
@@ -1564,6 +1570,40 @@
 			path = Foreground;
 			sourceTree = "<group>";
 		};
+		0E9D5F2A2355799E0076FFD8 /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F2B23557D050076FFD8 /* Task */,
+			);
+			path = Background;
+			sourceTree = "<group>";
+		};
+		0E9D5F2B23557D050076FFD8 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F312355A1900076FFD8 /* iOS12 */,
+				0E9D5F2E23557E7F0076FFD8 /* iOS13 */,
+				0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift */,
+			);
+			path = Task;
+			sourceTree = "<group>";
+		};
+		0E9D5F2E23557E7F0076FFD8 /* iOS13 */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F2F23557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift */,
+			);
+			path = iOS13;
+			sourceTree = "<group>";
+		};
+		0E9D5F312355A1900076FFD8 /* iOS12 */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F322355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift */,
+			);
+			path = iOS12;
+			sourceTree = "<group>";
+		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
 			isa = PBXGroup;
 			children = (
@@ -2074,6 +2114,7 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
+				0E9D5F2A2355799E0076FFD8 /* Background */,
 				0E9D5F29235574330076FFD8 /* Foreground */,
 			);
 			path = Daemons;
@@ -2783,6 +2824,7 @@
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */,
+				0E9D5F3023557E990076FFD8 /* RuuviTagBackgroundTaskDaemoniOS13.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
@@ -2855,12 +2897,14 @@
 				0EF2863522CBB03A0026C7A5 /* TagSettingsRouterInput.swift in Sources */,
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
+				0E9D5F332355A1AC0076FFD8 /* RuuviTagBackgroundTaskDaemoniOS12.swift in Sources */,
 				0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
+				0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundTaskDaemon.swift in Sources */,
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
