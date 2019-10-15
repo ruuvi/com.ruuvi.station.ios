@@ -121,7 +121,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     
     @objc private func persist(pair: RuuviTagDaemonPair) {
         let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
-        guard let uuid = ruuviTagData.ruuviTag?.uuid else { return }
+        let uuid = pair.device.uuid
         if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
                 ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
