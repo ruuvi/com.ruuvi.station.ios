@@ -5,7 +5,7 @@ import BTKit
 @available(iOS 13.0, *)
 class RuuviTagBackgroundTaskDaemoniOS13: RuuviTagBackgroundTaskDaemon {
     
-    var scanner: BTScanner!
+    var advertisementDaemon: RuuviTagAdvertisementDaemon!
     
     private let id = "com.ruuvi.station.RuuviTagBackgroundTaskDaemoniOS13"
     private let queue = DispatchQueue(label: "RuuviTagBackgroundTaskDaemoniOS13", qos: .background)
@@ -29,18 +29,13 @@ class RuuviTagBackgroundTaskDaemoniOS13: RuuviTagBackgroundTaskDaemon {
     }
     
     private func listenToAdvertisements(in task: BGAppRefreshTask, for deadline: TimeInterval) {
-        
         schedule()
-        
-        let token = scanner.scan(self, options: [.callbackQueue(.untouch)]) { (observer, device) in
-            print(device)
-        }
-        
+        advertisementDaemon.start()
         task.expirationHandler = {
-            token.invalidate()
+            self.advertisementDaemon.stop()
         }
-        
         queue.asyncAfter(deadline: .now() + deadline) {
+            self.advertisementDaemon.stop()
             task.setTaskCompleted(success: true)
         }
     }

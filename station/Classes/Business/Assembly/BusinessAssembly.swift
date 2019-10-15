@@ -39,7 +39,7 @@ class BusinessAssembly: Assembly {
             daemon.scanner = r.resolve(BTScanner.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
-        }.inObjectScope(.container)
+        }
         
         container.register(RuuviTagConnectionDaemon.self) { r in
             let daemon = RuuviTagConnectionDaemonBTKit()
@@ -52,7 +52,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviTagBackgroundTaskDaemon.self) { r in
             if #available(iOS 13.0, *) {
                 let daemon = RuuviTagBackgroundTaskDaemoniOS13()
-                daemon.scanner = BTKit.scanner
+                daemon.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
                 return daemon
             } else {
                 let daemon = RuuviTagBackgroundTaskDaemoniOS12()
