@@ -1580,14 +1580,14 @@
 			path = Foreground;
 			sourceTree = "<group>";
 		};
-		0E9D5F2A2355799E0076FFD8 /* Background */ = {
+		0E9D5F2A2355799E0076FFD8 /* Background (not working) */ = {
 			isa = PBXGroup;
 			children = (
 				0E9D5F342355B3900076FFD8 /* Process */,
 				0E9D5F452355CFCF0076FFD8 /* Scanner */,
 				0E9D5F2B23557D050076FFD8 /* Task */,
 			);
-			path = Background;
+			path = "Background (not working)";
 			sourceTree = "<group>";
 		};
 		0E9D5F2B23557D050076FFD8 /* Task */ = {
@@ -2185,7 +2185,7 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
-				0E9D5F2A2355799E0076FFD8 /* Background */,
+				0E9D5F2A2355799E0076FFD8 /* Background (not working) */,
 				0E9D5F29235574330076FFD8 /* Foreground */,
 			);
 			path = Daemons;
