@@ -144,6 +144,8 @@
 		0E9D5F392355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F382355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift */; };
 		0E9D5F3C2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F3B2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift */; };
 		0E9D5F3F2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F3E2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift */; };
+		0E9D5F472355CFE80076FFD8 /* RuuviTagBackgroundScannerDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F462355CFE80076FFD8 /* RuuviTagBackgroundScannerDaemon.swift */; };
+		0E9D5F4A2355D0C50076FFD8 /* RuuviTagBackgroundScannerDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F492355D0C50076FFD8 /* RuuviTagBackgroundScannerDaemonBTKit.swift */; };
 		0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */; };
 		0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
@@ -281,7 +283,6 @@
 		0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
 		0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */; };
 		0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */; };
-		5D694BA0474CE266BB5E6055 /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4DEAAA031FC6DFF1E23FC51 /* Pods_station.framework */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -294,6 +295,7 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
+		FF6F7CB0FDADDF9489257111 /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C86D0F70B6EAC16B9A310D3 /* Pods_station.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -314,6 +316,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C86D0F70B6EAC16B9A310D3 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WebTagSettings.storyboard; sourceTree = "<group>"; };
 		0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewInput.swift; sourceTree = "<group>"; };
 		0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewOutput.swift; sourceTree = "<group>"; };
@@ -454,6 +457,8 @@
 		0E9D5F382355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementProcessDaemon.swift; sourceTree = "<group>"; };
 		0E9D5F3B2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift; sourceTree = "<group>"; };
 		0E9D5F3E2355C1320076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementProcessDaemoniOS12.swift; sourceTree = "<group>"; };
+		0E9D5F462355CFE80076FFD8 /* RuuviTagBackgroundScannerDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundScannerDaemon.swift; sourceTree = "<group>"; };
+		0E9D5F492355D0C50076FFD8 /* RuuviTagBackgroundScannerDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundScannerDaemonBTKit.swift; sourceTree = "<group>"; };
 		0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
 		0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagViewModel.swift; sourceTree = "<group>"; };
 		0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
@@ -611,9 +616,8 @@
 		64678190225D02CE0072856A /* Muli-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Bold.ttf"; sourceTree = "<group>"; };
 		6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Bold.ttf"; sourceTree = "<group>"; };
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
-		B2310B155BCE4F233E3F116B /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
-		B4DEAAA031FC6DFF1E23FC51 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB8CE2C1D1975B66EA55DD0A /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		BE06E1D34BEE14039E33A75B /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
+		BF731CCC7044312E1D8E59D7 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -621,7 +625,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D694BA0474CE266BB5E6055 /* Pods_station.framework in Frameworks */,
+				FF6F7CB0FDADDF9489257111 /* Pods_station.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1580,6 +1584,7 @@
 			isa = PBXGroup;
 			children = (
 				0E9D5F342355B3900076FFD8 /* Process */,
+				0E9D5F452355CFCF0076FFD8 /* Scanner */,
 				0E9D5F2B23557D050076FFD8 /* Task */,
 			);
 			path = Background;
@@ -1651,6 +1656,23 @@
 				0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift */,
 			);
 			path = Advertisement;
+			sourceTree = "<group>";
+		};
+		0E9D5F452355CFCF0076FFD8 /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F482355D08A0076FFD8 /* BTKit */,
+				0E9D5F462355CFE80076FFD8 /* RuuviTagBackgroundScannerDaemon.swift */,
+			);
+			path = Scanner;
+			sourceTree = "<group>";
+		};
+		0E9D5F482355D08A0076FFD8 /* BTKit */ = {
+			isa = PBXGroup;
+			children = (
+				0E9D5F492355D0C50076FFD8 /* RuuviTagBackgroundScannerDaemonBTKit.swift */,
+			);
+			path = BTKit;
 			sourceTree = "<group>";
 		};
 		0E9F979722EB054B0015ADE2 /* WebTag */ = {
@@ -2462,19 +2484,11 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
-		4BB12D47D46D522F72EB14EC /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B4DEAAA031FC6DFF1E23FC51 /* Pods_station.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				BB8CE2C1D1975B66EA55DD0A /* Pods-station.debug.xcconfig */,
-				B2310B155BCE4F233E3F116B /* Pods-station.release.xcconfig */,
+				BF731CCC7044312E1D8E59D7 /* Pods-station.debug.xcconfig */,
+				BE06E1D34BEE14039E33A75B /* Pods-station.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -2487,7 +2501,7 @@
 				64333D4720B0C45B00CDF4B6 /* stationUITests */,
 				64333D2620B0C45900CDF4B6 /* Products */,
 				62FD66A56B206724C5DE9CFE /* Pods */,
-				4BB12D47D46D522F72EB14EC /* Frameworks */,
+				8541BD0C7060AEE58B72D4DE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2544,6 +2558,14 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		8541BD0C7060AEE58B72D4DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0C86D0F70B6EAC16B9A310D3 /* Pods_station.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2551,11 +2573,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D4D20B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "station" */;
 			buildPhases = (
-				0399E3BA146C2E80D32C672F /* [CP] Check Pods Manifest.lock */,
+				2E9EA1AB9DB800ED2F7F0DA4 /* [CP] Check Pods Manifest.lock */,
 				64333D2120B0C45900CDF4B6 /* Sources */,
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
 				64333D2320B0C45900CDF4B6 /* Resources */,
-				D7B0DDF7E21AD92EC6C761D9 /* [CP] Embed Pods Frameworks */,
+				9C3CDFD7EEC290248F5CBB61 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2707,7 +2729,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0399E3BA146C2E80D32C672F /* [CP] Check Pods Manifest.lock */ = {
+		2E9EA1AB9DB800ED2F7F0DA4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2729,7 +2751,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D7B0DDF7E21AD92EC6C761D9 /* [CP] Embed Pods Frameworks */ = {
+		9C3CDFD7EEC290248F5CBB61 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2905,6 +2927,7 @@
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
+				0E9D5F4A2355D0C50076FFD8 /* RuuviTagBackgroundScannerDaemonBTKit.swift in Sources */,
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
 				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
@@ -2932,6 +2955,7 @@
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */,
+				0E9D5F472355CFE80076FFD8 /* RuuviTagBackgroundScannerDaemon.swift in Sources */,
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
@@ -3199,7 +3223,7 @@
 		};
 		64333D4E20B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB8CE2C1D1975B66EA55DD0A /* Pods-station.debug.xcconfig */;
+			baseConfigurationReference = BF731CCC7044312E1D8E59D7 /* Pods-station.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -3300,7 +3324,7 @@
 		};
 		64333D4F20B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B2310B155BCE4F233E3F116B /* Pods-station.release.xcconfig */;
+			baseConfigurationReference = BE06E1D34BEE14039E33A75B /* Pods-station.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
