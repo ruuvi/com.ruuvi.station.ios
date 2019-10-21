@@ -1,12 +1,12 @@
 import Foundation
 
-class DaemonsPresenter: NSObject, DaemonsModuleInput {
-    weak var view: DaemonsViewInput!
-    var router: DaemonsRouterInput!
+class ForegroundPresenter: NSObject, ForegroundModuleInput {
+    weak var view: ForegroundViewInput!
+    var router: ForegroundRouterInput!
     var settings: Settings!
     
     func configure() {
-        let advertisement = DaemonsViewModel()
+        let advertisement = ForegroundViewModel()
         advertisement.type = .advertisement
         advertisement.isOn.value = settings.isAdvertisementDaemonOn
         advertisement.interval.value = settings.advertisementDaemonIntervalMinutes
@@ -17,7 +17,7 @@ class DaemonsPresenter: NSObject, DaemonsModuleInput {
             observer.settings.advertisementDaemonIntervalMinutes = interval.bound
         }
         
-        let connection = DaemonsViewModel()
+        let connection = ForegroundViewModel()
         connection.type = .connection
         connection.isOn.value = settings.isConnectionDaemonOn
         connection.interval.value = settings.connectionDaemonIntervalMinutes
@@ -28,7 +28,7 @@ class DaemonsPresenter: NSObject, DaemonsModuleInput {
             observer.settings.connectionDaemonIntervalMinutes = interval.bound
         }
         
-        let webTags = DaemonsViewModel()
+        let webTags = ForegroundViewModel()
         webTags.type = .webTags
         webTags.isOn.value = settings.isWebTagDaemonOn
         webTags.interval.value = settings.webTagDaemonIntervalMinutes
@@ -43,6 +43,6 @@ class DaemonsPresenter: NSObject, DaemonsModuleInput {
     }
 }
 
-extension DaemonsPresenter: DaemonsViewOutput {
+extension ForegroundPresenter: ForegroundViewOutput {
     
 }

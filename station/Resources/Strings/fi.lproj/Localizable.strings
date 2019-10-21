@@ -49,17 +49,6 @@
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 
-// Daemons
-"DaemonsRow.advertisement.section" = "ADVERTISEMENTS";
-"DaemonsRow.advertisement.title" = "Save advertisements";
-"DaemonsRow.connection.section" = "LOGS";
-"DaemonsRow.connection.title" = "Connect and sync logs";
-"Daemons.navigationItem.title" = "Daemons";
-"Daemons.Interval.Every.string" = "Every";
-"Daemons.Interval.Min.string" = "min";
-"DaemonsRow.webTags.title" = "Load and save from web";
-"DaemonsRow.webTags.section" = "WEB TAGS";
-
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Pyyhkäise sivulle löytääksesi muut laitteet.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
@@ -79,6 +68,17 @@
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
+
+// Foreground
+"ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
+"ForegroundRow.advertisement.title" = "Save advertisements";
+"ForegroundRow.connection.section" = "LOGS";
+"ForegroundRow.connection.title" = "Connect and sync logs";
+"Foreground.navigationItem.title" = "Foreground";
+"Foreground.Interval.Every.string" = "Every";
+"Foreground.Interval.Min.string" = "min";
+"ForegroundRow.webTags.title" = "Load and save from web";
+"ForegroundRow.webTags.section" = "WEB TAGS";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Mitataksesi ilmankosteutta mahdollisimman tarkasti, suosittelemme kalibrointia suolaliuoksen avulla. Katso täältä video-ohjeita kalibroinnista kotikonstein.";

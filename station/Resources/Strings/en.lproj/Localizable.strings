@@ -49,17 +49,6 @@
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 
-// Daemons
-"DaemonsRow.advertisement.section" = "ADVERTISEMENTS";
-"DaemonsRow.advertisement.title" = "Save advertisements";
-"DaemonsRow.connection.section" = "LOGS";
-"DaemonsRow.connection.title" = "Connect and sync logs";
-"Daemons.navigationItem.title" = "Daemons";
-"Daemons.Interval.Every.string" = "Every";
-"Daemons.Interval.Min.string" = "min";
-"DaemonsRow.webTags.title" = "Load and save from web";
-"DaemonsRow.webTags.section" = "WEB TAGS";
-
 // Dashboard
 "Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
@@ -79,6 +68,17 @@
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
+
+// Foreground
+"ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
+"ForegroundRow.advertisement.title" = "Save advertisements";
+"ForegroundRow.connection.section" = "LOGS";
+"ForegroundRow.connection.title" = "Connect and sync logs";
+"Foreground.navigationItem.title" = "Foreground";
+"Foreground.Interval.Every.string" = "Every";
+"Foreground.Interval.Min.string" = "min";
+"ForegroundRow.webTags.title" = "Load and save from web";
+"ForegroundRow.webTags.section" = "WEB TAGS";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";

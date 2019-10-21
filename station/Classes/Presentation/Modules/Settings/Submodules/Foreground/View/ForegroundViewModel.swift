@@ -1,36 +1,36 @@
 import Foundation
 
-enum DaemonType {
+enum ForegroundType {
     case advertisement
     case connection
     case webTags
 }
 
-class DaemonsViewModel: Identifiable {
+class ForegroundViewModel: Identifiable {
     var id = UUID().uuidString
-    var type: DaemonType = .advertisement
+    var type: ForegroundType = .advertisement
     var isOn: Observable<Bool?> = Observable<Bool?>(true)
     var interval: Observable<Int?> = Observable<Int?>(1)
     
     var title: String {
         switch type {
         case .advertisement:
-            return "DaemonsRow.advertisement.title".localized()
+            return "ForegroundRow.advertisement.title".localized()
         case .connection:
-            return "DaemonsRow.connection.title".localized()
+            return "ForegroundRow.connection.title".localized()
         case .webTags:
-            return "DaemonsRow.webTags.title".localized()
+            return "ForegroundRow.webTags.title".localized()
         }
     }
     
     var section: String {
         switch type {
         case .advertisement:
-            return "DaemonsRow.advertisement.section".localized()
+            return "ForegroundRow.advertisement.section".localized()
         case .connection:
-            return "DaemonsRow.connection.section".localized()
+            return "ForegroundRow.connection.section".localized()
         case .webTags:
-            return "DaemonsRow.webTags.section".localized()
+            return "ForegroundRow.webTags.section".localized()
         }
     }
     

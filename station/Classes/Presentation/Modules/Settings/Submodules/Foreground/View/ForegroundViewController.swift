@@ -3,20 +3,20 @@ import UIKit
 import SwiftUI
 #endif
 
-class DaemonsViewController: UIViewController {
-    var output: DaemonsViewOutput!
+class ForegroundViewController: UIViewController {
+    var output: ForegroundViewOutput!
     
-    var viewModels = [DaemonsViewModel]()
+    var viewModels = [ForegroundViewModel]()
     
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var listContainer: UIView!
     
 }
 
-// MARK: - DaemonsViewInput
-extension DaemonsViewController: DaemonsViewInput {
+// MARK: - ForegroundViewInput
+extension ForegroundViewController: ForegroundViewInput {
     func localize() {
-        navigationItem.title = "Daemons.navigationItem.title".localized()
+        navigationItem.title = "Foreground.navigationItem.title".localized()
     }
     
     func apply(theme: Theme) {
@@ -25,7 +25,7 @@ extension DaemonsViewController: DaemonsViewInput {
 }
 
 // MARK: - View lifecycle
-extension DaemonsViewController {
+extension ForegroundViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
@@ -34,18 +34,18 @@ extension DaemonsViewController {
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if #available(iOS 13, *) {
-            return identifier == DaemonsEmbedSegue.list.rawValue
+            return identifier == ForegroundEmbedSegue.list.rawValue
         } else {
-            return identifier == DaemonsEmbedSegue.table.rawValue
+            return identifier == ForegroundEmbedSegue.table.rawValue
         }
     }
     
     #if canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
-            let env = DaemonsEnvironmentObject()
+            let env = ForegroundEnvironmentObject()
             env.daemons = viewModels
-            return UIHostingController(coder: coder, rootView: DaemonsList().environmentObject(env))
+            return UIHostingController(coder: coder, rootView: ForegroundList().environmentObject(env))
         } else {
             return nil
         }
@@ -58,8 +58,8 @@ extension DaemonsViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
-        case DaemonsEmbedSegue.table.rawValue:
-            let table = segue.destination as! DaemonsTableViewController
+        case ForegroundEmbedSegue.table.rawValue:
+            let table = segue.destination as! ForegroundTableViewController
             table.output = output
             table.viewModels = viewModels
         default:
@@ -69,9 +69,9 @@ extension DaemonsViewController {
 }
 
 // MARK: - Configure Views
-extension DaemonsViewController {
+extension ForegroundViewController {
     func configureViews() {
-        tableContainer.isHidden = !shouldPerformSegue(withIdentifier: DaemonsEmbedSegue.table.rawValue, sender: nil)
-        listContainer.isHidden = !shouldPerformSegue(withIdentifier: DaemonsEmbedSegue.list.rawValue, sender: nil)
+        tableContainer.isHidden = !shouldPerformSegue(withIdentifier: ForegroundEmbedSegue.table.rawValue, sender: nil)
+        listContainer.isHidden = !shouldPerformSegue(withIdentifier: ForegroundEmbedSegue.list.rawValue, sender: nil)
     }
 }

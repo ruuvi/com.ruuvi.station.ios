@@ -1,5 +1,5 @@
 import Foundation
 
-protocol DaemonsModuleInput: class {
+protocol ForegroundModuleInput: class {
     func configure()
 }
