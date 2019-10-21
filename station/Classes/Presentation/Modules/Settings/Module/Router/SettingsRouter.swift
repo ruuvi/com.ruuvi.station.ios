@@ -15,10 +15,10 @@ class SettingsRouter: SettingsRouterInput {
             .perform()
     }
     
-    func openDaemons() {
-        let factory = StoryboardFactory(storyboardName: "Daemons")
+    func openForeground() {
+        let factory = StoryboardFactory(storyboardName: "Foreground")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: DaemonsModuleInput.self)
+            .forStoryboard(factory: factory, to: ForegroundModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
                 module.configure()

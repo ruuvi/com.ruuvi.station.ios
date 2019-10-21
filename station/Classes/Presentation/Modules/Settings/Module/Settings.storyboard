@@ -125,8 +125,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="383" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Daemons" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CdK-Qh-AQf">
-                                                    <rect key="frame" x="20" y="11.5" width="73" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Foreground" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CdK-Qh-AQf">
+                                                    <rect key="frame" x="20" y="11.5" width="89" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -156,7 +156,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
-                        <outlet property="daemonsCell" destination="gWD-Bu-GUM" id="568-5T-CYJ"/>
+                        <outlet property="foregroundCell" destination="gWD-Bu-GUM" id="568-5T-CYJ"/>
                         <outlet property="humidityUnitLabel" destination="bGS-es-4BZ" id="3Ok-bN-3Le"/>
                         <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
                         <outlet property="languageCell" destination="7Hf-la-egS" id="RhN-Ls-L2H"/>

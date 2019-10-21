@@ -40,7 +40,7 @@ extension SettingsPresenter: SettingsViewOutput {
         router.openLanguage()
     }
     
-    func viewDidTapOnDaemons() {
-        router.openDaemons()
+    func viewDidTapOnForeground() {
+        router.openForeground()
     }
 }

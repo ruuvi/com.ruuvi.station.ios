@@ -16,7 +16,7 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
-    @IBOutlet weak var daemonsCell: UITableViewCell!
+    @IBOutlet weak var foregroundCell: UITableViewCell!
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
@@ -113,8 +113,8 @@ extension SettingsTableViewController {
             switch cell {
             case languageCell:
                 output.viewDidTapOnLanguage()
-            case daemonsCell:
-                output.viewDidTapOnDaemons()
+            case foregroundCell:
+                output.viewDidTapOnForeground()
             default:
                 break
             }

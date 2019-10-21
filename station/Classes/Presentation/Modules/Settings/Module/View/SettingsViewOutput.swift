@@ -6,5 +6,5 @@ protocol SettingsViewOutput {
     func viewDidChange(humidityUnit: HumidityUnit)
     func viewDidTriggerClose()
     func viewDidTapOnLanguage()
-    func viewDidTapOnDaemons()
+    func viewDidTapOnForeground()
 }

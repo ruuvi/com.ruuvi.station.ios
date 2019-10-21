@@ -134,8 +134,7 @@
 		0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E02333799B00FFA577 /* TagChartsView.xib */; };
 		0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
-		0E9D5F202351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift */; };
-		0E9D5F222351BE670076FFD8 /* DaemonsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */; };
+		0E9D5F202351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */; };
 		0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
 		0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
 		0E9D5F2D23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift */; };
@@ -163,7 +162,6 @@
 		0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */; };
 		0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */; };
 		0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
-		0EA332A72351B9B800568AB7 /* DaemonsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA332A62351B9B800568AB7 /* DaemonsTableViewController.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -184,19 +182,18 @@
 		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */; };
-		0ECFF355235056DC0061D11B /* DaemonsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF354235056DC0061D11B /* DaemonsList.swift */; };
-		0ECFF35723505F8D0061D11B /* Daemons.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECFF35623505F8D0061D11B /* Daemons.storyboard */; };
-		0ECFF359235060EF0061D11B /* DaemonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF358235060EF0061D11B /* DaemonsViewController.swift */; };
-		0ECFF35B2350618E0061D11B /* DaemonsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35A2350618E0061D11B /* DaemonsModuleInput.swift */; };
-		0ECFF35E23506BC40061D11B /* DaemonsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */; };
-		0ECFF36023506BD60061D11B /* DaemonsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */; };
-		0ECFF36223506C050061D11B /* DaemonsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* DaemonsRow.swift */; };
-		0ECFF366235079F50061D11B /* DaemonsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF365235079F50061D11B /* DaemonsPresenter.swift */; };
-		0ECFF36823507A1A0061D11B /* DaemonsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36723507A1A0061D11B /* DaemonsRouterInput.swift */; };
-		0ECFF36A23507A3B0061D11B /* DaemonsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36923507A3B0061D11B /* DaemonsRouter.swift */; };
-		0ECFF36C23507BC00061D11B /* DaemonsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36B23507BC00061D11B /* DaemonsInitializer.swift */; };
-		0ECFF36E23507BF00061D11B /* DaemonsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36D23507BF00061D11B /* DaemonsConfigurator.swift */; };
-		0ECFF37023507CE80061D11B /* DaemonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36F23507CE80061D11B /* DaemonsViewModel.swift */; };
+		0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF354235056DC0061D11B /* ForegroundList.swift */; };
+		0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0ECFF35623505F8D0061D11B /* Foreground.storyboard */; };
+		0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF358235060EF0061D11B /* ForegroundViewController.swift */; };
+		0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35A2350618E0061D11B /* ForegroundModuleInput.swift */; };
+		0ECFF35E23506BC40061D11B /* ForegroundViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35D23506BC40061D11B /* ForegroundViewOutput.swift */; };
+		0ECFF36023506BD60061D11B /* ForegroundViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35F23506BD60061D11B /* ForegroundViewInput.swift */; };
+		0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* ForegroundRow.swift */; };
+		0ECFF366235079F50061D11B /* ForegroundPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF365235079F50061D11B /* ForegroundPresenter.swift */; };
+		0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36723507A1A0061D11B /* ForegroundRouterInput.swift */; };
+		0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36B23507BC00061D11B /* ForegroundInitializer.swift */; };
+		0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36D23507BF00061D11B /* ForegroundConfigurator.swift */; };
+		0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36F23507CE80061D11B /* ForegroundViewModel.swift */; };
 		0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */; };
 		0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */; };
 		0ED2364D234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364C234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift */; };
@@ -204,7 +201,7 @@
 		0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
 		0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */; };
 		0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */; };
-		0EE5B47D23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47C23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift */; };
+		0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */; };
 		0EE5B47F2351865300D5ED32 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47E2351865300D5ED32 /* UserDefault.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
 		0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */; };
@@ -277,6 +274,9 @@
 		0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */; };
 		0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */; };
 		0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */; };
+		0EF6F5BE235E01170052BA25 /* ForegroundRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF6F5BD235E01170052BA25 /* ForegroundRouter.swift */; };
+		0EF6F5C0235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF6F5BF235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift */; };
+		0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF6F5C1235E02000052BA25 /* ForegroundTableViewController.swift */; };
 		0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
 		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
@@ -446,8 +446,7 @@
 		0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsModuleOutput.swift; sourceTree = "<group>"; };
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
-		0E9D5F1F2351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsSwitchTableViewCell.swift; sourceTree = "<group>"; };
-		0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsStepperTableViewCell.swift; sourceTree = "<group>"; };
+		0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemon.swift; sourceTree = "<group>"; };
 		0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDaemonImpl.swift; sourceTree = "<group>"; };
 		0E9D5F2C23557D5C0076FFD8 /* RuuviTagBackgroundAdvertisementTaskDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagBackgroundAdvertisementTaskDaemon.swift; sourceTree = "<group>"; };
@@ -475,7 +474,6 @@
 		0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagLocationSource.swift; sourceTree = "<group>"; };
 		0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
 		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
-		0EA332A62351B9B800568AB7 /* DaemonsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsTableViewController.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -498,19 +496,18 @@
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
 		0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManager.swift; sourceTree = "<group>"; };
 		0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManagerImpl.swift; sourceTree = "<group>"; };
-		0ECFF354235056DC0061D11B /* DaemonsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsList.swift; sourceTree = "<group>"; };
-		0ECFF35623505F8D0061D11B /* Daemons.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Daemons.storyboard; sourceTree = "<group>"; };
-		0ECFF358235060EF0061D11B /* DaemonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewController.swift; sourceTree = "<group>"; };
-		0ECFF35A2350618E0061D11B /* DaemonsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsModuleInput.swift; sourceTree = "<group>"; };
-		0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewOutput.swift; sourceTree = "<group>"; };
-		0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewInput.swift; sourceTree = "<group>"; };
-		0ECFF36123506C050061D11B /* DaemonsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsRow.swift; sourceTree = "<group>"; };
-		0ECFF365235079F50061D11B /* DaemonsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsPresenter.swift; sourceTree = "<group>"; };
-		0ECFF36723507A1A0061D11B /* DaemonsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsRouterInput.swift; sourceTree = "<group>"; };
-		0ECFF36923507A3B0061D11B /* DaemonsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsRouter.swift; sourceTree = "<group>"; };
-		0ECFF36B23507BC00061D11B /* DaemonsInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsInitializer.swift; sourceTree = "<group>"; };
-		0ECFF36D23507BF00061D11B /* DaemonsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsConfigurator.swift; sourceTree = "<group>"; };
-		0ECFF36F23507CE80061D11B /* DaemonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsViewModel.swift; sourceTree = "<group>"; };
+		0ECFF354235056DC0061D11B /* ForegroundList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundList.swift; sourceTree = "<group>"; };
+		0ECFF35623505F8D0061D11B /* Foreground.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Foreground.storyboard; sourceTree = "<group>"; };
+		0ECFF358235060EF0061D11B /* ForegroundViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundViewController.swift; sourceTree = "<group>"; };
+		0ECFF35A2350618E0061D11B /* ForegroundModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundModuleInput.swift; sourceTree = "<group>"; };
+		0ECFF35D23506BC40061D11B /* ForegroundViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundViewOutput.swift; sourceTree = "<group>"; };
+		0ECFF35F23506BD60061D11B /* ForegroundViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundViewInput.swift; sourceTree = "<group>"; };
+		0ECFF36123506C050061D11B /* ForegroundRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundRow.swift; sourceTree = "<group>"; };
+		0ECFF365235079F50061D11B /* ForegroundPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundPresenter.swift; sourceTree = "<group>"; };
+		0ECFF36723507A1A0061D11B /* ForegroundRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundRouterInput.swift; sourceTree = "<group>"; };
+		0ECFF36B23507BC00061D11B /* ForegroundInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundInitializer.swift; sourceTree = "<group>"; };
+		0ECFF36D23507BF00061D11B /* ForegroundConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundConfigurator.swift; sourceTree = "<group>"; };
+		0ECFF36F23507CE80061D11B /* ForegroundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundViewModel.swift; sourceTree = "<group>"; };
 		0ED23648234F19DB00CE6AA3 /* RuuviTagConnectionDaemon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectionDaemon.swift; sourceTree = "<group>"; };
 		0ED2364A234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectionDaemonBTKit.swift; sourceTree = "<group>"; };
 		0ED2364C234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagConnectAndReadLogsOperation.swift; sourceTree = "<group>"; };
@@ -518,7 +515,7 @@
 		0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderService.swift; sourceTree = "<group>"; };
 		0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderServiceImpl.swift; sourceTree = "<group>"; };
 		0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
-		0EE5B47C23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaemonsEnvironmentObject.swift; sourceTree = "<group>"; };
+		0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundEnvironmentObject.swift; sourceTree = "<group>"; };
 		0EE5B47E2351865300D5ED32 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0EEB20BD22B7700A0015F9E0 /* SettingsUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserDefaults.swift; sourceTree = "<group>"; };
@@ -591,6 +588,9 @@
 		0EF2864122CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableConfigurator.swift; sourceTree = "<group>"; };
 		0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ruuvi.swift"; sourceTree = "<group>"; };
 		0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityUnit.swift; sourceTree = "<group>"; };
+		0EF6F5BD235E01170052BA25 /* ForegroundRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForegroundRouter.swift; sourceTree = "<group>"; };
+		0EF6F5BF235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForegroundStepperTableViewCell.swift; sourceTree = "<group>"; };
+		0EF6F5C1235E02000052BA25 /* ForegroundTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForegroundTableViewController.swift; sourceTree = "<group>"; };
 		0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistence.swift; sourceTree = "<group>"; };
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
@@ -1555,8 +1555,8 @@
 		0E9D5F1E2351BCBA0076FFD8 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				0E9D5F1F2351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift */,
-				0E9D5F212351BE670076FFD8 /* DaemonsStepperTableViewCell.swift */,
+				0EF6F5BF235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift */,
+				0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1803,7 +1803,7 @@
 		0EBAF063232001080025A191 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				0ECFF34F235056770061D11B /* Daemons */,
+				0ECFF34F235056770061D11B /* Foreground */,
 				0EBAF066232005600025A191 /* Language */,
 			);
 			path = Submodules;
@@ -1919,16 +1919,16 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
-		0ECFF34F235056770061D11B /* Daemons */ = {
+		0ECFF34F235056770061D11B /* Foreground */ = {
 			isa = PBXGroup;
 			children = (
-				0ECFF35623505F8D0061D11B /* Daemons.storyboard */,
+				0ECFF35623505F8D0061D11B /* Foreground.storyboard */,
 				0ECFF353235056920061D11B /* Assembly */,
 				0ECFF3522350568C0061D11B /* Presenter */,
 				0ECFF351235056870061D11B /* Router */,
 				0ECFF3502350567E0061D11B /* View */,
 			);
-			path = Daemons;
+			path = Foreground;
 			sourceTree = "<group>";
 		};
 		0ECFF3502350567E0061D11B /* View */ = {
@@ -1936,10 +1936,10 @@
 			children = (
 				0EE5B4802351AB3C00D5ED32 /* Table */,
 				0ECFF35C23506B8A0061D11B /* SwiftUI */,
-				0ECFF35F23506BD60061D11B /* DaemonsViewInput.swift */,
-				0ECFF35D23506BC40061D11B /* DaemonsViewOutput.swift */,
-				0ECFF358235060EF0061D11B /* DaemonsViewController.swift */,
-				0ECFF36F23507CE80061D11B /* DaemonsViewModel.swift */,
+				0ECFF35F23506BD60061D11B /* ForegroundViewInput.swift */,
+				0ECFF35D23506BC40061D11B /* ForegroundViewOutput.swift */,
+				0ECFF358235060EF0061D11B /* ForegroundViewController.swift */,
+				0ECFF36F23507CE80061D11B /* ForegroundViewModel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1947,8 +1947,8 @@
 		0ECFF351235056870061D11B /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				0ECFF36723507A1A0061D11B /* DaemonsRouterInput.swift */,
-				0ECFF36923507A3B0061D11B /* DaemonsRouter.swift */,
+				0ECFF36723507A1A0061D11B /* ForegroundRouterInput.swift */,
+				0EF6F5BD235E01170052BA25 /* ForegroundRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -1956,8 +1956,8 @@
 		0ECFF3522350568C0061D11B /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
-				0ECFF35A2350618E0061D11B /* DaemonsModuleInput.swift */,
-				0ECFF365235079F50061D11B /* DaemonsPresenter.swift */,
+				0ECFF35A2350618E0061D11B /* ForegroundModuleInput.swift */,
+				0ECFF365235079F50061D11B /* ForegroundPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -1965,8 +1965,8 @@
 		0ECFF353235056920061D11B /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
-				0ECFF36B23507BC00061D11B /* DaemonsInitializer.swift */,
-				0ECFF36D23507BF00061D11B /* DaemonsConfigurator.swift */,
+				0ECFF36B23507BC00061D11B /* ForegroundInitializer.swift */,
+				0ECFF36D23507BF00061D11B /* ForegroundConfigurator.swift */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -1974,9 +1974,9 @@
 		0ECFF35C23506B8A0061D11B /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				0ECFF354235056DC0061D11B /* DaemonsList.swift */,
-				0ECFF36123506C050061D11B /* DaemonsRow.swift */,
-				0EE5B47C23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift */,
+				0ECFF354235056DC0061D11B /* ForegroundList.swift */,
+				0ECFF36123506C050061D11B /* ForegroundRow.swift */,
+				0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -2029,7 +2029,7 @@
 			isa = PBXGroup;
 			children = (
 				0E9D5F1E2351BCBA0076FFD8 /* Cells */,
-				0EA332A62351B9B800568AB7 /* DaemonsTableViewController.swift */,
+				0EF6F5C1235E02000052BA25 /* ForegroundTableViewController.swift */,
 			);
 			path = Table;
 			sourceTree = "<group>";
@@ -2683,7 +2683,7 @@
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
 				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
-				0ECFF35723505F8D0061D11B /* Daemons.storyboard in Resources */,
+				0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Dashboard.storyboard in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
@@ -2777,7 +2777,6 @@
 			files = (
 				0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */,
 				0E1C1E1122B756B40032F6CA /* DashboardTagView.swift in Sources */,
-				0EA332A72351B9B800568AB7 /* DaemonsTableViewController.swift in Sources */,
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
@@ -2788,11 +2787,12 @@
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
+				0EF6F5BE235E01170052BA25 /* ForegroundRouter.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
 				0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */,
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
-				0ECFF35B2350618E0061D11B /* DaemonsModuleInput.swift in Sources */,
+				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
@@ -2804,7 +2804,7 @@
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
-				0ECFF355235056DC0061D11B /* DaemonsList.swift in Sources */,
+				0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
@@ -2820,7 +2820,6 @@
 				0EEB215322B8FD1F0015F9E0 /* WelcomePresenter.swift in Sources */,
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* DashboardViewOutput.swift in Sources */,
-				0E9D5F222351BE670076FFD8 /* DaemonsStepperTableViewCell.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
@@ -2840,9 +2839,10 @@
 				0E1C1DC622B396040032F6CA /* UIViewController+Show.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0ED2364D234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift in Sources */,
+				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
-				0ECFF37023507CE80061D11B /* DaemonsViewModel.swift in Sources */,
+				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* DashboardTagViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E9D5F3C2355BDEF0076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemoniOS13.swift in Sources */,
@@ -2867,12 +2867,12 @@
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
-				0ECFF36823507A1A0061D11B /* DaemonsRouterInput.swift in Sources */,
+				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */,
-				0E9D5F202351BE3C0076FFD8 /* DaemonsSwitchTableViewCell.swift in Sources */,
+				0E9D5F202351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift in Sources */,
 				0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E046F4A22F1820400BD4E9C /* LocationPickerViewOutput.swift in Sources */,
@@ -2884,7 +2884,7 @@
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0E9D5F392355BD920076FFD8 /* RuuviTagBackgroundAdvertisementProcessDaemon.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
-				0EE5B47D23508F6D00D5ED32 /* DaemonsEnvironmentObject.swift in Sources */,
+				0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
@@ -2903,20 +2903,20 @@
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
+				0EF6F5C0235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
 				0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */,
-				0ECFF36023506BD60061D11B /* DaemonsViewInput.swift in Sources */,
+				0ECFF36023506BD60061D11B /* ForegroundViewInput.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
-				0ECFF36A23507A3B0061D11B /* DaemonsRouter.swift in Sources */,
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
 				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
 				0EE5B47F2351865300D5ED32 /* UserDefault.swift in Sources */,
 				0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */,
-				0ECFF35E23506BC40061D11B /* DaemonsViewOutput.swift in Sources */,
+				0ECFF35E23506BC40061D11B /* ForegroundViewOutput.swift in Sources */,
 				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
@@ -2988,7 +2988,7 @@
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
-				0ECFF36E23507BF00061D11B /* DaemonsConfigurator.swift in Sources */,
+				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
@@ -3010,9 +3010,9 @@
 				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
-				0ECFF36223506C050061D11B /* DaemonsRow.swift in Sources */,
+				0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
-				0ECFF366235079F50061D11B /* DaemonsPresenter.swift in Sources */,
+				0ECFF366235079F50061D11B /* ForegroundPresenter.swift in Sources */,
 				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */,
@@ -3027,9 +3027,9 @@
 				0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
-				0ECFF359235060EF0061D11B /* DaemonsViewController.swift in Sources */,
+				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
-				0ECFF36C23507BC00061D11B /* DaemonsInitializer.swift in Sources */,
+				0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

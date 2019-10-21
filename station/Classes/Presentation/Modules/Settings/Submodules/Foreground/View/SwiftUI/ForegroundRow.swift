@@ -2,11 +2,11 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-struct DaemonsRow: View {
+struct ForegroundRow: View {
 
-    @EnvironmentObject var env: DaemonsEnvironmentObject
+    @EnvironmentObject var env: ForegroundEnvironmentObject
     
-    var daemon: DaemonsViewModel
+    var daemon: ForegroundViewModel
 
     var index: Int {
         return env.daemons.firstIndex(where: { $0.id == daemon.id })!
@@ -20,9 +20,9 @@ struct DaemonsRow: View {
 }
 
 @available(iOS 13.0, *)
-struct DaemonsRow_Previews: PreviewProvider {
+struct ForegroundRow_Previews: PreviewProvider {
     static var previews: some View {
-        DaemonsRow(daemon: DaemonsViewModel())
+        ForegroundRow(daemon: ForegroundViewModel())
     }
 }
 #endif
