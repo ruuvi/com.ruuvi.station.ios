@@ -7,7 +7,7 @@ class MigrationManagerToVIPER: MigrationManager {
     
     func migrateIfNeeded() {
         let config = Realm.Configuration(
-            schemaVersion: 8,
+            schemaVersion: 9,
             migrationBlock: { migration, oldSchemaVersion in
                 if (oldSchemaVersion < 2) {
                     migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, newObject) in
@@ -85,6 +85,8 @@ class MigrationManagerToVIPER: MigrationManager {
                 } else if oldSchemaVersion < 8 {
                     migration.deleteData(forType: RuuviTagDataRealm.className())
                     migration.deleteData(forType: WebTagDataRealm.className())
+                } else if oldSchemaVersion < 9 {
+                    // do nothing
                 }
         })
         
