@@ -8,7 +8,8 @@ class RuuviTagDataRealm: Object {
     @objc dynamic var compoundKey: String = UUID().uuidString
     
     // all versions
-    @objc dynamic var rssi: Int = 0
+//    @objc dynamic var rssi: Int = 0
+    let rssi = RealmOptional<Int>()
     let celsius = RealmOptional<Double>()
     let humidity = RealmOptional<Double>()
     let pressure = RealmOptional<Double>()
@@ -47,7 +48,7 @@ class RuuviTagDataRealm: Object {
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
-        self.rssi = data.rssi
+        self.rssi.value = data.rssi
         self.celsius.value = data.celsius
         self.humidity.value = data.humidity
         self.pressure.value = data.pressure

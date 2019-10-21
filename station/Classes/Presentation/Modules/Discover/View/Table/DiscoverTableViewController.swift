@@ -48,14 +48,26 @@ class DiscoverTableViewController: UITableViewController {
         didSet {
             shownDevices = devices
                 .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
-                .sorted(by: { $0.rssi > $1.rssi })
+                .sorted(by: {
+                    if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
+                        return rssi0 > rssi1
+                    } else {
+                        return false
+                    }
+                })
         }
     }
     var savedDevicesUUIDs: [String] = [String]() {
         didSet {
             shownDevices = devices
             .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
-            .sorted(by: { $0.rssi > $1.rssi })
+            .sorted(by: {
+                if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
+                    return rssi0 > rssi1
+                } else {
+                    return false
+                }
+            })
         }
     }
     
@@ -249,12 +261,16 @@ extension DiscoverTableViewController {
         }
         
         // RSSI
-        if (device.rssi < -80) {
-            cell.rssiImageView.image = UIImage(named: "icon-connection-1")
-        } else if (device.rssi < -50) {
-            cell.rssiImageView.image = UIImage(named: "icon-connection-2")
+        if let rssi = device.rssi {
+            if rssi < -80 {
+                cell.rssiImageView.image = UIImage(named: "icon-connection-1")
+            } else if rssi < -50 {
+                cell.rssiImageView.image = UIImage(named: "icon-connection-2")
+            } else {
+                cell.rssiImageView.image = UIImage(named: "icon-connection-3")
+            }
         } else {
-            cell.rssiImageView.image = UIImage(named: "icon-connection-3")
+            cell.rssiImageView.image = nil
         }
         
     }

@@ -138,7 +138,7 @@ struct DashboardTagViewModel {
         }
         pressure.value = ruuviTag.data.last?.pressure.value
         
-        rssi.value = ruuviTag.data.last?.rssi
+        rssi.value = ruuviTag.data.last?.rssi.value
         voltage.value = ruuviTag.data.last?.voltage.value
         
         date.value = ruuviTag.data.last?.date
