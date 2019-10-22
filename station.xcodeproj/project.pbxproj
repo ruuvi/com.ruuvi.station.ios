@@ -139,6 +139,8 @@
 		0E9959B1235ED65A001C37D8 /* BackgroundRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959B0235ED65A001C37D8 /* BackgroundRouter.swift */; };
 		0E9959B3235ED712001C37D8 /* BackgroundConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959B2235ED712001C37D8 /* BackgroundConfigurator.swift */; };
 		0E9959B5235ED75D001C37D8 /* BackgroundPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959B4235ED75D001C37D8 /* BackgroundPresenter.swift */; };
+		0E9959B8235EF24D001C37D8 /* HeartbeatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959B7235EF24D001C37D8 /* HeartbeatService.swift */; };
+		0E9959BB235EF40E001C37D8 /* HeartbeatServiceBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959BA235EF40E001C37D8 /* HeartbeatServiceBTKit.swift */; };
 		0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */; };
 		0E9D5F202351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */; };
 		0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
@@ -462,6 +464,8 @@
 		0E9959B0235ED65A001C37D8 /* BackgroundRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRouter.swift; sourceTree = "<group>"; };
 		0E9959B2235ED712001C37D8 /* BackgroundConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundConfigurator.swift; sourceTree = "<group>"; };
 		0E9959B4235ED75D001C37D8 /* BackgroundPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresenter.swift; sourceTree = "<group>"; };
+		0E9959B7235EF24D001C37D8 /* HeartbeatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatService.swift; sourceTree = "<group>"; };
+		0E9959BA235EF40E001C37D8 /* HeartbeatServiceBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatServiceBTKit.swift; sourceTree = "<group>"; };
 		0E9D0AAF231E9BD800C6BDA7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundSwitchTableViewCell.swift; sourceTree = "<group>"; };
@@ -1576,6 +1580,23 @@
 			path = Scroll;
 			sourceTree = "<group>";
 		};
+		0E9959B6235EF1E5001C37D8 /* Heartbeat */ = {
+			isa = PBXGroup;
+			children = (
+				0E9959B9235EF26E001C37D8 /* BTKit */,
+				0E9959B7235EF24D001C37D8 /* HeartbeatService.swift */,
+			);
+			path = Heartbeat;
+			sourceTree = "<group>";
+		};
+		0E9959B9235EF26E001C37D8 /* BTKit */ = {
+			isa = PBXGroup;
+			children = (
+				0E9959BA235EF40E001C37D8 /* HeartbeatServiceBTKit.swift */,
+			);
+			path = BTKit;
+			sourceTree = "<group>";
+		};
 		0E9D5F1E2351BCBA0076FFD8 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -2526,6 +2547,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD6D222BBD9C300EADFC6 /* Calibration */,
+				0E9959B6235EF1E5001C37D8 /* Heartbeat */,
 				0E046F5B22F18EB000BD4E9C /* Location */,
 				0EFDD6DA22BBDDBF00EADFC6 /* RuuviTag */,
 				0EDAC96622F2FF7500D0F6F2 /* WeatherProvider */,
@@ -3037,6 +3059,7 @@
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
+				0E9959BB235EF40E001C37D8 /* HeartbeatServiceBTKit.swift in Sources */,
 				0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */,
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
@@ -3102,6 +3125,7 @@
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* DashboardScrollConfigurator.swift in Sources */,
 				0EF6F5D1235E0D380052BA25 /* BackgroundTableViewController.swift in Sources */,
+				0E9959B8235EF24D001C37D8 /* HeartbeatService.swift in Sources */,
 				0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* DashboardRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,

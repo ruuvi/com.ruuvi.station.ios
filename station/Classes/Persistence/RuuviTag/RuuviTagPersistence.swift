@@ -6,6 +6,7 @@ protocol RuuviTagPersistence {
     func persist(ruuviTag: RuuviTag, name: String, humidityOffset: Double, humidityOffsetDate: Date?) -> Future<RuuviTag,RUError>
     func delete(ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
     func update(name: String, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
+    func update(keepConnection: Bool, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
     func update(humidityOffset: Double, date: Date, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
     func clearHumidityCalibration(of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError>
     func update(lastSyncDate: Date, for uuid: String) -> Future<Bool,RUError>

@@ -7,6 +7,7 @@ class BackgroundPresenter: NSObject, BackgroundModuleInput {
     var router: BackgroundRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
+    var heartbeatService: HeartbeatService!
     
     private var ruuviTagsToken: NotificationToken?
     private var ruuviTags: Results<RuuviTagRealm>? {
@@ -36,8 +37,23 @@ extension BackgroundPresenter {
             let viewModel = BackgroundViewModel()
             viewModel.name.value = ruuviTag.name
             viewModel.keepConnection.value = ruuviTag.keepConnection
+            bind(viewModel: viewModel, to: ruuviTag)
             return viewModel
         } ?? []
+    }
+    
+    private func bind(viewModel: BackgroundViewModel, to ruuviTag: RuuviTagRealm) {
+        bind(viewModel.keepConnection, fire: false) { (observer, keepConnection) in
+            if keepConnection.bound {
+                observer.heartbeatService.startKeepingConnection(to: ruuviTag).on(failure: { error in
+                    observer.errorPresenter.present(error: error)
+                })
+            } else {
+                observer.heartbeatService.stopKeepingConnection(to: ruuviTag).on(failure: { error in
+                    observer.errorPresenter.present(error: error)
+                })
+            }
+        }
     }
     
     private func startObservingRuuviTags() {
