@@ -4,13 +4,13 @@ import BTKit
 class CoreAssembly: Assembly {
     func assemble(container: Container) {
         
-        container.register(BTConnection.self) { r in
-            return BTKit.connection
+        container.register(BTScanner.self) { r in
+            return BTKit.foreground.scanner
         }.inObjectScope(.container)
         
-        container.register(BTScanner.self) { r in
-            return BTKit.scanner
-        }.inObjectScope(.container)
+        container.register(BTBackground.self) { r in
+            return BTKit.background
+        }
         
         container.register(LocationManager.self) { r in
             let manager = LocationManagerImpl()
