@@ -62,13 +62,15 @@ class HeartbeatServiceBTKit: HeartbeatService {
                 self?.errorPresenter.present(error: error)
             }
         }, heartbeat: { [weak self] (observer, device) in
-            print("heartbeat")
+//            print("heartbeat")
         }, disconnected: { [weak self] observer, result in
             switch result {
             case .just:
                 print("just disconnected")
             case .already:
                 print("already disconnected")
+            case .connected:
+                print("still connected")
             case .failure(let error):
                 self?.errorPresenter.present(error: error)
             }
@@ -83,6 +85,8 @@ class HeartbeatServiceBTKit: HeartbeatService {
                 print("just disconnected")
             case .already:
                 print("already disconnected")
+            case .connected:
+                print("still connected")
             case .failure(let error):
                 self?.errorPresenter.present(error: error)
             }
