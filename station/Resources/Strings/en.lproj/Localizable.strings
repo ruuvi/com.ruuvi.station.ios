@@ -32,6 +32,9 @@
 "About.More.header" = "MORE TO READ";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
  
+// Background
+"Background.navigationItem.title" = "Background";
+
 // Bluetooth Error
 "BluetoothError.disconnected" = "Disconnected";
 
@@ -126,6 +129,8 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
 "Settings.SectionHeader.Application.title" = "APPLICATION";
 "Settings.Label.Language.text" = "Language";
+"Settings.Label.Foreground" = "Foreground";
+"Settings.Label.Background" = "Background";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

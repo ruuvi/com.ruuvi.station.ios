@@ -138,6 +138,26 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="n15-Sp-8my">
+                                        <rect key="frame" x="0.0" y="323" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="n15-Sp-8my" id="F4Y-fj-GRF">
+                                            <rect key="frame" x="0.0" y="0.0" width="383" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Background" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tis-1n-KVL">
+                                                    <rect key="frame" x="20" y="11.5" width="92" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Tis-1n-KVL" firstAttribute="centerY" secondItem="F4Y-fj-GRF" secondAttribute="centerY" id="CO7-Si-cTB"/>
+                                                <constraint firstItem="Tis-1n-KVL" firstAttribute="leading" secondItem="F4Y-fj-GRF" secondAttribute="leading" constant="20" id="E3Y-KE-5Px"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -155,8 +175,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backgroundCell" destination="n15-Sp-8my" id="XhC-lX-w3N"/>
+                        <outlet property="backgroundTitleLabel" destination="Tis-1n-KVL" id="muv-El-96G"/>
                         <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
                         <outlet property="foregroundCell" destination="gWD-Bu-GUM" id="568-5T-CYJ"/>
+                        <outlet property="foregroundTitleLabel" destination="CdK-Qh-AQf" id="I76-HU-omN"/>
                         <outlet property="humidityUnitLabel" destination="bGS-es-4BZ" id="3Ok-bN-3Le"/>
                         <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
                         <outlet property="languageCell" destination="7Hf-la-egS" id="RhN-Ls-L2H"/>

@@ -62,15 +62,15 @@
             <objects>
                 <tableViewController storyboardIdentifier="ForegroundTableViewController" id="vIn-Xi-Mku" customClass="ForegroundTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="gsr-7l-fcU">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ForegroundSwitchTableViewCellReuseIdentifier" id="tVj-OS-6gR" customClass="ForegroundSwitchTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.5" width="600" height="43.5"/>
+                                <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tVj-OS-6gR" id="Fv1-DR-8SN">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save advertisements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aZ-xA-XHB">
@@ -80,7 +80,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g5J-eE-q7M">
-                                            <rect key="frame" x="529" y="6.5" width="51" height="31"/>
+                                            <rect key="frame" x="343" y="6.5" width="51" height="31"/>
                                             <connections>
                                                 <action selector="isOnSwitchValueChanged:" destination="tVj-OS-6gR" eventType="valueChanged" id="fzr-BK-l76"/>
                                             </connections>
@@ -99,10 +99,10 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ForegroundStepperTableViewCellReuseIdentifier" id="Yut-oe-khx" customClass="ForegroundStepperTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="99" width="600" height="43.5"/>
+                                <rect key="frame" x="0.0" y="99" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Yut-oe-khx" id="YHt-Am-HF1">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="shH-yE-orM">
@@ -112,7 +112,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="Mhv-xB-AFm">
-                                            <rect key="frame" x="486" y="6" width="94" height="32"/>
+                                            <rect key="frame" x="300" y="6" width="94" height="32"/>
                                             <connections>
                                                 <action selector="stepperValueChanged:" destination="Yut-oe-khx" eventType="valueChanged" id="08l-cz-2pE"/>
                                             </connections>
