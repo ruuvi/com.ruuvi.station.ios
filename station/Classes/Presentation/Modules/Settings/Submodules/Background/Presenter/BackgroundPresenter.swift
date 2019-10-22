@@ -58,6 +58,7 @@ extension BackgroundPresenter {
     
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self).filter("isConnectable = true")
+        ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
