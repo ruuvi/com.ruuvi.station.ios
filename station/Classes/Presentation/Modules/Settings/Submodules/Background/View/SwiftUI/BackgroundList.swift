@@ -4,8 +4,24 @@ import Localize_Swift
 
 @available(iOS 13.0, *)
 struct BackgroundList: View {
+    
+    @EnvironmentObject var env: BackgroundEnvironmentObject
+    
+    func index(of viewModel: BackgroundViewModel) -> Int {
+        return env.viewModels.firstIndex(where: { $0.id == viewModel.id })!
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+        List {
+            ForEach(env.viewModels) { viewModel in
+                Section() {
+                    Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].isOn.value.bound) {
+                        Text(viewModel.name.value.bound)
+                    }
+                }
+            }
+            
+        }.listStyle(GroupedListStyle())
     }
 }
 

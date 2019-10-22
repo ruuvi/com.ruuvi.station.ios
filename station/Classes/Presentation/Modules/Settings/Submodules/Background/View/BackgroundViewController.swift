@@ -6,10 +6,21 @@ import SwiftUI
 class BackgroundViewController: UIViewController {
     var output: BackgroundViewOutput!
     
-    var viewModels = [BackgroundViewModel]()
+    var viewModels = [BackgroundViewModel]() {
+        didSet {
+            if #available(iOS 13, *) {
+                env.viewModels = viewModels
+            }
+        }
+    }
     
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var listContainer: UIView!
+
+#if canImport(SwiftUI) && canImport(Combine)
+    @available(iOS 13, *)
+    private lazy var env = BackgroundEnvironmentObject()
+#endif
     
 }
 
@@ -42,7 +53,6 @@ extension BackgroundViewController {
     #if canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
-            let env = BackgroundEnvironmentObject()
             env.viewModels = viewModels
             return UIHostingController(coder: coder, rootView: BackgroundList().environmentObject(env))
         } else {
