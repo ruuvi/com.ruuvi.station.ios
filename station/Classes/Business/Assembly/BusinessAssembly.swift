@@ -20,6 +20,12 @@ class BusinessAssembly: Assembly {
             return service
         }
         
+        container.register(HeartbeatService.self) { r in
+            let service = HeartbeatServiceBTKit()
+            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            return service
+        }
+        
         container.register(LocationService.self) { r in
             let service = LocationServiceApple()
             return service
