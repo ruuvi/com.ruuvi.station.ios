@@ -6,6 +6,8 @@ class RuuviTagRealm: Object {
     @objc dynamic var name: String = ""
     @objc dynamic var mac: String?
     @objc dynamic var version: Int = 0
+    @objc dynamic var isConnectable: Bool = false
+    @objc dynamic var keepConnection: Bool = false
     
     // calibration
     @objc dynamic var humidityOffset: Double = 0
@@ -25,5 +27,6 @@ class RuuviTagRealm: Object {
         self.name = name
         self.mac = ruuviTag.mac
         self.version = ruuviTag.version
+        self.isConnectable = ruuviTag.isConnectable
     }
 }
