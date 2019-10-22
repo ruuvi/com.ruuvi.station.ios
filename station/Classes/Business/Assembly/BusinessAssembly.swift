@@ -23,6 +23,7 @@ class BusinessAssembly: Assembly {
         container.register(HeartbeatService.self) { r in
             let service = HeartbeatServiceBTKit()
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.connection = r.resolve(BTConnection.self)
             return service
         }
         
@@ -81,6 +82,7 @@ class BusinessAssembly: Assembly {
             service.calibrationService = r.resolve(CalibrationService.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            service.connection = r.resolve(BTConnection.self)
             return service
         }
         
