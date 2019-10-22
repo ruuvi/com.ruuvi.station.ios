@@ -24,4 +24,14 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
+    
+    func openBackground() {
+        let factory = StoryboardFactory(storyboardName: "Background")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: BackgroundModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
 }

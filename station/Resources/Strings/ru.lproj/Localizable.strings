@@ -32,6 +32,9 @@
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
+// Background
+"Background.navigationItem.title" = "Background";
+
 // Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
 
@@ -126,6 +129,8 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
 "Settings.SectionHeader.Application.title" = "ПРИЛОЖЕНИЕ";
 "Settings.Label.Language.text" = "Язык";
+"Settings.Label.Foreground" = "Foreground";
+"Settings.Label.Background" = "Background";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";

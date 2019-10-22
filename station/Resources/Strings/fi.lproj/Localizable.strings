@@ -32,6 +32,9 @@
 "About.More.header" = "LUE LISÄÄ";
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
  
+// Background
+"Background.navigationItem.title" = "Background";
+
 // Bluetooth Error
 "BluetoothError.disconnected" = "Disconnected";
 
@@ -126,6 +129,8 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
 "Settings.SectionHeader.Application.title" = "OHJELMA";
 "Settings.Label.Language.text" = "Kieli";
+"Settings.Label.Foreground" = "Foreground";
+"Settings.Label.Background" = "Background";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";

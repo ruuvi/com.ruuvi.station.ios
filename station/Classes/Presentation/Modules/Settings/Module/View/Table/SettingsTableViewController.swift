@@ -17,6 +17,9 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
     @IBOutlet weak var foregroundCell: UITableViewCell!
+    @IBOutlet weak var foregroundTitleLabel: UILabel!
+    @IBOutlet weak var backgroundTitleLabel: UILabel!
+    @IBOutlet weak var backgroundCell: UITableViewCell!
     
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
@@ -33,6 +36,8 @@ extension SettingsTableViewController: SettingsViewInput {
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(), forSegmentAt: 1)
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(), forSegmentAt: 2)
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
+        foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
+        backgroundTitleLabel.text = "Settings.Label.Background".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -115,6 +120,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnLanguage()
             case foregroundCell:
                 output.viewDidTapOnForeground()
+            case backgroundCell:
+                output.viewDidTapOnBackground()
             default:
                 break
             }
