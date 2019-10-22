@@ -15,7 +15,7 @@ struct BackgroundList: View {
         List {
             ForEach(env.viewModels) { viewModel in
                 Section() {
-                    Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].isOn.value.bound) {
+                    Toggle(keepConnection: self.$env.viewModels[self.index(of: viewModel)].keepConnection.value.bound) {
                         Text(viewModel.name.value.bound)
                     }
                 }

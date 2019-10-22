@@ -35,7 +35,7 @@ extension BackgroundPresenter {
         view.viewModels = ruuviTags?.map { ruuviTag in
             let viewModel = BackgroundViewModel()
             viewModel.name.value = ruuviTag.name
-            viewModel.isOn.value = ruuviTag.keepConnection
+            viewModel.keepConnection.value = ruuviTag.keepConnection
             return viewModel
         } ?? []
     }
