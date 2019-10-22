@@ -40,11 +40,6 @@ class BusinessAssembly: Assembly {
             return daemon
         }
         
-        container.register(RuuviTagBackgroundScannerDaemon.self) { r in
-            let daemon = RuuviTagBackgroundScannerDaemonBTKit()
-            return daemon
-        }
-        
         container.register(RuuviTagConnectionDaemon.self) { r in
             let daemon = RuuviTagConnectionDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
