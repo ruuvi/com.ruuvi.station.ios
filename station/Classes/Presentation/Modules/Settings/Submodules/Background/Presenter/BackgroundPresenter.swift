@@ -2,7 +2,7 @@ import Foundation
 import BTKit
 import RealmSwift
 
-class BackgroundPresenter: BackgroundModuleInput {
+class BackgroundPresenter: NSObject, BackgroundModuleInput {
     weak var view: BackgroundViewInput!
     var router: BackgroundRouterInput!
     var realmContext: RealmContext!
