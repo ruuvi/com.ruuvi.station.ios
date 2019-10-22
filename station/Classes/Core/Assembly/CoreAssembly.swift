@@ -4,6 +4,10 @@ import BTKit
 class CoreAssembly: Assembly {
     func assemble(container: Container) {
         
+        container.register(BTConnection.self) { r in
+            return BTKit.connection
+        }.inObjectScope(.container)
+        
         container.register(BTScanner.self) { r in
             return BTKit.scanner
         }.inObjectScope(.container)

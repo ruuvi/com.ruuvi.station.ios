@@ -6,6 +6,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     var ruuviTagPersistence: RuuviTagPersistence!
     var calibrationService: CalibrationService!
     var backgroundPersistence: BackgroundPersistence!
+    var connection: BTConnection!
     
     private var connectToken: ObservationToken?
     private var logToken: ObservationToken?
@@ -33,7 +34,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     
     func loadHistory(uuid: String, from: Date) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
-        connectToken = BTKit.connection.establish(for: self, uuid: uuid) { (observer, result) in
+        connectToken = connection.establish(for: self, uuid: uuid) { (observer, result) in
             observer.connectToken?.invalidate()
             switch result {
             case .failure(let error):
@@ -47,7 +48,7 @@ class RuuviTagServiceImpl: RuuviTagService {
                     case .success(let logs):
                         let op = observer.ruuviTagPersistence.persist(logs: logs, for: uuid)
                         op.on(success: { _ in
-                            observer.dropToken = BTKit.connection.drop(for: observer, uuid: uuid) { (observer, result) in
+                            observer.dropToken = observer.connection.drop(for: observer, uuid: uuid) { (observer, result) in
                                 observer.dropToken?.invalidate()
                                 switch result {
                                 case .failure(let error):
@@ -61,7 +62,7 @@ class RuuviTagServiceImpl: RuuviTagService {
                         })
                     case .failure(let error):
                         promise.fail(error: .btkit(error))
-                        observer.dropToken = BTKit.connection.drop(for: observer, uuid: uuid) { (observer, result) in
+                        observer.dropToken = observer.connection.drop(for: observer, uuid: uuid) { (observer, result) in
                             observer.dropToken?.invalidate()
                             switch result {
                             case .failure(let error):
