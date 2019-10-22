@@ -10,6 +10,7 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
+            service.heartbeatService = r.resolve(HeartbeatService.self)
             return service
         }.inObjectScope(.container)
         
@@ -24,6 +25,8 @@ class BusinessAssembly: Assembly {
             let service = HeartbeatServiceBTKit()
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.connection = r.resolve(BTConnection.self)
+            service.realmContext = r.resolve(RealmContext.self)
+            service.errorPresenter = r.resolve(ErrorPresenter.self)
             return service
         }
         
