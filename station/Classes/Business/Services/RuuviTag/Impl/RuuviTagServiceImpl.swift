@@ -33,6 +33,14 @@ class RuuviTagServiceImpl: RuuviTagService {
     
     func loadHistory(uuid: String, from: Date) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
+        BTKit.background.services.ruuvi.nus.log(for: self, uuid: uuid, from: Date.distantPast, result: { (observer, result) in
+            switch result {
+            case .success(let logs):
+                print(logs.count)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
 //        connectToken = connection.establish(for: self, uuid: uuid) { (observer, result) in
 //            observer.connectToken?.invalidate()
 //            switch result {
