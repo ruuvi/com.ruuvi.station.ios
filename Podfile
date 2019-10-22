@@ -2,6 +2,8 @@ platform :ios, '10.0'
 use_frameworks!
 inhibit_all_warnings!
 
+install! 'cocoapods', :disable_input_output_paths => true
+
 target 'station' do
   pod 'BTKit', :path => '../BTKit'
   pod 'Charts'

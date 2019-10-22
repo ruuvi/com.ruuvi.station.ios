@@ -6,9 +6,9 @@ import RealmSwift
 class HeartbeatServiceBTKit: HeartbeatService {
     
     var ruuviTagPersistence: RuuviTagPersistence!
-    var connection: BTConnection!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
+    var background: BTBackground!
     
     private var ruuviTags = [RuuviTagRealm]()
     private var ruuviTagsToken: NotificationToken?
@@ -50,7 +50,7 @@ class HeartbeatServiceBTKit: HeartbeatService {
     
     private func startConnection(to ruuviTag: RuuviTagRealm) {
         stopTokens[ruuviTag.uuid]?.invalidate()
-        startTokens[ruuviTag.uuid] = connection.start(for: self, uuid: ruuviTag.uuid, connected: { [weak self] (observer, result) in
+        startTokens[ruuviTag.uuid] = background.connect(for: self, uuid: ruuviTag.uuid, connected: { [weak self] (observer, result) in
             switch result {
             case .already:
                 print("already connected")
@@ -77,7 +77,7 @@ class HeartbeatServiceBTKit: HeartbeatService {
     
     private func stopConnection(to ruuviTag: RuuviTagRealm) {
         startTokens[ruuviTag.uuid]?.invalidate()
-        stopTokens[ruuviTag.uuid] = connection.stop(for: self, uuid: ruuviTag.uuid, result: { [weak self] (observer, result) in
+        stopTokens[ruuviTag.uuid] = background.disconnect(for: self, uuid: ruuviTag.uuid, result: { [weak self] (observer, result) in
             switch result {
             case .just:
                 print("just disconnected")
