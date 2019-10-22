@@ -13,7 +13,7 @@ struct ForegroundRow: View {
     }
     
     var body: some View {
-        Toggle(keepConnection: $env.daemons[index].keepConnection.value.bound) {
+        Toggle(isOn: $env.daemons[index].isOn.value.bound) {
             Text(daemon.title)
         }
     }
