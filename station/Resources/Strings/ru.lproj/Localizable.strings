@@ -34,7 +34,7 @@
 
 // Background
 "Background.navigationItem.title" = "Background";
-"Background.PresentNotifications.title" = "Notifications";
+"Background.PresentNotifications.title" = "Present Notifications";
 "Background.KeepConnection.title" = "Keep connection";
 
 // Bluetooth Error
