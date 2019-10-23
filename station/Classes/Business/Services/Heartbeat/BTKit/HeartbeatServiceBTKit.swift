@@ -71,7 +71,7 @@ class HeartbeatServiceBTKit: HeartbeatService {
             switch result {
             case .failure(let error):
                 observer.errorPresenter.present(error: error)
-            case .connected:
+            case .stillConnected:
                 break // do nothing
             case .already:
                 break // do nothing
@@ -95,7 +95,7 @@ class HeartbeatServiceBTKit: HeartbeatService {
                 }
             case .already:
                 break // do nothing
-            case .connected:
+            case .stillConnected:
                 break // do nothing
             }
         })
