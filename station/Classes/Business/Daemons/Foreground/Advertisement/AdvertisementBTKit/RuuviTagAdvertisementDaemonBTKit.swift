@@ -4,7 +4,7 @@ import RealmSwift
 class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     
     var ruuviTagPersistence: RuuviTagPersistence!
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     var settings: Settings!
     
     private var token: NotificationToken?
@@ -77,7 +77,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         observeTokens.forEach( { $0.invalidate() })
         observeTokens.removeAll()
         for ruuviTag in ruuviTags {
-            observeTokens.append(scanner.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
+            observeTokens.append(foreground.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag {
                     let pair = RuuviTagDaemonPair(ruuviTag: ruuviTag, device: tag)

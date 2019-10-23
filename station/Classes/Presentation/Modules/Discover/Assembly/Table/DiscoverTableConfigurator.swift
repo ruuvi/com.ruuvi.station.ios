@@ -17,7 +17,7 @@ class DiscoverTableConfigurator {
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
-        presenter.scanner = r.resolve(BTScanner.self)
+        presenter.foreground = r.resolve(BTForeground.self)
         
         view.output = presenter
     }

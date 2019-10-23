@@ -6,7 +6,7 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
     var router: HumidityCalibrationRouterInput!
     var calibrationService: CalibrationService!
     var errorPresenter: ErrorPresenter!
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     
     private var ruuviTag: RuuviTagRealm!
     private var humidity: Double!
@@ -61,7 +61,7 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
 // MARK: - Scanning
 extension HumidityCalibrationPresenter {
     private func startScanningHumidity() {
-        scanner.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
+        foreground.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
             if let tag = device.ruuvi?.tag {
                 self?.humidity = tag.humidity
                 self?.updateView()

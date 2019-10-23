@@ -4,7 +4,7 @@ import BTKit
 
 class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon {
     
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     var ruuviTagPersistence: RuuviTagPersistence!
     var settings: Settings!
     
@@ -52,7 +52,7 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
         start { [weak self] in
             guard let sSelf = self else { return }
             sSelf.realm = try! Realm()
-            sSelf.scanToken = sSelf.scanner.scan(sSelf, options: [.callbackQueue(.untouch)]) { (observer, device) in
+            sSelf.scanToken = sSelf.foreground.scan(sSelf, options: [.callbackQueue(.untouch)]) { (observer, device) in
                 if let ruuviTag = device.ruuvi?.tag, ruuviTag.isConnectable {
                     sSelf.perform(#selector(RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped:)),
                     on: sSelf.thread,

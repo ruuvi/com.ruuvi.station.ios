@@ -9,7 +9,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var errorPresenter: ErrorPresenter!
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     var activityPresenter: ActivityPresenter!
     var ruuviTagService: RuuviTagService!
     
@@ -301,7 +301,7 @@ extension TagChartsPresenter {
     }
     
     private func startObservingBluetoothState() {
-        stateToken = scanner.state(self, closure: { (observer, state) in
+        stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn {
                 observer.view.showBluetoothDisabled()
             }

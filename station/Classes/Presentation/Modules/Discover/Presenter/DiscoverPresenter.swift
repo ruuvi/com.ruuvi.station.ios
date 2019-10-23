@@ -9,7 +9,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var errorPresenter: ErrorPresenter!
     var ruuviTagService: RuuviTagService!
     var webTagService: WebTagService!
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     
@@ -55,7 +55,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
         view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current, icon: UIImage(named: "icon-webtag-current")),
                         DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual, icon: UIImage(named: "icon-webtag-map"))]
-        view.isBluetoothEnabled = scanner.bluetoothState == .poweredOn
+        view.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
         if !view.isBluetoothEnabled && !isOpenedFromWelcome {
             view.showBluetoothDisabled()
         }
@@ -197,7 +197,7 @@ extension DiscoverPresenter {
     }
     
     private func startObservingLost() {
-        lostToken = scanner.lost(self, options: [.lostDeviceDelay(10)], closure: { (observer, device) in
+        lostToken = foreground.lost(self, options: [.lostDeviceDelay(10)], closure: { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
                 observer.ruuviTags.remove(ruuviTag)
             }
@@ -209,7 +209,7 @@ extension DiscoverPresenter {
     }
     
     private func startObservingBluetoothState() {
-        stateToken = scanner.state(self, closure: { (observer, state) in
+        stateToken = foreground.state(self, closure: { (observer, state) in
             observer.view.isBluetoothEnabled = state == .poweredOn
             if state == .poweredOff {
                 observer.ruuviTags.removeAll()
@@ -224,7 +224,7 @@ extension DiscoverPresenter {
     }
     
     private func startScanning() {
-        scanToken = scanner.scan(self) { (observer, device) in
+        scanToken = foreground.scan(self) { (observer, device) in
             if let ruuviTag = device.ruuvi?.tag {
                 // when mode is changed, the device dhould be replaced
                 if let sameUUID = observer.ruuviTags.first(where: { $0.uuid == ruuviTag.uuid }), sameUUID != ruuviTag {
