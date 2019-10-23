@@ -6,6 +6,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     var ruuviTagPersistence: RuuviTagPersistence!
     var calibrationService: CalibrationService!
     var backgroundPersistence: BackgroundPersistence!
+    var background: BTBackground!
     
     private var connectToken: ObservationToken?
     private var logToken: ObservationToken?
@@ -33,7 +34,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     
     func loadHistory(uuid: String, from: Date) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
-        BTKit.background.services.ruuvi.nus.log(for: self, uuid: uuid, from: Date.distantPast, result: { (observer, result) in
+        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: Date.distantPast, options: [.callbackQueue(.untouch)], result: { (observer, result) in
             switch result {
             case .success(let logs):
                 let op = observer.ruuviTagPersistence.persist(logs: logs, for: uuid)

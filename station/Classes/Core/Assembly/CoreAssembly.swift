@@ -10,7 +10,7 @@ class CoreAssembly: Assembly {
         
         container.register(BTBackground.self) { r in
             return BTKit.background
-        }
+        }.inObjectScope(.container)
         
         container.register(LocationManager.self) { r in
             let manager = LocationManagerImpl()
