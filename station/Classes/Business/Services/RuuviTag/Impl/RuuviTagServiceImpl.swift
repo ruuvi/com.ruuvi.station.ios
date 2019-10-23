@@ -36,53 +36,16 @@ class RuuviTagServiceImpl: RuuviTagService {
         BTKit.background.services.ruuvi.nus.log(for: self, uuid: uuid, from: Date.distantPast, result: { (observer, result) in
             switch result {
             case .success(let logs):
-                print(logs.count)
+                let op = observer.ruuviTagPersistence.persist(logs: logs, for: uuid)
+                op.on(success: { _ in
+                    promise.succeed(value: true)
+                }, failure: { (error) in
+                    promise.fail(error: error)
+                })
             case .failure(let error):
-                print(error.localizedDescription)
+                promise.fail(error: .btkit(error))
             }
         })
-//        connectToken = connection.establish(for: self, uuid: uuid) { (observer, result) in
-//            observer.connectToken?.invalidate()
-//            switch result {
-//            case .failure(let error):
-//                promise.fail(error: .btkit(error))
-//            case .disconnected:
-//                promise.fail(error: .bluetooth(.disconnected))
-//            default:
-//                observer.logToken = BTKit.service.ruuvi.uart.nus.log(for: observer, uuid: uuid, from: Date.distantPast) { (observer, result) in
-//                    observer.logToken?.invalidate()
-//                    switch result {
-//                    case .success(let logs):
-//                        let op = observer.ruuviTagPersistence.persist(logs: logs, for: uuid)
-//                        op.on(success: { _ in
-//                            observer.dropToken = observer.connection.drop(for: observer, uuid: uuid) { (observer, result) in
-//                                observer.dropToken?.invalidate()
-//                                switch result {
-//                                case .failure(let error):
-//                                    promise.fail(error: .btkit(error))
-//                                default:
-//                                    promise.succeed(value: true)
-//                                }
-//                            }
-//                        }, failure: { (error) in
-//                            promise.fail(error: error)
-//                        })
-//                    case .failure(let error):
-//                        promise.fail(error: .btkit(error))
-//                        observer.dropToken = observer.connection.drop(for: observer, uuid: uuid) { (observer, result) in
-//                            observer.dropToken?.invalidate()
-//                            switch result {
-//                            case .failure(let error):
-//                                promise.fail(error: .btkit(error))
-//                            default:
-//                                break
-//                            }
-//                        }
-//                    }
-//                    
-//                }
-//            }
-//        }
         return promise.future
     }
     
