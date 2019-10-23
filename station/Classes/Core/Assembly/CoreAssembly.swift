@@ -4,8 +4,8 @@ import BTKit
 class CoreAssembly: Assembly {
     func assemble(container: Container) {
         
-        container.register(BTScanner.self) { r in
-            return BTKit.foreground.scanner
+        container.register(BTForeground.self) { r in
+            return BTKit.foreground
         }.inObjectScope(.container)
         
         container.register(BTBackground.self) { r in

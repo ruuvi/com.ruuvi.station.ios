@@ -9,7 +9,7 @@ class DashboardPresenter: DashboardModuleInput {
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     var webTagService: WebTagService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
@@ -175,7 +175,7 @@ extension DashboardPresenter {
     }
 
     private func startObservingBluetoothState() {
-        stateToken = scanner.state(self, closure: { (observer, state) in
+        stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn {
                 observer.view.showBluetoothDisabled()
             }
@@ -201,7 +201,7 @@ extension DashboardPresenter {
         observeTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
-                observeTokens.append(scanner.observe(self, uuid: uuid) { [weak self] (observer, device) in
+                observeTokens.append(foreground.observe(self, uuid: uuid) { [weak self] (observer, device) in
                     if let ruuviTag = device.ruuvi?.tag,
                         let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
                         viewModel.update(with: ruuviTag)

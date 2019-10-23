@@ -45,7 +45,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
-            daemon.scanner = r.resolve(BTScanner.self)
+            daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }
@@ -53,7 +53,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviTagConnectionDaemon.self) { r in
             let daemon = RuuviTagConnectionDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
-            daemon.scanner = r.resolve(BTScanner.self)
+            daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }.inObjectScope(.container)

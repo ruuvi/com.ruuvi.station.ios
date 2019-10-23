@@ -9,7 +9,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! { didSet { photoPickerPresenter.delegate = self  } }
-    var scanner: BTScanner!
+    var foreground: BTForeground!
     var calibrationService: CalibrationService!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
@@ -189,7 +189,7 @@ extension TagSettingsPresenter {
     }
     
     private func startScanningRuuviTag() {
-        observeToken = scanner.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
+        observeToken = foreground.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
