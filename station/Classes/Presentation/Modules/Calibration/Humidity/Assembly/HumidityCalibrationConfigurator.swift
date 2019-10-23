@@ -14,6 +14,7 @@ class HumidityCalibrationConfigurator {
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
+        presenter.background = r.resolve(BTBackground.self)
         
         view.output = presenter
     }

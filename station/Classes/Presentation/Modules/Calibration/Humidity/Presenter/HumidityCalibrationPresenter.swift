@@ -7,9 +7,17 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
     var calibrationService: CalibrationService!
     var errorPresenter: ErrorPresenter!
     var foreground: BTForeground!
+    var background: BTBackground!
     
     private var ruuviTag: RuuviTagRealm!
     private var humidity: Double!
+    private var advertisementToken: ObservationToken?
+    private var heartbeatToken: ObservationToken?
+    
+    deinit {
+        advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
+    }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double) {
         self.ruuviTag = ruuviTag
@@ -61,7 +69,15 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
 // MARK: - Scanning
 extension HumidityCalibrationPresenter {
     private func startScanningHumidity() {
-        foreground.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
+        advertisementToken?.invalidate()
+        advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
+            if let tag = device.ruuvi?.tag {
+                self?.humidity = tag.humidity
+                self?.updateView()
+            }
+        }
+        heartbeatToken?.invalidate()
+        heartbeatToken = background.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
             if let tag = device.ruuvi?.tag {
                 self?.humidity = tag.humidity
                 self?.updateView()
