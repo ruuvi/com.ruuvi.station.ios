@@ -23,12 +23,12 @@ class BusinessAssembly: Assembly {
         
         container.register(HeartbeatService.self) { r in
             let service = HeartbeatServiceBTKit()
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            service.realmContext = r.resolve(RealmContext.self)
             service.errorPresenter = r.resolve(ErrorPresenter.self)
             service.background = r.resolve(BTBackground.self)
+            service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+            service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return service
-        }
+        }.inObjectScope(.container)
         
         container.register(LocationService.self) { r in
             let service = LocationServiceApple()

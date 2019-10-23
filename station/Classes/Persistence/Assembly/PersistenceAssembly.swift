@@ -14,6 +14,11 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
         
+        container.register(ConnectionPersistence.self) { r in
+            let persistence = ConnectionPersistenceUserDefaults()
+            return persistence
+        }
+        
         container.register(ImagePersistence.self) { r in
             let persistence = ImagePersistenceDocuments()
             return persistence

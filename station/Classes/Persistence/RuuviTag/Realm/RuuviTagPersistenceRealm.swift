@@ -34,6 +34,20 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     }
     
     @discardableResult
+    func update(isConnectable: Bool, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        do {
+            try realm.write {
+                ruuviTag.isConnectable = isConnectable
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+    
+    @discardableResult
     func update(version: Int, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
         do {
@@ -222,32 +236,6 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             do {
                 try context.main.write {
                     ruuviTag.name = name
-                }
-                promise.succeed(value: true)
-            } catch {
-                promise.fail(error: .persistence(error))
-            }
-        }
-        return promise.future
-    }
-    
-    func update(keepConnection: Bool, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
-        let promise = Promise<Bool,RUError>()
-        if ruuviTag.realm == context.bg {
-            context.bgWorker.enqueue {
-                do {
-                    try self.context.bg.write {
-                        ruuviTag.keepConnection = keepConnection
-                    }
-                    promise.succeed(value: true)
-                } catch {
-                    promise.fail(error: .persistence(error))
-                }
-            }
-        } else {
-            do {
-                try context.main.write {
-                    ruuviTag.keepConnection = keepConnection
                 }
                 promise.succeed(value: true)
             } catch {

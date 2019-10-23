@@ -1,103 +1,108 @@
 import Foundation
-import Future
 import BTKit
-import RealmSwift
 
 class HeartbeatServiceBTKit: HeartbeatService {
     
-    var ruuviTagPersistence: RuuviTagPersistence!
-    var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var background: BTBackground!
+    var localNotificationsManager: LocalNotificationsManager!
+    var connectionPersistence: ConnectionPersistence!
     
-    private var ruuviTags = [RuuviTagRealm]()
-    private var ruuviTagsToken: NotificationToken?
-    private var startTokens = [String: ObservationToken]()
-    private var stopTokens = [String: ObservationToken]()
+    private var connectTokens = [String: ObservationToken]()
+    private var disconnectTokens = [String: ObservationToken]()
+    private var connectionAddedToken: NSObjectProtocol?
+    private var connectionRemovedToken: NSObjectProtocol?
     
-    func start() {
-        let results = realmContext.main.objects(RuuviTagRealm.self).filter("keepConnection == true")
-        ruuviTags = Array(results)
-        ruuviTagsToken?.invalidate()
-        ruuviTagsToken = results.observe { [weak self] (change) in
-            switch change {
-            case .initial(let ruuviTags):
-                self?.ruuviTags = Array(ruuviTags)
-                ruuviTags.forEach({ self?.startConnection(to: $0) })
-            case .update(let ruuviTags, let deletions, let insertions, _):
-                deletions.forEach({
-                    if let ruuviTag = self?.ruuviTags[$0] {
-                        self?.stopConnection(to: ruuviTag)
-                    }
-                })
-                self?.ruuviTags = Array(ruuviTags)
-                insertions.forEach({
-                    if let ruuviTag = self?.ruuviTags[$0] {
-                        self?.startConnection(to: ruuviTag)
-                    }
-                })
-            case .error(let error):
-                self?.errorPresenter.present(error: error)
+    init() {
+        connectionAddedToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartToKeepConnection, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[ConnectionPersistenceDidStartToKeepConnectionKey.uuid] as? String {
+                self?.connect(uuid: uuid)
             }
+        })
+        
+        connectionRemovedToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[ConnectionPersistenceDidStopToKeepConnectionKey.uuid] as? String {
+                self?.disconnect(uuid: uuid)
+            }
+        })
+    }
+    
+    deinit {
+        invalidateTokens()
+        if let connectionAddedToken = connectionAddedToken {
+            NotificationCenter.default.removeObserver(connectionAddedToken)
+        }
+        if let connectionRemovedToken = connectionRemovedToken {
+            NotificationCenter.default.removeObserver(connectionRemovedToken)
         }
     }
     
+    func start() {
+        invalidateTokens()
+        connectionPersistence.keepConnectionUUIDs.forEach({ connect(uuid: $0)})
+    }
+    
     func stop() {
-        ruuviTagsToken?.invalidate()
-        ruuviTags.forEach({ stopConnection(to: $0) })
-        stopTokens.values.forEach({ $0.invalidate() } )
+        invalidateTokens()
+        connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
+        
     }
     
-    private func startConnection(to ruuviTag: RuuviTagRealm) {
-        stopTokens[ruuviTag.uuid]?.invalidate()
-        startTokens[ruuviTag.uuid] = background.connect(for: self, uuid: ruuviTag.uuid, connected: { [weak self] (observer, result) in
+    private func connect(uuid: String) {
+        disconnectTokens[uuid]?.invalidate()
+        connectTokens[uuid] = background.connect(for: self, uuid: uuid, connected: { (observer, result) in
             switch result {
-            case .already:
-                print("already connected")
-            case .just:
-                print("just connected")
+            case .failure(let error):
+                observer.errorPresenter.present(error: error)
             case .disconnected:
-                print("disconnected")
-            case .failure(let error):
-                self?.errorPresenter.present(error: error)
-            }
-        }, heartbeat: { [weak self] (observer, device) in
-//            print("heartbeat")
-        }, disconnected: { [weak self] observer, result in
-            switch result {
-            case .just:
-                print("just disconnected")
+                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                    observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                }
             case .already:
-                print("already disconnected")
-            case .connected:
-                print("still connected")
+                break // do nothing
+            case .just:
+                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                    observer.localNotificationsManager.showDidConnect(uuid: uuid)
+                }
+            }
+        }, disconnected: { observer, result in
+            switch result {
             case .failure(let error):
-                self?.errorPresenter.present(error: error)
+                observer.errorPresenter.present(error: error)
+            case .connected:
+                break // do nothing
+            case .already:
+                break // do nothing
+            case .just:
+                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                    observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                }
             }
         })
     }
     
-    private func stopConnection(to ruuviTag: RuuviTagRealm) {
-        startTokens[ruuviTag.uuid]?.invalidate()
-        stopTokens[ruuviTag.uuid] = background.disconnect(for: self, uuid: ruuviTag.uuid, result: { [weak self] (observer, result) in
+    private func disconnect(uuid: String) {
+        connectTokens[uuid]?.invalidate()
+        disconnectTokens[uuid] = background.disconnect(for: self, uuid: uuid, result: { (observer, result) in
             switch result {
-            case .just:
-                print("just disconnected")
-            case .already:
-                print("already disconnected")
-            case .connected:
-                print("still connected")
             case .failure(let error):
-                self?.errorPresenter.present(error: error)
+                observer.errorPresenter.present(error: error)
+            case .just:
+                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                    observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                }
+            case .already:
+                break // do nothing
+            case .connected:
+                break // do nothing
             }
         })
     }
     
-    func startKeepingConnection(to ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
-        return ruuviTagPersistence.update(keepConnection: true, of: ruuviTag)
-    }
-    
-    func stopKeepingConnection(to ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
-        return ruuviTagPersistence.update(keepConnection: false, of: ruuviTag)
+    private func invalidateTokens() {
+        connectTokens.values.forEach({ $0.invalidate() })
+        connectTokens.removeAll()
+        disconnectTokens.values.forEach({ $0.invalidate() })
+        disconnectTokens.removeAll()
     }
 }

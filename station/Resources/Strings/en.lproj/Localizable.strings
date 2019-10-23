@@ -34,6 +34,8 @@
  
 // Background
 "Background.navigationItem.title" = "Background";
+"Background.PresentNotifications.title" = "Notifications";
+"Background.KeepConnection.title" = "Keep connection";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Disconnected";
@@ -100,6 +102,10 @@
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
+
+// LocalNotificationsManager
+"LocalNotificationsManager.DidConnect.title" = "Connected";
+"LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";

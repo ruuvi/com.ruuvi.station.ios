@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -84,6 +84,10 @@
 		0E1C1E1122B756B40032F6CA /* DashboardTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */; };
 		0E1C1E1322B756D30032F6CA /* DashboardTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */; };
 		0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */; };
+		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
+		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
+		0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE723602E2500D600DB /* ConnectionPersistence.swift */; };
+		0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -407,6 +411,10 @@
 		0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTagView.swift; sourceTree = "<group>"; };
 		0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DashboardTagView.xib; sourceTree = "<group>"; };
 		0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRouterDelegate.swift; sourceTree = "<group>"; };
+		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
+		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
+		0E390FE723602E2500D600DB /* ConnectionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistence.swift; sourceTree = "<group>"; };
+		0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
@@ -990,6 +998,7 @@
 				0E1C1DA922B387BE0032F6CA /* Assembly */,
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
+				0E390FE623602E0D00D600DB /* Connection */,
 				0E5C301D22D0904800B52E39 /* Image */,
 				0E1C1D9322B362420032F6CA /* Realm */,
 				0E1C1D9922B364FC0032F6CA /* RuuviTag */,
@@ -1296,6 +1305,40 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		0E390FE0236021BC00D600DB /* LocalNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				0E390FE3236021EE00D600DB /* Impl */,
+				0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */,
+			);
+			path = LocalNotifications;
+			sourceTree = "<group>";
+		};
+		0E390FE3236021EE00D600DB /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
+		0E390FE623602E0D00D600DB /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				0E390FE923602E3200D600DB /* UserDefaults */,
+				0E390FE723602E2500D600DB /* ConnectionPersistence.swift */,
+			);
+			path = Connection;
+			sourceTree = "<group>";
+		};
+		0E390FE923602E3200D600DB /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
 		0E502FB822B27D3100E8A6CC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
@@ -1323,6 +1366,7 @@
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
 				0E9F97A922EB1CBC0015ADE2 /* Location */,
+				0E390FE0236021BC00D600DB /* LocalNotifications */,
 				0E5C300D22CF633600B52E39 /* Permissions */,
 				0ECDF1B72313E04500A09ACA /* PushNotifications */,
 			);
@@ -2898,6 +2942,7 @@
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
+				0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language.swift in Sources */,
@@ -2918,6 +2963,7 @@
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E1C1DDA22B3C1AF0032F6CA /* DashboardScrollViewController.swift in Sources */,
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
+				0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */,
 				0EEB215322B8FD1F0015F9E0 /* WelcomePresenter.swift in Sources */,
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* DashboardViewOutput.swift in Sources */,
@@ -2970,6 +3016,7 @@
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
+				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
@@ -2993,6 +3040,7 @@
 				0ED8206E235E0E8C00874BCB /* BackgroundViewModel.swift in Sources */,
 				0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
+				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,

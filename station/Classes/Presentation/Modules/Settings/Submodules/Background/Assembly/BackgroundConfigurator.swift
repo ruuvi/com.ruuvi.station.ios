@@ -14,6 +14,7 @@ class BackgroundConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.heartbeatService = r.resolve(HeartbeatService.self)
+        presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         
         view.output = presenter
     }
