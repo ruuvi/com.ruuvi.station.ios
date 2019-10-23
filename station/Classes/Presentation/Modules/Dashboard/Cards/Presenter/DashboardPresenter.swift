@@ -10,6 +10,7 @@ class DashboardPresenter: DashboardModuleInput {
     var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
     var foreground: BTForeground!
+    var background: BTBackground!
     var webTagService: WebTagService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
@@ -18,7 +19,8 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
-    private var observeTokens = [ObservationToken]()
+    private var advertisementTokens = [ObservationToken]()
+    private var heartbeatTokens = [ObservationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -45,7 +47,8 @@ class DashboardPresenter: DashboardModuleInput {
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
-        observeTokens.forEach( { $0.invalidate() } )
+        advertisementTokens.forEach( { $0.invalidate() } )
+        heartbeatTokens.forEach( { $0.invalidate() } )
         webTagsDataTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         if let temperatureUnitToken = temperatureUnitToken {
@@ -196,12 +199,32 @@ extension DashboardPresenter {
         })
     }
     
-    private func startScanningRuuviTags() {
-        observeTokens.forEach( { $0.invalidate() } )
-        observeTokens.removeAll()
+    private func observeRuuviTags() {
+        observeRuuviTagAdvertisements()
+        observeRuuviTagHeartbeats()
+    }
+    
+    private func observeRuuviTagHeartbeats() {
+        heartbeatTokens.forEach( { $0.invalidate() } )
+        heartbeatTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
-                observeTokens.append(foreground.observe(self, uuid: uuid) { [weak self] (observer, device) in
+                heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (observer, device) in
+                    if let ruuviTag = device.ruuvi?.tag,
+                        let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
+                        viewModel.update(with: ruuviTag)
+                    }
+                })
+            }
+        }
+    }
+    
+    private func observeRuuviTagAdvertisements() {
+        advertisementTokens.forEach( { $0.invalidate() } )
+        advertisementTokens.removeAll()
+        for viewModel in viewModels {
+            if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
+                advertisementTokens.append(foreground.observe(self, uuid: uuid) { [weak self] (observer, device) in
                     if let ruuviTag = device.ruuvi?.tag,
                         let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
                         viewModel.update(with: ruuviTag)
@@ -266,7 +289,7 @@ extension DashboardPresenter {
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags
-                self?.startScanningRuuviTags()
+                self?.observeRuuviTags()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
@@ -275,7 +298,7 @@ extension DashboardPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                self?.startScanningRuuviTags()
+                self?.observeRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
