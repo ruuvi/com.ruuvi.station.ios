@@ -14,7 +14,7 @@ struct BackgroundList: View {
     var body: some View {
         List {
             ForEach(env.viewModels) { viewModel in
-                Section(header: Text(viewModel.name.value.bound)) {
+                Section(header: Text(viewModel.name.value.bound.uppercased())) {
                     Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].keepConnection.value.bound) {
                         Text(viewModel.keepConnectionTitle)
                     }
