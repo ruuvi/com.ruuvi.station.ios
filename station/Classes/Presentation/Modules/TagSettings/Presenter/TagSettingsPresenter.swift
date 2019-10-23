@@ -10,17 +10,20 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! { didSet { photoPickerPresenter.delegate = self  } }
     var foreground: BTForeground!
+    var background: BTBackground!
     var calibrationService: CalibrationService!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
     private var ruuviTagToken: NotificationToken?
-    private var observeToken: ObservationToken?
+    private var advertisementToken: ObservationToken?
+    private var heartbeatToken: ObservationToken?
     
     deinit {
         ruuviTagToken?.invalidate()
-        observeToken?.invalidate()
+        advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
     }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
@@ -176,6 +179,7 @@ extension TagSettingsPresenter {
     }
     
     private func startObservingRuuviTag() {
+        ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTag.observe { [weak self] (change) in
             switch change {
             case .change:
@@ -189,7 +193,14 @@ extension TagSettingsPresenter {
     }
     
     private func startScanningRuuviTag() {
-        observeToken = foreground.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
+        advertisementToken?.invalidate()
+        advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
+            if let tag = device.ruuvi?.tag {
+                self?.sync(device: tag)
+            }
+        })
+        heartbeatToken?.invalidate()
+        heartbeatToken = background.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
