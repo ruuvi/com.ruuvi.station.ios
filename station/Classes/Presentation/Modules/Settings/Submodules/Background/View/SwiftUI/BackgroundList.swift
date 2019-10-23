@@ -14,9 +14,14 @@ struct BackgroundList: View {
     var body: some View {
         List {
             ForEach(env.viewModels) { viewModel in
-                Section() {
+                Section(header: Text(viewModel.name.value.bound)) {
                     Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].keepConnection.value.bound) {
-                        Text(viewModel.name.value.bound)
+                        Text(viewModel.keepConnectionTitle)
+                    }
+                    if self.env.viewModels[self.index(of: viewModel)].keepConnection.value.bound {
+                        Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].presentConnectionNotifications.value.bound) {
+                            Text(viewModel.presentNotificationsTitle)
+                        }
                     }
                 }
             }

@@ -117,6 +117,13 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                 }
             })
         }
+        if pair.device.isConnectable != pair.ruuviTag.isConnectable {
+            ruuviTagPersistence.update(isConnectable: pair.device.isConnectable, of: pair.ruuviTag, realm: realm).on( failure: { error in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                }
+            })
+        }
     }
     
     @objc private func persist(pair: RuuviTagDaemonPair) {

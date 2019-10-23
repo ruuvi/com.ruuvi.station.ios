@@ -8,13 +8,9 @@ class BackgroundPresenter: NSObject, BackgroundModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var heartbeatService: HeartbeatService!
+    var connectionPersistence: ConnectionPersistence!
     
     private var ruuviTagsToken: NotificationToken?
-    private var ruuviTags: Results<RuuviTagRealm>? {
-        didSet {
-            syncViewModels()
-        }
-    }
     
     deinit {
         ruuviTagsToken?.invalidate()
@@ -32,39 +28,41 @@ extension BackgroundPresenter: BackgroundViewOutput {
 
 // MARK: - Private
 extension BackgroundPresenter {
-    private func syncViewModels() {
-        view.viewModels = ruuviTags?.map { ruuviTag in
-            let viewModel = BackgroundViewModel()
-            viewModel.name.value = ruuviTag.name
-            viewModel.keepConnection.value = ruuviTag.keepConnection
+    private func syncViewModels(with ruuviTags: Results<RuuviTagRealm>) {
+        view.viewModels = ruuviTags.map { ruuviTag in
+            let viewModel = BackgroundViewModel(uuid: ruuviTag.uuid)
+            update(viewModel: viewModel, with: ruuviTag)
             bind(viewModel: viewModel, to: ruuviTag)
             return viewModel
-        } ?? []
+        }
+    }
+    
+    private func update(viewModel: BackgroundViewModel, with ruuviTag: RuuviTagRealm) {
+        viewModel.name.value = ruuviTag.name
+        viewModel.keepConnection.value = connectionPersistence.keepConnection(to: ruuviTag.uuid)
+        viewModel.presentConnectionNotifications.value = connectionPersistence.presentConnectionNotifications(for: ruuviTag.uuid)
     }
     
     private func bind(viewModel: BackgroundViewModel, to ruuviTag: RuuviTagRealm) {
         bind(viewModel.keepConnection, fire: false) { (observer, keepConnection) in
-            if keepConnection.bound {
-                observer.heartbeatService.startKeepingConnection(to: ruuviTag).on(failure: { error in
-                    observer.errorPresenter.present(error: error)
-                })
-            } else {
-                observer.heartbeatService.stopKeepingConnection(to: ruuviTag).on(failure: { error in
-                    observer.errorPresenter.present(error: error)
-                })
-            }
+            observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
+        }
+        bind(viewModel.presentConnectionNotifications, fire: false) { observer, presentConnectionNotifications in
+            observer.connectionPersistence.setPresentConnectionNotifications(presentConnectionNotifications.bound, for: ruuviTag.uuid)
         }
     }
     
     private func startObservingRuuviTags() {
-        ruuviTags = realmContext.main.objects(RuuviTagRealm.self).filter("isConnectable = true")
+        let ruuviTags = realmContext.main.objects(RuuviTagRealm.self).filter("isConnectable = true")
         ruuviTagsToken?.invalidate()
-        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
+        ruuviTagsToken = ruuviTags.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
-                self?.ruuviTags = ruuviTags
-            case .update(let ruuviTags, _, _, _):
-                self?.ruuviTags = ruuviTags
+                self?.syncViewModels(with: ruuviTags)
+            case .update(let ruuviTags, let insertions, let deletions, _):
+                if insertions.count > 0 || deletions.count > 0 {
+                    self?.syncViewModels(with: ruuviTags)
+                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             }
