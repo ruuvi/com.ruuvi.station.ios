@@ -65,6 +65,8 @@ class HeartbeatServiceBTKit: HeartbeatService {
                     observer.localNotificationsManager.showDidConnect(uuid: uuid)
                 }
             }
+        }, heartbeat: { observer, device in
+            
         }, disconnected: { observer, result in
             switch result {
             case .failure(let error):
