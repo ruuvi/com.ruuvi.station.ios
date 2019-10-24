@@ -177,6 +177,7 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="backgroundImage" destination="hh5-fd-vAK" id="zcI-We-9Fa"/>
+                <outlet property="buttonsContainer" destination="MB1-Va-Z4n" id="wNO-QK-sT0"/>
                 <outlet property="humidityChart" destination="KNS-4I-3XP" id="0FN-rk-PeR"/>
                 <outlet property="humidityUnitLabel" destination="iwe-nR-ska" id="Fd4-RD-Aln"/>
                 <outlet property="nameLabel" destination="wQo-IQ-Rfz" id="ClI-hy-hSG"/>
