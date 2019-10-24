@@ -22,6 +22,14 @@ struct BackgroundList: View {
                         Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].presentConnectionNotifications.value.bound) {
                             Text(viewModel.presentNotificationsTitle)
                         }
+                        
+                        Toggle(isOn: self.$env.viewModels[self.index(of: viewModel)].saveHeartbeats.value.bound) {
+                            Text(viewModel.saveHeartbeatsTitle)
+                        }
+                        
+                        if self.env.viewModels[self.index(of: viewModel)].saveHeartbeats.value.bound {
+                            Stepper("Background.Interval.Every.string".localized() + " " + "\(self.env.viewModels[self.index(of: viewModel)].saveHeartbeatsInterval.value.bound)" + " " + "Background.Interval.Min.string".localized(), value: self.$env.viewModels[self.index(of: viewModel)].saveHeartbeatsInterval.value.bound, in: 1...3600)
+                        }
                     }
                 }
             }
