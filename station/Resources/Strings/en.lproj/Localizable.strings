@@ -35,11 +35,11 @@
 // Background
 "Background.navigationItem.title" = "Background";
 "Background.PresentNotifications.title" = "Present Notifications";
-"Background.KeepConnection.title" = "Keep connection";
+"Background.KeepConnection.title" = "Keep Connection";
 "Background.SaveHeartbeats.title" = "Save Heartbeats";
 "Background.Interval.Every.string" = "Every";
 "Background.Interval.Min.string" = "min";
-"Background.SyncLogsOnDidConnect.title" = "Sync logs when connected";
+"Background.SyncLogsOnDidConnect.title" = "Sync Logs When Connected";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Disconnected";
