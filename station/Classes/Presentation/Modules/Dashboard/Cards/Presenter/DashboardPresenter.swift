@@ -28,6 +28,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagConnectionDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
+    private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -72,6 +73,9 @@ class DashboardPresenter: DashboardModuleInput {
         }
         if let ruuviTagHeartbeatDaemonFailureToken = ruuviTagHeartbeatDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagHeartbeatDaemonFailureToken)
+        }
+        if let ruuviTagReadLogsOperationFailureToken = ruuviTagReadLogsOperationFailureToken {
+            NotificationCenter.default.removeObserver(ruuviTagReadLogsOperationFailureToken)
         }
     }
 }
@@ -352,6 +356,12 @@ extension DashboardPresenter {
         
         ruuviTagHeartbeatDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagHeartbeatDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagHeartbeatDaemonDidFailKey.error] as? RUError {
+                self?.errorPresenter.present(error: error)
+            }
+        })
+        
+        ruuviTagReadLogsOperationFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagReadLogsOperationDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let error = userInfo[RuuviTagReadLogsOperationDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })

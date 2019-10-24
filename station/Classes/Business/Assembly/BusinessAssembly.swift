@@ -45,6 +45,7 @@ class BusinessAssembly: Assembly {
             let daemon = RuuviTagConnectionDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
             daemon.foreground = r.resolve(BTForeground.self)
+            daemon.background = r.resolve(BTBackground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }.inObjectScope(.container)
