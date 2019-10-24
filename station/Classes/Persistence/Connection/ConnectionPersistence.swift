@@ -21,5 +21,11 @@ protocol ConnectionPersistence {
     func setKeepConnection(_ value: Bool, for uuid: String)
     
     func presentConnectionNotifications(for uuid: String) -> Bool
-    func setPresentConnectionNotifications(_ value: Bool, for uuid: String) 
+    func setPresentConnectionNotifications(_ value: Bool, for uuid: String)
+    
+    func saveHeartbeats(uuid: String) -> Bool
+    func setSaveHeartbeats(_ value: Bool, uuid: String)
+    
+    func saveHeartbeatsInterval(uuid: String) -> Int
+    func setSaveHeartbeatsInterval(_ value: Int, uuid: String)
 }
