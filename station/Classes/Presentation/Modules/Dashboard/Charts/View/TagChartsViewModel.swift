@@ -28,11 +28,13 @@ struct TagChartsViewModel {
     var dewPointKelvin: Observable<[TagChartsPoint]?> = Observable<[TagChartsPoint]?>()
     var humidityOffset: Observable<Double?> = Observable<Double?>(0)
     var pressure: Observable<[TagChartsPoint]?> = Observable<[TagChartsPoint]?>()
+    var isConnectable: Observable<Bool?> = Observable<Bool?>()
     
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
+        isConnectable.value = ruuviTag.isConnectable
         let data = ruuviTag.data.sorted(byKeyPath: "date")
         if data.count > 1 {
             celsius.value = data.compactMap({
@@ -165,6 +167,7 @@ struct TagChartsViewModel {
         type = .web
         uuid.value = webTag.uuid
         name.value = webTag.name
+        isConnectable.value = false
         let data = webTag.data.sorted(byKeyPath: "date")
         if data.count > 1 {
             celsius.value = data.compactMap({
