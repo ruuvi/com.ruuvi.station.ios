@@ -3,7 +3,13 @@ import UIKit
 class ForegroundTableViewController: UITableViewController {
     var output: ForegroundViewOutput!
     
-    var viewModels = [ForegroundViewModel]()
+    var viewModels = [ForegroundViewModel]() {
+        didSet {
+            if isViewLoaded {
+                tableView.reloadData()
+            }
+        }
+    }
     
     private let switchCellReuseIdentifier = "ForegroundSwitchTableViewCellReuseIdentifier"
     private let stepperCellReuseIdentifier = "ForegroundStepperTableViewCellReuseIdentifier"

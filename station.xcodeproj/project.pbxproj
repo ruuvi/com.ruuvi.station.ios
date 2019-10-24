@@ -181,6 +181,8 @@
 		0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07D2320086A0025A191 /* LanguageTableInitializer.swift */; };
 		0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */; };
 		0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
+		0EC1B6C82361D206008F1678 /* BackgroundStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC1B6C72361D206008F1678 /* BackgroundStepperTableViewCell.swift */; };
+		0EC1B6CA2361D557008F1678 /* BackgroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC1B6C92361D557008F1678 /* BackgroundSwitchTableViewCell.swift */; };
 		0EC50F5022CCB92000172EEB /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */; };
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
@@ -508,6 +510,8 @@
 		0EBAF07F2320089A0025A191 /* LanguageTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableConfigurator.swift; sourceTree = "<group>"; };
 		0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		0EBAF0832320120F0025A191 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0EC1B6C72361D206008F1678 /* BackgroundStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundStepperTableViewCell.swift; sourceTree = "<group>"; };
+		0EC1B6C92361D557008F1678 /* BackgroundSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0EC50F4F22CCB92000172EEB /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		0EC50F5122CCB9DE00172EEB /* TagSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewModel.swift; sourceTree = "<group>"; };
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
@@ -1871,6 +1875,15 @@
 			path = Table;
 			sourceTree = "<group>";
 		};
+		0EC1B6C62361CEB7008F1678 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				0EC1B6C72361D206008F1678 /* BackgroundStepperTableViewCell.swift */,
+				0EC1B6C92361D557008F1678 /* BackgroundSwitchTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		0EC50F4E22CCB91000172EEB /* Binding */ = {
 			isa = PBXGroup;
 			children = (
@@ -2490,6 +2503,7 @@
 		0EF6F5CB235E0AFA0052BA25 /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0EC1B6C62361CEB7008F1678 /* Cells */,
 				0EF6F5D0235E0D380052BA25 /* BackgroundTableViewController.swift */,
 			);
 			path = Table;
@@ -2991,6 +3005,7 @@
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
+				0EC1B6C82361D206008F1678 /* BackgroundStepperTableViewCell.swift in Sources */,
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* DashboardModuleInput.swift in Sources */,
@@ -3013,6 +3028,7 @@
 				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
+				0EC1B6CA2361D557008F1678 /* BackgroundSwitchTableViewCell.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
