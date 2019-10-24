@@ -5,6 +5,7 @@ import BTKit
 class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon {
     
     var foreground: BTForeground!
+    var background: BTBackground!
     var ruuviTagPersistence: RuuviTagPersistence!
     var settings: Settings!
     
@@ -71,9 +72,9 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     @objc private func onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
         let device = ruuviTagWrapped.device
-        let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagConnectAndReadLogsOperation)?.uuid == device.uuid })
+        let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == device.uuid })
         if !operationIsAlreadyInQueue, !device.isConnected, let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {
-            let operation = RuuviTagConnectAndReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, logSyncDate: ruuviTag.logSyncDate, device: device)
+            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, logSyncDate: ruuviTag.logSyncDate, uuid: device.uuid, background: background)
             queue.addOperation(operation)
         }
     }

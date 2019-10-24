@@ -194,7 +194,7 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
-"UnexpectedError.wasntAbleToFindRuuviTagForHeartbeat" = "Wasn't able to find RuuviTag for the heartbeat";
+"UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

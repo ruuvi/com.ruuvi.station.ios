@@ -194,7 +194,7 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
-"UnexpectedError.wasntAbleToFindRuuviTagForHeartbeat" = "Wasn't able to find RuuviTag for the heartbeat";
+"UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

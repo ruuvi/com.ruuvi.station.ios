@@ -16,7 +16,11 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
     private var savedDate = [String: Date]() // uuid:date
-    
+    lazy var syncLogsQueue: OperationQueue = {
+        var queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        return queue
+    }()
     
     @objc private class RuuviTagHeartbeatDaemonPair: NSObject {
         var uuid: String
@@ -100,6 +104,13 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                         observer?.localNotificationsManager.showDidConnect(uuid: uuid)
                     }
                 }
+                if observer.connectionPersistence.syncLogsOnDidConnect(uuid: uuid) {
+                    observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.syncLogs(_:)),
+                    on: observer.thread,
+                    with: uuid,
+                    waitUntilDone: false,
+                    modes: [RunLoop.Mode.default.rawValue])
+                }
             }
         }, heartbeat: { observer, device in
             if let ruuviTag = device.ruuvi?.tag,
@@ -181,7 +192,18 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             })
         } else {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.unexpected(.wasntAbleToFindRuuviTagForHeartbeat)])
+                NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.unexpected(.failedToFindRuuviTag)])
+            }
+        }
+    }
+    
+    @objc private func syncLogs(_ uuid: String) {
+        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == uuid }) {
+            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, logSyncDate: ruuviTag.logSyncDate, uuid: uuid, background: background)
+            syncLogsQueue.addOperation(operation)
+        } else {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.unexpected(.failedToFindRuuviTag)])
             }
         }
     }

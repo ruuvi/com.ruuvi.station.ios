@@ -194,7 +194,7 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Failed to reverse geocode location";
-"UnexpectedError.wasntAbleToFindRuuviTagForHeartbeat" = "Wasn't able to find RuuviTag for the heartbeat";
+"UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your current location";
