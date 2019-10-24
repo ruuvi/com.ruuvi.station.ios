@@ -7,6 +7,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     private let presentConnectionNotificationsArrayUDKey = "ConnectionPersistenceUserDefaults.presentConnectionNotifications.array"
     private let saveHeartbeatsUDKeyPrefix = "ConnectionPersistenceUserDefaults.saveHeartbeatsUDKeyPrefix."
     private let saveHeartbeatsIntervalUDKeyPrefix = "ConnectionPersistenceUserDefaults.saveHeartbeatsIntervalUDKeyPrefix."
+    private let syncLogsOnDidConnectUDKeyPrefix = "ConnectionPersistenceUserDefaults.syncLogsOnDidConnectUDKeyPrefix."
     
     var keepConnectionUUIDs: [String] {
         return prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
@@ -89,5 +90,13 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     
     func setSaveHeartbeatsInterval(_ value: Int, uuid: String) {
         prefs.set(value, forKey: saveHeartbeatsIntervalUDKeyPrefix + uuid)
+    }
+    
+    func syncLogsOnDidConnect(uuid: String) -> Bool {
+        return prefs.optionalBool(forKey: syncLogsOnDidConnectUDKeyPrefix + uuid) ?? true
+    }
+    
+    func setSyncLogsOnDidConnect(_ value: Bool, uuid: String) {
+        prefs.set(value, forKey: syncLogsOnDidConnectUDKeyPrefix + uuid)
     }
 }

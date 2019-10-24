@@ -42,6 +42,7 @@ extension BackgroundPresenter {
         viewModel.presentConnectionNotifications.value = connectionPersistence.presentConnectionNotifications(for: ruuviTag.uuid)
         viewModel.saveHeartbeats.value = connectionPersistence.saveHeartbeats(uuid: ruuviTag.uuid)
         viewModel.saveHeartbeatsInterval.value = connectionPersistence.saveHeartbeatsInterval(uuid: ruuviTag.uuid)
+        viewModel.syncLogsOnDidConnect.value = connectionPersistence.syncLogsOnDidConnect(uuid: ruuviTag.uuid)
     }
     
     private func bind(viewModel: BackgroundViewModel, to ruuviTag: RuuviTagRealm) {
@@ -56,6 +57,9 @@ extension BackgroundPresenter {
         }
         bind(viewModel.saveHeartbeatsInterval, fire: false) { observer, saveHeartbeatsInterval in
             observer.connectionPersistence.setSaveHeartbeatsInterval(saveHeartbeatsInterval.bound, uuid: ruuviTag.uuid)
+        }
+        bind(viewModel.syncLogsOnDidConnect, fire: false) { observer, syncLogsOnDidConnect in
+            observer.connectionPersistence.setSyncLogsOnDidConnect(syncLogsOnDidConnect.bound, uuid: ruuviTag.uuid)
         }
     }
     
