@@ -8,6 +8,7 @@ class BackgroundViewModel: Identifiable {
     var presentConnectionNotifications = Observable<Bool?>()
     var saveHeartbeats = Observable<Bool?>()
     var saveHeartbeatsInterval = Observable<Int?>(1)
+    var syncLogsOnDidConnect = Observable<Bool?>()
     
     var presentNotificationsTitle: String {
         return "Background.PresentNotifications.title".localized()
@@ -17,6 +18,9 @@ class BackgroundViewModel: Identifiable {
     }
     var saveHeartbeatsTitle: String {
         return "Background.SaveHeartbeats.title".localized()
+    }
+    var syncLogsOnDidConnectTitle: String {
+        return "Background.SyncLogsOnDidConnect.title".localized()
     }
     
     init(uuid: String) {

@@ -121,6 +121,7 @@
 		0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47422AF9978006CB87C /* DiscoverPresenter.swift */; };
 		0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47A22AF9BE2006CB87C /* DiscoverTableInitializer.swift */; };
 		0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */; };
+		0E7566172361B56500FCA977 /* BackgroundSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7566162361B56500FCA977 /* BackgroundSection.swift */; };
 		0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */; };
 		0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
 		0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */; };
@@ -445,6 +446,7 @@
 		0E70A47422AF9978006CB87C /* DiscoverPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverPresenter.swift; sourceTree = "<group>"; };
 		0E70A47A22AF9BE2006CB87C /* DiscoverTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableInitializer.swift; sourceTree = "<group>"; };
 		0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableConfigurator.swift; sourceTree = "<group>"; };
+		0E7566162361B56500FCA977 /* BackgroundSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSection.swift; sourceTree = "<group>"; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
 		0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollViewController.swift; sourceTree = "<group>"; };
 		0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewInput.swift; sourceTree = "<group>"; };
@@ -2471,6 +2473,7 @@
 			isa = PBXGroup;
 			children = (
 				0ED82069235E0DFE00874BCB /* BackgroundList.swift */,
+				0E7566162361B56500FCA977 /* BackgroundSection.swift */,
 				0ED8206B235E0E3700874BCB /* BackgroundEnvironmentObject.swift */,
 			);
 			path = SwiftUI;
@@ -2909,6 +2912,7 @@
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0ED2364D234F286B00CE6AA3 /* RuuviTagConnectAndReadLogsOperation.swift in Sources */,
 				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
+				0E7566172361B56500FCA977 /* BackgroundSection.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,

@@ -158,7 +158,9 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 }
             case .just:
                 if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
-                    observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                    DispatchQueue.main.async {
+                        observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                    }
                 }
             case .already:
                 break // do nothing
