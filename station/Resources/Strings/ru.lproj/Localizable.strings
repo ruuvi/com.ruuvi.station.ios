@@ -39,6 +39,7 @@
 "Background.SaveHeartbeats.title" = "Save Heartbeats";
 "Background.Interval.Every.string" = "Every";
 "Background.Interval.Min.string" = "min";
+"Background.SyncLogsOnDidConnect.title" = "Sync logs when connected";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
