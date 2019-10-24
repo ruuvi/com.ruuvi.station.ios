@@ -65,6 +65,72 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="BackgroundSwitchTableViewCellReuseIdentifier" id="F3Q-bj-soe" customClass="BackgroundSwitchTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="F3Q-bj-soe" id="agq-6N-BEZ">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehb-bg-qhk">
+                                            <rect key="frame" x="20" y="11.5" width="34" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ca6-OX-CbN">
+                                            <rect key="frame" x="343" y="6.5" width="51" height="31"/>
+                                            <connections>
+                                                <action selector="isOnSwitchValueChanged:" destination="F3Q-bj-soe" eventType="valueChanged" id="9t1-gc-TRd"/>
+                                            </connections>
+                                        </switch>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Ehb-bg-qhk" firstAttribute="centerY" secondItem="agq-6N-BEZ" secondAttribute="centerY" id="AmA-he-z6b"/>
+                                        <constraint firstItem="ca6-OX-CbN" firstAttribute="centerY" secondItem="agq-6N-BEZ" secondAttribute="centerY" id="YWP-fP-kJW"/>
+                                        <constraint firstAttribute="trailing" secondItem="ca6-OX-CbN" secondAttribute="trailing" constant="22" id="mfW-2q-ZOt"/>
+                                        <constraint firstItem="Ehb-bg-qhk" firstAttribute="leading" secondItem="agq-6N-BEZ" secondAttribute="leading" constant="20" id="qNt-jk-RMC"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="isOnSwitch" destination="ca6-OX-CbN" id="PMo-nm-nop"/>
+                                    <outlet property="titleLabel" destination="Ehb-bg-qhk" id="rdp-6v-ZcQ"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="BackgroundStepperTableViewCellReuseIdentifier" id="wBW-Ot-UhL" customClass="BackgroundStepperTableViewCell" customModule="station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="99" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wBW-Ot-UhL" id="KCE-Uc-bTQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Agy-jr-q38">
+                                            <rect key="frame" x="20" y="11.5" width="34" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="VRY-nZ-Sx7">
+                                            <rect key="frame" x="300" y="6" width="94" height="32"/>
+                                            <connections>
+                                                <action selector="stepperValueChanged:" destination="wBW-Ot-UhL" eventType="valueChanged" id="IB9-Yj-pkO"/>
+                                            </connections>
+                                        </stepper>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Agy-jr-q38" firstAttribute="centerY" secondItem="KCE-Uc-bTQ" secondAttribute="centerY" id="FrE-7i-qbU"/>
+                                        <constraint firstAttribute="trailing" secondItem="VRY-nZ-Sx7" secondAttribute="trailing" constant="20" id="uOO-kr-Pkf"/>
+                                        <constraint firstItem="Agy-jr-q38" firstAttribute="leading" secondItem="KCE-Uc-bTQ" secondAttribute="leading" constant="20" id="vXl-52-aFZ"/>
+                                        <constraint firstItem="VRY-nZ-Sx7" firstAttribute="centerY" secondItem="KCE-Uc-bTQ" secondAttribute="centerY" id="y1F-Kt-iii"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="stepper" destination="VRY-nZ-Sx7" id="hjD-dX-jZU"/>
+                                    <outlet property="titleLabel" destination="Agy-jr-q38" id="567-7J-mRe"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
                         <sections/>
                         <connections>
                             <outlet property="dataSource" destination="4Sf-uY-5Aw" id="MRT-fY-epU"/>

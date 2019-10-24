@@ -6,11 +6,16 @@ import SwiftUI
 class ForegroundViewController: UIViewController {
     var output: ForegroundViewOutput!
     
-    var viewModels = [ForegroundViewModel]()
+    var viewModels = [ForegroundViewModel]() {
+        didSet {
+            table?.viewModels = viewModels
+        }
+    }
     
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var listContainer: UIView!
     
+    private var table: ForegroundTableViewController?
 }
 
 // MARK: - ForegroundViewInput
@@ -59,9 +64,9 @@ extension ForegroundViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case ForegroundEmbedSegue.table.rawValue:
-            let table = segue.destination as! ForegroundTableViewController
-            table.output = output
-            table.viewModels = viewModels
+            table = segue.destination as? ForegroundTableViewController
+            table?.output = output
+            table?.viewModels = viewModels
         default:
             break
         }

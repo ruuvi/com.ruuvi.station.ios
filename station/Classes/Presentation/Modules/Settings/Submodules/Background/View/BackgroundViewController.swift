@@ -11,6 +11,7 @@ class BackgroundViewController: UIViewController {
             if #available(iOS 13, *) {
                 env.viewModels = viewModels
             }
+            table?.viewModels = viewModels
         }
     }
     
@@ -22,6 +23,7 @@ class BackgroundViewController: UIViewController {
     private lazy var env = BackgroundEnvironmentObject()
 #endif
     
+    private var table: BackgroundTableViewController?
 }
 
 extension BackgroundViewController: BackgroundViewInput {
@@ -68,9 +70,9 @@ extension BackgroundViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case BackgroundEmbedSegue.table.rawValue:
-            let table = segue.destination as! BackgroundTableViewController
-            table.output = output
-            table.viewModels = viewModels
+            table = segue.destination as? BackgroundTableViewController
+            table?.output = output
+            table?.viewModels = viewModels
         default:
             break
         }
