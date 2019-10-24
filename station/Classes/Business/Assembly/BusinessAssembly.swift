@@ -21,16 +21,6 @@ class BusinessAssembly: Assembly {
             return service
         }
         
-        container.register(RuuviTagHeartbeatDaemon.self) { r in
-            let service = RuuviTagHeartbeatDaemonBTKit()
-            service.errorPresenter = r.resolve(ErrorPresenter.self)
-            service.background = r.resolve(BTBackground.self)
-            service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
-            service.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            return service
-        }.inObjectScope(.container)
-        
         container.register(LocationService.self) { r in
             let service = LocationServiceApple()
             return service
@@ -57,6 +47,15 @@ class BusinessAssembly: Assembly {
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
+        }.inObjectScope(.container)
+        
+        container.register(RuuviTagHeartbeatDaemon.self) { r in
+            let service = RuuviTagHeartbeatDaemonBTKit()
+            service.background = r.resolve(BTBackground.self)
+            service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+            service.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            return service
         }.inObjectScope(.container)
         
         container.register(RuuviTagService.self) { r in

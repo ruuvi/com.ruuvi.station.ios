@@ -102,6 +102,7 @@ enum UnexpectedError: Error {
     case callbackErrorAndResultAreNil
     case callerDeinitedDuringOperation
     case failedToReverseGeocodeCoordinate
+    case wasntAbleToFindRuuviTagForHeartbeat
 }
 
 extension UnexpectedError: LocalizedError {
@@ -113,6 +114,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.callerDeinitedDuringOperation".localized()
         case .failedToReverseGeocodeCoordinate:
             return "UnexpectedError.failedToReverseGeocodeCoordinate".localized()
+        case .wasntAbleToFindRuuviTagForHeartbeat:
+            return "UnexpectedError.wasntAbleToFindRuuviTagForHeartbeat".localized()
         }
     }
 }
