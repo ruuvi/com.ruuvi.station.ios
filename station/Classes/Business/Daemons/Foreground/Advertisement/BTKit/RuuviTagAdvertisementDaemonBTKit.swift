@@ -16,7 +16,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
     
-    @objc private class RuuviTagDaemonPair: NSObject {
+    @objc private class RuuviTagAdvertisementDaemonPair: NSObject {
         var ruuviTag: RuuviTagRealm
         var device: RuuviTag
         
@@ -80,7 +80,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
             observeTokens.append(foreground.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag {
-                    let pair = RuuviTagDaemonPair(ruuviTag: ruuviTag, device: tag)
+                    let pair = RuuviTagAdvertisementDaemonPair(ruuviTag: ruuviTag, device: tag)
                     sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.tryToUpdate(pair:)),
                                   on: sSelf.thread,
                                   with: pair,
@@ -96,7 +96,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         }
     }
     
-    @objc private func tryToUpdate(pair: RuuviTagDaemonPair) {
+    @objc private func tryToUpdate(pair: RuuviTagAdvertisementDaemonPair) {
         if pair.device.version != pair.ruuviTag.version {
             let tagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
             ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm).on( failure: { error in
@@ -126,7 +126,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         }
     }
     
-    @objc private func persist(pair: RuuviTagDaemonPair) {
+    @objc private func persist(pair: RuuviTagAdvertisementDaemonPair) {
         let uuid = pair.device.uuid
         let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
         if let date = savedDate[uuid] {
