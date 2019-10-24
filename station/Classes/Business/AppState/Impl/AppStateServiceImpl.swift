@@ -6,13 +6,13 @@ class AppStateServiceImpl: AppStateService {
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
     var connectionDaemon: RuuviTagConnectionDaemon!
     var webTagDaemon: WebTagDaemon!
-    var heartbeatService: HeartbeatService!
+    var heartbeatDaemon: RuuviTagHeartbeatDaemon!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         if settings.isAdvertisementDaemonOn { advertisementDaemon.start() }
         if settings.isConnectionDaemonOn { connectionDaemon.start() }
         if settings.isWebTagDaemonOn { webTagDaemon.start() }
-        heartbeatService.start()
+        heartbeatDaemon.start()
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
