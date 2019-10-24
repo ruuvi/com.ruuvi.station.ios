@@ -10,7 +10,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     private var token: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var realm: Realm!
-    private var savedDate = [String:Date]() // uuid:date
+    private var savedDate = [String: Date]() // uuid:date
     private var isOnToken: NSObjectProtocol?
     private var saveInterval: TimeInterval {
         return TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
@@ -127,25 +127,24 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     }
     
     @objc private func persist(pair: RuuviTagDaemonPair) {
-        let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
         let uuid = pair.device.uuid
+        let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
         if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
-                ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
-                    }
-                })
+                persist(ruuviTagData)
                 savedDate[uuid] = Date()
             }
         } else {
-            ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
-                }
-            })
+            persist(ruuviTagData)
             savedDate[uuid] = Date()
         }
     }
-    
+ 
+    private func persist(_ ruuviTagData: RuuviTagDataRealm) {
+        ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+            }
+        })
+    }
 }

@@ -1,17 +1,19 @@
 import Foundation
 import BTKit
 
-class HeartbeatServiceBTKit: HeartbeatService {
+class RuuviTagHeartbeatDaemonBTKit: RuuviTagHeartbeatDaemon {
     
     var errorPresenter: ErrorPresenter!
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
+    var ruuviTagPersistence: RuuviTagPersistence!
     
     private var connectTokens = [String: ObservationToken]()
     private var disconnectTokens = [String: ObservationToken]()
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
+    private var savedDate = [String: Date]() // uuid:date
     
     init() {
         connectionAddedToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartToKeepConnection, object: nil, queue: .main, using: { [weak self] (notification) in
@@ -66,7 +68,20 @@ class HeartbeatServiceBTKit: HeartbeatService {
                 }
             }
         }, heartbeat: { observer, device in
-            
+            if let ruuviTag = device.ruuvi?.tag,
+                observer.connectionPersistence.saveHeartbeats(uuid: ruuviTag.uuid) {
+                let uuid = ruuviTag.uuid
+                let interval = observer.connectionPersistence.saveHeartbeatsInterval(uuid: uuid)
+                if let date = observer.savedDate[uuid] {
+                    if Date().timeIntervalSince(date) > TimeInterval(interval) {
+//                        persist(ruuviTagData)
+                        observer.savedDate[uuid] = Date()
+                    }
+                } else {
+//                    persist(ruuviTagData)
+                    observer.savedDate[uuid] = Date()
+                }
+            }
         }, disconnected: { observer, result in
             switch result {
             case .failure(let error):
@@ -107,4 +122,12 @@ class HeartbeatServiceBTKit: HeartbeatService {
         disconnectTokens.values.forEach({ $0.invalidate() })
         disconnectTokens.removeAll()
     }
+    
+//    private func persist(_ device: RuuviTag) {
+//        ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
+//            DispatchQueue.main.async {
+//                NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+//            }
+//        })
+//    }
 }

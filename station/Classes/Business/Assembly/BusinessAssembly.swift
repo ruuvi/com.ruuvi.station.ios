@@ -10,7 +10,7 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
-            service.heartbeatService = r.resolve(HeartbeatService.self)
+            service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             return service
         }.inObjectScope(.container)
         
@@ -21,12 +21,13 @@ class BusinessAssembly: Assembly {
             return service
         }
         
-        container.register(HeartbeatService.self) { r in
-            let service = HeartbeatServiceBTKit()
+        container.register(RuuviTagHeartbeatDaemon.self) { r in
+            let service = RuuviTagHeartbeatDaemonBTKit()
             service.errorPresenter = r.resolve(ErrorPresenter.self)
             service.background = r.resolve(BTBackground.self)
             service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return service
         }.inObjectScope(.container)
         
@@ -57,28 +58,6 @@ class BusinessAssembly: Assembly {
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
         }.inObjectScope(.container)
-        
-        container.register(RuuviTagBackgroundAdvertisementProcessDaemon.self) { r in
-            if #available(iOS 13.0, *) {
-                let daemon = RuuviTagBackgroundAdvertisementProcessDaemoniOS13()
-                daemon.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
-                return daemon
-            } else {
-                let daemon = RuuviTagBackgroundAdvertisementProcessDaemoniOS12()
-                return daemon
-            }
-        }
-        
-        container.register(RuuviTagBackgroundAdvertisementTaskDaemon.self) { r in
-            if #available(iOS 13.0, *) {
-                let daemon = RuuviTagBackgroundAdvertisementTaskDaemoniOS13()
-                daemon.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
-                return daemon
-            } else {
-                let daemon = RuuviTagBackgroundAdvertisementTaskDaemoniOS12()
-                return daemon
-            }
-        }
         
         container.register(RuuviTagService.self) { r in
             let service = RuuviTagServiceImpl()

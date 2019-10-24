@@ -7,7 +7,6 @@ class BackgroundPresenter: NSObject, BackgroundModuleInput {
     var router: BackgroundRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
-    var heartbeatService: HeartbeatService!
     var connectionPersistence: ConnectionPersistence!
     
     private var ruuviTagsToken: NotificationToken?

@@ -1,7 +1,7 @@
 import Foundation
 import Future
 
-protocol HeartbeatService {
+protocol RuuviTagHeartbeatDaemon {
     func start()
     func stop()
 }
