@@ -8,9 +8,11 @@ class BackgroundViewController: UIViewController {
     
     var viewModels = [BackgroundViewModel]() {
         didSet {
+#if canImport(SwiftUI) && canImport(Combine)
             if #available(iOS 13, *) {
                 env.viewModels = viewModels
             }
+#endif
             table?.viewModels = viewModels
         }
     }
