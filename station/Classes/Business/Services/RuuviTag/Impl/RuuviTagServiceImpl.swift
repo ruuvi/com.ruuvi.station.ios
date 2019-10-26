@@ -34,7 +34,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     
     func loadHistory(uuid: String, from: Date) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
-        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: Date.distantPast, options: [.callbackQueue(.untouch)], result: { (observer, result) in
+        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: Date.distantPast, options: [.callbackQueue(.untouch), .desiredConnectInterval(5)], result: { (observer, result) in
             switch result {
             case .success(let logs):
                 let op = observer.ruuviTagPersistence.persist(logs: logs, for: uuid)
