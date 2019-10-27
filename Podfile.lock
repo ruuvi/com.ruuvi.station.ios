@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.1.0)
+  - BTKit (0.1.1)
   - Charts (3.4.0):
     - Charts/Core (= 3.4.0)
   - Charts/Core (3.4.0)
@@ -154,7 +154,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: 356c06827a866f5f3d02e809c0a924c97c10a33b
+  BTKit: c9f1ccb07a025d3d618b5efd957d1761a067cb85
   Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
   EmptyDataSet-Swift: eb382c0c87a2d9c678077385a595cec52da38171
   Firebase: 5e6b7b12bf9adb90986688edc06b156c37e109cd
