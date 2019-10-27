@@ -47,14 +47,18 @@ extension BackgroundViewController {
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        #if SWIFTUI
         if #available(iOS 13, *) {
             return identifier == BackgroundEmbedSegue.list.rawValue
         } else {
             return identifier == BackgroundEmbedSegue.table.rawValue
         }
+        #else
+        return identifier == BackgroundEmbedSegue.table.rawValue
+        #endif
     }
     
-    #if canImport(SwiftUI) && canImport(Combine)
+    #if SWIFTUI && canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
             env.viewModels = viewModels
