@@ -148,12 +148,17 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 break // do nothing
             case .already:
                 break // do nothing
+            case .bluetoothWasPoweredOff:
+                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                    DispatchQueue.main.async { [weak observer] in
+                        observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                    }
+                }
             case .just:
                 if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
                     DispatchQueue.main.async { [weak observer] in
                         observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                     }
-                    
                 }
             }
         })
@@ -177,6 +182,12 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 break // do nothing
             case .stillConnected:
                 break // do nothing
+            case .bluetoothWasPoweredOff:
+                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                    DispatchQueue.main.async {
+                        observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
+                    }
+                }
             }
         })
     }
