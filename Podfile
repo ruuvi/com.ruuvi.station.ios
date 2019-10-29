@@ -5,7 +5,7 @@ inhibit_all_warnings!
 install! 'cocoapods', :disable_input_output_paths => true
 
 target 'station' do
-  pod 'BTKit', :path => '../BTKit'
+  pod 'BTKit'
   pod 'Charts'
   pod 'EmptyDataSet-Swift'
   pod 'Firebase/Messaging'
