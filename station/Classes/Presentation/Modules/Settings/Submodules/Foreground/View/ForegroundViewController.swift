@@ -38,11 +38,15 @@ extension ForegroundViewController {
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        #if SWIFTUI
         if #available(iOS 13, *) {
             return identifier == ForegroundEmbedSegue.list.rawValue
         } else {
             return identifier == ForegroundEmbedSegue.table.rawValue
         }
+        #else
+        return identifier == ForegroundEmbedSegue.table.rawValue
+        #endif
     }
     
     #if canImport(SwiftUI) && canImport(Combine)
