@@ -32,6 +32,7 @@ struct DashboardTagViewModel {
     var humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
     var location: Observable<Location?> = Observable<Location?>()
     var currentLocation: Observable<Location?> = Observable<Location?>()
+    var animateRSSI: Observable<Bool?> = Observable<Bool?>()
     var provider: WeatherProvider?
     
     init(_ webTag: WebTagRealm) {
@@ -183,7 +184,8 @@ struct DashboardTagViewModel {
         date.value = Date()
     }
     
-    func update(rssi: Int?) {
+    func update(rssi: Int?, animated: Bool = false) {
+        self.animateRSSI.value = animated
         self.rssi.value = rssi
     }
 }
