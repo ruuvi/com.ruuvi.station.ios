@@ -15,12 +15,15 @@ class DashboardPresenter: DashboardModuleInput {
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
+    var connectionPersistence: ConnectionPersistence!
     
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
     private var advertisementTokens = [ObservationToken]()
     private var heartbeatTokens = [ObservationToken]()
+    private var rssiTokens = [String: ObservationToken]()
+    private var rssiTimers = [String: Timer]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -49,6 +52,8 @@ class DashboardPresenter: DashboardModuleInput {
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
+        rssiTokens.values.forEach({ $0.invalidate() })
+        rssiTimers.values.forEach({ $0.invalidate() })
         advertisementTokens.forEach( { $0.invalidate() } )
         heartbeatTokens.forEach( { $0.invalidate() } )
         webTagsDataTokens.forEach({ $0.invalidate() })
@@ -210,6 +215,32 @@ extension DashboardPresenter {
     private func observeRuuviTags() {
         observeRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
+        observeRuuviTagRSSI()
+    }
+    
+    private func observeRuuviTagRSSI() {
+        rssiTokens.values.forEach({ $0.invalidate() })
+        rssiTimers.values.forEach({ $0.invalidate() })
+        connectionPersistence.keepConnectionUUIDs.forEach { (uuid) in
+            if connectionPersistence.readRSSI(uuid: uuid) {
+                let interval = connectionPersistence.readRSSIInterval(uuid: uuid)
+                let timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: true) { [weak self] timer in
+                    guard let sSelf = self else { timer.invalidate(); return }
+                    sSelf.rssiTokens[uuid] = sSelf.background.readRSSI(for: sSelf, uuid: uuid, result: { (observer, result) in
+                        switch result {
+                        case .success(let rssi):
+                            if let viewModel = observer.viewModels.first(where: { $0.uuid.value == uuid }) {
+                                viewModel.update(rssi: rssi)
+                            }
+                        case .failure(let error):
+                            observer.errorPresenter.present(error: error)
+                        }
+                    })
+                }
+                timer.fire()
+                rssiTimers[uuid] = timer
+            }
+        }
     }
     
     private func observeRuuviTagHeartbeats() {
@@ -236,6 +267,7 @@ extension DashboardPresenter {
                     if let ruuviTag = device.ruuvi?.tag,
                         let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
                         viewModel.update(with: ruuviTag)
+                        viewModel.update(rssi: ruuviTag.rssi)
                     }
                 })
             }
