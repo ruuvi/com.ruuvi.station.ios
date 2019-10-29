@@ -36,6 +36,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var stopKeepingConnectionToken: NSObjectProtocol?
     private var startReadingRSSIToken: NSObjectProtocol?
     private var stopReadingRSSIToken: NSObjectProtocol?
+    private var readRSSIIntervalDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -97,6 +98,9 @@ class DashboardPresenter: DashboardModuleInput {
         }
         if let stopReadingRSSIToken = stopReadingRSSIToken {
             NotificationCenter.default.removeObserver(stopReadingRSSIToken)
+        }
+        if let readRSSIIntervalDidChangeToken = readRSSIIntervalDidChangeToken {
+            NotificationCenter.default.removeObserver(readRSSIIntervalDidChangeToken)
         }
     }
 }
@@ -454,6 +458,10 @@ extension DashboardPresenter {
                     .filter( { $0.uuid.value == uuid} )
                     .forEach( { $0.update(rssi: nil) } )
             }
+        })
+        
+        readRSSIIntervalDidChangeToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidChangeReadRSSIInterval, object: nil, queue: .main, using: { [weak self] _ in
+            self?.observeRuuviTagRSSI()
         })
     }
 }

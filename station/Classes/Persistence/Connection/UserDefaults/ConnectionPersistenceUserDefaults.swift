@@ -146,6 +146,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     
     func setReadRSSIInterval(_ value: Int, uuid: String) {
         prefs.set(value, forKey: readRSSIIntervalUDKeyPrefix + uuid)
+        NotificationCenter.default.post(name: .ConnectionPersistenceDidChangeReadRSSIInterval, object: nil, userInfo: [ConnectionPersistenceDidChangeReadRSSIIntervalKey.uuid: uuid, ConnectionPersistenceDidChangeReadRSSIIntervalKey.interval: value])
     }
     
     func logSyncDate(uuid: String) -> Date? {
