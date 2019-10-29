@@ -13,7 +13,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
             content.subtitle = ruuviTag.name
             content.body = ruuviTag.mac ?? ruuviTag.uuid
         } else {
-            content.title = uuid
+            content.body = uuid
         }
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
@@ -28,7 +28,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
             content.subtitle = ruuviTag.name
             content.body = ruuviTag.mac ?? ruuviTag.uuid
         } else {
-            content.title = uuid
+            content.body = uuid
         }
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
