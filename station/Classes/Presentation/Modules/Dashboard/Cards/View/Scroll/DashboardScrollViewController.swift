@@ -278,9 +278,16 @@ extension DashboardScrollViewController {
         
         switch viewModel.type {
         case .ruuvi:
-            view.rssiCityLabel.bind(viewModel.rssi) { label, rssi in
+            let animated = viewModel.animateRSSI
+            view.rssiCityLabel.bind(viewModel.rssi) { [weak animated] label, rssi in
                 if let rssi = rssi {
                     label.text = "\(rssi)" + " " + "dBm".localized()
+                    if let animated = animated?.value, animated {
+                        label.alpha = 0.0
+                        UIView.animate(withDuration: 1.0, animations: {
+                            label.alpha = 1.0
+                        })
+                    }
                 } else {
                     label.text = "N/A".localized()
                 }

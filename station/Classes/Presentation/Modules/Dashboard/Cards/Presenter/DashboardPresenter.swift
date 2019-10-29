@@ -230,7 +230,7 @@ extension DashboardPresenter {
                         switch result {
                         case .success(let rssi):
                             if let viewModel = observer.viewModels.first(where: { $0.uuid.value == uuid }) {
-                                viewModel.update(rssi: rssi)
+                                viewModel.update(rssi: rssi, animated: true)
                             }
                         case .failure(let error):
                             observer.errorPresenter.present(error: error)
