@@ -254,7 +254,18 @@ extension DashboardPresenter {
                                     viewModel.update(rssi: rssi, animated: true)
                                 }
                             case .failure(let error):
-                                observer.errorPresenter.present(error: error)
+                                switch error {
+                                case .logic(let logicError):
+                                    switch logicError {
+                                    case .notConnected:
+                                        break // do nothing
+                                    default:
+                                        observer.errorPresenter.present(error: error)
+                                    }
+                                default:
+                                    observer.errorPresenter.present(error: error)
+                                }
+                                
                             }
                         })
                     }
