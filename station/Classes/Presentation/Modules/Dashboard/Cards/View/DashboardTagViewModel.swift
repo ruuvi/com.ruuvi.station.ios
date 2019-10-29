@@ -138,7 +138,6 @@ struct DashboardTagViewModel {
         }
         pressure.value = ruuviTag.data.last?.pressure.value
         
-        rssi.value = ruuviTag.data.last?.rssi.value
         voltage.value = ruuviTag.data.last?.voltage.value
         
         date.value = ruuviTag.data.last?.date
@@ -177,12 +176,15 @@ struct DashboardTagViewModel {
         }
         pressure.value = ruuviTag.pressure
         
-        rssi.value = ruuviTag.rssi
         version.value = ruuviTag.version
         voltage.value = ruuviTag.voltage
         
         mac.value = ruuviTag.mac
         date.value = Date()
+    }
+    
+    func update(rssi: Int?) {
+        self.rssi.value = rssi
     }
 }
 

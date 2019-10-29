@@ -22,6 +22,7 @@ class DashboardScrollConfigurator {
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
+        presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         
         router.delegate = presenter
         
