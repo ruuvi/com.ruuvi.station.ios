@@ -8,6 +8,8 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     private let saveHeartbeatsUDKeyPrefix = "ConnectionPersistenceUserDefaults.saveHeartbeatsUDKeyPrefix."
     private let saveHeartbeatsIntervalUDKeyPrefix = "ConnectionPersistenceUserDefaults.saveHeartbeatsIntervalUDKeyPrefix."
     private let syncLogsOnDidConnectUDKeyPrefix = "ConnectionPersistenceUserDefaults.syncLogsOnDidConnectUDKeyPrefix."
+    private let readRSSIUDKeyPrefix = "ConnectionPersistenceUserDefaults.readRSSIUDKeyPrefix."
+    private let readRSSIIntervalUDKeyPrefix = "ConnectionPersistenceUserDefaults.readRSSIIntervalUDKeyPrefix."
     
     var keepConnectionUUIDs: [String] {
         return prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
@@ -98,5 +100,21 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     
     func setSyncLogsOnDidConnect(_ value: Bool, uuid: String) {
         prefs.set(value, forKey: syncLogsOnDidConnectUDKeyPrefix + uuid)
+    }
+    
+    func readRSSI(uuid: String) -> Bool {
+        return prefs.optionalBool(forKey: readRSSIUDKeyPrefix + uuid) ?? true
+    }
+    
+    func setReadRSSI(_ value: Bool, uuid: String) {
+        prefs.set(value, forKey: readRSSIUDKeyPrefix + uuid)
+    }
+    
+    func readRSSIInterval(uuid: String) -> Int {
+        return prefs.optionalInt(forKey: readRSSIIntervalUDKeyPrefix + uuid) ?? 5
+    }
+    
+    func setReadRSSIInterval(_ value: Int, uuid: String) {
+        prefs.set(value, forKey: readRSSIIntervalUDKeyPrefix + uuid)
     }
 }
