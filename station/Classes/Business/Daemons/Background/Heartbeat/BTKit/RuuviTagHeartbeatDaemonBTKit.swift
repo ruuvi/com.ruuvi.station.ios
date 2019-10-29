@@ -209,14 +209,8 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
     
     @objc private func syncLogs(_ uuid: String) {
-        if let ruuviTag = ruuviTags?.first(where: { $0.uuid == uuid }) {
-            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, logSyncDate: ruuviTag.logSyncDate, uuid: uuid, background: background)
-            syncLogsQueue.addOperation(operation)
-        } else {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.unexpected(.failedToFindRuuviTag)])
-            }
-        }
+        let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, logSyncDate: connectionPersistence.logSyncDate(uuid: uuid), uuid: uuid, background: background)
+        syncLogsQueue.addOperation(operation)
     }
     
     private func invalidateTokens() {

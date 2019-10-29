@@ -47,6 +47,7 @@ class BusinessAssembly: Assembly {
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.background = r.resolve(BTBackground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return daemon
         }.inObjectScope(.container)
         
