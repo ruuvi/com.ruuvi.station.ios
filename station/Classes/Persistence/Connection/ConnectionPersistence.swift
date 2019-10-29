@@ -31,4 +31,10 @@ protocol ConnectionPersistence {
     
     func syncLogsOnDidConnect(uuid: String) -> Bool
     func setSyncLogsOnDidConnect(_ value: Bool, uuid: String)
+    
+    func readRSSI(uuid: String) -> Bool
+    func setReadRSSI(_ value: Bool, uuid: String)
+    
+    func readRSSIInterval(uuid: String) -> Int
+    func setReadRSSIInterval(_ value: Int, uuid: String)
 }
