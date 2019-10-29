@@ -35,6 +35,7 @@ extension Notification.Name {
     static let ConnectionPersistenceDidStopToKeepConnection = Notification.Name("ConnectionPersistenceDidStopToKeepConnection")
     static let ConnectionPersistenceDidStartReadingRSSI = Notification.Name("ConnectionPersistenceDidStartReadingRSSI")
     static let ConnectionPersistenceDidStopReadingRSSI = Notification.Name("ConnectionPersistenceDidStopReadingRSSI")
+    static let ConnectionPersistenceDidChangeReadRSSIInterval = Notification.Name("ConnectionPersistenceDidChangeReadRSSIInterval")
 }
 
 enum ConnectionPersistenceDidStartToKeepConnectionKey: String {
@@ -53,4 +54,9 @@ enum ConnectionPersistenceDidStartReadingRSSIKey: String {
 
 enum ConnectionPersistenceDidStopReadingRSSIKey: String {
     case uuid = "uuid"
+}
+
+enum ConnectionPersistenceDidChangeReadRSSIIntervalKey: String {
+    case uuid = "uuid"
+    case interval = "interval" // Int (seconds)
 }
