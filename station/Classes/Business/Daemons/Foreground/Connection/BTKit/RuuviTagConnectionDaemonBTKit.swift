@@ -1,5 +1,4 @@
 import Foundation
-import RealmSwift
 import BTKit
 
 class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon {
@@ -8,9 +7,9 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     var background: BTBackground!
     var ruuviTagPersistence: RuuviTagPersistence!
     var settings: Settings!
+    var connectionPersistence: ConnectionPersistence!
     
     private var scanToken: ObservationToken?
-    private var realm: Realm!
     private var isOnToken: NSObjectProtocol?
     private var syncInterval: TimeInterval {
         return TimeInterval(settings.connectionDaemonIntervalMinutes * 60)
@@ -52,7 +51,6 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     func start() {
         start { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.realm = try! Realm()
             sSelf.scanToken = sSelf.foreground.scan(sSelf, options: [.callbackQueue(.untouch)]) { (observer, device) in
                 if let ruuviTag = device.ruuvi?.tag, ruuviTag.isConnectable {
                     sSelf.perform(#selector(RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped:)),
@@ -73,14 +71,15 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     @objc private func onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
         let device = ruuviTagWrapped.device
         let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == device.uuid })
-        if !operationIsAlreadyInQueue, !device.isConnected, let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: device.uuid), needsToConnectAndLoadData(for: ruuviTag) {
-            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, logSyncDate: ruuviTag.logSyncDate, uuid: device.uuid, background: background)
+        let logSyncDate = connectionPersistence.logSyncDate(uuid: device.uuid)
+        if !operationIsAlreadyInQueue, !device.isConnected, needsToConnectAndLoadData(for: logSyncDate) {
+            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, logSyncDate: logSyncDate, uuid: device.uuid, background: background)
             queue.addOperation(operation)
         }
     }
     
-    private func needsToConnectAndLoadData(for ruuviTag: RuuviTagRealm) -> Bool {
-        if let logSyncDate = ruuviTag.logSyncDate {
+    private func needsToConnectAndLoadData(for logSyncDate: Date?) -> Bool {
+        if let logSyncDate = logSyncDate {
             return Date().timeIntervalSince(logSyncDate) > syncInterval
         } else {
             return true
