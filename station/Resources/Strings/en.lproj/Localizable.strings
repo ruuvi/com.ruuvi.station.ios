@@ -37,7 +37,7 @@
 "Background.PresentNotifications.title" = "Present Notifications";
 "Background.KeepConnection.title" = "Keep Connection";
 "Background.SaveHeartbeats.title" = "Save Heartbeats";
-"Background.Interval.Every.string" = "Every";
+"Background.Interval.Every.string" = "every";
 "Background.Interval.Min.string" = "min";
 "Background.SyncLogsOnDidConnect.title" = "Sync Logs When Connected";
 "Background.readRSSITitle.title" = "Read RSSI";
