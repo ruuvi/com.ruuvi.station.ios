@@ -32,6 +32,10 @@ class DashboardPresenter: DashboardModuleInput {
     private var ruuviTagConnectionDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
+    private var startKeepingConnectionToken: NSObjectProtocol?
+    private var stopKeepingConnectionToken: NSObjectProtocol?
+    private var startReadingRSSIToken: NSObjectProtocol?
+    private var stopReadingRSSIToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -82,6 +86,18 @@ class DashboardPresenter: DashboardModuleInput {
         if let ruuviTagReadLogsOperationFailureToken = ruuviTagReadLogsOperationFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagReadLogsOperationFailureToken)
         }
+        if let startKeepingConnectionToken = startKeepingConnectionToken {
+            NotificationCenter.default.removeObserver(startKeepingConnectionToken)
+        }
+        if let stopKeepingConnectionToken = stopKeepingConnectionToken {
+            NotificationCenter.default.removeObserver(stopKeepingConnectionToken)
+        }
+        if let startReadingRSSIToken = startReadingRSSIToken {
+            NotificationCenter.default.removeObserver(startReadingRSSIToken)
+        }
+        if let stopReadingRSSIToken = stopReadingRSSIToken {
+            NotificationCenter.default.removeObserver(stopReadingRSSIToken)
+        }
     }
 }
 
@@ -93,6 +109,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingSettingsChanges()
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
+        startObservingConnectionPersistenceNotifications()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -221,40 +238,44 @@ extension DashboardPresenter {
     private func observeRuuviTagRSSI() {
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
-        connectionPersistence.keepConnectionUUIDs.forEach { (uuid) in
-            if connectionPersistence.readRSSI(uuid: uuid) {
-                let interval = connectionPersistence.readRSSIInterval(uuid: uuid)
-                let timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: true) { [weak self] timer in
-                    guard let sSelf = self else { timer.invalidate(); return }
-                    sSelf.rssiTokens[uuid] = sSelf.background.readRSSI(for: sSelf, uuid: uuid, result: { (observer, result) in
-                        switch result {
-                        case .success(let rssi):
-                            if let viewModel = observer.viewModels.first(where: { $0.uuid.value == uuid }) {
-                                viewModel.update(rssi: rssi, animated: true)
+        connectionPersistence.readRSSIUUIDs
+            .filter({ connectionPersistence.keepConnectionUUIDs.contains($0)})
+            .filter({ (uuid) -> Bool in
+                ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
+            }).forEach { (uuid) in
+                if connectionPersistence.readRSSI(uuid: uuid) {
+                    let interval = connectionPersistence.readRSSIInterval(uuid: uuid)
+                    let timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(interval), repeats: true) { [weak self] timer in
+                        guard let sSelf = self else { timer.invalidate(); return }
+                        sSelf.rssiTokens[uuid] = sSelf.background.readRSSI(for: sSelf, uuid: uuid, result: { (observer, result) in
+                            switch result {
+                            case .success(let rssi):
+                                if let viewModel = observer.viewModels.first(where: { $0.uuid.value == uuid }) {
+                                    viewModel.update(rssi: rssi, animated: true)
+                                }
+                            case .failure(let error):
+                                observer.errorPresenter.present(error: error)
                             }
-                        case .failure(let error):
-                            observer.errorPresenter.present(error: error)
-                        }
-                    })
+                        })
+                    }
+                    timer.fire()
+                    rssiTimers[uuid] = timer
                 }
-                timer.fire()
-                rssiTimers[uuid] = timer
             }
-        }
     }
     
     private func observeRuuviTagHeartbeats() {
         heartbeatTokens.forEach( { $0.invalidate() } )
         heartbeatTokens.removeAll()
-        for viewModel in viewModels {
-            if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
-                heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (observer, device) in
-                    if let ruuviTag = device.ruuvi?.tag,
-                        let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
-                        viewModel.update(with: ruuviTag)
-                    }
-                })
-            }
+        connectionPersistence.keepConnectionUUIDs.filter { (uuid) -> Bool in
+            ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
+        }.forEach { (uuid) in
+            heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (observer, device) in
+                if let ruuviTag = device.ruuvi?.tag,
+                    let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
+                    viewModel.update(with: ruuviTag)
+                }
+            })
         }
     }
     
@@ -395,6 +416,32 @@ extension DashboardPresenter {
         ruuviTagReadLogsOperationFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagReadLogsOperationDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagReadLogsOperationDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
+            }
+        })
+        
+    }
+    
+    func startObservingConnectionPersistenceNotifications() {
+        startKeepingConnectionToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartToKeepConnection, object: nil, queue: .main, using: { [weak self] _ in
+            self?.observeRuuviTagHeartbeats()
+            self?.observeRuuviTagRSSI()
+        })
+        
+        stopKeepingConnectionToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection, object: nil, queue: .main, using: { [weak self] _ in
+            self?.observeRuuviTagHeartbeats()
+            self?.observeRuuviTagRSSI()
+        })
+        
+        startReadingRSSIToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartReadingRSSI, object: nil, queue: .main, using: { [weak self] _ in
+            self?.observeRuuviTagRSSI()
+        })
+        
+        stopReadingRSSIToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStopReadingRSSI, object: nil, queue: .main, using: { [weak self] notification in
+            self?.observeRuuviTagRSSI()
+            if let userInfo = notification.userInfo, let uuid = userInfo[ConnectionPersistenceDidStopReadingRSSIKey.uuid] as? String {
+                self?.viewModels
+                    .filter( { $0.uuid.value == uuid} )
+                    .forEach( { $0.update(rssi: nil) } )
             }
         })
     }
