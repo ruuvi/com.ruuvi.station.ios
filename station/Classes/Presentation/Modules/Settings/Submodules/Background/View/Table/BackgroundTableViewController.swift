@@ -6,6 +6,8 @@ enum BackgroundTableSectionRows: Int, CaseIterable {
     case syncLogs = 2
     case saveHeartbeats = 3
     case saveHeartbeatsInterval = 4
+    case readRSSI = 5
+    case readRSSIInterval = 6
 }
 
 class BackgroundTableViewController: UITableViewController {
@@ -90,6 +92,19 @@ extension BackgroundTableViewController {
             cell.stepper.value = Double(viewModel.saveHeartbeatsInterval.value.bound)
             cell.delegate = self
             return cell
+        case .readRSSI:
+            let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! BackgroundSwitchTableViewCell
+            cell.titleLabel.text = viewModel.readRSSITitle
+            cell.isOnSwitch.isOn = viewModel.readRSSI.value.bound
+            cell.delegate = self
+            return cell
+        case .readRSSIInterval:
+            let cell = tableView.dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier, for: indexPath) as! BackgroundStepperTableViewCell
+            cell.titleLabel.text = "Background.Interval.Every.string".localized() + " " + "\(viewModel.readRSSIInterval.value.bound)" + " " + "Background.Interval.Sec.string".localized()
+            cell.unit = .seconds
+            cell.stepper.value = Double(viewModel.readRSSIInterval.value.bound)
+            cell.delegate = self
+            return cell
         }
     }
 }
@@ -110,6 +125,10 @@ extension BackgroundTableViewController: BackgroundSwitchTableViewCellDelegate {
                 viewModels[indexPath.section].saveHeartbeats.value = value
             case .saveHeartbeatsInterval:
                 break // do nothing, unreachable
+            case .readRSSI:
+                viewModels[indexPath.section].readRSSI.value = value
+            case .readRSSIInterval:
+                break // do nothing, unreachable
             }
             
         }
@@ -124,6 +143,8 @@ extension BackgroundTableViewController: BackgroundStepperTableViewCellDelegate 
             switch type {
             case .saveHeartbeatsInterval:
                 viewModels[indexPath.section].saveHeartbeatsInterval.value = value
+            case .readRSSIInterval:
+                viewModels[indexPath.section].readRSSIInterval.value = value
             default:
                 break // do nothing
             }
