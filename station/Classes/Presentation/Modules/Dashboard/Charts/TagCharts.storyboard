@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,12 +25,14 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbe-Ju-Xdg">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="Zl9-xI-Y92" id="Kqf-gt-cXx"/>
+                                    <outletCollection property="gestureRecognizers" destination="K2A-S4-Sie" appends="YES" id="vbN-KK-hbI"/>
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jMb-BW-FfY">
-                                <rect key="frame" x="297" y="33" width="26" height="26"/>
+                                <rect key="frame" x="297" y="13" width="26" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="26" id="FQw-LI-KaR"/>
                                     <constraint firstAttribute="height" constant="26" id="w5R-Ej-KnM"/>
@@ -44,14 +44,14 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_white" translatesAutoresizingMaskIntoConstraints="NO" id="YoH-aD-scc">
-                                <rect key="frame" x="92.5" y="33" width="190" height="26"/>
+                                <rect key="frame" x="92.5" y="13" width="190" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="E62-pd-10A"/>
                                     <constraint firstAttribute="width" constant="190" id="ba4-Ba-Q9J"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yVc-EN-JgQ">
-                                <rect key="frame" x="8" y="28" width="36" height="36"/>
+                                <rect key="frame" x="8" y="8" width="36" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="K13-2n-2YW"/>
                                     <constraint firstAttribute="width" constant="36" id="i2E-EZ-wxt"/>
@@ -63,7 +63,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kd9-Ut-wHm">
-                                <rect key="frame" x="331" y="28" width="36" height="36"/>
+                                <rect key="frame" x="331" y="8" width="36" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="50r-66-xpV"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="36" id="JG8-eM-m8n"/>
@@ -108,8 +108,8 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="RdT-h9-7Ne"/>
-                                <exclude reference="Uwb-DI-1It"/>
                                 <exclude reference="UTg-wi-uwg"/>
+                                <exclude reference="Uwb-DI-1It"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -145,6 +145,11 @@
                         <outlet property="viewController" destination="Zl9-xI-Y92" id="P7n-9U-kKD"/>
                     </connections>
                 </customObject>
+                <swipeGestureRecognizer direction="up" id="K2A-S4-Sie">
+                    <connections>
+                        <action selector="swipeUpGestureAction:" destination="Zl9-xI-Y92" id="8iO-xS-afr"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-98.400000000000006" y="-583.3583208395803"/>
         </scene>

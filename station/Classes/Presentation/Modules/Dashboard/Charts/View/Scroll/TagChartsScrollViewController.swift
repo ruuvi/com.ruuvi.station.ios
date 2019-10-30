@@ -89,6 +89,12 @@ extension TagChartsScrollViewController {
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerMenu()
     }
+    
+    @IBAction func swipeUpGestureAction(_ sender: UISwipeGestureRecognizer) {
+        if sender.direction == .up {
+            output.viewDidTriggerTagActions()
+        }
+    }
 }
 
 // MARK: - View lifecycle
