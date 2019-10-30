@@ -75,7 +75,6 @@ class BusinessAssembly: Assembly {
             service.calibrationService = r.resolve(CalibrationService.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
-            service.background = r.resolve(BTBackground.self)
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return service
         }
