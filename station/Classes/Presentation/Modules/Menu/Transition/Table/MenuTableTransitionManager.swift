@@ -2,7 +2,7 @@ import UIKit
 
 class MenuTableTransitionManager: NSObject {
     
-    var menuWidth: CGFloat = min(round(min((appScreenRect.width), (appScreenRect.height)) * 0.75), 220)
+    var menuWidth: CGFloat = min(round(min((appScreenRect.width), (appScreenRect.height)) * 0.75), 260)
     var container: UIViewController
     var menu: UIViewController
     var isInteractive: Bool = false
