@@ -5,6 +5,62 @@ class TagActionsPresentationController: UIPresentationController {
     var height: CGFloat = 0
     var dismissTransition: TagActionsDismissTransitionAnimation!
     
+    private var leftDoorPortrait: CATransform3D {
+        let w = TagActionsTransitionManager.appScreenRect.width
+        let h = TagActionsTransitionManager.appScreenRect.height
+        var t = CATransform3DIdentity
+        t.m34 = 1.0 / 800
+        t = CATransform3DRotate(t, CGFloat(Double.pi) * -45.0/180.0, 0, 1, 0)
+        let scale: CGFloat = 0.7
+        let rw = w / sqrt(2)
+        let x = scale * (w - rw) / 2
+        t = CATransform3DTranslate(t, -x, -h*0.15, 100)
+        t = CATransform3DScale(t, scale, scale, 1.0)
+        return t
+    }
+    
+    private var rightDoorPortrait: CATransform3D {
+        let w = TagActionsTransitionManager.appScreenRect.width
+        let h = TagActionsTransitionManager.appScreenRect.height
+        var t = CATransform3DIdentity
+        t.m34 = 1.0 / 800
+        t = CATransform3DRotate(t, CGFloat(Double.pi) * 45.0/180.0, 0, 1, 0)
+        let scale: CGFloat = 0.7
+        let rw = w / sqrt(2)
+        let x = scale * (w - rw) / 2
+        t = CATransform3DTranslate(t, x, -h*0.15, 100)
+        t = CATransform3DScale(t, scale, scale, 1.0)
+        return t
+    }
+    
+    private var leftDoorLandscape: CATransform3D {
+        let w = TagActionsTransitionManager.appScreenRect.width
+        let h = TagActionsTransitionManager.appScreenRect.height
+        var t = CATransform3DIdentity
+        t.m34 = 1.0 / 800
+        t = CATransform3DRotate(t, CGFloat(Double.pi) * -45.0/180.0, 0, 1, 0)
+        let scale: CGFloat = 0.52
+        let rw = w / sqrt(2)
+        let x = scale * (w - rw) / 2
+        t = CATransform3DTranslate(t, -x * 2.0, -h*0.15, 100)
+        t = CATransform3DScale(t, scale, scale, 1.0)
+        return t
+    }
+    
+    private var rightDoorLandscape: CATransform3D {
+        let w = TagActionsTransitionManager.appScreenRect.width
+        let h = TagActionsTransitionManager.appScreenRect.height
+        var t = CATransform3DIdentity
+        t.m34 = 1.0 / 800
+        t = CATransform3DRotate(t, CGFloat(Double.pi) * 45.0/180.0, 0, 1, 0)
+        let scale: CGFloat = 0.52
+        let rw = w / sqrt(2)
+        let x = scale * (w - rw) / 2
+        t = CATransform3DTranslate(t, x * 2.0, -h*0.15, 100)
+        t = CATransform3DScale(t, scale, scale, 1.0)
+        return t
+    }
+    
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
@@ -39,6 +95,24 @@ class TagActionsPresentationController: UIPresentationController {
         }
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        let identity = CATransform3DIdentity
+        self.presentingViewController.view.layer.transform = identity
+        self.presentingViewController.presentingViewController?.view.layer.transform = identity
+        coordinator.animate(alongsideTransition: { (context) in
+            if UIApplication.shared.statusBarOrientation.isLandscape {
+                self.presentingViewController.view.layer.transform = self.rightDoorLandscape
+                self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoorLandscape
+            } else {
+                self.presentingViewController.view.layer.transform = self.rightDoorPortrait
+                self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoorPortrait
+            }
+        }) { (context) in
+            
+        }
+        super.viewWillTransition(to: size, with: coordinator)
+    }
+    
     override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
         return CGSize(width: parentSize.width, height: height)
     }
@@ -68,40 +142,17 @@ class TagActionsPresentationController: UIPresentationController {
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
             transitionCoordinator.animate(alongsideTransition: { (context) in
                 self.dimmingView.alpha = 1.0
-                self.presentingViewController.view.layer.transform = self.rightDoor
-                self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoor
+                if UIApplication.shared.statusBarOrientation.isLandscape {
+                    self.presentingViewController.view.layer.transform = self.rightDoorLandscape
+                    self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoorLandscape
+                } else {
+                    self.presentingViewController.view.layer.transform = self.rightDoorPortrait
+                    self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoorPortrait
+                }
             }, completion: nil)
         } else {
             self.dimmingView.alpha = 1.0
         }
-    }
-    
-    private var leftDoor: CATransform3D {
-        let w = TagActionsTransitionManager.appScreenRect.width
-        let h = TagActionsTransitionManager.appScreenRect.height
-        var t = CATransform3DIdentity
-        t.m34 = 1.0 / 800
-        t = CATransform3DRotate(t, CGFloat(Double.pi) * -45.0/180.0, 0, 1, 0)
-        let scale: CGFloat = 0.7
-        let rw = w / sqrt(2)
-        let x = scale * (w - rw) / 2
-        t = CATransform3DTranslate(t, -x, -h*0.15, 100)
-        t = CATransform3DScale(t, scale, scale, 1.0)
-        return t
-    }
-    
-    private var rightDoor: CATransform3D {
-        let w = TagActionsTransitionManager.appScreenRect.width
-        let h = TagActionsTransitionManager.appScreenRect.height
-        var t = CATransform3DIdentity
-        t.m34 = 1.0 / 800
-        t = CATransform3DRotate(t, CGFloat(Double.pi) * 45.0/180.0, 0, 1, 0)
-        let scale: CGFloat = 0.7
-        let rw = w / sqrt(2)
-        let x = scale * (w - rw) / 2
-        t = CATransform3DTranslate(t, x, -h*0.15, 100)
-        t = CATransform3DScale(t, scale, scale, 1.0)
-        return t
     }
 
     override func dismissalTransitionWillBegin() {
