@@ -12,6 +12,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var foreground: BTForeground!
     var activityPresenter: ActivityPresenter!
     var ruuviTagService: RuuviTagService!
+    var gattService: GATTService!
     
     private var isLoading: Bool = false {
         didSet {
@@ -120,7 +121,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         switch viewModel.type {
         case .ruuvi:
             if let uuid = viewModel.uuid.value {
-                let op = ruuviTagService.loadHistory(uuid: uuid, from: Date.distantPast)
+                let op = gattService.syncLogs(with: uuid)
                 op.on(failure: { [weak self] (error) in
                     self?.errorPresenter.present(error: error)
                 })
