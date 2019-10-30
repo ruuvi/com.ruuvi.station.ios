@@ -40,11 +40,11 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         disconnectToken?.invalidate()
     }
     
-    init(ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, uuid: String, background: BTBackground) {
+    init(uuid: String, ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, background: BTBackground) {
         self.uuid = uuid
         self.ruuviTagPersistence = ruuviTagPersistence
-        self.background = background
         self.connectionPersistence = connectionPersistence
+        self.background = background
     }
     
     override func main() {
