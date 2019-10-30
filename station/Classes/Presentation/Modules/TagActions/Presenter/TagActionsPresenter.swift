@@ -11,6 +11,6 @@ class TagActionsPresenter: TagActionsModuleInput {
 
 extension TagActionsPresenter: TagActionsViewOutput {
     func viewDidTapOnDimmingView() {
-        
+        router.dismiss()
     }
 }
