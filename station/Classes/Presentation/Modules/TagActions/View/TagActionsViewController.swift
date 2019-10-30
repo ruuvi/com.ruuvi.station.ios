@@ -4,8 +4,8 @@ import SwiftUI
 #endif
 
 enum TagActionsEmbedSegue: String {
-    case swiftUI = "sdfg"
-    case uikit = "sdfdsf"
+    case swiftUI = "EmbedTagActionsSwiftUIHostingControllerSegueIdentifier"
+    case uikit = "EmbedTagActionsUIKitViewControllerSegueIdentifier"
 }
 
 class TagActionsViewController: UIViewController {
