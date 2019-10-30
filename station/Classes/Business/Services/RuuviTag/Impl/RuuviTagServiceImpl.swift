@@ -7,6 +7,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     var calibrationService: CalibrationService!
     var backgroundPersistence: BackgroundPersistence!
     var background: BTBackground!
+    var connectionPersistence: ConnectionPersistence!
     
     private var connectToken: ObservationToken?
     private var logToken: ObservationToken?
@@ -51,6 +52,7 @@ class RuuviTagServiceImpl: RuuviTagService {
     }
     
     func clearHistory(uuid: String) -> Future<Bool,RUError> {
+        connectionPersistence.setLogSyncDate(nil, uuid: uuid)
         return ruuviTagPersistence.clearHistory(uuid: uuid)
     }
 }

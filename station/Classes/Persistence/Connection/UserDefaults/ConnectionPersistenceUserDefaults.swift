@@ -153,7 +153,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
         return prefs.value(forKey: logSyncDateUDKeyPrefix + uuid) as? Date
     }
     
-    func setLogSyncDate(_ value: Date, uuid: String) {
+    func setLogSyncDate(_ value: Date?, uuid: String) {
         prefs.set(value, forKey: logSyncDateUDKeyPrefix + uuid)
     }
 }
