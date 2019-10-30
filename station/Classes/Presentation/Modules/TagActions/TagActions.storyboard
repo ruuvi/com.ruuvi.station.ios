@@ -20,13 +20,13 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
-                                    <segue destination="I1N-10-D1p" kind="embed" identifier="EmbedBackgroundSwiftUIHostingControllerSegueIdentifier" destinationCreationSelector="addSwiftUIView:" id="lkF-hL-Lid"/>
+                                    <segue destination="I1N-10-D1p" kind="embed" identifier="EmbedTagActionsSwiftUIHostingControllerSegueIdentifier" destinationCreationSelector="addSwiftUIView:" id="lkF-hL-Lid"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b43-q0-drS">
                                 <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <connections>
-                                    <segue destination="pqD-0h-m9V" kind="embed" id="mgm-xL-rqU"/>
+                                    <segue destination="pqD-0h-m9V" kind="embed" identifier="EmbedTagActionsUIKitViewControllerSegueIdentifier" id="mgm-xL-rqU"/>
                                 </connections>
                             </containerView>
                         </subviews>
