@@ -16,7 +16,7 @@ class TagActionsPresentationController: UIPresentationController {
     
     private lazy var shadowView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         view.clipsToBounds = false
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowRadius = 5
