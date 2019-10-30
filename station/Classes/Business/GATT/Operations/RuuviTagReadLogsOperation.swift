@@ -26,6 +26,7 @@ enum RuuviTagReadLogsOperationDidFinishKey: String {
 class RuuviTagReadLogsOperation: AsyncOperation {
     
     var uuid: String
+    var error: RUError?
     
     private var background: BTBackground
     private var connectionPersistence: ConnectionPersistence
@@ -68,12 +69,14 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail, object: nil, userInfo: [RuuviTagReadLogsOperationDidFailKey.uuid: uuid, RuuviTagReadLogsOperationDidFailKey.error: error])
                     }
+                    observer.error = error
                     observer.state = .finished
                 })
             case .failure(let error):
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail, object: nil, userInfo: [RuuviTagReadLogsOperationDidFailKey.uuid: uuid, RuuviTagReadLogsOperationDidFailKey.error: error])
                 }
+                observer.error = .btkit(error)
                 observer.state = .finished
             }
         }

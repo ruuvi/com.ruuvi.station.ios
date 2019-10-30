@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import Future
 
 class GATTServiceQueue: GATTService {
     var connectionPersistence: ConnectionPersistence!
@@ -12,9 +13,23 @@ class GATTServiceQueue: GATTService {
         return queue
     }()
     
-    func syncLogs(with uuid: String) {
-        let operation = RuuviTagReadLogsOperation(uuid: uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background)
-        queue.addOperation(operation)
+    @discardableResult
+    func syncLogs(with uuid: String) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        if isSyncingLogs(with: uuid) {
+            promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
+        } else {
+            let operation = RuuviTagReadLogsOperation(uuid: uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background)
+            operation.completionBlock = { [unowned operation] in
+                if let error = operation.error {
+                    promise.fail(error: error)
+                } else {
+                    promise.succeed(value: true)
+                }
+            }
+            queue.addOperation(operation)
+        }
+        return promise.future
     }
     
     func isSyncingLogs(with uuid: String) -> Bool {
