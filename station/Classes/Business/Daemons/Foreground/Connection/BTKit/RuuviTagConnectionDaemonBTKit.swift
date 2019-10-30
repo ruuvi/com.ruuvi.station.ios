@@ -73,7 +73,7 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
         let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == device.uuid })
         let logSyncDate = connectionPersistence.logSyncDate(uuid: device.uuid)
         if !operationIsAlreadyInQueue, !device.isConnected, needsToConnectAndLoadData(for: logSyncDate) {
-            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, logSyncDate: logSyncDate, uuid: device.uuid, background: background)
+            let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, uuid: device.uuid, background: background)
             queue.addOperation(operation)
         }
     }
