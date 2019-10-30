@@ -85,6 +85,8 @@
 		0E1C1E1122B756B40032F6CA /* DashboardTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */; };
 		0E1C1E1322B756D30032F6CA /* DashboardTagView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */; };
 		0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */; };
+		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
+		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
 		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
 		0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE723602E2500D600DB /* ConnectionPersistence.swift */; };
@@ -410,6 +412,8 @@
 		0E1C1E1022B756B40032F6CA /* DashboardTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTagView.swift; sourceTree = "<group>"; };
 		0E1C1E1222B756D30032F6CA /* DashboardTagView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DashboardTagView.xib; sourceTree = "<group>"; };
 		0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRouterDelegate.swift; sourceTree = "<group>"; };
+		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
+		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
 		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
 		0E390FE723602E2500D600DB /* ConnectionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistence.swift; sourceTree = "<group>"; };
@@ -1319,6 +1323,22 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		0E2A2CA32369479C004993C5 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */,
+			);
+			path = Operations;
+			sourceTree = "<group>";
+		};
+		0E2A2CA62369480E004993C5 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */,
+			);
+			path = Queue;
+			sourceTree = "<group>";
+		};
 		0E390FE0236021BC00D600DB /* LocalNotifications */ = {
 			isa = PBXGroup;
 			children = (
@@ -1538,12 +1558,14 @@
 			path = Table;
 			sourceTree = "<group>";
 		};
-		0E75661C2361C18C00FCA977 /* Operations */ = {
+		0E75661C2361C18C00FCA977 /* GATT */ = {
 			isa = PBXGroup;
 			children = (
-				0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */,
+				0E2A2CA32369479C004993C5 /* Operations */,
+				0E2A2CA62369480E004993C5 /* Queue */,
+				0E2A2CA4236947F0004993C5 /* GATTService.swift */,
 			);
-			path = Operations;
+			path = GATT;
 			sourceTree = "<group>";
 		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
@@ -2184,6 +2206,7 @@
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
 				0E5C302322D0B16300B52E39 /* AppState */,
 				0EEB210922B7D8110015F9E0 /* Daemons */,
+				0E75661C2361C18C00FCA977 /* GATT */,
 				0EEB215E22BA610E0015F9E0 /* Migration */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 			);
@@ -2201,7 +2224,6 @@
 		0EEB210922B7D8110015F9E0 /* Daemons */ = {
 			isa = PBXGroup;
 			children = (
-				0E75661C2361C18C00FCA977 /* Operations */,
 				0E9D5F2A2355799E0076FFD8 /* Background */,
 				0E9D5F29235574330076FFD8 /* Foreground */,
 			);
@@ -2961,6 +2983,7 @@
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
+				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
@@ -2973,6 +2996,7 @@
 				0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
+				0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */,
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
