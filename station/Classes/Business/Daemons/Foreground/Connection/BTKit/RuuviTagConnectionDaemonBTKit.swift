@@ -8,18 +8,13 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     var ruuviTagPersistence: RuuviTagPersistence!
     var settings: Settings!
     var connectionPersistence: ConnectionPersistence!
+    var gattService: GATTService!
     
     private var scanToken: ObservationToken?
     private var isOnToken: NSObjectProtocol?
     private var syncInterval: TimeInterval {
         return TimeInterval(settings.connectionDaemonIntervalMinutes * 60)
     }
-    
-    lazy var queue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        return queue
-    }()
     
     @objc private class RuuviTagConnectableDaemonWrapper: NSObject {
         var device: RuuviTag
@@ -70,11 +65,10 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     
     @objc private func onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped: RuuviTagConnectableDaemonWrapper) {
         let device = ruuviTagWrapped.device
-        let operationIsAlreadyInQueue = queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == device.uuid })
+        let operationIsAlreadyInQueue = gattService.isSyncingLogs(with: device.uuid)
         let logSyncDate = connectionPersistence.logSyncDate(uuid: device.uuid)
         if !operationIsAlreadyInQueue, !device.isConnected, needsToConnectAndLoadData(for: logSyncDate) {
-            let operation = RuuviTagReadLogsOperation(uuid: device.uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background)
-            queue.addOperation(operation)
+            gattService.syncLogs(with: device.uuid)
         }
     }
     

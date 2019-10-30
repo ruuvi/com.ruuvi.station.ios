@@ -8,6 +8,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagPersistence: RuuviTagPersistence!
+    var gattService: GATTService!
     
     private var realm: Realm!
     private var ruuviTags: Results<RuuviTagRealm>?
@@ -17,11 +18,6 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var connectionRemovedToken: NSObjectProtocol?
     private var savedDate = [String: Date]() // uuid:date
     private var ruuviTagsToken: NotificationToken?
-    lazy var syncLogsQueue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        return queue
-    }()
     
     @objc private class RuuviTagHeartbeatDaemonPair: NSObject {
         var uuid: String
@@ -245,8 +241,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
     
     @objc private func syncLogs(_ uuid: String) {
-        let operation = RuuviTagReadLogsOperation(uuid: uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background)
-        syncLogsQueue.addOperation(operation)
+        gattService.syncLogs(with: uuid)
     }
     
     private func invalidateTokens() {

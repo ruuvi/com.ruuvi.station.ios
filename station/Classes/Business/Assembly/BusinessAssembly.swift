@@ -21,6 +21,14 @@ class BusinessAssembly: Assembly {
             return service
         }
         
+        container.register(GATTService.self) { r in
+            let service = GATTServiceQueue()
+            service.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.background = r.resolve(BTBackground.self)
+            return service
+        }.inObjectScope(.container)
+        
         container.register(LocationService.self) { r in
             let service = LocationServiceApple()
             return service
@@ -48,6 +56,7 @@ class BusinessAssembly: Assembly {
             daemon.background = r.resolve(BTBackground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            daemon.gattService = r.resolve(GATTService.self)
             return daemon
         }.inObjectScope(.container)
         
@@ -57,6 +66,7 @@ class BusinessAssembly: Assembly {
             service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.gattService = r.resolve(GATTService.self)
             return service
         }.inObjectScope(.container)
         
