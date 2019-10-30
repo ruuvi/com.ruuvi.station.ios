@@ -27,7 +27,7 @@ protocol ConnectionPersistence {
     func setReadRSSIInterval(_ value: Int, uuid: String)
     
     func logSyncDate(uuid: String) -> Date?
-    func setLogSyncDate(_ value: Date, uuid: String) 
+    func setLogSyncDate(_ value: Date?, uuid: String) 
 }
 
 extension Notification.Name {
