@@ -6,6 +6,7 @@ protocol TagChartsViewOutput {
     func viewWillAppear()
     func viewWillDisappear()
     func viewDidTriggerMenu()
+    func viewDidTriggerTagActions()
     func viewDidScroll(to index: Int)
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel)
     func viewDidAskToSync(with viewModel: TagChartsViewModel)

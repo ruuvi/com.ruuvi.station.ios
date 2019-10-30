@@ -99,6 +99,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.dismiss()
     }
     
+    func viewDidTriggerTagActions() {
+        print("tag actions")
+    }
+    
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value?.last?.value)
