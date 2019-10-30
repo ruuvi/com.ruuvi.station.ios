@@ -83,17 +83,52 @@ class TagActionsPresentationController: UIPresentationController {
             transitionCoordinator.animate(alongsideTransition: { (context) in
                 self.shadowView.frame = self.presentedView?.frame ?? .zero
                 self.dimmingView.alpha = 1.0
+                self.presentingViewController.view.layer.transform = self.rightDoor
+                self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoor
             }, completion: nil)
         } else {
             self.dimmingView.alpha = 1.0
         }
     }
     
+    private var leftDoor: CATransform3D {
+        let w = TagActionsTransitionManager.appScreenRect.width
+        let h = TagActionsTransitionManager.appScreenRect.height
+        var t = CATransform3DIdentity
+        t.m34 = 1.0 / 800
+        t = CATransform3DRotate(t, CGFloat(Double.pi) * -45.0/180.0, 0, 1, 0)
+        let scale: CGFloat = 0.7
+        let rw = w / sqrt(2)
+        let x = scale * (w - rw) / 2
+        t = CATransform3DTranslate(t, -x, -h*0.15, 100)
+        t = CATransform3DScale(t, scale, scale, 1.0)
+        return t
+    }
+    
+    private var rightDoor: CATransform3D {
+        let w = TagActionsTransitionManager.appScreenRect.width
+        let h = TagActionsTransitionManager.appScreenRect.height
+        var t = CATransform3DIdentity
+        t.m34 = 1.0 / 800
+        t = CATransform3DRotate(t, CGFloat(Double.pi) * 45.0/180.0, 0, 1, 0)
+        let scale: CGFloat = 0.7
+        let rw = w / sqrt(2)
+        let x = scale * (w - rw) / 2
+        t = CATransform3DTranslate(t, x, -h*0.15, 100)
+        t = CATransform3DScale(t, scale, scale, 1.0)
+        return t
+    }
+
     override func dismissalTransitionWillBegin() {
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
+            let identity = CATransform3DIdentity
             transitionCoordinator.animate(alongsideTransition: { (context) in
                 self.dimmingView.alpha = 0
                 self.shadowView.frame = self.presentedView?.frame ?? .zero
+                
+                self.presentingViewController.view.layer.transform = identity
+                self.presentingViewController.presentingViewController?.view.layer.transform = identity
+                
             }, completion: nil)
         } else {
             self.dimmingView.alpha = 0
