@@ -245,7 +245,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
     
     @objc private func syncLogs(_ uuid: String) {
-        let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, logSyncDate: connectionPersistence.logSyncDate(uuid: uuid), uuid: uuid, background: background)
+        let operation = RuuviTagReadLogsOperation(ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, uuid: uuid, background: background)
         syncLogsQueue.addOperation(operation)
     }
     

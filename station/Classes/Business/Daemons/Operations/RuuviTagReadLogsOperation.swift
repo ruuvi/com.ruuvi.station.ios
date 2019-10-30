@@ -27,13 +27,12 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     
     var uuid: String
     
-    private var ruuviTagPersistence: RuuviTagPersistence!
-    private var logSyncDate: Date?
+    private var background: BTBackground
+    private var connectionPersistence: ConnectionPersistence
+    private var ruuviTagPersistence: RuuviTagPersistence
     private var logToken: ObservationToken?
     private var connectToken: ObservationToken?
     private var disconnectToken: ObservationToken?
-    private var background: BTBackground
-    private var connectionPersistence: ConnectionPersistence
     
     deinit {
         logToken?.invalidate()
@@ -41,16 +40,15 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         disconnectToken?.invalidate()
     }
     
-    init(ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, logSyncDate: Date?, uuid: String, background: BTBackground) {
+    init(ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, uuid: String, background: BTBackground) {
         self.uuid = uuid
         self.ruuviTagPersistence = ruuviTagPersistence
-        self.logSyncDate = logSyncDate
         self.background = background
         self.connectionPersistence = connectionPersistence
     }
     
     override func main() {
-        let date = logSyncDate ?? Date.distantPast
+        let date = connectionPersistence.logSyncDate(uuid: uuid) ?? Date.distantPast
         let uuid = self.uuid
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart, object: nil, userInfo: [RuuviTagReadLogsOperationDidStartKey.uuid: uuid, RuuviTagReadLogsOperationDidStartKey.fromDate: date])
