@@ -241,7 +241,11 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
     
     @objc private func syncLogs(_ uuid: String) {
-        gattService.syncLogs(with: uuid)
+        gattService.syncLogs(with: uuid).on(failure: { (error) in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: error])
+            }
+        })
     }
     
     private func invalidateTokens() {

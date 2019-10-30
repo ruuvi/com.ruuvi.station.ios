@@ -46,10 +46,6 @@
 // Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
 
-// ErrorPresenterAlert
-"ErrorPresenterAlert.Error" = "Ошибка";
-"ErrorPresenterAlert.OK" = "OK";
-
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
 "CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
@@ -77,8 +73,13 @@
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 
+// ErrorPresenterAlert
+"ErrorPresenterAlert.Error" = "Ошибка";
+"ErrorPresenterAlert.OK" = "OK";
+
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
+"ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "ADVERTISEMENTS";

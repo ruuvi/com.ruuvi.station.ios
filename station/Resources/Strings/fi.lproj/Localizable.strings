@@ -46,10 +46,6 @@
 // Bluetooth Error
 "BluetoothError.disconnected" = "Disconnected";
 
-// ErrorPresenterAlert
-"ErrorPresenterAlert.Error" = "Virhe";
-"ErrorPresenterAlert.OK" = "OK";
-
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
 "CoreError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
@@ -77,8 +73,13 @@
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja laitteita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth poissa käytöstä";
 
+// ErrorPresenterAlert
+"ErrorPresenterAlert.Error" = "Virhe";
+"ErrorPresenterAlert.OK" = "OK";
+
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
+"ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this RuuviTag";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
