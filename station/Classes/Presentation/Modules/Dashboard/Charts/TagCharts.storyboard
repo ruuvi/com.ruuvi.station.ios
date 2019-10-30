@@ -28,7 +28,6 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="Zl9-xI-Y92" id="Kqf-gt-cXx"/>
-                                    <outletCollection property="gestureRecognizers" destination="K2A-S4-Sie" appends="YES" id="vbN-KK-hbI"/>
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jMb-BW-FfY">
@@ -145,11 +144,6 @@
                         <outlet property="viewController" destination="Zl9-xI-Y92" id="P7n-9U-kKD"/>
                     </connections>
                 </customObject>
-                <swipeGestureRecognizer direction="up" id="K2A-S4-Sie">
-                    <connections>
-                        <action selector="swipeUpGestureAction:" destination="Zl9-xI-Y92" id="8iO-xS-afr"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-98.400000000000006" y="-583.3583208395803"/>
         </scene>

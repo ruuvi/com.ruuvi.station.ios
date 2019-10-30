@@ -87,6 +87,25 @@
 		0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */; };
 		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
 		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
+		0E2A2CB023696EA5004993C5 /* TagActions.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E2A2CAF23696EA5004993C5 /* TagActions.storyboard */; };
+		0E2A2CB223696EDE004993C5 /* TagActionsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CB123696EDE004993C5 /* TagActionsViewInput.swift */; };
+		0E2A2CB423696EF7004993C5 /* TagActionsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CB323696EF7004993C5 /* TagActionsViewOutput.swift */; };
+		0E2A2CB723696F2F004993C5 /* TagActionsUIKitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CB623696F2F004993C5 /* TagActionsUIKitViewController.swift */; };
+		0E2A2CB923696FA7004993C5 /* TagActionsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CB823696FA7004993C5 /* TagActionsRouterInput.swift */; };
+		0E2A2CBB23696FB7004993C5 /* TagActionsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CBA23696FB7004993C5 /* TagActionsRouter.swift */; };
+		0E2A2CBD23696FE0004993C5 /* TagActionsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CBC23696FE0004993C5 /* TagActionsModuleInput.swift */; };
+		0E2A2CBF2369704D004993C5 /* TagActionsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CBE2369704D004993C5 /* TagActionsPresenter.swift */; };
+		0E2A2CC1236970AA004993C5 /* TagActionsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CC0236970AA004993C5 /* TagActionsInitializer.swift */; };
+		0E2A2CC3236970CE004993C5 /* TagActionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CC2236970CE004993C5 /* TagActionsViewController.swift */; };
+		0E2A2CC52369712C004993C5 /* TagActionsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CC42369712C004993C5 /* TagActionsConfigurator.swift */; };
+		0E2A2CC7236971F7004993C5 /* TagActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CC6236971F7004993C5 /* TagActionsViewModel.swift */; };
+		0E2A2CCA23697258004993C5 /* TagActionsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CC923697258004993C5 /* TagActionsEnvironmentObject.swift */; };
+		0E2A2CCE2369739B004993C5 /* TagActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CCD2369739B004993C5 /* TagActionsView.swift */; };
+		0E2A2CD023697641004993C5 /* TagActionsTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CCF23697641004993C5 /* TagActionsTransitioningDelegate.swift */; };
+		0E2A2CD2236976FC004993C5 /* TagActionsTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD1236976FC004993C5 /* TagActionsTransitionManager.swift */; };
+		0E2A2CD4236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD3236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift */; };
+		0E2A2CD6236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD5236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift */; };
+		0E2A2CD823697A29004993C5 /* TagActionsPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD723697A29004993C5 /* TagActionsPresentationController.swift */; };
 		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
 		0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE723602E2500D600DB /* ConnectionPersistence.swift */; };
@@ -414,6 +433,25 @@
 		0E211C29234C5FE900FC37B0 /* DashboardRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRouterDelegate.swift; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
+		0E2A2CAF23696EA5004993C5 /* TagActions.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagActions.storyboard; sourceTree = "<group>"; };
+		0E2A2CB123696EDE004993C5 /* TagActionsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsViewInput.swift; sourceTree = "<group>"; };
+		0E2A2CB323696EF7004993C5 /* TagActionsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsViewOutput.swift; sourceTree = "<group>"; };
+		0E2A2CB623696F2F004993C5 /* TagActionsUIKitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsUIKitViewController.swift; sourceTree = "<group>"; };
+		0E2A2CB823696FA7004993C5 /* TagActionsRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsRouterInput.swift; sourceTree = "<group>"; };
+		0E2A2CBA23696FB7004993C5 /* TagActionsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsRouter.swift; sourceTree = "<group>"; };
+		0E2A2CBC23696FE0004993C5 /* TagActionsModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsModuleInput.swift; sourceTree = "<group>"; };
+		0E2A2CBE2369704D004993C5 /* TagActionsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsPresenter.swift; sourceTree = "<group>"; };
+		0E2A2CC0236970AA004993C5 /* TagActionsInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsInitializer.swift; sourceTree = "<group>"; };
+		0E2A2CC2236970CE004993C5 /* TagActionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsViewController.swift; sourceTree = "<group>"; };
+		0E2A2CC42369712C004993C5 /* TagActionsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsConfigurator.swift; sourceTree = "<group>"; };
+		0E2A2CC6236971F7004993C5 /* TagActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsViewModel.swift; sourceTree = "<group>"; };
+		0E2A2CC923697258004993C5 /* TagActionsEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsEnvironmentObject.swift; sourceTree = "<group>"; };
+		0E2A2CCD2369739B004993C5 /* TagActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsView.swift; sourceTree = "<group>"; };
+		0E2A2CCF23697641004993C5 /* TagActionsTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsTransitioningDelegate.swift; sourceTree = "<group>"; };
+		0E2A2CD1236976FC004993C5 /* TagActionsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsTransitionManager.swift; sourceTree = "<group>"; };
+		0E2A2CD3236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsPresentTransitionAnimation.swift; sourceTree = "<group>"; };
+		0E2A2CD5236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
+		0E2A2CD723697A29004993C5 /* TagActionsPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsPresentationController.swift; sourceTree = "<group>"; };
 		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
 		0E390FE723602E2500D600DB /* ConnectionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistence.swift; sourceTree = "<group>"; };
@@ -939,6 +977,7 @@
 				0E09671D22AE76D800E85F48 /* Main */,
 				0E1C1DEB22B3FDB40032F6CA /* Menu */,
 				0EEB20CE22B7C6DA0015F9E0 /* Settings */,
+				0E2A2CA923696E56004993C5 /* TagActions */,
 				0EF2862522CBAF280026C7A5 /* TagSettings */,
 				0E046F2022F049C500BD4E9C /* WebTagSettings */,
 				0E09671E22AE7F2600E85F48 /* Welcome */,
@@ -1337,6 +1376,88 @@
 				0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */,
 			);
 			path = Queue;
+			sourceTree = "<group>";
+		};
+		0E2A2CA923696E56004993C5 /* TagActions */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CAF23696EA5004993C5 /* TagActions.storyboard */,
+				0E2A2CAE23696E8A004993C5 /* Assembly */,
+				0E2A2CAD23696E84004993C5 /* Transition */,
+				0E2A2CAC23696E7D004993C5 /* Presenter */,
+				0E2A2CAB23696E78004993C5 /* Router */,
+				0E2A2CAA23696E75004993C5 /* View */,
+			);
+			path = TagActions;
+			sourceTree = "<group>";
+		};
+		0E2A2CAA23696E75004993C5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CC823697241004993C5 /* SwiftUI */,
+				0E2A2CB523696F0C004993C5 /* UIKit */,
+				0E2A2CB123696EDE004993C5 /* TagActionsViewInput.swift */,
+				0E2A2CB323696EF7004993C5 /* TagActionsViewOutput.swift */,
+				0E2A2CC2236970CE004993C5 /* TagActionsViewController.swift */,
+				0E2A2CC6236971F7004993C5 /* TagActionsViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0E2A2CAB23696E78004993C5 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CB823696FA7004993C5 /* TagActionsRouterInput.swift */,
+				0E2A2CBA23696FB7004993C5 /* TagActionsRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		0E2A2CAC23696E7D004993C5 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CBC23696FE0004993C5 /* TagActionsModuleInput.swift */,
+				0E2A2CBE2369704D004993C5 /* TagActionsPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		0E2A2CAD23696E84004993C5 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CCF23697641004993C5 /* TagActionsTransitioningDelegate.swift */,
+				0E2A2CD1236976FC004993C5 /* TagActionsTransitionManager.swift */,
+				0E2A2CD3236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift */,
+				0E2A2CD5236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift */,
+				0E2A2CD723697A29004993C5 /* TagActionsPresentationController.swift */,
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
+		0E2A2CAE23696E8A004993C5 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CC0236970AA004993C5 /* TagActionsInitializer.swift */,
+				0E2A2CC42369712C004993C5 /* TagActionsConfigurator.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E2A2CB523696F0C004993C5 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CB623696F2F004993C5 /* TagActionsUIKitViewController.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		0E2A2CC823697241004993C5 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				0E2A2CCD2369739B004993C5 /* TagActionsView.swift */,
+				0E2A2CC923697258004993C5 /* TagActionsEnvironmentObject.swift */,
+			);
+			path = SwiftUI;
 			sourceTree = "<group>";
 		};
 		0E390FE0236021BC00D600DB /* LocalNotifications */ = {
@@ -2814,6 +2935,7 @@
 				0E1C1E1322B756D30032F6CA /* DashboardTagView.xib in Resources */,
 				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
+				0E2A2CB023696EA5004993C5 /* TagActions.storyboard in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
@@ -2936,8 +3058,10 @@
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* DashboardViewOutput.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
+				0E2A2CBD23696FE0004993C5 /* TagActionsModuleInput.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
+				0E2A2CC3236970CE004993C5 /* TagActionsViewController.swift in Sources */,
 				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
 				0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */,
 				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
@@ -2969,6 +3093,7 @@
 				0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
 				0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */,
+				0E2A2CCA23697258004993C5 /* TagActionsEnvironmentObject.swift in Sources */,
 				0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */,
 				0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */,
 				0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */,
@@ -2984,8 +3109,10 @@
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
+				0E2A2CCE2369739B004993C5 /* TagActionsView.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
+				0E2A2CD823697A29004993C5 /* TagActionsPresentationController.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */,
@@ -3001,6 +3128,7 @@
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
+				0E2A2CC52369712C004993C5 /* TagActionsConfigurator.swift in Sources */,
 				0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
@@ -3024,6 +3152,7 @@
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0EF6F5C0235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift in Sources */,
 				0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */,
+				0E2A2CB423696EF7004993C5 /* TagActionsViewOutput.swift in Sources */,
 				0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */,
 				0ECFF36023506BD60061D11B /* ForegroundViewInput.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
@@ -3041,6 +3170,7 @@
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
+				0E2A2CC7236971F7004993C5 /* TagActionsViewModel.swift in Sources */,
 				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,
 				0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */,
 				0E8FD0DF2333797300FFA577 /* TagChartsView.swift in Sources */,
@@ -3050,6 +3180,7 @@
 				0E1C1DFA22B3FFBF0032F6CA /* MenuRouterInput.swift in Sources */,
 				0EBAF077232007D80025A191 /* LanguageRouter.swift in Sources */,
 				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
+				0E2A2CBB23696FB7004993C5 /* TagActionsRouter.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
 				0EC1B6CA2361D557008F1678 /* BackgroundSwitchTableViewCell.swift in Sources */,
@@ -3063,6 +3194,7 @@
 				0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
+				0E2A2CC1236970AA004993C5 /* TagActionsInitializer.swift in Sources */,
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
@@ -3082,6 +3214,7 @@
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
 				0EEB215122B8FD070015F9E0 /* WelcomeModuleInput.swift in Sources */,
 				0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */,
+				0E2A2CD023697641004993C5 /* TagActionsTransitioningDelegate.swift in Sources */,
 				0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */,
 				0E9959B1235ED65A001C37D8 /* BackgroundRouter.swift in Sources */,
 				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
@@ -3111,10 +3244,13 @@
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
+				0E2A2CD2236976FC004993C5 /* TagActionsTransitionManager.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
+				0E2A2CB923696FA7004993C5 /* TagActionsRouterInput.swift in Sources */,
 				0E046F5D22F18EC100BD4E9C /* LocationService.swift in Sources */,
+				0E2A2CD6236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift in Sources */,
 				0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */,
 				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E046F3F22F0702D00BD4E9C /* WebTagSettingsViewModel.swift in Sources */,
@@ -3144,13 +3280,17 @@
 				0E1C1DE422B3C2710032F6CA /* DashboardRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* DashboardRouterInput.swift in Sources */,
+				0E2A2CB223696EDE004993C5 /* TagActionsViewInput.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0ED8206C235E0E3700874BCB /* BackgroundEnvironmentObject.swift in Sources */,
 				0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */,
 				0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */,
+				0E2A2CD4236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift in Sources */,
+				0E2A2CB723696F2F004993C5 /* TagActionsUIKitViewController.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
+				0E2A2CBF2369704D004993C5 /* TagActionsPresenter.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,

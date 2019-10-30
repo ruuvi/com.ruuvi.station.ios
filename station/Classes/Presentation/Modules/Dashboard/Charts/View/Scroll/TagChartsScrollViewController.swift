@@ -4,6 +4,9 @@ import Charts
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
     
+    var tagActionsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
+    var tagActionsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
+    
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -90,17 +93,13 @@ extension TagChartsScrollViewController {
         output.viewDidTriggerMenu()
     }
     
-    @IBAction func swipeUpGestureAction(_ sender: UISwipeGestureRecognizer) {
-        if sender.direction == .up {
-            output.viewDidTriggerTagActions()
-        }
-    }
 }
 
 // MARK: - View lifecycle
 extension TagChartsScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureViews()
         setupLocalization()
         updateUI()
         output.viewDidLoad()
@@ -161,8 +160,32 @@ extension TagChartsScrollViewController: TagChartsViewDelegate {
     }
 }
 
+//MARK: - UIGestureRecognizerDelegate
+extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let pan = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = pan.velocity(in: scrollView)
+            return abs(velocity.y) > abs(velocity.x)
+        } else {
+            return true
+        }
+    }
+}
+
 // MARK: - View configuration
 extension TagChartsScrollViewController {
+ 
+    private func configureViews() {
+        configurePanGestureRecognozer()
+    }
+   
+    private func configurePanGestureRecognozer() {
+        let gr = UIPanGestureRecognizer()
+        gr.delegate = self
+        gr.cancelsTouchesInView = true
+        scrollView.addGestureRecognizer(gr)
+        gr.addTarget(tagActionsPresentInteractiveTransition as Any, action:#selector(TagActionsPresentTransitionAnimation.handlePresentPan(_:)))
+    }
     
     private func configure(_ chartView: LineChartView) {
         chartView.delegate = self
