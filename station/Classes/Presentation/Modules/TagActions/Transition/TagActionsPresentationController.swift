@@ -13,17 +13,6 @@ class TagActionsPresentationController: UIPresentationController {
         view.addGestureRecognizer(panGestureRecognizer)
         return view
     }()
-    
-    private lazy var shadowView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.clipsToBounds = false
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 5
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = CGSize(width: 0, height: 0)
-        return view
-    }()
 
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer(target: self, action: #selector(TagActionsPresentationController.dimmingViewTapped(_:)))
@@ -72,16 +61,12 @@ class TagActionsPresentationController: UIPresentationController {
         if let containerView = containerView {
             dimmingView.bounds = containerView.bounds
             dimmingView.alpha = 0
-            
-            shadowView.frame = frameOfPresentedViewInContainerView.insetBy(dx: 0, dy: height)
         }
         
-        containerView?.insertSubview(shadowView, at: 0)
         containerView?.insertSubview(dimmingView, at: 0)
         
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
             transitionCoordinator.animate(alongsideTransition: { (context) in
-                self.shadowView.frame = self.presentedView?.frame ?? .zero
                 self.dimmingView.alpha = 1.0
                 self.presentingViewController.view.layer.transform = self.rightDoor
                 self.presentingViewController.presentingViewController?.view.layer.transform = self.leftDoor
@@ -124,7 +109,6 @@ class TagActionsPresentationController: UIPresentationController {
             let identity = CATransform3DIdentity
             transitionCoordinator.animate(alongsideTransition: { (context) in
                 self.dimmingView.alpha = 0
-                self.shadowView.frame = self.presentedView?.frame ?? .zero
                 
                 self.presentingViewController.view.layer.transform = identity
                 self.presentingViewController.presentingViewController?.view.layer.transform = identity
