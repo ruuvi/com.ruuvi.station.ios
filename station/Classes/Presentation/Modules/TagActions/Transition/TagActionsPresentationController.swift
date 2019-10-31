@@ -97,8 +97,8 @@ class TagActionsPresentationController: UIPresentationController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let identity = CATransform3DIdentity
-        self.presentingViewController.view.layer.transform = identity
-        self.presentingViewController.presentingViewController?.view.layer.transform = identity
+        presentingViewController.view.layer.transform = identity
+        presentingViewController.presentingViewController?.view.layer.transform = identity
         coordinator.animate(alongsideTransition: { (context) in
             if UIApplication.shared.statusBarOrientation.isLandscape {
                 self.presentingViewController.view.layer.transform = self.rightDoorLandscape
