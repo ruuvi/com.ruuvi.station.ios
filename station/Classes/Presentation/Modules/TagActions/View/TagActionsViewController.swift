@@ -62,7 +62,7 @@ extension TagActionsViewController: TagActionsViewInput {
         present(alertVC, animated: true)
     }
     
-    func showExportDialog() {
+    func showExportSelectTypeDialog() {
         let sheet = UIAlertController(title: nil, message: "TagActions.ExportSheet.message".localized(), preferredStyle: .actionSheet)
         let temperature = UIAlertAction(title: "TagActions.ExportSheet.temperature".localized(), style: .default) { [weak self] (action) in
             self?.output.viewDidAskToExportTemperature()

@@ -23,7 +23,7 @@ extension TagActionsUIKitViewController: TagActionsViewInput {
         // handled by parent
     }
     
-    func showExportDialog() {
+    func showExportSelectTypeDialog() {
         // handled by parent
     }
     
