@@ -23,7 +23,7 @@ class TagChartsScrollConfigurator {
         let tagActions = UIStoryboard(name: "TagActions", bundle: .main).instantiateInitialViewController() as! TagActionsViewController
         tagActions.modalPresentationStyle = .custom
         let tagActionsPresenter = tagActions.output as! TagActionsPresenter
-        tagActionsPresenter.configure()
+        presenter.tagActions = tagActionsPresenter
         
         let manager = TagActionsTransitionManager(container: view, actions: tagActions)
         let transition = TagActionsTransitioningDelegate(manager: manager)
