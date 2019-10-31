@@ -5,5 +5,5 @@ protocol TagActionsViewInput: ViewInput {
     
     func showClearConfirmationDialog()
     func showSyncConfirmationDialog()
-    func showExportSelectTypeDialog()
+    func showExportSheet(with path: URL)
 }

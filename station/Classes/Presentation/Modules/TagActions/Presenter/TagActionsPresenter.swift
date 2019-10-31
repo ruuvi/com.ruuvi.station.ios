@@ -6,6 +6,7 @@ class TagActionsPresenter: TagActionsModuleInput {
     var gattService: GATTService!
     var errorPresenter: ErrorPresenter!
     var ruuviTagService: RuuviTagService!
+    var exportService: ExportService!
     
     func configure(uuid: String) {
         view.viewModel = TagActionsViewModel(uuid: uuid)
@@ -38,7 +39,11 @@ extension TagActionsPresenter: TagActionsViewOutput {
     }
     
     func viewDidAskToExport() {
-        view.showExportSelectTypeDialog()
+        exportService.csvLog(for: view.viewModel.uuid).on(success: { [weak self] url in
+            self?.view.showExportSheet(with: url)
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
     
     func viewDidConfirmToSync() {
@@ -55,15 +60,4 @@ extension TagActionsPresenter: TagActionsViewOutput {
         })
     }
     
-    func viewDidAskToExportTemperature() {
-        
-    }
-    
-    func viewDidAskToExportHumidity() {
-        
-    }
-    
-    func viewDidAskToExportPressure() {
-        
-    }
 }

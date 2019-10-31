@@ -11,6 +11,7 @@ enum RUError: Error {
     case btkit(BTError)
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
+    case writeToDisk(Error)
 }
 
 extension RUError: LocalizedError {
@@ -33,6 +34,8 @@ extension RUError: LocalizedError {
         case .btkit(let error):
             return error.localizedDescription
         case .bluetooth(let error):
+            return error.localizedDescription
+        case .writeToDisk(let error):
             return error.localizedDescription
         }
     }
@@ -106,6 +109,7 @@ enum UnexpectedError: Error {
     case callerDeinitedDuringOperation
     case failedToReverseGeocodeCoordinate
     case failedToFindRuuviTag
+    case failedToFindLogsForTheTag
 }
 
 extension UnexpectedError: LocalizedError {
@@ -119,6 +123,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.failedToReverseGeocodeCoordinate".localized()
         case .failedToFindRuuviTag:
             return "UnexpectedError.failedToFindRuuviTag".localized()
+        case .failedToFindLogsForTheTag:
+            return "UnexpectedError.failedToFindLogsForTheTag".localized()
         }
     }
 }

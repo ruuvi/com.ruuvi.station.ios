@@ -114,6 +114,7 @@
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
 		0E538364236AE6BA0007956D /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E538363236AE6BA0007956D /* ExportService.swift */; };
+		0E538367236AEE400007956D /* ExportServiceTemp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E538366236AEE400007956D /* ExportServiceTemp.swift */; };
 		0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0E53A3F3232DFC6200ACED49 /* InfoPlist.strings */; };
 		0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */; };
 		0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E53DA5F22CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift */; };
@@ -461,6 +462,7 @@
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
 		0E538363236AE6BA0007956D /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
+		0E538366236AEE400007956D /* ExportServiceTemp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportServiceTemp.swift; sourceTree = "<group>"; };
 		0E53A3F2232DFC6200ACED49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53A3F4232DFC6400ACED49 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0E53A3F5232DFC6500ACED49 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1521,9 +1523,18 @@
 		0E538362236ADC040007956D /* Export */ = {
 			isa = PBXGroup;
 			children = (
+				0E538365236AEE1F0007956D /* Temp */,
 				0E538363236AE6BA0007956D /* ExportService.swift */,
 			);
 			path = Export;
+			sourceTree = "<group>";
+		};
+		0E538365236AEE1F0007956D /* Temp */ = {
+			isa = PBXGroup;
+			children = (
+				0E538366236AEE400007956D /* ExportServiceTemp.swift */,
+			);
+			path = Temp;
 			sourceTree = "<group>";
 		};
 		0E5C300C22CF632500B52E39 /* Core */ = {
@@ -3145,6 +3156,7 @@
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0ED8206E235E0E8C00874BCB /* BackgroundViewModel.swift in Sources */,
+				0E538367236AEE400007956D /* ExportServiceTemp.swift in Sources */,
 				0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,

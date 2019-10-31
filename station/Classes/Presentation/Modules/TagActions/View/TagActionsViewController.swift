@@ -62,28 +62,19 @@ extension TagActionsViewController: TagActionsViewInput {
         present(alertVC, animated: true)
     }
     
-    func showExportSelectTypeDialog() {
-        let sheet = UIAlertController(title: nil, message: "TagActions.ExportSheet.message".localized(), preferredStyle: .actionSheet)
-        let temperature = UIAlertAction(title: "TagActions.ExportSheet.temperature".localized(), style: .default) { [weak self] (action) in
-            self?.output.viewDidAskToExportTemperature()
-        }
-        let humidity = UIAlertAction(title: "TagActions.ExportSheet.humidity".localized(), style: .default) { [weak self] (action) in
-            self?.output.viewDidAskToExportHumidity()
-        }
-        let pressure = UIAlertAction(title: "TagActions.ExportSheet.pressure".localized(), style: .default) { [weak self] (action) in
-            self?.output.viewDidAskToExportPressure()
-        }
-        let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
-        sheet.addAction(temperature)
-        sheet.addAction(humidity)
-        sheet.addAction(pressure)
-        sheet.addAction(cancel)
-        if let presenter = sheet.popoverPresentationController {
-            presenter.sourceView = view
-            presenter.sourceRect = view.bounds
-            presenter.permittedArrowDirections = .down
-        }
-        present(sheet, animated: true)
+    func showExportSheet(with path: URL) {
+        let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
+        vc.excludedActivityTypes = [
+            UIActivity.ActivityType.assignToContact,
+            UIActivity.ActivityType.saveToCameraRoll,
+            UIActivity.ActivityType.postToFlickr,
+            UIActivity.ActivityType.postToVimeo,
+            UIActivity.ActivityType.postToTencentWeibo,
+            UIActivity.ActivityType.postToTwitter,
+            UIActivity.ActivityType.postToFacebook,
+            UIActivity.ActivityType.openInIBooks
+        ]
+        present(vc, animated: true)
     }
 }
 
