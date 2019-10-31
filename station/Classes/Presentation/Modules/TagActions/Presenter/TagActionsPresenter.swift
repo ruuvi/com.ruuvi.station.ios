@@ -38,7 +38,7 @@ extension TagActionsPresenter: TagActionsViewOutput {
     }
     
     func viewDidAskToExport() {
-        
+        view.showExportDialog()
     }
     
     func viewDidConfirmToSync() {
@@ -53,5 +53,17 @@ extension TagActionsPresenter: TagActionsViewOutput {
         op.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+    }
+    
+    func viewDidAskToExportTemperature() {
+        
+    }
+    
+    func viewDidAskToExportHumidity() {
+        
+    }
+    
+    func viewDidAskToExportPressure() {
+        
     }
 }

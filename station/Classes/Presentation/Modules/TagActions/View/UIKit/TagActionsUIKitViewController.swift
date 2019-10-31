@@ -23,6 +23,10 @@ extension TagActionsUIKitViewController: TagActionsViewInput {
         // handled by parent
     }
     
+    func showExportDialog() {
+        // handled by parent
+    }
+    
     func localize() {
         
     }
