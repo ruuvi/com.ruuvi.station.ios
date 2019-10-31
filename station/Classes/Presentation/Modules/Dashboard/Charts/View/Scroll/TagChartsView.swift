@@ -10,7 +10,6 @@ protocol TagChartsViewDelegate: class {
 class TagChartsView: UIView {
     weak var delegate: TagChartsViewDelegate?
     
-    @IBOutlet weak var buttonsContainer: UIView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var temperatureChart: LineChartView!
