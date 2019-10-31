@@ -41,6 +41,26 @@ extension TagActionsViewController: TagActionsViewInput {
     func apply(theme: Theme) {
         
     }
+    
+    func showSyncConfirmationDialog() {
+        let alertVC = UIAlertController(title: "TagActions.SyncConfirmationDialog.title".localized(), message: "TagActions.SyncConfirmationDialog.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToSync()
+            
+        }))
+        present(alertVC, animated: true)
+    }
+    
+    func showClearConfirmationDialog() {
+        let alertVC = UIAlertController(title: "TagActions.DeleteHistoryConfirmationDialog.title".localized(), message: "TagActions.DeleteHistoryConfirmationDialog.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "TagActions.DeleteHistoryConfirmationDialog.button.delete.title".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToClear()
+            
+        }))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - View lifecycle

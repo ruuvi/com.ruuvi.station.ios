@@ -7,4 +7,6 @@ protocol TagActionsViewOutput {
     func viewDidAskToClear()
     func viewDidAskToSync()
     func viewDidAskToExport()
+    func viewDidConfirmToSync()
+    func viewDidConfirmToClear()
 }

@@ -151,6 +151,13 @@
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
 "OWMError.invalidApiKey" = "Некорректный API-ключ";
 
+// TagActions
+"TagActions.SyncConfirmationDialog.title" = "Вы уверены?";
+"TagActions.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
+"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
+"TagActions.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
+"TagActions.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
+
 // TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";

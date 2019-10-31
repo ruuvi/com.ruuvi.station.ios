@@ -12,6 +12,7 @@ class TagActionsConfigurator {
         presenter.router = router
         presenter.gattService = r.resolve(GATTService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         
         view.output = presenter
     }
