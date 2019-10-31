@@ -117,10 +117,11 @@ extension TagChartsScrollViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let page = CGFloat(currentPage)
-        let width = size.width
         coordinator.animate(alongsideTransition: { [weak self] (context) in
+            let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
         }) { [weak self] (context) in
+            let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
         }
         super.viewWillTransition(to: size, with: coordinator)
