@@ -18,15 +18,14 @@ class ExportServiceTemp: ExportService {
 
     func csvLog(for uuid: String) -> Future<URL,RUError> {
         let promise = Promise<URL,RUError>()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy-HH-mm-ss"
+        let date = dateFormatter.string(from: Date())
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd-MM-yyyy-HH-mm-ss"
-            let date = dateFormatter.string(from: Date())
             let fileName = ruuviTag.name + "_" + date + ".csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
-            var csvText = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n".localized()
+            var csvText = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n".localized()
             let sortedData = ruuviTag.data.sorted(byKeyPath: "date")
-            dateFormatter.dateFormat = "dd-MM-yyyy-HH-mm-ss"
             for log in sortedData {
                 let date = iso8601.string(from: log.date)
                 var celsius: String
@@ -90,6 +89,13 @@ class ExportServiceTemp: ExportService {
                     dewPointKelvin = "N/A".localized()
                 }
                 
+                var pressure: String
+                if let p = log.pressure.value {
+                    pressure = String(format: "%.2f", p)
+                } else {
+                    pressure = "N/A".localized()
+                }
+                
                 var accelerationX: String
                 if let aX = log.accelerationX.value {
                     accelerationX = String(format: "%.3f", aX)
@@ -133,7 +139,7 @@ class ExportServiceTemp: ExportService {
                     txPower = "N/A".localized()
                 }
                 
-                let newLine = "\(date),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(accelerationX),\(accelerationY),\(accelerationZ),\(voltage),\(movementCounter),\(measurementSequenceNumber),\(txPower)\n"
+                let newLine = "\(date),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(accelerationX),\(accelerationY),\(accelerationZ),\(voltage),\(movementCounter),\(measurementSequenceNumber),\(txPower)\n"
                 csvText.append(contentsOf: newLine)
             }
             
@@ -143,6 +149,97 @@ class ExportServiceTemp: ExportService {
             } catch {
                 promise.fail(error: .writeToDisk(error))
             }
+        } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
+            let fileName = webTag.name + "_" + date + ".csv"
+            let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+            var csvText = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n".localized()
+            let sortedData = webTag.data.sorted(byKeyPath: "date")
+            for log in sortedData {
+                let date = iso8601.string(from: log.date)
+                 var celsius: String
+                 if let c = log.celsius.value {
+                     celsius = String(format: "%.2f", c)
+                 } else {
+                     celsius = "N/A".localized()
+                 }
+                 var fahrenheit: String
+                 if let f = log.fahrenheit {
+                     fahrenheit = String(format: "%.2f", f)
+                 } else {
+                     fahrenheit = "N/A".localized()
+                 }
+                 var kelvin: String
+                 if let k = log.kelvin {
+                     kelvin = String(format: "%.2f", k)
+                 } else {
+                     kelvin = "N/A".localized()
+                 }
+                 var relativeHumidity: String
+                 if let rh = log.humidity.value {
+                     if rh > 100 {
+                         relativeHumidity = "100"
+                     } else {
+                         relativeHumidity = String(format: "%.2f", rh)
+                     }
+                 } else {
+                     relativeHumidity = "N/A".localized()
+                 }
+                 var absoluteHumidity: String
+                 var dewPointCelsius: String
+                 var dewPointFahrenheit: String
+                 var dewPointKelvin: String
+                 if let c = log.celsius.value, var rh = log.humidity.value {
+                     if rh > 100.0 {
+                        rh = 100.0
+                     }
+                     let h = Humidity(c: c, rh: rh / 100.0)
+                     absoluteHumidity = String(format: "%.2f", h.ah)
+                     if let Td = h.Td {
+                            dewPointCelsius = String(format: "%.2f", Td)
+                     } else {
+                         dewPointCelsius = "N/A".localized()
+                     }
+                     if let TdF = h.TdF {
+                            dewPointFahrenheit = String(format: "%.2f", TdF)
+                     } else {
+                         dewPointFahrenheit = "N/A".localized()
+                     }
+                     if let TdK = h.TdK {
+                         dewPointKelvin = String(format: "%.2f", TdK)
+                     } else {
+                         dewPointKelvin = "N/A".localized()
+                     }
+                } else {
+                     absoluteHumidity = "N/A".localized()
+                     dewPointCelsius = "N/A".localized()
+                     dewPointFahrenheit = "N/A".localized()
+                     dewPointKelvin = "N/A".localized()
+                 }
+                
+                var pressure: String
+                if let p = log.pressure.value {
+                    pressure = String(format: "%.2f", p)
+                } else {
+                    pressure = "N/A".localized()
+                }
+                
+                var location: String
+                if let c = log.location?.city ?? log.location?.country {
+                    location = c
+                } else {
+                    location = "N/A".localized()
+                }
+                let newLine = "\(date),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(location)\n"
+                     csvText.append(contentsOf: newLine)
+                 }
+                 
+                 do {
+                     try csvText.write(to: path, atomically: true, encoding: .utf8)
+                     promise.succeed(value: path)
+                 } catch {
+                     promise.fail(error: .writeToDisk(error))
+                 }
+            
         } else {
             promise.fail(error: .unexpected(.failedToFindLogsForTheTag))
         }
