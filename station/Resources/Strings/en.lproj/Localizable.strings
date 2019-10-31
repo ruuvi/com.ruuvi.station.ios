@@ -157,6 +157,10 @@
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
 "TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
+"TagActions.ExportSheet.message" = "Export to CSV";
+"TagActions.ExportSheet.temperature" = "Temperature";
+"TagActions.ExportSheet.humidity" = "Humidity";
+"TagActions.ExportSheet.pressure" = "Pressure";
 
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";

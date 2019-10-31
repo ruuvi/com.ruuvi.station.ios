@@ -157,6 +157,10 @@
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
 "TagActions.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
+"TagActions.ExportSheet.message" = "Export to CSV";
+"TagActions.ExportSheet.temperature" = "Temperature";
+"TagActions.ExportSheet.humidity" = "Humidity";
+"TagActions.ExportSheet.pressure" = "Pressure";
 
 // TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
