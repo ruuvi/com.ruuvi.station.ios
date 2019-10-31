@@ -171,6 +171,10 @@ extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
             return true
         }
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer.view != otherGestureRecognizer.view 
+    }
 }
 
 // MARK: - View configuration
