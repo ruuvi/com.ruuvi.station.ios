@@ -225,6 +225,9 @@ extension TagChartsScrollViewController {
         
         chartView.noDataTextColor = UIColor.white
         chartView.noDataText = "TagCharts.NoChartData.text".localized()
+        
+        chartView.scaleXEnabled = true
+        chartView.scaleYEnabled = false
     }
     
     private func configure(_ set: LineChartDataSet) {
