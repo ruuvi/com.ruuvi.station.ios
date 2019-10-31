@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="55c-NI-b8G">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
@@ -18,18 +18,18 @@
             <objects>
                 <viewController storyboardIdentifier="TagActionsViewController" id="55c-NI-b8G" customClass="TagActionsViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="s8T-E8-D9o">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QYC-Wk-o6L">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="44" y="0.0" width="808" height="393"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <segue destination="I1N-10-D1p" kind="embed" identifier="EmbedTagActionsSwiftUIHostingControllerSegueIdentifier" destinationCreationSelector="addSwiftUIView:" id="lkF-hL-Lid"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b43-q0-drS">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="44" y="0.0" width="808" height="393"/>
                                 <connections>
                                     <segue destination="pqD-0h-m9V" kind="embed" identifier="EmbedTagActionsUIKitViewControllerSegueIdentifier" id="mgm-xL-rqU"/>
                                 </connections>
@@ -78,30 +78,117 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iDB-rn-ubG">
-                                <rect key="frame" x="137" y="60" width="140" height="43"/>
-                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                <state key="normal" title="SYNC LOGS"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="22"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b9c-qO-aSf">
+                                <rect key="frame" x="43.5" y="678" width="327" height="103"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Environmental Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOH-fB-qiP">
+                                        <rect key="frame" x="74" y="0.0" width="179" height="26"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ii0-J6-O3a">
+                                        <rect key="frame" x="0.0" y="42" width="327" height="2"/>
+                                    </progressView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3v9-6y-4JV">
+                                        <rect key="frame" x="0.0" y="60" width="327" height="43"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C4C-W8-RFg">
+                                                <rect key="frame" x="0.0" y="0.0" width="103" height="43"/>
+                                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                <state key="normal" title="CLEAR"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="22"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LWl-ee-h9c">
+                                                <rect key="frame" x="111" y="0.0" width="93" height="43"/>
+                                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                <state key="normal" title="SYNC"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="22"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dPw-gX-1Jj">
+                                                <rect key="frame" x="212" y="0.0" width="115" height="43"/>
+                                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                <state key="normal" title="EXPORT"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="22"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="dPw-gX-1Jj" firstAttribute="top" secondItem="3v9-6y-4JV" secondAttribute="top" id="2FV-sD-yhV"/>
+                                            <constraint firstItem="LWl-ee-h9c" firstAttribute="top" secondItem="3v9-6y-4JV" secondAttribute="top" id="6ZY-Mx-Vyv"/>
+                                            <constraint firstItem="C4C-W8-RFg" firstAttribute="top" secondItem="3v9-6y-4JV" secondAttribute="top" id="IqQ-L1-Mtv"/>
+                                            <constraint firstItem="LWl-ee-h9c" firstAttribute="leading" secondItem="C4C-W8-RFg" secondAttribute="trailing" constant="8" id="MXy-P1-9qF"/>
+                                            <constraint firstItem="dPw-gX-1Jj" firstAttribute="leading" secondItem="LWl-ee-h9c" secondAttribute="trailing" constant="8" id="Sy1-es-0LY"/>
+                                            <constraint firstAttribute="bottom" secondItem="C4C-W8-RFg" secondAttribute="bottom" id="bw6-II-dKu"/>
+                                            <constraint firstAttribute="bottom" secondItem="LWl-ee-h9c" secondAttribute="bottom" id="c3c-JP-Orq"/>
+                                            <constraint firstAttribute="bottom" secondItem="dPw-gX-1Jj" secondAttribute="bottom" id="ou7-hB-wdV"/>
+                                            <constraint firstAttribute="trailing" secondItem="dPw-gX-1Jj" secondAttribute="trailing" id="pcH-1f-Izy"/>
+                                            <constraint firstItem="C4C-W8-RFg" firstAttribute="leading" secondItem="3v9-6y-4JV" secondAttribute="leading" id="wUe-0I-6wS"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="ii0-J6-O3a" firstAttribute="trailing" secondItem="3v9-6y-4JV" secondAttribute="trailing" id="92J-yB-Ue2"/>
+                                    <constraint firstItem="ii0-J6-O3a" firstAttribute="leading" secondItem="3v9-6y-4JV" secondAttribute="leading" id="HjP-hY-fFq"/>
+                                    <constraint firstItem="FOH-fB-qiP" firstAttribute="centerX" secondItem="ii0-J6-O3a" secondAttribute="centerX" id="LAQ-gy-Sqw"/>
+                                    <constraint firstItem="3v9-6y-4JV" firstAttribute="top" secondItem="ii0-J6-O3a" secondAttribute="bottom" constant="16" id="OJ6-aP-ujF"/>
+                                    <constraint firstItem="3v9-6y-4JV" firstAttribute="leading" secondItem="b9c-qO-aSf" secondAttribute="leading" id="OdF-Xu-wry"/>
+                                    <constraint firstAttribute="bottom" secondItem="3v9-6y-4JV" secondAttribute="bottom" id="VN2-Tp-HUZ"/>
+                                    <constraint firstItem="ii0-J6-O3a" firstAttribute="top" secondItem="FOH-fB-qiP" secondAttribute="bottom" constant="16" id="afw-0e-Naq"/>
+                                    <constraint firstItem="FOH-fB-qiP" firstAttribute="top" secondItem="b9c-qO-aSf" secondAttribute="top" id="pq9-d6-47O"/>
+                                    <constraint firstAttribute="trailing" secondItem="3v9-6y-4JV" secondAttribute="trailing" id="wco-Uh-Lrf"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="iDB-rn-ubG" firstAttribute="centerX" secondItem="h0k-UU-AId" secondAttribute="centerX" id="0aH-nf-OcS"/>
-                            <constraint firstItem="iDB-rn-ubG" firstAttribute="top" secondItem="h0k-UU-AId" secondAttribute="top" constant="16" id="gaf-x0-K6x"/>
+                            <constraint firstItem="h0k-UU-AId" firstAttribute="bottom" secondItem="b9c-qO-aSf" secondAttribute="bottom" constant="20" id="CSw-ad-oTa">
+                                <variation key="heightClass=compact" constant="16"/>
+                            </constraint>
+                            <constraint firstItem="b9c-qO-aSf" firstAttribute="centerX" secondItem="h0k-UU-AId" secondAttribute="centerX" id="cR2-zq-udj"/>
+                            <constraint firstItem="b9c-qO-aSf" firstAttribute="centerY" secondItem="h0k-UU-AId" secondAttribute="centerY" id="wTj-4H-3CB"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="h0k-UU-AId"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="CSw-ad-oTa"/>
+                                <exclude reference="wTj-4H-3CB"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="CSw-ad-oTa"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="constraints">
+                                <include reference="wTj-4H-3CB"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fWD-Dl-IQZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-83" y="474"/>
+            <point key="canvasLocation" x="-84.057971014492765" y="473.4375"/>
         </scene>
     </scenes>
 </document>
