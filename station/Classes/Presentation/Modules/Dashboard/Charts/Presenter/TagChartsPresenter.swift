@@ -13,6 +13,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var activityPresenter: ActivityPresenter!
     var ruuviTagService: RuuviTagService!
     var gattService: GATTService!
+    weak var tagActions: TagActionsModuleInput?
     
     private var isLoading: Bool = false {
         didSet {
@@ -50,7 +51,20 @@ class TagChartsPresenter: TagChartsModuleInput {
             view.viewModels = viewModels
         }
     }
-    
+    private var tagUUID: String! {
+        didSet {
+            output?.tagCharts(module: self, didScrollTo: tagUUID)
+            tagActions?.configure(uuid: tagUUID)
+            tagActions?.configure(isConnectable: tagIsConnectable)
+        }
+    }
+    private var tagIsConnectable: Bool {
+        if let ruuviTag = ruuviTags?.first(where: {$0.uuid == tagUUID}) {
+            return ruuviTag.isConnectable
+        } else {
+            return false
+        }
+    }
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
@@ -113,7 +127,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewDidScroll(to index: Int) {
         if viewModels.count > index, let uuid = viewModels[index].uuid.value {
-            output?.tagCharts(module: self, didScrollTo: uuid)
+            tagUUID = uuid
         }
     }
     
@@ -202,6 +216,10 @@ extension TagChartsPresenter {
             // if no tags, open discover
             if viewModels.count == 0 {
                 router.openDiscover()
+            }
+            
+            if let initialUUID = initialUUID {
+                tagUUID = initialUUID
             }
             
             if let index = viewModels.firstIndex(where: { $0.uuid.value == initialUUID }) {
