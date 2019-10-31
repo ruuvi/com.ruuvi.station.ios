@@ -164,7 +164,12 @@ class TagActionsPresentationController: UIPresentationController {
                 self.presentingViewController.view.layer.transform = identity
                 self.presentingViewController.presentingViewController?.view.layer.transform = identity
                 
-            }, completion: nil)
+            }, completion: { context in
+                self.presentingViewController.view.setNeedsLayout()
+                self.presentingViewController.view.layoutIfNeeded()
+                self.presentingViewController.presentingViewController?.view.setNeedsLayout()
+                self.presentingViewController.presentingViewController?.view.layoutIfNeeded()
+            })
         } else {
             self.dimmingView.alpha = 0
         }
