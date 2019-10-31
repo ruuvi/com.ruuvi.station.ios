@@ -151,6 +151,13 @@
 "OWMError.notAHttpResponse" = "Vastaus ei ole HTTP-muodossa";
 "OWMError.invalidApiKey" = "API-avain ei kelpaa";
 
+// TagActions
+"TagActions.SyncConfirmationDialog.title" = "Are you sure?";
+"TagActions.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the tag?";
+"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
+"TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
+"TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
+
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
