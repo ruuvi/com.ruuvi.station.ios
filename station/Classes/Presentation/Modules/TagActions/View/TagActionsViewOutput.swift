@@ -9,7 +9,4 @@ protocol TagActionsViewOutput {
     func viewDidAskToExport()
     func viewDidConfirmToSync()
     func viewDidConfirmToClear()
-    func viewDidAskToExportTemperature()
-    func viewDidAskToExportHumidity()
-    func viewDidAskToExportPressure()
 }

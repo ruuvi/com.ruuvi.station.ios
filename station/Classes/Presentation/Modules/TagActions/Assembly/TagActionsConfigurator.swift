@@ -13,6 +13,7 @@ class TagActionsConfigurator {
         presenter.gattService = r.resolve(GATTService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
+        presenter.exportService = r.resolve(ExportService.self)
         
         view.output = presenter
     }

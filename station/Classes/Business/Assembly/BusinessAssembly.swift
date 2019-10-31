@@ -21,6 +21,12 @@ class BusinessAssembly: Assembly {
             return service
         }
         
+        container.register(ExportService.self) { r in
+            let service = ExportServiceTemp()
+            service.realmContext = r.resolve(RealmContext.self)
+            return service
+        }
+        
         container.register(GATTService.self) { r in
             let service = GATTServiceQueue()
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)

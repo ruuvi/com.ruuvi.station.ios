@@ -1,5 +1,6 @@
 import Foundation
+import Future
 
 protocol ExportService {
-    func temperatureLog(for uuid: String) -> String
+    func csvLog(for uuid: String) -> Future<URL,RUError>
 }

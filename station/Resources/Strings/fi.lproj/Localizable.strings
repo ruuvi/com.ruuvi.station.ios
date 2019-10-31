@@ -18,6 +18,7 @@
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
 "ago" = "sitten"; // time ago string
+"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n"; // export header
 
 // About
 "About.Version.text" = "Versio";
@@ -157,10 +158,6 @@
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
 "TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
-"TagActions.ExportSheet.message" = "Export to CSV";
-"TagActions.ExportSheet.temperature" = "Temperature";
-"TagActions.ExportSheet.humidity" = "Humidity";
-"TagActions.ExportSheet.pressure" = "Pressure";
 
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";
@@ -209,6 +206,7 @@
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
 "UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
+"UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the Tag";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
