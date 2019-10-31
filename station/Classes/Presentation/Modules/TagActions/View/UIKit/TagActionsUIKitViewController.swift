@@ -16,11 +16,11 @@ class TagActionsUIKitViewController: UIViewController {
 // MARK: - TagActionsViewInput
 extension TagActionsUIKitViewController: TagActionsViewInput {
     func showClearConfirmationDialog() {
-        
+        // handled by parent
     }
     
     func showSyncConfirmationDialog() {
-        
+        // handled by parent
     }
     
     func localize() {
