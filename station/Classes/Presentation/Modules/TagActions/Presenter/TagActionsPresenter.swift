@@ -38,7 +38,7 @@ extension TagActionsPresenter: TagActionsViewOutput {
     }
     
     func viewDidAskToExport() {
-        view.showExportDialog()
+        view.showExportSelectTypeDialog()
     }
     
     func viewDidConfirmToSync() {
