@@ -413,10 +413,6 @@ extension TagChartsScrollViewController {
             self?.configureData(chartView: chartView, values: pressure)
         }
         
-        view.buttonsContainer.bind(viewModel.isConnectable) { (view, isConnectable) in
-            view.isHidden = !isConnectable.bound
-        }
-        
         view.pressureUnitLabel.text = "hPa".localized()
     }
     
