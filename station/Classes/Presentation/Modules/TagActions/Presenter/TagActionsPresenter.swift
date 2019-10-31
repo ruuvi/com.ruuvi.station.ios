@@ -4,6 +4,7 @@ class TagActionsPresenter: TagActionsModuleInput {
     weak var view: TagActionsViewInput!
     var router: TagActionsRouterInput!
     var gattService: GATTService!
+    var errorPresenter: ErrorPresenter!
     
     func configure(uuid: String) {
         view.viewModel = TagActionsViewModel(uuid: uuid)
@@ -32,10 +33,10 @@ extension TagActionsPresenter: TagActionsViewOutput {
     }
     
     func viewDidAskToSync() {
-//        let op = gattService.syncLogs(with: uuid)
-//        op.on(failure: { [weak self] (error) in
-//            self?.errorPresenter.present(error: error)
-//        })
+        let op = gattService.syncLogs(with: view.viewModel.uuid)
+        op.on(failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
     
     func viewDidAskToExport() {
