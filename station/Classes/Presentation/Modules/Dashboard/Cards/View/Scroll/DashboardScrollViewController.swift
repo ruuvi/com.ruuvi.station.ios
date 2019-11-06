@@ -6,7 +6,6 @@ class DashboardScrollViewController: UIViewController {
     var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     
-    @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     
     var viewModels = [DashboardTagViewModel]() { didSet { updateUIViewModels() }  }
@@ -71,18 +70,6 @@ extension DashboardScrollViewController: DashboardViewInput {
 
 // MARK: - IBActions
 extension DashboardScrollViewController {
-    @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
-        if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[currentPage])
-        }
-    }
-    
-    @IBAction func chartsButtonTouchUpInside(_ sender: Any) {
-        if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTriggerChart(for: viewModels[currentPage])
-        }
-    }
-    
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerMenu()
     }
@@ -121,10 +108,25 @@ extension DashboardScrollViewController {
     }
 }
 
-// MARK: - Update UI
+// MARK: - UIScrollViewDelegate
 extension DashboardScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         output.viewDidScroll(to: viewModels[currentPage])
+    }
+}
+
+// MARK: - DashboardTagViewDelegate
+extension DashboardScrollViewController: DashboardTagViewDelegate {
+    func dashboardTag(view: DashboardTagView, didTriggerCharts sender: Any) {
+        if currentPage >= 0 && currentPage < viewModels.count {
+            output.viewDidTriggerChart(for: viewModels[currentPage])
+        }
+    }
+    
+    func dashboardTag(view: DashboardTagView, didTriggerSettings sender: Any) {
+        if currentPage >= 0 && currentPage < viewModels.count {
+            output.viewDidTriggerSettings(for: viewModels[currentPage])
+        }
     }
 }
 
@@ -144,6 +146,10 @@ extension DashboardScrollViewController: UITextFieldDelegate {
 // MARK: - Configure view
 extension DashboardScrollViewController {
     private func bind(view: DashboardTagView, with viewModel: DashboardTagViewModel) {
+        
+        view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
+            view.isHidden = !isConnectable.bound
+        }
         
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         
@@ -368,6 +374,7 @@ extension DashboardScrollViewController {
                     scrollView.addSubview(view)
                     position(view, leftView)
                     bind(view: view, with: viewModel)
+                    view.delegate = self
                     views.append(view)
                     leftView = view
                 }

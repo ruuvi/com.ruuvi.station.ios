@@ -1,8 +1,16 @@
 import UIKit
 import Localize_Swift
 
+protocol DashboardTagViewDelegate: class {
+    func dashboardTag(view: DashboardTagView, didTriggerSettings sender: Any)
+    func dashboardTag(view: DashboardTagView, didTriggerCharts sender: Any)
+}
+
 class DashboardTagView: UIView {
     
+    weak var delegate: DashboardTagViewDelegate?
+    
+    @IBOutlet weak var chartsButtonContainerView: UIView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
@@ -27,4 +35,13 @@ class DashboardTagView: UIView {
             self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
         })
     }
+    
+    @IBAction func chartsButtonTouchUpInside(_ sender: Any) {
+        delegate?.dashboardTag(view: self, didTriggerCharts: sender)
+    }
+    
+    @IBAction func settingsButtonTouchUpInside(_ sender: Any) {
+        delegate?.dashboardTag(view: self, didTriggerSettings: sender)
+    }
+    
 }
