@@ -63,7 +63,7 @@ class TagChartsPresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         }
         
         let direction: CGFloat = manager.presentDirection == .top ? 1 : -1
-        let distance = translation.y / TagActionsTransitionManager.appScreenRect.height
+        let distance = translation.y / TagChartsTransitionManager.appScreenRect.height
         // now lets deal with different states that the gesture recognizer sends
         switch (pan.state) {
         case .began, .changed:

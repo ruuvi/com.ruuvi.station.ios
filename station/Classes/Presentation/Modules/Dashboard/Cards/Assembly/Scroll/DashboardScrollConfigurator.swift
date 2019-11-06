@@ -51,6 +51,10 @@ class DashboardScrollConfigurator {
         router.tagChartsTransitioningDelegate = chartsTransition
         tagCharts.transitioningDelegate = chartsTransition
         
+        tagCharts.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
+        
+        router.tagCharts = tagCharts
+        
         view.tagChartsPresentInteractiveTransition = chartsTransition.present
         view.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
         

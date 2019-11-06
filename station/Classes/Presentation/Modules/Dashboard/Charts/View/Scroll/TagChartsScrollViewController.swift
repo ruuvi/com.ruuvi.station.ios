@@ -6,6 +6,7 @@ class TagChartsScrollViewController: UIViewController {
     
     var tagActionsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagActionsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
+    var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -157,6 +158,7 @@ extension TagChartsScrollViewController {
         gr.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(gr)
         gr.addTarget(tagActionsPresentInteractiveTransition as Any, action:#selector(TagActionsPresentTransitionAnimation.handlePresentPan(_:)))
+        gr.addTarget(tagChartsDismissInteractiveTransition as Any, action:#selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
     }
     
     private func configure(_ chartView: LineChartView) {
