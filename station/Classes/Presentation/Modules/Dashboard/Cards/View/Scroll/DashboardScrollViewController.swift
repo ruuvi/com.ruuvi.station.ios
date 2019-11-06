@@ -5,6 +5,8 @@ class DashboardScrollViewController: UIViewController {
     var output: DashboardViewOutput!
     var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
+    var tagChartsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
+    var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -342,11 +344,37 @@ extension DashboardScrollViewController {
     
 }
 
+//MARK: - UIGestureRecognizerDelegate
+extension DashboardScrollViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let pan = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = pan.velocity(in: scrollView)
+            return abs(velocity.y) > abs(velocity.x)
+        } else {
+            return true
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer.view != otherGestureRecognizer.view
+    }
+}
+
+
 // MARK: - View configuration
 extension DashboardScrollViewController {
     private func configureViews() {
         configureEdgeGestureRecognozer()
+        configurePanGestureRecognozer()
     }
+    
+     private func configurePanGestureRecognozer() {
+         let gr = UIPanGestureRecognizer()
+         gr.delegate = self
+         gr.cancelsTouchesInView = true
+         scrollView.addGestureRecognizer(gr)
+         gr.addTarget(tagChartsPresentInteractiveTransition as Any, action:#selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
+     }
     
     private func configureEdgeGestureRecognozer() {
         let leftScreenEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer()

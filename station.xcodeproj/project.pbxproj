@@ -106,6 +106,7 @@
 		0E2A2CD4236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD3236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift */; };
 		0E2A2CD6236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD5236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift */; };
 		0E2A2CD823697A29004993C5 /* TagActionsPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CD723697A29004993C5 /* TagActionsPresentationController.swift */; };
+		0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */; };
 		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
 		0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE723602E2500D600DB /* ConnectionPersistence.swift */; };
@@ -454,6 +455,7 @@
 		0E2A2CD3236978B3004993C5 /* TagActionsPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsPresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E2A2CD5236979F8004993C5 /* TagActionsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E2A2CD723697A29004993C5 /* TagActionsPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagActionsPresentationController.swift; sourceTree = "<group>"; };
+		0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitionManager.swift; sourceTree = "<group>"; };
 		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
 		0E390FE723602E2500D600DB /* ConnectionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistence.swift; sourceTree = "<group>"; };
@@ -1744,6 +1746,7 @@
 			isa = PBXGroup;
 			children = (
 				0E8FD0D223336B4200FFA577 /* TagChartsTransitioningDelegate.swift */,
+				0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */,
 				0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */,
 				0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */,
 			);
@@ -3264,6 +3267,7 @@
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
+				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,

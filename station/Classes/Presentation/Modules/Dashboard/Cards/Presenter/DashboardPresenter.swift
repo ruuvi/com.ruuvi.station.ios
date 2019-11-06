@@ -17,6 +17,8 @@ class DashboardPresenter: DashboardModuleInput {
     var permissionsManager: PermissionsManager!
     var connectionPersistence: ConnectionPersistence!
     
+    weak var tagCharts: TagChartsModuleInput?
+    
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
@@ -138,13 +140,15 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
-        if let uuid = viewModel.uuid.value {
-            router.openTagCharts(uuid: uuid, output: self)
-        }
+        router.openTagCharts(output: self)
     }
     
     func viewDidScroll(to viewModel: DashboardTagViewModel) {
-        // do nothing
+        if let uuid = viewModel.uuid.value {
+            tagCharts?.configure(uuid: uuid)
+        } else {
+            assert(false)
+        }
     }
 }
 

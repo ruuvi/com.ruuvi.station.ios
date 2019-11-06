@@ -6,9 +6,9 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     var settings: Settings!
     
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
+    var tagChartsTransitioningDelegate: TagChartsTransitioningDelegate!
     
     private var menuTableTransition: MenuTableTransitioningDelegate!
-    private lazy var tagChartsTransitioningDelegate = TagChartsTransitioningDelegate()
     
     func openMenu(output: MenuModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Menu")
@@ -70,7 +70,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             .perform()
     }
     
-    func openTagCharts(uuid: String, output: TagChartsModuleOutput) {
+    func openTagCharts(output: TagChartsModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "TagCharts")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagChartsModuleInput.self)
@@ -79,7 +79,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                 viewController.modalPresentationStyle = .custom
             })
             .then({ (module) -> Any? in
-                module.configure(uuid: uuid, output: output)
+                module.configure(output: output)
             })
     }
     
