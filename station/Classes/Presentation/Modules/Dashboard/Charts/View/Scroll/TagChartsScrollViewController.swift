@@ -7,7 +7,6 @@ class TagChartsScrollViewController: UIViewController {
     var tagActionsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagActionsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     
-    @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var scrollView: UIScrollView!
     
     var viewModels = [TagChartsViewModel]() { didSet { updateUIViewModels() }  }
@@ -55,40 +54,10 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
-    
-    func showSyncConfirmationDialog(with viewModel: TagChartsViewModel) {
-        let alertVC = UIAlertController(title: "TagCharts.SyncConfirmationDialog.title".localized(), message: "TagCharts.SyncConfirmationDialog.message".localized(), preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSync(with: viewModel)
-            
-        }))
-        present(alertVC, animated: true)
-    }
-    
-    func showDeleteHistoryConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let alertVC = UIAlertController(title: "TagCharts.DeleteHistoryConfirmationDialog.title".localized(), message: "TagCharts.DeleteHistoryConfirmationDialog.message".localized(), preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(title: "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title".localized(), style: .destructive, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToDeleteHistory(for: viewModel)
-            
-        }))
-        present(alertVC, animated: true)
-    }
 }
 
 // MARK: - IBActions
 extension TagChartsScrollViewController {
-    @IBAction func settingsButtonTouchUpInside(_ sender: UIButton) {
-        if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[currentPage])
-        }
-    }
-    
-    @IBAction func dashboardButtonTouchUpInside(_ sender: Any) {
-        output.viewDidTriggerDashboard()
-    }
-    
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerMenu()
     }
@@ -131,7 +100,7 @@ extension TagChartsScrollViewController {
 // MARK: - UIScrollViewDelegate
 extension TagChartsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        output.viewDidScroll(to: currentPage)
+        output.viewDidScroll(to: viewModels[currentPage])
     }
 }
 
@@ -142,22 +111,18 @@ extension TagChartsScrollViewController: ChartViewDelegate {
 
 // MARK: - TagChartsViewDelegate
 extension TagChartsScrollViewController: TagChartsViewDelegate {
-    func tagCharts(view: TagChartsView, sync sender: Any) {
+    func tagCharts(view: TagChartsView, didTriggerDashboard sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
-            output.viewDidAskToSync(with: viewModels[index])
+            output.viewDidTriggerDashboard(for: viewModels[index])
         }
     }
     
-    func tagCharts(view: TagChartsView, delete sender: Any) {
+    func tagCharts(view: TagChartsView, didTriggerSettings sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
-            output.viewDidAskToDeleteHistory(for: viewModels[index])
+            output.viewDidTriggerSettings(for: viewModels[index])
         }
-    }
-    
-    func tagCharts(view: TagChartsView, upload sender: Any) {
-        
     }
 }
 

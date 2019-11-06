@@ -109,12 +109,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerDashboard() {
+    func viewDidTriggerDashboard(for viewModel: TagChartsViewModel) {
         router.dismiss()
-    }
-    
-    func viewDidTriggerTagActions() {
-        print("tag actions")
     }
     
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
@@ -125,48 +121,12 @@ extension TagChartsPresenter: TagChartsViewOutput {
         }
     }
     
-    func viewDidScroll(to index: Int) {
-        if viewModels.count > index, let uuid = viewModels[index].uuid.value {
+    func viewDidScroll(to viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
             tagUUID = uuid
+        } else {
+            assert(false)
         }
-    }
-    
-    func viewDidAskToSync(with viewModel: TagChartsViewModel) {
-        view.showSyncConfirmationDialog(with: viewModel)
-    }
-    
-    func viewDidConfirmToSync(with viewModel: TagChartsViewModel) {
-        switch viewModel.type {
-        case .ruuvi:
-            if let uuid = viewModel.uuid.value {
-                let op = gattService.syncLogs(with: uuid)
-                op.on(failure: { [weak self] (error) in
-                    self?.errorPresenter.present(error: error)
-                })
-            }
-        case .web:
-            break
-        }
-        
-    }
-    
-    func viewDidAskToDeleteHistory(for viewModel: TagChartsViewModel) {
-        view.showDeleteHistoryConfirmationDialog(for: viewModel)
-    }
-    
-    func viewDidConfirmToDeleteHistory(for viewModel: TagChartsViewModel) {
-        switch viewModel.type {
-        case .ruuvi:
-            if let uuid = viewModel.uuid.value {
-                let op = ruuviTagService.clearHistory(uuid: uuid)
-                op.on(failure: { [weak self] (error) in
-                    self?.errorPresenter.present(error: error)
-                })
-            }
-        case .web:
-            break
-        }
-        
     }
 }
 
