@@ -49,6 +49,7 @@ class TagChartsPresenter: TagChartsModuleInput {
                 output?.tagCharts(module: self, didScrollTo: tagUUID)
                 tagActions?.configure(uuid: tagUUID)
                 tagActions?.configure(isConnectable: tagIsConnectable)
+                scrollToCurrentTag()
             }
         }
     }
@@ -149,6 +150,12 @@ extension TagChartsPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension TagChartsPresenter {
+    private func scrollToCurrentTag() {
+        if let index = viewModels.firstIndex(where: { $0.uuid.value == tagUUID }) {
+            view.scroll(to: index, immediately: true)
+        }
+    }
+    
     private func syncViewModels() {
         if ruuviTags != nil {
             viewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
@@ -162,6 +169,8 @@ extension TagChartsPresenter {
             // if no tags, open discover
             if viewModels.count == 0 {
                 router.openDiscover()
+            } else {
+                scrollToCurrentTag()
             }
         }
     }
@@ -189,8 +198,7 @@ extension TagChartsPresenter {
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
-            case .initial(let ruuviTags):
-                self?.tagUUID = ruuviTags.first?.uuid
+            case .initial:
                 self?.restartObservingData()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
@@ -198,7 +206,6 @@ extension TagChartsPresenter {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
-                        self?.tagUUID = uuid
                     }
                 }
                 self?.restartObservingData()
