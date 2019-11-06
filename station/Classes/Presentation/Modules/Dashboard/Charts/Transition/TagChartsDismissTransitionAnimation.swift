@@ -1,6 +1,12 @@
 import UIKit
 
-class TagChartsDismissTransitionAnimation: NSObject, UIViewControllerAnimatedTransitioning {
+class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning  {
+    
+    var manager: TagChartsTransitionManager
+    
+    init(manager: TagChartsTransitionManager) {
+        self.manager = manager
+    }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.35

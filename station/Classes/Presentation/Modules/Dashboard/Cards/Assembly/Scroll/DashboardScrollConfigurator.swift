@@ -32,14 +32,27 @@ class DashboardScrollConfigurator {
         let menuPresenter = menuTable.output as! MenuPresenter
         menuPresenter.configure(output: presenter)
         
-        let manager = MenuTableTransitionManager(container: view, menu: menu)
-        let transition = MenuTableTransitioningDelegate(manager: manager)
-        router.menuTableInteractiveTransition = transition
-        menu.transitioningDelegate = transition
+        let menuManager = MenuTableTransitionManager(container: view, menu: menu)
+        let menuTransition = MenuTableTransitioningDelegate(manager: menuManager)
+        router.menuTableInteractiveTransition = menuTransition
+        menu.transitioningDelegate = menuTransition
         
-        view.menuPresentInteractiveTransition = transition.present
-        view.menuDismissInteractiveTransition = transition.dismiss
+        view.menuPresentInteractiveTransition = menuTransition.present
+        view.menuDismissInteractiveTransition = menuTransition.dismiss
         
+        let tagCharts = UIStoryboard(name: "TagCharts", bundle: .main).instantiateInitialViewController() as! TagChartsScrollViewController
+        tagCharts.modalPresentationStyle = .custom
+        let tagChartsPresenter = tagCharts.output as! TagChartsModuleInput
+        tagChartsPresenter.configure(output: presenter)
+        presenter.tagCharts = tagChartsPresenter
+        
+        let chartsManager = TagChartsTransitionManager(container: view, charts: tagCharts)
+        let chartsTransition = TagChartsTransitioningDelegate(manager: chartsManager)
+        router.tagChartsTransitioningDelegate = chartsTransition
+        tagCharts.transitioningDelegate = chartsTransition
+        
+        view.tagChartsPresentInteractiveTransition = chartsTransition.present
+        view.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
         
         view.output = presenter
     }

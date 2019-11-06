@@ -33,7 +33,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
-    private var initialUUID: String?
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -44,11 +43,13 @@ class TagChartsPresenter: TagChartsModuleInput {
             view.viewModels = viewModels
         }
     }
-    private var tagUUID: String! {
+    private var tagUUID: String? {
         didSet {
-            output?.tagCharts(module: self, didScrollTo: tagUUID)
-            tagActions?.configure(uuid: tagUUID)
-            tagActions?.configure(isConnectable: tagIsConnectable)
+            if let tagUUID = tagUUID {
+                output?.tagCharts(module: self, didScrollTo: tagUUID)
+                tagActions?.configure(uuid: tagUUID)
+                tagActions?.configure(isConnectable: tagIsConnectable)
+            }
         }
     }
     private var tagIsConnectable: Bool {
@@ -73,9 +74,12 @@ class TagChartsPresenter: TagChartsModuleInput {
         }
     }
     
-    func configure(uuid: String, output: TagChartsModuleOutput) {
-        self.initialUUID = uuid
+    func configure(output: TagChartsModuleOutput) {
         self.output = output
+    }
+    
+    func configure(uuid: String) {
+        self.tagUUID = uuid
     }
 }
 
@@ -159,15 +163,6 @@ extension TagChartsPresenter {
             if viewModels.count == 0 {
                 router.openDiscover()
             }
-            
-            if let initialUUID = initialUUID {
-                tagUUID = initialUUID
-            }
-            
-            if let index = viewModels.firstIndex(where: { $0.uuid.value == initialUUID }) {
-                view.scroll(to: index, immediately: true)
-                initialUUID = nil
-            }
         }
     }
     
@@ -194,7 +189,8 @@ extension TagChartsPresenter {
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
-            case .initial:
+            case .initial(let ruuviTags):
+                self?.tagUUID = ruuviTags.first?.uuid
                 self?.restartObservingData()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
@@ -202,6 +198,7 @@ extension TagChartsPresenter {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
+                        self?.tagUUID = uuid
                     }
                 }
                 self?.restartObservingData()

@@ -1,5 +1,6 @@
 import Foundation
 
 protocol TagChartsModuleInput: class {
-    func configure(uuid: String, output: TagChartsModuleOutput)
+    func configure(output: TagChartsModuleOutput)
+    func configure(uuid: String)
 }
