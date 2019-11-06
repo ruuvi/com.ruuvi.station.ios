@@ -37,7 +37,9 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let fromView = transitionContext.view(forKey: .from)!
+        let fromVC = transitionContext.viewController(forKey: .from)!
         fromView.alpha = 1.0
+        let finalFrame = transitionContext.finalFrame(for: fromVC)
         
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration,
@@ -47,6 +49,7 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        options: .curveEaseInOut,
                        animations: {
                         fromView.alpha = 0.0
+                        fromView.frame = finalFrame
         }) { (finished) -> Void in
             if !transitionContext.transitionWasCancelled {
                 fromView.removeFromSuperview()
