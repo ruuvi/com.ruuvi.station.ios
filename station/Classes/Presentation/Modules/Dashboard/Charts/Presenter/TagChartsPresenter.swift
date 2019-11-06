@@ -28,20 +28,13 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     private var output: TagChartsModuleOutput?
     private var ruuviTagsToken: NotificationToken?
-    private var webTagsToken: NotificationToken?
     private var stateToken: ObservationToken?
     private var ruuviTagDataTokens = [NotificationToken]()
-    private var webTagDataTokens = [NotificationToken]()
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var initialUUID: String?
     private var ruuviTags: Results<RuuviTagRealm>? {
-        didSet {
-            syncViewModels()
-        }
-    }
-    private var webTags: Results<WebTagRealm>? {
         didSet {
             syncViewModels()
         }
@@ -67,10 +60,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     deinit {
         ruuviTagsToken?.invalidate()
-        webTagsToken?.invalidate()
         stateToken?.invalidate()
         ruuviTagDataTokens.forEach({ $0.invalidate() })
-        webTagDataTokens.forEach({ $0.invalidate() })
         if let settingsToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(settingsToken)
         }
@@ -92,7 +83,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewDidLoad() {
         startObservingRuuviTags()
-        startObservingWebTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
     }
@@ -116,8 +106,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value?.last?.value)
-        } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
-            router.openWebTagSettings(webTag: webTag)
+        } else {
+            assert(false)
         }
     }
     
@@ -156,22 +146,14 @@ extension TagChartsPresenter: MenuModuleOutput {
 // MARK: - Private
 extension TagChartsPresenter {
     private func syncViewModels() {
-        if ruuviTags != nil && webTags != nil {
-            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
+        if ruuviTags != nil {
+            viewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
                 let viewModel = TagChartsViewModel(ruuviTag)
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.humidityUnit.value = settings.humidityUnit
                 return viewModel
             }) ?? []
-            let webViewModels = webTags?.compactMap({ (webTag) -> TagChartsViewModel in
-                let viewModel = TagChartsViewModel(webTag)
-                viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
-                viewModel.humidityUnit.value = settings.humidityUnit
-                return viewModel
-            }) ?? []
-            viewModels = ruuviViewModels + webViewModels
             
             // if no tags, open discover
             if viewModels.count == 0 {
@@ -204,25 +186,11 @@ extension TagChartsPresenter {
                 }
             })
         })
-        
-        webTagDataTokens.forEach({ $0.invalidate() })
-        webTagDataTokens.removeAll()
-        webTags?.forEach({ (webTag) in
-            webTagDataTokens.append(webTag.data.observe({ [weak self] (change) in
-                switch change {
-                case .update:
-                    self?.syncViewModels()
-                case .error(let error):
-                    self?.errorPresenter.present(error: error)
-                default:
-                    break
-                }
-            }))
-        })
     }
     
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+            .filter("isConnectable == true")
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
@@ -241,27 +209,6 @@ extension TagChartsPresenter {
                 self?.errorPresenter.present(error: error)
             }
         }
-    }
-    
-    private func startObservingWebTags() {
-        webTags = realmContext.main.objects(WebTagRealm.self)
-        webTagsToken = webTags?.observe({ [weak self] (change) in
-            switch change {
-            case .initial:
-                self?.restartObservingData()
-            case .update(let webTags, _, let insertions, _):
-                self?.webTags = webTags
-                if let ii = insertions.last {
-                    let uuid = webTags[ii].uuid
-                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-                        self?.view.scroll(to: index)
-                    }
-                }
-                self?.restartObservingData()
-            case .error(let error):
-                self?.errorPresenter.present(error: error)
-            }
-        })
     }
     
     private func startListeningToSettings() {
