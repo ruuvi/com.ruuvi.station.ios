@@ -24,6 +24,7 @@ class SettingsTableViewController: UITableViewController {
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
     var language: Language = .english { didSet { updateUILanguage() } }
+    var isBackgroundVisible: Bool = false { didSet { updateUIIsBackgroundVisible() } }
 }
 
 // MARK: - SettingsViewInput
@@ -93,6 +94,16 @@ extension SettingsTableViewController {
 
 // MARK: - UITableViewDelegate
 extension SettingsTableViewController {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        if !isBackgroundVisible && cell == backgroundCell {
+            return 0
+        } else {
+            return super.tableView(tableView, heightForRowAt: indexPath)
+        }
+    }
+
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case SettingsTableSection.general.rawValue:
@@ -135,6 +146,13 @@ extension SettingsTableViewController {
         updateUITemperatureUnit()
         updateUIHumidityUnit()
         updateUILanguage()
+        updateUIIsBackgroundVisible()
+    }
+    
+    private func updateUIIsBackgroundVisible() {
+        if isViewLoaded {
+            tableView.reloadData()
+        }
     }
     
     private func updateUILanguage() {
