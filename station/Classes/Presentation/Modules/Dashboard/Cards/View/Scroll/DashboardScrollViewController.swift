@@ -349,7 +349,7 @@ extension DashboardScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: scrollView)
-            return abs(velocity.y) > abs(velocity.x)
+            return abs(velocity.y) > abs(velocity.x) && viewModels[currentPage].isConnectable.value.bound
         } else {
             return true
         }
