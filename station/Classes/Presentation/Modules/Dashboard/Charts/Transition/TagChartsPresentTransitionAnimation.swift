@@ -19,11 +19,13 @@ class TagChartsPresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let toView = transitionContext.view(forKey: .to)!
+        let toVC = transitionContext.viewController(forKey: .to)!
         
         let containerView = transitionContext.containerView
         containerView.addSubview(toView)
         
         toView.alpha = 0.0
+        let finalFrame = transitionContext.finalFrame(for: toVC)
         
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration,
@@ -33,6 +35,7 @@ class TagChartsPresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        options: .curveEaseInOut,
                        animations: {
                         toView.alpha = 1.0
+                        toView.frame = finalFrame
         }) { (finished) -> Void in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
