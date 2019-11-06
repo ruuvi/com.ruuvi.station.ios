@@ -35,16 +35,18 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     }
     
     func scroll(to index: Int, immediately: Bool = false) {
-        if immediately {
-            view.layoutIfNeeded()
-            scrollView.layoutIfNeeded()
-            let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
-            scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let sSelf = self else { return }
-                let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
-                sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+        if isViewLoaded {
+            if immediately {
+                view.layoutIfNeeded()
+                scrollView.layoutIfNeeded()
+                let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
+                scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                    guard let sSelf = self else { return }
+                    let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
+                    sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+                }
             }
         }
     }
