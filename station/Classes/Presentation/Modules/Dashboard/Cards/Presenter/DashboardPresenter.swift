@@ -142,6 +142,10 @@ extension DashboardPresenter: DashboardViewOutput {
             router.openTagCharts(uuid: uuid, output: self)
         }
     }
+    
+    func viewDidScroll(to viewModel: DashboardTagViewModel) {
+        // do nothing
+    }
 }
 
 // MARK: - MenuModuleOutput

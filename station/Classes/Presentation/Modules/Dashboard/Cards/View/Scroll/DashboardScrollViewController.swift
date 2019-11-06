@@ -121,6 +121,13 @@ extension DashboardScrollViewController {
     }
 }
 
+// MARK: - Update UI
+extension DashboardScrollViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        output.viewDidScroll(to: viewModels[currentPage])
+    }
+}
+
 // MARK: - UITextFieldDelegate
 extension DashboardScrollViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
