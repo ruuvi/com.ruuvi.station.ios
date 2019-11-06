@@ -29,6 +29,53 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYc-s6-bCm">
+                    <rect key="frame" x="370" y="52" width="36" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="CE4-Ee-kZm"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="36" id="GPr-SK-tyW"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="36" id="cLD-E7-bTt"/>
+                        <constraint firstAttribute="width" constant="36" id="eIB-FG-gqt"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" image="baseline_settings_white_48pt"/>
+                    <connections>
+                        <action selector="settingsButtonTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="yFG-sI-nN6"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Ff-2G-dMH">
+                    <rect key="frame" x="326" y="48" width="44" height="44"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-dashboard-button" translatesAutoresizingMaskIntoConstraints="NO" id="1K2-Z1-y8p">
+                            <rect key="frame" x="9" y="9" width="26" height="26"/>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="26" id="hmv-Gj-BBE"/>
+                                <constraint firstAttribute="height" constant="26" id="wWb-W3-oG0"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U5a-tX-c5p">
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="TTd-sP-NTV"/>
+                                <constraint firstAttribute="width" constant="44" id="inE-Fl-4uS"/>
+                            </constraints>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="dashboardButtonTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="V0X-f0-2uV"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="1K2-Z1-y8p" firstAttribute="centerX" secondItem="U5a-tX-c5p" secondAttribute="centerX" id="8je-Od-Epi"/>
+                        <constraint firstItem="U5a-tX-c5p" firstAttribute="top" secondItem="0Ff-2G-dMH" secondAttribute="top" id="9Ni-X1-t6X"/>
+                        <constraint firstItem="U5a-tX-c5p" firstAttribute="leading" secondItem="0Ff-2G-dMH" secondAttribute="leading" id="Bpw-CJ-TTB"/>
+                        <constraint firstItem="1K2-Z1-y8p" firstAttribute="centerY" secondItem="U5a-tX-c5p" secondAttribute="centerY" id="Imc-6T-P2b"/>
+                        <constraint firstAttribute="trailing" secondItem="U5a-tX-c5p" secondAttribute="trailing" id="NLR-Za-Th2"/>
+                        <constraint firstAttribute="bottom" secondItem="U5a-tX-c5p" secondAttribute="bottom" id="t3f-5S-bKB"/>
+                    </constraints>
+                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wQo-IQ-Rfz">
                     <rect key="frame" x="71.5" y="104" width="271" height="21"/>
                     <constraints>
@@ -105,12 +152,16 @@
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="6SF-UU-U4I"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="91x-Vt-9zY"/>
                 <constraint firstAttribute="bottom" secondItem="hh5-fd-vAK" secondAttribute="bottom" id="9n8-kp-faL"/>
+                <constraint firstItem="0Ff-2G-dMH" firstAttribute="centerY" secondItem="NYc-s6-bCm" secondAttribute="centerY" id="Bq2-mD-VmE"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="CLV-YU-UuC"/>
+                <constraint firstItem="NYc-s6-bCm" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="8" id="Cxu-u7-HUr"/>
                 <constraint firstItem="em1-nB-mq5" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="FpX-O5-k6T"/>
                 <constraint firstAttribute="bottom" secondItem="40X-75-l2S" secondAttribute="bottom" id="GTO-3p-nda"/>
+                <constraint firstItem="NYc-s6-bCm" firstAttribute="leading" secondItem="0Ff-2G-dMH" secondAttribute="trailing" id="O5D-LD-MrQ"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="top" secondItem="wQo-IQ-Rfz" secondAttribute="bottom" constant="8" id="R56-EE-BrP"/>
                 <constraint firstItem="em1-nB-mq5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VvW-e4-CPN"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Xd5-a8-Dlp"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="NYc-s6-bCm" secondAttribute="trailing" constant="8" id="ZSw-pe-8pN"/>
                 <constraint firstItem="em1-nB-mq5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="adr-C1-lX9"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="di8-Hg-LyS"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="gKc-0G-Zaf"/>
@@ -133,7 +184,9 @@
         </view>
     </objects>
     <resources>
+        <image name="baseline_settings_white_48pt" width="48" height="48"/>
         <image name="bg6" width="960" height="1440"/>
+        <image name="icon-dashboard-button" width="18" height="18"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>

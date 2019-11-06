@@ -118,14 +118,16 @@ extension DashboardScrollViewController: UIScrollViewDelegate {
 // MARK: - DashboardTagViewDelegate
 extension DashboardScrollViewController: DashboardTagViewDelegate {
     func dashboardTag(view: DashboardTagView, didTriggerCharts sender: Any) {
-        if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTriggerChart(for: viewModels[currentPage])
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidTriggerChart(for: viewModels[index])
         }
     }
     
     func dashboardTag(view: DashboardTagView, didTriggerSettings sender: Any) {
-        if currentPage >= 0 && currentPage < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[currentPage])
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidTriggerSettings(for: viewModels[index])
         }
     }
 }

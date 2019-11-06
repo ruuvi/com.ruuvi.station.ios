@@ -2,9 +2,8 @@ import UIKit
 import Charts
 
 protocol TagChartsViewDelegate: class {
-    func tagCharts(view: TagChartsView, sync sender: Any)
-    func tagCharts(view: TagChartsView, delete sender: Any)
-    func tagCharts(view: TagChartsView, upload sender: Any)
+    func tagCharts(view: TagChartsView, didTriggerDashboard sender: Any)
+    func tagCharts(view: TagChartsView, didTriggerSettings sender: Any)
 }
 
 class TagChartsView: UIView {
@@ -18,16 +17,13 @@ class TagChartsView: UIView {
     @IBOutlet weak var temperatureUnitLabel: UILabel!
     @IBOutlet weak var humidityUnitLabel: UILabel!
     @IBOutlet weak var pressureUnitLabel: UILabel!
+ 
     
-    @IBAction func syncButtonTouchUpInside(_ sender: Any) {
-        delegate?.tagCharts(view: self, sync: sender)
+    @IBAction func dashboardButtonTouchUpInside(_ sender: Any) {
+        delegate?.tagCharts(view: self, didTriggerDashboard: sender)
     }
     
-    @IBAction func uploadButtonTouchUpInside(_ sender: Any) {
-        delegate?.tagCharts(view: self, upload: sender)
-    }
-    
-    @IBAction func deleteButtonTouchUpInside(_ sender: Any) {
-        delegate?.tagCharts(view: self, delete: sender)
+    @IBAction func settingsButtonTouchUpInside(_ sender: Any) {
+        delegate?.tagCharts(view: self, didTriggerSettings: sender)
     }
 }
