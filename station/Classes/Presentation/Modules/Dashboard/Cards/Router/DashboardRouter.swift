@@ -1,8 +1,9 @@
 import LightRoute
 
 class DashboardRouter: NSObject, DashboardRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
     weak var delegate: DashboardRouterDelegate!
+    weak var tagCharts: UIViewController!
     var settings: Settings!
     
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -16,7 +17,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             .forStoryboard(factory: factory, to: MenuModuleInput.self)
             .apply(to: { (viewController) in
                 viewController.modalPresentationStyle = .custom
-                let manager = MenuTableTransitionManager(container: self.transitionHandler as! UIViewController, menu: viewController)
+                let manager = MenuTableTransitionManager(container: self.transitionHandler, menu: viewController)
                 self.menuTableTransition = MenuTableTransitioningDelegate(manager: manager)
             })
             .add(transitioningDelegate: menuTableTransition)
@@ -70,17 +71,8 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             .perform()
     }
     
-    func openTagCharts(output: TagChartsModuleOutput) {
-        let factory = StoryboardFactory(storyboardName: "TagCharts")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: TagChartsModuleInput.self)
-            .add(transitioningDelegate: tagChartsTransitioningDelegate)
-            .apply(to: { (viewController) in
-                viewController.modalPresentationStyle = .custom
-            })
-            .then({ (module) -> Any? in
-                module.configure(output: output)
-            })
+    func openTagCharts() {
+        transitionHandler.present(tagCharts, animated: true)
     }
     
     func openRuuviWebsite() {

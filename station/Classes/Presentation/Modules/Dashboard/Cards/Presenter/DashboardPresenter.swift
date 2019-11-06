@@ -140,7 +140,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
     
     func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
-        router.openTagCharts(output: self)
+        router.openTagCharts()
     }
     
     func viewDidScroll(to viewModel: DashboardTagViewModel) {
