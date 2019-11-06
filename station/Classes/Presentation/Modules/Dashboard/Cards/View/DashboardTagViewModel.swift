@@ -33,6 +33,7 @@ struct DashboardTagViewModel {
     var location: Observable<Location?> = Observable<Location?>()
     var currentLocation: Observable<Location?> = Observable<Location?>()
     var animateRSSI: Observable<Bool?> = Observable<Bool?>()
+    var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var provider: WeatherProvider?
     
     init(_ webTag: WebTagRealm) {
@@ -43,6 +44,7 @@ struct DashboardTagViewModel {
         fahrenheit.value = webTag.data.last?.fahrenheit
         kelvin.value = webTag.data.last?.kelvin
         relativeHumidity.value = webTag.data.last?.humidity.value
+        isConnectable.value = false
         
         if let c = webTag.data.last?.celsius.value, let rh = webTag.data.last?.humidity.value {
             let h = Humidity(c: c, rh: rh / 100.0)
@@ -68,6 +70,7 @@ struct DashboardTagViewModel {
         kelvin.value = data.kelvin
         pressure.value = data.pressure.value
         relativeHumidity.value = data.humidity.value
+        isConnectable.value = false
         
         if let c = data.celsius.value, let rh = data.humidity.value {
             let h = Humidity(c: c, rh: rh / 100.0)
@@ -91,6 +94,7 @@ struct DashboardTagViewModel {
         kelvin.value = wpsData.kelvin
         pressure.value = wpsData.pressure
         relativeHumidity.value = wpsData.humidity
+        isConnectable.value = false
         
         if let c = wpsData.celsius, let rh = wpsData.humidity {
             let h = Humidity(c: c, rh: rh / 100.0)
@@ -116,6 +120,7 @@ struct DashboardTagViewModel {
         version.value = ruuviTag.version
         humidityOffset.value = ruuviTag.humidityOffset
         humidityOffsetDate.value = ruuviTag.humidityOffsetDate
+        isConnectable.value = ruuviTag.isConnectable
         
         celsius.value = ruuviTag.data.last?.celsius.value
         fahrenheit.value = ruuviTag.data.last?.fahrenheit
@@ -146,6 +151,7 @@ struct DashboardTagViewModel {
     
     func update(with ruuviTag: RuuviTag) {
         uuid.value = ruuviTag.uuid
+        isConnectable.value = ruuviTag.isConnectable
         
         celsius.value = ruuviTag.celsius
         fahrenheit.value = ruuviTag.fahrenheit
