@@ -11,6 +11,8 @@ class SettingsTableConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.settings = r.resolve(Settings.self)
+        presenter.realmContext = r.resolve(RealmContext.self)
+        presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         
         view.output = presenter
     }
