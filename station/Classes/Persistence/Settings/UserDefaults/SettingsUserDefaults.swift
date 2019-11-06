@@ -98,7 +98,7 @@ class SettingsUserDegaults: Settings {
         }
     }
     
-    @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: true)
+    @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: false)
     var isConnectionDaemonOn: Bool {
         didSet {
             NotificationCenter
