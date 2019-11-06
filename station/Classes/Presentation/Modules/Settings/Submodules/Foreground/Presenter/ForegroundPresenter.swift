@@ -16,18 +16,7 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
         bind(advertisement.interval, fire: false) { observer, interval in
             observer.settings.advertisementDaemonIntervalMinutes = interval.bound
         }
-        
-        let connection = ForegroundViewModel()
-        connection.type = .connection
-        connection.isOn.value = settings.isConnectionDaemonOn
-        connection.interval.value = settings.connectionDaemonIntervalMinutes
-        bind(connection.isOn, fire: false) { (observer, isOn) in
-            observer.settings.isConnectionDaemonOn = isOn.bound
-        }
-        bind(connection.interval, fire: false) { observer, interval in
-            observer.settings.connectionDaemonIntervalMinutes = interval.bound
-        }
-        
+                
         let webTags = ForegroundViewModel()
         webTags.type = .webTags
         webTags.isOn.value = settings.isWebTagDaemonOn
@@ -39,7 +28,7 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
             observer.settings.webTagDaemonIntervalMinutes = interval.bound
         }
         
-        view.viewModels = [advertisement, connection, webTags]
+        view.viewModels = [advertisement, webTags]
     }
 }
 
