@@ -31,6 +31,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var backgroundToken: NSObjectProtocol?
     private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
+    private var ruuviTagPropertiesDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagConnectionDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
@@ -103,6 +104,9 @@ class DashboardPresenter: DashboardModuleInput {
         }
         if let readRSSIIntervalDidChangeToken = readRSSIIntervalDidChangeToken {
             NotificationCenter.default.removeObserver(readRSSIIntervalDidChangeToken)
+        }
+        if let ruuviTagPropertiesDaemonFailureToken = ruuviTagPropertiesDaemonFailureToken {
+            NotificationCenter.default.removeObserver(ruuviTagPropertiesDaemonFailureToken)
         }
     }
 }
@@ -420,6 +424,12 @@ extension DashboardPresenter {
         
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagAdvertisementDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagAdvertisementDaemonDidFailKey.error] as? RUError {
+                self?.errorPresenter.present(error: error)
+            }
+        })
+        
+        ruuviTagPropertiesDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagPropertiesDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let error = userInfo[RuuviTagPropertiesDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
