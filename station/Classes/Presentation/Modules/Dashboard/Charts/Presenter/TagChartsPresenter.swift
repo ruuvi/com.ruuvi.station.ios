@@ -195,6 +195,7 @@ extension TagChartsPresenter {
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
             .filter("isConnectable == true")
+        tagActions?.configure(isConnectable: tagIsConnectable)
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
