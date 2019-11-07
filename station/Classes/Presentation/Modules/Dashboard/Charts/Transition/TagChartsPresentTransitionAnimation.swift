@@ -53,7 +53,7 @@ class TagChartsPresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         
         // do some math to translate this to a percentage based value
         if !manager.isInteractive {
-            if translation.y == 0 {
+            if translation.y >= 0 {
                 return // not sure which way the user is swiping yet, so do nothing
             }
             
