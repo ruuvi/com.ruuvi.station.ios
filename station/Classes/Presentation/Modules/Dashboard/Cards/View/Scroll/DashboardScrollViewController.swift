@@ -237,7 +237,7 @@ extension DashboardScrollViewController {
                         if rh < 100.0 {
                             label.text = String(format: "%.2f", rh) + " " + "%".localized()
                         } else {
-                            label.text = "N/A".localized()
+                            label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
                         }
                     } else {
                         label.text = "N/A".localized()
