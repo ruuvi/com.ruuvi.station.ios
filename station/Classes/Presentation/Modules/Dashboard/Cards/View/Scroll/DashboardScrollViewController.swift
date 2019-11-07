@@ -228,13 +228,13 @@ extension DashboardScrollViewController {
                 case .percent:
                     if let rh = rh?.value, let ho = ho?.value {
                         let sh = rh + ho
-                        if sh <= 100.0 {
+                        if sh < 100.0 {
                             label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
                         } else {
                             label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
                         }
                     } else if let rh = rh?.value {
-                        if rh <= 100.0 {
+                        if rh < 100.0 {
                             label.text = String(format: "%.2f", rh) + " " + "%".localized()
                         } else {
                             label.text = "N/A".localized()
@@ -402,7 +402,7 @@ extension DashboardScrollViewController {
         if let rh = viewModel.relativeHumidity.value {
             if let ho = viewModel.humidityOffset.value {
                 let sh = rh + ho
-                if sh <= 100.0 {
+                if sh < 100.0 {
                     if rainController.isAnimating {
                         rainController.stop()
                     }
@@ -412,7 +412,7 @@ extension DashboardScrollViewController {
                     }
                 }
             } else {
-                if rh <= 100.0 {
+                if rh < 100.0 {
                     if rainController.isAnimating {
                         rainController.stop()
                     }
