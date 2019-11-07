@@ -76,6 +76,13 @@ class BusinessAssembly: Assembly {
             return service
         }.inObjectScope(.container)
         
+        container.register(RuuviTagPropertiesDaemon.self) { r in
+            let daemon = RuuviTagPropertiesDaemonBTKit()
+            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            daemon.foreground = r.resolve(BTForeground.self)
+            return daemon
+        }.inObjectScope(.container)
+        
         container.register(RuuviTagService.self) { r in
             let service = RuuviTagServiceImpl()
             service.calibrationService = r.resolve(CalibrationService.self)

@@ -212,6 +212,8 @@
 		0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */; };
 		0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
 		0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */; };
+		0EC61FD52373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD42373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift */; };
+		0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */; };
 		0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */; };
 		0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1BB2313E08E00A09ACA /* PushNotificationsManagerImpl.swift */; };
@@ -565,6 +567,8 @@
 		0EC50F5322CCBBE800172EEB /* NSObject+Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+Observable.swift"; sourceTree = "<group>"; };
 		0EC50F5522CCE46D00172EEB /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		0EC50F5822CF621000172EEB /* PhotoPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerPresenter.swift; sourceTree = "<group>"; };
+		0EC61FD42373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPropertiesDaemon.swift; sourceTree = "<group>"; };
+		0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPropertiesDaemonBTKit.swift; sourceTree = "<group>"; };
 		0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0ECDF1B62313D7DA00A09ACA /* station.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = station.entitlements; sourceTree = "<group>"; };
 		0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationsManager.swift; sourceTree = "<group>"; };
@@ -1836,6 +1840,7 @@
 			children = (
 				0ED23643234F193B00CE6AA3 /* Advertisement */,
 				0ED23644234F194B00CE6AA3 /* Connection */,
+				0EC61FD32373FB7000A654C8 /* Properties */,
 				0E9D5F232353624E0076FFD8 /* WebTag */,
 			);
 			path = Foreground;
@@ -2076,6 +2081,23 @@
 				0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */,
 			);
 			path = Sheet;
+			sourceTree = "<group>";
+		};
+		0EC61FD32373FB7000A654C8 /* Properties */ = {
+			isa = PBXGroup;
+			children = (
+				0EC61FD62373FFF200A654C8 /* BTKit */,
+				0EC61FD42373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift */,
+			);
+			path = Properties;
+			sourceTree = "<group>";
+		};
+		0EC61FD62373FFF200A654C8 /* BTKit */ = {
+			isa = PBXGroup;
+			children = (
+				0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */,
+			);
+			path = BTKit;
 			sourceTree = "<group>";
 		};
 		0ECDF1B72313E04500A09ACA /* PushNotifications */ = {
@@ -3043,6 +3065,7 @@
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
+				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0EF6F5CD235E0C5D0052BA25 /* BackgroundModuleInput.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
@@ -3262,6 +3285,7 @@
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
 				0E9959AF235ED64D001C37D8 /* BackgroundRouterInput.swift in Sources */,
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
+				0EC61FD52373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift in Sources */,
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
