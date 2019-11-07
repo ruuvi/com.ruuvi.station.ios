@@ -37,7 +37,6 @@
 		0E09672822AE8D7A00E85F48 /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09672722AE8D7A00E85F48 /* Discover.storyboard */; };
 		0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */; };
 		0E0A381923616AC3003A0364 /* UserDefaults+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */; };
-		0E0C7D4C23741F2A0004EC91 /* RainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C7D4B23741F2A0004EC91 /* RainController.swift */; };
 		0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9022B35D6A0032F6CA /* Worker.swift */; };
 		0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9422B3624F0032F6CA /* RealmContext.swift */; };
 		0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */; };
@@ -389,7 +388,6 @@
 		0E09672722AE8D7A00E85F48 /* Discover.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Discover.storyboard; sourceTree = "<group>"; };
 		0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Optional.swift"; sourceTree = "<group>"; };
-		0E0C7D4B23741F2A0004EC91 /* RainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainController.swift; sourceTree = "<group>"; };
 		0E1C1D9022B35D6A0032F6CA /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		0E1C1D9422B3624F0032F6CA /* RealmContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmContext.swift; sourceTree = "<group>"; };
 		0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmContextImpl.swift; sourceTree = "<group>"; };
@@ -1061,14 +1059,6 @@
 			path = BTKit;
 			sourceTree = "<group>";
 		};
-		0E0C7D4A23741EFF0004EC91 /* Rain */ = {
-			isa = PBXGroup;
-			children = (
-				0E0C7D4B23741F2A0004EC91 /* RainController.swift */,
-			);
-			path = Rain;
-			sourceTree = "<group>";
-		};
 		0E1C1D9222B360160032F6CA /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
@@ -1231,7 +1221,6 @@
 		0E1C1DCF22B3BDBB0032F6CA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0E0C7D4A23741EFF0004EC91 /* Rain */,
 				0E1C1DD622B3BF760032F6CA /* Scroll */,
 				0E1C1DD222B3BF180032F6CA /* DashboardViewInput.swift */,
 				0E1C1DD422B3BF3A0032F6CA /* DashboardViewOutput.swift */,
@@ -3255,7 +3244,6 @@
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E2A2CC1236970AA004993C5 /* TagActionsInitializer.swift in Sources */,
-				0E0C7D4C23741F2A0004EC91 /* RainController.swift in Sources */,
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
