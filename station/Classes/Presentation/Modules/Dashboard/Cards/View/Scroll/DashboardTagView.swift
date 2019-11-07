@@ -10,6 +10,7 @@ class DashboardTagView: UIView {
     
     weak var delegate: DashboardTagViewDelegate?
     
+    @IBOutlet weak var humidityWarningImageView: UIImageView!
     @IBOutlet weak var chartsButtonContainerView: UIView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -33,6 +34,10 @@ class DashboardTagView: UIView {
         super.awakeFromNib()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
             self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
+        })
+        
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse], animations: { [weak self] in
+            self?.humidityWarningImageView.alpha = 0.0
         })
     }
     

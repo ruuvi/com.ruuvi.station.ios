@@ -221,8 +221,8 @@ extension DashboardScrollViewController {
         let dc = viewModel.dewPointCelsius
         let df = viewModel.dewPointFahrenheit
         let dk = viewModel.dewPointKelvin
-        
-        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df, weak dk] label, _ in
+        let humidityWarning = view.humidityWarningImageView
+        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df, weak dk, weak humidityWarning] label, _ in
             if let hu = hu?.value {
                 switch hu {
                 case .percent:
@@ -230,14 +230,18 @@ extension DashboardScrollViewController {
                         let sh = rh + ho
                         if sh < 100.0 {
                             label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
+                            humidityWarning?.isHidden = true
                         } else {
                             label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                            humidityWarning?.isHidden = false
                         }
                     } else if let rh = rh?.value {
                         if rh < 100.0 {
                             label.text = String(format: "%.2f", rh) + " " + "%".localized()
+                            humidityWarning?.isHidden = true
                         } else {
                             label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                            humidityWarning?.isHidden = false
                         }
                     } else {
                         label.text = "N/A".localized()

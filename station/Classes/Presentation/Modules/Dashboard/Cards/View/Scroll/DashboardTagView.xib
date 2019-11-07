@@ -109,7 +109,7 @@
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Humidity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XwV-cb-60i">
-                    <rect key="frame" x="74" y="659" width="324" height="50"/>
+                    <rect key="frame" x="74" y="659" width="87.5" height="50"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="Ioe-4H-arq"/>
                     </constraints>
@@ -163,6 +163,14 @@
                         <action selector="settingsButtonTouchUpInside:" destination="O00-Hz-n75" eventType="touchUpInside" id="oyh-n6-YaH"/>
                     </connections>
                 </button>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-warning" translatesAutoresizingMaskIntoConstraints="NO" id="XbS-ri-gks">
+                    <rect key="frame" x="169.5" y="674" width="20" height="20"/>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="SGb-Hk-JaF"/>
+                        <constraint firstAttribute="width" constant="20" id="aMN-ZR-Mja"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -175,7 +183,6 @@
                 <constraint firstItem="pZx-ro-mwa" firstAttribute="top" secondItem="O00-Hz-n75" secondAttribute="top" id="B40-tv-YHS"/>
                 <constraint firstItem="A5Y-2H-mT9" firstAttribute="top" secondItem="XwV-cb-60i" secondAttribute="bottom" constant="8" id="BnP-c3-7YV"/>
                 <constraint firstItem="l6K-wF-oLr" firstAttribute="bottom" secondItem="O00-Hz-n75" secondAttribute="bottom" id="FUi-Mt-Yih"/>
-                <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="XwV-cb-60i" secondAttribute="trailing" constant="16" id="HpK-78-In1"/>
                 <constraint firstItem="Drw-j1-Iq5" firstAttribute="top" secondItem="pP4-3S-qyE" secondAttribute="bottom" constant="8" id="Hzs-rH-jRv"/>
                 <constraint firstItem="A5Y-2H-mT9" firstAttribute="leading" secondItem="Drw-j1-Iq5" secondAttribute="trailing" constant="8" id="Mn0-gP-88i"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="IB9-bM-mpw" secondAttribute="trailing" constant="8" id="PAM-X4-2Gw"/>
@@ -185,6 +192,8 @@
                 <constraint firstItem="bjH-UG-dwW" firstAttribute="centerX" secondItem="O00-Hz-n75" secondAttribute="centerX" id="Vz2-dY-ye7"/>
                 <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="2Pk-nL-gnn" secondAttribute="bottom" constant="8" id="WoG-4F-aYr"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="UNY-cv-I7Q" secondAttribute="trailing" constant="16" id="XOY-gT-U3y"/>
+                <constraint firstItem="XwV-cb-60i" firstAttribute="centerY" secondItem="XbS-ri-gks" secondAttribute="centerY" id="ZrW-Wz-czs"/>
+                <constraint firstItem="XbS-ri-gks" firstAttribute="leading" secondItem="XwV-cb-60i" secondAttribute="trailing" constant="8" id="ZwR-Zp-YdO"/>
                 <constraint firstItem="IB9-bM-mpw" firstAttribute="top" secondItem="27w-ik-OkD" secondAttribute="top" constant="8" id="b2N-Fq-v1i"/>
                 <constraint firstItem="2Pk-nL-gnn" firstAttribute="top" secondItem="A5Y-2H-mT9" secondAttribute="bottom" constant="8" id="dUS-Uo-s9Z"/>
                 <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="tnh-8q-eCb" secondAttribute="bottom" constant="8" id="gHH-uB-cHP"/>
@@ -208,6 +217,7 @@
                 <outlet property="backgroundImage" destination="pZx-ro-mwa" id="sld-pS-lHK"/>
                 <outlet property="chartsButtonContainerView" destination="eca-Uk-3ms" id="Njl-47-jzN"/>
                 <outlet property="humidityLabel" destination="XwV-cb-60i" id="ETY-XG-Dbv"/>
+                <outlet property="humidityWarningImageView" destination="XbS-ri-gks" id="JVl-I2-kxW"/>
                 <outlet property="nameLabel" destination="bjH-UG-dwW" id="Mvh-u2-RLu"/>
                 <outlet property="pressureLabel" destination="A5Y-2H-mT9" id="uh9-NZ-vo8"/>
                 <outlet property="rssiCityImageView" destination="tnh-8q-eCb" id="BHv-p6-C6H"/>
@@ -226,6 +236,7 @@
         <image name="icon-measure-humidity" width="221" height="221"/>
         <image name="icon-measure-pressure" width="221" height="221"/>
         <image name="icon-measure-signal" width="221" height="221"/>
+        <image name="icon-warning" width="321" height="260"/>
         <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>
