@@ -9,6 +9,7 @@ class BusinessAssembly: Assembly {
             service.settings = r.resolve(Settings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
+            service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             return service
