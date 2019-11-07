@@ -12,7 +12,6 @@ class DashboardScrollViewController: UIViewController {
     
     var viewModels = [DashboardTagViewModel]() { didSet { updateUIViewModels() }  }
     
-    private lazy var rainController = RainController(view: self.view)
     private var views = [DashboardTagView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
@@ -115,7 +114,6 @@ extension DashboardScrollViewController {
 extension DashboardScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         output.viewDidScroll(to: viewModels[currentPage])
-        updateUIRain()
     }
 }
 
@@ -399,38 +397,6 @@ extension DashboardScrollViewController {
 extension DashboardScrollViewController {
     private func updateUI() {
         updateUIViewModels()
-    }
-    
-    private func updateUIRain() {
-        let viewModel = viewModels[currentPage]
-        if let rh = viewModel.relativeHumidity.value {
-            if let ho = viewModel.humidityOffset.value {
-                let sh = rh + ho
-                if sh < 100.0 {
-                    if rainController.isAnimating {
-                        rainController.stop()
-                    }
-                } else {
-                    if !rainController.isAnimating {
-                        rainController.start()
-                    }
-                }
-            } else {
-                if rh < 100.0 {
-                    if rainController.isAnimating {
-                        rainController.stop()
-                    }
-                } else {
-                    if !rainController.isAnimating {
-                        rainController.start()
-                    }
-                }
-            }
-        } else {
-            if !rainController.isAnimating {
-                rainController.start()
-            }
-        }
     }
     
     private func updateUIViewModels() {
