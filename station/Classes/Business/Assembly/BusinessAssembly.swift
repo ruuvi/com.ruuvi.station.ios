@@ -4,6 +4,12 @@ import BTKit
 class BusinessAssembly: Assembly {
     func assemble(container: Container) {
         
+        container.register(AlertService.self) { r in
+            let service = AlertServiceImpl()
+            service.alertPersistence = r.resolve(AlertPersistence.self)
+            return service
+        }
+        
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()
             service.settings = r.resolve(Settings.self)

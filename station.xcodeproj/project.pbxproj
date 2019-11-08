@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABB9237598C600ED4629 /* RURangeSeekSlider.swift */; };
+		0E02ABBD2375A1CF00ED4629 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABBC2375A1CF00ED4629 /* AlertService.swift */; };
+		0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABBF2375A5D000ED4629 /* AlertServiceImpl.swift */; };
+		0E02ABC32375A6B500ED4629 /* AlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC22375A6B500ED4629 /* AlertPersistence.swift */; };
+		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
+		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -360,6 +365,11 @@
 
 /* Begin PBXFileReference section */
 		0E02ABB9237598C600ED4629 /* RURangeSeekSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RURangeSeekSlider.swift; sourceTree = "<group>"; };
+		0E02ABBC2375A1CF00ED4629 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
+		0E02ABBF2375A5D000ED4629 /* AlertServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertServiceImpl.swift; sourceTree = "<group>"; };
+		0E02ABC22375A6B500ED4629 /* AlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPersistence.swift; sourceTree = "<group>"; };
+		0E02ABC42375A6CE00ED4629 /* AlertType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
+		0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WebTagSettings.storyboard; sourceTree = "<group>"; };
 		0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewInput.swift; sourceTree = "<group>"; };
 		0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewOutput.swift; sourceTree = "<group>"; };
@@ -740,6 +750,40 @@
 			path = RangeSeekSlider;
 			sourceTree = "<group>";
 		};
+		0E02ABBB2375A1C000ED4629 /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				0E02ABBE2375A5C000ED4629 /* Impl */,
+				0E02ABBC2375A1CF00ED4629 /* AlertService.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
+		0E02ABBE2375A5C000ED4629 /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E02ABBF2375A5D000ED4629 /* AlertServiceImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
+		0E02ABC12375A6A500ED4629 /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				0E02ABC62375A74B00ED4629 /* UserDefaults */,
+				0E02ABC22375A6B500ED4629 /* AlertPersistence.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
+		0E02ABC62375A74B00ED4629 /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
 		0E046F2022F049C500BD4E9C /* WebTagSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1073,6 +1117,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DA922B387BE0032F6CA /* Assembly */,
+				0E02ABC12375A6A500ED4629 /* Alert */,
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
 				0E390FE623602E0D00D600DB /* Connection */,
@@ -1517,12 +1562,13 @@
 		0E502FB822B27D3100E8A6CC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
+				0E02ABC42375A6CE00ED4629 /* AlertType.swift */,
 				0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */,
-				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
+				0EBAF064232002A00025A191 /* Language.swift */,
 				0E1C1D9F22B36C100032F6CA /* RUError.swift */,
+				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
 				0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */,
 				0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */,
-				0EBAF064232002A00025A191 /* Language.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -2729,6 +2775,7 @@
 		0EFDD6D122BBD9AB00EADFC6 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0E02ABBB2375A1C000ED4629 /* Alert */,
 				0EFDD6D222BBD9C300EADFC6 /* Calibration */,
 				0E538362236ADC040007956D /* Export */,
 				0E046F5B22F18EB000BD4E9C /* Location */,
@@ -3182,6 +3229,7 @@
 				0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
+				0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */,
 				0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */,
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
@@ -3190,6 +3238,7 @@
 				0E2A2CC52369712C004993C5 /* TagActionsConfigurator.swift in Sources */,
 				0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
+				0E02ABBD2375A1CF00ED4629 /* AlertService.swift in Sources */,
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0ED8206E235E0E8C00874BCB /* BackgroundViewModel.swift in Sources */,
@@ -3301,6 +3350,7 @@
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
+				0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
@@ -3348,6 +3398,7 @@
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
+				0E02ABC32375A6B500ED4629 /* AlertPersistence.swift in Sources */,
 				0ED8206C235E0E3700874BCB /* BackgroundEnvironmentObject.swift in Sources */,
 				0E211C2A234C5FE900FC37B0 /* DashboardRouterDelegate.swift in Sources */,
 				0E9F97B322EC40490015ADE2 /* OpenWeatherMapAPIURLSession.swift in Sources */,
@@ -3361,6 +3412,7 @@
 				0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */,
 				0ED82068235E0DAA00874BCB /* BackgroundInitializer.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
+				0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,6 +3,11 @@ import Swinject
 class PersistenceAssembly: Assembly {
     func assemble(container: Container) {
         
+        container.register(AlertPersistence.self) { r in
+            let persistence = AlertPersistenceUserDefaults()
+            return persistence
+        }
+        
         container.register(BackgroundPersistence.self) { r in
             let persistence = BackgroundPersistenceUserDefaults()
             persistence.imagePersistence = r.resolve(ImagePersistence.self)
