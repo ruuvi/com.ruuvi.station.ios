@@ -1,15 +1,25 @@
 import UIKit
 
-private enum TagSettingsTableSection: Int {
+enum TagSettingsTableSection: Int {
     case image = 0
     case name = 1
-    case calibration = 2
-    case moreInfo = 3
+    case alerts = 2
+    case calibration = 3
+    case moreInfo = 4
+    
+    static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isConnectable.value ?? false
+    }
+    
+    static func section(for index: Int) -> TagSettingsTableSection {
+        return TagSettingsTableSection(rawValue: index) ?? .name
+    }
 }
 
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var temperatureAlertCell: UITableViewCell!
     @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
@@ -202,11 +212,14 @@ extension TagSettingsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let section = TagSettingsTableSection.section(for: section)
         switch section {
-        case TagSettingsTableSection.name.rawValue:
+        case .name:
             return "TagSettings.SectionHeader.Name.title".localized()
-        case TagSettingsTableSection.calibration.rawValue:
+        case .calibration:
             return "TagSettings.SectionHeader.Calibration.title".localized()
+        case .alerts:
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? "TagSettings.SectionHeader.Alerts.title".localized() : nil
         default:
             return nil
         }
@@ -224,26 +237,67 @@ extension TagSettingsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == TagSettingsTableSection.moreInfo.rawValue {
+        let section = TagSettingsTableSection.section(for: section)
+        switch section {
+        case .moreInfo:
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier) as! TagSettingsMoreInfoHeaderFooterView
             header.delegate = self
             header.noValuesView.isHidden = viewModel?.version.value == 5
             return header
-        } else {
+        default:
             return nil
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 3 {
+        let s = TagSettingsTableSection.section(for: section)
+        switch s {
+        case .moreInfo:
             return 44
-        } else {
+        case .alerts:
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+        default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
     
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        let s = TagSettingsTableSection.section(for: section)
+        switch s {
+        case .alerts:
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+        default:
+            return super.tableView(tableView, heightForHeaderInSection: section)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let s = TagSettingsTableSection.section(for: section)
+        switch s {
+        case .alerts:
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+        default:
+            return super.tableView(tableView, numberOfRowsInSection: section)
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        if viewModel?.isConnectable.value ?? false {
+            switch cell {
+            case temperatureAlertCell:
+                return 144
+            default:
+                return 44
+            }
+        } else {
+            switch cell {
+            case temperatureAlertCell:
+                return 0
+            default:
+                return 44
+            }
+        }
     }
 }
 
@@ -394,6 +448,10 @@ extension TagSettingsTableViewController {
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
+            }
+            
+            tableView.bind(viewModel.isConnectable) { (tableView, isConnectable) in
+                tableView.reloadData()
             }
         }
     }

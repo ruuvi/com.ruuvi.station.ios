@@ -202,6 +202,7 @@
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
+"TagSettings.SectionHeader.Alerts.title" = "ALERTS";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
