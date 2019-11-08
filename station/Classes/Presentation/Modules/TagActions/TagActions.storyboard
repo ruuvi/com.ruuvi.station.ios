@@ -75,14 +75,14 @@
             <objects>
                 <viewController storyboardIdentifier="TagActionsUIKitViewController" id="pqD-0h-m9V" customClass="TagActionsUIKitViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WBX-se-VpK">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                        <rect key="frame" x="0.0" y="0.0" width="808" height="393"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b9c-qO-aSf">
-                                <rect key="frame" x="43.5" y="678" width="327" height="103"/>
+                                <rect key="frame" x="262.5" y="274" width="327" height="103"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Environmental Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOH-fB-qiP">
-                                        <rect key="frame" x="74" y="0.0" width="179" height="26"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOH-fB-qiP">
+                                        <rect key="frame" x="141" y="0.0" width="45" height="26"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -196,9 +196,9 @@
                     </view>
                     <connections>
                         <outlet property="clearButton" destination="C4C-W8-RFg" id="RCd-0g-e0Q"/>
-                        <outlet property="environmentalLogsLabel" destination="b9c-qO-aSf" id="yuS-4s-JfN"/>
                         <outlet property="exportButton" destination="dPw-gX-1Jj" id="fNT-7A-qjD"/>
                         <outlet property="progressView" destination="ii0-J6-O3a" id="fDp-em-k02"/>
+                        <outlet property="statusLabel" destination="FOH-fB-qiP" id="4nb-k3-r39"/>
                         <outlet property="syncButton" destination="LWl-ee-h9c" id="oW1-x3-N01"/>
                     </connections>
                 </viewController>
