@@ -203,6 +203,7 @@
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
 "TagSettings.SectionHeader.Alerts.title" = "ALERTS";
+"TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

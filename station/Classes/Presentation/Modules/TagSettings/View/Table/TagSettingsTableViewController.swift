@@ -96,6 +96,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
+        temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
         tableView.reloadData()
     }
     
@@ -194,7 +195,7 @@ extension TagSettingsTableViewController {
     }
     
     @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
-        temperatureAlertSlider.isEnabled = temperatureAlertSwitch.isOn
+        viewModel?.isTemperatureAlertOn.value = temperatureAlertSwitch.isOn
     }
 }
 
@@ -484,6 +485,16 @@ extension TagSettingsTableViewController {
             
             tableView.bind(viewModel.isConnectable) { (tableView, isConnectable) in
                 tableView.reloadData()
+            }
+            
+            let temperatureLower = viewModel.temperatureAlertLowerBound
+            let temperatureUpper = viewModel.temperatureAlertUpperBound
+            
+            temperatureAlertSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
+            temperatureAlertSlider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
+                slider.isEnabled = isOn.bound
             }
         }
     }
