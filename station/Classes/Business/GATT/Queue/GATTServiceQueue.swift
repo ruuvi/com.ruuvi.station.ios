@@ -14,12 +14,12 @@ class GATTServiceQueue: GATTService {
     }()
     
     @discardableResult
-    func syncLogs(with uuid: String) -> Future<Bool,RUError> {
+    func syncLogs(with uuid: String, progress: ((BTServiceProgress) -> Void)? = nil) -> Future<Bool,RUError> {
         let promise = Promise<Bool,RUError>()
         if isSyncingLogs(with: uuid) {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
         } else {
-            let operation = RuuviTagReadLogsOperation(uuid: uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background)
+            let operation = RuuviTagReadLogsOperation(uuid: uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background, progress: progress)
             operation.completionBlock = { [unowned operation] in
                 if let error = operation.error {
                     promise.fail(error: error)
