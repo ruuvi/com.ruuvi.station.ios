@@ -242,6 +242,9 @@ IMAGE</string>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CVB-JT-Te6">
                                                     <rect key="frame" x="345" y="8" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="temperatureAlertSwitchValueChanged:" destination="JXe-xp-HbB" eventType="valueChanged" id="LAW-rV-zM5"/>
+                                                    </connections>
                                                 </switch>
                                                 <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="hRO-kJ-T9r" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="61" width="374" height="75"/>
@@ -275,6 +278,7 @@ IMAGE</string>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="handleDiameter">
                                                             <real key="value" value="24"/>
                                                         </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="enableStep" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                             </subviews>
@@ -662,6 +666,10 @@ IMAGE</string>
                         <outlet property="tagNameTextField" destination="wsY-ah-PBa" id="jfa-8a-aDt"/>
                         <outlet property="tagNameTitleLabel" destination="5rU-pr-cVB" id="svL-c0-SM3"/>
                         <outlet property="temperatureAlertCell" destination="OHK-8e-l2P" id="Mdt-KF-DNX"/>
+                        <outlet property="temperatureAlertDescriptionLabel" destination="GjM-2N-ajj" id="bSh-ne-YHB"/>
+                        <outlet property="temperatureAlertSlider" destination="hRO-kJ-T9r" id="OKA-jB-QB3"/>
+                        <outlet property="temperatureAlertSwitch" destination="CVB-JT-Te6" id="Pxo-b5-kXa"/>
+                        <outlet property="temperatureAlertTitleLabel" destination="FNr-3a-XC8" id="JPG-mw-rV9"/>
                         <outlet property="txPowerCell" destination="XcN-id-Y5e" id="NzX-l5-SKf"/>
                         <outlet property="txPowerTitleLabel" destination="9z1-8W-BSJ" id="2UL-jA-tVG"/>
                         <outlet property="txPowerValueLabel" destination="fKD-IO-Ovr" id="2gL-vR-F92"/>
