@@ -12,6 +12,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
     var foreground: BTForeground!
     var background: BTBackground!
     var calibrationService: CalibrationService!
+    var alertService: AlertService!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }

@@ -1,4 +1,5 @@
 import UIKit
+import RangeSeekSlider
 
 enum TagSettingsTableSection: Int {
     case image = 0
@@ -60,6 +61,11 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     
+    @IBOutlet weak var temperatureAlertSwitch: UISwitch!
+    @IBOutlet weak var temperatureAlertTitleLabel: UILabel!
+    @IBOutlet weak var temperatureAlertDescriptionLabel: UILabel!
+    @IBOutlet weak var temperatureAlertSlider: RURangeSeekSlider!
+    
     var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -67,6 +73,9 @@ class TagSettingsTableViewController: UITableViewController {
     }
     
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
+    
+    
+    
 }
 
 // MARK: - TagSettingsViewInput
@@ -182,6 +191,28 @@ extension TagSettingsTableViewController {
         if let name = tagNameTextField.text {
             output.viewDidChangeTag(name: name)
         }
+    }
+    
+    @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
+        temperatureAlertSlider.isEnabled = temperatureAlertSwitch.isOn
+    }
+}
+
+// MARK: - RangeSeekSliderDelegate
+extension TagSettingsTableViewController: RangeSeekSliderDelegate {
+
+    func rangeSeekSlider(_ slider: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
+        if slider === temperatureAlertSlider {
+            print("Standard slider updated. Min Value: \(minValue) Max Value: \(maxValue)")
+        }
+    }
+
+    func didStartTouches(in slider: RangeSeekSlider) {
+        print("did start touches")
+    }
+
+    func didEndTouches(in slider: RangeSeekSlider) {
+        print("did end touches")
     }
 }
 
@@ -321,6 +352,7 @@ extension TagSettingsTableViewController {
     private func configureViews() {
         let nib = UINib(nibName: "TagSettingsMoreInfoHeaderFooterView", bundle: nil)
         tableView.register(nib, forHeaderFooterViewReuseIdentifier: moreInfoSectionHeaderReuseIdentifier)
+        temperatureAlertSlider.delegate = self
     }
 }
 
