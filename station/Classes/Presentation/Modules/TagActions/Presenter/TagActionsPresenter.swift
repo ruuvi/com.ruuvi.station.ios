@@ -47,8 +47,14 @@ extension TagActionsPresenter: TagActionsViewOutput {
     }
     
     func viewDidConfirmToSync() {
-        let op = gattService.syncLogs(with: view.viewModel.uuid)
-        op.on(failure: { [weak self] (error) in
+        let op = gattService.syncLogs(with: view.viewModel.uuid, progress: { [weak self] progress in
+            DispatchQueue.main.async { [weak self] in
+                self?.view.syncProgress = progress
+            }
+        })
+        op.on(success: { [weak self] _ in
+            self?.view.syncProgress = nil
+        }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }

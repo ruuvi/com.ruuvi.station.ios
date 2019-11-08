@@ -1,10 +1,12 @@
 import UIKit
+import BTKit
 
 class TagActionsUIKitViewController: UIViewController {
     var output: TagActionsViewOutput!
     var viewModel: TagActionsViewModel! { didSet { bindViewModel() } }
+    var syncProgress: BTServiceProgress? { didSet { updateUISyncProgress() } }
     
-    @IBOutlet weak var environmentalLogsLabel: UIView!
+    @IBOutlet weak var statusLabel: UILabel!
     
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var syncButton: UIButton!
@@ -28,7 +30,7 @@ extension TagActionsUIKitViewController: TagActionsViewInput {
     }
     
     func localize() {
-        
+        updateUISyncProgress()
     }
     
     func apply(theme: Theme) {
@@ -57,6 +59,7 @@ extension TagActionsUIKitViewController {
         super.viewDidLoad()
         setupLocalization()
         bindViewModel()
+        updateUI()
         output.viewDidLoad()
     }
     
@@ -66,7 +69,33 @@ extension TagActionsUIKitViewController {
     }
 }
 
+// MARK: - Update UI
 extension TagActionsUIKitViewController {
+    private func updateUI() {
+        updateUISyncProgress()
+    }
+    
+    private func updateUISyncProgress() {
+        if isViewLoaded {
+            if let syncProgress = syncProgress {
+                switch syncProgress {
+                case .connecting:
+                    statusLabel.text = "TagActions.Status.Connecting".localized()
+                case .serving:
+                    statusLabel.text = "TagActions.Status.Serving".localized()
+                case .disconnecting:
+                    statusLabel.text = "TagActions.Status.Disconnecting".localized()
+                case .success:
+                    statusLabel.text = "TagActions.Status.Success".localized()
+                case .failure:
+                    statusLabel.text = "TagActions.Status.Error".localized()
+                }
+            } else {
+                statusLabel.text = "TagActions.Status.Logs".localized()
+            }
+        }
+    }
+    
     private func bindViewModel() {
         if isViewLoaded {
             syncButton.bind(viewModel.isSyncEnabled) { (button, isSyncEnabled) in

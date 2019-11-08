@@ -1,4 +1,5 @@
 import UIKit
+import BTKit
 #if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
 #endif
@@ -19,6 +20,16 @@ class TagActionsViewController: UIViewController {
             }
 #endif
             uikit?.viewModel = viewModel
+        }
+    }
+    var syncProgress: BTServiceProgress? {
+        didSet {
+#if canImport(SwiftUI) && canImport(Combine)
+            if #available(iOS 13, *) {
+                env.syncProgress = syncProgress
+            }
+#endif
+            uikit?.syncProgress = syncProgress
         }
     }
     
