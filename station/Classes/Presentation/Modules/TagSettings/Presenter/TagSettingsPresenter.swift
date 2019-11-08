@@ -151,6 +151,8 @@ extension TagSettingsPresenter {
             viewModel.name.value = ruuviTag.name
         }
         
+        viewModel.isConnectable.value = ruuviTag.isConnectable
+        
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.uuid
         viewModel.version.value = ruuviTag.version
@@ -215,6 +217,9 @@ extension TagSettingsPresenter {
         viewModel.accelerationZ.value = device.accelerationZ
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
+        }
+        if viewModel.isConnectable.value != device.isConnectable {
+            viewModel.isConnectable.value = device.isConnectable
         }
         viewModel.movementCounter.value = device.movementCounter
         viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
