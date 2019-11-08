@@ -2,7 +2,7 @@ import Foundation
 import RealmSwift
 import BTKit
 
-class TagSettingsPresenter: TagSettingsModuleInput {
+class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     var router: TagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
@@ -33,6 +33,7 @@ class TagSettingsPresenter: TagSettingsModuleInput {
         self.humidity = humidity
         startObservingRuuviTag()
         startScanningRuuviTag()
+        bindViewModel()
     }
 }
 
@@ -179,6 +180,20 @@ extension TagSettingsPresenter {
             viewModel.measurementSequenceNumber.value = nil
             viewModel.txPower.value = nil
         }
+        
+        AlertType.allCases.forEach { (type) in
+            switch type {
+            case .temperature:
+                if case .temperature(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
+                    viewModel.isTemperatureAlertOn.value = true
+                    viewModel.temperatureAlertLowerBound.value = lower
+                    viewModel.temperatureAlertUpperBound.value = upper
+                } else {
+                    viewModel.isTemperatureAlertOn.value = false
+                }
+                
+            }
+        }
     }
     
     private func startObservingRuuviTag() {
@@ -228,6 +243,20 @@ extension TagSettingsPresenter {
         
         if let mac = device.mac {
             viewModel.mac.value = mac
+        }
+    }
+    
+    private func bindViewModel() {
+        let temperatureLower = viewModel.temperatureAlertLowerBound
+        let temperatureUpper = viewModel.temperatureAlertUpperBound
+        bind(viewModel.isTemperatureAlertOn, fire: false) { [weak temperatureLower, weak temperatureUpper] observer, isOn in
+            if let l = temperatureLower?.value, let u = temperatureUpper?.value {
+                if isOn.bound {
+                    observer.alertService.register(type: .temperature(lower: l, upper: u), for: observer.ruuviTag.uuid)
+                } else {
+                    observer.alertService.unregister(type: .temperature(lower: l, upper: u), for: observer.ruuviTag.uuid)
+                }
+            }
         }
     }
 }
