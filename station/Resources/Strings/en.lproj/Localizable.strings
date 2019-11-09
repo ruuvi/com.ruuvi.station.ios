@@ -24,9 +24,9 @@
 // About
 "About.Version.text" = "Version";
 "About.AboutHelp.header" = "ABOUT / HELP";
-"About.AboutHelp.contents" = "Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.";
+"About.AboutHelp.contents" = "Ruuvi Station is an easy-to-use but powerful tool to supercharge your Ruuvi sensors. Just add some sensors and you're ready to go.";
 "About.OperationsManual.header" = "OPERATIONS MANUAL";
-"About.OperationsManual.contents" = "We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals";
+"About.OperationsManual.contents" = "We've designed the app to be self-explanatory but also comprehensive manuals are available for both Ruuvi sensors and Ruuvi Station: ruuvi.com/manuals";
 "About.Troubleshooting.header" = "TROUBLESHOOTING";
 "About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles";
 "About.OpenSource.header" = "OPEN-SOURCE";
@@ -59,20 +59,20 @@
 "CoreError.objectInvalidated" = "Object invalidated";
 
 // Dashboard
-"Dashboard.SwipeAlert.title" = "Swipe left or right to see other tag cards.";
+"Dashboard.SwipeAlert.title" = "Swipe left or right to see other sensors.";
 "Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
 "Dashboard.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
 "Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth Devices";
-"DiscoverTable.SectionTitle.WebTags" = "Virtual Sensors";
+"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth sensors";
+"DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
 "DiscoverTable.NavigationItem.title" = "Add a New Sensor";
 "DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
-"DiscoverTable.NoDevicesSection.NotFound.text" = "(No devices on Bluetooth range)";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 
 // ErrorPresenterAlert
@@ -81,7 +81,7 @@
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
-"ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this RuuviTag";
+"ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this sensor";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
@@ -92,7 +92,7 @@
 "Foreground.Interval.Every.string" = "Every";
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Load and save from web";
-"ForegroundRow.webTags.section" = "WEB TAGS";
+"ForegroundRow.webTags.section" = "VIRTUAL SENSORS";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
@@ -155,9 +155,9 @@
 
 // TagActions
 "TagActions.SyncConfirmationDialog.title" = "Are you sure?";
-"TagActions.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the tag?";
+"TagActions.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the sensor?";
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
+"TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this sensor? This can't be undone.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
 "TagActions.Status.Connecting" = "Connecting...";
 "TagActions.Status.Serving" = "Serving...";
@@ -169,15 +169,15 @@
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for RuuviTags. Go to Settings and turn Bluetooth on.";
+"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
 
 // TagSettings
-"TagSettings.confirmTagRemovalDialog.title" = "Remove RuuviTag";
-"TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this RuuviTag?";
+"TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
+"TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this sensor?";
 "TagSettings.Mac.Alert.title" = "MAC Address";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2 mode is required";
-"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on your RuuviTag.\nOr update your RuuviTag with the latest firmware.";
+"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on a RuuviTag.\nOr update your sensor with the latest firmware.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Learn more";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
@@ -207,27 +207,27 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Caller was deallocated during operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Failed to reverse geocode location";
-"UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
-"UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the Tag";
+"UnexpectedError.failedToFindRuuviTag" = "Failed to find sensor";
+"UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your current location";
 "WebTagLocationSource.manual" = "Pick from the map";
 
 // WebTagSettings
-"WebTagSettings.confirmTagRemovalDialog.title" = "Remove Web Tag";
-"WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this Web Tag?";
+"WebTagSettings.confirmTagRemovalDialog.title" = "Remove virtual sensor";
+"WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this virtual sensor?";
 "WebTagSettings.Location.Current" = "Your current location";
 "WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
-"WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this Web Tag? Current location will be used instead.";
-"WebTagSettings.navigationItem.title" = "Web Tag Settings";
+"WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this virtual sensor? Current location will be used instead.";
+"WebTagSettings.navigationItem.title" = "Virtual Sensor Settings";
 "WebTagSettings.Label.BackgroundImage.text" = "BACKGROUND\nIMAGE";
-"WebTagSettings.Label.TagName.text" = "Tag Name";
+"WebTagSettings.Label.TagName.text" = "Sensor Name";
 "WebTagSettings.Label.Location.text" = "Location";
-"WebTagSettings.Button.Remove.title" = "REMOVE THIS WEB TAG";
+"WebTagSettings.Button.Remove.title" = "REMOVE THIS VIRTUAL SENSOR";
 "WebTagSettings.SectionHeader.Name.title" = "NAME";
 "WebTagSettings.SectionHeader.MoreInfo.title" = "MORE INFO";
 
 // Welcome
-"Welcome.description.text" = "To find nearby RuuviTags and receive live sensor data, press scan.";
+"Welcome.description.text" = "To find nearby sensors and receive live sensor data, press scan.";
 "Welcome.scan.title" = "SCAN";

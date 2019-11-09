@@ -18,8 +18,8 @@
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
 "ago" = "sitten"; // time ago string
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n"; // export header (RuuviTag)
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n"; // export header (WebTag)
+"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Päivämäärä,Celsius,Fahrenheit,Kelvin,Suhteellinen kosteus (%),Absoluuttinen kosteus (g/m³),Kastepiste (°C),Kastepiste (°F),Kastepiste (K),Ilmanpaine (hPa),Kiihtyvyys X,Kiihtyvyys Y,Kiihtyvyys Z,Jännite,Liikelaskuri,Mittausjärjestysnumero,Lähetysteho\n"; // export header (RuuviTag)
+"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Päivämäärä,Celsius,Fahrenheit,Kelvin,Suhteellinen kosteus (%),Absoluuttinen kosteus (g/m³),Kastepiste (°C),Kastepiste (°F),Kastepiste (K),Ilmanpaine (hPa),Sijainti\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Versio";
@@ -35,18 +35,18 @@
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
  
 // Background
-"Background.navigationItem.title" = "Background";
-"Background.PresentNotifications.title" = "Present Notifications";
-"Background.KeepConnection.title" = "Keep Connection";
-"Background.SaveHeartbeats.title" = "Save Heartbeats";
-"Background.Interval.Every.string" = "every";
+"Background.navigationItem.title" = "Taustaprosessit";
+"Background.PresentNotifications.title" = "Tämänhetkiset ilmoitukset";
+"Background.KeepConnection.title" = "Säilytä yhteys";
+"Background.SaveHeartbeats.title" = "Tallenna sykkeet";
+"Background.Interval.Every.string" = "joka";
 "Background.Interval.Min.string" = "min";
-"Background.SyncLogsOnDidConnect.title" = "Sync Logs When Connected";
-"Background.readRSSITitle.title" = "Read RSSI";
-"Background.Interval.Sec.string" = "sec";
+"Background.SyncLogsOnDidConnect.title" = "Synkronoi lokitiedot yhdistettäessä";
+"Background.readRSSITitle.title" = "Lue RSSI";
+"Background.Interval.Sec.string" = "sek";
 
 // Bluetooth Error
-"BluetoothError.disconnected" = "Disconnected";
+"BluetoothError.disconnected" = "Yhteys katkaistu";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
@@ -54,26 +54,26 @@
 "CoreError.failedToGetCurrentLocation" = "Nykyistä paikkaa ei löydy";
 "CoreError.failedToGetDataFromResponse" = "Vastaus ei sisällä tietoa";
 "CoreError.locationPermissionDenied" = "Oikeus paikkatietoon puuttuu";
-"CoreError.locationPermissionNotDetermined" = "Location permission authorization status is not determined";
-"CoreError.objectNotFound" = "Object not found";
-"CoreError.objectInvalidated" = "Object invalidated";
+"CoreError.locationPermissionNotDetermined" = "Sijainnin käyttöoikeuden tilaa ei ole päätetty";
+"CoreError.objectNotFound" = "Kohdetta ei löydy";
+"CoreError.objectInvalidated" = "Kohde mitätöity";
 
 // Dashboard
-"Dashboard.SwipeAlert.title" = "Pyyhkäise sivulle löytääksesi muut laitteet.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
+"Dashboard.SwipeAlert.title" = "Selaa antureita pyyhkäisemällä sivulle.";
+"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
+"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "Dashboard.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
 "Dashboard.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Bluetooth-laitteet";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
-"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
+"DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "DiscoverTable.NavigationItem.title" = "Lisää uusi anturi";
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
-"DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja laitteita Bluetooth-verkon alueella";
-"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth poissa käytöstä";
+"DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja antureita Bluetooth-verkon alueella";
+"DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth ei ole käytössä";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";
@@ -81,31 +81,31 @@
 
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
-"ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this RuuviTag";
+"ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
 
 // Foreground
-"ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
-"ForegroundRow.advertisement.title" = "Save advertisements";
-"ForegroundRow.connection.section" = "LOGS";
-"ForegroundRow.connection.title" = "Connect and sync logs";
-"Foreground.navigationItem.title" = "Foreground";
-"Foreground.Interval.Every.string" = "Every";
+"ForegroundRow.advertisement.section" = "LAITEILMOITUKSET";
+"ForegroundRow.advertisement.title" = "Tallenna laiteilmoitukset";
+"ForegroundRow.connection.section" = "LOKITIEDOT";
+"ForegroundRow.connection.title" = "Yhdistä ja tallenna lokitiedot";
+"Foreground.navigationItem.title" = "Prosessit sovelluksen ollessa etualalla";
+"Foreground.Interval.Every.string" = "Joka";
 "Foreground.Interval.Min.string" = "min";
-"ForegroundRow.webTags.title" = "Load and save from web";
-"ForegroundRow.webTags.section" = "WEB TAGS";
+"ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
+"ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
 // HumidityCalibration
-"HumidityCalibration.Description.text" = "Mitataksesi ilmankosteutta mahdollisimman tarkasti, suosittelemme kalibrointia suolaliuoksen avulla. Katso täältä video-ohjeita kalibroinnista kotikonstein.";
+"HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Katso täältä video-ohjeita kalibroinnista kotikonstein.";
 "HumidityCalibration.VideoTutorials.link" = "video-ohjeita";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibroitu: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Oletko varma?";
-"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Olet nollaamassa kalibrointia. Tätä ei voida peruuttaa. Klikkaa \"Vahvista\" jatkaaksesi.";
+"HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Olet nollaamassa kalibrointia. Tätä ei voida peruuttaa. Jatka napauttamalla \"Vahvista\" .";
 "HumidityCalibration.CalibrationConfirmationAlert.title" = "Oletko varma?";
-"HumidityCalibration.CalibrationConfirmationAlert.message" = "Olet kalibroimassa kosteusanturia. Klikkaa \"Vahvista\" jatkaaksesi.";
+"HumidityCalibration.CalibrationConfirmationAlert.message" = "Olet kalibroimassa kosteusanturia. Jatka napauttamalla \"Vahvista\" .";
 "HumidityCalibration.Button.Clear.title" = "Pyyhi";
 "HumidityCalibration.Button.Calibrate.title" = "Kalibroi";
 "HumidityCalibration.Button.Close.title" = "Sulje";
-"HumidityCalibration.Label.note.text" = "Huomaathan, että kalibrointitieto tallennetaan paikallisesti mobiililaitteeseesi. Kalibrointi joudutaan suorittamaan uudelleen ohjelman poistamisen ja uudelleenasennuksen jälkeen.";
+"HumidityCalibration.Label.note.text" = "Huomaathan, että kalibrointitieto tallennetaan paikallisesti mobiililaitteeseesi. Kalibrointi joudutaan suorittamaan uudelleen sovelluksen poistamisen ja uudelleenasennuksen jälkeen.";
 
 // Language
 "Language.English" = "English";
@@ -113,8 +113,8 @@
 "Language.Russian" = "Русский";
 
 // LocalNotificationsManager
-"LocalNotificationsManager.DidConnect.title" = "Connected";
-"LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
+"LocalNotificationsManager.DidConnect.title" = "Yhdistetty";
+"LocalNotificationsManager.DidDisconnect.title" = "Yhteys katkaistu";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
@@ -144,8 +144,8 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
 "Settings.SectionHeader.Application.title" = "OHJELMA";
 "Settings.Label.Language.text" = "Kieli";
-"Settings.Label.Foreground" = "Foreground";
-"Settings.Label.Background" = "Background";
+"Settings.Label.Foreground" = "Etualaprosessi";
+"Settings.Label.Background" = "Taustaprosessi";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
@@ -154,38 +154,38 @@
 "OWMError.invalidApiKey" = "API-avain ei kelpaa";
 
 // TagActions
-"TagActions.SyncConfirmationDialog.title" = "Are you sure?";
-"TagActions.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the tag?";
-"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this tag? This can't be undone.";
-"TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
-"TagActions.Status.Connecting" = "Connecting...";
-"TagActions.Status.Serving" = "Serving...";
-"TagActions.Status.Disconnecting" = "Disconnecting...";
-"TagActions.Status.Success" = "Success";
-"TagActions.Status.Error" = "Error";
-"TagActions.Status.Logs" = "Logs";
+"TagActions.SyncConfirmationDialog.title" = "Oletko varma?";
+"TagActions.SyncConfirmationDialog.message" = "Haluatko synkronoida tiedot anturin tietoihin?";
+"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
+"TagActions.DeleteHistoryConfirmationDialog.message" = "Haluatko poistaa tämän anturin lokihistorian kokonaisuudessaan? Tätä toimintoa ei voida perua.";
+"TagActions.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
+"TagActions.Status.Connecting" = "Yhdistetään...";
+"TagActions.Status.Serving" = "Käsitellään...";
+"TagActions.Status.Disconnecting" = "Katkaistaan yhteyttä...";
+"TagActions.Status.Success" = "Onnistui";
+"TagActions.Status.Error" = "Virhe";
+"TagActions.Status.Logs" = "Lokitiedot";
 
 // TagCharts
-"TagCharts.NoChartData.text" = "No chart data available";
+"TagCharts.NoChartData.text" = "Tietoja ei ole saatavilla";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
-"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Käynnistä Bluetooth laitteen asetuksista.";
+"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
-"TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän laitteen?";
+"TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän anturin?";
 "TagSettings.Mac.Alert.title" = "MAC-osoite";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2-formaatti vaaditaan";
-"TagSettings.UpdateFirmware.Alert.message" = "Nähdäksesi puuttuvat arvot, päivitä laitteesi firmware-ohjelmisto.";
+"TagSettings.UpdateFirmware.Alert.message" = "Puuttuvat arvot voidaan näyttää ainoastaan uudemmalla laiteohjelmistoversiolla.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Lue lisää";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Kosteus on säädetty";
 "TagSettings.HumidityIsClipped.Alert.message" = "Kalibroinnin jälkeinen kosteusarvo on suurempi kuin 100%. Tämä ei käy järkeen, joten maksimiarvona näytetään 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Korjaa";
-"TagSettings.navigationItem.title" = "Laitteen asetukset";
+"TagSettings.navigationItem.title" = "Anturin asetukset";
 "TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
-"TagSettings.tagNameTitleLabel.text" = "Laitteen nimi";
+"TagSettings.tagNameTitleLabel.text" = "Anturin nimi";
 "TagSettings.humidityTitleLabel.text" = "Kosteus";
 "TagSettings.uuidTitleLabel.text" = "UUID";
 "TagSettings.macAddressTitleLabel.text" = "MAC-osoite";
@@ -207,8 +207,8 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
 "UnexpectedError.callerDeinitedDuringOperation" = "Kutsuja deallokoitiin toiminnon aikana";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
-"UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
-"UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the Tag";
+"UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
+"UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
@@ -226,8 +226,8 @@
 "WebTagSettings.Label.Location.text" = "Paikka";
 "WebTagSettings.Button.Remove.title" = "POISTA";
 "WebTagSettings.SectionHeader.Name.title" = "NIMI";
-"WebTagSettings.SectionHeader.MoreInfo.title" = "LISÄTIETOA";
+"WebTagSettings.SectionHeader.MoreInfo.title" = "LISÄTIETOJA";
 
 // Welcome
-"Welcome.description.text" = "Löytääksesi lähistöllä olevat anturit, klikkaa skannaa.";
+"Welcome.description.text" = "Etsi lähistöllä olevia antureita napauttamalla Skannaa.";
 "Welcome.scan.title" = "SKANNAA";
