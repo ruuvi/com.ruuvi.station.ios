@@ -31,6 +31,9 @@ extension TagActionsUIKitViewController: TagActionsViewInput {
     
     func localize() {
         updateUISyncProgress()
+        clearButton.setTitle("TagActions.Clear.title".localized(), for: .normal)
+        syncButton.setTitle("TagActions.Sync.title".localized(), for: .normal)
+        exportButton.setTitle("TagActions.Export.title".localized(), for: .normal)
     }
     
     func apply(theme: Theme) {
