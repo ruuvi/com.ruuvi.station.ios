@@ -18,8 +18,8 @@
 "min" = "мин"; // time ago string, minutes
 "s" = "с"; // time ago string, seconds
 "ago" = "назад"; // time ago string
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n"; // export header (RuuviTag)
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n"; // export header (WebTag)
+"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Дата,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (г/м³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (гПа),Ускорение по X,Ускорение по Y,Ускорение по Z,Напряжение Батареи,Счетчик Движения,Порядковый Номер Измерения,Мощность Передачи\n"; // export header (RuuviTag)
+"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Дата,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (g/m³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (hPa),Локация\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Версия";
@@ -28,22 +28,22 @@
 "About.OperationsManual.header" = "РУКОВОДСТВО";
 "About.OperationsManual.contents" = "Мы разработали приложение так, чтобы оно было интуитивно понятным. В то же время, руководства доступны здесь: ruuvi.com/manuals";
 "About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
-"About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем, здесь: ruuvi.com/troubles";
+"About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/troubles";
 "About.OpenSource.header" = "ОТКРЫТЫЙ ИСХОДНЫЙ КОД";
 "About.OpenSource.contents" = "Как и RuuviTag, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
 // Background
-"Background.navigationItem.title" = "Background";
-"Background.PresentNotifications.title" = "Present Notifications";
-"Background.KeepConnection.title" = "Keep Connection";
-"Background.SaveHeartbeats.title" = "Save Heartbeats";
-"Background.Interval.Every.string" = "every";
-"Background.Interval.Min.string" = "min";
-"Background.SyncLogsOnDidConnect.title" = "Sync Logs When Connected";
-"Background.readRSSITitle.title" = "Read RSSI";
-"Background.Interval.Sec.string" = "sec";
+"Background.navigationItem.title" = "Фоновый Режим";
+"Background.PresentNotifications.title" = "Показывать Уведомления";
+"Background.KeepConnection.title" = "Держать Соединение";
+"Background.SaveHeartbeats.title" = "Сохранять Данные";
+"Background.Interval.Every.string" = "каждые";
+"Background.Interval.Min.string" = "мин";
+"Background.SyncLogsOnDidConnect.title" = "Синхронизировать При Соединении";
+"Background.readRSSITitle.title" = "Считывать RSSI";
+"Background.Interval.Sec.string" = "сек";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
@@ -84,15 +84,15 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 
 // Foreground
-"ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
-"ForegroundRow.advertisement.title" = "Save advertisements";
-"ForegroundRow.connection.section" = "LOGS";
-"ForegroundRow.connection.title" = "Connect and sync logs";
-"Foreground.navigationItem.title" = "Foreground";
-"Foreground.Interval.Every.string" = "Every";
-"Foreground.Interval.Min.string" = "min";
-"ForegroundRow.webTags.title" = "Load and save from web";
-"ForegroundRow.webTags.section" = "WEB TAGS";
+"ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
+"ForegroundRow.advertisement.title" = "Сохранять сообщения";
+"ForegroundRow.connection.section" = "ЛОГИ";
+"ForegroundRow.connection.title" = "Соединяться и сохранять логи";
+"Foreground.navigationItem.title" = "Активный Режим";
+"Foreground.Interval.Every.string" = "Каждые";
+"Foreground.Interval.Min.string" = "мин";
+"ForegroundRow.webTags.title" = "Загружать и сохранять из интернета";
+"ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с поваренной солью. Посмотрите обучающие видео о том, как легко сделать это дома. ";
@@ -113,8 +113,8 @@
 "Language.Russian" = "Русский";
 
 // LocalNotificationsManager
-"LocalNotificationsManager.DidConnect.title" = "Connected";
-"LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
+"LocalNotificationsManager.DidConnect.title" = "Соединился";
+"LocalNotificationsManager.DidDisconnect.title" = "Отсоединился";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
@@ -144,8 +144,8 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
 "Settings.SectionHeader.Application.title" = "ПРИЛОЖЕНИЕ";
 "Settings.Label.Language.text" = "Язык";
-"Settings.Label.Foreground" = "Foreground";
-"Settings.Label.Background" = "Background";
+"Settings.Label.Foreground" = "Активный Режим";
+"Settings.Label.Background" = "Фоновый Режим";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
@@ -159,12 +159,12 @@
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
 "TagActions.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
-"TagActions.Status.Connecting" = "Connecting...";
-"TagActions.Status.Serving" = "Serving...";
-"TagActions.Status.Disconnecting" = "Disconnecting...";
-"TagActions.Status.Success" = "Success";
-"TagActions.Status.Error" = "Error";
-"TagActions.Status.Logs" = "Logs";
+"TagActions.Status.Connecting" = "Соединение...";
+"TagActions.Status.Serving" = "Обмениваюсь...";
+"TagActions.Status.Disconnecting" = "Разрываю соединение...";
+"TagActions.Status.Success" = "Успех";
+"TagActions.Status.Error" = "Ошибка";
+"TagActions.Status.Logs" = "Логи";
 
 // TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
@@ -207,8 +207,8 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
-"UnexpectedError.failedToFindRuuviTag" = "Failed to find RuuviTag";
-"UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the Tag";
+"UnexpectedError.failedToFindRuuviTag" = "Не удалось найти RuuviTag";
+"UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
