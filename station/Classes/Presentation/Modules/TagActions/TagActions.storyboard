@@ -79,25 +79,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b9c-qO-aSf">
-                                <rect key="frame" x="262.5" y="274" width="327" height="103"/>
+                                <rect key="frame" x="301.5" y="274" width="249" height="103"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FOH-fB-qiP">
-                                        <rect key="frame" x="141" y="0.0" width="45" height="26"/>
+                                        <rect key="frame" x="102" y="0.0" width="45" height="26"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ii0-J6-O3a">
-                                        <rect key="frame" x="0.0" y="42" width="327" height="2"/>
+                                        <rect key="frame" x="0.0" y="42" width="249" height="2"/>
                                     </progressView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3v9-6y-4JV">
-                                        <rect key="frame" x="0.0" y="60" width="327" height="43"/>
+                                        <rect key="frame" x="0.0" y="60" width="249" height="43"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C4C-W8-RFg">
-                                                <rect key="frame" x="0.0" y="0.0" width="103" height="43"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="77" height="43"/>
                                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                                 <state key="normal" title="CLEAR"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -109,10 +109,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LWl-ee-h9c">
-                                                <rect key="frame" x="111" y="0.0" width="93" height="43"/>
+                                                <rect key="frame" x="85" y="0.0" width="67" height="43"/>
                                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                                 <state key="normal" title="SYNC"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -124,10 +124,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dPw-gX-1Jj">
-                                                <rect key="frame" x="212" y="0.0" width="115" height="43"/>
+                                                <rect key="frame" x="160" y="0.0" width="89" height="43"/>
                                                 <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                                <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                                 <state key="normal" title="EXPORT"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">

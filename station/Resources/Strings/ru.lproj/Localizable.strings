@@ -165,6 +165,9 @@
 "TagActions.Status.Success" = "Успех";
 "TagActions.Status.Error" = "Ошибка";
 "TagActions.Status.Logs" = "Логи";
+"TagActions.Export.title" = "ЭКСПОРТ";
+"TagActions.Sync.title" = "СКАЧАТЬ";
+"TagActions.Clear.title" = "ОЧИСТИТЬ";
 
 // TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
