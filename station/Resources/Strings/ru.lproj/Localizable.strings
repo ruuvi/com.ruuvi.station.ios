@@ -207,7 +207,7 @@
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
 "TagSettings.SectionHeader.Alerts.title" = "УВЕДОМЛЕНИЯ";
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура";
-"TagSettings.Alerts.Temperature.description" = "Уведомление когда < %d или > %d";
+"TagSettings.Alerts.Temperature.description" = "Уведомление когда < %.0f или > %.0f";
 "TagSettings.Alerts.Off" = "Отключено";
 
 // UnexpectedError

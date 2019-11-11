@@ -13,6 +13,7 @@
 		0E02ABC32375A6B500ED4629 /* AlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC22375A6B500ED4629 /* AlertPersistence.swift */; };
 		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
 		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
+		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -370,6 +371,7 @@
 		0E02ABC22375A6B500ED4629 /* AlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPersistence.swift; sourceTree = "<group>"; };
 		0E02ABC42375A6CE00ED4629 /* AlertType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
 		0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPersistenceUserDefaults.swift; sourceTree = "<group>"; };
+		0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Temperature.swift"; sourceTree = "<group>"; };
 		0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WebTagSettings.storyboard; sourceTree = "<group>"; };
 		0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewInput.swift; sourceTree = "<group>"; };
 		0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsViewOutput.swift; sourceTree = "<group>"; };
@@ -1080,6 +1082,7 @@
 				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
+				0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3292,6 +3295,7 @@
 				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
 				0E2A2CBB23696FB7004993C5 /* TagActionsRouter.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
+				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
 				0EC1B6CA2361D557008F1678 /* BackgroundSwitchTableViewCell.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,

@@ -2,6 +2,14 @@ import Foundation
 
 extension UserDefaults {
 
+    func optionalDouble(forKey defaultName: String) -> Double? {
+        let defaults = self
+        if let value = defaults.value(forKey: defaultName) {
+            return value as? Double
+        }
+        return nil
+    }
+    
     func optionalInt(forKey defaultName: String) -> Int? {
         let defaults = self
         if let value = defaults.value(forKey: defaultName) {

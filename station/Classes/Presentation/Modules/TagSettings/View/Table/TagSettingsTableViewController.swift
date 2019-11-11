@@ -218,8 +218,20 @@ extension TagSettingsTableViewController {
 extension TagSettingsTableViewController: RangeSeekSliderDelegate {
     func rangeSeekSlider(_ slider: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
         if slider === temperatureAlertSlider {
-            viewModel?.temperatureAlertLowerBound.value = Int(minValue)
-            viewModel?.temperatureAlertUpperBound.value = Int(maxValue)
+            if let tu = viewModel?.temperatureUnit.value {
+                switch tu {
+                case .celsius:
+                    viewModel?.celsiusLowerBound.value = Double(minValue)
+                    viewModel?.celsiusUpperBound.value = Double(maxValue)
+                case .fahrenheit:
+                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromFahrenheit
+                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromFahrenheit
+                case .kelvin:
+                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromKelvin
+                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
+                }
+            }
+            
         }
     }
 }
@@ -499,18 +511,13 @@ extension TagSettingsTableViewController {
             temperatureAlertSlider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
                 slider.isEnabled = isOn.bound
             }
-            temperatureAlertSlider.bind(viewModel.temperatureAlertLowerBound) { [weak self] (slider, lower) in
-                let lower = CGFloat(lower.bound)
-                if slider.selectedMinValue != lower {
-                    slider.selectedMinValue = lower
-                }
+            
+            temperatureAlertSlider.bind(viewModel.celsiusLowerBound) { [weak self] (slider, lower) in
+                self?.updateUICelsiusLowerBound()
                 self?.updateUITemperatureAlertDescription()
             }
-            temperatureAlertSlider.bind(viewModel.temperatureAlertUpperBound) { [weak self] (slider, upper) in
-                let upper = CGFloat(upper.bound)
-                if slider.selectedMaxValue != upper {
-                    slider.selectedMaxValue = upper
-                }
+            temperatureAlertSlider.bind(viewModel.celsiusUpperBound) { [weak self] (slider, upper) in
+                self?.updateUICelsiusUpperBound()
                 self?.updateUITemperatureAlertDescription()
             }
             
@@ -528,6 +535,26 @@ extension TagSettingsTableViewController {
                     label.text = "N/A".localized()
                 }
             }
+            
+            temperatureAlertSlider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
+                if let tu = temperatureUnit {
+                    switch tu {
+                    case .celsius:
+                        slider.minValue = -40
+                        slider.maxValue = 85
+                    case .fahrenheit:
+                        slider.minValue = -40
+                        slider.maxValue = 185
+                    case .kelvin:
+                        slider.minValue = 233
+                        slider.maxValue = 358
+                    }
+                }
+            }
+            
+            temperatureAlertDescriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (label, isOn) in
+                self?.updateUITemperatureAlertDescription()
+            }
         }
     }
 }
@@ -536,12 +563,75 @@ extension TagSettingsTableViewController {
 extension TagSettingsTableViewController {
     private func updateUI() {
         updateUITemperatureAlertDescription()
+        updateUICelsiusLowerBound()
+        updateUICelsiusUpperBound()
+    }
+    
+    private func updateUICelsiusLowerBound() {
+        if isViewLoaded {
+            if let temperatureUnit = viewModel?.temperatureUnit.value {
+                if let lower = viewModel?.celsiusLowerBound.value {
+                    switch temperatureUnit {
+                    case .celsius:
+                        temperatureAlertSlider.selectedMinValue = CGFloat(lower)
+                    case .fahrenheit:
+                        temperatureAlertSlider.selectedMinValue = CGFloat(lower.fahrenheit)
+                    case .kelvin:
+                        temperatureAlertSlider.selectedMinValue = CGFloat(lower.kelvin)
+                    }
+                } else {
+                    temperatureAlertSlider.selectedMinValue = -40
+                }
+            } else {
+                temperatureAlertSlider.minValue = -40
+                temperatureAlertSlider.selectedMinValue = -40
+            }
+        }
+    }
+    
+    private func updateUICelsiusUpperBound() {
+        if isViewLoaded {
+            if let temperatureUnit = viewModel?.temperatureUnit.value {
+                if let upper = viewModel?.celsiusUpperBound.value {
+                    switch temperatureUnit {
+                    case .celsius:
+                        temperatureAlertSlider.selectedMaxValue = CGFloat(upper)
+                    case .fahrenheit:
+                        temperatureAlertSlider.selectedMaxValue = CGFloat(upper.fahrenheit)
+                    case .kelvin:
+                        temperatureAlertSlider.selectedMaxValue = CGFloat(upper.kelvin)
+                    }
+                } else {
+                    temperatureAlertSlider.selectedMaxValue = 85
+                }
+            } else {
+                temperatureAlertSlider.maxValue = 85
+                temperatureAlertSlider.selectedMaxValue = 85
+            }
+        }
     }
     
     private func updateUITemperatureAlertDescription() {
         if isViewLoaded {
-            if let l = viewModel?.temperatureAlertLowerBound.value, let u = viewModel?.temperatureAlertUpperBound.value {
-                temperatureAlertDescriptionLabel.text = String(format: "TagSettings.Alerts.Temperature.description".localized(), l, u)
+            if let isTemperatureAlertOn = viewModel?.isTemperatureAlertOn.value, isTemperatureAlertOn {
+                if let l = viewModel?.celsiusLowerBound.value, let u = viewModel?.celsiusUpperBound.value, let tu = viewModel?.temperatureUnit.value {
+                    var la: Double
+                    var ua: Double
+                    switch tu {
+                    case .celsius:
+                        la = l
+                        ua = u
+                    case .fahrenheit:
+                        la = l.fahrenheit
+                        ua = u.fahrenheit
+                    case .kelvin:
+                        la = l.kelvin
+                        ua = u.kelvin
+                    }
+                    temperatureAlertDescriptionLabel.text = String(format: "TagSettings.Alerts.Temperature.description".localized(), la, ua)
+                } else {
+                    temperatureAlertDescriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                }
             } else {
                 temperatureAlertDescriptionLabel.text = "TagSettings.Alerts.Off".localized()
             }

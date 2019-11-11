@@ -207,7 +207,7 @@
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
 "TagSettings.SectionHeader.Alerts.title" = "ALERTS";
 "TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
-"TagSettings.Alerts.Temperature.description" = "Alert when less than %d or more than %d";
+"TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Off" = "Off";
 
 // UnexpectedError

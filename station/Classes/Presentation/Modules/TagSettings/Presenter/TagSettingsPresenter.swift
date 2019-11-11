@@ -194,8 +194,8 @@ extension TagSettingsPresenter {
             case .temperature:
                 if case .temperature(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
                     viewModel.isTemperatureAlertOn.value = true
-                    viewModel.temperatureAlertLowerBound.value = lower
-                    viewModel.temperatureAlertUpperBound.value = upper
+                    viewModel.celsiusLowerBound.value = lower
+                    viewModel.celsiusUpperBound.value = upper
                 } else {
                     viewModel.isTemperatureAlertOn.value = false
                 }
@@ -255,8 +255,8 @@ extension TagSettingsPresenter {
     }
     
     private func bindViewModel() {
-        let temperatureLower = viewModel.temperatureAlertLowerBound
-        let temperatureUpper = viewModel.temperatureAlertUpperBound
+        let temperatureLower = viewModel.celsiusLowerBound
+        let temperatureUpper = viewModel.celsiusUpperBound
         bind(viewModel.isTemperatureAlertOn, fire: false) { [weak temperatureLower, weak temperatureUpper] observer, isOn in
             if let l = temperatureLower?.value, let u = temperatureUpper?.value {
                 if isOn.bound {
@@ -266,11 +266,11 @@ extension TagSettingsPresenter {
                 }
             }
         }
-        bind(viewModel.temperatureAlertLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(temperature: lower, for: observer.ruuviTag.uuid)
+        bind(viewModel.celsiusLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(celsius: lower, for: observer.ruuviTag.uuid)
         }
-        bind(viewModel.temperatureAlertUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(temperature: upper, for: observer.ruuviTag.uuid)
+        bind(viewModel.celsiusUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(celsius: upper, for: observer.ruuviTag.uuid)
         }
     }
     

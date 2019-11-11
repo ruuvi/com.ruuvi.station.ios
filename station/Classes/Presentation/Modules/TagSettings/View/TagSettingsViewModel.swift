@@ -20,6 +20,6 @@ struct TagSettingsViewModel {
     
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>()
-    let temperatureAlertLowerBound: Observable<Int?> = Observable<Int?>(-40)
-    let temperatureAlertUpperBound: Observable<Int?> = Observable<Int?>(85)
+    let celsiusLowerBound: Observable<Double?> = Observable<Double?>()
+    let celsiusUpperBound: Observable<Double?> = Observable<Double?>()
 }
