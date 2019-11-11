@@ -16,8 +16,16 @@ class AlertServiceImpl: AlertService {
         alertPersistence.unregister(type: type, for: uuid)
     }
     
+    func lowerCelsius(for uuid: String) -> Double? {
+        return alertPersistence.lowerCelsius(for: uuid)
+    }
+    
     func setLower(celsius: Double?, for uuid: String) {
         alertPersistence.setLower(celsius: celsius, for: uuid)
+    }
+    
+    func upperCelsius(for uuid: String) -> Double? {
+        return alertPersistence.upperCelsius(for: uuid)
     }
     
     func setUpper(celsius: Double?, for uuid: String) {
