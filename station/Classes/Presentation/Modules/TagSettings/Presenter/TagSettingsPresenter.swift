@@ -13,6 +13,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var background: BTBackground!
     var calibrationService: CalibrationService!
     var alertService: AlertService!
+    var settings: Settings!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
@@ -20,11 +21,15 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var ruuviTagToken: NotificationToken?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
+    private var temperatureUnitToken: NSObjectProtocol?
     
     deinit {
         ruuviTagToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
+        if let temperatureUnitToken = temperatureUnitToken {
+            NotificationCenter.default.removeObserver(temperatureUnitToken)
+        }
     }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
@@ -33,6 +38,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         self.humidity = humidity
         startObservingRuuviTag()
         startScanningRuuviTag()
+        startObservingSettingsChanges()
         bindViewModel()
     }
 }
@@ -145,6 +151,8 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 // MARK: - Private
 extension TagSettingsPresenter {
     private func syncViewModel() {
+        viewModel.temperatureUnit.value = settings.temperatureUnit
+        
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
         
         if ruuviTag.name == ruuviTag.uuid || ruuviTag.name == ruuviTag.mac {
@@ -263,6 +271,12 @@ extension TagSettingsPresenter {
         }
         bind(viewModel.temperatureAlertUpperBound, fire: false) { observer, upper in
             observer.alertService.setUpper(temperature: upper, for: observer.ruuviTag.uuid)
+        }
+    }
+    
+    private func startObservingSettingsChanges() {
+        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
+            self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
         }
     }
 }
