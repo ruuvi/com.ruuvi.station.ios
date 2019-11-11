@@ -8,19 +8,11 @@ struct WPSData {
     var pressure: Double?
     
     var fahrenheit: Double? {
-        if let celsius = celsius {
-            return (celsius * 9.0/5.0) + 32.0
-        } else {
-            return nil
-        }
+        return celsius?.fahrenheit
     }
     
     var kelvin: Double? {
-        if let celsius = celsius {
-            return celsius + 273.15
-        } else {
-            return nil
-        }
+        return celsius?.kelvin
     }
 }
 

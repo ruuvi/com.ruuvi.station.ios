@@ -9,8 +9,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
         case .temperature:
-            if let lower = prefs.optionalInt(forKey: temperatureLowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.optionalInt(forKey: temperatureUpperBoundUDKeyPrefix + uuid) {
+            if let lower = prefs.optionalDouble(forKey: temperatureLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: temperatureUpperBoundUDKeyPrefix + uuid) {
                 return .temperature(lower: lower, upper: upper)
             } else {
                 return nil
@@ -18,12 +18,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
     
-    func setLower(temperature: Int?, for uuid: String) {
-        prefs.set(temperature, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
+    func setLower(celsius: Double?, for uuid: String) {
+        prefs.set(celsius, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
     }
     
-    func setUpper(temperature: Int?, for uuid: String) {
-        prefs.set(temperature, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+    func setUpper(celsius: Double?, for uuid: String) {
+        prefs.set(celsius, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
     }
     
     func register(type: AlertType, for uuid: String) {

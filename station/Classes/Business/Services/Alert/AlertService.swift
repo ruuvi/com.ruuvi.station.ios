@@ -5,6 +5,6 @@ protocol AlertService {
     func register(type: AlertType, for uuid: String)
     func unregister(type: AlertType, for uuid: String)
     
-    func setLower(temperature: Int?, for uuid: String)
-    func setUpper(temperature: Int?, for uuid: String) 
+    func setLower(celsius: Double?, for uuid: String)
+    func setUpper(celsius: Double?, for uuid: String) 
 }

@@ -67,3 +67,22 @@ extension Optional where Wrapped == String {
         }
     }
 }
+
+extension Optional where Wrapped == Double {
+    var _bound: Double? {
+        get {
+            return self
+        }
+        set {
+            self = newValue
+        }
+    }
+    public var bound: Double {
+        get {
+            return _bound ?? 0.0
+        }
+        set {
+            _bound = newValue
+        }
+    }
+}

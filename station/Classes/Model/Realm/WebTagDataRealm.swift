@@ -18,18 +18,10 @@ class WebTagDataRealm: Object {
     }
     
     var fahrenheit: Double? {
-        if let celsius = celsius.value {
-            return (celsius * 9.0/5.0) + 32.0
-        } else {
-            return nil
-        }
+        return celsius.value?.fahrenheit
     }
     
     var kelvin: Double? {
-        if let celsius = celsius.value {
-            return celsius + 273.15
-        } else {
-            return nil
-        }
+        return celsius.value?.kelvin
     }
 }
