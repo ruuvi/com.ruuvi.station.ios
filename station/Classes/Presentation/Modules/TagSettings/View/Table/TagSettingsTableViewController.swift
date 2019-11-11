@@ -201,19 +201,11 @@ extension TagSettingsTableViewController {
 
 // MARK: - RangeSeekSliderDelegate
 extension TagSettingsTableViewController: RangeSeekSliderDelegate {
-
     func rangeSeekSlider(_ slider: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
         if slider === temperatureAlertSlider {
-            print("Standard slider updated. Min Value: \(minValue) Max Value: \(maxValue)")
+            viewModel?.temperatureAlertLowerBound.value = Int(minValue)
+            viewModel?.temperatureAlertUpperBound.value = Int(maxValue)
         }
-    }
-
-    func didStartTouches(in slider: RangeSeekSlider) {
-        print("did start touches")
-    }
-
-    func didEndTouches(in slider: RangeSeekSlider) {
-        print("did end touches")
     }
 }
 
@@ -486,15 +478,23 @@ extension TagSettingsTableViewController {
             tableView.bind(viewModel.isConnectable) { (tableView, isConnectable) in
                 tableView.reloadData()
             }
-            
-            let temperatureLower = viewModel.temperatureAlertLowerBound
-            let temperatureUpper = viewModel.temperatureAlertUpperBound
-            
             temperatureAlertSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
                 view.isOn = isOn.bound
             }
             temperatureAlertSlider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
                 slider.isEnabled = isOn.bound
+            }
+            temperatureAlertSlider.bind(viewModel.temperatureAlertLowerBound) { (slider, lower) in
+                let lower = CGFloat(lower.bound)
+                if slider.selectedMinValue != lower {
+                    slider.selectedMinValue = lower
+                }
+            }
+            temperatureAlertSlider.bind(viewModel.temperatureAlertUpperBound) { (slider, upper) in
+                let upper = CGFloat(upper.bound)
+                if slider.selectedMaxValue != upper {
+                    slider.selectedMaxValue = upper
+                }
             }
         }
     }

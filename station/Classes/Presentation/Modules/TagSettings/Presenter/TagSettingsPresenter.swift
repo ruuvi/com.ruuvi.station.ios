@@ -258,5 +258,11 @@ extension TagSettingsPresenter {
                 }
             }
         }
+        bind(viewModel.temperatureAlertLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(temperature: lower, for: observer.ruuviTag.uuid)
+        }
+        bind(viewModel.temperatureAlertUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(temperature: upper, for: observer.ruuviTag.uuid)
+        }
     }
 }

@@ -18,6 +18,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
     
+    func setLower(temperature: Int?, for uuid: String) {
+        prefs.set(temperature, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
+    }
+    
+    func setUpper(temperature: Int?, for uuid: String) {
+        prefs.set(temperature, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+    }
+    
     func register(type: AlertType, for uuid: String) {
         switch type {
         case .temperature(let lower, let upper):
