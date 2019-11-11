@@ -198,8 +198,9 @@ extension TagSettingsPresenter {
                     viewModel.celsiusUpperBound.value = upper
                 } else {
                     viewModel.isTemperatureAlertOn.value = false
+                    viewModel.celsiusLowerBound.value = alertService.lowerCelsius(for: ruuviTag.uuid)
+                    viewModel.celsiusUpperBound.value = alertService.upperCelsius(for: ruuviTag.uuid)
                 }
-                
             }
         }
     }
