@@ -19,6 +19,7 @@ class TagSettingsTableConfigurator {
         presenter.background = r.resolve(BTBackground.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.alertService = r.resolve(AlertService.self)
+        presenter.settings = r.resolve(Settings.self)
         
         view.output = presenter
     }

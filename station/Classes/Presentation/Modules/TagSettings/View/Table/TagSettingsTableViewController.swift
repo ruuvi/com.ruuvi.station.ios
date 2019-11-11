@@ -96,7 +96,20 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
-        temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
+        
+        if let tu = viewModel?.temperatureUnit.value {
+            switch tu {
+            case .celsius:
+                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+            case .fahrenheit:
+                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+            case .kelvin:
+                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "K".localized()
+            }
+        } else {
+            temperatureAlertTitleLabel.text = "N/A".localized()
+        }
+        
         updateUITemperatureAlertDescription()
         tableView.reloadData()
     }
@@ -499,6 +512,21 @@ extension TagSettingsTableViewController {
                     slider.selectedMaxValue = upper
                 }
                 self?.updateUITemperatureAlertDescription()
+            }
+            
+            temperatureAlertTitleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
+                if let tu = temperatureUnit {
+                    switch tu {
+                    case .celsius:
+                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+                    case .fahrenheit:
+                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+                    case .kelvin:
+                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " "  + "K".localized()
+                    }
+                } else {
+                    label.text = "N/A".localized()
+                }
             }
         }
     }

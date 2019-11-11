@@ -18,6 +18,7 @@ struct TagSettingsViewModel {
     let txPower: Observable<Int?> = Observable<Int?>()
     let isConnectable: Observable<Bool?> = Observable<Bool?>()
     
+    var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>()
     let temperatureAlertLowerBound: Observable<Int?> = Observable<Int?>(-40)
     let temperatureAlertUpperBound: Observable<Int?> = Observable<Int?>(85)
