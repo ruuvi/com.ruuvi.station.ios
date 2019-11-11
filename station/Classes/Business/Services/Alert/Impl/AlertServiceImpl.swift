@@ -15,4 +15,12 @@ class AlertServiceImpl: AlertService {
     func unregister(type: AlertType, for uuid: String) {
         alertPersistence.unregister(type: type, for: uuid)
     }
+    
+    func setLower(temperature: Int?, for uuid: String) {
+        alertPersistence.setLower(temperature: temperature, for: uuid)
+    }
+    
+    func setUpper(temperature: Int?, for uuid: String) {
+        alertPersistence.setUpper(temperature: temperature, for: uuid)
+    }
 }
