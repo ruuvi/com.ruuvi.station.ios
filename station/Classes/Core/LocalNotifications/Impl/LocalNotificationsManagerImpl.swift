@@ -34,4 +34,12 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
+    
+    func notifyLowTemperature(for uuid: String, celsius: Double) {
+        print("low temperature for " + uuid)
+    }
+    
+    func notifyHighTemperature(for uuid: String, celsius: Double) {
+        print("high temperature for " + uuid)
+    }
 }
