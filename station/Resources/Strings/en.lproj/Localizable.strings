@@ -207,6 +207,8 @@
 "TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
 "TagSettings.SectionHeader.Alerts.title" = "ALERTS";
 "TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"TagSettings.Alerts.Temperature.description" = "Alert when less than %d or more than %d";
+"TagSettings.Alerts.Off" = "Off";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

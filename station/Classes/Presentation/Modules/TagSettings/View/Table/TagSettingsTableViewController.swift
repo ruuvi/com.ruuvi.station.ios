@@ -97,6 +97,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
         temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
+        updateUITemperatureAlertDescription()
         tableView.reloadData()
     }
     
@@ -167,6 +168,7 @@ extension TagSettingsTableViewController {
         setupLocalization()
         configureViews()
         bindViewModels()
+        updateUI()
     }
 }
     
@@ -484,17 +486,36 @@ extension TagSettingsTableViewController {
             temperatureAlertSlider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
                 slider.isEnabled = isOn.bound
             }
-            temperatureAlertSlider.bind(viewModel.temperatureAlertLowerBound) { (slider, lower) in
+            temperatureAlertSlider.bind(viewModel.temperatureAlertLowerBound) { [weak self] (slider, lower) in
                 let lower = CGFloat(lower.bound)
                 if slider.selectedMinValue != lower {
                     slider.selectedMinValue = lower
                 }
+                self?.updateUITemperatureAlertDescription()
             }
-            temperatureAlertSlider.bind(viewModel.temperatureAlertUpperBound) { (slider, upper) in
+            temperatureAlertSlider.bind(viewModel.temperatureAlertUpperBound) { [weak self] (slider, upper) in
                 let upper = CGFloat(upper.bound)
                 if slider.selectedMaxValue != upper {
                     slider.selectedMaxValue = upper
                 }
+                self?.updateUITemperatureAlertDescription()
+            }
+        }
+    }
+}
+
+// MARK: - Update UI
+extension TagSettingsTableViewController {
+    private func updateUI() {
+        updateUITemperatureAlertDescription()
+    }
+    
+    private func updateUITemperatureAlertDescription() {
+        if isViewLoaded {
+            if let l = viewModel?.temperatureAlertLowerBound.value, let u = viewModel?.temperatureAlertUpperBound.value {
+                temperatureAlertDescriptionLabel.text = String(format: "TagSettings.Alerts.Temperature.description".localized(), l, u)
+            } else {
+                temperatureAlertDescriptionLabel.text = "TagSettings.Alerts.Off".localized()
             }
         }
     }
