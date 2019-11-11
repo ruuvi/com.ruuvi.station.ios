@@ -205,7 +205,7 @@
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
-"TagSettings.SectionHeader.Alerts.title" = "ОПОВЕЩЕНИЯ";
+"TagSettings.SectionHeader.Alerts.title" = "УВЕДОМЛЕНИЯ";
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура";
 
 // UnexpectedError
