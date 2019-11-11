@@ -1,8 +1,10 @@
 import Foundation
+import BTKit
 
 class AlertServiceImpl: AlertService {
     
     var alertPersistence: AlertPersistence!
+    var localNotificationsManager: LocalNotificationsManager!
     
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         return alertPersistence.alert(for: uuid, of: type)
@@ -31,4 +33,24 @@ class AlertServiceImpl: AlertService {
     func setUpper(celsius: Double?, for uuid: String) {
         alertPersistence.setUpper(celsius: celsius, for: uuid)
     }
+    
+    func proccess(heartbeat ruuviTag: RuuviTag) {
+        AlertType.allCases.forEach { (type) in
+            switch type {
+            case .temperature:
+                if case .temperature(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let celsius = ruuviTag.celsius {
+                    if celsius < lower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyLowTemperature(for: ruuviTag.uuid, celsius: celsius)
+                        }
+                    } else if celsius > upper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyHighTemperature(for: ruuviTag.uuid, celsius: celsius)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }

@@ -7,8 +7,9 @@ class BusinessAssembly: Assembly {
         container.register(AlertService.self) { r in
             let service = AlertServiceImpl()
             service.alertPersistence = r.resolve(AlertPersistence.self)
+            service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             return service
-        }
+        }.inObjectScope(.container)
         
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()
@@ -80,6 +81,7 @@ class BusinessAssembly: Assembly {
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.gattService = r.resolve(GATTService.self)
+            service.alertService = r.resolve(AlertService.self)
             return service
         }.inObjectScope(.container)
         

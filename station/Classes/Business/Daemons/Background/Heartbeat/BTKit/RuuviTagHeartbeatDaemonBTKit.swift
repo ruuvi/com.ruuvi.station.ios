@@ -9,6 +9,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagPersistence: RuuviTagPersistence!
     var gattService: GATTService!
+    var alertService: AlertService!
     
     private var realm: Realm!
     private var ruuviTags: Results<RuuviTagRealm>?
@@ -144,12 +145,23 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 }
             }
         }, heartbeat: { observer, device in
-            if let ruuviTag = device.ruuvi?.tag,
-                observer.connectionPersistence.saveHeartbeats(uuid: ruuviTag.uuid) {
-                let uuid = ruuviTag.uuid
-                let interval = observer.connectionPersistence.saveHeartbeatsInterval(uuid: uuid)
-                if let date = observer.savedDate[uuid] {
-                    if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
+            if let ruuviTag = device.ruuvi?.tag {
+                observer.alertService.proccess(heartbeat: ruuviTag)
+                if observer.connectionPersistence.saveHeartbeats(uuid: ruuviTag.uuid) {
+                    let uuid = ruuviTag.uuid
+                    let interval = observer.connectionPersistence.saveHeartbeatsInterval(uuid: uuid)
+                    if let date = observer.savedDate[uuid] {
+                        if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
+                            let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
+                            observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.persist(_:)),
+                            on: observer.thread,
+                            with: pair,
+                            waitUntilDone: false,
+                            modes: [RunLoop.Mode.default.rawValue])
+                            observer.savedDate[uuid] = Date()
+                            
+                        }
+                    } else {
                         let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
                         observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.persist(_:)),
                         on: observer.thread,
@@ -157,16 +169,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                         waitUntilDone: false,
                         modes: [RunLoop.Mode.default.rawValue])
                         observer.savedDate[uuid] = Date()
-                        
                     }
-                } else {
-                    let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
-                    observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.persist(_:)),
-                    on: observer.thread,
-                    with: pair,
-                    waitUntilDone: false,
-                    modes: [RunLoop.Mode.default.rawValue])
-                    observer.savedDate[uuid] = Date()
                 }
             }
         }, disconnected: { observer, result in
