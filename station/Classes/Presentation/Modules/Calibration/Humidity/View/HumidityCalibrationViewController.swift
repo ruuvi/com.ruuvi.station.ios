@@ -135,6 +135,9 @@ extension HumidityCalibrationViewController {
         let link = "HumidityCalibration.VideoTutorials.link".localized()
         if let linkRange = text.range(of: link) {
             descriptionLabel.addLink(to: videoTutorialsUrl, with: NSRange(linkRange, in: text))
+            let linkAttributes = NSMutableDictionary(dictionary: descriptionLabel.linkAttributes)
+            linkAttributes[NSAttributedString.Key.foregroundColor] = UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+            descriptionLabel.linkAttributes = linkAttributes as? [AnyHashable : Any]
         }
         descriptionLabel.delegate = self
     }
