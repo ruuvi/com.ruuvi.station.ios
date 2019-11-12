@@ -166,6 +166,9 @@
 "TagActions.Status.Success" = "Onnistui";
 "TagActions.Status.Error" = "Virhe";
 "TagActions.Status.Logs" = "Lokitiedot";
+"TagActions.Export.title" = "VIE";
+"TagActions.Sync.title" = "SYNKRONOI";
+"TagActions.Clear.title" = "PYYHI";
 
 // TagCharts
 "TagCharts.NoChartData.text" = "Tietoja ei ole saatavilla";
