@@ -1,4 +1,5 @@
 "Cancel" = "Peruuta";
+"Done" = "Valmis";
 "OK" = "OK";
 "Copy" = "Kopioi";
 "Confirm" = "Vahvista";
@@ -95,8 +96,8 @@
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
 // HumidityCalibration
-"HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. ";
-"HumidityCalibration.VideoTutorials.link" = "Video-ohje";
+"HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Video-ohje.";
+"HumidityCalibration.VideoTutorials.link" = "Video-ohje.";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibroitu: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Oletko varma?";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Olet nollaamassa kalibrointia. Tätä ei voida peruuttaa. Jatka napauttamalla \"Vahvista\" .";

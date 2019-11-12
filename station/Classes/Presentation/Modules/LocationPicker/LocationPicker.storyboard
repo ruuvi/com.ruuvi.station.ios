@@ -62,12 +62,12 @@
                             </barButtonItem>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
-                            <barButtonItem style="done" systemItem="done" id="Ljc-6U-rzS">
+                            <barButtonItem title="Done" style="done" id="Ljc-6U-rzS">
                                 <connections>
                                     <action selector="doneBarButtonItemAction:" destination="OPB-2U-HF7" id="Xj8-1V-zD2"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="cancel" id="cj0-Kv-aTM">
+                            <barButtonItem title="Cancel" id="cj0-Kv-aTM">
                                 <connections>
                                     <action selector="cancelBarButtonItemAction:" destination="OPB-2U-HF7" id="vZJ-El-UJK"/>
                                 </connections>
