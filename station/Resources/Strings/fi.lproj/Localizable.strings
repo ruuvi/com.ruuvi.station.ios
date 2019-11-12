@@ -1,4 +1,5 @@
 "Cancel" = "Peruuta";
+"Done" = "Valmis";
 "OK" = "OK";
 "Copy" = "Kopioi";
 "Confirm" = "Vahvista";
@@ -88,15 +89,15 @@
 "ForegroundRow.advertisement.title" = "Tallenna laiteilmoitukset";
 "ForegroundRow.connection.section" = "LOKITIEDOT";
 "ForegroundRow.connection.title" = "Yhdistä ja tallenna lokitiedot";
-"Foreground.navigationItem.title" = "Prosessit sovelluksen ollessa etualalla";
+"Foreground.navigationItem.title" = "Prosessit";
 "Foreground.Interval.Every.string" = "Joka";
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
 // HumidityCalibration
-"HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Katso täältä video-ohjeita kalibroinnista kotikonstein.";
-"HumidityCalibration.VideoTutorials.link" = "video-ohjeita";
+"HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Video-ohje.";
+"HumidityCalibration.VideoTutorials.link" = "Video-ohje.";
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibroitu: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Oletko varma?";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Olet nollaamassa kalibrointia. Tätä ei voida peruuttaa. Jatka napauttamalla \"Vahvista\" .";
@@ -145,8 +146,8 @@
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
 "Settings.SectionHeader.Application.title" = "OHJELMA";
 "Settings.Label.Language.text" = "Kieli";
-"Settings.Label.Foreground" = "Etualaprosessi";
-"Settings.Label.Background" = "Taustaprosessi";
+"Settings.Label.Foreground" = "Prosessit";
+"Settings.Label.Background" = "Taustaprosessit";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
@@ -166,8 +167,8 @@
 "TagActions.Status.Success" = "Onnistui";
 "TagActions.Status.Error" = "Virhe";
 "TagActions.Status.Logs" = "Lokitiedot";
-"TagActions.Export.title" = "VIEDÄ";
-"TagActions.Sync.title" = "LADATA";
+"TagActions.Export.title" = "VIE";
+"TagActions.Sync.title" = "SYNKRONOI";
 "TagActions.Clear.title" = "PYYHI";
 
 // TagCharts
@@ -187,7 +188,7 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Kosteus on säädetty";
 "TagSettings.HumidityIsClipped.Alert.message" = "Kalibroinnin jälkeinen kosteusarvo on suurempi kuin 100%. Tämä ei käy järkeen, joten maksimiarvona näytetään 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Korjaa";
-"TagSettings.navigationItem.title" = "Anturin asetukset";
+"TagSettings.navigationItem.title" = "Asetukset";
 "TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
 "TagSettings.tagNameTitleLabel.text" = "Anturin nimi";
 "TagSettings.humidityTitleLabel.text" = "Kosteus";

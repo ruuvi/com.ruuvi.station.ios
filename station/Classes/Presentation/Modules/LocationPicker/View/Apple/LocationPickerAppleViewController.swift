@@ -17,7 +17,8 @@ class LocationPickerAppleViewController: UIViewController {
 // MARK: - LocationPickerViewInput
 extension LocationPickerAppleViewController: LocationPickerViewInput {
     func localize() {
-        
+        doneBarButtonItem.title = "Done".localized()
+        cancelBarButtonItem.title = "Cancel".localized()
     }
     
     func apply(theme: Theme) {
@@ -60,6 +61,7 @@ extension LocationPickerAppleViewController {
 extension LocationPickerAppleViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         configureViews()
         updateUI()
     }
