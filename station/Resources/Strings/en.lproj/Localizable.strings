@@ -117,6 +117,7 @@
 "LocalNotificationsManager.DidConnect.title" = "Connected";
 "LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
 "LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
+"LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";

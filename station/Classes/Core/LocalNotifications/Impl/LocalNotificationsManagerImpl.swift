@@ -5,6 +5,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
     var realmContext: RealmContext!
     
     var lowTemperatureAlerts = [String: Date]()
+    var highTemperatureAlerts = [String: Date]()
     
     func showDidConnect(uuid: String) {
         
@@ -63,6 +64,25 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
     }
     
     func notifyHighTemperature(for uuid: String, celsius: Double) {
-        print("high temperature for " + uuid)
+        var needsToShow: Bool
+        if let shownDate = highTemperatureAlerts[uuid] {
+            needsToShow = Int(Date().timeIntervalSince(shownDate)) > 60
+        } else {
+            needsToShow = true
+        }
+        if needsToShow {
+            let content = UNMutableNotificationContent()
+            content.title = "LocalNotificationsManager.HighTemperature.title".localized()
+            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+                content.subtitle = ruuviTag.name
+                content.body = ruuviTag.mac ?? ruuviTag.uuid
+            } else {
+                content.body = uuid
+            }
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            highTemperatureAlerts[uuid] = Date()
+        }
     }
 }
