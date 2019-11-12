@@ -115,6 +115,7 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Соединился";
 "LocalNotificationsManager.DidDisconnect.title" = "Отсоединился";
+"LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";

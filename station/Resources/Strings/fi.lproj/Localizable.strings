@@ -115,6 +115,7 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Yhdistetty";
 "LocalNotificationsManager.DidDisconnect.title" = "Yhteys katkaistu";
+"LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
