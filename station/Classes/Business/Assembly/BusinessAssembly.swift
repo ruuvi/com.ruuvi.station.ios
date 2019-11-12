@@ -54,7 +54,7 @@ class BusinessAssembly: Assembly {
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return daemon
-        }
+        }.inObjectScope(.container)
         
         container.register(RuuviTagConnectionDaemon.self) { r in
             let daemon = RuuviTagConnectionDaemonBTKit()
@@ -107,7 +107,7 @@ class BusinessAssembly: Assembly {
             daemon.settings = r.resolve(Settings.self)
             daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
             return daemon
-        }
+        }.inObjectScope(.container)
         
         container.register(WebTagService.self) { r in
             let service = WebTagServiceImpl()
