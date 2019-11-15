@@ -162,7 +162,8 @@ extension TagSettingsPresenter {
         }
         
         viewModel.isConnectable.value = ruuviTag.isConnectable
-        
+        viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
+            
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.uuid
         viewModel.version.value = ruuviTag.version

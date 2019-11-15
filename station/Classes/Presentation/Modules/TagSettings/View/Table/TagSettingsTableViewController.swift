@@ -555,6 +555,15 @@ extension TagSettingsTableViewController {
             temperatureAlertDescriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (label, isOn) in
                 self?.updateUITemperatureAlertDescription()
             }
+            
+            temperatureAlertSwitch.bind(viewModel.isConnected) { (view, isConnected) in
+                view.isEnabled = isConnected.bound
+                view.onTintColor = isConnected.bound ? UISwitch.appearance().onTintColor : .gray
+            }
+            
+            temperatureAlertSlider.bind(viewModel.isConnected) { (slider, isConnected) in
+                slider.isEnabled = isConnected.bound
+            }
         }
     }
 }
