@@ -212,6 +212,7 @@
 "TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
 "TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Off" = "Off";
+"TagSettings.SectionHeader.Connection.title" = "CONNECTION";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
