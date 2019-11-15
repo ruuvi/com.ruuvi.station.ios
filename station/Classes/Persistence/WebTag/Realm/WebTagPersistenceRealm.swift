@@ -88,7 +88,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
             do {
                 try self.context.bg.write {
                     self.context.bg.add(webTag, update: .all)
-                    self.context.bg.add(webTagLocation)
+                    self.context.bg.add(webTagLocation, update: .modified)
                     webTag.location = webTagLocation
                 }
                 promise.succeed(value: provider)
