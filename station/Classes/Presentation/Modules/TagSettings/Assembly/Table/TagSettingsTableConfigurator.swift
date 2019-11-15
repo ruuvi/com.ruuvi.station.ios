@@ -20,6 +20,7 @@ class TagSettingsTableConfigurator {
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.settings = r.resolve(Settings.self)
+        presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         
         view.output = presenter
     }

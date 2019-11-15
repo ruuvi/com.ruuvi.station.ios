@@ -236,6 +236,9 @@ IMAGE</string>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jzG-Fk-Sl1">
                                                     <rect key="frame" x="345" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="keepConnectionSwitchValueChanged:" destination="JXe-xp-HbB" eventType="valueChanged" id="Nqn-13-jRa"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -678,6 +681,8 @@ IMAGE</string>
                         <outlet property="humidityLabel" destination="h1w-an-ceI" id="Kcn-AW-TMy"/>
                         <outlet property="humidityLabelTrailing" destination="af2-sb-o1z" id="jl6-uI-e1R"/>
                         <outlet property="humidityTitleLabel" destination="l91-kJ-VAO" id="m6y-LI-f6w"/>
+                        <outlet property="keepConnectionSwitch" destination="jzG-Fk-Sl1" id="afL-UA-r0y"/>
+                        <outlet property="keepConnectionTitleLabel" destination="8VU-aF-PH8" id="MC4-aI-gwH"/>
                         <outlet property="macAddressCell" destination="5W6-6n-nIk" id="65i-v0-kqJ"/>
                         <outlet property="macAddressTitleLabel" destination="rvA-8R-FuO" id="BTX-w1-l1a"/>
                         <outlet property="macAddressValueLabel" destination="WtD-WI-89V" id="3lA-Fg-rDb"/>
