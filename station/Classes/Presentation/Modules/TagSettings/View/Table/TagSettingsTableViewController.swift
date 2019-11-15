@@ -25,6 +25,8 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var keepConnectionSwitch: UISwitch!
+    @IBOutlet weak var keepConnectionTitleLabel: UILabel!
     @IBOutlet weak var temperatureAlertCell: UITableViewCell!
     @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
@@ -116,6 +118,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         }
         
         updateUITemperatureAlertDescription()
+        keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
         tableView.reloadData()
     }
     
@@ -216,6 +219,10 @@ extension TagSettingsTableViewController {
     
     @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
         viewModel?.isTemperatureAlertOn.value = temperatureAlertSwitch.isOn
+    }
+    
+    @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
+        viewModel?.keepConnection.value = keepConnectionSwitch.isOn
     }
 }
 
@@ -576,6 +583,10 @@ extension TagSettingsTableViewController {
             
             temperatureAlertSlider.bind(viewModel.isConnected) { (slider, isConnected) in
                 slider.isEnabled = isConnected.bound
+            }
+            
+            keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
+                view.isOn = keepConnection.bound
             }
         }
     }

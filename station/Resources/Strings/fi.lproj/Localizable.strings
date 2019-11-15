@@ -213,6 +213,7 @@
 "TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Off" = "Off";
 "TagSettings.SectionHeader.Connection.title" = "CONNECTION";
+"TagSettings.KeepConnection.title" = "Säilytä yhteys";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

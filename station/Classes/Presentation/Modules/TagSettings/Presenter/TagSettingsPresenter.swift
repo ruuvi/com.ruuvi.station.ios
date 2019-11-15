@@ -14,6 +14,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var calibrationService: CalibrationService!
     var alertService: AlertService!
     var settings: Settings!
+    var connectionPersistence: ConnectionPersistence!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
@@ -48,7 +49,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startScanningRuuviTag()
         startObservingSettingsChanges()
         startObservingConnectionStatus()
-        bindViewModel()
+        bindViewModel(to: ruuviTag)
     }
 }
 
@@ -172,7 +173,8 @@ extension TagSettingsPresenter {
         
         viewModel.isConnectable.value = ruuviTag.isConnectable
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
-            
+        viewModel.keepConnection.value = connectionPersistence.keepConnection(to: ruuviTag.uuid)
+        
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.uuid
         viewModel.version.value = ruuviTag.version
@@ -265,7 +267,7 @@ extension TagSettingsPresenter {
         }
     }
     
-    private func bindViewModel() {
+    private func bindViewModel(to ruuviTag: RuuviTagRealm) {
         let temperatureLower = viewModel.celsiusLowerBound
         let temperatureUpper = viewModel.celsiusUpperBound
         bind(viewModel.isTemperatureAlertOn, fire: false) { [weak temperatureLower, weak temperatureUpper] observer, isOn in
@@ -282,6 +284,9 @@ extension TagSettingsPresenter {
         }
         bind(viewModel.celsiusUpperBound, fire: false) { observer, upper in
             observer.alertService.setUpper(celsius: upper, for: observer.ruuviTag.uuid)
+        }
+        bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
+            observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
         }
     }
     
