@@ -172,8 +172,6 @@ extension TagChartsPresenter {
             } else {
                 scrollToCurrentTag()
             }
-            
-            tagActions?.configure(isConnectable: tagIsConnectable)
         }
     }
     
@@ -200,8 +198,13 @@ extension TagChartsPresenter {
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
-            case .initial:
+            case .initial(let ruuviTags):
                 self?.restartObservingData()
+                if let uuid = self?.tagUUID {
+                    self?.configure(uuid: uuid)
+                } else if let uuid = ruuviTags.first?.uuid {
+                    self?.configure(uuid: uuid)
+                }
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
