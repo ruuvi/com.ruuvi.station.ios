@@ -22,6 +22,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
+    private var connectToken: NSObjectProtocol?
+    private var disconnectToken: NSObjectProtocol?
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -29,6 +31,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         heartbeatToken?.invalidate()
         if let temperatureUnitToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(temperatureUnitToken)
+        }
+        if let connectToken = connectToken {
+            NotificationCenter.default.removeObserver(connectToken)
+        }
+        if let disconnectToken = disconnectToken {
+            NotificationCenter.default.removeObserver(disconnectToken)
         }
     }
     
@@ -39,6 +47,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingRuuviTag()
         startScanningRuuviTag()
         startObservingSettingsChanges()
+        startObservingConnectionStatus()
         bindViewModel()
     }
 }
@@ -280,5 +289,23 @@ extension TagSettingsPresenter {
         temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
             self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
         }
+    }
+    
+    private func startObservingConnectionStatus() {
+        connectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
+                uuid == self?.ruuviTag.uuid {
+                self?.viewModel.isConnected.value = true
+            }
+        })
+        
+        disconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
+                uuid == self?.ruuviTag.uuid {
+                self?.viewModel.isConnected.value = false
+            }
+        })
     }
 }
