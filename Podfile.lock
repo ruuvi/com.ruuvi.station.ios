@@ -99,7 +99,7 @@ PODS:
   - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
-  - BTKit
+  - BTKit (from `../BTKit`)
   - Charts
   - EmptyDataSet-Swift
   - Firebase/Analytics
@@ -116,7 +116,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - BTKit
     - Charts
     - EmptyDataSet-Swift
     - Firebase
@@ -143,6 +142,8 @@ SPEC REPOS:
     - TTTAttributedLabel
 
 EXTERNAL SOURCES:
+  BTKit:
+    :path: "../BTKit"
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
   SwinjectPropertyLoader:
@@ -185,6 +186,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: a477f552ecda05a8e09ed45c3897017f784a8807
+PODFILE CHECKSUM: 110fa1cdf9e684adc95457c442eb94ce2d57b577
 
 COCOAPODS: 1.8.4
