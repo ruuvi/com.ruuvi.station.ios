@@ -161,7 +161,7 @@
 "TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this sensor? This can't be undone.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
 "TagActions.Status.Connecting" = "Connecting...";
-"TagActions.Status.Serving" = "Serving...";
+"TagActions.Status.Serving" = "Syncing...";
 "TagActions.Status.Disconnecting" = "Disconnecting...";
 "TagActions.Status.Success" = "Success";
 "TagActions.Status.Error" = "Error";
