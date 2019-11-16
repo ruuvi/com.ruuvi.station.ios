@@ -4,7 +4,7 @@
 "Copy" = "Kopioi";
 "Confirm" = "Vahvista";
 "Remove" = "Poista";
-"N/A" = "N/A";
+"N/A" = "-";
 "°C" = "°C";
 "°F" = "°F";
 "K" = "K"; // kelvin
