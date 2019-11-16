@@ -67,7 +67,7 @@
 "Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Nearby Bluetooth sensors";
+"DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
 "DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
@@ -156,9 +156,9 @@
 
 // TagActions
 "TagActions.SyncConfirmationDialog.title" = "Are you sure?";
-"TagActions.SyncConfirmationDialog.message" = "Are you sure you want to sync data with the sensor?";
+"TagActions.SyncConfirmationDialog.message" = "Download history data from the sensor?";
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Are you sure you want to delete all recorded history logs for this sensor? This can't be undone.";
+"TagActions.DeleteHistoryConfirmationDialog.message" = "Clear the historical data from the app?";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
 "TagActions.Status.Connecting" = "Connecting...";
 "TagActions.Status.Serving" = "Syncing...";
