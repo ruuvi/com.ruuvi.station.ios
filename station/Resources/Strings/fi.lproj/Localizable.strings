@@ -67,7 +67,7 @@
 "Dashboard.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
 
 // DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Bluetooth-laitteet";
+"DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
@@ -156,9 +156,9 @@
 
 // TagActions
 "TagActions.SyncConfirmationDialog.title" = "Oletko varma?";
-"TagActions.SyncConfirmationDialog.message" = "Haluatko synkronoida tiedot anturin tietoihin?";
+"TagActions.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
 "TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Haluatko poistaa tämän anturin lokihistorian kokonaisuudessaan? Tätä toimintoa ei voida perua.";
+"TagActions.DeleteHistoryConfirmationDialog.message" = "Tyhjennetäänkö sovellukseen tallennetut historiatiedot?";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
 "TagActions.Status.Connecting" = "Yhdistetään...";
 "TagActions.Status.Serving" = "Synkronoidaan...";
