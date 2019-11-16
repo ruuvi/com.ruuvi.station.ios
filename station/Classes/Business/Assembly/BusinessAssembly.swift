@@ -73,7 +73,6 @@ class BusinessAssembly: Assembly {
             service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            service.gattService = r.resolve(GATTService.self)
             return service
         }.inObjectScope(.container)
         
