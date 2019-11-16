@@ -4,7 +4,7 @@
 "Copy" = "Copy";
 "Confirm" = "Confirm";
 "Remove" = "Remove";
-"N/A" = "N/A";
+"N/A" = "-";
 "°C" = "°C";
 "°F" = "°F";
 "K" = "K"; // kelvin
@@ -37,7 +37,7 @@
  
 // Background
 "Background.navigationItem.title" = "Background";
-"Background.PresentNotifications.title" = "Present Notifications";
+"Background.PresentNotifications.title" = "Show Notifications";
 "Background.KeepConnection.title" = "Keep Connection";
 "Background.SaveHeartbeats.title" = "Save Heartbeats";
 "Background.Interval.Every.string" = "every";
