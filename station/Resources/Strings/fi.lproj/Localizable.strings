@@ -37,7 +37,7 @@
  
 // Background
 "Background.navigationItem.title" = "Taustaprosessit";
-"Background.PresentNotifications.title" = "Tämänhetkiset ilmoitukset";
+"Background.PresentNotifications.title" = "Näytä ilmoituksia";
 "Background.KeepConnection.title" = "Säilytä yhteys";
 "Background.SaveHeartbeats.title" = "Tallenna sykkeet";
 "Background.Interval.Every.string" = "joka";
@@ -161,7 +161,7 @@
 "TagActions.DeleteHistoryConfirmationDialog.message" = "Haluatko poistaa tämän anturin lokihistorian kokonaisuudessaan? Tätä toimintoa ei voida perua.";
 "TagActions.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
 "TagActions.Status.Connecting" = "Yhdistetään...";
-"TagActions.Status.Serving" = "Käsitellään...";
+"TagActions.Status.Serving" = "Synkronoidaan...";
 "TagActions.Status.Disconnecting" = "Katkaistaan yhteyttä...";
 "TagActions.Status.Success" = "Onnistui";
 "TagActions.Status.Error" = "Virhe";
