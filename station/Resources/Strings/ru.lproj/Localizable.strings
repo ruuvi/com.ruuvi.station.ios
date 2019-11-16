@@ -42,7 +42,6 @@
 "Background.SaveHeartbeats.title" = "Сохранять Данные";
 "Background.Interval.Every.string" = "каждые";
 "Background.Interval.Min.string" = "мин";
-"Background.SyncLogsOnDidConnect.title" = "Синхронизировать Логи";
 "Background.readRSSITitle.title" = "Считывать RSSI";
 "Background.Interval.Sec.string" = "сек";
 

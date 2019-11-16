@@ -42,7 +42,6 @@
 "Background.SaveHeartbeats.title" = "Tallenna sykkeet";
 "Background.Interval.Every.string" = "joka";
 "Background.Interval.Min.string" = "min";
-"Background.SyncLogsOnDidConnect.title" = "Synkronoi lokitiedot yhdistettäessä";
 "Background.readRSSITitle.title" = "Lue RSSI";
 "Background.Interval.Sec.string" = "sek";
 

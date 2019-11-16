@@ -3,11 +3,10 @@ import UIKit
 enum BackgroundTableSectionRows: Int, CaseIterable {
     case keepConnection = 0
     case presentNotifications = 1
-    case syncLogs = 2
-    case saveHeartbeats = 3
-    case saveHeartbeatsInterval = 4
-    case readRSSI = 5
-    case readRSSIInterval = 6
+    case saveHeartbeats = 2
+    case saveHeartbeatsInterval = 3
+    case readRSSI = 4
+    case readRSSIInterval = 5
 }
 
 class BackgroundTableViewController: UITableViewController {
@@ -74,12 +73,6 @@ extension BackgroundTableViewController {
             cell.isOnSwitch.isOn = viewModel.presentConnectionNotifications.value.bound
             cell.delegate = self
             return cell
-        case .syncLogs:
-            let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! BackgroundSwitchTableViewCell
-            cell.titleLabel.text = viewModel.syncLogsOnDidConnectTitle
-            cell.isOnSwitch.isOn = viewModel.syncLogsOnDidConnect.value.bound
-            cell.delegate = self
-            return cell
         case .saveHeartbeats:
             let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! BackgroundSwitchTableViewCell
             cell.titleLabel.text = viewModel.saveHeartbeatsTitle
@@ -119,8 +112,6 @@ extension BackgroundTableViewController: BackgroundSwitchTableViewCellDelegate {
                 viewModels[indexPath.section].keepConnection.value = value
             case .presentNotifications:
                 viewModels[indexPath.section].presentConnectionNotifications.value = value
-            case .syncLogs:
-                viewModels[indexPath.section].syncLogsOnDidConnect.value = value
             case .saveHeartbeats:
                 viewModels[indexPath.section].saveHeartbeats.value = value
             case .saveHeartbeatsInterval:
