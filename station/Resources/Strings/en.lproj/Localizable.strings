@@ -155,22 +155,6 @@
 "OWMError.notAHttpResponse" = "Not a HTTP response";
 "OWMError.invalidApiKey" = "Invalid API Key";
 
-// TagActions
-"TagActions.SyncConfirmationDialog.title" = "Are you sure?";
-"TagActions.SyncConfirmationDialog.message" = "Download history data from the sensor?";
-"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Clear the historical data from the app?";
-"TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
-"TagActions.Status.Connecting" = "Connecting...";
-"TagActions.Status.Serving" = "Syncing...";
-"TagActions.Status.Disconnecting" = "Disconnecting...";
-"TagActions.Status.Success" = "Success";
-"TagActions.Status.Error" = "Error";
-"TagActions.Status.Logs" = "Logs";
-"TagActions.Export.title" = "EXPORT";
-"TagActions.Sync.title" = "SYNC";
-"TagActions.Clear.title" = "CLEAR";
-
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";

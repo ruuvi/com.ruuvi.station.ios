@@ -3,8 +3,6 @@ import LightRoute
 class TagChartsRouter: TagChartsRouterInput {
     weak var transitionHandler: TransitionHandler!
     
-    var tagActionsInteractiveTransition: TagActionsTransitioningDelegate!
-    
     private var menuTableTransition: MenuTableTransitioningDelegate!
     
     func dismiss() {
