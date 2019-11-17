@@ -80,6 +80,10 @@ class TagChartsPresenter: TagChartsModuleInput {
     func configure(uuid: String) {
         self.tagUUID = uuid
     }
+    
+    func dismiss() {
+        router.dismiss()
+    }
 }
 
 extension TagChartsPresenter: TagChartsViewOutput {
