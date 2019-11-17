@@ -235,7 +235,7 @@ extension TagSettingsTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 3 {
+        if section == TagSettingsTableSection.moreInfo.rawValue {
             return 44
         } else {
             return super.tableView(tableView, heightForHeaderInSection: section)

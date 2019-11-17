@@ -131,6 +131,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
             router.dismiss()
         }
     }
+    
+    func viewDidTapOnWebTagInfo() {
+        view.showWebTagInfoDialog()
+    }
 }
 
 // MARK: - LocationPickerModuleOutput

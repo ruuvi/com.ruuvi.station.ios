@@ -80,6 +80,7 @@ class DiscoverTableViewController: UITableViewController {
     private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
     private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
     private let noDevicesCellReuseIdentifier = "DiscoverNoDevicesTableViewCellReuseIdentifier"
+    private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
     private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
     private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() { didSet { updateUIShownWebTags() } }
 }
@@ -98,6 +99,12 @@ extension DiscoverTableViewController: DiscoverViewInput {
     
     func showBluetoothDisabled() {
         let alertVC = UIAlertController(title: "DiscoverTable.BluetoothDisabledAlert.title".localized(), message: "DiscoverTable.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
+    
+    func showWebTagInfoDialog() {
+        let alertVC = UIAlertController(title: nil, message: "DiscoverTable.WebTagsInfoDialog.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -195,20 +202,48 @@ extension DiscoverTableViewController {
         default:
             break
         }
-        
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        switch s {
+        case .webTag:
+            return 44
+        default:
+            return super.tableView(tableView, heightForHeaderInSection: section)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        switch section {
+        case .webTag:
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier) as! DiscoverWebTagsInfoHeaderFooterView
+            header.delegate = self
+            return header
+        default:
+            return nil
+        }
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
-        case .webTag:
-            return shownWebTags.count > 0 ? "DiscoverTable.SectionTitle.WebTags".localized() : nil
         case .device:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:
             return shownDevices.count == 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
+        default:
+            return nil
         }
         
+    }
+}
+
+// MARK: - DiscoverWebTagsInfoHeaderFooterViewDelegate
+extension DiscoverTableViewController: DiscoverWebTagsInfoHeaderFooterViewDelegate {
+    func discoverWebTagsInfo(headerView: DiscoverWebTagsInfoHeaderFooterView, didTapOnInfo button: UIButton) {
+        output.viewDidTapOnWebTagInfo()
     }
 }
 
@@ -287,6 +322,8 @@ extension DiscoverTableViewController {
         tableView.rowHeight = 44
         tableView.emptyDataSetSource = self
         tableView.emptyDataSetDelegate = self
+        let nib = UINib(nibName: "DiscoverWebTagsInfoHeaderFooterView", bundle: nil)
+        tableView.register(nib, forHeaderFooterViewReuseIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
     }
     
     private func configureBTDisabledImageView() {

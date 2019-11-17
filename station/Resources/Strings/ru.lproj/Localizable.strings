@@ -74,6 +74,7 @@
 "DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
