@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -42,10 +42,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temp" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k0F-ZD-XNB">
-                    <rect key="frame" x="125" y="205" width="164.5" height="70"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="70" id="wTY-rf-SQf"/>
-                    </constraints>
+                    <rect key="frame" x="125" y="177" width="164.5" height="113"/>
                     <fontDescription key="fontDescription" name="Oswald-Bold" family="Oswald" pointSize="76"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -65,16 +62,6 @@
                         <constraint firstAttribute="height" constant="50" id="Eqx-Cp-F8b"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="18"/>
-                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tya-ss-bXe">
-                    <rect key="frame" x="289.5" y="209" width="40" height="40"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="40" id="4F2-p5-CW4"/>
-                        <constraint firstAttribute="width" constant="40" id="SrE-tv-ivj"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Oswald-ExtraLight" family="Oswald ExtraLight" pointSize="40"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -171,9 +158,20 @@
                         <constraint firstAttribute="width" constant="20" id="aMN-ZR-Mja"/>
                     </constraints>
                 </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tya-ss-bXe">
+                    <rect key="frame" x="289.5" y="199" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="4F2-p5-CW4"/>
+                        <constraint firstAttribute="width" constant="40" id="SrE-tv-ivj"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Oswald-ExtraLight" family="Oswald ExtraLight" pointSize="40"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="tya-ss-bXe" firstAttribute="top" secondItem="k0F-ZD-XNB" secondAttribute="top" constant="22" id="2TS-B7-OBD"/>
                 <constraint firstItem="l6K-wF-oLr" firstAttribute="trailing" secondItem="O00-Hz-n75" secondAttribute="trailing" id="3Qd-gf-j3k"/>
                 <constraint firstItem="tnh-8q-eCb" firstAttribute="top" secondItem="Drw-j1-Iq5" secondAttribute="bottom" constant="8" id="3ae-jp-VVQ"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="2Pk-nL-gnn" secondAttribute="trailing" constant="16" id="3eN-Cn-NsE"/>
@@ -197,10 +195,9 @@
                 <constraint firstItem="IB9-bM-mpw" firstAttribute="top" secondItem="27w-ik-OkD" secondAttribute="top" constant="8" id="b2N-Fq-v1i"/>
                 <constraint firstItem="2Pk-nL-gnn" firstAttribute="top" secondItem="A5Y-2H-mT9" secondAttribute="bottom" constant="8" id="dUS-Uo-s9Z"/>
                 <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="tnh-8q-eCb" secondAttribute="bottom" constant="8" id="gHH-uB-cHP"/>
-                <constraint firstItem="tya-ss-bXe" firstAttribute="top" secondItem="bjH-UG-dwW" secondAttribute="bottom" constant="84" id="gqV-xc-pFf"/>
                 <constraint firstItem="Drw-j1-Iq5" firstAttribute="leading" secondItem="27w-ik-OkD" secondAttribute="leading" constant="16" id="kDt-TA-aOe"/>
                 <constraint firstItem="tnh-8q-eCb" firstAttribute="leading" secondItem="27w-ik-OkD" secondAttribute="leading" constant="16" id="kXR-4s-P0m"/>
-                <constraint firstItem="k0F-ZD-XNB" firstAttribute="top" secondItem="bjH-UG-dwW" secondAttribute="bottom" constant="80" id="l30-rL-upq"/>
+                <constraint firstItem="k0F-ZD-XNB" firstAttribute="top" secondItem="bjH-UG-dwW" secondAttribute="bottom" constant="52" id="l30-rL-upq"/>
                 <constraint firstItem="XwV-cb-60i" firstAttribute="leading" secondItem="pP4-3S-qyE" secondAttribute="trailing" constant="8" id="mzJ-9t-nRG"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="A5Y-2H-mT9" secondAttribute="trailing" constant="16" id="o0u-xI-DkL"/>
                 <constraint firstItem="pZx-ro-mwa" firstAttribute="bottom" secondItem="O00-Hz-n75" secondAttribute="bottom" id="oIl-YX-Mwx"/>
