@@ -5,6 +5,7 @@ import Localize_Swift
 class HumidityCalibrationViewController: UIViewController {
     var output: HumidityCalibrationViewOutput!
     
+    @IBOutlet weak var targetHumidityLabel: UILabel!
     @IBOutlet weak var descriptionLabel: TTTAttributedLabel!
     @IBOutlet weak var oldHumidityLabel: UILabel!
     @IBOutlet weak var lastCalibrationDateLabel: UILabel!
@@ -29,7 +30,9 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         clearButton.setTitle("HumidityCalibration.Button.Clear.title".localized(), for: .normal)
         calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
         closeButton.setTitle("HumidityCalibration.Button.Close.title".localized(), for: .normal)
+        targetHumidityLabel.text = String.localizedStringWithFormat("%.2f", 75.0)
     }
+    
     func apply(theme: Theme) {
         
     }
