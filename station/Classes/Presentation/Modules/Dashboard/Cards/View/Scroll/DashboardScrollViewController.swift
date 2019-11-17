@@ -296,7 +296,7 @@ extension DashboardScrollViewController {
         
         view.pressureLabel.bind(viewModel.pressure) { label, pressure in
             if let pressure = pressure {
-                label.text = "\(pressure)" + " " + "hPa".localized()
+                label.text = String.localizedStringWithFormat("%.2f", pressure) + " " + "hPa".localized()
             } else {
                 label.text = "N/A".localized()
             }
