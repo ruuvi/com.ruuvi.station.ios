@@ -1,5 +1,6 @@
 import UIKit
 import Charts
+import BTKit
 
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
@@ -56,6 +57,70 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         let alertVC = UIAlertController(title: "TagCharts.BluetoothDisabledAlert.title".localized(), message: "TagCharts.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
+    }
+    
+    func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
+        let alertVC = UIAlertController(title: "TagCharts.SyncConfirmationDialog.title".localized(), message: "TagCharts.SyncConfirmationDialog.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToSync(for: viewModel)
+            
+        }))
+        present(alertVC, animated: true)
+    }
+    
+    func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
+        let alertVC = UIAlertController(title: "TagCharts.DeleteHistoryConfirmationDialog.title".localized(), message: "TagCharts.DeleteHistoryConfirmationDialog.message".localized(), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToClear(for: viewModel)
+            
+        }))
+        present(alertVC, animated: true)
+    }
+    
+    func showExportSheet(with path: URL) {
+        let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
+        vc.excludedActivityTypes = [
+            UIActivity.ActivityType.assignToContact,
+            UIActivity.ActivityType.saveToCameraRoll,
+            UIActivity.ActivityType.postToFlickr,
+            UIActivity.ActivityType.postToVimeo,
+            UIActivity.ActivityType.postToTencentWeibo,
+            UIActivity.ActivityType.postToTwitter,
+            UIActivity.ActivityType.postToFacebook,
+            UIActivity.ActivityType.openInIBooks
+        ]
+        present(vc, animated: true)
+    }
+    
+    func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
+        if let index = viewModels.firstIndex(where: { $0.uuid.value == viewModel.uuid.value }), index < views.count {
+            let view = views[index]
+            if let progress = progress {
+                view.syncStatusLabel.isHidden = false
+                view.syncButton.isHidden = true
+                view.clearButton.isHidden = true
+                view.exportButton.isHidden = true
+                switch progress {
+                case .connecting:
+                    view.syncStatusLabel.text = "TagCharts.Status.Connecting".localized()
+                case .serving:
+                    view.syncStatusLabel.text = "TagCharts.Status.Serving".localized()
+                case .disconnecting:
+                    view.syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
+                case .success:
+                    view.syncStatusLabel.text = "TagCharts.Status.Success".localized()
+                case .failure:
+                    view.syncStatusLabel.text = "TagCharts.Status.Error".localized()
+                }
+            } else {
+                view.syncStatusLabel.isHidden = true
+                view.syncButton.isHidden = false
+                view.clearButton.isHidden = false
+                view.exportButton.isHidden = false
+            }
+        }
     }
 }
 
@@ -125,6 +190,27 @@ extension TagChartsScrollViewController: TagChartsViewDelegate {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerSettings(for: viewModels[index])
+        }
+    }
+    
+    func tagCharts(view: TagChartsView, didTriggerSync sender: Any) {
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidTriggerSync(for: viewModels[index])
+        }
+    }
+    
+    func tagCharts(view: TagChartsView, didTriggerClear sender: Any) {
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidTriggerClear(for: viewModels[index])
+        }
+    }
+    
+    func tagCharts(view: TagChartsView, didTriggerExport sender: Any) {
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidTriggerExport(for: viewModels[index])
         }
     }
 }

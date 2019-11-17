@@ -175,6 +175,19 @@
 "TagCharts.NoChartData.text" = "Tietoja ei ole saatavilla";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
+"TagCharts.Export.title" = "VIE";
+"TagCharts.Sync.title" = "SYNKRONOI";
+"TagCharts.Clear.title" = "PYYHI";
+"TagCharts.SyncConfirmationDialog.title" = "Oletko varma?";
+"TagCharts.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
+"TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Tyhjennetäänkö sovellukseen tallennetut historiatiedot?";
+"TagCharts.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
+"TagCharts.Status.Connecting" = "Yhdistetään...";
+"TagCharts.Status.Serving" = "Synkronoidaan...";
+"TagCharts.Status.Disconnecting" = "Katkaistaan yhteyttä...";
+"TagCharts.Status.Success" = "Onnistui";
+"TagCharts.Status.Error" = "Virhe";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
@@ -214,6 +227,7 @@
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
+"UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

@@ -87,10 +87,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="DMQ-s0-DdM">
-                    <rect key="frame" x="0.0" y="133" width="414" height="729"/>
+                    <rect key="frame" x="0.0" y="133" width="414" height="670"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wd6-XB-uzY" customClass="LineChartView" customModule="Charts">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="243"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="223.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7zR-db-SZm">
                                     <rect key="frame" x="314.5" y="8" width="91.5" height="13.5"/>
@@ -106,7 +106,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KNS-4I-3XP" customClass="LineChartView" customModule="Charts">
-                            <rect key="frame" x="0.0" y="243" width="414" height="243"/>
+                            <rect key="frame" x="0.0" y="223.5" width="414" height="223"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Humidity Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iwe-nR-ska">
                                     <rect key="frame" x="334.5" y="8" width="71.5" height="13.5"/>
@@ -122,7 +122,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f1-Br-0jw" customClass="LineChartView" customModule="Charts">
-                            <rect key="frame" x="0.0" y="486" width="414" height="243"/>
+                            <rect key="frame" x="0.0" y="446.5" width="414" height="223.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pressure Unit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PqV-fU-Itv">
                                     <rect key="frame" x="335" y="8" width="71" height="13.5"/>
@@ -143,11 +143,78 @@
                         <constraint firstItem="KNS-4I-3XP" firstAttribute="height" secondItem="5f1-Br-0jw" secondAttribute="height" id="Wat-oL-OLe"/>
                     </constraints>
                 </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O3z-Mc-eUp">
+                    <rect key="frame" x="0.0" y="803" width="414" height="59"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7x-hT-Goy">
+                            <rect key="frame" x="175.5" y="19.5" width="63.5" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BVU-IB-dHg">
+                            <rect key="frame" x="88.5" y="8" width="77" height="43"/>
+                            <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                            <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                            <state key="normal" title="CLEAR"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="22"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="clearButtonTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="Ke3-e3-9l4"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4iA-Sj-gXB">
+                            <rect key="frame" x="173.5" y="8" width="67" height="43"/>
+                            <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                            <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                            <state key="normal" title="SYNC"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="22"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="syncButtonTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="K8S-aT-oFf"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHn-eP-67H">
+                            <rect key="frame" x="248.5" y="8" width="89" height="43"/>
+                            <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                            <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                            <state key="normal" title="EXPORT"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="22"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="exportButtonTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="TpK-rk-m5Z"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="4iA-Sj-gXB" firstAttribute="leading" secondItem="BVU-IB-dHg" secondAttribute="trailing" constant="8" id="6O0-5q-73z"/>
+                        <constraint firstItem="k7x-hT-Goy" firstAttribute="centerX" secondItem="O3z-Mc-eUp" secondAttribute="centerX" id="6ef-O4-6Ae"/>
+                        <constraint firstItem="bHn-eP-67H" firstAttribute="leading" secondItem="4iA-Sj-gXB" secondAttribute="trailing" constant="8" id="Ogf-cx-jDc"/>
+                        <constraint firstItem="k7x-hT-Goy" firstAttribute="centerY" secondItem="O3z-Mc-eUp" secondAttribute="centerY" id="a2K-bI-ebM"/>
+                        <constraint firstItem="BVU-IB-dHg" firstAttribute="centerY" secondItem="4iA-Sj-gXB" secondAttribute="centerY" id="f5i-b5-C8s"/>
+                        <constraint firstAttribute="bottom" secondItem="4iA-Sj-gXB" secondAttribute="bottom" constant="8" id="fmC-bI-2yL"/>
+                        <constraint firstItem="4iA-Sj-gXB" firstAttribute="top" secondItem="O3z-Mc-eUp" secondAttribute="top" constant="8" id="gpN-Lb-6tZ"/>
+                        <constraint firstItem="4iA-Sj-gXB" firstAttribute="centerX" secondItem="O3z-Mc-eUp" secondAttribute="centerX" id="l8m-El-c6Y"/>
+                        <constraint firstItem="bHn-eP-67H" firstAttribute="centerY" secondItem="4iA-Sj-gXB" secondAttribute="centerY" id="lMh-0v-uHZ"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="40X-75-l2S" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0HC-NS-4S2"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="DMQ-s0-DdM" secondAttribute="bottom" id="0Kr-br-Hqu"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1Vq-sJ-wNn"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="6SF-UU-U4I"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="91x-Vt-9zY"/>
@@ -158,6 +225,8 @@
                 <constraint firstItem="em1-nB-mq5" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="FpX-O5-k6T"/>
                 <constraint firstAttribute="bottom" secondItem="40X-75-l2S" secondAttribute="bottom" id="GTO-3p-nda"/>
                 <constraint firstItem="NYc-s6-bCm" firstAttribute="leading" secondItem="0Ff-2G-dMH" secondAttribute="trailing" id="O5D-LD-MrQ"/>
+                <constraint firstItem="O3z-Mc-eUp" firstAttribute="top" secondItem="DMQ-s0-DdM" secondAttribute="bottom" id="Oz2-4b-bZn"/>
+                <constraint firstItem="O3z-Mc-eUp" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="QSk-e3-ENG"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="top" secondItem="wQo-IQ-Rfz" secondAttribute="bottom" constant="8" id="R56-EE-BrP"/>
                 <constraint firstItem="em1-nB-mq5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VvW-e4-CPN"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="Xd5-a8-Dlp"/>
@@ -165,18 +234,24 @@
                 <constraint firstItem="em1-nB-mq5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="adr-C1-lX9"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="di8-Hg-LyS"/>
                 <constraint firstItem="DMQ-s0-DdM" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="gKc-0G-Zaf"/>
+                <constraint firstItem="O3z-Mc-eUp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="gNW-zi-SaT"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="iQR-ym-0ev"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="O3z-Mc-eUp" secondAttribute="bottom" id="ux4-4j-SY4"/>
                 <constraint firstAttribute="bottom" secondItem="em1-nB-mq5" secondAttribute="bottom" id="vHW-1j-m0M"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="zGK-sv-g8J"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="backgroundImage" destination="hh5-fd-vAK" id="zcI-We-9Fa"/>
+                <outlet property="clearButton" destination="BVU-IB-dHg" id="Edw-E2-kYy"/>
+                <outlet property="exportButton" destination="bHn-eP-67H" id="xbi-1B-ewi"/>
                 <outlet property="humidityChart" destination="KNS-4I-3XP" id="0FN-rk-PeR"/>
                 <outlet property="humidityUnitLabel" destination="iwe-nR-ska" id="Fd4-RD-Aln"/>
                 <outlet property="nameLabel" destination="wQo-IQ-Rfz" id="ClI-hy-hSG"/>
                 <outlet property="pressureChart" destination="5f1-Br-0jw" id="kdq-tl-jcc"/>
                 <outlet property="pressureUnitLabel" destination="PqV-fU-Itv" id="r7b-tL-B82"/>
+                <outlet property="syncButton" destination="4iA-Sj-gXB" id="bbe-Ec-K8v"/>
+                <outlet property="syncStatusLabel" destination="k7x-hT-Goy" id="2gS-4P-DsS"/>
                 <outlet property="temperatureChart" destination="wd6-XB-uzY" id="rPK-YS-Oda"/>
                 <outlet property="temperatureUnitLabel" destination="7zR-db-SZm" id="U00-IW-4jS"/>
             </connections>
