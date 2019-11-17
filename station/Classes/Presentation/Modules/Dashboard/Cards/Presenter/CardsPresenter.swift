@@ -360,6 +360,7 @@ extension CardsPresenter {
                 if let ii = insertions.last {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                        self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
                 }
@@ -383,6 +384,7 @@ extension CardsPresenter {
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                        self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
                 }
