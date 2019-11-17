@@ -111,6 +111,8 @@
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
 		0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE723602E2500D600DB /* ConnectionPersistence.swift */; };
 		0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
+		0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */; };
+		0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -462,6 +464,8 @@
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
 		0E390FE723602E2500D600DB /* ConnectionPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistence.swift; sourceTree = "<group>"; };
 		0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPersistenceUserDefaults.swift; sourceTree = "<group>"; };
+		0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DiscoverWebTagsInfoHeaderFooterView.xib; sourceTree = "<group>"; };
+		0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverWebTagsInfoHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
 		0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouterInput.swift; sourceTree = "<group>"; };
 		0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverRouter.swift; sourceTree = "<group>"; };
@@ -1504,6 +1508,15 @@
 			path = UserDefaults;
 			sourceTree = "<group>";
 		};
+		0E3FF731238156AF00EB98F9 /* SectionHeader */ = {
+			isa = PBXGroup;
+			children = (
+				0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */,
+				0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */,
+			);
+			path = SectionHeader;
+			sourceTree = "<group>";
+		};
 		0E502FB822B27D3100E8A6CC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
@@ -1672,6 +1685,7 @@
 		0E70A46A22AF96C5006CB87C /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0E3FF731238156AF00EB98F9 /* SectionHeader */,
 				0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */,
 				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
 				0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */,
@@ -2960,6 +2974,7 @@
 				6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */,
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
 				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
+				0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
 				0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
@@ -3123,6 +3138,7 @@
 				0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */,
 				0E1C1DDF22B3C2330032F6CA /* DashboardPresenter.swift in Sources */,
+				0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
 				0E5C301622CF640000B52E39 /* CoreAssembly.swift in Sources */,
 				0E1C1DC622B396040032F6CA /* UIViewController+Show.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,

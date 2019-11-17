@@ -74,6 +74,7 @@
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja antureita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth ei ole käytössä";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";

@@ -74,6 +74,7 @@
 "DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
