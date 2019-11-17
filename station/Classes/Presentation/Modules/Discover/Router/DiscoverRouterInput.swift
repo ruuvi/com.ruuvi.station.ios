@@ -2,7 +2,7 @@ import Foundation
 import BTKit
 
 protocol DiscoverRouterInput {
-    func openDashboard()
+    func openCards()
     func openRuuviWebsite()
     func openLocationPicker(output: LocationPickerModuleOutput)
     func dismiss()

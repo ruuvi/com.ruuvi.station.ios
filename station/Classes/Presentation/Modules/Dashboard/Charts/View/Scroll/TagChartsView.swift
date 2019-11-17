@@ -2,7 +2,7 @@ import UIKit
 import Charts
 
 protocol TagChartsViewDelegate: class {
-    func tagCharts(view: TagChartsView, didTriggerDashboard sender: Any)
+    func tagCharts(view: TagChartsView, didTriggerCards sender: Any)
     func tagCharts(view: TagChartsView, didTriggerSettings sender: Any)
 }
 
@@ -19,8 +19,8 @@ class TagChartsView: UIView {
     @IBOutlet weak var pressureUnitLabel: UILabel!
  
     
-    @IBAction func dashboardButtonTouchUpInside(_ sender: Any) {
-        delegate?.tagCharts(view: self, didTriggerDashboard: sender)
+    @IBAction func cardsButtonTouchUpInside(_ sender: Any) {
+        delegate?.tagCharts(view: self, didTriggerCards: sender)
     }
     
     @IBAction func settingsButtonTouchUpInside(_ sender: Any) {

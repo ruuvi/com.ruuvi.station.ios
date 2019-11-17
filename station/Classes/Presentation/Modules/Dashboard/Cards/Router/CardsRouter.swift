@@ -1,8 +1,8 @@
 import LightRoute
 
-class DashboardRouter: NSObject, DashboardRouterInput {
+class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!
-    weak var delegate: DashboardRouterDelegate!
+    weak var delegate: CardsRouterDelegate!
     weak var tagCharts: UIViewController!
     var settings: Settings!
     
@@ -81,7 +81,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     
 }
 
-extension DashboardRouter: UIAdaptivePresentationControllerDelegate {
+extension CardsRouter: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         return delegate.shouldDismissDiscover()
     }

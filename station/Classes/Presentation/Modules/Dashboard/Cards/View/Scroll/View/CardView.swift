@@ -1,14 +1,14 @@
 import UIKit
 import Localize_Swift
 
-protocol DashboardTagViewDelegate: class {
-    func dashboardTag(view: DashboardTagView, didTriggerSettings sender: Any)
-    func dashboardTag(view: DashboardTagView, didTriggerCharts sender: Any)
+protocol CardViewDelegate: class {
+    func card(view: CardView, didTriggerSettings sender: Any)
+    func card(view: CardView, didTriggerCharts sender: Any)
 }
 
-class DashboardTagView: UIView {
+class CardView: UIView {
     
-    weak var delegate: DashboardTagViewDelegate?
+    weak var delegate: CardViewDelegate?
     
     @IBOutlet weak var humidityWarningImageView: UIImageView!
     @IBOutlet weak var chartsButtonContainerView: UIView!
@@ -42,11 +42,11 @@ class DashboardTagView: UIView {
     }
     
     @IBAction func chartsButtonTouchUpInside(_ sender: Any) {
-        delegate?.dashboardTag(view: self, didTriggerCharts: sender)
+        delegate?.card(view: self, didTriggerCharts: sender)
     }
     
     @IBAction func settingsButtonTouchUpInside(_ sender: Any) {
-        delegate?.dashboardTag(view: self, didTriggerSettings: sender)
+        delegate?.card(view: self, didTriggerSettings: sender)
     }
     
 }

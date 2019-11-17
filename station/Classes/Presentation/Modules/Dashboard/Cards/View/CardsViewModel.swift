@@ -2,13 +2,13 @@ import UIKit
 import BTKit
 import Humidity
 
-enum DashboardTagType {
+enum CardType {
     case ruuvi
     case web
 }
 
-struct DashboardTagViewModel {
-    var type: DashboardTagType = .ruuvi
+struct CardsViewModel {
+    var type: CardType = .ruuvi
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
@@ -196,14 +196,14 @@ struct DashboardTagViewModel {
     }
 }
 
-extension DashboardTagViewModel: Hashable {
+extension CardsViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid.value)
     }
 }
 
-extension DashboardTagViewModel: Equatable {
-    public static func ==(lhs: DashboardTagViewModel, rhs: DashboardTagViewModel) -> Bool {
+extension CardsViewModel: Equatable {
+    public static func ==(lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
         return lhs.uuid.value == rhs.uuid.value
     }
 }

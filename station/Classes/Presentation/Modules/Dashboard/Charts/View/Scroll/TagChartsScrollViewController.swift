@@ -114,10 +114,10 @@ extension TagChartsScrollViewController: ChartViewDelegate {
 
 // MARK: - TagChartsViewDelegate
 extension TagChartsScrollViewController: TagChartsViewDelegate {
-    func tagCharts(view: TagChartsView, didTriggerDashboard sender: Any) {
+    func tagCharts(view: TagChartsView, didTriggerCards sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
-            output.viewDidTriggerDashboard(for: viewModels[index])
+            output.viewDidTriggerCards(for: viewModels[index])
         }
     }
     
