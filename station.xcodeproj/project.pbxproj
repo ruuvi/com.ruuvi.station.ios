@@ -1563,10 +1563,8 @@
 		0E70A46A22AF96C5006CB87C /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0EF26D172381A12F005BD84E /* Cell */,
 				0E3FF731238156AF00EB98F9 /* SectionHeader */,
-				0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */,
-				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
-				0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */,
 				0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */,
 			);
 			path = Table;
@@ -2450,6 +2448,16 @@
 				0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */,
 			);
 			path = Transition;
+			sourceTree = "<group>";
+		};
+		0EF26D172381A12F005BD84E /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */,
+				0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */,
+				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		0EF2862522CBAF280026C7A5 /* TagSettings */ = {

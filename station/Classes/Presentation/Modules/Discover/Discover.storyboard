@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KWd-e4-kyA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KWd-e4-kyA">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -105,31 +105,40 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mrr-n1-s1j">
-                                            <rect key="frame" x="20" y="9" width="26" height="26"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="26" id="H7m-h5-AKI"/>
-                                                <constraint firstAttribute="height" constant="26" id="hXR-sv-80C"/>
-                                            </constraints>
-                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UUID or MAC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SH5-FF-pqY">
-                                            <rect key="frame" x="54" y="11.5" width="340" height="21"/>
+                                            <rect key="frame" x="20" y="11.5" width="102" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qdm-6q-Clj">
+                                            <rect key="frame" x="368" y="9" width="26" height="26"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="26" id="K6J-Rj-tVJ"/>
+                                                <constraint firstAttribute="height" constant="26" id="R8v-Xp-gBG"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="-70 dBm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDo-7K-kj4">
+                                            <rect key="frame" x="130" y="13" width="230" height="18"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="SH5-FF-pqY" firstAttribute="leading" secondItem="Mrr-n1-s1j" secondAttribute="trailing" constant="8" id="AqF-1Z-wnd"/>
-                                        <constraint firstItem="Mrr-n1-s1j" firstAttribute="leading" secondItem="iPH-xW-e3d" secondAttribute="leading" constant="20" id="J5Z-cV-fep"/>
-                                        <constraint firstItem="Mrr-n1-s1j" firstAttribute="centerY" secondItem="iPH-xW-e3d" secondAttribute="centerY" id="XTP-Is-5kb"/>
-                                        <constraint firstAttribute="trailing" secondItem="SH5-FF-pqY" secondAttribute="trailing" constant="20" id="Xu2-JN-no6"/>
-                                        <constraint firstItem="SH5-FF-pqY" firstAttribute="centerY" secondItem="Mrr-n1-s1j" secondAttribute="centerY" id="hra-Yv-UpA"/>
+                                        <constraint firstItem="SH5-FF-pqY" firstAttribute="centerY" secondItem="iPH-xW-e3d" secondAttribute="centerY" id="4T0-Pv-lAB"/>
+                                        <constraint firstItem="SH5-FF-pqY" firstAttribute="leading" secondItem="iPH-xW-e3d" secondAttribute="leading" constant="20" id="8Lz-As-U80"/>
+                                        <constraint firstItem="hDo-7K-kj4" firstAttribute="centerY" secondItem="Qdm-6q-Clj" secondAttribute="centerY" id="AJF-cK-aZh"/>
+                                        <constraint firstAttribute="trailing" secondItem="Qdm-6q-Clj" secondAttribute="trailing" constant="20" id="Chw-la-VoH"/>
+                                        <constraint firstItem="hDo-7K-kj4" firstAttribute="leading" secondItem="SH5-FF-pqY" secondAttribute="trailing" constant="8" id="Cj4-IF-lRx"/>
+                                        <constraint firstItem="Qdm-6q-Clj" firstAttribute="leading" secondItem="hDo-7K-kj4" secondAttribute="trailing" constant="8" id="WqD-r8-d6f"/>
+                                        <constraint firstItem="Qdm-6q-Clj" firstAttribute="centerY" secondItem="iPH-xW-e3d" secondAttribute="centerY" id="ZqR-It-0Y6"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="identifierLabel" destination="SH5-FF-pqY" id="OSx-Xx-7Fd"/>
-                                    <outlet property="rssiImageView" destination="Mrr-n1-s1j" id="gZG-k1-EBk"/>
+                                    <outlet property="rssiImageView" destination="Qdm-6q-Clj" id="fH5-Qr-r5B"/>
+                                    <outlet property="rssiLabel" destination="hDo-7K-kj4" id="yyA-pW-x1O"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DiscoverNoDevicesTableViewCellReuseIdentifier" id="GNJ-iL-zEl" customClass="DiscoverNoDevicesTableViewCell" customModule="station" customModuleProvider="target">

@@ -301,6 +301,7 @@ extension DiscoverTableViewController {
         
         // RSSI
         if let rssi = device.rssi {
+            cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized()
             if rssi < -80 {
                 cell.rssiImageView.image = UIImage(named: "icon-connection-1")
             } else if rssi < -50 {
@@ -310,6 +311,7 @@ extension DiscoverTableViewController {
             }
         } else {
             cell.rssiImageView.image = nil
+            cell.rssiLabel.text = nil
         }
         
     }
