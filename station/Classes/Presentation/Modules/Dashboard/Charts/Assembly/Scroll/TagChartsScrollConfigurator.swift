@@ -19,6 +19,7 @@ class TagChartsScrollConfigurator {
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.gattService = r.resolve(GATTService.self)
+        presenter.exportService = r.resolve(ExportService.self)
         
         let tagActions = UIStoryboard(name: "TagActions", bundle: .main).instantiateInitialViewController() as! TagActionsViewController
         tagActions.modalPresentationStyle = .custom
