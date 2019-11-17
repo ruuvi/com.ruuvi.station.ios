@@ -294,9 +294,9 @@ extension DiscoverTableViewController {
         
         // identifier
         if let mac = device.mac {
-            cell.identifierLabel.text = mac
+            cell.identifierLabel.text = "DiscoverTable.RuuviDevice.prefix".localized() + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            cell.identifierLabel.text = device.uuid
+            cell.identifierLabel.text = "DiscoverTable.RuuviDevice.prefix".localized() + " " + device.uuid.prefix(4)
         }
         
         // RSSI

@@ -75,6 +75,7 @@
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja antureita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth ei ole käytössä";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";
