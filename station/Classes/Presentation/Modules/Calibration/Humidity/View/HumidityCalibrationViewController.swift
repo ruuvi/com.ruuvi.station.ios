@@ -101,7 +101,7 @@ extension HumidityCalibrationViewController {
             if let lastCalibrationDate = lastCalibrationDate {
                 let df = DateFormatter()
                 df.dateFormat = "dd MMMM yyyy"
-                lastCalibrationDateLabel.text = String(format: "HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
+                lastCalibrationDateLabel.text = String.localizedStringWithFormat("HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
                 clearButton.isEnabled = true
             } else {
                 lastCalibrationDateLabel.text = nil
@@ -112,13 +112,13 @@ extension HumidityCalibrationViewController {
     
     private func updateUIOldHumidity() {
         if isViewLoaded {
-            oldHumidityLabel.text = String(format: "%.2f", oldHumidity + humidityOffset) + " %"
+            oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
     
     func updateUIHumidityOffset() {
         if isViewLoaded {
-            oldHumidityLabel.text = String(format: "%.2f", oldHumidity + humidityOffset) + " %"
+            oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
 }

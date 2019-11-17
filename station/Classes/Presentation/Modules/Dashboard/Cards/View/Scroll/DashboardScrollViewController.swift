@@ -167,19 +167,19 @@ extension DashboardScrollViewController {
                 switch temperatureUnit {
                 case .celsius:
                     if let celsius = celsius?.value {
-                        label.text = String(format: "%.2f", celsius)
+                        label.text = String.localizedStringWithFormat("%.2f", celsius)
                     } else {
                         label.text = "N/A".localized()
                     }
                 case .fahrenheit:
                     if let fahrenheit = fahrenheit?.value {
-                        label.text = String(format: "%.2f", fahrenheit)
+                        label.text = String.localizedStringWithFormat("%.2f", fahrenheit)
                     } else {
                         label.text = "N/A".localized()
                     }
                 case .kelvin:
                     if let kelvin = kelvin?.value {
-                        label.text = String(format: "%.2f", kelvin)
+                        label.text = String.localizedStringWithFormat("%.2f", kelvin)
                     } else {
                         label.text = "N/A".localized()
                     }
@@ -227,18 +227,18 @@ extension DashboardScrollViewController {
                     if let rh = rh?.value, let ho = ho?.value {
                         let sh = rh + ho
                         if sh < 100.0 {
-                            label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", rh + ho) + " " + "%".localized()
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", 100.0) + " " + "%".localized()
                             humidityWarning?.isHidden = false
                         }
                     } else if let rh = rh?.value {
                         if rh < 100.0 {
-                            label.text = String(format: "%.2f", rh) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", rh) + " " + "%".localized()
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", 100.0) + " " + "%".localized()
                             humidityWarning?.isHidden = false
                         }
                     } else {
@@ -246,7 +246,7 @@ extension DashboardScrollViewController {
                     }
                 case .gm3:
                     if let ah = ah?.value {
-                        label.text = String(format: "%.2f", ah) + " " + "g/m³".localized()
+                        label.text = String.localizedStringWithFormat("%.2f", ah) + " " + "g/m³".localized()
                     } else {
                         label.text = "N/A".localized()
                     }
@@ -255,19 +255,19 @@ extension DashboardScrollViewController {
                         switch tu {
                         case .celsius:
                             if let dc = dc?.value {
-                                label.text = String(format: "%.2f", dc) + " " + "°C".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", dc) + " " + "°C".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
                         case .fahrenheit:
                             if let df = df?.value {
-                                label.text = String(format: "%.2f", df) + " " + "°F".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", df) + " " + "°F".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
                         case .kelvin:
                             if let dk = dk?.value {
-                                label.text = String(format: "%.2f", dk) + " " + "K".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", dk) + " " + "K".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }

@@ -30,19 +30,19 @@ class ExportServiceTemp: ExportService {
                 let date = iso8601.string(from: log.date)
                 var celsius: String
                 if let c = log.celsius.value {
-                    celsius = String(format: "%.2f", c)
+                    celsius = String.localizedStringWithFormat("%.2f", c)
                 } else {
                     celsius = "N/A".localized()
                 }
                 var fahrenheit: String
                 if let f = log.fahrenheit {
-                    fahrenheit = String(format: "%.2f", f)
+                    fahrenheit = String.localizedStringWithFormat("%.2f", f)
                 } else {
                     fahrenheit = "N/A".localized()
                 }
                 var kelvin: String
                 if let k = log.kelvin {
-                    kelvin = String(format: "%.2f", k)
+                    kelvin = String.localizedStringWithFormat("%.2f", k)
                 } else {
                     kelvin = "N/A".localized()
                 }
@@ -51,7 +51,7 @@ class ExportServiceTemp: ExportService {
                     if rh > 100 {
                         relativeHumidity = "100"
                     } else {
-                        relativeHumidity = String(format: "%.2f", rh)
+                        relativeHumidity = String.localizedStringWithFormat("%.2f", rh)
                     }
                 } else {
                     relativeHumidity = "N/A".localized()
@@ -66,19 +66,19 @@ class ExportServiceTemp: ExportService {
                        sh = 100.0
                     }
                     let h = Humidity(c: c, rh: sh / 100.0)
-                    absoluteHumidity = String(format: "%.2f", h.ah)
+                    absoluteHumidity = String.localizedStringWithFormat("%.2f", h.ah)
                     if let Td = h.Td {
-                           dewPointCelsius = String(format: "%.2f", Td)
+                           dewPointCelsius = String.localizedStringWithFormat("%.2f", Td)
                     } else {
                         dewPointCelsius = "N/A".localized()
                     }
                     if let TdF = h.TdF {
-                           dewPointFahrenheit = String(format: "%.2f", TdF)
+                           dewPointFahrenheit = String.localizedStringWithFormat("%.2f", TdF)
                     } else {
                         dewPointFahrenheit = "N/A".localized()
                     }
                     if let TdK = h.TdK {
-                        dewPointKelvin = String(format: "%.2f", TdK)
+                        dewPointKelvin = String.localizedStringWithFormat("%.2f", TdK)
                     } else {
                         dewPointKelvin = "N/A".localized()
                     }
@@ -91,32 +91,32 @@ class ExportServiceTemp: ExportService {
                 
                 var pressure: String
                 if let p = log.pressure.value {
-                    pressure = String(format: "%.2f", p)
+                    pressure = String.localizedStringWithFormat("%.2f", p)
                 } else {
                     pressure = "N/A".localized()
                 }
                 
                 var accelerationX: String
                 if let aX = log.accelerationX.value {
-                    accelerationX = String(format: "%.3f", aX)
+                    accelerationX = String.localizedStringWithFormat("%.3f", aX)
                 } else {
                     accelerationX = "N/A".localized()
                 }
                 var accelerationY: String
                 if let aY = log.accelerationY.value {
-                    accelerationY = String(format: "%.3f", aY)
+                    accelerationY = String.localizedStringWithFormat("%.3f", aY)
                 } else {
                     accelerationY = "N/A".localized()
                 }
                 var accelerationZ: String
                 if let aZ = log.accelerationZ.value {
-                    accelerationZ = String(format: "%.3f", aZ)
+                    accelerationZ = String.localizedStringWithFormat("%.3f", aZ)
                 } else {
                     accelerationZ = "N/A".localized()
                 }
                 let voltage: String
                 if let v = log.voltage.value {
-                    voltage = String(format: "%.3f", v)
+                    voltage = String.localizedStringWithFormat("%.3f", v)
                 } else {
                     voltage = "N/A".localized()
                 }
@@ -158,19 +158,19 @@ class ExportServiceTemp: ExportService {
                 let date = iso8601.string(from: log.date)
                  var celsius: String
                  if let c = log.celsius.value {
-                     celsius = String(format: "%.2f", c)
+                     celsius = String.localizedStringWithFormat("%.2f", c)
                  } else {
                      celsius = "N/A".localized()
                  }
                  var fahrenheit: String
                  if let f = log.fahrenheit {
-                     fahrenheit = String(format: "%.2f", f)
+                     fahrenheit = String.localizedStringWithFormat("%.2f", f)
                  } else {
                      fahrenheit = "N/A".localized()
                  }
                  var kelvin: String
                  if let k = log.kelvin {
-                     kelvin = String(format: "%.2f", k)
+                     kelvin = String.localizedStringWithFormat("%.2f", k)
                  } else {
                      kelvin = "N/A".localized()
                  }
@@ -179,7 +179,7 @@ class ExportServiceTemp: ExportService {
                      if rh > 100 {
                          relativeHumidity = "100"
                      } else {
-                         relativeHumidity = String(format: "%.2f", rh)
+                         relativeHumidity = String.localizedStringWithFormat("%.2f", rh)
                      }
                  } else {
                      relativeHumidity = "N/A".localized()
@@ -193,19 +193,19 @@ class ExportServiceTemp: ExportService {
                         rh = 100.0
                      }
                      let h = Humidity(c: c, rh: rh / 100.0)
-                     absoluteHumidity = String(format: "%.2f", h.ah)
+                     absoluteHumidity = String.localizedStringWithFormat("%.2f", h.ah)
                      if let Td = h.Td {
-                            dewPointCelsius = String(format: "%.2f", Td)
+                            dewPointCelsius = String.localizedStringWithFormat("%.2f", Td)
                      } else {
                          dewPointCelsius = "N/A".localized()
                      }
                      if let TdF = h.TdF {
-                            dewPointFahrenheit = String(format: "%.2f", TdF)
+                            dewPointFahrenheit = String.localizedStringWithFormat("%.2f", TdF)
                      } else {
                          dewPointFahrenheit = "N/A".localized()
                      }
                      if let TdK = h.TdK {
-                         dewPointKelvin = String(format: "%.2f", TdK)
+                         dewPointKelvin = String.localizedStringWithFormat("%.2f", TdK)
                      } else {
                          dewPointKelvin = "N/A".localized()
                      }
@@ -218,7 +218,7 @@ class ExportServiceTemp: ExportService {
                 
                 var pressure: String
                 if let p = log.pressure.value {
-                    pressure = String(format: "%.2f", p)
+                    pressure = String.localizedStringWithFormat("%.2f", p)
                 } else {
                     pressure = "N/A".localized()
                 }
