@@ -4,10 +4,10 @@ import BTKit
 class DiscoverRouter: DiscoverRouterInput {
     weak var transitionHandler: TransitionHandler!
     
-    func openDashboard() {
-        let factory = StoryboardFactory(storyboardName: "Dashboard")
+    func openCards() {
+        let factory = StoryboardFactory(storyboardName: "Cards")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: DashboardModuleInput.self)
+            .forStoryboard(factory: factory, to: CardsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .perform()
     }

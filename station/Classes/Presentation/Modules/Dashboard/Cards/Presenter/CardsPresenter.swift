@@ -2,9 +2,9 @@ import Foundation
 import RealmSwift
 import BTKit
 
-class DashboardPresenter: DashboardModuleInput {
-    weak var view: DashboardViewInput!
-    var router: DashboardRouterInput!
+class CardsPresenter: CardsModuleInput {
+    weak var view: CardsViewInput!
+    var router: CardsRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
@@ -51,7 +51,7 @@ class DashboardPresenter: DashboardModuleInput {
             syncViewModels()
         }
     }
-    private var viewModels = [DashboardTagViewModel]() {
+    private var viewModels = [CardsViewModel]() {
         didSet {
             view.viewModels = viewModels
         }
@@ -111,8 +111,8 @@ class DashboardPresenter: DashboardModuleInput {
     }
 }
 
-// MARK: - DashboardViewOutput
-extension DashboardPresenter: DashboardViewOutput {
+// MARK: - CardsViewOutput
+extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
         startObservingWebTags()
@@ -135,7 +135,7 @@ extension DashboardPresenter: DashboardViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerSettings(for viewModel: DashboardTagViewModel) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
@@ -143,11 +143,11 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
     
-    func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
+    func viewDidTriggerChart(for viewModel: CardsViewModel) {
         router.openTagCharts()
     }
     
-    func viewDidScroll(to viewModel: DashboardTagViewModel) {
+    func viewDidScroll(to viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             tagCharts?.configure(uuid: uuid)
         } else {
@@ -157,7 +157,7 @@ extension DashboardPresenter: DashboardViewOutput {
 }
 
 // MARK: - MenuModuleOutput
-extension DashboardPresenter: MenuModuleOutput {
+extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
         router.openDiscover()
@@ -180,7 +180,7 @@ extension DashboardPresenter: MenuModuleOutput {
 }
 
 // MARK: - TagChartsModuleOutput
-extension DashboardPresenter: TagChartsModuleOutput {
+extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
         if let index = viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
             view.scroll(to: index, immediately: true)
@@ -188,27 +188,27 @@ extension DashboardPresenter: TagChartsModuleOutput {
     }
 }
 
-// MARK: - DashboardRouterDelegate
-extension DashboardPresenter: DashboardRouterDelegate {
+// MARK: - CardsRouterDelegate
+extension CardsPresenter: CardsRouterDelegate {
     func shouldDismissDiscover() -> Bool {
         return viewModels.count > 0
     }
 }
 
 // MARK: - Private
-extension DashboardPresenter {
+extension CardsPresenter {
 
     private func syncViewModels() {
         if ruuviTags != nil && webTags != nil {
-            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardTagViewModel in
-                let viewModel = DashboardTagViewModel(ruuviTag)
+            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> CardsViewModel in
+                let viewModel = CardsViewModel(ruuviTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 return viewModel
             }) ?? []
-            let webViewModels = webTags?.compactMap({ (webTag) -> DashboardTagViewModel in
-                let viewModel = DashboardTagViewModel(webTag)
+            let webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
+                let viewModel = CardsViewModel(webTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit

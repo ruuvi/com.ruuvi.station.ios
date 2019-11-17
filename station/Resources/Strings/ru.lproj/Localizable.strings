@@ -48,6 +48,13 @@
 // Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
 
+// Cards
+"Cards.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
+"Cards.BluetoothDisabledAlert.title" = "Bluetooth выключен";
+"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
+"Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
+"Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
+
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
 "CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
@@ -57,13 +64,6 @@
 "CoreError.locationPermissionNotDetermined" = "Права на использование локационных сервисов не определены";
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
-
-// Dashboard
-"Dashboard.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";

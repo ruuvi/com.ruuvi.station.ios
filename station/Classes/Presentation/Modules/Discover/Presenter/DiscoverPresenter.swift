@@ -82,7 +82,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: ruuviTag.mac ?? ruuviTag.uuid)
             operation.on(success: { [weak self] (ruuviTag) in
                 if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                    self?.router.openDashboard()
+                    self?.router.openCards()
                 } else {
                     self?.router.dismiss()
                 }
@@ -114,7 +114,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     
     func viewDidTriggerContinue() {
         if isOpenedFromWelcome {
-            router.openDashboard()
+            router.openCards()
         } else {
             router.dismiss()
         }
@@ -126,7 +126,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     
     func viewDidTriggerClose() {
         if isOpenedFromWelcome {
-            router.openDashboard()
+            router.openCards()
         } else {
             router.dismiss()
         }
@@ -144,7 +144,7 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
         let operation = webTagService.add(provider: webTag.provider, location: location)
         operation.on(success: { [weak self] _ in
             if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                self?.router.openDashboard()
+                self?.router.openCards()
             } else {
                 self?.router.dismiss()
             }
@@ -162,7 +162,7 @@ extension DiscoverPresenter {
         let operation = webTagService.add(provider: provider)
         operation.on(success: { [weak self] _ in
             if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                self?.router.openDashboard()
+                self?.router.openCards()
             } else {
                 self?.router.dismiss()
             }

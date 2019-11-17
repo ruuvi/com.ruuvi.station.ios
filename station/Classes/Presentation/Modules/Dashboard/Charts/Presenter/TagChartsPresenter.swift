@@ -104,7 +104,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerDashboard(for viewModel: TagChartsViewModel) {
+    func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
         router.dismiss()
     }
     

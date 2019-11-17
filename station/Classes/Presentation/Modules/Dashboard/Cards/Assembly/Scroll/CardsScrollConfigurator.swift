@@ -1,15 +1,15 @@
 import UIKit
 import BTKit
 
-class DashboardScrollConfigurator {
-    func configure(view: DashboardScrollViewController) {
+class CardsScrollConfigurator {
+    func configure(view: CardsScrollViewController) {
         let r = AppAssembly.shared.assembler.resolver
         
-        let router = DashboardRouter()
+        let router = CardsRouter()
         router.transitionHandler = view
         router.settings = r.resolve(Settings.self)
         
-        let presenter = DashboardPresenter()
+        let presenter = CardsPresenter()
         presenter.router = router
         presenter.view = view
         presenter.realmContext = r.resolve(RealmContext.self)

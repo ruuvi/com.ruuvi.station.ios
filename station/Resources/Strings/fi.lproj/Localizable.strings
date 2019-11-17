@@ -48,6 +48,13 @@
 // Bluetooth Error
 "BluetoothError.disconnected" = "Yhteys katkaistu";
 
+// Cards
+"Cards.SwipeAlert.title" = "Selaa antureita pyyhkäisemällä sivulle.";
+"Cards.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
+"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
+"Cards.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
+"Cards.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
+
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
 "CoreError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
@@ -57,13 +64,6 @@
 "CoreError.locationPermissionNotDetermined" = "Sijainnin käyttöoikeuden tilaa ei ole päätetty";
 "CoreError.objectNotFound" = "Kohdetta ei löydy";
 "CoreError.objectInvalidated" = "Kohde mitätöity";
-
-// Dashboard
-"Dashboard.SwipeAlert.title" = "Selaa antureita pyyhkäisemällä sivulle.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
