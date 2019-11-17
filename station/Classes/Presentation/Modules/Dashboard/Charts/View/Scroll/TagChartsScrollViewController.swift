@@ -5,8 +5,6 @@ import BTKit
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
     
-    var tagActionsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
-    var tagActionsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -243,7 +241,6 @@ extension TagChartsScrollViewController {
         gr.delegate = self
         gr.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(gr)
-        gr.addTarget(tagActionsPresentInteractiveTransition as Any, action:#selector(TagActionsPresentTransitionAnimation.handlePresentPan(_:)))
         gr.addTarget(tagChartsDismissInteractiveTransition as Any, action:#selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
     }
     

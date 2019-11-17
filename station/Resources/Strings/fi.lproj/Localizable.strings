@@ -155,22 +155,6 @@
 "OWMError.notAHttpResponse" = "Vastaus ei ole HTTP-muodossa";
 "OWMError.invalidApiKey" = "API-avain ei kelpaa";
 
-// TagActions
-"TagActions.SyncConfirmationDialog.title" = "Oletko varma?";
-"TagActions.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
-"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Tyhjennetäänkö sovellukseen tallennetut historiatiedot?";
-"TagActions.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
-"TagActions.Status.Connecting" = "Yhdistetään...";
-"TagActions.Status.Serving" = "Synkronoidaan...";
-"TagActions.Status.Disconnecting" = "Katkaistaan yhteyttä...";
-"TagActions.Status.Success" = "Onnistui";
-"TagActions.Status.Error" = "Virhe";
-"TagActions.Status.Logs" = "Lokitiedot";
-"TagActions.Export.title" = "VIE";
-"TagActions.Sync.title" = "SYNKRONOI";
-"TagActions.Clear.title" = "PYYHI";
-
 // TagCharts
 "TagCharts.NoChartData.text" = "Tietoja ei ole saatavilla";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";

@@ -14,7 +14,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     var ruuviTagService: RuuviTagService!
     var gattService: GATTService!
     var exportService: ExportService!
-    weak var tagActions: TagActionsModuleInput?
     
     private var isLoading: Bool = false {
         didSet {
@@ -48,8 +47,6 @@ class TagChartsPresenter: TagChartsModuleInput {
         didSet {
             if let tagUUID = tagUUID {
                 output?.tagCharts(module: self, didScrollTo: tagUUID)
-                tagActions?.configure(uuid: tagUUID)
-                tagActions?.configure(isConnectable: tagIsConnectable)
                 scrollToCurrentTag()
             }
         }
