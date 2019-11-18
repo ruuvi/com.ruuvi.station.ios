@@ -148,15 +148,21 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
+            let desiredConnectInterval: TimeInterval = 15
             let op = gattService.syncLogs(with: uuid, progress: { [weak self] progress in
                 DispatchQueue.main.async { [weak self] in
                     self?.view.setSync(progress: progress, for: viewModel)
                 }
-            })
+            }, desiredConnectInterval: desiredConnectInterval)
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
             }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
+                self?.view.setSync(progress: nil, for: viewModel)
+                if case .btkit(.logic(.notConnectedInDesiredInterval)) = error {
+                    self?.view.showFailedToSyncIn(desiredConnectInterval: desiredConnectInterval)
+                } else {
+                    self?.errorPresenter.present(error: error)
+                }
             })
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
