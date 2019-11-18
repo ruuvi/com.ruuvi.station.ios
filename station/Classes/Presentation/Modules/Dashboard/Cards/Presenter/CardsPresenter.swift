@@ -40,6 +40,8 @@ class CardsPresenter: CardsModuleInput {
     private var startReadingRSSIToken: NSObjectProtocol?
     private var stopReadingRSSIToken: NSObjectProtocol?
     private var readRSSIIntervalDidChangeToken: NSObjectProtocol?
+    private var didConnectToken: NSObjectProtocol?
+    private var didDisconnectToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -108,6 +110,12 @@ class CardsPresenter: CardsModuleInput {
         if let ruuviTagPropertiesDaemonFailureToken = ruuviTagPropertiesDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagPropertiesDaemonFailureToken)
         }
+        if let didConnectToken = didConnectToken {
+            NotificationCenter.default.removeObserver(didConnectToken)
+        }
+        if let didDisconnectToken = didDisconnectToken {
+            NotificationCenter.default.removeObserver(didDisconnectToken)
+        }
     }
 }
 
@@ -120,6 +128,7 @@ extension CardsPresenter: CardsViewOutput {
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
         startObservingConnectionPersistenceNotifications()
+        startObservingDidConnectDisconnectNotifications()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -232,6 +241,7 @@ extension CardsPresenter {
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
                 return viewModel
             }) ?? []
             let webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
@@ -509,6 +519,20 @@ extension CardsPresenter {
         
         readRSSIIntervalDidChangeToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidChangeReadRSSIInterval, object: nil, queue: .main, using: { [weak self] _ in
             self?.observeRuuviTagRSSI()
+        })
+    }
+    
+    func startObservingDidConnectDisconnectNotifications() {
+        didConnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                viewModel.isConnected.value = true
+            }
+        })
+        
+        didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                viewModel.isConnected.value = false
+            }
         })
     }
 }
