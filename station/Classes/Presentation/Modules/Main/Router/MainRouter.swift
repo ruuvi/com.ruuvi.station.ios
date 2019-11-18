@@ -1,7 +1,7 @@
 import UIKit
 
 protocol MainRouterInput {
-    func openDashboard()
+    func openCards()
 }
 
 class MainRouter: MainRouterInput {
@@ -20,11 +20,11 @@ class MainRouter: MainRouterInput {
         }
     }
     
-    func openDashboard() {
+    func openCards() {
         assert(navigationController.topViewController is WelcomeViewController)
         let view = navigationController.topViewController as! WelcomeViewController
         let presenter = view.output as! WelcomePresenter
         let router = presenter.router
-        router?.openDashboard()
+        router?.openCards()
     }
 }

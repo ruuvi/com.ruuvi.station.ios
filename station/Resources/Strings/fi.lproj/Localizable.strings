@@ -42,12 +42,22 @@
 "Background.SaveHeartbeats.title" = "Tallenna sykkeet";
 "Background.Interval.Every.string" = "joka";
 "Background.Interval.Min.string" = "min";
-"Background.SyncLogsOnDidConnect.title" = "Synkronoi lokitiedot yhdistettäessä";
 "Background.readRSSITitle.title" = "Lue RSSI";
 "Background.Interval.Sec.string" = "sek";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Yhteys katkaistu";
+
+// Cards
+"Cards.SwipeAlert.title" = "Selaa antureita pyyhkäisemällä sivulle.";
+"Cards.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
+"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
+"Cards.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
+"Cards.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
+"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
+"Cards.Connected.title" = "Connected";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
@@ -59,13 +69,6 @@
 "CoreError.objectNotFound" = "Kohdetta ei löydy";
 "CoreError.objectInvalidated" = "Kohde mitätöity";
 
-// Dashboard
-"Dashboard.SwipeAlert.title" = "Selaa antureita pyyhkäisemällä sivulle.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
-
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
@@ -75,6 +78,8 @@
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja antureita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth ei ole käytössä";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";
@@ -156,26 +161,24 @@
 "OWMError.notAHttpResponse" = "Vastaus ei ole HTTP-muodossa";
 "OWMError.invalidApiKey" = "API-avain ei kelpaa";
 
-// TagActions
-"TagActions.SyncConfirmationDialog.title" = "Oletko varma?";
-"TagActions.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
-"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Tyhjennetäänkö sovellukseen tallennetut historiatiedot?";
-"TagActions.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
-"TagActions.Status.Connecting" = "Yhdistetään...";
-"TagActions.Status.Serving" = "Synkronoidaan...";
-"TagActions.Status.Disconnecting" = "Katkaistaan yhteyttä...";
-"TagActions.Status.Success" = "Onnistui";
-"TagActions.Status.Error" = "Virhe";
-"TagActions.Status.Logs" = "Lokitiedot";
-"TagActions.Export.title" = "VIE";
-"TagActions.Sync.title" = "SYNKRONOI";
-"TagActions.Clear.title" = "PYYHI";
-
 // TagCharts
 "TagCharts.NoChartData.text" = "Tietoja ei ole saatavilla";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth ei ole päällä";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
+"TagCharts.Export.title" = "VIE";
+"TagCharts.Sync.title" = "SYNKRONOI";
+"TagCharts.Clear.title" = "PYYHI";
+"TagCharts.SyncConfirmationDialog.title" = "Oletko varma?";
+"TagCharts.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
+"TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Tyhjennetäänkö sovellukseen tallennetut historiatiedot?";
+"TagCharts.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
+"TagCharts.Status.Connecting" = "Yhdistetään...";
+"TagCharts.Status.Serving" = "Synkronoidaan...";
+"TagCharts.Status.Disconnecting" = "Katkaistaan yhteyttä...";
+"TagCharts.Status.Success" = "Onnistui";
+"TagCharts.Status.Error" = "Virhe";
+"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
@@ -214,6 +217,9 @@
 "TagSettings.Alerts.Off" = "Off";
 "TagSettings.SectionHeader.Connection.title" = "CONNECTION";
 "TagSettings.KeepConnection.title" = "Säilytä yhteys";
+"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
+"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
+"TagSettings.DataSource.Advertisement.title" = "Advertisement";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
@@ -221,6 +227,7 @@
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
+"UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

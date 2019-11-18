@@ -8,7 +8,6 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagPersistence: RuuviTagPersistence!
-    var gattService: GATTService!
     var alertService: AlertService!
     
     private var realm: Realm!
@@ -136,13 +135,6 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                         observer?.localNotificationsManager.showDidConnect(uuid: uuid)
                     }
                 }
-                if observer.connectionPersistence.syncLogsOnDidConnect(uuid: uuid) {
-                    observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.syncLogs(_:)),
-                    on: observer.thread,
-                    with: uuid,
-                    waitUntilDone: false,
-                    modes: [RunLoop.Mode.default.rawValue])
-                }
             }
         }, heartbeat: { observer, device in
             if let ruuviTag = device.ruuvi?.tag {
@@ -241,14 +233,6 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.unexpected(.failedToFindRuuviTag)])
             }
         }
-    }
-    
-    @objc private func syncLogs(_ uuid: String) {
-        gattService.syncLogs(with: uuid).on(failure: { (error) in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: error])
-            }
-        })
     }
     
     private func invalidateTokens() {

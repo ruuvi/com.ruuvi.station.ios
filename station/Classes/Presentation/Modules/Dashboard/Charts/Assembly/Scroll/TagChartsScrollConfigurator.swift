@@ -19,19 +19,7 @@ class TagChartsScrollConfigurator {
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.gattService = r.resolve(GATTService.self)
-        
-        let tagActions = UIStoryboard(name: "TagActions", bundle: .main).instantiateInitialViewController() as! TagActionsViewController
-        tagActions.modalPresentationStyle = .custom
-        let tagActionsPresenter = tagActions.output as! TagActionsPresenter
-        presenter.tagActions = tagActionsPresenter
-        
-        let manager = TagActionsTransitionManager(container: view, actions: tagActions)
-        let transition = TagActionsTransitioningDelegate(manager: manager)
-        router.tagActionsInteractiveTransition = transition
-        tagActions.transitioningDelegate = transition
-        
-        view.tagActionsPresentInteractiveTransition = transition.present
-        view.tagActionsDismissInteractiveTransition = transition.dismiss
+        presenter.exportService = r.resolve(ExportService.self)
         
         view.output = presenter
     }

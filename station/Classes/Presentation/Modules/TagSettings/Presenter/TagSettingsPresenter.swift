@@ -162,7 +162,8 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 extension TagSettingsPresenter {
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
-        
+        viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
+
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
         
         if ruuviTag.name == ruuviTag.uuid || ruuviTag.name == ruuviTag.mac {
@@ -261,6 +262,7 @@ extension TagSettingsPresenter {
         viewModel.movementCounter.value = device.movementCounter
         viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
         viewModel.txPower.value = device.txPower
+        viewModel.isConnected.value = device.isConnected
         
         if let mac = device.mac {
             viewModel.mac.value = mac

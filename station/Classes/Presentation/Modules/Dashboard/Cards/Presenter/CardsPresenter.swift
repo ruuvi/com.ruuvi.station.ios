@@ -2,9 +2,9 @@ import Foundation
 import RealmSwift
 import BTKit
 
-class DashboardPresenter: DashboardModuleInput {
-    weak var view: DashboardViewInput!
-    var router: DashboardRouterInput!
+class CardsPresenter: CardsModuleInput {
+    weak var view: CardsViewInput!
+    var router: CardsRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
@@ -40,6 +40,8 @@ class DashboardPresenter: DashboardModuleInput {
     private var startReadingRSSIToken: NSObjectProtocol?
     private var stopReadingRSSIToken: NSObjectProtocol?
     private var readRSSIIntervalDidChangeToken: NSObjectProtocol?
+    private var didConnectToken: NSObjectProtocol?
+    private var didDisconnectToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -51,7 +53,7 @@ class DashboardPresenter: DashboardModuleInput {
             syncViewModels()
         }
     }
-    private var viewModels = [DashboardTagViewModel]() {
+    private var viewModels = [CardsViewModel]() {
         didSet {
             view.viewModels = viewModels
         }
@@ -108,11 +110,17 @@ class DashboardPresenter: DashboardModuleInput {
         if let ruuviTagPropertiesDaemonFailureToken = ruuviTagPropertiesDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagPropertiesDaemonFailureToken)
         }
+        if let didConnectToken = didConnectToken {
+            NotificationCenter.default.removeObserver(didConnectToken)
+        }
+        if let didDisconnectToken = didDisconnectToken {
+            NotificationCenter.default.removeObserver(didDisconnectToken)
+        }
     }
 }
 
-// MARK: - DashboardViewOutput
-extension DashboardPresenter: DashboardViewOutput {
+// MARK: - CardsViewOutput
+extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
         startObservingWebTags()
@@ -120,6 +128,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
         startObservingConnectionPersistenceNotifications()
+        startObservingDidConnectDisconnectNotifications()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -135,7 +144,7 @@ extension DashboardPresenter: DashboardViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerSettings(for viewModel: DashboardTagViewModel) {
+    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
@@ -143,11 +152,38 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
     
-    func viewDidTriggerChart(for viewModel: DashboardTagViewModel) {
-        router.openTagCharts()
+    func viewDidTriggerChart(for viewModel: CardsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            if settings.keepConnectionDialogWasShown(for: uuid) {
+                router.openTagCharts()
+            } else {
+                view.showKeepConnectionDialog(for: viewModel)
+            }
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
     }
     
-    func viewDidScroll(to viewModel: DashboardTagViewModel) {
+    func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            settings.setKeepConnectionDialogWasShown(for: uuid)
+            router.openTagCharts()
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidConfirmToKeepConnection(to viewModel: CardsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            connectionPersistence.setKeepConnection(true, for: uuid)
+            settings.setKeepConnectionDialogWasShown(for: uuid)
+            router.openTagCharts()
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidScroll(to viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             tagCharts?.configure(uuid: uuid)
         } else {
@@ -157,7 +193,7 @@ extension DashboardPresenter: DashboardViewOutput {
 }
 
 // MARK: - MenuModuleOutput
-extension DashboardPresenter: MenuModuleOutput {
+extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
         router.openDiscover()
@@ -180,7 +216,7 @@ extension DashboardPresenter: MenuModuleOutput {
 }
 
 // MARK: - TagChartsModuleOutput
-extension DashboardPresenter: TagChartsModuleOutput {
+extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
         if let index = viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
             view.scroll(to: index, immediately: true)
@@ -188,27 +224,28 @@ extension DashboardPresenter: TagChartsModuleOutput {
     }
 }
 
-// MARK: - DashboardRouterDelegate
-extension DashboardPresenter: DashboardRouterDelegate {
+// MARK: - CardsRouterDelegate
+extension CardsPresenter: CardsRouterDelegate {
     func shouldDismissDiscover() -> Bool {
         return viewModels.count > 0
     }
 }
 
 // MARK: - Private
-extension DashboardPresenter {
+extension CardsPresenter {
 
     private func syncViewModels() {
         if ruuviTags != nil && webTags != nil {
-            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> DashboardTagViewModel in
-                let viewModel = DashboardTagViewModel(ruuviTag)
+            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> CardsViewModel in
+                let viewModel = CardsViewModel(ruuviTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
                 return viewModel
             }) ?? []
-            let webViewModels = webTags?.compactMap({ (webTag) -> DashboardTagViewModel in
-                let viewModel = DashboardTagViewModel(webTag)
+            let webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
+                let viewModel = CardsViewModel(webTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
@@ -360,6 +397,7 @@ extension DashboardPresenter {
                 if let ii = insertions.last {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                        self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
                 }
@@ -383,6 +421,7 @@ extension DashboardPresenter {
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                        self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
                 }
@@ -480,6 +519,20 @@ extension DashboardPresenter {
         
         readRSSIIntervalDidChangeToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidChangeReadRSSIInterval, object: nil, queue: .main, using: { [weak self] _ in
             self?.observeRuuviTagRSSI()
+        })
+    }
+    
+    func startObservingDidConnectDisconnectNotifications() {
+        didConnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                viewModel.isConnected.value = true
+            }
+        })
+        
+        didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                viewModel.isConnected.value = false
+            }
         })
     }
 }

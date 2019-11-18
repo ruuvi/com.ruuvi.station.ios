@@ -23,10 +23,6 @@ struct BackgroundSection: View {
                     Text(viewModel.presentNotificationsTitle)
                 }
                 
-                Toggle(isOn: self.$env.viewModels[self.index].syncLogsOnDidConnect.value.bound) {
-                    Text(viewModel.syncLogsOnDidConnectTitle)
-                }
-                
                 Toggle(isOn: self.$env.viewModels[self.index].saveHeartbeats.value.bound) {
                     Text(viewModel.saveHeartbeatsTitle)
                 }

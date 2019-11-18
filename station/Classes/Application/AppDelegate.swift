@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let settings = r.resolve(Settings.self),
             settings.welcomeShown {
             let mainRouter = MainRouter.shared
-            mainRouter.openDashboard()
+            mainRouter.openCards()
         }
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)

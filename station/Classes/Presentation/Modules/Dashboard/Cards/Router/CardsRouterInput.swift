@@ -1,6 +1,6 @@
 import Foundation
 
-protocol DashboardRouterInput {
+protocol CardsRouterInput {
     func openMenu(output: MenuModuleOutput)
     func openDiscover()
     func openSettings()

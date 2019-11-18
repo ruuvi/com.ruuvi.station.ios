@@ -42,12 +42,22 @@
 "Background.SaveHeartbeats.title" = "Сохранять Данные";
 "Background.Interval.Every.string" = "каждые";
 "Background.Interval.Min.string" = "мин";
-"Background.SyncLogsOnDidConnect.title" = "Синхронизировать Логи";
 "Background.readRSSITitle.title" = "Считывать RSSI";
 "Background.Interval.Sec.string" = "сек";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
+
+// Cards
+"Cards.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
+"Cards.BluetoothDisabledAlert.title" = "Bluetooth выключен";
+"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
+"Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
+"Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
+"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
+"Cards.Connected.title" = "Connected";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
@@ -59,13 +69,6 @@
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
 
-// Dashboard
-"Dashboard.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
-
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
@@ -75,6 +78,8 @@
 "DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
@@ -156,26 +161,24 @@
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
 "OWMError.invalidApiKey" = "Некорректный API-ключ";
 
-// TagActions
-"TagActions.SyncConfirmationDialog.title" = "Вы уверены?";
-"TagActions.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
-"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
-"TagActions.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
-"TagActions.Status.Connecting" = "Соединение...";
-"TagActions.Status.Serving" = "Обмениваюсь...";
-"TagActions.Status.Disconnecting" = "Разрываю соединение...";
-"TagActions.Status.Success" = "Успех";
-"TagActions.Status.Error" = "Ошибка";
-"TagActions.Status.Logs" = "Логи";
-"TagActions.Export.title" = "ЭКСПОРТ";
-"TagActions.Sync.title" = "СКАЧАТЬ";
-"TagActions.Clear.title" = "ОЧИСТИТЬ";
-
 // TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
+"TagCharts.Export.title" = "ЭКСПОРТ";
+"TagCharts.Sync.title" = "СКАЧАТЬ";
+"TagCharts.Clear.title" = "ОЧИСТИТЬ";
+"TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
+"TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
+"TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
+"TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
+"TagCharts.Status.Connecting" = "Соединение...";
+"TagCharts.Status.Serving" = "Обмениваюсь...";
+"TagCharts.Status.Disconnecting" = "Разрываю соединение...";
+"TagCharts.Status.Success" = "Успех";
+"TagCharts.Status.Error" = "Ошибка";
+"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
@@ -214,6 +217,9 @@
 "TagSettings.Alerts.Off" = "Отключено";
 "TagSettings.SectionHeader.Connection.title" = "СОЕДИНЕНИЕ";
 "TagSettings.KeepConnection.title" = "Держать Соединение";
+"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
+"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
+"TagSettings.DataSource.Advertisement.title" = "Advertisement";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
@@ -221,6 +227,7 @@
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
 "UnexpectedError.failedToFindRuuviTag" = "Не удалось найти RuuviTag";
 "UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
+"UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
