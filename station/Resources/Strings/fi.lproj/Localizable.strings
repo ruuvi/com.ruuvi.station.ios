@@ -208,6 +208,9 @@
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
+"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
+"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
+"TagSettings.DataSource.Advertisement.title" = "Advertisement";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

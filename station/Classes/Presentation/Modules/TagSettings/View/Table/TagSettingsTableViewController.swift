@@ -10,6 +10,8 @@ private enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var dataSourceTitleLabel: UILabel!
+    @IBOutlet weak var dataSourceValueLabel: UILabel!
     @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
@@ -76,6 +78,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
         mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
+        dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
         tableView.reloadData()
     }
@@ -277,6 +280,14 @@ extension TagSettingsTableViewController {
     }
     private func bindTagSettingsViewModel() {
         if isViewLoaded, let viewModel = viewModel {
+            
+            dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
+                if let isConnected = isConnected, isConnected {
+                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+                } else {
+                    label.text = "TagSettings.DataSource.Advertisement.title".localized()
+                }
+            }
             
             tableView.bind(viewModel.version) { (tableView, version) in
                 tableView.reloadData()
