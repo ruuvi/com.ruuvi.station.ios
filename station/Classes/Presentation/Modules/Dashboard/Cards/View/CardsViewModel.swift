@@ -35,6 +35,7 @@ struct CardsViewModel {
     var animateRSSI: Observable<Bool?> = Observable<Bool?>()
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var provider: WeatherProvider?
+    var isConnected: Observable<Bool?> = Observable<Bool?>()
     
     init(_ webTag: WebTagRealm) {
         type = .web
