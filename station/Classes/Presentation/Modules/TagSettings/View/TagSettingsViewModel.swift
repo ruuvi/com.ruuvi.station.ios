@@ -16,4 +16,5 @@ struct TagSettingsViewModel {
     let movementCounter: Observable<Int?> = Observable<Int?>()
     let measurementSequenceNumber: Observable<Int?> = Observable<Int?>()
     let txPower: Observable<Int?> = Observable<Int?>()
+    let isConnected: Observable<Bool?> = Observable<Bool?>()
 }

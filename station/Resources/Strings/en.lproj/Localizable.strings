@@ -208,6 +208,9 @@
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
+"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
+"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
+"TagSettings.DataSource.Advertisement.title" = "Advertisement";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
