@@ -23,4 +23,5 @@ protocol Settings {
     var webTagDaemonIntervalMinutes: Int { get set }
     
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
+    func setKeepConnectionDialogWasShown(for uuid: String)
 }

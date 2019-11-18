@@ -8,6 +8,10 @@ class SettingsUserDegaults: Settings {
         return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + uuid)
     }
     
+    func setKeepConnectionDialogWasShown(for uuid: String) {
+        UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + uuid)
+    }
+    
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {

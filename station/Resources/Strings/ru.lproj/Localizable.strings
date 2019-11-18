@@ -54,6 +54,9 @@
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
+"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";

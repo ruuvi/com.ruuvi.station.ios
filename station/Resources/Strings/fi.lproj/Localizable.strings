@@ -54,6 +54,9 @@
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
+"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
