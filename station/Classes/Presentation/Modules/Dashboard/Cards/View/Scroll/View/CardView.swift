@@ -23,6 +23,7 @@ class CardView: UIView {
     @IBOutlet weak var rssiCityImageView: UIImageView!
     
     var updatedAt: Date?
+    var isConnected: Bool?
     
     private var timer: Timer?
     
@@ -33,7 +34,11 @@ class CardView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (timer) in
-            self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
+            if let isConnected = self?.isConnected, isConnected, let date = self?.updatedAt?.ruuviAgo {
+                self?.updatedLabel.text = "Cards.Connected.title".localized() + " " + "|" + " " + date
+            } else {
+                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
+            }
         })
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse], animations: { [weak self] in
