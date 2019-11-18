@@ -144,7 +144,34 @@ extension CardsPresenter: CardsViewOutput {
     }
     
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
-        router.openTagCharts()
+        if let uuid = viewModel.uuid.value {
+            if settings.keepConnectionDialogWasShown(for: uuid) {
+                router.openTagCharts()
+            } else {
+                view.showKeepConnectionDialog(for: viewModel)
+            }
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            settings.setKeepConnectionDialogWasShown(for: uuid)
+            router.openTagCharts()
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidConfirmToKeepConnection(to viewModel: CardsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            connectionPersistence.setKeepConnection(true, for: uuid)
+            settings.setKeepConnectionDialogWasShown(for: uuid)
+            router.openTagCharts()
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
     }
     
     func viewDidScroll(to viewModel: CardsViewModel) {

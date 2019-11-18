@@ -68,6 +68,16 @@ extension CardsScrollViewController: CardsViewInput {
         }
     }
     
+    func showKeepConnectionDialog(for viewModel: CardsViewModel) {
+        let alert = UIAlertController(title: nil, message: "Cards.KeepConnectionDialog.message".localized(), preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.Dismiss.title".localized(), style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidDismissKeepConnectionDialog(for: viewModel)
+        }))
+        alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.KeepConnection.title".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToKeepConnection(to: viewModel)
+        }))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - IBActions
