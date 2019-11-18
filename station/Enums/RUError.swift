@@ -110,6 +110,7 @@ enum UnexpectedError: Error {
     case failedToReverseGeocodeCoordinate
     case failedToFindRuuviTag
     case failedToFindLogsForTheTag
+    case viewModelUUIDIsNil
 }
 
 extension UnexpectedError: LocalizedError {
@@ -125,6 +126,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.failedToFindRuuviTag".localized()
         case .failedToFindLogsForTheTag:
             return "UnexpectedError.failedToFindLogsForTheTag".localized()
+        case .viewModelUUIDIsNil:
+            return "UnexpectedError.viewModelUUIDIsNil".localized()
         }
     }
 }

@@ -5,6 +5,7 @@ import Localize_Swift
 class HumidityCalibrationViewController: UIViewController {
     var output: HumidityCalibrationViewOutput!
     
+    @IBOutlet weak var targetHumidityLabel: UILabel!
     @IBOutlet weak var descriptionLabel: TTTAttributedLabel!
     @IBOutlet weak var oldHumidityLabel: UILabel!
     @IBOutlet weak var lastCalibrationDateLabel: UILabel!
@@ -29,7 +30,9 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         clearButton.setTitle("HumidityCalibration.Button.Clear.title".localized(), for: .normal)
         calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
         closeButton.setTitle("HumidityCalibration.Button.Close.title".localized(), for: .normal)
+        targetHumidityLabel.text = String.localizedStringWithFormat("%.2f", 75.0)
     }
+    
     func apply(theme: Theme) {
         
     }
@@ -101,7 +104,7 @@ extension HumidityCalibrationViewController {
             if let lastCalibrationDate = lastCalibrationDate {
                 let df = DateFormatter()
                 df.dateFormat = "dd MMMM yyyy"
-                lastCalibrationDateLabel.text = String(format: "HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
+                lastCalibrationDateLabel.text = String.localizedStringWithFormat("HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
                 clearButton.isEnabled = true
             } else {
                 lastCalibrationDateLabel.text = nil
@@ -112,13 +115,13 @@ extension HumidityCalibrationViewController {
     
     private func updateUIOldHumidity() {
         if isViewLoaded {
-            oldHumidityLabel.text = String(format: "%.2f", oldHumidity + humidityOffset) + " %"
+            oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
     
     func updateUIHumidityOffset() {
         if isViewLoaded {
-            oldHumidityLabel.text = String(format: "%.2f", oldHumidity + humidityOffset) + " %"
+            oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
 }

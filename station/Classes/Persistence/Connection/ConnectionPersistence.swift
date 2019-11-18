@@ -17,9 +17,6 @@ protocol ConnectionPersistence {
     func saveHeartbeatsInterval(uuid: String) -> Int
     func setSaveHeartbeatsInterval(_ value: Int, uuid: String)
     
-    func syncLogsOnDidConnect(uuid: String) -> Bool
-    func setSyncLogsOnDidConnect(_ value: Bool, uuid: String)
-    
     func readRSSI(uuid: String) -> Bool
     func setReadRSSI(_ value: Bool, uuid: String)
     

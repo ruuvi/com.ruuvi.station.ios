@@ -13,7 +13,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var activityPresenter: ActivityPresenter!
     var ruuviTagService: RuuviTagService!
     var gattService: GATTService!
-    weak var tagActions: TagActionsModuleInput?
+    var exportService: ExportService!
     
     private var isLoading: Bool = false {
         didSet {
@@ -47,8 +47,6 @@ class TagChartsPresenter: TagChartsModuleInput {
         didSet {
             if let tagUUID = tagUUID {
                 output?.tagCharts(module: self, didScrollTo: tagUUID)
-                tagActions?.configure(uuid: tagUUID)
-                tagActions?.configure(isConnectable: tagIsConnectable)
                 scrollToCurrentTag()
             }
         }
@@ -82,6 +80,10 @@ class TagChartsPresenter: TagChartsModuleInput {
     func configure(uuid: String) {
         self.tagUUID = uuid
     }
+    
+    func dismiss() {
+        router.dismiss()
+    }
 }
 
 extension TagChartsPresenter: TagChartsViewOutput {
@@ -104,7 +106,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         router.openMenu(output: self)
     }
     
-    func viewDidTriggerDashboard(for viewModel: TagChartsViewModel) {
+    func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
         router.dismiss()
     }
     
@@ -121,6 +123,60 @@ extension TagChartsPresenter: TagChartsViewOutput {
             tagUUID = uuid
         } else {
             assert(false)
+        }
+    }
+    
+    func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
+        view.showSyncConfirmationDialog(for: viewModel)
+    }
+    
+    func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            exportService.csvLog(for: uuid).on(success: { [weak self] url in
+                self?.view.showExportSheet(with: url)
+            }, failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
+        view.showClearConfirmationDialog(for: viewModel)
+    }
+    
+    func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            let desiredConnectInterval: TimeInterval = 15
+            let op = gattService.syncLogs(with: uuid, progress: { [weak self] progress in
+                DispatchQueue.main.async { [weak self] in
+                    self?.view.setSync(progress: progress, for: viewModel)
+                }
+            }, desiredConnectInterval: desiredConnectInterval)
+            op.on(success: { [weak self] _ in
+                self?.view.setSync(progress: nil, for: viewModel)
+            }, failure: { [weak self] error in
+                self?.view.setSync(progress: nil, for: viewModel)
+                if case .btkit(.logic(.notConnectedInDesiredInterval)) = error {
+                    self?.view.showFailedToSyncIn(desiredConnectInterval: desiredConnectInterval)
+                } else {
+                    self?.errorPresenter.present(error: error)
+                }
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+    
+    func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            let op = ruuviTagService.clearHistory(uuid: uuid)
+            op.on(failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
 }

@@ -42,12 +42,22 @@
 "Background.SaveHeartbeats.title" = "Save Heartbeats";
 "Background.Interval.Every.string" = "every";
 "Background.Interval.Min.string" = "min";
-"Background.SyncLogsOnDidConnect.title" = "Sync Logs When Connected";
 "Background.readRSSITitle.title" = "Read RSSI";
 "Background.Interval.Sec.string" = "sec";
 
 // Bluetooth Error
 "BluetoothError.disconnected" = "Disconnected";
+
+// Cards
+"Cards.SwipeAlert.title" = "Swipe left or right to see other sensors.";
+"Cards.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
+"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
+"Cards.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
+"Cards.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
+"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
+"Cards.Connected.title" = "Connected";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
@@ -59,13 +69,6 @@
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
 
-// Dashboard
-"Dashboard.SwipeAlert.title" = "Swipe left or right to see other sensors.";
-"Dashboard.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
-"Dashboard.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
-"Dashboard.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
-"Dashboard.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
-
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
 "DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
@@ -75,6 +78,8 @@
 "DiscoverTable.GetMoreSensors.button.title" = "BUY SENSORS";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
@@ -156,26 +161,24 @@
 "OWMError.notAHttpResponse" = "Not a HTTP response";
 "OWMError.invalidApiKey" = "Invalid API Key";
 
-// TagActions
-"TagActions.SyncConfirmationDialog.title" = "Are you sure?";
-"TagActions.SyncConfirmationDialog.message" = "Download history data from the sensor?";
-"TagActions.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
-"TagActions.DeleteHistoryConfirmationDialog.message" = "Clear the historical data from the app?";
-"TagActions.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
-"TagActions.Status.Connecting" = "Connecting...";
-"TagActions.Status.Serving" = "Syncing...";
-"TagActions.Status.Disconnecting" = "Disconnecting...";
-"TagActions.Status.Success" = "Success";
-"TagActions.Status.Error" = "Error";
-"TagActions.Status.Logs" = "Logs";
-"TagActions.Export.title" = "EXPORT";
-"TagActions.Sync.title" = "SYNC";
-"TagActions.Clear.title" = "CLEAR";
-
 // TagCharts
 "TagCharts.NoChartData.text" = "No chart data available";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth is not enabled";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station needs bluetooth to be able to listen for sensors. Go to Settings and turn Bluetooth on.";
+"TagCharts.Export.title" = "EXPORT";
+"TagCharts.Sync.title" = "SYNC";
+"TagCharts.Clear.title" = "CLEAR";
+"TagCharts.SyncConfirmationDialog.title" = "Are you sure?";
+"TagCharts.SyncConfirmationDialog.message" = "Download history data from the sensor?";
+"TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Clear the historical data from the app?";
+"TagCharts.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
+"TagCharts.Status.Connecting" = "Connecting...";
+"TagCharts.Status.Serving" = "Syncing...";
+"TagCharts.Status.Disconnecting" = "Disconnecting...";
+"TagCharts.Status.Success" = "Success";
+"TagCharts.Status.Error" = "Error";
+"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
@@ -214,6 +217,9 @@
 "TagSettings.Alerts.Off" = "Off";
 "TagSettings.SectionHeader.Connection.title" = "CONNECTION";
 "TagSettings.KeepConnection.title" = "Keep Connection";
+"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
+"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
+"TagSettings.DataSource.Advertisement.title" = "Advertisement";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
@@ -221,6 +227,7 @@
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Failed to reverse geocode location";
 "UnexpectedError.failedToFindRuuviTag" = "Failed to find sensor";
 "UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the sensor";
+"UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your current location";

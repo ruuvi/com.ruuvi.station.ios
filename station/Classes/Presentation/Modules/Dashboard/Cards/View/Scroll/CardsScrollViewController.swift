@@ -1,8 +1,8 @@
 import UIKit
 import Localize_Swift
 
-class DashboardScrollViewController: UIViewController {
-    var output: DashboardViewOutput!
+class CardsScrollViewController: UIViewController {
+    var output: CardsViewOutput!
     var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
@@ -10,9 +10,9 @@ class DashboardScrollViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var viewModels = [DashboardTagViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
     
-    private var views = [DashboardTagView]()
+    private var views = [CardView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
@@ -22,8 +22,8 @@ class DashboardScrollViewController: UIViewController {
     }
 }
 
-// MARK: - DashboardViewInput
-extension DashboardScrollViewController: DashboardViewInput {
+// MARK: - CardsViewInput
+extension CardsScrollViewController: CardsViewInput {
 
     func localize() {
         
@@ -34,13 +34,13 @@ extension DashboardScrollViewController: DashboardViewInput {
     }
     
     func showWebTagAPILimitExceededError() {
-        let alertVC = UIAlertController(title: "Dashboard.WebTagAPILimitExcededError.Alert.title".localized(), message: "Dashboard.WebTagAPILimitExcededError.Alert.message".localized(), preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Cards.WebTagAPILimitExcededError.Alert.title".localized(), message: "Cards.WebTagAPILimitExcededError.Alert.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
     func showBluetoothDisabled() {
-        let alertVC = UIAlertController(title: "Dashboard.BluetoothDisabledAlert.title".localized(), message: "Dashboard.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Cards.BluetoothDisabledAlert.title".localized(), message: "Cards.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -49,7 +49,7 @@ extension DashboardScrollViewController: DashboardViewInput {
         let key = "DashboardScrollViewController.hasShownSwipeAlert"
         if viewModels.count > 1 && !UserDefaults.standard.bool(forKey: key) {
             UserDefaults.standard.set(true, forKey: key)
-            let alert = UIAlertController(title: "Dashboard.SwipeAlert.title".localized(), message: nil, preferredStyle: .alert)
+            let alert = UIAlertController(title: "Cards.SwipeAlert.title".localized(), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
             present(alert, animated: true)
         }
@@ -68,17 +68,27 @@ extension DashboardScrollViewController: DashboardViewInput {
         }
     }
     
+    func showKeepConnectionDialog(for viewModel: CardsViewModel) {
+        let alert = UIAlertController(title: nil, message: "Cards.KeepConnectionDialog.message".localized(), preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.Dismiss.title".localized(), style: .cancel, handler: { [weak self] _ in
+            self?.output.viewDidDismissKeepConnectionDialog(for: viewModel)
+        }))
+        alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.KeepConnection.title".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToKeepConnection(to: viewModel)
+        }))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - IBActions
-extension DashboardScrollViewController {
+extension CardsScrollViewController {
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerMenu()
     }
 }
 
 // MARK: - View lifecycle
-extension DashboardScrollViewController {
+extension CardsScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
@@ -111,22 +121,22 @@ extension DashboardScrollViewController {
 }
 
 // MARK: - UIScrollViewDelegate
-extension DashboardScrollViewController: UIScrollViewDelegate {
+extension CardsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         output.viewDidScroll(to: viewModels[currentPage])
     }
 }
 
-// MARK: - DashboardTagViewDelegate
-extension DashboardScrollViewController: DashboardTagViewDelegate {
-    func dashboardTag(view: DashboardTagView, didTriggerCharts sender: Any) {
+// MARK: - CardViewDelegate
+extension CardsScrollViewController: CardViewDelegate {
+    func card(view: CardView, didTriggerCharts sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerChart(for: viewModels[index])
         }
     }
     
-    func dashboardTag(view: DashboardTagView, didTriggerSettings sender: Any) {
+    func card(view: CardView, didTriggerSettings sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerSettings(for: viewModels[index])
@@ -135,7 +145,7 @@ extension DashboardScrollViewController: DashboardTagViewDelegate {
 }
 
 // MARK: - UITextFieldDelegate
-extension DashboardScrollViewController: UITextFieldDelegate {
+extension CardsScrollViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let textFieldText = textField.text,
             let rangeOfTextToReplace = Range(range, in: textFieldText) else {
@@ -148,8 +158,8 @@ extension DashboardScrollViewController: UITextFieldDelegate {
 }
 
 // MARK: - Configure view
-extension DashboardScrollViewController {
-    private func bind(view: DashboardTagView, with viewModel: DashboardTagViewModel) {
+extension CardsScrollViewController {
+    private func bind(view: CardView, with viewModel: CardsViewModel) {
         
         view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
             view.isHidden = !isConnectable.bound
@@ -167,19 +177,19 @@ extension DashboardScrollViewController {
                 switch temperatureUnit {
                 case .celsius:
                     if let celsius = celsius?.value {
-                        label.text = String(format: "%.2f", celsius)
+                        label.text = String.localizedStringWithFormat("%.2f", celsius)
                     } else {
                         label.text = "N/A".localized()
                     }
                 case .fahrenheit:
                     if let fahrenheit = fahrenheit?.value {
-                        label.text = String(format: "%.2f", fahrenheit)
+                        label.text = String.localizedStringWithFormat("%.2f", fahrenheit)
                     } else {
                         label.text = "N/A".localized()
                     }
                 case .kelvin:
                     if let kelvin = kelvin?.value {
-                        label.text = String(format: "%.2f", kelvin)
+                        label.text = String.localizedStringWithFormat("%.2f", kelvin)
                     } else {
                         label.text = "N/A".localized()
                     }
@@ -227,18 +237,18 @@ extension DashboardScrollViewController {
                     if let rh = rh?.value, let ho = ho?.value {
                         let sh = rh + ho
                         if sh < 100.0 {
-                            label.text = String(format: "%.2f", rh + ho) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", rh + ho) + " " + "%".localized()
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", 100.0) + " " + "%".localized()
                             humidityWarning?.isHidden = false
                         }
                     } else if let rh = rh?.value {
                         if rh < 100.0 {
-                            label.text = String(format: "%.2f", rh) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", rh) + " " + "%".localized()
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String(format: "%.2f", 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat("%.2f", 100.0) + " " + "%".localized()
                             humidityWarning?.isHidden = false
                         }
                     } else {
@@ -246,7 +256,7 @@ extension DashboardScrollViewController {
                     }
                 case .gm3:
                     if let ah = ah?.value {
-                        label.text = String(format: "%.2f", ah) + " " + "g/m³".localized()
+                        label.text = String.localizedStringWithFormat("%.2f", ah) + " " + "g/m³".localized()
                     } else {
                         label.text = "N/A".localized()
                     }
@@ -255,19 +265,19 @@ extension DashboardScrollViewController {
                         switch tu {
                         case .celsius:
                             if let dc = dc?.value {
-                                label.text = String(format: "%.2f", dc) + " " + "°C".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", dc) + " " + "°C".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
                         case .fahrenheit:
                             if let df = df?.value {
-                                label.text = String(format: "%.2f", df) + " " + "°F".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", df) + " " + "°F".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
                         case .kelvin:
                             if let dk = dk?.value {
-                                label.text = String(format: "%.2f", dk) + " " + "K".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", dk) + " " + "K".localized()
                             } else {
                                 label.text = "N/A".localized()
                             }
@@ -296,7 +306,7 @@ extension DashboardScrollViewController {
         
         view.pressureLabel.bind(viewModel.pressure) { label, pressure in
             if let pressure = pressure {
-                label.text = "\(pressure)" + " " + "hPa".localized()
+                label.text = String.localizedStringWithFormat("%.2f", pressure) + " " + "hPa".localized()
             } else {
                 label.text = "N/A".localized()
             }
@@ -331,13 +341,35 @@ extension DashboardScrollViewController {
             }
         }
         
-        view.updatedLabel.bind(viewModel.date) { [weak view] (label, date) in
-            if let date = date {
-                label.text = date.ruuviAgo
+        let isConnected = viewModel.isConnected
+        let date = viewModel.date
+        
+        view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
+            if let isConnected = isConnected, isConnected, let date = date?.value {
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
             } else {
-                label.text = "N/A".localized()
+                if let date = date?.value {
+                    label.text = date.ruuviAgo
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
+            view?.updatedAt = date?.value
+            view?.isConnected = isConnected
+        }
+        
+        view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
+            if let isConnected = isConnected, isConnected.value.bound, let date = date {
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+            } else {
+                if let date = date {
+                    label.text = date.ruuviAgo
+                } else {
+                    label.text = "N/A".localized()
+                }
             }
             view?.updatedAt = date
+            view?.isConnected = isConnected?.value
         }
         
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
@@ -353,7 +385,7 @@ extension DashboardScrollViewController {
 }
 
 //MARK: - UIGestureRecognizerDelegate
-extension DashboardScrollViewController: UIGestureRecognizerDelegate {
+extension CardsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: scrollView)
@@ -370,7 +402,7 @@ extension DashboardScrollViewController: UIGestureRecognizerDelegate {
 
 
 // MARK: - View configuration
-extension DashboardScrollViewController {
+extension CardsScrollViewController {
     private func configureViews() {
         configureEdgeGestureRecognozer()
         configurePanGestureRecognozer()
@@ -394,7 +426,7 @@ extension DashboardScrollViewController {
 }
 
 // MARK: - Update UI
-extension DashboardScrollViewController {
+extension CardsScrollViewController {
     private func updateUI() {
         updateUIViewModels()
     }
@@ -407,7 +439,7 @@ extension DashboardScrollViewController {
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
-                    let view = Bundle.main.loadNibNamed("DashboardTagView", owner: self, options: nil)?.first as! DashboardTagView
+                    let view = Bundle.main.loadNibNamed("CardView", owner: self, options: nil)?.first as! CardView
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)
@@ -423,7 +455,7 @@ extension DashboardScrollViewController {
         }
     }
     
-    private func position(_ view: DashboardTagView, _ leftView: UIView) {
+    private func position(_ view: CardView, _ leftView: UIView) {
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: leftView, attribute: leftView == scrollView ? .leading : .trailing, multiplier: 1.0, constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))

@@ -2,15 +2,16 @@ import Foundation
 import RealmSwift
 import BTKit
 
-protocol DashboardViewInput: ViewInput {
-    var viewModels: [DashboardTagViewModel] { get set }
+protocol CardsViewInput: ViewInput {
+    var viewModels: [CardsViewModel] { get set }
     
     func scroll(to index: Int, immediately: Bool)
     func showBluetoothDisabled()
     func showWebTagAPILimitExceededError()
+    func showKeepConnectionDialog(for viewModel: CardsViewModel)
 }
 
-extension DashboardViewInput {
+extension CardsViewInput {
     func scroll(to index: Int) {
         scroll(to: index, immediately: false)
     }

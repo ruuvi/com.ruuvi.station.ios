@@ -28,6 +28,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
     @IBOutlet weak var temperatureAlertCell: UITableViewCell!
+    @IBOutlet weak var dataSourceTitleLabel: UILabel!
+    @IBOutlet weak var dataSourceValueLabel: UILabel!
     @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
@@ -102,6 +104,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
         mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
+        dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
         
         if let tu = viewModel?.temperatureUnit.value {
@@ -404,6 +407,14 @@ extension TagSettingsTableViewController {
     private func bindTagSettingsViewModel() {
         if isViewLoaded, let viewModel = viewModel {
             
+            dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
+                if let isConnected = isConnected, isConnected {
+                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+                } else {
+                    label.text = "TagSettings.DataSource.Advertisement.title".localized()
+                }
+            }
+            
             tableView.bind(viewModel.version) { (tableView, version) in
                 tableView.reloadData()
             }
@@ -421,11 +432,11 @@ extension TagSettingsTableViewController {
                     if humidityOffset > 0 {
                         let shownHumidity = humidity + humidityOffset
                         if shownHumidity > 100.0 {
-                            label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", 100.0))"
+                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
                             humidityCell?.accessoryType = .detailButton
                             humidityTrailing?.constant = 0
                         } else {
-                            label.text = "\(String(format: "%.2f", humidity))" + " → " + "\(String(format: "%.2f", shownHumidity))"
+                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
                             humidityCell?.accessoryType = .none
                             humidityTrailing?.constant = 16.0
                         }
@@ -460,7 +471,7 @@ extension TagSettingsTableViewController {
             
             voltageValueLabel.bind(viewModel.voltage) { label, voltage in
                 if let voltage = voltage {
-                    label.text = String(format: "%.3f", voltage) + " " + "V".localized()
+                    label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
@@ -468,7 +479,7 @@ extension TagSettingsTableViewController {
             
             accelerationXValueLabel.bind(viewModel.accelerationX) { label, accelerationX in
                 if let accelerationX = accelerationX {
-                    label.text = String(format: "%.3f", accelerationX) + " " + "g".localized()
+                    label.text = String.localizedStringWithFormat("%.3f", accelerationX) + " " + "g".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
@@ -476,7 +487,7 @@ extension TagSettingsTableViewController {
             
             accelerationYValueLabel.bind(viewModel.accelerationY) { label, accelerationY in
                 if let accelerationY = accelerationY {
-                    label.text = String(format: "%.3f", accelerationY) + " " + "g".localized()
+                    label.text = String.localizedStringWithFormat("%.3f", accelerationY) + " " + "g".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
@@ -484,7 +495,7 @@ extension TagSettingsTableViewController {
             
             accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
                 if let accelerationZ = accelerationZ {
-                    label.text = String(format: "%.3f", accelerationZ) + " " + "g".localized()
+                    label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
                 } else {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
