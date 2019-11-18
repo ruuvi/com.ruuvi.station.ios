@@ -35,6 +35,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     private var connectToken: ObservationToken?
     private var disconnectToken: ObservationToken?
     private var progress: ((BTServiceProgress) -> Void)?
+    private var desiredConnectInterval: TimeInterval?
     
     deinit {
         logToken?.invalidate()
@@ -42,12 +43,13 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         disconnectToken?.invalidate()
     }
     
-    init(uuid: String, ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, background: BTBackground, progress: ((BTServiceProgress) -> Void)? = nil) {
+    init(uuid: String, ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, background: BTBackground, progress: ((BTServiceProgress) -> Void)? = nil, desiredConnectInterval: TimeInterval? = 0) {
         self.uuid = uuid
         self.ruuviTagPersistence = ruuviTagPersistence
         self.connectionPersistence = connectionPersistence
         self.background = background
         self.progress = progress
+        self.desiredConnectInterval = desiredConnectInterval
     }
     
     override func main() {
@@ -57,7 +59,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart, object: nil, userInfo: [RuuviTagReadLogsOperationDidStartKey.uuid: uuid, RuuviTagReadLogsOperationDidStartKey.fromDate: date])
         }
         
-        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: date, options: [.callbackQueue(.untouch)], progress: progress) { (observer, result) in
+        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: date, options: [.callbackQueue(.untouch), .desiredConnectInterval(desiredConnectInterval ?? 0)], progress: progress) { (observer, result) in
             switch result {
             case .success(let logs):
                 let opLogs = observer.ruuviTagPersistence.persist(logs: logs, for: observer.uuid)

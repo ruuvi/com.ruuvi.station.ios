@@ -176,6 +176,7 @@
 "TagCharts.Status.Disconnecting" = "Katkaistaan yhteyttä...";
 "TagCharts.Status.Success" = "Onnistui";
 "TagCharts.Status.Error" = "Virhe";
+"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";

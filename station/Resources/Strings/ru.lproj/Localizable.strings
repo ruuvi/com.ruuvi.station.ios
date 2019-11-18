@@ -176,6 +176,7 @@
 "TagCharts.Status.Disconnecting" = "Разрываю соединение...";
 "TagCharts.Status.Success" = "Успех";
 "TagCharts.Status.Error" = "Ошибка";
+"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
