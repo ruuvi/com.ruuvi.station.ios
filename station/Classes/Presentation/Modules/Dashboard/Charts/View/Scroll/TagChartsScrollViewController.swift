@@ -224,7 +224,7 @@ extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: scrollView)
-            return abs(velocity.y) > abs(velocity.x)
+            return abs(velocity.y) > abs(velocity.x) && UIApplication.shared.statusBarOrientation.isPortrait
         } else {
             return true
         }
