@@ -2,6 +2,12 @@ import Foundation
 
 class SettingsUserDegaults: Settings {
     
+    private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
+    
+    func keepConnectionDialogWasShown(for uuid: String) -> Bool {
+        return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + uuid)
+    }
+    
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
