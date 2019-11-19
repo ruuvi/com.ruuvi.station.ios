@@ -301,7 +301,7 @@ extension TagChartsScrollViewController {
         chartView.noDataText = "TagCharts.NoChartData.text".localized()
         
         chartView.scaleXEnabled = true
-        chartView.scaleYEnabled = false
+        chartView.scaleYEnabled = true
     }
     
     private func configure(_ set: LineChartDataSet) {
