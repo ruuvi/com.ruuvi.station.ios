@@ -143,6 +143,7 @@
 		0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101D238461D400A9CBA6 /* DefaultsConfigurator.swift */; };
 		0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
+		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
 		0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */; };
 		0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
 		0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */; };
@@ -493,6 +494,7 @@
 		0E8A101D238461D400A9CBA6 /* DefaultsConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsConfigurator.swift; sourceTree = "<group>"; };
 		0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsEnvironmentObject.swift; sourceTree = "<group>"; };
 		0E8A10212384637F00A9CBA6 /* DefaultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsList.swift; sourceTree = "<group>"; };
+		0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
 		0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollViewController.swift; sourceTree = "<group>"; };
 		0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewInput.swift; sourceTree = "<group>"; };
@@ -1698,9 +1700,18 @@
 		0E8A100823845F2300A9CBA6 /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0E8A102323846CCE00A9CBA6 /* Cells */,
 				0E8A10112384605A00A9CBA6 /* DefaultsTableViewController.swift */,
 			);
 			path = Table;
+			sourceTree = "<group>";
+		};
+		0E8A102323846CCE00A9CBA6 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
@@ -3115,6 +3126,7 @@
 				0EEB215322B8FD1F0015F9E0 /* WelcomePresenter.swift in Sources */,
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* CardsViewOutput.swift in Sources */,
+				0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */,
 				0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,

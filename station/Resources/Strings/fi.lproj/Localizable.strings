@@ -71,6 +71,7 @@
 
 // Defaults
 "Defaults.navigationItem.title" = "Defaults";
+"Defaults.WelcomeShown.title" = "Welcome Shown";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
