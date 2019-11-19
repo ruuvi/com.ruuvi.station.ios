@@ -50,6 +50,7 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 6.2)
     - Protobuf (>= 3.9.2, ~> 3.9)
   - FutureX (1.1.1)
+  - GestureInstructions (0.0.1)
   - GoogleAppMeasurement (6.1.3):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -104,6 +105,7 @@ DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Messaging
   - FutureX
+  - GestureInstructions
   - Humidity
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -125,6 +127,7 @@ SPEC REPOS:
     - FirebaseInstanceID
     - FirebaseMessaging
     - FutureX
+    - GestureInstructions
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
@@ -167,6 +170,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 550df9be1f99f751d8fcde3ac342a1e21a0e6c42
   FirebaseMessaging: 35edef69a6af9b34e9e44624089f054be3c09089
   FutureX: 85faeccb370f5a4286ae8540849095adb0bd7b2d
+  GestureInstructions: eae6f87572dc384505d7a649530d627531315407
   GoogleAppMeasurement: 434cc7be25e71dc04b8d0e3079125127b330e84a
   GoogleDataTransport: f6fe28f43e3a300736854260961ad485b473edc5
   GoogleDataTransportCCTSupport: 862418a8cdda520c4dd4af83a756d04efe4a6990
@@ -182,6 +186,6 @@ SPEC CHECKSUMS:
   SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: a5daa820cd99fa61927c86e985989ae4086f0dfc
+PODFILE CHECKSUM: b1e30539fd5cce3a5ba971ee43eb99564ff5d3ad
 
 COCOAPODS: 1.8.4
