@@ -129,7 +129,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     }
     
     func showSwipeUpInstruction() {
-        gestureInstructor.show(.swipeUp, attributedText: NSAttributedString(string: "TagCharts.SwipeUpInstruction.hint".localized()), after: 0.1)
+        gestureInstructor.show(.swipeUp, after: 0.1)
     }
 }
 
