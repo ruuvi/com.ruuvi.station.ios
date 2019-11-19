@@ -66,7 +66,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="BackgroundSwitchTableViewCellReuseIdentifier" id="aHT-1j-e5A" customClass="BackgroundSwitchTableViewCell" customModule="station" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="DefaultsSwitchTableViewCellReuseIdentifier" id="aHT-1j-e5A" customClass="DefaultsSwitchTableViewCell" customModule="station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aHT-1j-e5A" id="5Bt-BE-uZ1">
@@ -96,38 +96,6 @@
                                 <connections>
                                     <outlet property="isOnSwitch" destination="cQz-uX-Wih" id="9Qx-QR-Dqr"/>
                                     <outlet property="titleLabel" destination="sSV-H8-HDl" id="q5v-aX-c3g"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="BackgroundStepperTableViewCellReuseIdentifier" id="kH3-Gc-8iC" customClass="BackgroundStepperTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="99" width="414" height="43.5"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kH3-Gc-8iC" id="cDs-Xo-m2N">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QEV-I9-QGp">
-                                            <rect key="frame" x="20" y="11.5" width="34" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="awe-G3-azM">
-                                            <rect key="frame" x="300" y="6" width="94" height="32"/>
-                                            <connections>
-                                                <action selector="stepperValueChanged:" destination="kH3-Gc-8iC" eventType="valueChanged" id="v0p-4d-HNY"/>
-                                            </connections>
-                                        </stepper>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="QEV-I9-QGp" firstAttribute="leading" secondItem="cDs-Xo-m2N" secondAttribute="leading" constant="20" id="4dP-lD-tRt"/>
-                                        <constraint firstItem="awe-G3-azM" firstAttribute="centerY" secondItem="cDs-Xo-m2N" secondAttribute="centerY" id="Erg-dn-WRT"/>
-                                        <constraint firstAttribute="trailing" secondItem="awe-G3-azM" secondAttribute="trailing" constant="20" id="h2K-qo-BGw"/>
-                                        <constraint firstItem="QEV-I9-QGp" firstAttribute="centerY" secondItem="cDs-Xo-m2N" secondAttribute="centerY" id="lu7-R3-W01"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="stepper" destination="awe-G3-azM" id="9G1-bu-w3j"/>
-                                    <outlet property="titleLabel" destination="QEV-I9-QGp" id="G8h-59-gXQ"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
