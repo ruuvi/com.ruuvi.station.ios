@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import BTKit
+import UIKit
 
 class TagChartsPresenter: TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -100,6 +101,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewWillDisappear() {
         stopObservingBluetoothState()
+    }
+    
+    func viewWillTransition(to orientation: UIInterfaceOrientation) {
+        
     }
     
     func viewDidTriggerMenu() {

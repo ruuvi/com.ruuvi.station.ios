@@ -166,6 +166,7 @@ extension TagChartsScrollViewController {
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
         }
         super.viewWillTransition(to: size, with: coordinator)
+        output.viewWillTransition(to: UIApplication.shared.statusBarOrientation)
     }
 }
 
