@@ -1,6 +1,7 @@
 import UIKit
 import Charts
 import BTKit
+import GestureInstructions
 
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
@@ -126,6 +127,10 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
+    
+    func showSwipeUpInstruction() {
+        gestureInstructor.show(.swipeUp, attributedText: NSAttributedString(string: "TagCharts.SwipeUpInstruction.hint".localized()), after: 0.1)
+    }
 }
 
 // MARK: - IBActions
@@ -164,9 +169,10 @@ extension TagChartsScrollViewController {
         }) { [weak self] (context) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
+            self?.output.viewDidTransition()
         }
         super.viewWillTransition(to: size, with: coordinator)
-        output.viewWillTransition(to: UIApplication.shared.statusBarOrientation)
+        gestureInstructor.dismissThenResume()
     }
 }
 
@@ -241,6 +247,11 @@ extension TagChartsScrollViewController {
  
     private func configureViews() {
         configurePanGestureRecognozer()
+        configureGestureInstructor()
+    }
+    
+    private func configureGestureInstructor() {
+        GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
    
     private func configurePanGestureRecognozer() {
