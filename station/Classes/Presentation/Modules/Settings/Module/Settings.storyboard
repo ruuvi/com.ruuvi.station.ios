@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ivn-QC-p8c">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ivn-QC-p8c">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -158,6 +158,26 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="zPg-YI-U3o">
+                                        <rect key="frame" x="0.0" y="367" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zPg-YI-U3o" id="Ef4-m6-xcK">
+                                            <rect key="frame" x="0.0" y="0.0" width="383" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defaults" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAA-Ek-iEf">
+                                                    <rect key="frame" x="20" y="11.5" width="64" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="xAA-Ek-iEf" firstAttribute="leading" secondItem="Ef4-m6-xcK" secondAttribute="leading" constant="20" id="QkZ-Bo-J4y"/>
+                                                <constraint firstItem="xAA-Ek-iEf" firstAttribute="centerY" secondItem="Ef4-m6-xcK" secondAttribute="centerY" id="twp-gn-tfZ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -178,6 +198,8 @@
                         <outlet property="backgroundCell" destination="n15-Sp-8my" id="XhC-lX-w3N"/>
                         <outlet property="backgroundTitleLabel" destination="Tis-1n-KVL" id="muv-El-96G"/>
                         <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
+                        <outlet property="defaultsCell" destination="zPg-YI-U3o" id="qvw-Bo-WKb"/>
+                        <outlet property="defaultsTitleLabel" destination="xAA-Ek-iEf" id="00Z-4t-FuC"/>
                         <outlet property="foregroundCell" destination="gWD-Bu-GUM" id="568-5T-CYJ"/>
                         <outlet property="foregroundTitleLabel" destination="CdK-Qh-AQf" id="I76-HU-omN"/>
                         <outlet property="humidityUnitLabel" destination="bGS-es-4BZ" id="3Ok-bN-3Le"/>

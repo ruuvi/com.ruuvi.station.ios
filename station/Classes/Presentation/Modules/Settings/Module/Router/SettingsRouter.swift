@@ -34,4 +34,14 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
+    
+    func openDefaults() {
+        let factory = StoryboardFactory(storyboardName: "Defaults")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: DefaultsModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
 }
