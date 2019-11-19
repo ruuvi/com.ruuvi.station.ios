@@ -11,6 +11,7 @@ target 'station' do
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
   pod 'FutureX'
+  pod 'GestureInstructions'
   pod 'Humidity'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
