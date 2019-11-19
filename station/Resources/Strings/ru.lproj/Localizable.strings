@@ -155,6 +155,7 @@
 "Settings.Label.Language.text" = "Язык";
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Background" = "Фоновый Режим";
+"Settings.Label.Defaults" = "Defaults";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
