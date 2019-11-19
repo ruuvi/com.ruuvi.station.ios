@@ -72,6 +72,7 @@
 // Defaults
 "Defaults.navigationItem.title" = "Defaults";
 "Defaults.WelcomeShown.title" = "Welcome Shown";
+"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
