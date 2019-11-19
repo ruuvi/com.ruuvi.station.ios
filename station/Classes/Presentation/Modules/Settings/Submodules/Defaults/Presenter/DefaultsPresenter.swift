@@ -14,7 +14,15 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             observer.settings.welcomeShown = welcomeShown.bound
         }
         
-        view.viewModels = [welcomeShown]
+        let tagChartsLandscapeSwipeInstructionWasShown = DefaultsViewModel()
+        tagChartsLandscapeSwipeInstructionWasShown.title = "Defaults.TagChartsLandscapeSwipeInstructionWasShown.title".localized()
+        tagChartsLandscapeSwipeInstructionWasShown.boolean.value = settings.tagChartsLandscapeSwipeInstructionWasShown
+        
+        bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) { observer, tagChartsLandscapeSwipeInstructionWasShown in
+            observer.settings.tagChartsLandscapeSwipeInstructionWasShown = tagChartsLandscapeSwipeInstructionWasShown.bound
+        }
+        
+        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown]
     }
 }
 
