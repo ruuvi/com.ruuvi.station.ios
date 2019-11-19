@@ -97,6 +97,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
     
+    @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
+    var tagChartsLandscapeSwipeInstructionWasShown: Bool
+    
     @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
     var isAdvertisementDaemonOn: Bool {
         didSet {

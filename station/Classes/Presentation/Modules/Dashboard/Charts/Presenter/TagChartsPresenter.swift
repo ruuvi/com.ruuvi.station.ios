@@ -97,14 +97,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewWillAppear() {
         startObservingBluetoothState()
+        tryToShowSwipeUpHint()
     }
     
     func viewWillDisappear() {
         stopObservingBluetoothState()
     }
     
-    func viewWillTransition(to orientation: UIInterfaceOrientation) {
-        
+    func viewDidTransition() {
+        tryToShowSwipeUpHint()
     }
     
     func viewDidTriggerMenu() {
@@ -211,6 +212,14 @@ extension TagChartsPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension TagChartsPresenter {
+    
+    private func tryToShowSwipeUpHint() {
+        if UIApplication.shared.statusBarOrientation.isLandscape && !settings.tagChartsLandscapeSwipeInstructionWasShown {
+            settings.tagChartsLandscapeSwipeInstructionWasShown = true
+            view.showSwipeUpInstruction()
+        }
+    }
+    
     private func scrollToCurrentTag() {
         if let index = viewModels.firstIndex(where: { $0.uuid.value == tagUUID }) {
             view.scroll(to: index, immediately: true)

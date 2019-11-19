@@ -5,7 +5,7 @@ protocol TagChartsViewOutput {
     func viewDidLoad()
     func viewWillAppear()
     func viewWillDisappear()
-    func viewWillTransition(to orientation: UIInterfaceOrientation)
+    func viewDidTransition()
     func viewDidTriggerMenu()
     func viewDidScroll(to viewModel: TagChartsViewModel)
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel)
