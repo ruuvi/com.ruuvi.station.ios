@@ -24,10 +24,13 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         views.forEach( {
             $0.temperatureChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.temperatureChart.noDataTextColor = .white
+            $0.temperatureChart.setNeedsDisplay()
             $0.humidityChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.humidityChart.noDataTextColor = .white
+            $0.humidityChart.setNeedsDisplay()
             $0.pressureChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.pressureChart.noDataTextColor = .white
+            $0.pressureChart.setNeedsDisplay()
         } )
     }
     
