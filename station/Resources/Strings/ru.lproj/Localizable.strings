@@ -219,7 +219,7 @@
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
-"TagSettings.dataSourceTitleLabel.text" = "Данны Получены Из";
+"TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
 
