@@ -72,10 +72,10 @@
 // Defaults
 "Defaults.navigationItem.title" = "Значения";
 "Defaults.WelcomeShown.title" = "Приветствие Показано";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Свайп Подсказка на Графиках Показана";
+"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Свайп на Графиках";
 "Defaults.Interval.Sec.string" = "сек";
-"Defaults.ConnectionTimeout.title" = "Таймаут Соединения";
-"Defaults.ServiceTimeout.title" = "Таймаут Обмена Данными";
+"Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
+"Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
