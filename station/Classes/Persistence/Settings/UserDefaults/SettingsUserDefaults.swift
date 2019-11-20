@@ -144,6 +144,12 @@ class SettingsUserDegaults: Settings {
         }
     }
     
+    @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 15)
+    var connectionTimeout: TimeInterval
+    
+    @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 60)
+    var serviceTimeout: TimeInterval
+    
     @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
     var connectionDaemonIntervalMinutes: Int
     
