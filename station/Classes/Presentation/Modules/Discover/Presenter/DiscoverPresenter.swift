@@ -83,9 +83,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
         stopObservingLost()
     }
     
-    func viewDidChoose(device: DiscoverDeviceViewModel) {
+    func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
-            let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: ruuviTag.mac ?? ruuviTag.uuid)
+            let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: displayName)
             operation.on(success: { [weak self] (ruuviTag) in
                 if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
                     self?.router.openCards()
