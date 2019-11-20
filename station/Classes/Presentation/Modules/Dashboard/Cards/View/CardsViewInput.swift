@@ -7,6 +7,7 @@ protocol CardsViewInput: ViewInput {
     
     func scroll(to index: Int, immediately: Bool)
     func showBluetoothDisabled()
+    func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialog(for viewModel: CardsViewModel)
 }

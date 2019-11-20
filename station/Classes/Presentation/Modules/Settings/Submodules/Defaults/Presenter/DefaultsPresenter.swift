@@ -39,7 +39,15 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             observer.settings.serviceTimeout = TimeInterval(serviceTimeout.bound)
         }
         
-        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown, connectionTimeout, serviceTimeout]
+        let cardsSwipeHint = DefaultsViewModel()
+        cardsSwipeHint.title = "Defaults.CardsSwipeHint.title".localized()
+        cardsSwipeHint.boolean.value = settings.cardsSwipeHintWasShown
+        
+        bind(cardsSwipeHint.boolean, fire: false) { observer, cardsSwipeHintWasShown in
+            observer.settings.cardsSwipeHintWasShown = cardsSwipeHintWasShown.bound
+        }
+        
+        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown, connectionTimeout, serviceTimeout, cardsSwipeHint]
     }
 }
 
