@@ -73,6 +73,9 @@
 "Defaults.navigationItem.title" = "Defaults";
 "Defaults.WelcomeShown.title" = "Welcome Shown";
 "Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
+"Defaults.Interval.Sec.string" = "sec";
+"Defaults.ConnectionTimeout.title" = "Connection Timeout";
+"Defaults.ServiceTimeout.title" = "Service Timeout";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
