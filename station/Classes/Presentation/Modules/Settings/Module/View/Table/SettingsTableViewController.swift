@@ -23,6 +23,12 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var backgroundTitleLabel: UILabel!
     @IBOutlet weak var backgroundCell: UITableViewCell!
     
+    #if DEVELOPMENT
+    private let showDefaults = true
+    #else
+    private let showDefaults = false
+    #endif
+    
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
     var language: Language = .english { didSet { updateUILanguage() } }
@@ -100,6 +106,8 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if !isBackgroundVisible && cell == backgroundCell {
+            return 0
+        } else if !showDefaults && cell == defaultsCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
