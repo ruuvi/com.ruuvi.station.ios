@@ -9,7 +9,7 @@ protocol TagChartsViewDelegate: class {
     func tagCharts(view: TagChartsView, didTriggerExport sender: Any)
 }
 
-class TagChartsView: UIView, Localizable {
+class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
     weak var delegate: TagChartsViewDelegate?
     
     @IBOutlet weak var syncStatusLabel: UILabel!
@@ -24,20 +24,40 @@ class TagChartsView: UIView, Localizable {
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var syncButton: UIButton!
     @IBOutlet weak var exportButton: UIButton!
+    @IBOutlet weak var scrollView: UIScrollView!
     
+    private var contentOffset: CGPoint = .zero
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         setupLocalization()
+        NotificationCenter.default.addObserver(self, selector: #selector(TagChartsView.handleRotation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+
     }
     
+    @objc private func handleRotation(_ notification: Notification) {
+        if UIDevice.current.orientation.isLandscape {
+            scrollView.setContentOffset(contentOffset, animated: false)
+        }
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        contentOffset = scrollView.contentOffset
+    }
+    
+    // MARK: - Localizable
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
         syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
         exportButton.setTitle("TagCharts.Export.title".localized(), for: .normal)
     }
     
+    // MARK: - IBActions
     @IBAction func exportButtonTouchUpInside(_ sender: Any) {
         delegate?.tagCharts(view: self, didTriggerExport: sender)
     }
