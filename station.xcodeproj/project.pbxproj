@@ -848,7 +848,7 @@
 		0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0E8BD405238566AB008B31EF /* station copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "station copy-Info.plist"; path = "/Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/station copy-Info.plist"; sourceTree = "<absolute>"; };
+		0E8BD405238566AB008B31EF /* DevInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = DevInfo.plist; path = /Users/rinatenikeev/Documents/Repositories/GitHub/com.ruuvi.station.ios/DevInfo.plist; sourceTree = "<absolute>"; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
 		0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollViewController.swift; sourceTree = "<group>"; };
 		0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewInput.swift; sourceTree = "<group>"; };
@@ -1368,6 +1368,7 @@
 			children = (
 				0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */,
 				64333D3420B0C45A00CDF4B6 /* Info.plist */,
+				0E8BD405238566AB008B31EF /* DevInfo.plist */,
 			);
 			path = Plists;
 			sourceTree = "<group>";
@@ -3214,7 +3215,6 @@
 				64333D2620B0C45900CDF4B6 /* Products */,
 				62FD66A56B206724C5DE9CFE /* Pods */,
 				B399835F095F1ECDA23A4430 /* Frameworks */,
-				0E8BD405238566AB008B31EF /* station copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -4282,7 +4282,7 @@
 				CURRENT_PROJECT_VERSION = 35;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
-				INFOPLIST_FILE = "station copy-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/DevInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4383,7 +4383,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
-				INFOPLIST_FILE = "station copy-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/DevInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
