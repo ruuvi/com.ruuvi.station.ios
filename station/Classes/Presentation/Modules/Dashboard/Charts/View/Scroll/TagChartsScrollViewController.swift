@@ -90,6 +90,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             UIActivity.ActivityType.postToFacebook,
             UIActivity.ActivityType.openInIBooks
         ]
+        vc.popoverPresentationController?.sourceView = views[currentPage].exportButton
         present(vc, animated: true)
     }
     
