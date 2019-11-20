@@ -49,7 +49,6 @@
 "BluetoothError.disconnected" = "Yhteys katkaistu";
 
 // Cards
-"Cards.SwipeAlert.title" = "Selaa antureita pyyhkäisemällä sivulle.";
 "Cards.BluetoothDisabledAlert.title" = "Bluetooth ei ole käytössä";
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
