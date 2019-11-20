@@ -54,10 +54,10 @@
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station tarvitsee Bluetooth-yhteyden toimiakseen. Ota Bluetooth käyttöön laitteen asetuksista.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Liian monta pyyntöä";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Yritä uudelleen viiden minuutin kuluttua";
-"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
-"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
-"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
-"Cards.Connected.title" = "Connected";
+"Cards.KeepConnectionDialog.message" = "Laitteessasi on yhteyden säilyttämiseen pystyvä laiteohjelmisto. Haluatko pitää yhteyden avoinna tähän Ruuvi-laitteeseen ohjelman ollessa taustalla? Tämä mahdollistaa historian ja hälytysten toiminnan ohjelman ollessa pienennettynä.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Hylkää";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Säilytä yhteys";
+"Cards.Connected.title" = "Yhdistetty";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";
@@ -70,12 +70,12 @@
 "CoreError.objectInvalidated" = "Kohde mitätöity";
 
 // Defaults
-"Defaults.navigationItem.title" = "Defaults";
-"Defaults.WelcomeShown.title" = "Welcome Shown";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
-"Defaults.Interval.Sec.string" = "sec";
-"Defaults.ConnectionTimeout.title" = "Connection Timeout";
-"Defaults.ServiceTimeout.title" = "Service Timeout";
+"Defaults.navigationItem.title" = "Oletusasetukset";
+"Defaults.WelcomeShown.title" = "Kiertoajelu näytetään";
+"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Histogrammin selite näytetään vaakanäytöllä";
+"Defaults.Interval.Sec.string" = "sek";
+"Defaults.ConnectionTimeout.title" = "Yhteyden aikakatkaisu";
+"Defaults.ServiceTimeout.title" = "Palvelun aikakatkaisu";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
@@ -86,8 +86,8 @@
 "DiscoverTable.GetMoreSensors.button.title" = "OSTA ANTUREITA";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "Ei havaittuja antureita Bluetooth-verkon alueella";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth ei ole käytössä";
-"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
-"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
+"DiscoverTable.WebTagsInfoDialog.message" = "Virtuaalisten antureiden avulla voidaan esittää paikallisilta sääasemilta kerättyjä säätietoja.";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";
@@ -160,7 +160,7 @@
 "Settings.Label.Language.text" = "Kieli";
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Background" = "Taustaprosessit";
-"Settings.Label.Defaults" = "Defaults";
+"Settings.Label.Defaults" = "Oletusasetukset";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
@@ -185,8 +185,8 @@
 "TagCharts.Status.Disconnecting" = "Katkaistaan yhteyttä...";
 "TagCharts.Status.Success" = "Onnistui";
 "TagCharts.Status.Error" = "Virhe";
-"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
-"TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
+"TagCharts.FailedToSyncDialog.message" = "Yhteys aikakatkaistiin. Synkronointi peruutettiin.";
+"TagCharts.FailedToServeDialog.message" = "Synkronointi aikakatkaistiin. Synkronointi peruutettiin.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
@@ -219,9 +219,9 @@
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
-"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
-"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
-"TagSettings.DataSource.Advertisement.title" = "Advertisement";
+"TagSettings.dataSourceTitleLabel.text" = "Datalähde";
+"TagSettings.DataSource.Heartbeat.title" = "Syke";
+"TagSettings.DataSource.Advertisement.title" = "Laiteilmoitus";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
@@ -229,7 +229,7 @@
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Maantieteellisen sijainnin peruutus epäonnistui";
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
-"UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
+"UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
