@@ -58,6 +58,7 @@ class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
         syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
         exportButton.setTitle("TagCharts.Export.title".localized(), for: .normal)
+        pressureUnitLabel.text = "hPa".localized()
     }
     
     // MARK: - IBActions
