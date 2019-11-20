@@ -207,6 +207,9 @@
                             <exclude reference="t6h-to-AVZ"/>
                         </mask>
                     </variation>
+                    <connections>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="BOM-Gk-3iN"/>
+                    </connections>
                 </scrollView>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O3z-Mc-eUp">
                     <rect key="frame" x="0.0" y="334" width="852" height="59"/>
@@ -325,19 +328,19 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="j93-FJ-j2L"/>
                     <exclude reference="ilF-mO-Eqs"/>
                     <exclude reference="ubq-tu-asF"/>
                     <exclude reference="vK5-uE-Msx"/>
                     <exclude reference="wKY-1L-TdV"/>
-                    <exclude reference="j93-FJ-j2L"/>
                 </mask>
             </variation>
             <variation key="heightClass=compact">
                 <mask key="constraints">
                     <exclude reference="ux4-4j-SY4"/>
+                    <include reference="j93-FJ-j2L"/>
                     <include reference="ubq-tu-asF"/>
                     <include reference="vK5-uE-Msx"/>
-                    <include reference="j93-FJ-j2L"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular">
@@ -355,6 +358,7 @@
                 <outlet property="nameLabel" destination="wQo-IQ-Rfz" id="ClI-hy-hSG"/>
                 <outlet property="pressureChart" destination="5f1-Br-0jw" id="kdq-tl-jcc"/>
                 <outlet property="pressureUnitLabel" destination="PqV-fU-Itv" id="r7b-tL-B82"/>
+                <outlet property="scrollView" destination="xrf-Ax-wli" id="llw-12-NZ0"/>
                 <outlet property="syncButton" destination="4iA-Sj-gXB" id="bbe-Ec-K8v"/>
                 <outlet property="syncStatusLabel" destination="k7x-hT-Goy" id="2gS-4P-DsS"/>
                 <outlet property="temperatureChart" destination="wd6-XB-uzY" id="rPK-YS-Oda"/>
