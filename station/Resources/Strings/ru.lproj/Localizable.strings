@@ -87,7 +87,7 @@
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
-"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
