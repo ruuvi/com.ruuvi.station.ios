@@ -232,13 +232,13 @@
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 
 // WebTagLocationSource
-"WebTagLocationSource.current" = "Your current location";
+"WebTagLocationSource.current" = "Your location";
 "WebTagLocationSource.manual" = "Pick from the map";
 
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Remove virtual sensor";
 "WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this virtual sensor?";
-"WebTagSettings.Location.Current" = "Your current location";
+"WebTagSettings.Location.Current" = "Your location";
 "WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
 "WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this virtual sensor? Current location will be used instead.";
 "WebTagSettings.navigationItem.title" = "Virtual Sensor Settings";
