@@ -97,6 +97,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
     
+    @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
+    var tagChartsLandscapeSwipeInstructionWasShown: Bool
+    
     @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
     var isAdvertisementDaemonOn: Bool {
         didSet {
@@ -140,6 +143,12 @@ class SettingsUserDegaults: Settings {
              userInfo: nil)
         }
     }
+    
+    @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 15)
+    var connectionTimeout: TimeInterval
+    
+    @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 60)
+    var serviceTimeout: TimeInterval
     
     @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
     var connectionDaemonIntervalMinutes: Int

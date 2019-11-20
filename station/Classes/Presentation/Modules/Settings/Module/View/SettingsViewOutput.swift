@@ -8,4 +8,5 @@ protocol SettingsViewOutput {
     func viewDidTapOnLanguage()
     func viewDidTapOnForeground()
     func viewDidTapOnBackground()
+    func viewDidTapOnDefaults()
 }

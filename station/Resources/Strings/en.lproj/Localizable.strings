@@ -19,8 +19,8 @@
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
 "ago" = "ago"; // time ago string
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n"; // export header (RuuviTag)
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n"; // export header (WebTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n"; // export header (RuuviTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Version";
@@ -68,6 +68,14 @@
 "CoreError.locationPermissionNotDetermined" = "Location permission authorization status is not determined";
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
+
+// Defaults
+"Defaults.navigationItem.title" = "Defaults";
+"Defaults.WelcomeShown.title" = "Welcome Shown";
+"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
+"Defaults.Interval.Sec.string" = "sec";
+"Defaults.ConnectionTimeout.title" = "Connection Timeout";
+"Defaults.ServiceTimeout.title" = "Service Timeout";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
@@ -154,6 +162,7 @@
 "Settings.Label.Language.text" = "Language";
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Background" = "Background";
+"Settings.Label.Defaults" = "Defaults";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
@@ -179,6 +188,7 @@
 "TagCharts.Status.Success" = "Success";
 "TagCharts.Status.Error" = "Error";
 "TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
+"TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
@@ -230,13 +240,13 @@
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 
 // WebTagLocationSource
-"WebTagLocationSource.current" = "Your current location";
+"WebTagLocationSource.current" = "Your location";
 "WebTagLocationSource.manual" = "Pick from the map";
 
 // WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Remove virtual sensor";
 "WebTagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this virtual sensor?";
-"WebTagSettings.Location.Current" = "Your current location";
+"WebTagSettings.Location.Current" = "Your location";
 "WebTagSettings.confirmClearLocationDialog.title" = "Clear Location";
 "WebTagSettings.confirmClearLocationDialog.message" = "Are you sure you want to clear location for this virtual sensor? Current location will be used instead.";
 "WebTagSettings.navigationItem.title" = "Virtual Sensor Settings";

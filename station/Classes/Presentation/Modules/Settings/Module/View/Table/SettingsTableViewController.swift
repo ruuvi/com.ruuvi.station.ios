@@ -8,6 +8,8 @@ private enum SettingsTableSection: Int {
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
     
+    @IBOutlet weak var defaultsTitleLabel: UILabel!
+    @IBOutlet weak var defaultsCell: UITableViewCell!
     @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
     @IBOutlet weak var temperatureUnitSegmentedControl: UISegmentedControl!
     @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
@@ -39,6 +41,7 @@ extension SettingsTableViewController: SettingsViewInput {
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         backgroundTitleLabel.text = "Settings.Label.Background".localized()
+        defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -133,6 +136,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnForeground()
             case backgroundCell:
                 output.viewDidTapOnBackground()
+            case defaultsCell:
+                output.viewDidTapOnDefaults()
             default:
                 break
             }

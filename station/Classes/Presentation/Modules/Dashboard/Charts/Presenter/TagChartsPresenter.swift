@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import BTKit
+import UIKit
 
 class TagChartsPresenter: TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -96,10 +97,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewWillAppear() {
         startObservingBluetoothState()
+        tryToShowSwipeUpHint()
     }
     
     func viewWillDisappear() {
         stopObservingBluetoothState()
+    }
+    
+    func viewDidTransition() {
+        tryToShowSwipeUpHint()
     }
     
     func viewDidTriggerMenu() {
@@ -148,18 +154,21 @@ extension TagChartsPresenter: TagChartsViewOutput {
     
     func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
-            let desiredConnectInterval: TimeInterval = 15
+            let connectionTimeout: TimeInterval = settings.connectionTimeout
+            let serviceTimeout: TimeInterval = settings.serviceTimeout
             let op = gattService.syncLogs(with: uuid, progress: { [weak self] progress in
                 DispatchQueue.main.async { [weak self] in
                     self?.view.setSync(progress: progress, for: viewModel)
                 }
-            }, desiredConnectInterval: desiredConnectInterval)
+            }, connectionTimeout: connectionTimeout, serviceTimeout: serviceTimeout)
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
             }, failure: { [weak self] error in
                 self?.view.setSync(progress: nil, for: viewModel)
-                if case .btkit(.logic(.notConnectedInDesiredInterval)) = error {
-                    self?.view.showFailedToSyncIn(desiredConnectInterval: desiredConnectInterval)
+                if case .btkit(.logic(.connectionTimedOut)) = error {
+                    self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+                } else if case .btkit(.logic(.serviceTimedOut)) = error {
+                    self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
                 } else {
                     self?.errorPresenter.present(error: error)
                 }
@@ -206,6 +215,14 @@ extension TagChartsPresenter: MenuModuleOutput {
 
 // MARK: - Private
 extension TagChartsPresenter {
+    
+    private func tryToShowSwipeUpHint() {
+        if UIApplication.shared.statusBarOrientation.isLandscape && !settings.tagChartsLandscapeSwipeInstructionWasShown {
+            settings.tagChartsLandscapeSwipeInstructionWasShown = true
+            view.showSwipeUpInstruction()
+        }
+    }
+    
     private func scrollToCurrentTag() {
         if let index = viewModels.firstIndex(where: { $0.uuid.value == tagUUID }) {
             view.scroll(to: index, immediately: true)

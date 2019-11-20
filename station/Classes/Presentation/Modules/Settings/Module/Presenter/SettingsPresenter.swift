@@ -65,4 +65,8 @@ extension SettingsPresenter: SettingsViewOutput {
     func viewDidTapOnBackground() {
         router.openBackground()
     }
+    
+    func viewDidTapOnDefaults() {
+        router.openDefaults()
+    }
 }

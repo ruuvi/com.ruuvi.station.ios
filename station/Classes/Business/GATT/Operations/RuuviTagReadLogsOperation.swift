@@ -35,7 +35,8 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     private var connectToken: ObservationToken?
     private var disconnectToken: ObservationToken?
     private var progress: ((BTServiceProgress) -> Void)?
-    private var desiredConnectInterval: TimeInterval?
+    private var connectionTimeout: TimeInterval?
+    private var serviceTimeout: TimeInterval?
     
     deinit {
         logToken?.invalidate()
@@ -43,13 +44,14 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         disconnectToken?.invalidate()
     }
     
-    init(uuid: String, ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, background: BTBackground, progress: ((BTServiceProgress) -> Void)? = nil, desiredConnectInterval: TimeInterval? = 0) {
+    init(uuid: String, ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, background: BTBackground, progress: ((BTServiceProgress) -> Void)? = nil, connectionTimeout: TimeInterval? = 0, serviceTimeout: TimeInterval? = 0) {
         self.uuid = uuid
         self.ruuviTagPersistence = ruuviTagPersistence
         self.connectionPersistence = connectionPersistence
         self.background = background
         self.progress = progress
-        self.desiredConnectInterval = desiredConnectInterval
+        self.connectionTimeout = connectionTimeout
+        self.serviceTimeout = serviceTimeout
     }
     
     override func main() {
@@ -59,7 +61,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart, object: nil, userInfo: [RuuviTagReadLogsOperationDidStartKey.uuid: uuid, RuuviTagReadLogsOperationDidStartKey.fromDate: date])
         }
         
-        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: date, options: [.callbackQueue(.untouch), .desiredConnectInterval(desiredConnectInterval ?? 0)], progress: progress) { (observer, result) in
+        background.services.ruuvi.nus.log(for: self, uuid: uuid, from: date, options: [.callbackQueue(.untouch), .connectionTimeout(connectionTimeout ?? 0), .serviceTimeout(serviceTimeout ?? 0)], progress: progress) { (observer, result) in
             switch result {
             case .success(let logs):
                 let opLogs = observer.ruuviTagPersistence.persist(logs: logs, for: observer.uuid)
