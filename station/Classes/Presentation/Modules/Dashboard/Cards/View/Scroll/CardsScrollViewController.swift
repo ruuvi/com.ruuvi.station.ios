@@ -230,6 +230,13 @@ extension CardsScrollViewController {
         let df = viewModel.dewPointFahrenheit
         let dk = viewModel.dewPointKelvin
         let humidityWarning = view.humidityWarningImageView
+        let rhFormat: String
+        switch viewModel.type {
+        case .ruuvi:
+            rhFormat = "%.2f"
+        case .web:
+            rhFormat = "%.0f"
+        }
         let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df, weak dk, weak humidityWarning] label, _ in
             if let hu = hu?.value {
                 switch hu {
@@ -237,18 +244,18 @@ extension CardsScrollViewController {
                     if let rh = rh?.value, let ho = ho?.value {
                         let sh = rh + ho
                         if sh < 100.0 {
-                            label.text = String.localizedStringWithFormat("%.2f", rh + ho) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, rh + ho) + " " + "%".localized()
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String.localizedStringWithFormat("%.2f", 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%".localized()
                             humidityWarning?.isHidden = false
                         }
                     } else if let rh = rh?.value {
                         if rh < 100.0 {
-                            label.text = String.localizedStringWithFormat("%.2f", rh) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, rh) + " " + "%".localized()
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String.localizedStringWithFormat("%.2f", 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%".localized()
                             humidityWarning?.isHidden = false
                         }
                     } else {
