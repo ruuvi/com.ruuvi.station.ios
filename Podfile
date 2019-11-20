@@ -29,3 +29,7 @@ end
 target 'station_dev' do
   shared_pods
 end
+
+target 'station_sui' do
+  shared_pods
+end
