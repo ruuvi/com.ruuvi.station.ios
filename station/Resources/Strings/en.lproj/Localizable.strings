@@ -76,6 +76,7 @@
 "Defaults.Interval.Sec.string" = "sec";
 "Defaults.ConnectionTimeout.title" = "Connection Timeout";
 "Defaults.ServiceTimeout.title" = "Service Timeout";
+"Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";

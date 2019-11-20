@@ -76,6 +76,7 @@
 "Defaults.Interval.Sec.string" = "sek";
 "Defaults.ConnectionTimeout.title" = "Yhteyden aikakatkaisu";
 "Defaults.ServiceTimeout.title" = "Palvelun aikakatkaisu";
+"Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
