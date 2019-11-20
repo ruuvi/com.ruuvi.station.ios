@@ -400,6 +400,10 @@ extension CardsPresenter {
                         self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
+                    if let viewModels = self?.viewModels, let settings = self?.settings, !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
+                        self?.view.showSwipeLeftRightHint()
+                        self?.settings.cardsSwipeHintWasShown = true
+                    }
                 }
                 self?.startObservingWebTagsData()
             case .error(let error):
@@ -423,6 +427,10 @@ extension CardsPresenter {
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
+                    }
+                    if let viewModels = self?.viewModels, let settings = self?.settings, !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
+                        self?.view.showSwipeLeftRightHint()
+                        self?.settings.cardsSwipeHintWasShown = true
                     }
                 }
                 self?.observeRuuviTags()

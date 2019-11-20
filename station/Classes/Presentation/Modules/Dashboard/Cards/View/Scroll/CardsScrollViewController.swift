@@ -45,15 +45,13 @@ extension CardsScrollViewController: CardsViewInput {
         present(alertVC, animated: true)
     }
     
+    func showSwipeLeftRightHint() {
+        let alert = UIAlertController(title: "Cards.SwipeAlert.title".localized(), message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
+    
     func scroll(to index: Int, immediately: Bool = false) {
-        let key = "DashboardScrollViewController.hasShownSwipeAlert"
-        if viewModels.count > 1 && !UserDefaults.standard.bool(forKey: key) {
-            UserDefaults.standard.set(true, forKey: key)
-            let alert = UIAlertController(title: "Cards.SwipeAlert.title".localized(), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-            present(alert, animated: true)
-        }
-        
         if immediately {
             view.layoutIfNeeded()
             scrollView.layoutIfNeeded()
