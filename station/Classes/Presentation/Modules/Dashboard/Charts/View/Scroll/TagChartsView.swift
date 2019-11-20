@@ -12,6 +12,7 @@ protocol TagChartsViewDelegate: class {
 class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
     weak var delegate: TagChartsViewDelegate?
     
+    @IBOutlet weak var iPadDefaultConstraint: NSLayoutConstraint!
     @IBOutlet weak var iPadLandscapeConstraint: NSLayoutConstraint!
     @IBOutlet weak var iPadPortraitConstraint: NSLayoutConstraint!
     @IBOutlet weak var syncStatusLabel: UILabel!
@@ -37,8 +38,8 @@ class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupLocalization()
+        iPadDefaultConstraint.isActive = false
         NotificationCenter.default.addObserver(self, selector: #selector(TagChartsView.handleRotation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
-
     }
     
     @objc private func handleRotation(_ notification: Notification) {
@@ -57,6 +58,7 @@ class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
         syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
         exportButton.setTitle("TagCharts.Export.title".localized(), for: .normal)
+        pressureUnitLabel.text = "hPa".localized()
     }
     
     // MARK: - IBActions
