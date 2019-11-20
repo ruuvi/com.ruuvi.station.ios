@@ -1,5 +1,6 @@
 import UIKit
 import Localize_Swift
+import GestureInstructions
 
 class CardsScrollViewController: UIViewController {
     var output: CardsViewOutput!
@@ -45,15 +46,11 @@ extension CardsScrollViewController: CardsViewInput {
         present(alertVC, animated: true)
     }
     
+    func showSwipeLeftRightHint() {
+        gestureInstructor.show(.swipeRight, after: 0.1)
+    }
+    
     func scroll(to index: Int, immediately: Bool = false) {
-        let key = "DashboardScrollViewController.hasShownSwipeAlert"
-        if viewModels.count > 1 && !UserDefaults.standard.bool(forKey: key) {
-            UserDefaults.standard.set(true, forKey: key)
-            let alert = UIAlertController(title: "Cards.SwipeAlert.title".localized(), message: nil, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-            present(alert, animated: true)
-        }
-        
         if immediately {
             view.layoutIfNeeded()
             scrollView.layoutIfNeeded()
@@ -420,6 +417,11 @@ extension CardsScrollViewController {
     private func configureViews() {
         configureEdgeGestureRecognozer()
         configurePanGestureRecognozer()
+        configureGestureInstructor()
+    }
+    
+    private func configureGestureInstructor() {
+        GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
     
      private func configurePanGestureRecognozer() {

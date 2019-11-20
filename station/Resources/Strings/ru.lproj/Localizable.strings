@@ -49,7 +49,6 @@
 "BluetoothError.disconnected" = "Соединение разорвано";
 
 // Cards
-"Cards.SwipeAlert.title" = "Свайп влево или вправо чтобы увидеть другие таги.";
 "Cards.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
@@ -76,6 +75,7 @@
 "Defaults.Interval.Sec.string" = "сек";
 "Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
+"Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
