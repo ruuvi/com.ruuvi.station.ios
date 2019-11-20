@@ -105,15 +105,27 @@
                         <constraint firstAttribute="bottom" secondItem="U5a-tX-c5p" secondAttribute="bottom" id="t3f-5S-bKB"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wQo-IQ-Rfz">
-                    <rect key="frame" x="395.66666666666674" y="15.666666666666664" width="271" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wQo-IQ-Rfz">
+                    <rect key="frame" x="306" y="15.666666666666664" width="62.333333333333314" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="GyG-Yk-t6Y"/>
-                        <constraint firstAttribute="width" constant="271" id="oE3-yS-zI6"/>
+                        <constraint firstAttribute="width" constant="62.333333333333343" id="L7F-aR-Fx4">
+                            <variation key="heightClass=regular" constant="271"/>
+                        </constraint>
                     </constraints>
                     <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="20"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="L7F-aR-Fx4"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular">
+                        <mask key="constraints">
+                            <include reference="L7F-aR-Fx4"/>
+                        </mask>
+                    </variation>
                 </label>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xrf-Ax-wli">
                     <rect key="frame" x="44" y="44.666666666666657" width="808" height="289.33333333333337"/>
@@ -290,6 +302,9 @@
             <constraints>
                 <constraint firstItem="40X-75-l2S" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="0HC-NS-4S2"/>
                 <constraint firstItem="hh5-fd-vAK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1Vq-sJ-wNn"/>
+                <constraint firstItem="wQo-IQ-Rfz" firstAttribute="leading" secondItem="CC2-Xe-pv8" secondAttribute="trailing" constant="97.666666666666742" id="1ko-dJ-N1I">
+                    <variation key="heightClass=compact" constant="8"/>
+                </constraint>
                 <constraint firstItem="0Ff-2G-dMH" firstAttribute="leading" secondItem="nbR-7R-Tix" secondAttribute="trailing" id="3pN-2E-rVe"/>
                 <constraint firstItem="xrf-Ax-wli" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="6kc-X5-AaG"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="91x-Vt-9zY"/>
@@ -318,29 +333,31 @@
                 </constraint>
                 <constraint firstItem="O3z-Mc-eUp" firstAttribute="top" secondItem="xrf-Ax-wli" secondAttribute="bottom" id="lhh-Sy-afq"/>
                 <constraint firstItem="nbR-7R-Tix" firstAttribute="leading" secondItem="CC2-Xe-pv8" secondAttribute="trailing" id="ohD-Ck-8vk"/>
-                <constraint firstItem="wQo-IQ-Rfz" firstAttribute="centerX" secondItem="nbR-7R-Tix" secondAttribute="centerX" id="ubq-tu-asF"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="O3z-Mc-eUp" secondAttribute="bottom" id="ux4-4j-SY4"/>
                 <constraint firstAttribute="bottom" secondItem="em1-nB-mq5" secondAttribute="bottom" id="vHW-1j-m0M"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="centerY" secondItem="U5a-tX-c5p" secondAttribute="centerY" id="vK5-uE-Msx"/>
+                <constraint firstItem="0Ff-2G-dMH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wQo-IQ-Rfz" secondAttribute="trailing" constant="8" id="vWg-T0-Jog"/>
                 <constraint firstItem="wQo-IQ-Rfz" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="wKY-1L-TdV"/>
                 <constraint firstItem="40X-75-l2S" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="zGK-sv-g8J"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <variation key="default">
                 <mask key="constraints">
-                    <exclude reference="j93-FJ-j2L"/>
+                    <exclude reference="1ko-dJ-N1I"/>
                     <exclude reference="ilF-mO-Eqs"/>
-                    <exclude reference="ubq-tu-asF"/>
                     <exclude reference="vK5-uE-Msx"/>
                     <exclude reference="wKY-1L-TdV"/>
+                    <exclude reference="j93-FJ-j2L"/>
+                    <exclude reference="vWg-T0-Jog"/>
                 </mask>
             </variation>
             <variation key="heightClass=compact">
                 <mask key="constraints">
                     <exclude reference="ux4-4j-SY4"/>
-                    <include reference="j93-FJ-j2L"/>
-                    <include reference="ubq-tu-asF"/>
+                    <include reference="1ko-dJ-N1I"/>
                     <include reference="vK5-uE-Msx"/>
+                    <include reference="j93-FJ-j2L"/>
+                    <include reference="vWg-T0-Jog"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular">
@@ -364,7 +381,7 @@
                 <outlet property="temperatureChart" destination="wd6-XB-uzY" id="rPK-YS-Oda"/>
                 <outlet property="temperatureUnitLabel" destination="7zR-db-SZm" id="U00-IW-4jS"/>
             </connections>
-            <point key="canvasLocation" x="137.18140929535232" y="130.40000000000001"/>
+            <point key="canvasLocation" x="136.60714285714286" y="128.98550724637681"/>
         </view>
     </objects>
     <resources>
