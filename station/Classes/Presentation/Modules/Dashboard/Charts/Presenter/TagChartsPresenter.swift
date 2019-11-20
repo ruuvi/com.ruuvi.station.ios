@@ -155,7 +155,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             let connectionTimeout: TimeInterval = 15
-            let serviceTimeout: TimeInterval = 15
+            let serviceTimeout: TimeInterval = 60
             let op = gattService.syncLogs(with: uuid, progress: { [weak self] progress in
                 DispatchQueue.main.async { [weak self] in
                     self?.view.setSync(progress: progress, for: viewModel)
