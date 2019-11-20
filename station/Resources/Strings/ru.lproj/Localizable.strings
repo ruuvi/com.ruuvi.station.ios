@@ -19,8 +19,8 @@
 "min" = "мин"; // time ago string, minutes
 "s" = "с"; // time ago string, seconds
 "ago" = "назад"; // time ago string
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Дата,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (г/м³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (гПа),Ускорение по X,Ускорение по Y,Ускорение по Z,Напряжение Батареи,Счетчик Движения,Порядковый Номер Измерения,Мощность Передачи\n"; // export header (RuuviTag)
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Дата,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (g/m³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (hPa),Локация\n"; // export header (WebTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Дата,ISO8601,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (г/м³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (гПа),Ускорение по X,Ускорение по Y,Ускорение по Z,Напряжение Батареи,Счетчик Движения,Порядковый Номер Измерения,Мощность Передачи\n"; // export header (RuuviTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Дата,ISO8601,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (g/m³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (hPa),Локация\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Версия";

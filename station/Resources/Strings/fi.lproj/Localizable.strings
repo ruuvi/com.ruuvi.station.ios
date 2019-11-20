@@ -19,8 +19,8 @@
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
 "ago" = "sitten"; // time ago string
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Päivämäärä,Celsius,Fahrenheit,Kelvin,Suhteellinen kosteus (%),Absoluuttinen kosteus (g/m³),Kastepiste (°C),Kastepiste (°F),Kastepiste (K),Ilmanpaine (hPa),Kiihtyvyys X,Kiihtyvyys Y,Kiihtyvyys Z,Jännite,Liikelaskuri,Mittausjärjestysnumero,Lähetysteho\n"; // export header (RuuviTag)
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Päivämäärä,Celsius,Fahrenheit,Kelvin,Suhteellinen kosteus (%),Absoluuttinen kosteus (g/m³),Kastepiste (°C),Kastepiste (°F),Kastepiste (K),Ilmanpaine (hPa),Sijainti\n"; // export header (WebTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Päivämäärä,ISO8601,Celsius,Fahrenheit,Kelvin,Suhteellinen kosteus (%),Absoluuttinen kosteus (g/m³),Kastepiste (°C),Kastepiste (°F),Kastepiste (K),Ilmanpaine (hPa),Kiihtyvyys X,Kiihtyvyys Y,Kiihtyvyys Z,Jännite,Liikelaskuri,Mittausjärjestysnumero,Lähetysteho\n"; // export header (RuuviTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Päivämäärä,ISO8601,Celsius,Fahrenheit,Kelvin,Suhteellinen kosteus (%),Absoluuttinen kosteus (g/m³),Kastepiste (°C),Kastepiste (°F),Kastepiste (K),Ilmanpaine (hPa),Sijainti\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Versio";
