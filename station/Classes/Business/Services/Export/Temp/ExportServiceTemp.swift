@@ -21,13 +21,15 @@ class ExportServiceTemp: ExportService {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy-HH-mm-ss"
         let date = dateFormatter.string(from: Date())
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             let fileName = ruuviTag.name + "_" + date + ".csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
-            var csvText = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n".localized()
+            var csvText = "Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n".localized()
             let sortedData = ruuviTag.data.sorted(byKeyPath: "date")
             for log in sortedData {
-                let date = iso8601.string(from: log.date)
+                let date = dateFormatter.string(from: log.date)
+                let iso = iso8601.string(from: log.date)
                 var celsius: String
                 if let c = log.celsius.value {
                     celsius = String(format: "%.2f", c)
@@ -139,7 +141,7 @@ class ExportServiceTemp: ExportService {
                     txPower = "N/A".localized()
                 }
                 
-                let newLine = "\(date),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(accelerationX),\(accelerationY),\(accelerationZ),\(voltage),\(movementCounter),\(measurementSequenceNumber),\(txPower)\n"
+                let newLine = "\(date),\(iso),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(accelerationX),\(accelerationY),\(accelerationZ),\(voltage),\(movementCounter),\(measurementSequenceNumber),\(txPower)\n"
                 csvText.append(contentsOf: newLine)
             }
             
@@ -152,10 +154,11 @@ class ExportServiceTemp: ExportService {
         } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
             let fileName = webTag.name + "_" + date + ".csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
-            var csvText = "Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n".localized()
+            var csvText = "Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n".localized()
             let sortedData = webTag.data.sorted(byKeyPath: "date")
             for log in sortedData {
-                let date = iso8601.string(from: log.date)
+                let date = dateFormatter.string(from: log.date)
+                let iso = iso8601.string(from: log.date)
                  var celsius: String
                  if let c = log.celsius.value {
                      celsius = String(format: "%.2f", c)
@@ -229,7 +232,7 @@ class ExportServiceTemp: ExportService {
                 } else {
                     location = "N/A".localized()
                 }
-                let newLine = "\(date),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(location)\n"
+                let newLine = "\(date),\(iso),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(location)\n"
                      csvText.append(contentsOf: newLine)
                  }
                  
