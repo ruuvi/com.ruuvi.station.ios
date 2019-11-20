@@ -197,7 +197,8 @@ extension DiscoverTableViewController {
             }
         case .device:
             if indexPath.row < shownDevices.count {
-                output.viewDidChoose(device: shownDevices[indexPath.row])
+                let device = shownDevices[indexPath.row]
+                output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
         default:
             break
@@ -292,12 +293,7 @@ extension DiscoverTableViewController {
     
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverDeviceViewModel) {
         
-        // identifier
-        if let mac = device.mac {
-            cell.identifierLabel.text = "DiscoverTable.RuuviDevice.prefix".localized() + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
-        } else {
-            cell.identifierLabel.text = "DiscoverTable.RuuviDevice.prefix".localized() + " " + device.uuid.prefix(4)
-        }
+        cell.identifierLabel.text = displayName(for: device)
         
         // RSSI
         if let rssi = device.rssi {
@@ -372,6 +368,15 @@ extension DiscoverTableViewController {
     private func updateUIShownWebTags() {
         if isViewLoaded {
             tableView.reloadData()
+        }
+    }
+    
+    private func displayName(for device: DiscoverDeviceViewModel) -> String {
+        // identifier
+        if let mac = device.mac {
+            return "DiscoverTable.RuuviDevice.prefix".localized() + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
+        } else {
+            return "DiscoverTable.RuuviDevice.prefix".localized() + " " + device.uuid.prefix(4)
         }
     }
 }

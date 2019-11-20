@@ -12,6 +12,8 @@ protocol TagChartsViewDelegate: class {
 class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
     weak var delegate: TagChartsViewDelegate?
     
+    @IBOutlet weak var iPadLandscapeConstraint: NSLayoutConstraint!
+    @IBOutlet weak var iPadPortraitConstraint: NSLayoutConstraint!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!

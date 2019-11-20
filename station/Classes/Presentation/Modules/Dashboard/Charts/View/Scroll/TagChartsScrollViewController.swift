@@ -24,10 +24,13 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         views.forEach( {
             $0.temperatureChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.temperatureChart.noDataTextColor = .white
+            $0.temperatureChart.setNeedsDisplay()
             $0.humidityChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.humidityChart.noDataTextColor = .white
+            $0.humidityChart.setNeedsDisplay()
             $0.pressureChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.pressureChart.noDataTextColor = .white
+            $0.pressureChart.setNeedsDisplay()
         } )
     }
     
@@ -90,6 +93,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             UIActivity.ActivityType.postToFacebook,
             UIActivity.ActivityType.openInIBooks
         ]
+        vc.popoverPresentationController?.sourceView = views[currentPage].exportButton
         present(vc, animated: true)
     }
     
@@ -172,6 +176,9 @@ extension TagChartsScrollViewController {
         coordinator.animate(alongsideTransition: { [weak self] (context) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
+            self?.views.forEach({ (view) in
+                self?.configureiPadConstraints(for: view)
+            })
         }) { [weak self] (context) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
@@ -534,5 +541,16 @@ extension TagChartsScrollViewController {
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1.0, constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1.0, constant: 0.0))
+        configureiPadConstraints(for: view)
+    }
+    
+    private func configureiPadConstraints(for view: TagChartsView) {
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            view.iPadLandscapeConstraint.isActive = true
+            view.iPadPortraitConstraint.isActive = false
+        } else {
+            view.iPadLandscapeConstraint.isActive = false
+            view.iPadPortraitConstraint.isActive = true
+        }
     }
 }
