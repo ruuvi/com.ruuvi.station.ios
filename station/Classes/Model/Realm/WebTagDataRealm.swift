@@ -1,4 +1,5 @@
 import RealmSwift
+import Foundation
 
 class WebTagDataRealm: Object {
     @objc dynamic var webTag: WebTagRealm?
