@@ -311,9 +311,16 @@ extension CardsScrollViewController {
             humidityBlock(label, nil)
         }
         
+        let pressureFormat: String
+        switch viewModel.type {
+        case .ruuvi:
+            pressureFormat = "%.2f"
+        case .web:
+            pressureFormat = "%.0f"
+        }
         view.pressureLabel.bind(viewModel.pressure) { label, pressure in
             if let pressure = pressure {
-                label.text = String.localizedStringWithFormat("%.2f", pressure) + " " + "hPa".localized()
+                label.text = String.localizedStringWithFormat(pressureFormat, pressure) + " " + "hPa".localized()
             } else {
                 label.text = "N/A".localized()
             }
