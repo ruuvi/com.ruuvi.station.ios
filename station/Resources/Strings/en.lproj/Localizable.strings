@@ -183,6 +183,7 @@
 "TagCharts.Status.Success" = "Success";
 "TagCharts.Status.Error" = "Error";
 "TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
+"TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
