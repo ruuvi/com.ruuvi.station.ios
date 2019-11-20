@@ -14,6 +14,7 @@ protocol Settings {
     var temperatureUnit: TemperatureUnit { get set }
     var humidityUnit: HumidityUnit { get set }
     var welcomeShown: Bool { get set }
+    var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var isConnectionDaemonOn: Bool { get set }
@@ -21,6 +22,8 @@ protocol Settings {
     var advertisementDaemonIntervalMinutes: Int { get set }
     var isWebTagDaemonOn: Bool { get set }
     var webTagDaemonIntervalMinutes: Int { get set }
+    var connectionTimeout: TimeInterval { get set }
+    var serviceTimeout: TimeInterval { get set }
     
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)

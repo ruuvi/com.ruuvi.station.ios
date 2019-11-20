@@ -5,12 +5,13 @@ inhibit_all_warnings!
 install! 'cocoapods', :disable_input_output_paths => true
 
 target 'station' do
-  pod 'BTKit', :path => '../BTKit'
+  pod 'BTKit'
   pod 'Charts'
   pod 'EmptyDataSet-Swift'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
   pod 'FutureX'
+  pod 'GestureInstructions'
   pod 'Humidity'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'

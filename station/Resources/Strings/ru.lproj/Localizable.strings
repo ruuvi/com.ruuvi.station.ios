@@ -19,8 +19,8 @@
 "min" = "мин"; // time ago string, minutes
 "s" = "с"; // time ago string, seconds
 "ago" = "назад"; // time ago string
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Дата,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (г/м³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (гПа),Ускорение по X,Ускорение по Y,Ускорение по Z,Напряжение Батареи,Счетчик Движения,Порядковый Номер Измерения,Мощность Передачи\n"; // export header (RuuviTag)
-"Date,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Дата,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (g/m³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (hPa),Локация\n"; // export header (WebTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Дата,ISO8601,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (г/м³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (гПа),Ускорение по X,Ускорение по Y,Ускорение по Z,Напряжение Батареи,Счетчик Движения,Порядковый Номер Измерения,Мощность Передачи\n"; // export header (RuuviTag)
+"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Дата,ISO8601,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (g/m³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (hPa),Локация\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Версия";
@@ -54,10 +54,10 @@
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
-"Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
-"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
-"Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
-"Cards.Connected.title" = "Connected";
+"Cards.KeepConnectionDialog.message" = "На вашем устройстве установлена прошивка, поддерживающая соединение. Хотите поддерживать соединение активным для этого устройства в фоновом режиме? Это позволит использовать графики и уведомления даже когда приложение закрыто.";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Закрыть";
+"Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
+"Cards.Connected.title" = "Соединен";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
@@ -69,6 +69,14 @@
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
 
+// Defaults
+"Defaults.navigationItem.title" = "Значения";
+"Defaults.WelcomeShown.title" = "Приветствие Показано";
+"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Свайп Подсказка на Графиках Показана";
+"Defaults.Interval.Sec.string" = "сек";
+"Defaults.ConnectionTimeout.title" = "Таймаут Соединения";
+"Defaults.ServiceTimeout.title" = "Таймаут Обмена Данными";
+
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
@@ -78,7 +86,7 @@
 "DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
-"DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
+"DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
 
 // ErrorPresenterAlert
@@ -154,6 +162,7 @@
 "Settings.Label.Language.text" = "Язык";
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Background" = "Фоновый Режим";
+"Settings.Label.Defaults" = "Значения";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
@@ -178,7 +187,8 @@
 "TagCharts.Status.Disconnecting" = "Разрываю соединение...";
 "TagCharts.Status.Success" = "Успех";
 "TagCharts.Status.Error" = "Ошибка";
-"TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
+"TagCharts.FailedToSyncDialog.message" = "Не удалось установить соединение за %.0f сек. Синхронизация отменена.";
+"TagCharts.FailedToServeDialog.message" = "Не удалось обменяться данными за %.0f сек. Обмен данными отменен.";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
@@ -217,9 +227,9 @@
 "TagSettings.Alerts.Off" = "Отключено";
 "TagSettings.SectionHeader.Connection.title" = "СОЕДИНЕНИЕ";
 "TagSettings.KeepConnection.title" = "Держать Соединение";
-"TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
-"TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
-"TagSettings.DataSource.Advertisement.title" = "Advertisement";
+"TagSettings.dataSourceTitleLabel.text" = "Данны Получены Из";
+"TagSettings.DataSource.Heartbeat.title" = "Соединение";
+"TagSettings.DataSource.Advertisement.title" = "Вещания";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
@@ -227,7 +237,7 @@
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
 "UnexpectedError.failedToFindRuuviTag" = "Не удалось найти RuuviTag";
 "UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
-"UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
+"UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

@@ -1,6 +1,7 @@
 import UIKit
 import Charts
 import BTKit
+import GestureInstructions
 
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
@@ -121,10 +122,20 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         }
     }
     
-    func showFailedToSyncIn(desiredConnectInterval: TimeInterval) {
-        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(), desiredConnectInterval), preferredStyle: .alert)
+    func showFailedToSyncIn(connectionTimeout: TimeInterval) {
+        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(), connectionTimeout), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
+    }
+   
+    func showFailedToServeIn(serviceTimeout: TimeInterval) {
+        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToServeDialog.message".localized(), serviceTimeout), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
+    
+    func showSwipeUpInstruction() {
+        gestureInstructor.show(.swipeUp, after: 0.1)
     }
 }
 
@@ -164,8 +175,10 @@ extension TagChartsScrollViewController {
         }) { [weak self] (context) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
+            self?.output.viewDidTransition()
         }
         super.viewWillTransition(to: size, with: coordinator)
+        gestureInstructor.dismissThenResume()
     }
 }
 
@@ -240,6 +253,11 @@ extension TagChartsScrollViewController {
  
     private func configureViews() {
         configurePanGestureRecognozer()
+        configureGestureInstructor()
+    }
+    
+    private func configureGestureInstructor() {
+        GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
    
     private func configurePanGestureRecognozer() {
@@ -289,7 +307,7 @@ extension TagChartsScrollViewController {
         chartView.noDataText = "TagCharts.NoChartData.text".localized()
         
         chartView.scaleXEnabled = true
-        chartView.scaleYEnabled = false
+        chartView.scaleYEnabled = true
     }
     
     private func configure(_ set: LineChartDataSet) {

@@ -5,4 +5,5 @@ protocol SettingsRouterInput {
     func openLanguage()
     func openForeground()
     func openBackground()
+    func openDefaults()
 }

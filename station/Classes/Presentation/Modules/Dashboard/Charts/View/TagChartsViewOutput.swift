@@ -1,9 +1,11 @@
 import Foundation
+import UIKit
 
 protocol TagChartsViewOutput {
     func viewDidLoad()
     func viewWillAppear()
     func viewWillDisappear()
+    func viewDidTransition()
     func viewDidTriggerMenu()
     func viewDidScroll(to viewModel: TagChartsViewModel)
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel)
