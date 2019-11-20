@@ -53,8 +53,14 @@ class DiscoverPresenter: DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        view.webTags = [DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current, icon: UIImage(named: "icon-webtag-current")),
-                        DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual, icon: UIImage(named: "icon-webtag-map"))]
+        let current = DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current, icon: UIImage(named: "icon-webtag-current"))
+        let manual = DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual, icon: UIImage(named: "icon-webtag-map"))
+        let isCurrentLocationTagAlreadyAdded = realmContext.main.objects(WebTagRealm.self).filter("location == nil").count > 0
+        if isCurrentLocationTagAlreadyAdded {
+            view.webTags = [manual]
+        } else {
+            view.webTags = [manual, current]
+        }
         view.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
         if !view.isBluetoothEnabled && !isOpenedFromWelcome {
             view.showBluetoothDisabled()
