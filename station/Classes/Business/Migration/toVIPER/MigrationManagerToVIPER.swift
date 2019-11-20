@@ -1,4 +1,5 @@
 import RealmSwift
+import Foundation
 
 class MigrationManagerToVIPER: MigrationManager {
     
