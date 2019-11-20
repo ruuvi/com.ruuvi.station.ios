@@ -122,8 +122,14 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         }
     }
     
-    func showFailedToSyncIn(desiredConnectInterval: TimeInterval) {
-        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(), desiredConnectInterval), preferredStyle: .alert)
+    func showFailedToSyncIn(connectionTimeout: TimeInterval) {
+        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(), connectionTimeout), preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
+   
+    func showFailedToServeIn(serviceTimeout: TimeInterval) {
+        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToServeDialog.message".localized(), serviceTimeout), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }

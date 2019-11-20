@@ -10,7 +10,8 @@ protocol TagChartsViewInput: ViewInput {
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func showExportSheet(with path: URL)
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel)
-    func showFailedToSyncIn(desiredConnectInterval: TimeInterval)
+    func showFailedToSyncIn(connectionTimeout: TimeInterval)
+    func showFailedToServeIn(serviceTimeout: TimeInterval)
     func showSwipeUpInstruction()
 }
 
