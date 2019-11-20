@@ -24,6 +24,7 @@ protocol Settings {
     var webTagDaemonIntervalMinutes: Int { get set }
     var connectionTimeout: TimeInterval { get set }
     var serviceTimeout: TimeInterval { get set }
+    var cardsSwipeHintWasShown: Bool { get set }
     
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)

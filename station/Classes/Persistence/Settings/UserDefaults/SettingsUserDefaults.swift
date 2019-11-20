@@ -100,6 +100,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
     var tagChartsLandscapeSwipeInstructionWasShown: Bool
     
+    @UserDefault("DashboardScrollViewController.hasShownSwipeAlert", defaultValue: false)
+     var cardsSwipeHintWasShown: Bool
+    
     @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
     var isAdvertisementDaemonOn: Bool {
         didSet {
