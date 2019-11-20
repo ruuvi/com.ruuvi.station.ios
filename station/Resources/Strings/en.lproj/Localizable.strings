@@ -87,7 +87,7 @@
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(No sensors on Bluetooth range)";
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
-"DiscoverTable.RuuviDevice.prefix" = "Ruuvi Device";
+"DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
