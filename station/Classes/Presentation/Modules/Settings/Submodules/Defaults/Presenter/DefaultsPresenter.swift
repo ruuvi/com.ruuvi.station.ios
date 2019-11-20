@@ -22,7 +22,24 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             observer.settings.tagChartsLandscapeSwipeInstructionWasShown = tagChartsLandscapeSwipeInstructionWasShown.bound
         }
         
-        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown]
+        let connectionTimeout = DefaultsViewModel()
+        connectionTimeout.title = "Defaults.ConnectionTimeout.title".localized()
+        connectionTimeout.integer.value = Int(settings.connectionTimeout)
+        
+        bind(connectionTimeout.integer, fire: false) { observer, connectionTimeout in
+            observer.settings.connectionTimeout = TimeInterval(connectionTimeout.bound)
+        }
+        
+        
+        let serviceTimeout = DefaultsViewModel()
+        serviceTimeout.title = "Defaults.ServiceTimeout.title".localized()
+        serviceTimeout.integer.value = Int(settings.serviceTimeout)
+        
+        bind(serviceTimeout.integer, fire: false) { observer, serviceTimeout in
+            observer.settings.serviceTimeout = TimeInterval(serviceTimeout.bound)
+        }
+        
+        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown, connectionTimeout, serviceTimeout]
     }
 }
 

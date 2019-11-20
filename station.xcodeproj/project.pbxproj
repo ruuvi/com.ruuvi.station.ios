@@ -144,6 +144,7 @@
 		0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
+		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */; };
 		0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
 		0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */; };
@@ -495,6 +496,7 @@
 		0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsEnvironmentObject.swift; sourceTree = "<group>"; };
 		0E8A10212384637F00A9CBA6 /* DefaultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsList.swift; sourceTree = "<group>"; };
 		0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
 		0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsScrollViewController.swift; sourceTree = "<group>"; };
 		0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewInput.swift; sourceTree = "<group>"; };
@@ -1710,6 +1712,7 @@
 			isa = PBXGroup;
 			children = (
 				0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */,
+				0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3134,6 +3137,7 @@
 				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
 				0ED2364B234F19FE00CE6AA3 /* RuuviTagConnectionDaemonBTKit.swift in Sources */,
 				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
+				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
