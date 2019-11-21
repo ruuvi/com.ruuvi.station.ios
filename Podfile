@@ -16,7 +16,6 @@ def shared_pods
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'RangeSeekSlider'
-  pod 'RealmSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
   pod 'TTTAttributedLabel'
@@ -24,12 +23,14 @@ end
 
 target 'station' do
   shared_pods
+  pod 'RealmSwift'
 end
 
 target 'station_dev' do
   shared_pods
+  pod 'RealmSwift'
 end
 
 target 'station_sui' do
-  shared_pods
+#  shared_pods
 end

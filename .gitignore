@@ -42,6 +42,22 @@ playground.xcworkspace
 # Package.pins
 # Package.resolved
 .build/
+.build
+DerivedData
+/.previous-build
+xcuserdata
+.DS_Store
+*~
+\#*
+.\#*
+.*.sw[nop]
+*.xcscmblueprint
+/default.profraw
+*.xcodeproj
+Utilities/Docker/*.tar.gz
+.swiftpm
+Package.resolved
+/build
 
 # CocoaPods
 #
