@@ -16,7 +16,11 @@ class MenuTablePresentationController: UIPresentationController {
     
     private lazy var shadowView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        if #available(iOS 13, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
         view.clipsToBounds = false
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowRadius = 5
