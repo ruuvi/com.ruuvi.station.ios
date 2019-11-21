@@ -79,7 +79,7 @@ PODS:
   - GoogleUtilities/UserDefaults (6.3.2):
     - GoogleUtilities/Logger
   - Humidity (0.0.8)
-  - LightRoute (2.2.1)
+  - LightRoute (2.2.2)
   - Localize-Swift (3.1.0)
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
@@ -150,7 +150,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   LightRoute:
-    :commit: df406013ff7fb3d9c00509d61c8bf19bf25c8892
+    :commit: fcea1b3808b75be92d983316742bf186e21981ec
     :git: https://github.com/rinat-enikeev/LightRoute.git
   SwinjectPropertyLoader:
     :commit: 653f1b149c575921fbc1cb02a447aa2f6da9e94c
@@ -174,7 +174,7 @@ SPEC CHECKSUMS:
   GoogleDataTransportCCTSupport: ef79a4728b864946a8aafdbab770d5294faf3b5f
   GoogleUtilities: 547a86735c6f0ee30ad17e94df4fc21f616b71cb
   Humidity: 293c834c017c111d254440f234fcf8d7e6fe4493
-  LightRoute: 39a4cb3f42077a7836e0f78ad16d2b13adca052b
+  LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Nantes: 94a2e0c0b8207f12694f4ff6d96bf670adad3e27
