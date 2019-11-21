@@ -1,4 +1,5 @@
 import Localize_Swift
+import Foundation
 
 class LocalizationService {
     static let shared = LocalizationService()
