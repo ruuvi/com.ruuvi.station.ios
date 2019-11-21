@@ -82,6 +82,14 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     }
     
     func showExportSheet(with path: URL) {
+        var shareItems = [Any]()
+        #if targetEnvironment(macCatalyst)
+        if let nsUrl = NSURL(string: path.absoluteString) {
+            shareItems.append(nsUrl)
+        }
+        #else
+        shareItems.append(path)
+        #endif
         let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
         vc.excludedActivityTypes = [
             UIActivity.ActivityType.assignToContact,
@@ -94,6 +102,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             UIActivity.ActivityType.openInIBooks
         ]
         vc.popoverPresentationController?.sourceView = views[currentPage].exportButton
+        vc.popoverPresentationController?.sourceRect = views[currentPage].exportButton.bounds
         present(vc, animated: true)
     }
     
