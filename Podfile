@@ -16,20 +16,15 @@ def shared_pods
   pod 'Localize-Swift'
   pod 'Nantes'
   pod 'RangeSeekSlider'
+  pod 'RealmSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
 end
 
 target 'station' do
   shared_pods
-  pod 'RealmSwift'
 end
 
 target 'station_dev' do
   shared_pods
-  pod 'RealmSwift'
-end
-
-target 'station_sui' do
-#  shared_pods
 end
