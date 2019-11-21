@@ -226,6 +226,9 @@ extension TagSettingsTableViewController {
     
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
+        if !keepConnectionSwitch.isOn {
+            viewModel?.isTemperatureAlertOn.value = false
+        }
     }
 }
 
@@ -592,8 +595,13 @@ extension TagSettingsTableViewController {
                 view.onTintColor = isConnected.bound ? UISwitch.appearance().onTintColor : .gray
             }
             
-            temperatureAlertSlider.bind(viewModel.isConnected) { (slider, isConnected) in
-                slider.isEnabled = isConnected.bound
+            let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
+            temperatureAlertSlider.bind(viewModel.isConnected) { [weak isTemperatureAlertOn] (slider, isConnected) in
+                if let isTemperatureAlertOn = isTemperatureAlertOn?.value {
+                    slider.isEnabled = isConnected.bound && isTemperatureAlertOn
+                } else {
+                    slider.isEnabled = false
+                }
             }
             
             keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
