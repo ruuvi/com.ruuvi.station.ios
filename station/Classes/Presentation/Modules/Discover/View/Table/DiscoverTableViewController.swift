@@ -1,6 +1,5 @@
 import UIKit
 import BTKit
-import EmptyDataSet_Swift
 
 enum DiscoverTableSection {
     case webTag
@@ -252,38 +251,6 @@ extension DiscoverTableViewController: DiscoverWebTagsInfoHeaderFooterViewDelega
     }
 }
 
-// MARK: - EmptyDataSetSource
-extension DiscoverTableViewController: EmptyDataSetSource {
-    func customView(forEmptyDataSet scrollView: UIScrollView) -> UIView? {
-        return emptyDataSetView
-    }
-}
-
-// MARK: - EmptyDataSetDelegate
-extension DiscoverTableViewController: EmptyDataSetDelegate {
-    func emptyDataSetShouldAllowScroll(_ scrollView: UIScrollView) -> Bool {
-        return true
-    }
-    
-    func emptyDataSet(_ scrollView: UIScrollView, didTapView view: UIView) {
-        if emptyDataSetView == getMoreSensorsEmptyDataSetView {
-            output.viewDidTapOnGetMoreSensors()
-        }
-    }
-    
-    func emptyDataSetWillAppear(_ scrollView: UIScrollView) {
-        tableView.tableFooterView?.isHidden = true
-    }
-    
-    func emptyDataSetDidDisappear(_ scrollView: UIScrollView) {
-        tableView.tableFooterView?.isHidden = false
-    }
-    
-    func verticalOffset(forEmptyDataSet scrollView: UIScrollView) -> CGFloat {
-        return -64
-    }
-}
-
 // MARK: - Cell configuration
 extension DiscoverTableViewController {
     private func configure(cell: DiscoverWebTagTableViewCell, with tag: DiscoverWebTagViewModel) {
@@ -322,8 +289,6 @@ extension DiscoverTableViewController {
     
     private func configureTableView() {
         tableView.rowHeight = 44
-        tableView.emptyDataSetSource = self
-        tableView.emptyDataSetDelegate = self
         let nib = UINib(nibName: "DiscoverWebTagsInfoHeaderFooterView", bundle: nil)
         tableView.register(nib, forHeaderFooterViewReuseIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
     }
@@ -355,7 +320,6 @@ extension DiscoverTableViewController {
     private func updateUIISBluetoothEnabled() {
         if isViewLoaded {
             emptyDataSetView = isBluetoothEnabled ? getMoreSensorsEmptyDataSetView : btDisabledEmptyDataSetView
-            tableView.reloadEmptyDataSet()
         }
     }
     

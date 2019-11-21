@@ -1,5 +1,6 @@
 import BTKit
 import RealmSwift
+import Foundation
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
     

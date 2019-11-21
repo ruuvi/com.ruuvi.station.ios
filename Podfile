@@ -7,7 +7,6 @@ install! 'cocoapods', :disable_input_output_paths => true
 def shared_pods
   pod 'BTKit'
   pod 'Charts'
-  pod 'EmptyDataSet-Swift'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
   pod 'FutureX'

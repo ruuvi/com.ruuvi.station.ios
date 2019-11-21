@@ -1,6 +1,7 @@
 import Foundation
 import BTKit
 import RealmSwift
+import UIKit
 
 class DiscoverPresenter: DiscoverModuleInput {
     weak var view: DiscoverViewInput!
