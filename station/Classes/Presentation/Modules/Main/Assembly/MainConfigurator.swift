@@ -8,6 +8,7 @@ class MainConfigurator {
         router.navigationDelegate = MainNavigationDelegate()
         navigationController.delegate = router.navigationDelegate
         navigationController.view.backgroundColor = .white
+        navigationController.interactivePopGestureRecognizer?.isEnabled = false
     }
     
 }
