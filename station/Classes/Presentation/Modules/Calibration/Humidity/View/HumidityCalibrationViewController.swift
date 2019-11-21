@@ -1,12 +1,12 @@
 import UIKit
-import TTTAttributedLabel
+import Nantes
 import Localize_Swift
 
 class HumidityCalibrationViewController: UIViewController {
     var output: HumidityCalibrationViewOutput!
     
     @IBOutlet weak var targetHumidityLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: TTTAttributedLabel!
+    @IBOutlet weak var descriptionLabel: NantesLabel!
     @IBOutlet weak var oldHumidityLabel: UILabel!
     @IBOutlet weak var lastCalibrationDateLabel: UILabel!
     @IBOutlet weak var clearButton: UIButton!
@@ -82,11 +82,11 @@ extension HumidityCalibrationViewController {
     }
 }
 
-// MARK: - TTTAttributedLabelDelegate
-extension HumidityCalibrationViewController: TTTAttributedLabelDelegate {
-    func attributedLabel(_ label: TTTAttributedLabel!, didSelectLinkWith url: URL!) {
-        if url.absoluteString == videoTutorialsUrl.absoluteString {
-            UIApplication.shared.open(url)
+// MARK: - NantesLabelDelegate
+extension HumidityCalibrationViewController: NantesLabelDelegate {
+    func attributedLabel(_ label: NantesLabel, didSelectLink link: URL) {
+        if link.absoluteString == videoTutorialsUrl.absoluteString {
+            UIApplication.shared.open(link)
         }
     }
 }
@@ -137,10 +137,10 @@ extension HumidityCalibrationViewController {
         descriptionLabel.text = text
         let link = "HumidityCalibration.VideoTutorials.link".localized()
         if let linkRange = text.range(of: link) {
-            descriptionLabel.addLink(to: videoTutorialsUrl, with: NSRange(linkRange, in: text))
-            let linkAttributes = NSMutableDictionary(dictionary: descriptionLabel.linkAttributes)
-            linkAttributes[NSAttributedString.Key.foregroundColor] = UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
-            descriptionLabel.linkAttributes = linkAttributes as? [AnyHashable : Any]
+            descriptionLabel.addLink(to: videoTutorialsUrl, withRange: NSRange(linkRange, in: text))
+            descriptionLabel.linkAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+            ]
         }
         descriptionLabel.delegate = self
     }
