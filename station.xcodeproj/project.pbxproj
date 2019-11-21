@@ -3808,6 +3808,7 @@
 				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
 				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
 				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
+				0E4EAED823865F2200BBDFBD /* XCRemoteSwiftPackageReference "Nantes" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -5987,6 +5988,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.8.1;
+			};
+		};
+		0E4EAED823865F2200BBDFBD /* XCRemoteSwiftPackageReference "Nantes" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/instacart/Nantes";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.9;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
