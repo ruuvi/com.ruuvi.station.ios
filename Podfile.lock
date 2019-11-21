@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.1.5)
+  - BTKit (0.1.6)
   - Charts (3.4.0):
     - Charts/Core (= 3.4.0)
   - Charts/Core (3.4.0)
@@ -78,8 +78,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.3.2):
     - GoogleUtilities/Logger
-  - Humidity (0.0.7)
-  - LightRoute (2.1.20)
+  - Humidity (0.0.8)
+  - LightRoute (2.2.0)
   - Localize-Swift (3.1.0)
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
@@ -95,7 +95,7 @@ PODS:
   - RealmSwift (4.1.1):
     - Realm (= 4.1.1)
   - Swinject (2.6.2)
-  - SwinjectPropertyLoader (1.0.0):
+  - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
 
 DEPENDENCIES:
@@ -150,14 +150,14 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   LightRoute:
-    :commit: c537a7afacc290504bc73c4a893957a4e1932fb7
+    :commit: 8e71434aceaaa998214c866692193c0720fece13
     :git: https://github.com/rinat-enikeev/LightRoute.git
   SwinjectPropertyLoader:
-    :commit: 8861237b6edc95065d23256b16c92afc240b9b20
+    :commit: 653f1b149c575921fbc1cb02a447aa2f6da9e94c
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: 00bff9ee5bb1a8b943c9a7d67c946f265347991c
+  BTKit: 3727b51dd425fbe92379fd952305fe416f941e52
   Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
   Firebase: 458d109512200d1aca2e1b9b6cf7d68a869a4a46
   FirebaseAnalytics: 45f36d9c429fc91d206283900ab75390cd05ee8a
@@ -173,8 +173,8 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
   GoogleDataTransportCCTSupport: ef79a4728b864946a8aafdbab770d5294faf3b5f
   GoogleUtilities: 547a86735c6f0ee30ad17e94df4fc21f616b71cb
-  Humidity: b6fcbbfeda1a001bbe40116a1ddf4272c9c58bd8
-  LightRoute: aa65803a1d984be3be83651b433699077bfe6ab3
+  Humidity: 293c834c017c111d254440f234fcf8d7e6fe4493
+  LightRoute: bdfbc1e401961ccf1892f944a2ddf827685aa06b
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Nantes: 94a2e0c0b8207f12694f4ff6d96bf670adad3e27
@@ -183,8 +183,8 @@ SPEC CHECKSUMS:
   Realm: 25f0a8244cbb1c2271c922963ea8666fc2d8104d
   RealmSwift: 9e2657b33764f80e4a4dffd6d440e24715782052
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
-  SwinjectPropertyLoader: 4559d83559906184752ea8e02fa240324f6ba8c5
+  SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: f8d428586b79da431c40762e2bc74901ec0d3e95
+PODFILE CHECKSUM: 164e7a9753104209feae755e72e5f6e89d8d2b0e
 
 COCOAPODS: 1.8.4
