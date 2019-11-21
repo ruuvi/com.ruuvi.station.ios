@@ -1,4 +1,5 @@
 import RangeSeekSlider
+import UIKit
 
 class RURangeSeekSlider: RangeSeekSlider {
     private let ruuviColor = UIColor(red: 21.0/255.0, green: 141.0/255.0, blue: 165.0/255.0, alpha: 1.0)
