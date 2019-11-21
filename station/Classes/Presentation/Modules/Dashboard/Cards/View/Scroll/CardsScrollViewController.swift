@@ -15,7 +15,11 @@ class CardsScrollViewController: UIViewController {
     
     private var views = [CardView]()
     private var currentPage: Int {
-        return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+        if isViewLoaded {
+            return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+        } else {
+            return 0
+        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {

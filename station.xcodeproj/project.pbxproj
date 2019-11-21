@@ -14,8 +14,8 @@
 		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
 		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
 		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E03B7C623866CDC00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */; };
-		0E03B8052386741B00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwiftPackageProductDependency */; };
+		0E03B7C623866CDC00949713 /* Nantes in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* Nantes */; };
+		0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwinjectPropertyLoader */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -102,17 +102,17 @@
 		0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
 		0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */; };
 		0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
-		0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* Realm */; };
+		0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* RealmSwift */; };
+		0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* Localize_Swift */; };
+		0E4EAE4823863D4100BBDFBD /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* Future */; };
+		0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* BTKit */; };
+		0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* LightRoute */; };
+		0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* Humidity */; };
+		0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* Swinject */; };
+		0E4EAECA238656B100BBDFBD /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* Charts */; };
+		0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* GestureInstructions */; };
+		0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* RangeSeekSlider */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -1408,19 +1408,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E03B7C623866CDC00949713 /* BuildFile in Frameworks */,
-				0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */,
-				0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */,
-				0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */,
-				0E03B8052386741B00949713 /* BuildFile in Frameworks */,
-				0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */,
+				0E03B7C623866CDC00949713 /* Nantes in Frameworks */,
+				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
+				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
+				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
+				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
+				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
+				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
+				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
+				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
+				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
+				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
+				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
+				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3663,19 +3663,19 @@
 			);
 			name = station_sui;
 			packageProductDependencies = (
-				0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */,
-				0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */,
-				0E03B8042386741B00949713 /* SwiftPackageProductDependency */,
+				0E4EAE3F23863BA600BBDFBD /* Realm */,
+				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
+				0E4EAE4423863CBC00BBDFBD /* Localize_Swift */,
+				0E4EAE4723863D4100BBDFBD /* Future */,
+				0E4EAE98238646FF00BBDFBD /* BTKit */,
+				0E4EAEB82386534B00BBDFBD /* LightRoute */,
+				0E4EAEC3238654AE00BBDFBD /* Humidity */,
+				0E4EAEC6238655FA00BBDFBD /* Swinject */,
+				0E4EAEC9238656B100BBDFBD /* Charts */,
+				0E4EAECC2386586C00BBDFBD /* GestureInstructions */,
+				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
+				0E03B7C523866CDC00949713 /* Nantes */,
+				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_sui.app */;
@@ -3795,18 +3795,18 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */,
-				0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */,
-				0E03B8032386741B00949713 /* RemoteSwiftPackageReference */,
+				0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */,
+				0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */,
+				0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */,
+				0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */,
+				0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */,
+				0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */,
+				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
+				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
+				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
+				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
+				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -5040,6 +5040,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 35;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/SUIInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -5065,6 +5066,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -5078,6 +5080,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 35;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/SUIInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -5103,6 +5106,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -5756,7 +5760,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */ = {
+		0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Nantes";
 			requirement = {
@@ -5764,7 +5768,7 @@
 				minimumVersion = 0.0.10;
 			};
 		};
-		0E03B8032386741B00949713 /* RemoteSwiftPackageReference */ = {
+		0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
 			requirement = {
@@ -5772,7 +5776,7 @@
 				minimumVersion = 1.0.2;
 			};
 		};
-		0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa";
 			requirement = {
@@ -5780,7 +5784,7 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
 			requirement = {
@@ -5788,7 +5792,7 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Future";
 			requirement = {
@@ -5796,7 +5800,7 @@
 				minimumVersion = 1.3.0;
 			};
 		};
-		0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
@@ -5804,7 +5808,7 @@
 				minimumVersion = 0.1.7;
 			};
 		};
-		0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
 			requirement = {
@@ -5812,7 +5816,7 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
 			requirement = {
@@ -5820,7 +5824,7 @@
 				minimumVersion = 0.0.8;
 			};
 		};
-		0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
 			requirement = {
@@ -5828,7 +5832,7 @@
 				minimumVersion = 2.7.1;
 			};
 		};
-		0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
@@ -5836,7 +5840,7 @@
 				minimumVersion = 3.4.0;
 			};
 		};
-		0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
 			requirement = {
@@ -5844,7 +5848,7 @@
 				minimumVersion = 0.0.2;
 			};
 		};
-		0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
 			requirement = {
@@ -5855,69 +5859,69 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */ = {
+		0E03B7C523866CDC00949713 /* Nantes */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */;
+			package = 0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */;
 			productName = Nantes;
 		};
-		0E03B8042386741B00949713 /* SwiftPackageProductDependency */ = {
+		0E03B8042386741B00949713 /* SwinjectPropertyLoader */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B8032386741B00949713 /* RemoteSwiftPackageReference */;
+			package = 0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
 			productName = SwinjectPropertyLoader;
 		};
-		0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE3F23863BA600BBDFBD /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = Realm;
 		};
-		0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE4123863BA600BBDFBD /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = RealmSwift;
 		};
-		0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE4423863CBC00BBDFBD /* Localize_Swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */;
 			productName = Localize_Swift;
 		};
-		0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE4723863D4100BBDFBD /* Future */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */;
 			productName = Future;
 		};
-		0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE98238646FF00BBDFBD /* BTKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */;
 			productName = BTKit;
 		};
-		0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEB82386534B00BBDFBD /* LightRoute */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */;
 			productName = LightRoute;
 		};
-		0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEC3238654AE00BBDFBD /* Humidity */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */;
 			productName = Humidity;
 		};
-		0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEC6238655FA00BBDFBD /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
 		};
-		0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEC9238656B100BBDFBD /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
-		0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAECC2386586C00BBDFBD /* GestureInstructions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */;
 			productName = GestureInstructions;
 		};
-		0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAED623865CB500BBDFBD /* RangeSeekSlider */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
 			productName = RangeSeekSlider;
 		};
 /* End XCSwiftPackageProductDependency section */
