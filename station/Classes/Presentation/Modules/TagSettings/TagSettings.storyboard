@@ -279,7 +279,7 @@ IMAGE</string>
                                                     </connections>
                                                 </switch>
                                                 <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="hRO-kJ-T9r" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
-                                                    <rect key="frame" x="20" y="60.5" width="374" height="80"/>
+                                                    <rect key="frame" x="20" y="52.5" width="374" height="80"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
@@ -333,10 +333,10 @@ IMAGE</string>
                                                 <constraint firstItem="FNr-3a-XC8" firstAttribute="top" secondItem="Rno-vh-7GQ" secondAttribute="top" constant="8" id="8Go-7i-QlR"/>
                                                 <constraint firstItem="viZ-iT-L8j" firstAttribute="centerY" secondItem="6wL-Ng-vIB" secondAttribute="centerY" id="8qT-p7-YXY"/>
                                                 <constraint firstAttribute="trailing" secondItem="CVB-JT-Te6" secondAttribute="trailing" constant="20" id="Hwq-sE-hOD"/>
-                                                <constraint firstItem="hRO-kJ-T9r" firstAttribute="top" secondItem="GjM-2N-ajj" secondAttribute="bottom" constant="8" id="NzN-fq-dtr"/>
+                                                <constraint firstItem="hRO-kJ-T9r" firstAttribute="top" secondItem="GjM-2N-ajj" secondAttribute="bottom" id="NzN-fq-dtr"/>
                                                 <constraint firstItem="CVB-JT-Te6" firstAttribute="top" secondItem="Rno-vh-7GQ" secondAttribute="top" constant="8" id="OSf-gU-IPd"/>
                                                 <constraint firstItem="FNr-3a-XC8" firstAttribute="leading" secondItem="Rno-vh-7GQ" secondAttribute="leading" constant="20" id="TcP-9f-Da7"/>
-                                                <constraint firstItem="6wL-Ng-vIB" firstAttribute="top" secondItem="hRO-kJ-T9r" secondAttribute="bottom" constant="8" id="bCa-rg-gS1"/>
+                                                <constraint firstItem="6wL-Ng-vIB" firstAttribute="top" secondItem="hRO-kJ-T9r" secondAttribute="bottom" constant="16" id="bCa-rg-gS1"/>
                                                 <constraint firstItem="viZ-iT-L8j" firstAttribute="leading" secondItem="6wL-Ng-vIB" secondAttribute="trailing" constant="8" id="d2t-p8-pLh"/>
                                                 <constraint firstItem="hRO-kJ-T9r" firstAttribute="leading" secondItem="GjM-2N-ajj" secondAttribute="leading" id="h9X-ch-bON"/>
                                                 <constraint firstAttribute="trailing" secondItem="viZ-iT-L8j" secondAttribute="trailing" constant="20" id="hiy-rk-oJM"/>
