@@ -6,6 +6,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let temperatureLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
     private let temperatureUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureUpperBoundUDKeyPrefix."
     private let temperatureAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
+    private let temperatureIntervalUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureIntervalUDKeyPrefix."
     
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
@@ -17,6 +18,22 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        }
+    }
+    
+    func register(type: AlertType, for uuid: String) {
+        switch type {
+        case .temperature(let lower, let upper):
+            prefs.set(true, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+        }
+    }
+    
+    func unregister(type: AlertType, for uuid: String) {
+        switch type {
+        case .temperature:
+            prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
         }
     }
     
@@ -36,19 +53,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         prefs.set(celsius, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
     }
     
-    func register(type: AlertType, for uuid: String) {
-        switch type {
-        case .temperature(let lower, let upper):
-            prefs.set(true, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
-        }
+    func setTemperature(interval: TimeInterval, for uuid: String) {
+        prefs.set(interval, forKey: temperatureIntervalUDKeyPrefix + uuid)
     }
     
-    func unregister(type: AlertType, for uuid: String) {
-        switch type {
-        case .temperature:
-            prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
-        }
+    func temperatureInterval(for uuid: String) -> TimeInterval {
+        return prefs.optionalDouble(forKey: temperatureIntervalUDKeyPrefix + uuid) ?? 60
     }
+    
 }
