@@ -709,6 +709,15 @@ extension TagSettingsTableViewController {
             tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, isPushNotificationsEnabled) in
                 tableView.reloadData()
             }
+            
+            bind(viewModel.isConnectable) {
+                observer, isConnectable in
+                if isConnectable.bound {
+                    observer.navigationItem.rightBarButtonItem = observer.exportBarButtonItem
+                } else {
+                    observer.navigationItem.rightBarButtonItem = nil
+                }
+            }
         }
     }
 }
