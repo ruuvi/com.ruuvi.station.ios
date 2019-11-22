@@ -194,6 +194,11 @@ extension TagSettingsTableViewController {
         bindViewModels()
         updateUI()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
+    }
 }
     
 // MARK: - IBActions
@@ -595,18 +600,30 @@ extension TagSettingsTableViewController {
                 self?.updateUITemperatureAlertDescription()
             }
             
-            temperatureAlertSwitch.bind(viewModel.isConnected) { (view, isConnected) in
-                view.isEnabled = isConnected.bound
-                view.onTintColor = isConnected.bound ? UISwitch.appearance().onTintColor : .gray
+            let isPNEnabled = viewModel.isPushNotificationsEnabled
+            let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
+            let isConnected = viewModel.isConnected
+            
+            temperatureAlertSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isEnabled = isPN && isConnected.bound
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
             
-            let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
-            temperatureAlertSlider.bind(viewModel.isConnected) { [weak isTemperatureAlertOn] (slider, isConnected) in
-                if let isTemperatureAlertOn = isTemperatureAlertOn?.value {
-                    slider.isEnabled = isConnected.bound && isTemperatureAlertOn
-                } else {
-                    slider.isEnabled = false
-                }
+            
+            temperatureAlertSwitch.bind(viewModel.isPushNotificationsEnabled) { [weak isConnected] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isCo = isConnected?.value ?? false
+                let isEnabled = isPN && isCo
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+            
+            temperatureAlertSlider.bind(viewModel.isConnected) { [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isOn = isTemperatureAlertOn?.value ?? false
+                slider.isEnabled = isConnected.bound && isOn && isPN
             }
             
             keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
