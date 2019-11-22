@@ -178,7 +178,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         let title = "TagSettings.HumidityIsClipped.Alert.title".localized()
         let message = "TagSettings.HumidityIsClipped.Alert.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "TagSettings.HumidityIsClipped.Alert.Fix.button".localized(), style: .destructive, handler: { [weak self] _ in
+        controller.addAction(UIAlertAction(title: "TagSettings.HumidityIsClipped.Alert.Fix.button".localized(), style: .default, handler: { [weak self] _ in
             self?.output.viewDidAskToFixHumidityAdjustment()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -186,15 +186,23 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
     
     func showBothNotConnectedAndNoPNPermissionDialog() {
-        print("both")
-    }
-    
-    func showNoPNPermissionDialog() {
-        print("pn")
+        let message = "TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "TagSettings.AlertsAreDisabled.Dialog.Connect.title".localized(), style: .default, handler: { [weak self] _ in
+            self?.output.viewDidAskToConnectFromAlertsDisabledDialog()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
     }
     
     func showNotConnectedDialog() {
-        print("connection")
+        let message = "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "TagSettings.AlertsAreDisabled.Dialog.Connect.title".localized(), style: .destructive, handler: { [weak self] _ in
+            self?.output.viewDidAskToConnectFromAlertsDisabledDialog()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
     }
 }
 

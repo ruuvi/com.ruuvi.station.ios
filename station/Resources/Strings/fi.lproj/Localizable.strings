@@ -143,6 +143,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Tämä ominaisuus vaatii oikeuden kameran käyttöön.";
 "PermissionPresenter.NoLocationAccess.message" = "Tämä ominaisuus vaatii oikeuden paikkatiedon käyttöön.";
 "PermissionPresenter.settings" = "Asetukset";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Valitse kuva";
@@ -233,6 +234,9 @@
 "TagSettings.Alert.Interval.Sec.title" = "sec";
 "TagSettings.Label.disabled.text" = "DISABLED?";
 "TagSettings.Label.alerts.text" = "ALERTS";
+"TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
+"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

@@ -42,4 +42,18 @@ class PermissionPresenterAlert: PermissionPresenter {
         alert.addAction(cancel)
         viewController.present(alert, animated: true)
     }
+    
+    func presentNoPushNotificationsPermission() {
+        guard let viewController = UIApplication.shared.topViewController() else { return }
+        let alert = UIAlertController(title: nil, message: "PermissionPresenter.NoPushNotificationsPermission.message".localized(), preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
+        let settings = UIAlertAction(title: "PermissionPresenter.settings".localized(), style: .default) { (action) -> Void in
+            if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(settingsUrl, options: [:])
+            }
+        }
+        alert.addAction(settings)
+        alert.addAction(cancel)
+        viewController.present(alert, animated: true)
+    }
 }

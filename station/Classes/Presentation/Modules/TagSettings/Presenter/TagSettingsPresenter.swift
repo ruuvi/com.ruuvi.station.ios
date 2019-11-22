@@ -17,6 +17,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var settings: Settings!
     var connectionPersistence: ConnectionPersistence!
     var pushNotificationsManager: PushNotificationsManager!
+    var permissionPresenter: PermissionPresenter!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
@@ -164,10 +165,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if !isPN && !isCo {
             view.showBothNotConnectedAndNoPNPermissionDialog()
         } else if !isPN {
-            view.showNoPNPermissionDialog()
+            permissionPresenter.presentNoPushNotificationsPermission()
         } else if !isCo {
             view.showNotConnectedDialog()
         }
+    }
+    
+    func viewDidAskToConnectFromAlertsDisabledDialog() {
+        viewModel?.keepConnection.value = true
     }
 }
 

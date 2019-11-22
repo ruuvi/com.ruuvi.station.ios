@@ -22,6 +22,7 @@ class TagSettingsTableConfigurator {
         presenter.settings = r.resolve(Settings.self)
         presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         
         view.output = presenter
     }
