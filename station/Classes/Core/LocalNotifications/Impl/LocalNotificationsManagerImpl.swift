@@ -3,6 +3,7 @@ import UserNotifications
 class LocalNotificationsManagerImpl: LocalNotificationsManager {
     
     var realmContext: RealmContext!
+    var alertPersistence: AlertPersistence!
     
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
@@ -41,7 +42,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
     func notifyLowTemperature(for uuid: String, celsius: Double) {
         var needsToShow: Bool
         if let shownDate = lowTemperatureAlerts[uuid] {
-            needsToShow = Int(Date().timeIntervalSince(shownDate)) > 60
+            needsToShow = Date().timeIntervalSince(shownDate) > alertPersistence.temperatureInterval(for: uuid)
         } else {
             needsToShow = true
         }
@@ -66,7 +67,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
     func notifyHighTemperature(for uuid: String, celsius: Double) {
         var needsToShow: Bool
         if let shownDate = highTemperatureAlerts[uuid] {
-            needsToShow = Int(Date().timeIntervalSince(shownDate)) > 60
+            needsToShow = Date().timeIntervalSince(shownDate) > alertPersistence.temperatureInterval(for: uuid)
         } else {
             needsToShow = true
         }
