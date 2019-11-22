@@ -203,6 +203,7 @@ extension TagSettingsPresenter {
             viewModel.txPower.value = nil
         }
         
+        viewModel.temperatureAlertInterval.value = alertService.temperatureInterval(for: ruuviTag.uuid)
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
@@ -290,6 +291,9 @@ extension TagSettingsPresenter {
         }
         bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
             observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
+        }
+        bind(viewModel.temperatureAlertInterval, fire: false) { observer, temperatureAlertInterval in
+            observer.alertService.setTemperature(interval: temperatureAlertInterval.bound, for: ruuviTag.uuid)
         }
     }
     

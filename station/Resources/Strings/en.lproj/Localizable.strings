@@ -230,6 +230,8 @@
 "TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
 "TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
+"TagSettings.Alert.Interval.Every.title" = "Every";
+"TagSettings.Alert.Interval.Sec.title" = "sec";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
