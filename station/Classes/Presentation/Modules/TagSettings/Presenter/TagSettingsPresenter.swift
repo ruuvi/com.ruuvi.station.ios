@@ -27,6 +27,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var temperatureUnitToken: NSObjectProtocol?
     private var connectToken: NSObjectProtocol?
     private var disconnectToken: NSObjectProtocol?
+    private var appDidBecomeActiveToken: NSObjectProtocol?
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -41,6 +42,9 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         if let disconnectToken = disconnectToken {
             NotificationCenter.default.removeObserver(disconnectToken)
         }
+        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
+            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
+        }
     }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
@@ -52,6 +56,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingSettingsChanges()
         startObservingConnectionStatus()
         bindViewModel(to: ruuviTag)
+        startObservingApplicationState()
     }
 }
 
@@ -59,16 +64,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 extension TagSettingsPresenter: TagSettingsViewOutput {
     
     func viewWillAppear() {
-        pushNotificationsManager.getRemoteNotificationsAuthorizationStatus { [weak self] (status) in
-            switch status {
-            case .notDetermined:
-                self?.pushNotificationsManager.registerForRemoteNotifications()
-            case .authorized:
-                self?.viewModel.isPushNotificationsEnabled.value = true
-            case .denied:
-                self?.viewModel.isPushNotificationsEnabled.value = false
-            }
-        }
+        checkPushNotificationsStatus()
     }
     
     func viewDidAskToDismiss() {
@@ -334,5 +330,24 @@ extension TagSettingsPresenter {
                 self?.viewModel.isConnected.value = false
             }
         })
+    }
+    
+    private func startObservingApplicationState() {
+        appDidBecomeActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+            self?.checkPushNotificationsStatus()
+        })
+    }
+    
+    private func checkPushNotificationsStatus() {
+        pushNotificationsManager.getRemoteNotificationsAuthorizationStatus { [weak self] (status) in
+            switch status {
+            case .notDetermined:
+                self?.pushNotificationsManager.registerForRemoteNotifications()
+            case .authorized:
+                self?.viewModel.isPushNotificationsEnabled.value = true
+            case .denied:
+                self?.viewModel.isPushNotificationsEnabled.value = false
+            }
+        }
     }
 }
