@@ -25,6 +25,7 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet var exportBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var temperatureAlertIntervalStepper: UIStepper!
     @IBOutlet weak var temperatureAlertIntervalLabel: UILabel!
@@ -722,6 +723,17 @@ extension TagSettingsTableViewController {
                     observer.navigationItem.rightBarButtonItem = observer.exportBarButtonItem
                 } else {
                     observer.navigationItem.rightBarButtonItem = nil
+                }
+            }
+            let keepConnection = viewModel.keepConnection
+            connectStatusLabel.bind(viewModel.isConnected) { [weak keepConnection] (label, isConnected) in
+                let keep = keepConnection?.value ?? false
+                if isConnected.bound {
+                    label.text = "TagSettings.ConnectStatus.Connected".localized()
+                } else if keep {
+                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
+                } else {
+                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
                 }
             }
         }
