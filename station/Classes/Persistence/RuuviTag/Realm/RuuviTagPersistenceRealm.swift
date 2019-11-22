@@ -10,7 +10,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         let promise = Promise<Bool,RUError>()
         do {
             try realm.write {
-                realm.add(ruuviTagData)
+                realm.add(ruuviTagData, update: .modified)
             }
             promise.succeed(value: true)
         } catch {
