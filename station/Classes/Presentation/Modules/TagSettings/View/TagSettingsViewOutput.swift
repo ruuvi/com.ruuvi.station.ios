@@ -18,4 +18,5 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnNoValuesView()
     func viewDidTapOnHumidityAccessoryButton()
     func viewDidAskToFixHumidityAdjustment()
+    func viewDidTapOnAlertsDisabledView()
 }

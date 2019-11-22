@@ -221,7 +221,6 @@
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
-"TagSettings.SectionHeader.Alerts.title" = "ALERTS";
 "TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
 "TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Off" = "Off";
@@ -232,6 +231,8 @@
 "TagSettings.DataSource.Advertisement.title" = "Laiteilmoitus";
 "TagSettings.Alert.Interval.Every.title" = "Every";
 "TagSettings.Alert.Interval.Sec.title" = "sec";
+"TagSettings.Label.disabled.text" = "DISABLED?";
+"TagSettings.Label.alerts.text" = "ALERTS";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

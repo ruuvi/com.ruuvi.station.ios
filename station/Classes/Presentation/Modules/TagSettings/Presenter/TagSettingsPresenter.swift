@@ -156,6 +156,19 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             })
         }
     }
+    
+    func viewDidTapOnAlertsDisabledView() {
+        let isPN = viewModel.isPushNotificationsEnabled.value ?? false
+        let isCo = viewModel.isConnected.value ?? false
+        
+        if !isPN && !isCo {
+            view.showBothNotConnectedAndNoPNPermissionDialog()
+        } else if !isPN {
+            view.showNoPNPermissionDialog()
+        } else if !isCo {
+            view.showNotConnectedDialog()
+        }
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate

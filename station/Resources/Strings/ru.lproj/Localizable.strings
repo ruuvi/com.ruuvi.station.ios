@@ -221,7 +221,6 @@
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
-"TagSettings.SectionHeader.Alerts.title" = "УВЕДОМЛЕНИЯ";
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура";
 "TagSettings.Alerts.Temperature.description" = "Уведомление когда < %.0f или > %.0f";
 "TagSettings.Alerts.Off" = "Отключено";
@@ -232,6 +231,8 @@
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
 "TagSettings.Alert.Interval.Every.title" = "Every";
 "TagSettings.Alert.Interval.Sec.title" = "sec";
+"TagSettings.Label.disabled.text" = "DISABLED?";
+"TagSettings.Label.alerts.text" = "ALERTS";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";

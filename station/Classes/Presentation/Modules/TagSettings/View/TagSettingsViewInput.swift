@@ -8,4 +8,7 @@ protocol TagSettingsViewInput: ViewInput {
     func showUUIDDetail()
     func showUpdateFirmwareDialog()
     func showHumidityIsClippedDialog()
+    func showBothNotConnectedAndNoPNPermissionDialog()
+    func showNoPNPermissionDialog()
+    func showNotConnectedDialog()
 }
