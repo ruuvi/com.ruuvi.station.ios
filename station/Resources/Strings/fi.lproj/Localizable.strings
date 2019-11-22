@@ -230,6 +230,8 @@
 "TagSettings.dataSourceTitleLabel.text" = "Datalähde";
 "TagSettings.DataSource.Heartbeat.title" = "Syke";
 "TagSettings.DataSource.Advertisement.title" = "Laiteilmoitus";
+"TagSettings.Alert.Interval.Every.title" = "Every";
+"TagSettings.Alert.Interval.Sec.title" = "sec";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

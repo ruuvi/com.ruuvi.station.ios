@@ -25,6 +25,8 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var temperatureAlertIntervalStepper: UIStepper!
+    @IBOutlet weak var temperatureAlertIntervalLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
     @IBOutlet weak var temperatureAlertCell: UITableViewCell!
@@ -82,8 +84,6 @@ class TagSettingsTableViewController: UITableViewController {
     }
     
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
-    
-    
     
 }
 
@@ -230,6 +230,11 @@ extension TagSettingsTableViewController {
             viewModel?.isTemperatureAlertOn.value = false
         }
     }
+    
+    
+    @IBAction func temperatureAlertIntervalStepperValueChanged(_ sender: Any) {
+        viewModel?.temperatureAlertInterval.value = temperatureAlertIntervalStepper.value
+    }
 }
 
 // MARK: - RangeSeekSliderDelegate
@@ -363,7 +368,7 @@ extension TagSettingsTableViewController {
         if viewModel?.isConnectable.value ?? false {
             switch cell {
             case temperatureAlertCell:
-                return 144
+                return 182
             default:
                 return 44
             }
@@ -606,6 +611,15 @@ extension TagSettingsTableViewController {
             
             keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
                 view.isOn = keepConnection.bound
+            }
+            
+            temperatureAlertIntervalLabel.bind(viewModel.temperatureAlertInterval) {
+                label, temperatureAlertInterval in
+                label.text = "TagSettings.Alert.Interval.Every.title".localized() + " " + String.localizedStringWithFormat("%.0f", temperatureAlertInterval.bound) + " " + "TagSettings.Alert.Interval.Sec.title".localized()
+            }
+            
+            temperatureAlertIntervalStepper.bind(viewModel.temperatureAlertInterval) { (stepper, temperatureAlertInterval) in
+                stepper.value = temperatureAlertInterval.bound
             }
         }
     }
