@@ -221,7 +221,6 @@
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
-"TagSettings.SectionHeader.Alerts.title" = "ALERTS";
 "TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
 "TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Off" = "Off";
@@ -232,6 +231,8 @@
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
 "TagSettings.Alert.Interval.Every.title" = "Every";
 "TagSettings.Alert.Interval.Sec.title" = "sec";
+"TagSettings.Label.disabled.text" = "DISABLED?";
+"TagSettings.Label.alerts.text" = "ALERTS";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

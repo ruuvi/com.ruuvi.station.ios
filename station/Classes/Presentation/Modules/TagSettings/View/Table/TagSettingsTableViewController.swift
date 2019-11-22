@@ -84,6 +84,7 @@ class TagSettingsTableViewController: UITableViewController {
     }
     
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
+    private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
     
 }
 
@@ -182,6 +183,18 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
+    }
+    
+    func showBothNotConnectedAndNoPNPermissionDialog() {
+        print("both")
+    }
+    
+    func showNoPNPermissionDialog() {
+        print("pn")
+    }
+    
+    func showNotConnectedDialog() {
+        print("connection")
     }
 }
 
@@ -297,8 +310,6 @@ extension TagSettingsTableViewController {
             return "TagSettings.SectionHeader.Name.title".localized()
         case .calibration:
             return "TagSettings.SectionHeader.Calibration.title".localized()
-        case .alerts:
-            return TagSettingsTableSection.showAlerts(for: viewModel) ? "TagSettings.SectionHeader.Alerts.title".localized() : nil
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel) ? "TagSettings.SectionHeader.Connection.title".localized() : nil
         default:
@@ -325,6 +336,13 @@ extension TagSettingsTableViewController {
             header.delegate = self
             header.noValuesView.isHidden = viewModel?.version.value == 5
             return header
+        case .alerts:
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: alertsSectionHeaderReuseIdentifier) as! TagSettingsAlertsHeaderFooterView
+            header.delegate = self
+            let isPN = viewModel?.isPushNotificationsEnabled.value ?? false
+            let isCo = viewModel?.isConnected.value ?? false
+            header.disabledView.isHidden = isPN && isCo
+            return header
         default:
             return nil
         }
@@ -336,7 +354,7 @@ extension TagSettingsTableViewController {
         case .moreInfo:
             return 44
         case .alerts:
-            return TagSettingsTableSection.showAlerts(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+            return TagSettingsTableSection.showAlerts(for: viewModel) ? 44 : .leastNormalMagnitude
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
         default:
@@ -396,6 +414,13 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     }
 }
 
+// MARK: - TagSettingsAlertsHeaderFooterViewDelegate
+extension TagSettingsTableViewController: TagSettingsAlertsHeaderFooterViewDelegate {
+    func tagSettingsAlerts(headerView: TagSettingsAlertsHeaderFooterView, didTapOnDisabled button: UIButton) {
+        output.viewDidTapOnAlertsDisabledView()
+    }
+}
+
 // MARK: - TagSettingsMoreInfoHeaderFooterViewDelegate
 extension TagSettingsTableViewController: TagSettingsMoreInfoHeaderFooterViewDelegate {
     func tagSettingsMoreInfo(headerView: TagSettingsMoreInfoHeaderFooterView, didTapOnInfo button: UIButton) {
@@ -406,8 +431,10 @@ extension TagSettingsTableViewController: TagSettingsMoreInfoHeaderFooterViewDel
 // MARK: - View configuration
 extension TagSettingsTableViewController {
     private func configureViews() {
-        let nib = UINib(nibName: "TagSettingsMoreInfoHeaderFooterView", bundle: nil)
-        tableView.register(nib, forHeaderFooterViewReuseIdentifier: moreInfoSectionHeaderReuseIdentifier)
+        let moreInfoSectionNib = UINib(nibName: "TagSettingsMoreInfoHeaderFooterView", bundle: nil)
+        tableView.register(moreInfoSectionNib, forHeaderFooterViewReuseIdentifier: moreInfoSectionHeaderReuseIdentifier)
+        let alertsSectionNib = UINib(nibName: "TagSettingsAlertsHeaderFooterView", bundle: nil)
+        tableView.register(alertsSectionNib, forHeaderFooterViewReuseIdentifier: alertsSectionHeaderReuseIdentifier)
         temperatureAlertSlider.delegate = self
     }
 }
@@ -637,6 +664,14 @@ extension TagSettingsTableViewController {
             
             temperatureAlertIntervalStepper.bind(viewModel.temperatureAlertInterval) { (stepper, temperatureAlertInterval) in
                 stepper.value = temperatureAlertInterval.bound
+            }
+            
+            tableView.bind(viewModel.isConnected) { (tableView, isConnected) in
+                tableView.reloadData()
+            }
+            
+            tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, isPushNotificationsEnabled) in
+                tableView.reloadData()
             }
         }
     }

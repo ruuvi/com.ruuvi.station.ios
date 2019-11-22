@@ -879,6 +879,12 @@
 		0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */; };
 		0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */; };
 		0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
+		0EA92FDB2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */; };
+		0EA92FDC2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */; };
+		0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */; };
+		0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
+		0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
+		0EA92FE12387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -1242,6 +1248,8 @@
 		0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagLocationSource.swift; sourceTree = "<group>"; };
 		0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
 		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
+		0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
+		0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -3419,6 +3427,8 @@
 			children = (
 				0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */,
 				0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */,
+				0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */,
+				0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */,
 			);
 			path = SectionHeader;
 			sourceTree = "<group>";
@@ -3843,6 +3853,7 @@
 				0E6BAEB723856A01003A2D4C /* TagSettings.storyboard in Resources */,
 				0E6BAEB823856A01003A2D4C /* TagCharts.storyboard in Resources */,
 				0E6BAEB923856A01003A2D4C /* Muli-Regular.ttf in Resources */,
+				0EA92FE12387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E6BAEBA23856A01003A2D4C /* Oswald-ExtraLight.ttf in Resources */,
 				0E6BAEBB23856A01003A2D4C /* Language.storyboard in Resources */,
 				0E6BAEBC23856A01003A2D4C /* Welcome.storyboard in Resources */,
@@ -3883,6 +3894,7 @@
 				0E8BD3ED238566AB008B31EF /* TagSettings.storyboard in Resources */,
 				0E8BD3EE238566AB008B31EF /* TagCharts.storyboard in Resources */,
 				0E8BD3EF238566AB008B31EF /* Muli-Regular.ttf in Resources */,
+				0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
 				0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */,
 				0E8BD3F2238566AB008B31EF /* Welcome.storyboard in Resources */,
@@ -3923,6 +3935,7 @@
 				0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */,
 				0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
+				0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
@@ -4107,6 +4120,7 @@
 				0E6BADB923856A01003A2D4C /* RealmContextImpl.swift in Sources */,
 				0E6BADBA23856A01003A2D4C /* SettingsRouter.swift in Sources */,
 				0E6BADBB23856A01003A2D4C /* BackgroundPresenter.swift in Sources */,
+				0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E6BADBC23856A01003A2D4C /* WeatherProviderServiceImpl.swift in Sources */,
 				0E6BADBD23856A01003A2D4C /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E6BADBE23856A01003A2D4C /* DefaultsRouterInput.swift in Sources */,
@@ -4415,6 +4429,7 @@
 				0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */,
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
 				0E8BD2F1238566AB008B31EF /* BackgroundPresenter.swift in Sources */,
+				0EA92FDC2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD2F2238566AB008B31EF /* WeatherProviderServiceImpl.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8BD2F4238566AB008B31EF /* DefaultsRouterInput.swift in Sources */,
@@ -4723,6 +4738,7 @@
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				0E9959B5235ED75D001C37D8 /* BackgroundPresenter.swift in Sources */,
+				0EA92FDB2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8A10162384612300A9CBA6 /* DefaultsRouterInput.swift in Sources */,
