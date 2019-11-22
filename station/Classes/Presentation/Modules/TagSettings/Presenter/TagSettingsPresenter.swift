@@ -16,6 +16,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var alertService: AlertService!
     var settings: Settings!
     var connectionPersistence: ConnectionPersistence!
+    var pushNotificationsManager: PushNotificationsManager!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
@@ -56,6 +57,20 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
 // MARK: - TagSettingsViewOutput
 extension TagSettingsPresenter: TagSettingsViewOutput {
+    
+    func viewWillAppear() {
+        pushNotificationsManager.getRemoteNotificationsAuthorizationStatus { [weak self] (status) in
+            switch status {
+            case .notDetermined:
+                self?.pushNotificationsManager.registerForRemoteNotifications()
+            case .authorized:
+                self?.viewModel.isPushNotificationsEnabled.value = true
+            case .denied:
+                self?.viewModel.isPushNotificationsEnabled.value = false
+            }
+        }
+    }
+    
     func viewDidAskToDismiss() {
         router.dismiss()
     }

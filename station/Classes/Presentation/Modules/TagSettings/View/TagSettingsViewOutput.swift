@@ -1,6 +1,7 @@
 import UIKit
 
 protocol TagSettingsViewOutput {
+    func viewWillAppear()
     func viewDidAskToDismiss()
     func viewDidAskToRandomizeBackground()
     func viewDidAskToRemoveRuuviTag()
