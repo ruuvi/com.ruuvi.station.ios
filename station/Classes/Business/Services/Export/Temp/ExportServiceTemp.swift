@@ -19,11 +19,11 @@ class ExportServiceTemp: ExportService {
     func csvLog(for uuid: String) -> Future<URL,RUError> {
         let promise = Promise<URL,RUError>()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy-HH-mm-ss"
+        dateFormatter.dateFormat = "yyMMdd-HHmm"
         let date = dateFormatter.string(from: Date())
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
-            let fileName = ruuviTag.name + "_" + date + ".csv"
+            let fileName = ruuviTag.name + "-" + date + ".csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
             var csvText = "\(ruuviTag.name)\nDate,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n".localized()
             let sortedData = ruuviTag.data.sorted(byKeyPath: "date")
