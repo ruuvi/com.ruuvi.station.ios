@@ -306,7 +306,9 @@ extension TagSettingsPresenter {
         viewModel.movementCounter.value = device.movementCounter
         viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
         viewModel.txPower.value = device.txPower
-        viewModel.isConnected.value = device.isConnected
+        if viewModel.isConnected.value != device.isConnected {
+            viewModel.isConnected.value = device.isConnected
+        }
         
         if let mac = device.mac {
             viewModel.mac.value = mac
