@@ -143,6 +143,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
 "PermissionPresenter.settings" = "Настройки";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
@@ -233,6 +234,9 @@
 "TagSettings.Alert.Interval.Sec.title" = "sec";
 "TagSettings.Label.disabled.text" = "DISABLED?";
 "TagSettings.Label.alerts.text" = "ALERTS";
+"TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
+"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
