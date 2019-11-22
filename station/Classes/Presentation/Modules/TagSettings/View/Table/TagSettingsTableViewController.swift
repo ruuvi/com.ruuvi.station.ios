@@ -693,6 +693,12 @@ extension TagSettingsTableViewController {
                 view.isOn = keepConnection.bound
             }
             
+            temperatureAlertSlider.bind(viewModel.isPushNotificationsEnabled) { [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+                let isOn = isTemperatureAlertOn?.value ?? false
+                let isCo = isConnected?.value ?? false
+                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            }
+            
             temperatureAlertIntervalLabel.bind(viewModel.temperatureAlertInterval) {
                 label, temperatureAlertInterval in
                 label.text = "TagSettings.Alert.Interval.Every.title".localized() + " " + String.localizedStringWithFormat("%.0f", temperatureAlertInterval.bound) + " " + "TagSettings.Alert.Interval.Sec.title".localized()
