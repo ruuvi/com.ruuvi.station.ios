@@ -710,6 +710,11 @@ IMAGE</string>
                                 <action selector="dismissBarButtonItemAction:" destination="JXe-xp-HbB" id="onb-BV-tEw"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Crm-oc-VEO">
+                            <connections>
+                                <action selector="exportBarButtonItemAction:" destination="JXe-xp-HbB" id="kyH-FS-F9T"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <size key="freeformSize" width="414" height="1400"/>
                     <connections>
@@ -727,6 +732,7 @@ IMAGE</string>
                         <outlet property="dataFormatValueLabel" destination="rWn-Du-rat" id="ReW-Ye-M97"/>
                         <outlet property="dataSourceTitleLabel" destination="ieS-ij-o3L" id="Ybs-x1-hAP"/>
                         <outlet property="dataSourceValueLabel" destination="hD6-Gs-hVm" id="5vy-d8-KZu"/>
+                        <outlet property="exportBarButtonItem" destination="Crm-oc-VEO" id="UAo-Og-VAQ"/>
                         <outlet property="humidityLabel" destination="h1w-an-ceI" id="Kcn-AW-TMy"/>
                         <outlet property="humidityLabelTrailing" destination="af2-sb-o1z" id="jl6-uI-e1R"/>
                         <outlet property="humidityTitleLabel" destination="l91-kJ-VAO" id="m6y-LI-f6w"/>

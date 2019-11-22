@@ -25,6 +25,7 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet var exportBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var temperatureAlertIntervalStepper: UIStepper!
     @IBOutlet weak var temperatureAlertIntervalLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
@@ -204,6 +205,30 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
+    
+    func showExportSheet(with path: URL) {
+        var shareItems = [Any]()
+        #if targetEnvironment(macCatalyst)
+        if let nsUrl = NSURL(string: path.absoluteString) {
+            shareItems.append(nsUrl)
+        }
+        #else
+        shareItems.append(path)
+        #endif
+        let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
+        vc.excludedActivityTypes = [
+            UIActivity.ActivityType.assignToContact,
+            UIActivity.ActivityType.saveToCameraRoll,
+            UIActivity.ActivityType.postToFlickr,
+            UIActivity.ActivityType.postToVimeo,
+            UIActivity.ActivityType.postToTencentWeibo,
+            UIActivity.ActivityType.postToTwitter,
+            UIActivity.ActivityType.postToFacebook,
+            UIActivity.ActivityType.openInIBooks
+        ]
+        vc.popoverPresentationController?.barButtonItem = exportBarButtonItem
+        present(vc, animated: true)
+    }
 }
 
 // MARK: - View lifecycle
@@ -256,10 +281,13 @@ extension TagSettingsTableViewController {
             viewModel?.isTemperatureAlertOn.value = false
         }
     }
-    
-    
+       
     @IBAction func temperatureAlertIntervalStepperValueChanged(_ sender: Any) {
         viewModel?.temperatureAlertInterval.value = temperatureAlertIntervalStepper.value
+    }
+    
+    @IBAction func exportBarButtonItemAction(_ sender: Any) {
+        output.viewDidAskToExportLogs()
     }
 }
 
