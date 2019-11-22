@@ -48,6 +48,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
         }
         if needsToShow {
             let content = UNMutableNotificationContent()
+            content.sound = .default
             content.title = "LocalNotificationsManager.LowTemperature.title".localized()
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
@@ -73,6 +74,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
         }
         if needsToShow {
             let content = UNMutableNotificationContent()
+            content.sound = .default
             content.title = "LocalNotificationsManager.HighTemperature.title".localized()
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
