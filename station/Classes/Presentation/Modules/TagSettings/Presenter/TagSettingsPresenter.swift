@@ -18,6 +18,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var connectionPersistence: ConnectionPersistence!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
+    var exportService: ExportService!
     
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
@@ -173,6 +174,18 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     
     func viewDidAskToConnectFromAlertsDisabledDialog() {
         viewModel?.keepConnection.value = true
+    }
+    
+    func viewDidAskToExportLogs() {
+        if let uuid = viewModel.uuid.value {
+            exportService.csvLog(for: uuid).on(success: { [weak self] url in
+                self?.view.showExportSheet(with: url)
+            }, failure: { [weak self] (error) in
+                self?.errorPresenter.present(error: error)
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
     }
 }
 
