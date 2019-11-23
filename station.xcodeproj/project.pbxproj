@@ -1170,7 +1170,7 @@
 		0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateServiceImpl.swift; sourceTree = "<group>"; };
 		0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsMoreInfoHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsMoreInfoHeaderFooterView.xib; sourceTree = "<group>"; };
-		0E6BAECE23856A01003A2D4C /* station_sui.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_sui.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E6BAECE23856A01003A2D4C /* station_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
@@ -3608,7 +3608,7 @@
 				64333D3920B0C45A00CDF4B6 /* stationTests.xctest */,
 				64333D4420B0C45B00CDF4B6 /* stationUITests.xctest */,
 				0E8BD404238566AB008B31EF /* station_dev.app */,
-				0E6BAECE23856A01003A2D4C /* station_sui.app */,
+				0E6BAECE23856A01003A2D4C /* station_mac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3659,9 +3659,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0E6BAD7623856A01003A2D4C /* station_sui */ = {
+		0E6BAD7623856A01003A2D4C /* station_mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0E6BAECB23856A01003A2D4C /* Build configuration list for PBXNativeTarget "station_sui" */;
+			buildConfigurationList = 0E6BAECB23856A01003A2D4C /* Build configuration list for PBXNativeTarget "station_mac" */;
 			buildPhases = (
 				0E6BAD7823856A01003A2D4C /* Sources */,
 				0E6BAEA623856A01003A2D4C /* Frameworks */,
@@ -3671,7 +3671,7 @@
 			);
 			dependencies = (
 			);
-			name = station_sui;
+			name = station_mac;
 			packageProductDependencies = (
 				0E4EAE3F23863BA600BBDFBD /* Realm */,
 				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
@@ -3688,7 +3688,7 @@
 				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
 			);
 			productName = station;
-			productReference = 0E6BAECE23856A01003A2D4C /* station_sui.app */;
+			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
 			productType = "com.apple.product-type.application";
 		};
 		0E8BD2AC238566AB008B31EF /* station_dev */ = {
@@ -3824,7 +3824,7 @@
 			targets = (
 				64333D2420B0C45900CDF4B6 /* station */,
 				0E8BD2AC238566AB008B31EF /* station_dev */,
-				0E6BAD7623856A01003A2D4C /* station_sui */,
+				0E6BAD7623856A01003A2D4C /* station_mac */,
 				64333D3820B0C45A00CDF4B6 /* stationTests */,
 				64333D4320B0C45B00CDF4B6 /* stationUITests */,
 			);
@@ -5725,7 +5725,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0E6BAECB23856A01003A2D4C /* Build configuration list for PBXNativeTarget "station_sui" */ = {
+		0E6BAECB23856A01003A2D4C /* Build configuration list for PBXNativeTarget "station_mac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0E6BAECC23856A01003A2D4C /* Debug */,
