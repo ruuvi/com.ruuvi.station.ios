@@ -16,6 +16,7 @@ class CoreAssembly: Assembly {
             let manager = LocalNotificationsManagerImpl()
             manager.realmContext = r.resolve(RealmContext.self)
             manager.alertService = r.resolve(AlertService.self)
+            manager.settings = r.resolve(Settings.self)
             return manager
         }.inObjectScope(.container)
         
