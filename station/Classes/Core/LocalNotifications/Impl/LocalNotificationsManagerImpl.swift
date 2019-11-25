@@ -104,6 +104,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
             content.sound = .default
             content.title = "LocalNotificationsManager.HighTemperature.title".localized()
             content.userInfo = [alertCategoryUUIDKey : uuid, alertCategoryTypeKey: LocalNotificationType.temperature.rawValue]
+            content.categoryIdentifier = alertCategory
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
                 content.body = alertService.temperatureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
