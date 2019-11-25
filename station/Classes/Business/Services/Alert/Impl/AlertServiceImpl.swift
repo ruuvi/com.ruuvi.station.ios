@@ -6,6 +6,10 @@ class AlertServiceImpl: AlertService {
     var alertPersistence: AlertPersistence!
     weak var localNotificationsManager: LocalNotificationsManager!
     
+    func isOn(type: AlertType, for uuid: String) -> Bool {
+        return alert(for: uuid, of: type) != nil
+    }
+    
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         return alertPersistence.alert(for: uuid, of: type)
     }
@@ -20,6 +24,10 @@ class AlertServiceImpl: AlertService {
     
     func unregister(type: AlertType, for uuid: String) {
         alertPersistence.unregister(type: type, for: uuid)
+        switch type {
+        case .temperature:
+            postTemperatureAlertDidChange(with: uuid)
+        }
     }
     
     func lowerCelsius(for uuid: String) -> Double? {
