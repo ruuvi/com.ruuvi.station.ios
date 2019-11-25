@@ -6,7 +6,6 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let temperatureLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
     private let temperatureUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureUpperBoundUDKeyPrefix."
     private let temperatureAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
-    private let temperatureIntervalUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureIntervalUDKeyPrefix."
     
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
@@ -51,14 +50,5 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     
     func setUpper(celsius: Double?, for uuid: String) {
         prefs.set(celsius, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
-    }
-    
-    func setTemperature(interval: TimeInterval, for uuid: String) {
-        prefs.set(interval, forKey: temperatureIntervalUDKeyPrefix + uuid)
-    }
-    
-    func temperatureInterval(for uuid: String) -> TimeInterval {
-        return prefs.optionalDouble(forKey: temperatureIntervalUDKeyPrefix + uuid) ?? 60
-    }
-    
+    }    
 }

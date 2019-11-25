@@ -27,8 +27,6 @@ class TagSettingsTableViewController: UITableViewController {
     
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet var exportBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var temperatureAlertIntervalStepper: UIStepper!
-    @IBOutlet weak var temperatureAlertIntervalLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
     @IBOutlet weak var temperatureAlertCell: UITableViewCell!
@@ -282,10 +280,6 @@ extension TagSettingsTableViewController {
             viewModel?.isTemperatureAlertOn.value = false
         }
     }
-       
-    @IBAction func temperatureAlertIntervalStepperValueChanged(_ sender: Any) {
-        viewModel?.temperatureAlertInterval.value = temperatureAlertIntervalStepper.value
-    }
     
     @IBAction func exportBarButtonItemAction(_ sender: Any) {
         output.viewDidAskToExportLogs()
@@ -428,7 +422,7 @@ extension TagSettingsTableViewController {
         if viewModel?.isConnectable.value ?? false {
             switch cell {
             case temperatureAlertCell:
-                return 182
+                return 192
             default:
                 return 44
             }
@@ -698,15 +692,6 @@ extension TagSettingsTableViewController {
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isCo = isConnected?.value ?? false
                 slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
-            }
-            
-            temperatureAlertIntervalLabel.bind(viewModel.temperatureAlertInterval) {
-                label, temperatureAlertInterval in
-                label.text = "TagSettings.Alert.Interval.Every.title".localized() + " " + String.localizedStringWithFormat("%.0f", temperatureAlertInterval.bound) + " " + "TagSettings.Alert.Interval.Sec.title".localized()
-            }
-            
-            temperatureAlertIntervalStepper.bind(viewModel.temperatureAlertInterval) { (stepper, temperatureAlertInterval) in
-                stepper.value = temperatureAlertInterval.bound
             }
             
             tableView.bind(viewModel.isConnected) { (tableView, isConnected) in
