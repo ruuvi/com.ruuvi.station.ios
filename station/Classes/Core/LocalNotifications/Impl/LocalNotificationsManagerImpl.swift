@@ -84,7 +84,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
                 content.body = uuid
             }
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: uuid + "temperature", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             lowTemperatureAlerts[uuid] = Date()
         }
@@ -111,7 +111,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
                 content.body = uuid
             }
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: uuid + "temperature", content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             highTemperatureAlerts[uuid] = Date()
         }
