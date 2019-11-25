@@ -34,6 +34,14 @@ class AlertServiceImpl: AlertService {
         alertPersistence.setUpper(celsius: celsius, for: uuid)
     }
     
+    func temperatureDescription(for uuid: String) -> String? {
+        return alertPersistence.temperatureDescription(for: uuid)
+    }
+    
+    func setTemperature(description: String?, for uuid: String) {
+        alertPersistence.setTemperature(description: description, for: uuid)
+    }
+    
     func proccess(heartbeat ruuviTag: RuuviTag) {
         AlertType.allCases.forEach { (type) in
             switch type {
