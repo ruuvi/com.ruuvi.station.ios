@@ -12,6 +12,10 @@ class AlertServiceImpl: AlertService {
     
     func register(type: AlertType, for uuid: String) {
         alertPersistence.register(type: type, for: uuid)
+        switch type {
+        case .temperature:
+            postTemperatureAlertDidChange(with: uuid)
+        }
     }
     
     func unregister(type: AlertType, for uuid: String) {
@@ -24,6 +28,7 @@ class AlertServiceImpl: AlertService {
     
     func setLower(celsius: Double?, for uuid: String) {
         alertPersistence.setLower(celsius: celsius, for: uuid)
+        postTemperatureAlertDidChange(with: uuid)
     }
     
     func upperCelsius(for uuid: String) -> Double? {
@@ -32,6 +37,7 @@ class AlertServiceImpl: AlertService {
     
     func setUpper(celsius: Double?, for uuid: String) {
         alertPersistence.setUpper(celsius: celsius, for: uuid)
+        postTemperatureAlertDidChange(with: uuid)
     }
     
     func temperatureDescription(for uuid: String) -> String? {
@@ -40,6 +46,7 @@ class AlertServiceImpl: AlertService {
     
     func setTemperature(description: String?, for uuid: String) {
         alertPersistence.setTemperature(description: description, for: uuid)
+        postTemperatureAlertDidChange(with: uuid)
     }
     
     func proccess(heartbeat ruuviTag: RuuviTag) {
@@ -59,6 +66,10 @@ class AlertServiceImpl: AlertService {
                 }
             }
         }
+    }
+    
+    private func postTemperatureAlertDidChange(with uuid: String) {
+        NotificationCenter.default.post(name: .AlertServiceTemperatureAlertDidChange, object: nil, userInfo: [AlertServiceTemperatureAlertDidChangeKey.uuid: uuid])
     }
     
 }

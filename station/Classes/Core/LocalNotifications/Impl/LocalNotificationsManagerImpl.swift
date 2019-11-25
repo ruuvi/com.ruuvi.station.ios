@@ -8,6 +8,23 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
     
+    private var temperatureDidChangeToken: NSObjectProtocol?
+    
+    init() {
+        temperatureDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main) { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+                self?.lowTemperatureAlerts[uuid] = nil
+                self?.highTemperatureAlerts[uuid] = nil
+            }
+        }
+    }
+    
+    deinit {
+        if let temperatureDidChangeToken = temperatureDidChangeToken {
+            NotificationCenter.default.removeObserver(temperatureDidChangeToken)
+        }
+    }
+    
     func showDidConnect(uuid: String) {
         
         let content = UNMutableNotificationContent()

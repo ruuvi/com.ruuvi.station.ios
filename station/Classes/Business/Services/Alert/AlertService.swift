@@ -16,3 +16,11 @@ protocol AlertService {
     func temperatureDescription(for uuid: String) -> String?
     func setTemperature(description: String?, for uuid: String)
 }
+
+extension Notification.Name {
+    static let AlertServiceTemperatureAlertDidChange = Notification.Name("AlertServiceTemperatureAlertIsOnDidChange")
+}
+
+enum AlertServiceTemperatureAlertDidChangeKey: String {
+    case uuid = "uuid"
+}
