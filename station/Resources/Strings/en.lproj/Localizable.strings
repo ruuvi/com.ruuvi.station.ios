@@ -131,7 +131,7 @@
 "LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
 "LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
 "LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
-"LocalNotificationsManager.Disable.button" = "Disable";
+"LocalNotificationsManager.Disable.button" = "Turn Off";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
