@@ -11,5 +11,6 @@ protocol AlertPersistence {
     func setLower(celsius: Double?, for uuid: String)
     func upperCelsius(for uuid: String) -> Double? 
     func setUpper(celsius: Double?, for uuid: String)
-    
+    func temperatureDescription(for uuid: String) -> String?
+    func setTemperature(description: String?, for uuid: String)
 }
