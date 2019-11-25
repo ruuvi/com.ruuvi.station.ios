@@ -47,7 +47,15 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             observer.settings.cardsSwipeHintWasShown = cardsSwipeHintWasShown.bound
         }
         
-        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown, connectionTimeout, serviceTimeout, cardsSwipeHint]
+        let alertsInterval = DefaultsViewModel()
+        alertsInterval.title = "Defaults.AlertsRepeatInterval.title".localized()
+        alertsInterval.integer.value = settings.alertsRepeatingIntervalSeconds
+        
+        bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
+            observer.settings.alertsRepeatingIntervalSeconds = alertsInterval.bound
+        }
+        
+        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown, connectionTimeout, serviceTimeout, cardsSwipeHint, alertsInterval]
     }
 }
 
