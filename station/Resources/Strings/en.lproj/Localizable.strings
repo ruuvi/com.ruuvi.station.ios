@@ -238,6 +238,7 @@
 "TagSettings.ConnectStatus.Connected" = "Connected";
 "TagSettings.ConnectStatus.Connecting" = "Connecting...";
 "TagSettings.ConnectStatus.Disconnected" = "Disconnected";
+"TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

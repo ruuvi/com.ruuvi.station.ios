@@ -336,10 +336,14 @@ IMAGE</string>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="enableStep" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9rU-gJ-u3S">
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Set custom description..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9rU-gJ-u3S">
                                                     <rect key="frame" x="20" y="148" width="374" height="34"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <action selector="temperatureAlertTextFieldEditingDidEnd:" destination="JXe-xp-HbB" eventType="editingDidEnd" id="WR3-1b-V3Z"/>
+                                                        <outlet property="delegate" destination="JXe-xp-HbB" id="pP5-at-zhC"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -771,6 +775,7 @@ IMAGE</string>
                         <outlet property="temperatureAlertDescriptionLabel" destination="GjM-2N-ajj" id="bSh-ne-YHB"/>
                         <outlet property="temperatureAlertSlider" destination="hRO-kJ-T9r" id="OKA-jB-QB3"/>
                         <outlet property="temperatureAlertSwitch" destination="CVB-JT-Te6" id="Pxo-b5-kXa"/>
+                        <outlet property="temperatureAlertTextField" destination="9rU-gJ-u3S" id="cwf-mB-WXe"/>
                         <outlet property="temperatureAlertTitleLabel" destination="FNr-3a-XC8" id="JPG-mw-rV9"/>
                         <outlet property="txPowerCell" destination="XcN-id-Y5e" id="NzX-l5-SKf"/>
                         <outlet property="txPowerTitleLabel" destination="9z1-8W-BSJ" id="2UL-jA-tVG"/>
