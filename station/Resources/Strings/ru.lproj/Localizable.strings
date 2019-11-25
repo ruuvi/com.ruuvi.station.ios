@@ -76,6 +76,7 @@
 "Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
+"Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
