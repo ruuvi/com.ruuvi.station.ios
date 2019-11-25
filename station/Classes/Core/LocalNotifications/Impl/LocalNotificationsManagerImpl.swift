@@ -52,7 +52,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
             content.title = "LocalNotificationsManager.LowTemperature.title".localized()
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
-                content.body = ruuviTag.mac ?? ruuviTag.uuid
+                content.body = alertPersistence.temperatureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
             } else {
                 content.body = uuid
             }
@@ -78,7 +78,7 @@ class LocalNotificationsManagerImpl: LocalNotificationsManager {
             content.title = "LocalNotificationsManager.HighTemperature.title".localized()
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
-                content.body = ruuviTag.mac ?? ruuviTag.uuid
+                content.body = alertPersistence.temperatureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
             } else {
                 content.body = uuid
             }
