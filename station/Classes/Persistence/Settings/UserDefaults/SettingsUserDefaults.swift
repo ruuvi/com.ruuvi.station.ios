@@ -159,6 +159,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
     var advertisementDaemonIntervalMinutes: Int
     
+    @UserDefault("SettingsUserDegaults.alertsRepeatingIntervalSeconds", defaultValue: 3600)
+    var alertsRepeatingIntervalSeconds: Int
+    
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
     
