@@ -230,8 +230,6 @@
 "TagSettings.dataSourceTitleLabel.text" = "Datalähde";
 "TagSettings.DataSource.Heartbeat.title" = "Syke";
 "TagSettings.DataSource.Advertisement.title" = "Laiteilmoitus";
-"TagSettings.Alert.Interval.Every.title" = "Every";
-"TagSettings.Alert.Interval.Sec.title" = "sec";
 "TagSettings.Label.disabled.text" = "DISABLED?";
 "TagSettings.Label.alerts.text" = "ALERTS";
 "TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
