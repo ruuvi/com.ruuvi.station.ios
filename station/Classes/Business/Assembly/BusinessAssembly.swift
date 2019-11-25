@@ -7,9 +7,11 @@ class BusinessAssembly: Assembly {
         container.register(AlertService.self) { r in
             let service = AlertServiceImpl()
             service.alertPersistence = r.resolve(AlertPersistence.self)
-            service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             return service
-        }.inObjectScope(.container)
+        }.inObjectScope(.container).initCompleted { (r, service) in
+            let s = service as! AlertServiceImpl
+            s.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+        }
         
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()

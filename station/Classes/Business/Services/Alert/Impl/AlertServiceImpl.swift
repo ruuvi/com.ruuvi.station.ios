@@ -4,7 +4,7 @@ import BTKit
 class AlertServiceImpl: AlertService {
     
     var alertPersistence: AlertPersistence!
-    var localNotificationsManager: LocalNotificationsManager!
+    weak var localNotificationsManager: LocalNotificationsManager!
     
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         return alertPersistence.alert(for: uuid, of: type)
