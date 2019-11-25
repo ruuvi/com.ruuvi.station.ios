@@ -30,6 +30,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var connectToken: NSObjectProtocol?
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
+    private var temperatureAlertDidChangeToken: NSObjectProtocol?
     
     deinit {
         ruuviTagToken?.invalidate()
@@ -47,18 +48,22 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         if let appDidBecomeActiveToken = appDidBecomeActiveToken {
             NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
         }
+        if let temperatureAlertDidChangeToken = temperatureAlertDidChangeToken {
+            NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
+        }
     }
     
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
         self.humidity = humidity
+        bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
         startScanningRuuviTag()
         startObservingSettingsChanges()
         startObservingConnectionStatus()
-        bindViewModel(to: ruuviTag)
         startObservingApplicationState()
+        startObservingAlertChanges()
     }
 }
 
@@ -382,5 +387,21 @@ extension TagSettingsPresenter {
                 self?.viewModel.isPushNotificationsEnabled.value = false
             }
         }
+    }
+    
+    private func startObservingAlertChanges() {
+        temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String, uuid == self?.viewModel.uuid.value {
+                AlertType.allCases.forEach { (type) in
+                    switch type {
+                    case .temperature:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.viewModel.isTemperatureAlertOn.value {
+                            self?.viewModel.isTemperatureAlertOn.value = isOn
+                        }
+                    }
+                }
+            }
+        })
     }
 }
