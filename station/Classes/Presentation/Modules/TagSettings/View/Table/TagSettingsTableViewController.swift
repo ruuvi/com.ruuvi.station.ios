@@ -25,6 +25,7 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
     
+    @IBOutlet weak var temperatureAlertTextField: UITextField!
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet var exportBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
@@ -123,6 +124,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
+        temperatureAlertTextField.placeholder = "TagSettings.TemperatureAlert.Description.placeholder".localized()
         tableView.reloadData()
     }
     
@@ -284,6 +286,18 @@ extension TagSettingsTableViewController {
     @IBAction func exportBarButtonItemAction(_ sender: Any) {
         output.viewDidAskToExportLogs()
     }
+    
+    @IBAction func temperatureAlertTextFieldEditingDidEnd(_ sender: Any) {
+        print(temperatureAlertTextField.text)
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension TagSettingsTableViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
 
 // MARK: - RangeSeekSliderDelegate
@@ -434,14 +448,6 @@ extension TagSettingsTableViewController {
                 return 44
             }
         }
-    }
-}
-
-// MARK: - UITextFieldDelegate
-extension TagSettingsTableViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return false
     }
 }
 
