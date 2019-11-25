@@ -206,7 +206,8 @@ extension TagSettingsPresenter {
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
-
+        viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag.uuid)
+        
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
         
         if ruuviTag.name == ruuviTag.uuid || ruuviTag.name == ruuviTag.mac {
@@ -334,6 +335,9 @@ extension TagSettingsPresenter {
         }
         bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
             observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
+        }
+        bind(viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
+            observer.alertService.setTemperature(description: temperatureAlertDescription, for: ruuviTag.uuid)
         }
     }
     

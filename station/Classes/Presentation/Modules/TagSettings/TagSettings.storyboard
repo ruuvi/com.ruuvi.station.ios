@@ -339,7 +339,7 @@ IMAGE</string>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Set custom description..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9rU-gJ-u3S">
                                                     <rect key="frame" x="20" y="148" width="374" height="34"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done"/>
                                                     <connections>
                                                         <action selector="temperatureAlertTextFieldEditingDidEnd:" destination="JXe-xp-HbB" eventType="editingDidEnd" id="WR3-1b-V3Z"/>
                                                         <outlet property="delegate" destination="JXe-xp-HbB" id="pP5-at-zhC"/>

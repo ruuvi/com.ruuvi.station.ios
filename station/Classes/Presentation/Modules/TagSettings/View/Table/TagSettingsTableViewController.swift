@@ -288,7 +288,7 @@ extension TagSettingsTableViewController {
     }
     
     @IBAction func temperatureAlertTextFieldEditingDidEnd(_ sender: Any) {
-        print(temperatureAlertTextField.text)
+        viewModel?.temperatureAlertDescription.value = temperatureAlertTextField.text
     }
 }
 
@@ -737,6 +737,9 @@ extension TagSettingsTableViewController {
                 } else {
                     label.text = "TagSettings.ConnectStatus.Disconnected".localized()
                 }
+            }
+            temperatureAlertTextField.bind(viewModel.temperatureAlertDescription) { (textField, temperatureAlertDescription) in
+                textField.text = temperatureAlertDescription
             }
         }
     }
