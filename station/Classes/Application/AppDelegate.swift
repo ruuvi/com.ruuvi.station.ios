@@ -9,9 +9,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var appStateService: AppStateService!
+    var localNotificationsManager: LocalNotificationsManager!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UNUserNotificationCenter.current().delegate = self
         #if canImport(Firebase)
         FirebaseApp.configure()
         #endif
@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
+        localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+        localNotificationsManager.application(application, didFinishLaunchingWithOptions: launchOptions)
         return true
     }
 
@@ -67,17 +69,4 @@ extension AppDelegate {
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print(error.localizedDescription)
     }
-}
-
-// for displaying notification when app is in foreground
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .badge, .sound])
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        completionHandler()
-    }
-
 }
