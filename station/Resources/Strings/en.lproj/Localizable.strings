@@ -39,7 +39,7 @@
 "Background.navigationItem.title" = "Background";
 "Background.PresentNotifications.title" = "Show Notifications";
 "Background.KeepConnection.title" = "Keep Connection";
-"Background.SaveHeartbeats.title" = "Save Heartbeats";
+"Background.SaveHeartbeats.title" = "Data Logging Interval";
 "Background.Interval.Every.string" = "every";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Read RSSI";
