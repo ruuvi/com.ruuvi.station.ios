@@ -21,6 +21,16 @@ class AlertServiceImpl: AlertService {
         }
     }
     
+    func hasRegistrations(for uuid: String) -> Bool {
+        var hasRegistrations = false
+        AlertType.allCases.forEach { (type) in
+            if isOn(type: type, for: uuid) {
+                hasRegistrations = true
+            }
+        }
+        return hasRegistrations
+    }
+    
     func isOn(type: AlertType, for uuid: String) -> Bool {
         return alert(for: uuid, of: type) != nil
     }
@@ -93,7 +103,7 @@ class AlertServiceImpl: AlertService {
                         if let observers = sSelf.observations[ruuviTag.uuid] {
                             for i in 0..<observers.count {
                                 if let pointer = observers.pointer(at: i), let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue() as? AlertServiceObserver {
-                                    observer.alert(service: sSelf, didProcess: .temperature(lower: lower, upper: upper), isTriggered: isTriggered)
+                                    observer.alert(service: sSelf, didProcess: .temperature(lower: lower, upper: upper), isTriggered: isTriggered, for: ruuviTag.uuid)
                                 }
                             }
                         }

@@ -393,6 +393,21 @@ extension CardsScrollViewController {
         
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
         
+        view.alertImageView.bind(viewModel.alertState) { (imageView, state) in
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.image = UIImage(named: "icon-alert-off")
+                case .registered:
+                    imageView.image = UIImage(named: "icon-alert-on")
+                case .firing:
+                    imageView.image = UIImage(named: "icon-alert-active")
+                }
+            } else {
+                imageView.image = nil
+            }
+        }
+        
         switch viewModel.type {
         case .ruuvi:
             view.rssiCityImageView.image = UIImage(named: "icon-measure-signal")

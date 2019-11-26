@@ -23,6 +23,7 @@ class CardsScrollConfigurator {
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
+        presenter.alertService = r.resolve(AlertService.self)
         
         router.delegate = presenter
         

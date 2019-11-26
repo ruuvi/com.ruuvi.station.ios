@@ -16,6 +16,7 @@ class CardsPresenter: CardsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     var connectionPersistence: ConnectionPersistence!
+    var alertService: AlertService!
     
     weak var tagCharts: TagChartsModuleInput?
     
@@ -51,12 +52,17 @@ class CardsPresenter: CardsModuleInput {
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
+            startListeningToAlertStatus()
         }
     }
     private var viewModels = [CardsViewModel]() {
         didSet {
             view.viewModels = viewModels
         }
+    }
+    
+    private func startListeningToAlertStatus() {
+        ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
     
     deinit {
@@ -231,6 +237,15 @@ extension CardsPresenter: CardsRouterDelegate {
     }
 }
 
+// MARK: - AlertServiceObserver
+extension CardsPresenter: AlertServiceObserver {
+    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool, for uuid: String) {
+        viewModels
+            .filter({ $0.uuid.value == uuid })
+            .forEach({ $0.alertState.value = isTriggered ? .firing : .registered })
+    }
+}
+
 // MARK: - Private
 extension CardsPresenter {
 
@@ -242,6 +257,7 @@ extension CardsPresenter {
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
+                viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.uuid) ? .registered : .empty
                 return viewModel
             }) ?? []
             let webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
@@ -249,6 +265,7 @@ extension CardsPresenter {
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
