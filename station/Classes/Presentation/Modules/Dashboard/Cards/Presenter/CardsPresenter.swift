@@ -43,6 +43,7 @@ class CardsPresenter: CardsModuleInput {
     private var readRSSIIntervalDidChangeToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
+    private var temperatureAlertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var webTags: Results<WebTagRealm>? {
         didSet {
@@ -122,6 +123,9 @@ class CardsPresenter: CardsModuleInput {
         if let didDisconnectToken = didDisconnectToken {
             NotificationCenter.default.removeObserver(didDisconnectToken)
         }
+        if let temperatureAlertDidChangeToken = temperatureAlertDidChangeToken {
+            NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
+        }
     }
 }
 
@@ -135,6 +139,7 @@ extension CardsPresenter: CardsViewOutput {
         startObservingDaemonsErrors()
         startObservingConnectionPersistenceNotifications()
         startObservingDidConnectDisconnectNotifications()
+        startObservingAlertChanges()
         pushNotificationsManager.registerForRemoteNotifications()
     }
     
@@ -557,6 +562,17 @@ extension CardsPresenter {
         didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = false
+            }
+        })
+    }
+    
+    
+    private func startObservingAlertChanges() {
+        temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let sSelf = self, let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+                sSelf.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
+                    viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
+                })
             }
         })
     }
