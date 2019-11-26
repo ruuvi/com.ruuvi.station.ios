@@ -166,6 +166,10 @@ extension CardsScrollViewController {
             view.isHidden = !isConnectable.bound
         }
         
+        view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
+            view.isHidden = !isConnected.bound
+        }
+        
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         
         let temperatureUnit = viewModel.temperatureUnit
