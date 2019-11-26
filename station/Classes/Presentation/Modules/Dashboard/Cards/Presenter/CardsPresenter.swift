@@ -62,10 +62,6 @@ class CardsPresenter: CardsModuleInput {
         }
     }
     
-    private func startListeningToAlertStatus() {
-        ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
-    }
-    
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
@@ -575,5 +571,9 @@ extension CardsPresenter {
                 })
             }
         })
+    }
+    
+    private func startListeningToAlertStatus() {
+        ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
 }

@@ -15,6 +15,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     var ruuviTagService: RuuviTagService!
     var gattService: GATTService!
     var exportService: ExportService!
+    var alertService: AlertService!
+    var background: BTBackground!
     
     private var isLoading: Bool = false {
         didSet {
@@ -34,9 +36,14 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
+    private var temperatureAlertDidChangeToken: NSObjectProtocol?
+    private var didConnectToken: NSObjectProtocol?
+    private var didDisconnectToken: NSObjectProtocol?
+    
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
+            startListeningToAlertStatus()
         }
     }
     private var viewModels = [TagChartsViewModel]() {
@@ -72,6 +79,15 @@ class TagChartsPresenter: TagChartsModuleInput {
         if let backgroundToken = backgroundToken {
             NotificationCenter.default.removeObserver(backgroundToken)
         }
+        if let temperatureAlertDidChangeToken = temperatureAlertDidChangeToken {
+            NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
+        }
+        if let didConnectToken = didConnectToken {
+            NotificationCenter.default.removeObserver(didConnectToken)
+        }
+        if let didDisconnectToken = didDisconnectToken {
+            NotificationCenter.default.removeObserver(didDisconnectToken)
+        }
     }
     
     func configure(output: TagChartsModuleOutput) {
@@ -93,6 +109,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingRuuviTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
+        startObservingAlertChanges()
+        startObservingDidConnectDisconnectNotifications()
     }
     
     func viewWillAppear() {
@@ -213,6 +231,15 @@ extension TagChartsPresenter: MenuModuleOutput {
     }
 }
 
+// MARK: - AlertServiceObserver
+extension TagChartsPresenter: AlertServiceObserver {
+    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool, for uuid: String) {
+        viewModels
+            .filter({ $0.uuid.value == uuid })
+            .forEach({ $0.alertState.value = isTriggered ? .firing : .registered })
+    }
+}
+
 // MARK: - Private
 extension TagChartsPresenter {
     
@@ -236,6 +263,8 @@ extension TagChartsPresenter {
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.humidityUnit.value = settings.humidityUnit
+                viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
+                viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.uuid) ? .registered : .empty
                 return viewModel
             }) ?? []
             
@@ -323,4 +352,33 @@ extension TagChartsPresenter {
     private func stopObservingBluetoothState() {
         stateToken?.invalidate()
     }
+    
+    private func startObservingAlertChanges() {
+        temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let sSelf = self, let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+                sSelf.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
+                    viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
+                })
+            }
+        })
+    }
+    
+    private func startListeningToAlertStatus() {
+        ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+    }
+    
+    func startObservingDidConnectDisconnectNotifications() {
+        didConnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                viewModel.isConnected.value = true
+            }
+        })
+        
+        didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                viewModel.isConnected.value = false
+            }
+        })
+    }
+    
 }

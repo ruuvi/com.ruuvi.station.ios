@@ -7,13 +7,6 @@ enum CardType {
     case web
 }
 
-
-enum AlertState {
-    case registered
-    case empty
-    case firing
-}
-
 struct CardsViewModel {
     var type: CardType = .ruuvi
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
