@@ -3,6 +3,7 @@ import BTKit
 
 protocol AlertService {
     func proccess(heartbeat ruuviTag: RuuviTag)
+    func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)
     
     func isOn(type: AlertType, for uuid: String) -> Bool
     func alert(for uuid: String, of type: AlertType) -> AlertType?
@@ -16,6 +17,10 @@ protocol AlertService {
     func setUpper(celsius: Double?, for uuid: String)
     func temperatureDescription(for uuid: String) -> String?
     func setTemperature(description: String?, for uuid: String)
+}
+
+protocol AlertServiceObserver: class {
+    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool)
 }
 
 extension Notification.Name {
