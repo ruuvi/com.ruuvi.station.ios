@@ -20,6 +20,8 @@ class TagChartsScrollConfigurator {
         presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.gattService = r.resolve(GATTService.self)
         presenter.exportService = r.resolve(ExportService.self)
+        presenter.alertService = r.resolve(AlertService.self)
+        presenter.background = r.resolve(BTBackground.self)
         
         view.output = presenter
     }

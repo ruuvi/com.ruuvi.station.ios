@@ -29,6 +29,8 @@ struct TagChartsViewModel {
     var humidityOffset: Observable<Double?> = Observable<Double?>(0)
     var pressure: Observable<[TagChartsPoint]?> = Observable<[TagChartsPoint]?>()
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
+    var alertState: Observable<AlertState?> = Observable<AlertState?>()
+    var isConnected: Observable<Bool?> = Observable<Bool?>()
     
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi

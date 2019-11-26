@@ -8,3 +8,9 @@ enum AlertType: CaseIterable {
         return [.temperature(lower: 0, upper: 0)]
     }
 }
+
+enum AlertState {
+    case registered
+    case empty
+    case firing
+}
