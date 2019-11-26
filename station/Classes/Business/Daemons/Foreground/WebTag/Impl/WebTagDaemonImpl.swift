@@ -84,8 +84,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         let currentLocationWebTags = webTags.filter( { $0.location == nil })
         
         for provider in WeatherProvider.allCases {
-            let providerCurrentWebTags = currentLocationWebTags.filter( { $0.provider == provider } )
-            if  providerCurrentWebTags.count > 0 {
+            if currentLocationWebTags.contains(where: { $0.provider == provider } ) {
                 wsTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: pullInterval, fire: fire, closure: { (observer, data, location, error) in
                     if let data = data, let location = location {
                         observer.webTagPersistence.persist(currentLocation: location, data: data)
