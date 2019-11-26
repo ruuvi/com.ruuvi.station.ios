@@ -86,7 +86,7 @@ class TagSettingsTableViewController: UITableViewController {
     
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
-    
+    private let maxCharsInTextFields = 100
 }
 
 // MARK: - TagSettingsViewInput
@@ -297,6 +297,11 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let newText = textField.text?.replace(with: string, in: range) else { return false }
+        return newText.count <= maxCharsInTextFields
     }
 }
 

@@ -342,7 +342,7 @@ IMAGE</string>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done"/>
                                                     <connections>
                                                         <action selector="temperatureAlertTextFieldEditingDidEnd:" destination="JXe-xp-HbB" eventType="editingDidEnd" id="WR3-1b-V3Z"/>
-                                                        <outlet property="delegate" destination="JXe-xp-HbB" id="pP5-at-zhC"/>
+                                                        <outlet property="delegate" destination="JXe-xp-HbB" id="v2b-kJ-8a9"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
