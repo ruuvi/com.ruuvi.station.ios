@@ -46,6 +46,7 @@ struct CardsViewModel {
         kelvin.value = webTag.data.last?.kelvin
         relativeHumidity.value = webTag.data.last?.humidity.value
         isConnectable.value = false
+        isConnected.value = false
         
         if let c = webTag.data.last?.celsius.value, let rh = webTag.data.last?.humidity.value {
             let h = Humidity(c: c, rh: rh / 100.0)
@@ -72,6 +73,7 @@ struct CardsViewModel {
         pressure.value = data.pressure.value
         relativeHumidity.value = data.humidity.value
         isConnectable.value = false
+        isConnected.value = false
         
         if let c = data.celsius.value, let rh = data.humidity.value {
             let h = Humidity(c: c, rh: rh / 100.0)

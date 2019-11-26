@@ -10,6 +10,8 @@ class CardView: UIView {
     
     weak var delegate: CardViewDelegate?
     
+    @IBOutlet weak var alertImageView: UIImageView!
+    @IBOutlet weak var alertView: UIView!
     @IBOutlet weak var humidityWarningImageView: UIImageView!
     @IBOutlet weak var chartsButtonContainerView: UIView!
     @IBOutlet weak var backgroundImage: UIImageView!
