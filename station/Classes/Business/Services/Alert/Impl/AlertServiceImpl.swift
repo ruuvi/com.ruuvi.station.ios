@@ -6,6 +6,21 @@ class AlertServiceImpl: AlertService {
     var alertPersistence: AlertPersistence!
     weak var localNotificationsManager: LocalNotificationsManager!
     
+    private var observations = [String: NSPointerArray]()
+    
+    func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String) {
+        let pointer = Unmanaged.passUnretained(observer).toOpaque()
+        if let array = observations[uuid] {
+            array.addPointer(pointer)
+            array.compact()
+        } else {
+            let array = NSPointerArray.weakObjects()
+            array.addPointer(pointer)
+            observations[uuid] = array
+            array.compact()
+        }
+    }
+    
     func isOn(type: AlertType, for uuid: String) -> Bool {
         return alert(for: uuid, of: type) != nil
     }
@@ -71,6 +86,19 @@ class AlertServiceImpl: AlertService {
                             self?.localNotificationsManager.notifyHighTemperature(for: ruuviTag.uuid, celsius: celsius)
                         }
                     }
+                    
+                    let isTriggered = celsius < lower || celsius > upper
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        if let observers = sSelf.observations[ruuviTag.uuid] {
+                            for i in 0..<observers.count {
+                                if let pointer = observers.pointer(at: i), let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue() as? AlertServiceObserver {
+                                    observer.alert(service: sSelf, didProcess: .temperature(lower: lower, upper: upper), isTriggered: isTriggered)
+                                }
+                            }
+                        }
+                    }
+                    
                 }
             }
         }
