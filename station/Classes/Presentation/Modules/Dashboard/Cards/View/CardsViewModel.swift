@@ -7,6 +7,13 @@ enum CardType {
     case web
 }
 
+
+enum AlertState {
+    case registered
+    case empty
+    case firing
+}
+
 struct CardsViewModel {
     var type: CardType = .ruuvi
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
@@ -36,6 +43,7 @@ struct CardsViewModel {
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var provider: WeatherProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
+    var alertState: Observable<AlertState?> = Observable<AlertState?>()
     
     init(_ webTag: WebTagRealm) {
         type = .web

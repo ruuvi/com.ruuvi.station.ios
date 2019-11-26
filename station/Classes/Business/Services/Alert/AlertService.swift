@@ -4,6 +4,7 @@ import BTKit
 protocol AlertService {
     func proccess(heartbeat ruuviTag: RuuviTag)
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)
+    func hasRegistrations(for uuid: String) -> Bool
     
     func isOn(type: AlertType, for uuid: String) -> Bool
     func alert(for uuid: String, of type: AlertType) -> AlertType?
@@ -20,7 +21,7 @@ protocol AlertService {
 }
 
 protocol AlertServiceObserver: class {
-    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool)
+    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool, for uuid: String)
 }
 
 extension Notification.Name {
