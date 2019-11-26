@@ -39,7 +39,7 @@
 "Background.navigationItem.title" = "Taustaprosessit";
 "Background.PresentNotifications.title" = "Näytä ilmoituksia";
 "Background.KeepConnection.title" = "Säilytä yhteys";
-"Background.SaveHeartbeats.title" = "Tallenna sykkeet";
+"Background.SaveHeartbeats.title" = "Historian tallennusväli";
 "Background.Interval.Every.string" = "joka";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Lue RSSI";
