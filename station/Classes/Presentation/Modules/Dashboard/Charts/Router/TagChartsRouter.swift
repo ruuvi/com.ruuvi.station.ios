@@ -2,7 +2,7 @@ import LightRoute
 import UIKit
 
 class TagChartsRouter: TagChartsRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
     
     private var menuTableTransition: MenuTableTransitioningDelegate!
     
@@ -16,7 +16,7 @@ class TagChartsRouter: TagChartsRouterInput {
             .forStoryboard(factory: factory, to: MenuModuleInput.self)
             .apply(to: { (viewController) in
                 viewController.modalPresentationStyle = .custom
-                let manager = MenuTableTransitionManager(container: self.transitionHandler as! UIViewController, menu: viewController)
+                let manager = MenuTableTransitionManager(container: self.transitionHandler, menu: viewController)
                 self.menuTableTransition = MenuTableTransitioningDelegate(manager: manager)
             })
             .add(transitioningDelegate: menuTableTransition)

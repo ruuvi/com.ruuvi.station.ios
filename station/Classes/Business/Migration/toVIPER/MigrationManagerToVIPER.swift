@@ -6,6 +6,7 @@ class MigrationManagerToVIPER: MigrationManager {
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
     
+    // swiftlint:disable:next cyclomatic_complexity
     func migrateIfNeeded() {
         let config = Realm.Configuration(
             schemaVersion: 10,
@@ -43,7 +44,20 @@ class MigrationManagerToVIPER: MigrationManager {
                                 let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
                                 let txPower = oldObject?["txPower"] as? Int,
                                 let updatedAt = oldObject?["updatedAt"] as? NSDate {
-                             migration.create(RuuviTagDataRealm.className(), value: ["ruuviTag": ruuviTag, "date": updatedAt, "rssi": rssi, "celsius": temperature, "humidity": humidity, "pressure": pressure, "accelerationX": accelerationX, "accelerationY": accelerationY, "accelerationZ": accelerationZ, "voltage": voltage, "movementCounter": movementCounter, "measurementSequenceNumber": measurementSequenceNumber, "txPower": txPower])
+                             migration.create(RuuviTagDataRealm.className(),
+                                              value: ["ruuviTag": ruuviTag,
+                                                      "date": updatedAt,
+                                                      "rssi": rssi,
+                                                      "celsius": temperature,
+                                                      "humidity": humidity,
+                                                      "pressure": pressure,
+                                                      "accelerationX": accelerationX,
+                                                      "accelerationY": accelerationY,
+                                                      "accelerationZ": accelerationZ,
+                                                      "voltage": voltage,
+                                                      "movementCounter": movementCounter,
+                                                      "measurementSequenceNumber": measurementSequenceNumber,
+                                                      "txPower": txPower])
                             }
                         }
                         

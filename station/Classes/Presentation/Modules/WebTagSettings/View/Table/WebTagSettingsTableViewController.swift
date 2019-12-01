@@ -41,7 +41,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
     }
     
     func showTagRemovalConfirmationDialog() {
-        let controller = UIAlertController(title: "WebTagSettings.confirmTagRemovalDialog.title".localized(), message: "WebTagSettings.confirmTagRemovalDialog.message".localized(), preferredStyle: .alert)
+        let title = "WebTagSettings.confirmTagRemovalDialog.title".localized()
+        let message = "WebTagSettings.confirmTagRemovalDialog.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmTagRemoval()
         }))
@@ -50,7 +52,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
     }
     
     func showClearLocationConfirmationDialog() {
-        let controller = UIAlertController(title: "WebTagSettings.confirmClearLocationDialog.title".localized(), message: "WebTagSettings.confirmClearLocationDialog.message".localized(), preferredStyle: .alert)
+        let title = "WebTagSettings.confirmClearLocationDialog.title".localized()
+        let message = "WebTagSettings.confirmClearLocationDialog.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmToClearLocation()
         }))

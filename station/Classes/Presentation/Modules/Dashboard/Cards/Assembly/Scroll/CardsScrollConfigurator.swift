@@ -27,10 +27,12 @@ class CardsScrollConfigurator {
         
         router.delegate = presenter
         
+        // swiftlint:disable force_cast
         let menu = UIStoryboard(name: "Menu", bundle: .main).instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom
         let menuTable = menu.topViewController as! MenuTableViewController
         let menuPresenter = menuTable.output as! MenuPresenter
+        // swiftlint:enable force_cast
         menuPresenter.configure(output: presenter)
         
         let menuManager = MenuTableTransitionManager(container: view, menu: menu)
@@ -41,9 +43,11 @@ class CardsScrollConfigurator {
         view.menuPresentInteractiveTransition = menuTransition.present
         view.menuDismissInteractiveTransition = menuTransition.dismiss
         
+        // swiftlint:disable force_cast
         let tagCharts = UIStoryboard(name: "TagCharts", bundle: .main).instantiateInitialViewController() as! TagChartsScrollViewController
         tagCharts.modalPresentationStyle = .custom
         let tagChartsPresenter = tagCharts.output as! TagChartsModuleInput
+        // swiftlint:enable force_cast
         tagChartsPresenter.configure(output: presenter)
         presenter.tagCharts = tagChartsPresenter
         

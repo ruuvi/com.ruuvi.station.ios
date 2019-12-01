@@ -17,7 +17,10 @@ struct ForegroundList: View {
                 Section(header: Text(daemon.section)) {
                     ForegroundRow(daemon: daemon)
                     if daemon.isOn.value.bound {
-                        Stepper("Foreground.Interval.Every.string".localized() + " " + "\(daemon.interval.value.bound)" + " " + "Foreground.Interval.Min.string".localized(), value: self.$env.daemons[self.index(of: daemon)].interval.value.bound, in: 1...3600)
+                        Stepper("Foreground.Interval.Every.string".localized()
+                            + " " + "\(daemon.interval.value.bound)"
+                            + " " + "Foreground.Interval.Min.string".localized(),
+                                value: self.$env.daemons[self.index(of: daemon)].interval.value.bound, in: 1...3600)
                     }
                 }
             }

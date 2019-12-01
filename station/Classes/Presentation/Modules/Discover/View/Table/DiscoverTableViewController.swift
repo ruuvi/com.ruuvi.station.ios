@@ -167,17 +167,23 @@ extension DiscoverTableViewController {
         let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
         switch section {
         case .webTag:
+            // swiftlint:disable force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier, for: indexPath) as! DiscoverWebTagTableViewCell
+            // swiftlint:enable force_cast
             let tag = shownWebTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .device:
+            // swiftlint:disable force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier, for: indexPath) as! DiscoverDeviceTableViewCell
+            // swiftlint:enable force_cast
             let tag = shownDevices[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .noDevices:
+            // swiftlint:disable force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier, for: indexPath) as! DiscoverNoDevicesTableViewCell
+            // swiftlint:enable force_cast
             cell.descriptionLabel.text = isBluetoothEnabled ? "DiscoverTable.NoDevicesSection.NotFound.text".localized() : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         }
@@ -222,7 +228,9 @@ extension DiscoverTableViewController {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
         case .webTag:
+            // swiftlint:disable force_cast
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier) as! DiscoverWebTagsInfoHeaderFooterView
+            // swiftlint:enable force_cast
             header.delegate = self
             return header
         default:

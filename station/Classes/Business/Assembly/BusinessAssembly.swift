@@ -9,7 +9,9 @@ class BusinessAssembly: Assembly {
             service.alertPersistence = r.resolve(AlertPersistence.self)
             return service
         }.inObjectScope(.container).initCompleted { (r, service) in
+            // swiftlint:disable force_cast
             let s = service as! AlertServiceImpl
+            // swiftlint:enable force_cast
             s.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
         }
         

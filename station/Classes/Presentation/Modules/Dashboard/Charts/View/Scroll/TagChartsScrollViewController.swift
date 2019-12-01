@@ -54,7 +54,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             }
         }
     }
-    
+
     func showBluetoothDisabled() {
         let alertVC = UIAlertController(title: "TagCharts.BluetoothDisabledAlert.title".localized(), message: "TagCharts.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
@@ -66,15 +66,17 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToSync(for: viewModel)
-            
         }))
         present(alertVC, animated: true)
     }
     
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let alertVC = UIAlertController(title: "TagCharts.DeleteHistoryConfirmationDialog.title".localized(), message: "TagCharts.DeleteHistoryConfirmationDialog.message".localized(), preferredStyle: .alert)
+        let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
+        let message = "TagCharts.DeleteHistoryConfirmationDialog.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(title: "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title".localized(), style: .destructive, handler: { [weak self] _ in
+        let actionTitle = "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title".localized()
+        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmToClear(for: viewModel)
             
         }))
@@ -382,54 +384,52 @@ extension TagChartsScrollViewController {
         }
     }
     
-    private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
-        
+    private func bindTemperature(view: TagChartsView, with viewModel: TagChartsViewModel) {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         let kelvin = viewModel.kelvin
         let temperatureChart = view.temperatureChart
-        
+
         let temperatureBlock: ((LineChartView,[TagChartsPoint]?) -> Void) = { [weak self, weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] chartView, _ in
-            if let temperatureUnit = temperatureUnit?.value {
-                switch temperatureUnit {
-                case .celsius:
-                    self?.configureData(chartView: chartView, values: celsius?.value)
-                case .fahrenheit:
-                    self?.configureData(chartView: chartView, values: fahrenheit?.value)
-                case .kelvin:
-                    self?.configureData(chartView: chartView, values: kelvin?.value)
-                }
-            } else {
-                self?.configureData(chartView: chartView, values: nil)
-            }
+           if let temperatureUnit = temperatureUnit?.value {
+               switch temperatureUnit {
+               case .celsius:
+                   self?.configureData(chartView: chartView, values: celsius?.value)
+               case .fahrenheit:
+                   self?.configureData(chartView: chartView, values: fahrenheit?.value)
+               case .kelvin:
+                   self?.configureData(chartView: chartView, values: kelvin?.value)
+               }
+           } else {
+               self?.configureData(chartView: chartView, values: nil)
+           }
         }
-        
+
         view.temperatureChart.bind(viewModel.celsius, fire: false, block: temperatureBlock)
         view.temperatureChart.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
         view.temperatureChart.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-        
+
         view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureChart] label, temperatureUnit in
-            if let temperatureUnit = temperatureUnit {
-                switch temperatureUnit {
-                case .celsius:
-                    label.text = "°C".localized()
-                case .fahrenheit:
-                    label.text = "°F".localized()
-                case .kelvin:
-                    label.text = "K".localized()
-                }
-            } else {
-                label.text = "N/A".localized()
-            }
-            if let temperatureChart = temperatureChart {
-                temperatureBlock(temperatureChart, nil)
-            }
+           if let temperatureUnit = temperatureUnit {
+               switch temperatureUnit {
+               case .celsius:
+                   label.text = "°C".localized()
+               case .fahrenheit:
+                   label.text = "°F".localized()
+               case .kelvin:
+                   label.text = "K".localized()
+               }
+           } else {
+               label.text = "N/A".localized()
+           }
+           if let temperatureChart = temperatureChart {
+               temperatureBlock(temperatureChart, nil)
+           }
         }
-     
-        
+    }
+    
+    private func bindHumidity(view: TagChartsView, with viewModel: TagChartsViewModel) {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
         let ah = viewModel.absoluteHumidity
@@ -474,6 +474,7 @@ extension TagChartsScrollViewController {
             humidityBlock(chartView, nil)
         })
         
+        let temperatureUnit = viewModel.temperatureUnit
         let humidityUnitBlock: ((UILabel, Any) -> Void) = { [weak humidityChart, weak temperatureUnit, weak humidityUnit] label, _ in
             if let humidityUnit = humidityUnit?.value {
                 switch humidityUnit {
@@ -504,6 +505,14 @@ extension TagChartsScrollViewController {
         }
         view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
         view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
+        
+    }
+    
+    private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
+        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+        view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
+        bindTemperature(view: view, with: viewModel)
+        bindHumidity(view: view, with: viewModel)
         
         view.pressureChart.bind(viewModel.pressure) { [weak self] chartView, pressure in
             self?.configureData(chartView: chartView, values: pressure)
@@ -552,7 +561,9 @@ extension TagChartsScrollViewController {
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
+                    // swiftlint:disable force_cast
                     let view = Bundle.main.loadNibNamed("TagChartsView", owner: self, options: nil)?.first as! TagChartsView
+                    // swiftlint:enable force_cast
                     view.delegate = self
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
@@ -567,16 +578,46 @@ extension TagChartsScrollViewController {
             }
         }
     }
-    
+
     private func position(_ view: TagChartsView, _ leftView: UIView) {
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: leftView, attribute: leftView == scrollView ? .leading : .trailing, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .leading,
+                                                    relatedBy: .equal,
+                                                    toItem: leftView,
+                                                    attribute: leftView == scrollView ? .leading : .trailing,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .top,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .top,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .bottom,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .bottom,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .width,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .width,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .height,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .height,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
         configureiPadConstraints(for: view)
     }
-    
+
     private func configureiPadConstraints(for view: TagChartsView) {
         if UIApplication.shared.statusBarOrientation.isLandscape {
             view.iPadLandscapeConstraint.isActive = true

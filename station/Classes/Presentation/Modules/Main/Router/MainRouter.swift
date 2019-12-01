@@ -22,8 +22,10 @@ class MainRouter: MainRouterInput {
     
     func openCards() {
         assert(navigationController.topViewController is WelcomeViewController)
+        // swiftlint:disable force_cast
         let view = navigationController.topViewController as! WelcomeViewController
         let presenter = view.output as! WelcomePresenter
+        // swiftlint:enable force_cast
         let router = presenter.router
         router?.openCards()
     }
