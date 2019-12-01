@@ -141,14 +141,21 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.delegate = self
         
         // alerts actions and categories
-        let disableAction = UNNotificationAction(identifier: alertCategoryDisableAction, title: "LocalNotificationsManager.Disable.button".localized(), options: UNNotificationActionOptions(rawValue: 0))
+        let disableAction = UNNotificationAction(identifier: alertCategoryDisableAction,
+                                                 title: "LocalNotificationsManager.Disable.button".localized(),
+                                                 options: UNNotificationActionOptions(rawValue: 0))
         let disableAlertCategory =
-              UNNotificationCategory(identifier: alertCategory, actions: [disableAction], intentIdentifiers: [], options: .customDismissAction)
+              UNNotificationCategory(identifier: alertCategory,
+                                     actions: [disableAction],
+                                     intentIdentifiers: [],
+                                     options: .customDismissAction)
         
         nc.setNotificationCategories([disableAlertCategory])
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .badge, .sound])
     }
 

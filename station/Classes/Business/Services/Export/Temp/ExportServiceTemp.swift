@@ -16,6 +16,7 @@ class ExportServiceTemp: ExportService {
         return formatter
     }()
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func csvLog(for uuid: String) -> Future<URL,RUError> {
         let promise = Promise<URL,RUError>()
         let dateFormatter = DateFormatter()
@@ -25,7 +26,25 @@ class ExportServiceTemp: ExportService {
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             let fileName = ruuviTag.name + "-" + date + ".csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
-            var csvText = "\(ruuviTag.name)\nDate,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n".localized()
+            var csvText = "\(ruuviTag.name)\n"
+                        + "Date,"
+                        + "ISO8601,"
+                        + "Celsius,"
+                        + "Fahrenheit,"
+                        + "Kelvin,"
+                        + "Relative Humidity (%),"
+                        + "Absoulte Humidity (g/m³),"
+                        + "Dew point (°C),"
+                        + "Dew point (°F),"
+                        + "Dew point (K),"
+                        + "Pressure (hPa),"
+                        + "Acceleration X,"
+                        + "Acceleration Y,"
+                        + "Acceleration Z,"
+                        + "Voltage,"
+                        + "Movement Counter,"
+                        + "Measurement Sequence Number,"
+                        + "TX Power\n".localized()
             let sortedData = ruuviTag.data.sorted(byKeyPath: "date")
             for log in sortedData {
                 let date = dateFormatter.string(from: log.date)
@@ -141,7 +160,24 @@ class ExportServiceTemp: ExportService {
                     txPower = "N/A".localized()
                 }
                 
-                let newLine = "\(date),\(iso),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(accelerationX),\(accelerationY),\(accelerationZ),\(voltage),\(movementCounter),\(measurementSequenceNumber),\(txPower)\n"
+                let newLine = "\(date)" + ","
+                            + "\(iso)" + ","
+                            + "\(celsius)" + ","
+                            + "\(fahrenheit)" + ","
+                            + "\(kelvin)" + ","
+                            + "\(relativeHumidity)" + ","
+                            + "\(absoluteHumidity)" + ","
+                            + "\(dewPointCelsius)" + ","
+                            + "\(dewPointFahrenheit)" + ","
+                            + "\(dewPointKelvin)" + ","
+                            + "\(pressure)" + ","
+                            + "\(accelerationX)" + ","
+                            + "\(accelerationY)" + ","
+                            + "\(accelerationZ)" + ","
+                            + "\(voltage)" + ","
+                            + "\(movementCounter)" + ","
+                            + "\(measurementSequenceNumber)" + ","
+                            + "\(txPower)\n"
                 csvText.append(contentsOf: newLine)
             }
             
@@ -154,7 +190,19 @@ class ExportServiceTemp: ExportService {
         } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
             let fileName = webTag.name + "_" + date + ".csv"
             let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
-            var csvText = "\(webTag.name)\nDate,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absoulte Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n".localized()
+            var csvText = "\(webTag.name)\n"
+                        + "Date,"
+                        + "ISO8601,"
+                        + "Celsius,"
+                        + "Fahrenheit,"
+                        + "Kelvin,"
+                        + "Relative Humidity (%),"
+                        + "Absoulte Humidity (g/m³),"
+                        + "Dew point (°C),"
+                        + "Dew point (°F),"
+                        + "Dew point (K),"
+                        + "Pressure (hPa),"
+                        + "Location\n".localized()
             let sortedData = webTag.data.sorted(byKeyPath: "date")
             for log in sortedData {
                 let date = dateFormatter.string(from: log.date)
@@ -232,7 +280,18 @@ class ExportServiceTemp: ExportService {
                 } else {
                     location = "N/A".localized()
                 }
-                let newLine = "\(date),\(iso),\(celsius),\(fahrenheit),\(kelvin),\(relativeHumidity),\(absoluteHumidity),\(dewPointCelsius),\(dewPointFahrenheit),\(dewPointKelvin),\(pressure),\(location)\n"
+                let newLine = "\(date)" + ","
+                            + "\(iso)" + ","
+                            + "\(celsius)" + ","
+                            + "\(fahrenheit)" + ","
+                            + "\(kelvin)" + ","
+                            + "\(relativeHumidity)" + ","
+                            + "\(absoluteHumidity)" + ","
+                            + "\(dewPointCelsius)" + ","
+                            + "\(dewPointFahrenheit)" + ","
+                            + "\(dewPointKelvin)" + ","
+                            + "\(pressure)" + ","
+                            + "\(location)\n"
                      csvText.append(contentsOf: newLine)
                  }
                  

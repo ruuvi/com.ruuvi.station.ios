@@ -32,12 +32,21 @@ class WebTagServiceImpl: WebTagService {
     }
 
     @discardableResult
-    func observeCurrentLocationData<T: AnyObject>(_ observer: T, provider: WeatherProvider, interval: TimeInterval, fire: Bool = true, closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
+    func observeCurrentLocationData<T: AnyObject>(_ observer: T,
+                                                  provider: WeatherProvider,
+                                                  interval: TimeInterval,
+                                                  fire: Bool = true,
+                                                  closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
         return weatherProviderService.observeCurrentLocationData(observer, provider: provider, interval: interval, fire: fire, closure: closure)
     }
     
     @discardableResult
-    func observeData<T: AnyObject>(_ observer: T, coordinate: CLLocationCoordinate2D, provider: WeatherProvider, interval: TimeInterval, fire: Bool = true, closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
+    func observeData<T: AnyObject>(_ observer: T,
+                                   coordinate: CLLocationCoordinate2D,
+                                   provider: WeatherProvider,
+                                   interval: TimeInterval,
+                                   fire: Bool = true,
+                                   closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
         return weatherProviderService.observeData(observer, coordinate: coordinate, provider: provider, interval: interval, fire: fire, closure: closure)
     }
 }

@@ -107,7 +107,11 @@ extension AboutViewController {
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         
         // make headers bold
-        let makeBold = ["About.AboutHelp.header".localized(), "About.OperationsManual.header".localized(), "About.Troubleshooting.header".localized(), "About.OpenSource.header".localized(), "About.More.header".localized()]
+        let makeBold = ["About.AboutHelp.header".localized(),
+                        "About.OperationsManual.header".localized(),
+                        "About.Troubleshooting.header".localized(),
+                        "About.OpenSource.header".localized(),
+                        "About.More.header".localized()]
         let boldFont = UIFont(name: "Montserrat-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)

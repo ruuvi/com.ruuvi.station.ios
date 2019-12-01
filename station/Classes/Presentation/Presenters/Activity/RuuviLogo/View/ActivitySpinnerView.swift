@@ -1,11 +1,13 @@
 import UIKit
 
 @IBDesignable
-class ActivitySpinnerView : UIView {
+class ActivitySpinnerView: UIView {
     
     override var layer: CAShapeLayer {
         get {
+            // swiftlint:disable force_cast
             return super.layer as! CAShapeLayer
+            // swiftlint:enable force_cast
         }
     }
     

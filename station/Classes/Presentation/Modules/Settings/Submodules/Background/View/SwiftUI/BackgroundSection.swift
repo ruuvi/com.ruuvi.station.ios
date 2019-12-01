@@ -28,7 +28,10 @@ struct BackgroundSection: View {
                 }
                 
                 if self.env.viewModels[self.index].saveHeartbeats.value.bound {
-                    Stepper("Background.Interval.Every.string".localized() + " " + "\(self.env.viewModels[self.index].saveHeartbeatsInterval.value.bound)" + " " + "Background.Interval.Min.string".localized(), value: self.$env.viewModels[self.index].saveHeartbeatsInterval.value.bound, in: 1...3600)
+                    Stepper("Background.Interval.Every.string".localized()
+                        + " " + "\(self.env.viewModels[self.index].saveHeartbeatsInterval.value.bound)"
+                        + " " + "Background.Interval.Min.string".localized(),
+                            value: self.$env.viewModels[self.index].saveHeartbeatsInterval.value.bound, in: 1...3600)
                 }
                 
                 Toggle(isOn: self.$env.viewModels[self.index].readRSSI.value.bound) {
@@ -36,7 +39,10 @@ struct BackgroundSection: View {
                 }
                 
                 if self.env.viewModels[self.index].readRSSI.value.bound {
-                    Stepper("Background.Interval.Every.string".localized() + " " + "\(self.env.viewModels[self.index].readRSSIInterval.value.bound)" + " " + "Background.Interval.Sec.string".localized(), value: self.$env.viewModels[self.index].readRSSIInterval.value.bound, in: 1...3600)
+                    Stepper("Background.Interval.Every.string".localized()
+                        + " " + "\(self.env.viewModels[self.index].readRSSIInterval.value.bound)"
+                        + " " + "Background.Interval.Sec.string".localized(),
+                            value: self.$env.viewModels[self.index].readRSSIInterval.value.bound, in: 1...3600)
                 }
             }
         }

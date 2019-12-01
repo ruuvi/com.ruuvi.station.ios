@@ -39,13 +39,17 @@ extension CardsScrollViewController: CardsViewInput {
     }
     
     func showWebTagAPILimitExceededError() {
-        let alertVC = UIAlertController(title: "Cards.WebTagAPILimitExcededError.Alert.title".localized(), message: "Cards.WebTagAPILimitExcededError.Alert.message".localized(), preferredStyle: .alert)
+        let title = "Cards.WebTagAPILimitExcededError.Alert.title".localized()
+        let message = "Cards.WebTagAPILimitExcededError.Alert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
     func showBluetoothDisabled() {
-        let alertVC = UIAlertController(title: "Cards.BluetoothDisabledAlert.title".localized(), message: "Cards.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        let title = "Cards.BluetoothDisabledAlert.title".localized()
+        let message = "Cards.BluetoothDisabledAlert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -160,18 +164,7 @@ extension CardsScrollViewController: UITextFieldDelegate {
 
 // MARK: - Configure view
 extension CardsScrollViewController {
-    private func bind(view: CardView, with viewModel: CardsViewModel) {
-        
-        view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
-            view.isHidden = !isConnectable.bound
-        }
-        
-        view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
-            view.isHidden = !isConnected.bound
-        }
-        
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        
+    private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
@@ -225,7 +218,9 @@ extension CardsScrollViewController {
                 temperatureBlock(temperatureLabel, nil)
             }
         }
-        
+    }
+    
+    private func bindHumidity(view: CardView, with viewModel: CardsViewModel) {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
         let ah = viewModel.absoluteHumidity
@@ -315,6 +310,22 @@ extension CardsScrollViewController {
         view.humidityLabel.bind(viewModel.temperatureUnit) { label, _ in
             humidityBlock(label, nil)
         }
+    }
+    
+    private func bind(view: CardView, with viewModel: CardsViewModel) {
+        
+        view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
+            view.isHidden = !isConnectable.bound
+        }
+        
+        view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
+            view.isHidden = !isConnected.bound
+        }
+        
+        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+        
+        bindTemperature(view: view, with: viewModel)
+        bindHumidity(view: view, with: viewModel)
         
         let pressureFormat: String
         switch viewModel.type {
@@ -483,7 +494,9 @@ extension CardsScrollViewController {
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
+                    // swiftlint:disable force_cast
                     let view = Bundle.main.loadNibNamed("CardView", owner: self, options: nil)?.first as! CardView
+                    // swiftlint:enable force_cast
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)
@@ -500,10 +513,40 @@ extension CardsScrollViewController {
     }
     
     private func position(_ view: CardView, _ leftView: UIView) {
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: leftView, attribute: leftView == scrollView ? .leading : .trailing, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .leading,
+                                                    relatedBy: .equal,
+                                                    toItem: leftView,
+                                                    attribute: leftView == scrollView ? .leading : .trailing,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .top,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .top,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .bottom,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .bottom,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .width,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .width,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .height,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .height,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
     }
 }

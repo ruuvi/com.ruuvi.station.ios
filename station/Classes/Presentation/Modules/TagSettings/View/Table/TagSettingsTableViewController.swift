@@ -78,7 +78,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var temperatureAlertDescriptionLabel: UILabel!
     @IBOutlet weak var temperatureAlertSlider: RURangeSeekSlider!
     
-    var viewModel: TagSettingsViewModel? { didSet { bindTagSettingsViewModel() } }
+    var viewModel: TagSettingsViewModel? { didSet { bindViewModel() } }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
@@ -382,12 +382,16 @@ extension TagSettingsTableViewController {
         let section = TagSettingsTableSection.section(for: section)
         switch section {
         case .moreInfo:
+            // swiftlint:disable force_cast
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier) as! TagSettingsMoreInfoHeaderFooterView
+            // swiftlint:enable force_cast
             header.delegate = self
             header.noValuesView.isHidden = viewModel?.version.value == 5
             return header
         case .alerts:
+            // swiftlint:disable force_cast
             let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: alertsSectionHeaderReuseIdentifier) as! TagSettingsAlertsHeaderFooterView
+            // swiftlint:enable force_cast
             header.delegate = self
             let isPN = viewModel?.isPushNotificationsEnabled.value ?? false
             let isCo = viewModel?.isConnected.value ?? false
@@ -484,9 +488,12 @@ extension TagSettingsTableViewController {
 // MARK: - Bindings
 extension TagSettingsTableViewController {
     private func bindViewModels() {
-        bindTagSettingsViewModel()
+        bindViewModel()
     }
-    private func bindTagSettingsViewModel() {
+    
+    private func bindViewModel() {
+        bindHumidity()
+        bindTemperatureAlert()
         if isViewLoaded, let viewModel = viewModel {
             
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
@@ -504,36 +511,6 @@ extension TagSettingsTableViewController {
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
             
-            let humidity = viewModel.relativeHumidity
-            let humidityOffset = viewModel.humidityOffset
-            let humidityCell = calibrationHumidityCell
-            let humidityTrailing = humidityLabelTrailing
-            
-            let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset, weak humidityCell, weak humidityTrailing] label, _ in
-                if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
-                    if humidityOffset > 0 {
-                        let shownHumidity = humidity + humidityOffset
-                        if shownHumidity > 100.0 {
-                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
-                            humidityCell?.accessoryType = .detailButton
-                            humidityTrailing?.constant = 0
-                        } else {
-                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
-                            humidityCell?.accessoryType = .none
-                            humidityTrailing?.constant = 16.0
-                        }
-                    } else {
-                        label.text = nil
-                        humidityCell?.accessoryType = .none
-                        humidityTrailing?.constant = 16.0
-                    }
-                } else {
-                    label.text = nil
-                }
-            }
-            
-            humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
-            humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
             
             uuidValueLabel.bind(viewModel.uuid) { label, uuid in
                 if let uuid = uuid {
@@ -614,10 +591,95 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+        
             tableView.bind(viewModel.isConnectable) { (tableView, isConnectable) in
                 tableView.reloadData()
             }
+            
+            tableView.bind(viewModel.isConnected) { (tableView, isConnected) in
+                tableView.reloadData()
+            }
+            
+            tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, isPushNotificationsEnabled) in
+                tableView.reloadData()
+            }
+            
+            bind(viewModel.isConnectable) {
+                observer, isConnectable in
+                if isConnectable.bound {
+                    observer.navigationItem.rightBarButtonItem = observer.exportBarButtonItem
+                } else {
+                    observer.navigationItem.rightBarButtonItem = nil
+                }
+            }
+            let keepConnection = viewModel.keepConnection
+            connectStatusLabel.bind(viewModel.isConnected) { [weak keepConnection] (label, isConnected) in
+                let keep = keepConnection?.value ?? false
+                if isConnected.bound {
+                    label.text = "TagSettings.ConnectStatus.Connected".localized()
+                } else if keep {
+                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
+                } else {
+                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
+                }
+            }
+            
+            let isConnected = viewModel.isConnected
+            
+            keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
+                view.isOn = keepConnection.bound
+            }
+            
+            connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
+                let isConnected = isConnected?.value ?? false
+                if isConnected {
+                    label.text = "TagSettings.ConnectStatus.Connected".localized()
+                } else if keepConnection.bound {
+                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
+                } else {
+                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
+                }
+            }
+        }
+    }
+    
+    private func bindHumidity() {
+       if isViewLoaded, let viewModel = viewModel {
+           let humidity = viewModel.relativeHumidity
+           let humidityOffset = viewModel.humidityOffset
+           let humidityCell = calibrationHumidityCell
+           let humidityTrailing = humidityLabelTrailing
+           
+           let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset, weak humidityCell, weak humidityTrailing] label, _ in
+               if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
+                   if humidityOffset > 0 {
+                       let shownHumidity = humidity + humidityOffset
+                       if shownHumidity > 100.0 {
+                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
+                           humidityCell?.accessoryType = .detailButton
+                           humidityTrailing?.constant = 0
+                       } else {
+                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
+                           humidityCell?.accessoryType = .none
+                           humidityTrailing?.constant = 16.0
+                       }
+                   } else {
+                       label.text = nil
+                       humidityCell?.accessoryType = .none
+                       humidityTrailing?.constant = 16.0
+                   }
+               } else {
+                   label.text = nil
+               }
+           }
+           
+           humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
+           humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
+       }
+    }
+    
+    private func bindTemperatureAlert() {
+        if isViewLoaded, let viewModel = viewModel {
             temperatureAlertSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
                 view.isOn = isOn.bound
             }
@@ -695,59 +757,18 @@ extension TagSettingsTableViewController {
                 slider.isEnabled = isConnected.bound && isOn && isPN
             }
             
-            keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
-                view.isOn = keepConnection.bound
-            }
-            
             temperatureAlertSlider.bind(viewModel.isPushNotificationsEnabled) { [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isCo = isConnected?.value ?? false
                 slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
             }
             
-            tableView.bind(viewModel.isConnected) { (tableView, isConnected) in
-                tableView.reloadData()
-            }
-            
-            tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, isPushNotificationsEnabled) in
-                tableView.reloadData()
-            }
-            
-            bind(viewModel.isConnectable) {
-                observer, isConnectable in
-                if isConnectable.bound {
-                    observer.navigationItem.rightBarButtonItem = observer.exportBarButtonItem
-                } else {
-                    observer.navigationItem.rightBarButtonItem = nil
-                }
-            }
-            let keepConnection = viewModel.keepConnection
-            connectStatusLabel.bind(viewModel.isConnected) { [weak keepConnection] (label, isConnected) in
-                let keep = keepConnection?.value ?? false
-                if isConnected.bound {
-                    label.text = "TagSettings.ConnectStatus.Connected".localized()
-                } else if keep {
-                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
-                } else {
-                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
-                }
-            }
-            
-            connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
-                let isConnected = isConnected?.value ?? false
-                if isConnected {
-                    label.text = "TagSettings.ConnectStatus.Connected".localized()
-                } else if keepConnection.bound {
-                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
-                } else {
-                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
-                }
-            }
             temperatureAlertTextField.bind(viewModel.temperatureAlertDescription) { (textField, temperatureAlertDescription) in
                 textField.text = temperatureAlertDescription
             }
         }
     }
+    
 }
 
 // MARK: - Update UI

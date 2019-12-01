@@ -40,13 +40,17 @@ extension DefaultsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
         if let boolean = viewModel.boolean.value {
+            // swiftlint:disable force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! DefaultsSwitchTableViewCell
+            // swiftlint:enable force_cast
             cell.titleLabel.text = viewModel.title
             cell.isOnSwitch.isOn = boolean
             cell.delegate = self
             return cell
         } else {
+            // swiftlint:disable force_cast
             let cell = tableView.dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier, for: indexPath) as! DefaultsStepperTableViewCell
+            // swiftlint:enable force_cast
             let title = viewModel.title ?? ""
             cell.titleLabel.text = title + " " + "(" + "\(viewModel.integer.value.bound)" + " " + "Defaults.Interval.Sec.string".localized() + ")"
             cell.prefix = title

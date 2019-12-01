@@ -38,7 +38,9 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
     }
     
     func showClearCalibrationConfirmationDialog() {
-        let controller = UIAlertController(title: "HumidityCalibration.ClearCalibrationConfirmationAlert.title".localized(), message: "HumidityCalibration.ClearCalibrationConfirmationAlert.message".localized(), preferredStyle: .alert)
+        let title = "HumidityCalibration.ClearCalibrationConfirmationAlert.title".localized()
+        let message = "HumidityCalibration.ClearCalibrationConfirmationAlert.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmToClearHumidityOffset()
         }))
@@ -47,7 +49,9 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
     }
     
     func showCalibrationConfirmationDialog() {
-        let controller = UIAlertController(title: "HumidityCalibration.CalibrationConfirmationAlert.title".localized(), message: "HumidityCalibration.CalibrationConfirmationAlert.message".localized(), preferredStyle: .alert)
+        let title = "HumidityCalibration.CalibrationConfirmationAlert.title".localized()
+        let message = "HumidityCalibration.CalibrationConfirmationAlert.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToCalibrateHumidityOffset()
         }))

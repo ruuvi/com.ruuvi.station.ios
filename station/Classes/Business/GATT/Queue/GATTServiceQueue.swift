@@ -19,7 +19,13 @@ class GATTServiceQueue: GATTService {
         if isSyncingLogs(with: uuid) {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
         } else {
-            let operation = RuuviTagReadLogsOperation(uuid: uuid, ruuviTagPersistence: ruuviTagPersistence, connectionPersistence: connectionPersistence, background: background, progress: progress, connectionTimeout: connectionTimeout, serviceTimeout: serviceTimeout)
+            let operation = RuuviTagReadLogsOperation(uuid: uuid,
+                                                      ruuviTagPersistence: ruuviTagPersistence,
+                                                      connectionPersistence: connectionPersistence,
+                                                      background: background,
+                                                      progress: progress,
+                                                      connectionTimeout: connectionTimeout,
+                                                      serviceTimeout: serviceTimeout)
             operation.completionBlock = { [unowned operation] in
                 if let error = operation.error {
                     promise.fail(error: error)
