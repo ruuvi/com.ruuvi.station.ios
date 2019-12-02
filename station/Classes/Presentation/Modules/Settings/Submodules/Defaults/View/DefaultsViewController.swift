@@ -5,7 +5,7 @@ import SwiftUI
 
 class DefaultsViewController: UIViewController {
     var output: DefaultsViewOutput!
-    
+
     var viewModels = [DefaultsViewModel]() {
         didSet {
 #if canImport(SwiftUI) && canImport(Combine)
@@ -16,7 +16,7 @@ class DefaultsViewController: UIViewController {
             table?.viewModels = viewModels
         }
     }
-    
+
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var listContainer: UIView!
 
@@ -24,7 +24,7 @@ class DefaultsViewController: UIViewController {
     @available(iOS 13, *)
     private lazy var env = DefaultsEnvironmentObject()
 #endif
-    
+
     private var table: DefaultsTableViewController?
 }
 
@@ -32,9 +32,9 @@ extension DefaultsViewController: DefaultsViewInput {
     func localize() {
         navigationItem.title = "Defaults.navigationItem.title".localized()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
@@ -45,7 +45,7 @@ extension DefaultsViewController {
         setupLocalization()
         configureViews()
     }
-    
+
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         #if SWIFTUI
         if #available(iOS 13, *) {
@@ -57,7 +57,7 @@ extension DefaultsViewController {
         return identifier == DefaultsEmbedSegue.table.rawValue
         #endif
     }
-    
+
     #if SWIFTUI && canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
@@ -72,7 +72,7 @@ extension DefaultsViewController {
         return nil
     }
     #endif
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case DefaultsEmbedSegue.table.rawValue:

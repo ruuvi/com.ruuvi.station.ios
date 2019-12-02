@@ -8,13 +8,13 @@ class BackgroundPresenter: NSObject, BackgroundModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var connectionPersistence: ConnectionPersistence!
-    
+
     private var ruuviTagsToken: NotificationToken?
-    
+
     deinit {
         ruuviTagsToken?.invalidate()
     }
-    
+
     func configure() {
         startObservingRuuviTags()
     }
@@ -22,7 +22,7 @@ class BackgroundPresenter: NSObject, BackgroundModuleInput {
 
 // MARK: - BackgroundViewOutput
 extension BackgroundPresenter: BackgroundViewOutput {
-    
+
 }
 
 // MARK: - Private
@@ -35,7 +35,7 @@ extension BackgroundPresenter {
             return viewModel
         }
     }
-    
+
     private func update(viewModel: BackgroundViewModel, with ruuviTag: RuuviTagRealm) {
         viewModel.name.value = ruuviTag.name
         viewModel.keepConnection.value = connectionPersistence.keepConnection(to: ruuviTag.uuid)
@@ -45,7 +45,7 @@ extension BackgroundPresenter {
         viewModel.readRSSI.value = connectionPersistence.readRSSI(uuid: ruuviTag.uuid)
         viewModel.readRSSIInterval.value = connectionPersistence.readRSSIInterval(uuid: ruuviTag.uuid)
     }
-    
+
     private func bind(viewModel: BackgroundViewModel, to ruuviTag: RuuviTagRealm) {
         bind(viewModel.keepConnection, fire: false) { (observer, keepConnection) in
             observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
@@ -66,7 +66,7 @@ extension BackgroundPresenter {
             observer.connectionPersistence.setReadRSSIInterval(readRSSIInterval.bound, uuid: ruuviTag.uuid)
         }
     }
-    
+
     private func startObservingRuuviTags() {
         let ruuviTags = realmContext.main.objects(RuuviTagRealm.self).filter("isConnectable = true")
         ruuviTagsToken?.invalidate()

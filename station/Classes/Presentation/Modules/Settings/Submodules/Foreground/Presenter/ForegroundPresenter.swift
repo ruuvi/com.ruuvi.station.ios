@@ -4,7 +4,7 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
     weak var view: ForegroundViewInput!
     var router: ForegroundRouterInput!
     var settings: Settings!
-    
+
     func configure() {
         let advertisement = ForegroundViewModel()
         advertisement.type = .advertisement
@@ -16,7 +16,7 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
         bind(advertisement.interval, fire: false) { observer, interval in
             observer.settings.advertisementDaemonIntervalMinutes = interval.bound
         }
-                
+
         let webTags = ForegroundViewModel()
         webTags.type = .webTags
         webTags.isOn.value = settings.isWebTagDaemonOn
@@ -27,11 +27,11 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
         bind(webTags.interval, fire: false) { observer, interval in
             observer.settings.webTagDaemonIntervalMinutes = interval.bound
         }
-        
+
         view.viewModels = [advertisement, webTags]
     }
 }
 
 extension ForegroundPresenter: ForegroundViewOutput {
-    
+
 }

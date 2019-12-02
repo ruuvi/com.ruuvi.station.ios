@@ -8,17 +8,17 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
     var errorPresenter: ErrorPresenter!
     var foreground: BTForeground!
     var background: BTBackground!
-    
+
     private var ruuviTag: RuuviTagRealm!
     private var humidity: Double!
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
-    
+
     deinit {
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
     }
-    
+
     func configure(ruuviTag: RuuviTagRealm, humidity: Double) {
         self.ruuviTag = ruuviTag
         self.humidity = humidity
@@ -30,19 +30,19 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
     func viewDidLoad() {
         startScanningHumidity()
     }
-    
+
     func viewDidTapOnDimmingView() {
         router.dismiss()
     }
-    
+
     func viewDidTriggerClose() {
         router.dismiss()
     }
-    
+
     func viewDidTriggerClearCalibration() {
         view.showClearCalibrationConfirmationDialog()
     }
-    
+
     func viewDidConfirmToClearHumidityOffset() {
         let clear = calibrationService.cleanHumidityCalibration(for: ruuviTag)
         clear.on(success: { [weak self] _ in
@@ -51,7 +51,7 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidConfirmToCalibrateHumidityOffset() {
         let update = calibrationService.calibrateHumiditySaltTest(currentValue: humidity, for: ruuviTag)
         update.on(success: { [weak self] _ in
@@ -60,7 +60,7 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidTriggerCalibrate() {
         view.showCalibrationConfirmationDialog()
     }
@@ -70,14 +70,14 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
 extension HumidityCalibrationPresenter {
     private func startScanningHumidity() {
         advertisementToken?.invalidate()
-        advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
+        advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid) { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.humidity = tag.humidity
                 self?.updateView()
             }
         }
         heartbeatToken?.invalidate()
-        heartbeatToken = background.observe(self, uuid: ruuviTag.uuid) { [weak self] (observer, device) in
+        heartbeatToken = background.observe(self, uuid: ruuviTag.uuid) { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.humidity = tag.humidity
                 self?.updateView()

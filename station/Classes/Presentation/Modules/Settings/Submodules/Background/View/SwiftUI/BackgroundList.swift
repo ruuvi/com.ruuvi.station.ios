@@ -4,9 +4,9 @@ import Localize_Swift
 
 @available(iOS 13.0, *)
 struct BackgroundList: View {
-    
+
     @EnvironmentObject var env: BackgroundEnvironmentObject
-    
+
     var body: some View {
         List {
             ForEach(env.viewModels) { viewModel in
@@ -14,7 +14,7 @@ struct BackgroundList: View {
                     BackgroundSection(viewModel: viewModel)
                 }
             }
-            
+
         }.listStyle(GroupedListStyle())
     }
 }

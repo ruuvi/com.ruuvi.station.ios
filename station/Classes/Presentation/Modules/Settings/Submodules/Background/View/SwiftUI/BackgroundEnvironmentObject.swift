@@ -3,7 +3,7 @@ import Combine
 import SwiftUI
 
 @available(iOS 13, *)
-final class BackgroundEnvironmentObject: ObservableObject  {
+final class BackgroundEnvironmentObject: ObservableObject {
     @Published var viewModels = [BackgroundViewModel]()
 }
 #endif

@@ -11,7 +11,7 @@ enum BackgroundTableSectionRows: Int, CaseIterable {
 
 class BackgroundTableViewController: UITableViewController {
     var output: BackgroundViewOutput!
-    
+
     var viewModels = [BackgroundViewModel]() {
         didSet {
             if isViewLoaded {
@@ -19,7 +19,7 @@ class BackgroundTableViewController: UITableViewController {
             }
         }
     }
-    
+
     private let switchCellReuseIdentifier = "BackgroundSwitchTableViewCellReuseIdentifier"
     private let stepperCellReuseIdentifier = "BackgroundStepperTableViewCellReuseIdentifier"
 }
@@ -27,17 +27,17 @@ class BackgroundTableViewController: UITableViewController {
 // MARK: - BackgroundViewInput
 extension BackgroundTableViewController: BackgroundViewInput {
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func localize() {
-        
+
     }
 }
 
 // MARK: - View lifecycle
 extension BackgroundTableViewController {
-    
+
 }
 
 // MARK: - UITableViewDelegate
@@ -52,11 +52,11 @@ extension BackgroundTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return viewModels.count
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return BackgroundTableSectionRows.allCases.count
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.section]
         let type = BackgroundTableSectionRows(rawValue: indexPath.row) ?? .keepConnection
@@ -133,7 +133,7 @@ extension BackgroundTableViewController: BackgroundSwitchTableViewCellDelegate {
             case .readRSSIInterval:
                 break // do nothing, unreachable
             }
-            
+
         }
     }
 }
@@ -151,7 +151,7 @@ extension BackgroundTableViewController: BackgroundStepperTableViewCellDelegate 
             default:
                 break // do nothing
             }
-            
+
         }
     }
 }

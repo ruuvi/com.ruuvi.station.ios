@@ -7,7 +7,7 @@ private enum WebTagSettingsSection: Int {
 
 class WebTagSettingsTableViewController: UITableViewController {
     var output: WebTagSettingsViewOutput!
-    
+
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameCell: UITableViewCell!
@@ -19,9 +19,9 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var tagNameTitleLabel: UILabel!
     @IBOutlet weak var removeThisWebTagButton: UIButton!
     @IBOutlet weak var locationTitleLabel: UILabel!
-    
+
     var isNameChangedEnabled: Bool = true { didSet { updateUIIsNamaChangeEnabled() } }
-    
+
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
 }
 
@@ -35,11 +35,11 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
         tableView.reloadData()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func showTagRemovalConfirmationDialog() {
         let title = "WebTagSettings.confirmTagRemovalDialog.title".localized()
         let message = "WebTagSettings.confirmTagRemovalDialog.message".localized()
@@ -50,7 +50,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showClearLocationConfirmationDialog() {
         let title = "WebTagSettings.confirmClearLocationDialog.title".localized()
         let message = "WebTagSettings.confirmClearLocationDialog.message".localized()
@@ -61,7 +61,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
 }
 
 // MARK: - IBActions
@@ -69,25 +69,25 @@ extension WebTagSettingsTableViewController {
     @IBAction func dismissBarButtonItemAction(_ sender: Any) {
         output.viewDidAskToDismiss()
     }
-    
+
     @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRandomizeBackground()
     }
-    
+
     @IBAction func selectBackgroundButtonTouchUpInside(_ sender: UIButton) {
         output.viewDidAskToSelectBackground(sourceView: sender)
     }
-    
+
     @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
         if let name = tagNameTextField.text {
             output.viewDidChangeTag(name: name)
         }
     }
-    
+
     @IBAction func removeThisWebTagButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRemoveWebTag()
     }
-    
+
     @IBAction func clearLocationButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToClearLocation()
     }
@@ -118,11 +118,11 @@ extension WebTagSettingsTableViewController {
             }
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case WebTagSettingsSection.name.rawValue:
@@ -147,7 +147,7 @@ extension WebTagSettingsTableViewController {
     private func updateUI() {
         updateUIIsNamaChangeEnabled()
     }
-    
+
     private func updateUIIsNamaChangeEnabled() {
         if isViewLoaded {
             tagNameTextField.isEnabled = isNameChangedEnabled

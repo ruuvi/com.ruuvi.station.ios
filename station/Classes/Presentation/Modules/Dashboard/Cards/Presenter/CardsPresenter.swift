@@ -17,9 +17,9 @@ class CardsPresenter: CardsModuleInput {
     var permissionsManager: PermissionsManager!
     var connectionPersistence: ConnectionPersistence!
     var alertService: AlertService!
-    
+
     weak var tagCharts: TagChartsModuleInput?
-    
+
     private var ruuviTagsToken: NotificationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
@@ -61,14 +61,14 @@ class CardsPresenter: CardsModuleInput {
             view.viewModels = viewModels
         }
     }
-    
+
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
-        advertisementTokens.forEach( { $0.invalidate() } )
-        heartbeatTokens.forEach( { $0.invalidate() } )
+        advertisementTokens.forEach({ $0.invalidate() })
+        heartbeatTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         if let temperatureUnitToken = temperatureUnitToken {
@@ -83,7 +83,7 @@ class CardsPresenter: CardsModuleInput {
         if let webTagDaemonFailureToken = webTagDaemonFailureToken {
             NotificationCenter.default.removeObserver(webTagDaemonFailureToken)
         }
-        if let ruuviTagAdvertisementDaemonFailureToken = ruuviTagAdvertisementDaemonFailureToken{
+        if let ruuviTagAdvertisementDaemonFailureToken = ruuviTagAdvertisementDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagAdvertisementDaemonFailureToken)
         }
         if let ruuviTagConnectionDaemonFailureToken = ruuviTagConnectionDaemonFailureToken {
@@ -138,19 +138,19 @@ extension CardsPresenter: CardsViewOutput {
         startObservingAlertChanges()
         pushNotificationsManager.registerForRemoteNotifications()
     }
-    
+
     func viewWillAppear() {
         startObservingBluetoothState()
     }
-    
+
     func viewWillDisappear() {
         stopObservingBluetoothState()
     }
-    
+
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
-    
+
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
@@ -158,7 +158,7 @@ extension CardsPresenter: CardsViewOutput {
             router.openWebTagSettings(webTag: webTag)
         }
     }
-    
+
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             if settings.keepConnectionDialogWasShown(for: uuid) {
@@ -170,7 +170,7 @@ extension CardsPresenter: CardsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             settings.setKeepConnectionDialogWasShown(for: uuid)
@@ -179,7 +179,7 @@ extension CardsPresenter: CardsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidConfirmToKeepConnection(to viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             connectionPersistence.setKeepConnection(true, for: uuid)
@@ -189,7 +189,7 @@ extension CardsPresenter: CardsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidScroll(to viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             tagCharts?.configure(uuid: uuid)
@@ -205,17 +205,17 @@ extension CardsPresenter: MenuModuleOutput {
         module.dismiss()
         router.openDiscover()
     }
-    
+
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
         module.dismiss()
         router.openSettings()
     }
-    
+
     func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
         module.dismiss()
         router.openAbout()
     }
-    
+
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
         router.openRuuviWebsite()
@@ -270,7 +270,7 @@ extension CardsPresenter {
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
-            
+
             // if no tags, open discover
             if viewModels.count == 0 {
                 router.openDiscover()
@@ -285,27 +285,26 @@ extension CardsPresenter {
             }
         })
     }
-    
+
     private func stopObservingBluetoothState() {
         stateToken?.invalidate()
     }
-    
-    
+
     private func startObservingSettingsChanges() {
-        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
-            self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit } )
+        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (_) in
+            self?.viewModels.forEach({ $0.temperatureUnit.value = self?.settings.temperatureUnit })
         }
-        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
-            self?.viewModels.forEach( { $0.humidityUnit.value = self?.settings.humidityUnit } )
+        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (_) in
+            self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
         })
     }
-    
+
     private func observeRuuviTags() {
         observeRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
         observeRuuviTagRSSI()
     }
-    
+
     private func observeRuuviTagRSSI() {
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
@@ -336,7 +335,7 @@ extension CardsPresenter {
                                 default:
                                     observer.errorPresenter.present(error: error)
                                 }
-                                
+
                             }
                         })
                     }
@@ -345,14 +344,14 @@ extension CardsPresenter {
                 }
             }
     }
-    
+
     private func observeRuuviTagHeartbeats() {
-        heartbeatTokens.forEach( { $0.invalidate() } )
+        heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (uuid) -> Bool in
             ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
         }.forEach { (uuid) in
-            heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (observer, device) in
+            heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
                     let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
                     viewModel.update(with: ruuviTag)
@@ -360,13 +359,13 @@ extension CardsPresenter {
             })
         }
     }
-    
+
     private func observeRuuviTagAdvertisements() {
-        advertisementTokens.forEach( { $0.invalidate() } )
+        advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
-                advertisementTokens.append(foreground.observe(self, uuid: uuid) { [weak self] (observer, device) in
+                advertisementTokens.append(foreground.observe(self, uuid: uuid) { [weak self] (_, device) in
                     if let ruuviTag = device.ruuvi?.tag,
                         let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
                         viewModel.update(with: ruuviTag)
@@ -376,11 +375,11 @@ extension CardsPresenter {
             }
         }
     }
-    
+
     private func startObservingWebTagsData() {
         webTagsDataTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.removeAll()
-        
+
         webTags?.forEach({ webTag in
             webTagsDataTokens.append(webTag.data.observe { [weak self] (change) in
                 switch change {
@@ -388,13 +387,13 @@ extension CardsPresenter {
                     if let last = data.sorted(byKeyPath: "date").last {
                         self?.viewModels
                             .filter({ $0.uuid.value == webTag.uuid })
-                            .forEach( { $0.update(last)})
+                            .forEach({ $0.update(last)})
                     }
                 case .update(let data, _, _, _):
                     if let last = data.sorted(byKeyPath: "date").last {
                         self?.viewModels
                             .filter({ $0.uuid.value == webTag.uuid })
-                            .forEach( { $0.update(last)})
+                            .forEach({ $0.update(last)})
                     }
                 case .error(let error):
                     self?.errorPresenter.present(error: error)
@@ -402,7 +401,7 @@ extension CardsPresenter {
             })
         })
     }
-    
+
     private func startObservingWebTags() {
         webTags = realmContext.main.objects(WebTagRealm.self)
         webTagsToken = webTags?.observe({ [weak self] (change) in
@@ -429,7 +428,7 @@ extension CardsPresenter {
             }
         })
     }
-    
+
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
         ruuviTagsToken?.invalidate()
@@ -457,7 +456,7 @@ extension CardsPresenter {
             }
         }
     }
-    
+
     private func startObservingBackgroundChanges() {
         backgroundToken = NotificationCenter.default.addObserver(forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main) { [weak self] notification in
             if let userInfo = notification.userInfo, let uuid = userInfo[BackgroundPersistenceDidChangeBackgroundKey.uuid] as? String {
@@ -467,7 +466,7 @@ extension CardsPresenter {
             }
         }
     }
-    
+
     func startObservingDaemonsErrors() {
         webTagDaemonFailureToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonDidFail, object: nil, queue: .main) { [weak self] notification in
             if let userInfo = notification.userInfo, let error = userInfo[WebTagDaemonDidFailKey.error] as? RUError {
@@ -486,83 +485,82 @@ extension CardsPresenter {
                 }
             }
         }
-        
+
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagAdvertisementDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagAdvertisementDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
-        
+
         ruuviTagPropertiesDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagPropertiesDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagPropertiesDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
-        
+
         ruuviTagConnectionDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagConnectionDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagConnectionDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
-        
+
         ruuviTagHeartbeatDaemonFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagHeartbeatDaemonDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagHeartbeatDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
-        
+
         ruuviTagReadLogsOperationFailureToken = NotificationCenter.default.addObserver(forName: .RuuviTagReadLogsOperationDidFail, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let error = userInfo[RuuviTagReadLogsOperationDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
-        
+
     }
-    
+
     func startObservingConnectionPersistenceNotifications() {
         startKeepingConnectionToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartToKeepConnection, object: nil, queue: .main, using: { [weak self] _ in
             self?.observeRuuviTagHeartbeats()
             self?.observeRuuviTagRSSI()
         })
-        
+
         stopKeepingConnectionToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection, object: nil, queue: .main, using: { [weak self] _ in
             self?.observeRuuviTagHeartbeats()
             self?.observeRuuviTagRSSI()
         })
-        
+
         startReadingRSSIToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartReadingRSSI, object: nil, queue: .main, using: { [weak self] _ in
             self?.observeRuuviTagRSSI()
         })
-        
+
         stopReadingRSSIToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStopReadingRSSI, object: nil, queue: .main, using: { [weak self] notification in
             self?.observeRuuviTagRSSI()
             if let userInfo = notification.userInfo, let uuid = userInfo[ConnectionPersistenceDidStopReadingRSSIKey.uuid] as? String {
                 self?.viewModels
-                    .filter( { $0.uuid.value == uuid} )
-                    .forEach( { $0.update(rssi: nil) } )
+                    .filter({ $0.uuid.value == uuid})
+                    .forEach({ $0.update(rssi: nil) })
             }
         })
-        
+
         readRSSIIntervalDidChangeToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidChangeReadRSSIInterval, object: nil, queue: .main, using: { [weak self] _ in
             self?.observeRuuviTagRSSI()
         })
     }
-    
+
     func startObservingDidConnectDisconnectNotifications() {
         didConnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = true
             }
         })
-        
+
         didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = false
             }
         })
     }
-    
-    
+
     private func startObservingAlertChanges() {
         temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
             if let sSelf = self, let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
@@ -572,7 +570,7 @@ extension CardsPresenter {
             }
         })
     }
-    
+
     private func startListeningToAlertStatus() {
         ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }

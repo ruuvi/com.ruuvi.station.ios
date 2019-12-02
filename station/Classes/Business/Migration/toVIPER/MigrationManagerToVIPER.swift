@@ -2,23 +2,23 @@ import RealmSwift
 import Foundation
 
 class MigrationManagerToVIPER: MigrationManager {
-    
+
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
-    
+
     // swiftlint:disable:next cyclomatic_complexity
     func migrateIfNeeded() {
         let config = Realm.Configuration(
             schemaVersion: 10,
             migrationBlock: { migration, oldSchemaVersion in
                 if (oldSchemaVersion < 2) {
-                    migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, newObject) in
-                        
+                    migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, _) in
+
                         if let uuid = oldObject?["uuid"] as? String,
                             let name = oldObject?["name"] as? String,
                             let version = oldObject?["dataFormat"] as? Int,
                             let mac = oldObject?["mac"] as? String {
-                            
+
                             var realName: String
                             if name.isEmpty {
                                 if mac.isEmpty {
@@ -29,9 +29,9 @@ class MigrationManagerToVIPER: MigrationManager {
                             } else {
                                 realName = name
                             }
-                            
+
                             let ruuviTag = migration.create(RuuviTagRealm.className(), value: ["uuid": uuid, "name": realName, "version": version, "mac": mac])
-                            
+
                             if let temperature = oldObject?["temperature"] as? Double,
                                 let humidity = oldObject?["humidity"] as? Double,
                                 let pressure = oldObject?["pressure"] as? Double,
@@ -60,11 +60,11 @@ class MigrationManagerToVIPER: MigrationManager {
                                                       "txPower": txPower])
                             }
                         }
-                        
+
                         if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
                             self.backgroundPersistence.setBackground(id, for: uuid)
                         }
-                        
+
                     })
                 } else if oldSchemaVersion < 3 {
                     migration.enumerateObjects(ofType: RuuviTagDataRealm.className()) { oldObject, newObject in
@@ -94,7 +94,7 @@ class MigrationManagerToVIPER: MigrationManager {
                 } else if oldSchemaVersion < 6 {
                     migration.deleteData(forType: RuuviTagDataRealm.className())
                     migration.deleteData(forType: WebTagDataRealm.className())
-                }  else if oldSchemaVersion < 7 {
+                } else if oldSchemaVersion < 7 {
                     migration.deleteData(forType: RuuviTagDataRealm.className())
                     migration.deleteData(forType: WebTagDataRealm.className())
                 } else if oldSchemaVersion < 8 {
@@ -106,21 +106,21 @@ class MigrationManagerToVIPER: MigrationManager {
                     // do nothing
                 }
         })
-        
+
         // Tell Realm to use this new configuration object for the default Realm
         Realm.Configuration.defaultConfiguration = config
-        
+
         if !UserDefaults.standard.bool(forKey: "MigrationManagerToVIPER.useFahrenheit.checked") {
             UserDefaults.standard.set(true, forKey: "MigrationManagerToVIPER.useFahrenheit.checked")
             let useFahrenheit = UserDefaults.standard.bool(forKey: "useFahrenheit")
             settings.temperatureUnit = useFahrenheit ? .fahrenheit : .celsius
         }
-        
+
         if !UserDefaults.standard.bool(forKey: "MigrationManagerToVIPER.hasShownWelcome.checked") {
             UserDefaults.standard.set(true, forKey: "MigrationManagerToVIPER.hasShownWelcome.checked")
             settings.welcomeShown = UserDefaults.standard.bool(forKey: "hasShownWelcome")
         }
-        
+
         if !UserDefaults.standard.bool(forKey: "MigrationManagerToVIPER.hasShownSwipe.checked") {
             UserDefaults.standard.set(true, forKey: "MigrationManagerToVIPER.hasShownSwipe.checked")
             let hasShownSwipe = UserDefaults.standard.bool(forKey: "hasShownSwipe")

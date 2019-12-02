@@ -30,7 +30,7 @@ class ErrorPresenterAlert: ErrorPresenter {
             presentAlert(error: error)
         }
     }
-    
+
     private func presentAlert(error: Error) {
         var title: String? = "ErrorPresenterAlert.Error".localized()
         if let localizedError = error as? LocalizedError {

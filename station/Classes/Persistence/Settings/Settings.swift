@@ -26,7 +26,7 @@ protocol Settings {
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }
     var alertsRepeatingIntervalSeconds: Int { get set }
-    
+
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)
 }

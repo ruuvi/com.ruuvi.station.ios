@@ -3,7 +3,7 @@ import Foundation
 enum WebTagLocationSource {
     case current
     case manual
-    
+
     var title: String {
         switch self {
         case .current:
@@ -13,4 +13,3 @@ enum WebTagLocationSource {
         }
     }
 }
-

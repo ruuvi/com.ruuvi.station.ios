@@ -2,15 +2,15 @@ import UIKit
 
 class WelcomeViewController: UIViewController {
     var output: WelcomeViewOutput!
-    
+
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var welcomeImageView: UIImageView!
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
+
 }
 
 extension WelcomeViewController: WelcomeViewInput {
@@ -18,9 +18,9 @@ extension WelcomeViewController: WelcomeViewInput {
         configureDescriptionLabel()
         scanButton.setTitle("Welcome.scan.title".localized(), for: .normal)
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
@@ -45,13 +45,13 @@ extension WelcomeViewController {
     private func configureViews() {
         configureDescriptionLabel()
     }
-    
+
     private func configureDescriptionLabel() {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 4
         paragraphStyle.alignment = .center
         let attrString = NSMutableAttributedString(string: "Welcome.description.text".localized())
-        attrString.addAttribute(.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        attrString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attrString.length))
         descriptionLabel.attributedText = attrString
     }
 }

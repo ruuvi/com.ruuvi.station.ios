@@ -3,7 +3,7 @@ import BTKit
 
 protocol TagChartsViewInput: ViewInput {
     var viewModels: [TagChartsViewModel] { get set }
-    
+
     func showBluetoothDisabled()
     func scroll(to index: Int, immediately: Bool)
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel)

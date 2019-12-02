@@ -1,7 +1,7 @@
 import Foundation
 
 class ConnectionPersistenceUserDefaults: ConnectionPersistence {
-    
+
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
     private let presentConnectionNotificationsArrayUDKey = "ConnectionPersistenceUserDefaults.presentConnectionNotifications.array"
@@ -10,15 +10,15 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     private let readRSSIArrayUDKey = "ConnectionPersistenceUserDefaults.readRSSIArrayUDKey.array"
     private let readRSSIIntervalUDKeyPrefix = "ConnectionPersistenceUserDefaults.readRSSIIntervalUDKeyPrefix."
     private let logSyncDateUDKeyPrefix = "ConnectionPersistenceUserDefaults.logSyncDateUDKeyPrefix."
-    
+
     var keepConnectionUUIDs: [String] {
         return prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
     }
-    
+
     var readRSSIUUIDs: [String] {
         return prefs.array(forKey: readRSSIArrayUDKey) as? [String] ?? []
     }
-    
+
     func keepConnection(to uuid: String) -> Bool {
         if let array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
             return array.contains(uuid)
@@ -26,7 +26,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
             return false
         }
     }
-    
+
     func presentConnectionNotifications(for uuid: String) -> Bool {
         if let array = prefs.array(forKey: presentConnectionNotificationsArrayUDKey) as? [String] {
             return array.contains(uuid)
@@ -34,7 +34,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
             return false
         }
     }
-    
+
     func setKeepConnection(_ value: Bool, for uuid: String) {
         if value {
             if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
@@ -68,7 +68,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
             }
         }
     }
-    
+
     func setPresentConnectionNotifications(_ value: Bool, for uuid: String) {
         if value {
             if var array = prefs.array(forKey: presentConnectionNotificationsArrayUDKey) as? [String] {
@@ -90,23 +90,23 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
             }
         }
     }
-    
+
     func saveHeartbeats(uuid: String) -> Bool {
         return prefs.optionalBool(forKey: saveHeartbeatsUDKeyPrefix + uuid) ?? true
     }
-    
+
     func setSaveHeartbeats(_ value: Bool, uuid: String) {
         prefs.set(value, forKey: saveHeartbeatsUDKeyPrefix + uuid)
     }
-    
+
     func saveHeartbeatsInterval(uuid: String) -> Int {
         return prefs.optionalInt(forKey: saveHeartbeatsIntervalUDKeyPrefix + uuid) ?? 5
     }
-    
+
     func setSaveHeartbeatsInterval(_ value: Int, uuid: String) {
         prefs.set(value, forKey: saveHeartbeatsIntervalUDKeyPrefix + uuid)
     }
-    
+
     func readRSSI(uuid: String) -> Bool {
         if let array = prefs.array(forKey: readRSSIArrayUDKey) as? [String] {
             return array.contains(uuid)
@@ -114,7 +114,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
             return false
         }
     }
-    
+
     func setReadRSSI(_ value: Bool, uuid: String) {
         if value {
             if var array = prefs.array(forKey: readRSSIArrayUDKey) as? [String] {
@@ -139,22 +139,22 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
             }
         }
     }
-    
+
     func readRSSIInterval(uuid: String) -> Int {
         return prefs.optionalInt(forKey: readRSSIIntervalUDKeyPrefix + uuid) ?? 5
     }
-    
+
     func setReadRSSIInterval(_ value: Int, uuid: String) {
         prefs.set(value, forKey: readRSSIIntervalUDKeyPrefix + uuid)
         NotificationCenter.default.post(name: .ConnectionPersistenceDidChangeReadRSSIInterval,
                                         object: nil,
                                         userInfo: [ConnectionPersistenceDidChangeReadRSSIIntervalKey.uuid: uuid, ConnectionPersistenceDidChangeReadRSSIIntervalKey.interval: value])
     }
-    
+
     func logSyncDate(uuid: String) -> Date? {
         return prefs.value(forKey: logSyncDateUDKeyPrefix + uuid) as? Date
     }
-    
+
     func setLogSyncDate(_ value: Date?, uuid: String) {
         prefs.set(value, forKey: logSyncDateUDKeyPrefix + uuid)
     }

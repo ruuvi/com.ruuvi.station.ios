@@ -3,13 +3,13 @@ import MapKit
 
 class LocationPickerAppleViewController: UIViewController {
     var output: LocationPickerViewOutput!
- 
+
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet var doneBarButtonItem: UIBarButtonItem!
     @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
-    
+
     var selectedLocation: Location? { didSet { updateUISelectedLocation() } }
-    
+
     private var searchBar: UISearchBar!
     private let annotationViewReuseIdentifier = "LocationPickerMKAnnotationViewReuseIdentifier"
 }
@@ -20,9 +20,9 @@ extension LocationPickerAppleViewController: LocationPickerViewInput {
         doneBarButtonItem.title = "Done".localized()
         cancelBarButtonItem.title = "Cancel".localized()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
@@ -31,19 +31,19 @@ extension LocationPickerAppleViewController {
     @IBAction func doneBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerDone()
     }
-    
+
     @IBAction func cancelBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerCancel()
     }
-    
+
     @IBAction func dismissBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerDismiss()
     }
-    
+
     @IBAction func pinBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerCurrentLocation()
     }
-    
+
     @objc func mapViewLongPressHandler(_ gr: UIGestureRecognizer) {
         if gr.state == .began {
             let point = gr.location(in: mapView)
@@ -51,7 +51,7 @@ extension LocationPickerAppleViewController {
             output.viewDidLongPressOnMap(at: coordinate)
         }
     }
-    
+
     @objc func mapViewTapHandler(_ gr: UIGestureRecognizer) {
         searchBar.resignFirstResponder()
     }
@@ -79,7 +79,7 @@ extension LocationPickerAppleViewController: MKMapViewDelegate {
             return view
         }
     }
-    
+
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         searchBar.resignFirstResponder()
     }
@@ -102,15 +102,15 @@ extension LocationPickerAppleViewController {
             let appearance = navigationController?.navigationBar.standardAppearance.copy()
             navigationItem.standardAppearance = appearance
         }
-        
+
         searchBar = UISearchBar(frame: .zero)
         searchBar.delegate = self
         navigationItem.titleView = searchBar
-        
+
         let gr = UILongPressGestureRecognizer(target: self, action: #selector(LocationPickerAppleViewController.mapViewLongPressHandler(_:)))
         gr.minimumPressDuration = 0.3
         mapView.addGestureRecognizer(gr)
-        
+
         let tr = UITapGestureRecognizer(target: self, action: #selector(LocationPickerAppleViewController.mapViewTapHandler(_:)))
         mapView.addGestureRecognizer(tr)
     }
@@ -121,7 +121,7 @@ extension LocationPickerAppleViewController {
     private func updateUI() {
         updateUISelectedLocation()
     }
-    
+
     private func updateUISelectedLocation() {
         if isViewLoaded {
             mapView.removeAnnotations(mapView.annotations)

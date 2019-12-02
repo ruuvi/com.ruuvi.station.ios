@@ -24,10 +24,10 @@ enum RuuviTagReadLogsOperationDidFinishKey: String {
 }
 
 class RuuviTagReadLogsOperation: AsyncOperation {
-    
+
     var uuid: String
     var error: RUError?
-    
+
     private var background: BTBackground
     private var connectionPersistence: ConnectionPersistence
     private var ruuviTagPersistence: RuuviTagPersistence
@@ -37,13 +37,13 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
-    
+
     deinit {
         logToken?.invalidate()
         connectToken?.invalidate()
         disconnectToken?.invalidate()
     }
-    
+
     init(uuid: String,
          ruuviTagPersistence: RuuviTagPersistence,
          connectionPersistence: ConnectionPersistence,
@@ -59,7 +59,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         self.connectionTimeout = connectionTimeout
         self.serviceTimeout = serviceTimeout
     }
-    
+
     override func main() {
         let date = connectionPersistence.logSyncDate(uuid: uuid) ?? Date.distantPast
         let uuid = self.uuid
@@ -68,7 +68,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                                             object: nil,
                                             userInfo: [RuuviTagReadLogsOperationDidStartKey.uuid: uuid, RuuviTagReadLogsOperationDidStartKey.fromDate: date])
         }
-        
+
         background.services.ruuvi.nus.log(for: self,
                                           uuid: uuid,
                                           from: date,

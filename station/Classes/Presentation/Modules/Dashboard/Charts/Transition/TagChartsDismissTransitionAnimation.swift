@@ -1,22 +1,22 @@
 import UIKit
 
-class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning  {
-    
+class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
+
     var manager: TagChartsTransitionManager
-    
+
     init(manager: TagChartsTransitionManager) {
         self.manager = manager
     }
-    
+
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.35
     }
-    
+
     @objc internal func handleHidePan(_ pan: UIPanGestureRecognizer) {
         let translation = pan.translation(in: pan.view!)
         let direction: CGFloat = manager.presentDirection == .top ? -1 : 1
         let distance = translation.y / TagChartsTransitionManager.appScreenRect.height * direction
-        
+
         switch (pan.state) {
         case .began:
             if translation.y > 0 { return } // don't start gesture
@@ -34,13 +34,13 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
             }
         }
     }
-    
+
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let fromView = transitionContext.view(forKey: .from)!
         let fromVC = transitionContext.viewController(forKey: .from)!
         fromView.alpha = 1.0
         let finalFrame = transitionContext.finalFrame(for: fromVC)
-        
+
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration,
                        delay: 0,
@@ -50,7 +50,7 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        animations: {
                         fromView.alpha = 0.0
                         fromView.frame = finalFrame
-        }) { (finished) -> Void in
+        }) { (_) -> Void in
             if !transitionContext.transitionWasCancelled {
                 fromView.removeFromSuperview()
             }

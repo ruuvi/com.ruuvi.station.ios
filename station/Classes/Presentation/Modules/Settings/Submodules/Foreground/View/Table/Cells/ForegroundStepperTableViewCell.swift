@@ -6,10 +6,10 @@ protocol ForegroundStepperTableViewCellDelegate: class {
 
 class ForegroundStepperTableViewCell: UITableViewCell {
     weak var delegate: ForegroundStepperTableViewCellDelegate?
-    
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var stepper: UIStepper!
-    
+
     @IBAction func stepperValueChanged(_ sender: Any) {
         let result = Int(stepper.value)
         titleLabel.text = "Foreground.Interval.Every.string".localized() + " " + "\(result)" + " " + "Foreground.Interval.Min.string".localized()

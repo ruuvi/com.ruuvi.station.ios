@@ -2,7 +2,7 @@ import LightRoute
 
 class WelcomeRouter: WelcomeRouterInput {
     weak var transitionHandler: TransitionHandler!
-    
+
     func openDiscover() {
         let factory = StoryboardFactory(storyboardName: "Discover")
         try! transitionHandler
@@ -12,7 +12,7 @@ class WelcomeRouter: WelcomeRouterInput {
                 module.configure(isOpenedFromWelcome: true)
             })
     }
-    
+
     func openCards() {
         let factory = StoryboardFactory(storyboardName: "Cards")
         try! transitionHandler

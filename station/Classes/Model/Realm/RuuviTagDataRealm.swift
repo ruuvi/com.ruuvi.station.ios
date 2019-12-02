@@ -3,24 +3,24 @@ import BTKit
 import Foundation
 
 class RuuviTagDataRealm: Object {
-    
+
     @objc dynamic var ruuviTag: RuuviTagRealm?
     @objc dynamic var date: Date = Date()
     @objc dynamic var compoundKey: String = UUID().uuidString
-    
+
     // all versions
 //    @objc dynamic var rssi: Int = 0
     let rssi = RealmOptional<Int>()
     let celsius = RealmOptional<Double>()
     let humidity = RealmOptional<Double>()
     let pressure = RealmOptional<Double>()
-    
+
     // v3 & v5
     let accelerationX = RealmOptional<Double>()
     let accelerationY = RealmOptional<Double>()
     let accelerationZ = RealmOptional<Double>()
     let voltage = RealmOptional<Double>()
-    
+
     // v5
     let movementCounter = RealmOptional<Int>()
     let measurementSequenceNumber = RealmOptional<Int>()
@@ -29,15 +29,15 @@ class RuuviTagDataRealm: Object {
     var fahrenheit: Double? {
         return celsius.value?.fahrenheit
     }
-    
+
     var kelvin: Double? {
         return celsius.value?.kelvin
     }
-    
+
     override static func primaryKey() -> String? {
         return "compoundKey"
     }
-    
+
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
@@ -54,7 +54,7 @@ class RuuviTagDataRealm: Object {
         self.txPower.value = data.txPower
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
-    
+
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
         self.init()
         self.ruuviTag = ruuviTag

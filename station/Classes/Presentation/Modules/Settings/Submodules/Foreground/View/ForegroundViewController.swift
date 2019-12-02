@@ -5,16 +5,16 @@ import SwiftUI
 
 class ForegroundViewController: UIViewController {
     var output: ForegroundViewOutput!
-    
+
     var viewModels = [ForegroundViewModel]() {
         didSet {
             table?.viewModels = viewModels
         }
     }
-    
+
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var listContainer: UIView!
-    
+
     private var table: ForegroundTableViewController?
 }
 
@@ -23,9 +23,9 @@ extension ForegroundViewController: ForegroundViewInput {
     func localize() {
         navigationItem.title = "Foreground.navigationItem.title".localized()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
@@ -36,7 +36,7 @@ extension ForegroundViewController {
         setupLocalization()
         configureViews()
     }
-    
+
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         #if SWIFTUI
         if #available(iOS 13, *) {
@@ -48,7 +48,7 @@ extension ForegroundViewController {
         return identifier == ForegroundEmbedSegue.table.rawValue
         #endif
     }
-    
+
     #if canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
@@ -64,7 +64,7 @@ extension ForegroundViewController {
         return nil
     }
     #endif
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case ForegroundEmbedSegue.table.rawValue:

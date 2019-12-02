@@ -6,9 +6,9 @@ class WebTagRealm: Object {
     @objc dynamic var uuid: String = ""
     @objc dynamic var providerString: String = WeatherProvider.openWeatherMap.rawValue
     @objc dynamic var location: WebTagLocationRealm?
-    
+
     let data = LinkingObjects(fromType: WebTagDataRealm.self, property: "webTag")
-    
+
     var provider: WeatherProvider {
         if let provider = WeatherProvider(rawValue: providerString) {
             return provider
@@ -16,11 +16,11 @@ class WebTagRealm: Object {
             return .openWeatherMap
         }
     }
-    
+
     override static func primaryKey() -> String {
         return "uuid"
     }
-    
+
     convenience init(uuid: String, provider: WeatherProvider) {
         self.init()
         self.uuid = uuid
@@ -29,19 +29,19 @@ class WebTagRealm: Object {
 }
 
 class WebTagLocationRealm: Object {
-    
+
     let webTags = LinkingObjects(fromType: WebTagRealm.self, property: "location")
-    
+
     @objc dynamic var city: String?
     @objc dynamic var country: String?
     @objc dynamic var latitude: Double = 0
     @objc dynamic var longitude: Double = 0
     @objc dynamic var compoundKey: String = UUID().uuidString
-    
+
     override static func primaryKey() -> String? {
         return "compoundKey"
     }
-    
+
     convenience init(location: Location) {
         self.init()
         city = location.city

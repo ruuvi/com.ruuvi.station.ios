@@ -3,11 +3,11 @@ import Future
 import CoreLocation
 
 class WeatherProviderServiceImpl: WeatherProviderService {
-    
+
     var owmApi: OpenWeatherMapAPI!
     var locationManager: LocationManager!
     var locationService: LocationService!
-    
+
     @discardableResult
     func observeData<T: AnyObject>(_ observer: T,
                                    coordinate: CLLocationCoordinate2D,
@@ -34,23 +34,23 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                 timer.invalidate()
             }
         }
-        
+
         if fire {
             timer.fire()
         }
-        
+
         return RUObservationToken {
             timer.invalidate()
         }
     }
-    
+
     @discardableResult
     func observeCurrentLocationData<T: AnyObject>(_ observer: T,
                                                   provider: WeatherProvider,
                                                   interval: TimeInterval,
                                                   fire: Bool = true,
                                                   closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
-        
+
         let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
                 timer.invalidate()
@@ -70,60 +70,60 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                 timer.invalidate()
             }
         }
-        
+
         if fire {
             timer.fire()
         }
-        
+
         return RUObservationToken {
             timer.invalidate()
         }
     }
-    
-    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<(Location,WPSData),RUError> {
-        let promise = Promise<(Location,WPSData),RUError>()
+
+    func loadCurrentLocationData(from provider: WeatherProvider) -> Future<(Location, WPSData), RUError> {
+        let promise = Promise<(Location, WPSData), RUError>()
         let coordinate = locationManager.getCurrentLocation()
-        
+
         coordinate.on(success: { [weak self] (coordinate) in
             guard let location = self?.locationService.reverseGeocode(coordinate: coordinate.coordinate) else {
                 promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
                 return
             }
-            
+
             location.on(success: { (locations) in
                 guard let location = locations.last else {
                     promise.fail(error: .unexpected(.failedToReverseGeocodeCoordinate))
                     return
                 }
-            
+
                 guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
                     promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
                     return
                 }
-                
+
                 op.on(success: { (data) in
-                    promise.succeed(value: (location,data))
+                    promise.succeed(value: (location, data))
                 }, failure: { (error) in
                     promise.fail(error: error)
                 })
-                
+
             }, failure: { (error) in
                 promise.fail(error: error)
             })
-            
+
         }, failure: { (error) in
             promise.fail(error: error)
         })
         return promise.future
     }
-    
-    func loadData(coordinate: CLLocationCoordinate2D, provider: WeatherProvider) -> Future<WPSData,RUError> {
-        let promise = Promise<WPSData,RUError>()
+
+    func loadData(coordinate: CLLocationCoordinate2D, provider: WeatherProvider) -> Future<WPSData, RUError> {
+        let promise = Promise<WPSData, RUError>()
         switch provider {
         case .openWeatherMap:
             let api = self.owmApi.loadCurrent(longitude: coordinate.longitude, latitude: coordinate.latitude)
             api.on(success: { (data) in
-                var celsius: Double? = nil
+                var celsius: Double?
                 if let kelvin = data.kelvin {
                     celsius = kelvin - 273.15
                 }
@@ -135,5 +135,5 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         }
         return promise.future
     }
-    
+
 }

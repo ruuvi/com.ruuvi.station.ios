@@ -7,4 +7,3 @@ protocol AppStateService {
     func applicationDidEnterBackground(_ application: UIApplication)
     func applicationWillEnterForeground(_ application: UIApplication)
 }
-

@@ -1,10 +1,10 @@
 import UIKit
 
 class MenuTablePresentationController: UIPresentationController {
-    
+
     var menuWidth: CGFloat = 0
     var dismissTransition: MenuTableDismissTransitionAnimation!
-    
+
     private lazy var dimmingView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.0, alpha: 0.0)
@@ -13,7 +13,7 @@ class MenuTablePresentationController: UIPresentationController {
         view.addGestureRecognizer(panGestureRecognizer)
         return view
     }()
-    
+
     private lazy var shadowView: UIView = {
         let view = UIView()
         if #available(iOS 13, *) {
@@ -30,61 +30,58 @@ class MenuTablePresentationController: UIPresentationController {
     }()
 
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(MenuTablePresentationController.dimmingViewTapped(_:)))
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(MenuTablePresentationController.dimmingViewTapped(_:)))
         return tap
     }()
-    
+
     private lazy var panGestureRecognizer: UIPanGestureRecognizer = {
         let exitPanGesture = UIPanGestureRecognizer()
         exitPanGesture.cancelsTouchesInView = false
-        exitPanGesture.addTarget(dismissTransition as Any, action:#selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
+        exitPanGesture.addTarget(dismissTransition as Any,
+                                 action: #selector(MenuTableDismissTransitionAnimation.handleHideMenuPan(_:)))
         return exitPanGesture
     }()
-    
-    
+
     override var shouldPresentInFullscreen: Bool {
-        get {
-            return true
-        }
+        return true
     }
-    
+
     override var adaptivePresentationStyle: UIModalPresentationStyle {
-        get {
-            return .overFullScreen
-        }
+        return .overFullScreen
     }
-    
-    override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
+
+    override func size(forChildContentContainer container: UIContentContainer,
+                       withParentContainerSize parentSize: CGSize) -> CGSize {
         return CGSize(width: menuWidth, height: parentSize.height)
     }
-    
+
     override var frameOfPresentedViewInContainerView: CGRect {
-        get {
-            var presentedViewFrame = CGRect.zero
-            if let containerBounds = containerView?.bounds {
-                let size = self.size(forChildContentContainer: presentedViewController, withParentContainerSize: containerBounds.size)
-                presentedViewFrame.size = size
-                presentedViewFrame.origin.x = containerBounds.origin.x
-                presentedViewFrame.origin.y = containerBounds.origin.y
-            }
-            
-            return presentedViewFrame
+        var presentedViewFrame = CGRect.zero
+        if let containerBounds = containerView?.bounds {
+            let size = self.size(forChildContentContainer: presentedViewController,
+                                 withParentContainerSize: containerBounds.size)
+            presentedViewFrame.size = size
+            presentedViewFrame.origin.x = containerBounds.origin.x
+            presentedViewFrame.origin.y = containerBounds.origin.y
         }
+
+        return presentedViewFrame
     }
-    
+
     override func presentationTransitionWillBegin() {
         if let containerView = containerView {
             dimmingView.bounds = containerView.bounds
             dimmingView.alpha = 0
-            
+
             shadowView.frame = .zero
         }
-        
+
         containerView?.insertSubview(shadowView, at: 0)
         containerView?.insertSubview(dimmingView, at: 0)
-        
+
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
-            transitionCoordinator.animate(alongsideTransition: { (context) in
+            transitionCoordinator.animate(alongsideTransition: { _ in
                 self.shadowView.frame = self.presentedView?.frame ?? .zero
                 self.dimmingView.alpha = 1.0
             }, completion: nil)
@@ -92,10 +89,10 @@ class MenuTablePresentationController: UIPresentationController {
             self.dimmingView.alpha = 1.0
         }
     }
-    
+
     override func dismissalTransitionWillBegin() {
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
-            transitionCoordinator.animate(alongsideTransition: { (context) in
+            transitionCoordinator.animate(alongsideTransition: { _ in
                 self.dimmingView.alpha = 0
                 self.shadowView.frame = self.presentedView?.frame ?? .zero
             }, completion: nil)
@@ -103,18 +100,18 @@ class MenuTablePresentationController: UIPresentationController {
             self.dimmingView.alpha = 0
         }
     }
-    
+
     override func containerViewWillLayoutSubviews() {
         if let bounds = containerView?.bounds {
             dimmingView.frame = bounds
         }
         presentedView?.frame = frameOfPresentedViewInContainerView
     }
-    
+
     @objc func dimmingViewTapped(_ tap: UITapGestureRecognizer) {
-        if let navigationController = self.presentedViewController as? UINavigationController, let menuTable = navigationController.topViewController as? MenuTableViewController {
+        if let navigationController = self.presentedViewController as? UINavigationController,
+            let menuTable = navigationController.topViewController as? MenuTableViewController {
             menuTable.output.viewDidTapOnDimmingView()
         }
     }
-    
 }

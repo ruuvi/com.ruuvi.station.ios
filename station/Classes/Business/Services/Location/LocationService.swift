@@ -3,8 +3,8 @@ import Future
 import CoreLocation
 
 protocol LocationService {
-    func search(query: String) -> Future<[Location],RUError>
-    func reverseGeocode(coordinate: CLLocationCoordinate2D) -> Future<[Location],RUError>
+    func search(query: String) -> Future<[Location], RUError>
+    func reverseGeocode(coordinate: CLLocationCoordinate2D) -> Future<[Location], RUError>
 }
 
 protocol Location {

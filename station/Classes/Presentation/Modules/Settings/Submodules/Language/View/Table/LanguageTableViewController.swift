@@ -2,9 +2,9 @@ import UIKit
 
 class LanguageTableViewController: UITableViewController {
     var output: LanguageViewOutput!
-    
+
     var languages: [Language] = [Language]() { didSet { updateUILanguages() } }
-    
+
     private let cellReuseIdentifier = "LanguageTableViewCellReuseIdentifier"
 }
 
@@ -13,9 +13,9 @@ extension LanguageTableViewController: LanguageViewInput {
     func localize() {
         tableView.reloadData()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
@@ -33,7 +33,7 @@ extension LanguageTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return languages.count
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! LanguageTableViewCell
@@ -56,7 +56,7 @@ extension LanguageTableViewController {
     private func updateUI() {
         updateUILanguages()
     }
-    
+
     private func updateUILanguages() {
         if isViewLoaded {
             tableView.reloadData()

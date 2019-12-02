@@ -2,10 +2,10 @@ import UIKit
 
 class AboutViewController: UIViewController {
     var output: AboutViewOutput!
-    
+
     @IBOutlet weak var aboutTextView: UITextView!
     @IBOutlet weak var versionLabel: UILabel!
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
     }
@@ -17,19 +17,19 @@ extension AboutViewController: AboutViewInput {
         configureTextView()
         configureVersionLabel()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
 // MARK: - IBActions
 extension AboutViewController {
-    
+
     @IBAction func backButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerClose()
     }
-    
+
 }
 
 // MARK: - View lifecycle
@@ -39,26 +39,26 @@ extension AboutViewController {
         setupLocalization()
         configureViews()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DispatchQueue.main.async {
             UIView.setAnimationsEnabled(false)
-            self.aboutTextView.scrollRangeToVisible(NSMakeRange(0, 0))
+            self.aboutTextView.scrollRangeToVisible(NSRange(location: 0, length: 0))
             UIView.setAnimationsEnabled(true)
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         aboutTextView.layoutManager.allowsNonContiguousLayout = false
     }
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { (context) in
+        coordinator.animate(alongsideTransition: { (_) in
             UIView.setAnimationsEnabled(false)
-            self.aboutTextView.scrollRangeToVisible(NSMakeRange(0, 0))
+            self.aboutTextView.scrollRangeToVisible(NSRange(location: 0, length: 0))
             UIView.setAnimationsEnabled(true)
         })
     }
@@ -78,7 +78,7 @@ extension AboutViewController {
         configureTextView()
         configureVersionLabel()
     }
-    
+
     private func configureVersionLabel() {
         if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
             let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
@@ -87,9 +87,9 @@ extension AboutViewController {
             versionLabel.text = nil
         }
     }
-    
+
     private func configureTextView() {
-        
+
         let text = "About.AboutHelp.header".localized() + "\n\n" +
             "About.AboutHelp.contents".localized() + "\n\n\n\n" +
             "About.OperationsManual.header".localized() + "\n\n" +
@@ -99,13 +99,13 @@ extension AboutViewController {
             "About.OpenSource.header".localized() + "\n\n" +
             "About.OpenSource.contents".localized() + "\n\n\n\n" +
             "About.More.header".localized() + "\n\n" +
-            "About.More.contents".localized() + "\n";
-        
+            "About.More.contents".localized() + "\n"
+
         let attrString = NSMutableAttributedString(string: text)
         let muliRegular = UIFont(name: "Muli-Regular", size: 16.0) ?? UIFont.systemFont(ofSize: 16)
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
-        
+
         // make headers bold
         let makeBold = ["About.AboutHelp.header".localized(),
                         "About.OperationsManual.header".localized(),
@@ -122,10 +122,10 @@ extension AboutViewController {
         for range in attrString.string.ranges(of: "\n") {
             attrString.addAttribute(NSAttributedString.Key.font, value: smallFont, range: NSRange(range, in: attrString.string))
         }
-        
+
         // make text color white
-        attrString.addAttribute(.foregroundColor, value: UIColor.white, range:  NSRange(location: 0, length: attrString.length))
-        
+        attrString.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: attrString.length))
+
         aboutTextView.attributedText = attrString
     }
 }
@@ -134,8 +134,7 @@ private extension String {
     func ranges(of substring: String, options: CompareOptions = [], locale: Locale? = nil) -> [Range<Index>] {
         var ranges: [Range<Index>] = []
         while ranges.last.map({ $0.upperBound < self.endIndex }) ?? true,
-            let range = self.range(of: substring, options: options, range: (ranges.last?.upperBound ?? self.startIndex)..<self.endIndex, locale: locale)
-        {
+            let range = self.range(of: substring, options: options, range: (ranges.last?.upperBound ?? self.startIndex)..<self.endIndex, locale: locale) {
             ranges.append(range)
         }
         return ranges

@@ -10,7 +10,7 @@ class LocationPickerPresenter: LocationPickerModuleInput {
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     var locationManager: LocationManager!
-    
+
     private var isLoading: Bool = false {
         didSet {
             if isLoading != oldValue {
@@ -23,7 +23,7 @@ class LocationPickerPresenter: LocationPickerModuleInput {
         }
     }
     private weak var output: LocationPickerModuleOutput?
-    
+
     func configure(output: LocationPickerModuleOutput) {
         self.output = output
     }
@@ -33,18 +33,18 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
     func viewDidTriggerCancel() {
         router.dismiss()
     }
-    
+
     func viewDidTriggerDismiss() {
         router.dismiss()
     }
-    
+
     func viewDidTriggerDone() {
         if let location = view.selectedLocation {
             output?.locationPicker(module: self, didPick: location)
         }
         router.dismiss()
     }
-    
+
     func viewDidEnterSearchQuery(_ query: String) {
         let search = locationService.search(query: query)
         isLoading = true
@@ -56,7 +56,7 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
             self.isLoading = false
         }
     }
-    
+
     func viewDidLongPressOnMap(at coordinate: CLLocationCoordinate2D) {
         let reverseGeoCode = locationService.reverseGeocode(coordinate: coordinate)
         reverseGeoCode.on(success: { [weak self] (locations) in
@@ -65,7 +65,7 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidTriggerCurrentLocation() {
         if !permissionsManager.isLocationPermissionGranted {
             permissionsManager.requestLocationPermission { [weak self] (granted) in
@@ -79,7 +79,7 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
             obtainCurrentLocation()
         }
     }
-    
+
     private func obtainCurrentLocation() {
         let op = locationManager.getCurrentLocation()
         op.on(success: { [weak self] (location) in

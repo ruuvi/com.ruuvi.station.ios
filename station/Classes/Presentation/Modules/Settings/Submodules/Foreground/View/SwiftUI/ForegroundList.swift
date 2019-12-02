@@ -4,13 +4,13 @@ import Localize_Swift
 
 @available(iOS 13.0, *)
 struct ForegroundList: View {
-    
+
     @EnvironmentObject var env: ForegroundEnvironmentObject
-    
+
     func index(of daemon: ForegroundViewModel) -> Int {
         return env.daemons.firstIndex(where: { $0.id == daemon.id })!
     }
-    
+
     var body: some View {
         List {
             ForEach(env.daemons) { daemon in
@@ -24,7 +24,7 @@ struct ForegroundList: View {
                     }
                 }
             }
-            
+
         }.listStyle(GroupedListStyle())
     }
 }

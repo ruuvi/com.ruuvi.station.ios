@@ -10,7 +10,7 @@ extension LanguagePresenter: LanguageViewOutput {
     func viewDidLoad() {
         view.languages = Language.allCases
     }
-    
+
     func viewDidSelect(language: Language) {
         settings.language = language
         LocalizationService.shared.localization = language.rawValue

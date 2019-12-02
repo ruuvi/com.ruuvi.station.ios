@@ -10,7 +10,7 @@ class BackgroundViewModel: Identifiable {
     var saveHeartbeatsInterval = Observable<Int?>(1)
     var readRSSI = Observable<Bool?>()
     var readRSSIInterval = Observable<Int?>(5)
-    
+
     var presentNotificationsTitle: String {
         return "Background.PresentNotifications.title".localized()
     }
@@ -23,9 +23,8 @@ class BackgroundViewModel: Identifiable {
     var readRSSITitle: String {
         return "Background.readRSSITitle.title".localized()
     }
-    
+
     init(uuid: String) {
         self.uuid = uuid
     }
 }
-

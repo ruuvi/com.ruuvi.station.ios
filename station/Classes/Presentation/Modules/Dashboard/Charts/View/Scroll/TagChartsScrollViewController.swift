@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import Charts
 import BTKit
@@ -5,13 +6,13 @@ import GestureInstructions
 
 class TagChartsScrollViewController: UIViewController {
     var output: TagChartsViewOutput!
-    
+
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
-    
+
     @IBOutlet weak var scrollView: UIScrollView!
-    
+
     var viewModels = [TagChartsViewModel]() { didSet { updateUIViewModels() }  }
-    
+
     private var views = [TagChartsView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
@@ -21,7 +22,7 @@ class TagChartsScrollViewController: UIViewController {
 // MARK: - TagChartsViewInput
 extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
-        views.forEach( {
+        views.forEach({
             $0.temperatureChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.temperatureChart.noDataTextColor = .white
             $0.temperatureChart.setNeedsDisplay()
@@ -31,13 +32,13 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             $0.pressureChart.noDataText = "TagCharts.NoChartData.text".localized()
             $0.pressureChart.noDataTextColor = .white
             $0.pressureChart.setNeedsDisplay()
-        } )
+        })
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func scroll(to index: Int, immediately: Bool = false) {
         if isViewLoaded {
             if immediately {
@@ -56,20 +57,24 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     }
 
     func showBluetoothDisabled() {
-        let alertVC = UIAlertController(title: "TagCharts.BluetoothDisabledAlert.title".localized(), message: "TagCharts.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        let title = "TagCharts.BluetoothDisabledAlert.title".localized()
+        let message = "TagCharts.BluetoothDisabledAlert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
-    
+
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
-        let alertVC = UIAlertController(title: "TagCharts.SyncConfirmationDialog.title".localized(), message: "TagCharts.SyncConfirmationDialog.message".localized(), preferredStyle: .alert)
+        let title = "TagCharts.SyncConfirmationDialog.title".localized()
+        let message = "TagCharts.SyncConfirmationDialog.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToSync(for: viewModel)
         }))
         present(alertVC, animated: true)
     }
-    
+
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel) {
         let title = "TagCharts.DeleteHistoryConfirmationDialog.title".localized()
         let message = "TagCharts.DeleteHistoryConfirmationDialog.message".localized()
@@ -78,11 +83,11 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         let actionTitle = "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title".localized()
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidConfirmToClear(for: viewModel)
-            
+
         }))
         present(alertVC, animated: true)
     }
-    
+
     func showExportSheet(with path: URL) {
         var shareItems = [Any]()
         #if targetEnvironment(macCatalyst)
@@ -107,7 +112,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         vc.popoverPresentationController?.sourceRect = views[currentPage].exportButton.bounds
         present(vc, animated: true)
     }
-    
+
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
         if let index = viewModels.firstIndex(where: { $0.uuid.value == viewModel.uuid.value }), index < views.count {
             let view = views[index]
@@ -136,19 +141,23 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             }
         }
     }
-    
+
     func showFailedToSyncIn(connectionTimeout: TimeInterval) {
-        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(), connectionTimeout), preferredStyle: .alert)
+        let message = String.localizedStringWithFormat("TagCharts.FailedToSyncDialog.message".localized(),
+                                                       connectionTimeout)
+        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
-   
+
     func showFailedToServeIn(serviceTimeout: TimeInterval) {
-        let alertVC = UIAlertController(title: nil, message: String.localizedStringWithFormat("TagCharts.FailedToServeDialog.message".localized(), serviceTimeout), preferredStyle: .alert)
+        let message = String.localizedStringWithFormat("TagCharts.FailedToServeDialog.message".localized(),
+                                                       serviceTimeout)
+        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
-    
+
     func showSwipeUpInstruction() {
         gestureInstructor.show(.swipeUp, after: 0.1)
     }
@@ -159,7 +168,7 @@ extension TagChartsScrollViewController {
     @IBAction func menuButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerMenu()
     }
-    
+
 }
 
 // MARK: - View lifecycle
@@ -171,30 +180,30 @@ extension TagChartsScrollViewController {
         updateUI()
         output.viewDidLoad()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
     }
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let page = CGFloat(currentPage)
-        coordinator.animate(alongsideTransition: { [weak self] (context) in
+        coordinator.animate(alongsideTransition: { [weak self] _ in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
             self?.views.forEach({ (view) in
                 self?.configureiPadConstraints(for: view)
             })
-        }) { [weak self] (context) in
+        }, completion: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
             self?.output.viewDidTransition()
-        }
+        })
         super.viewWillTransition(to: size, with: coordinator)
         gestureInstructor.dismissThenResume()
     }
@@ -209,7 +218,7 @@ extension TagChartsScrollViewController: UIScrollViewDelegate {
 
 // MARK: - ChartViewDelegate
 extension TagChartsScrollViewController: ChartViewDelegate {
-    
+
 }
 
 // MARK: - TagChartsViewDelegate
@@ -220,28 +229,28 @@ extension TagChartsScrollViewController: TagChartsViewDelegate {
             output.viewDidTriggerCards(for: viewModels[index])
         }
     }
-    
+
     func tagCharts(view: TagChartsView, didTriggerSettings sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerSettings(for: viewModels[index])
         }
     }
-    
+
     func tagCharts(view: TagChartsView, didTriggerSync sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerSync(for: viewModels[index])
         }
     }
-    
+
     func tagCharts(view: TagChartsView, didTriggerClear sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerClear(for: viewModels[index])
         }
     }
-    
+
     func tagCharts(view: TagChartsView, didTriggerExport sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
@@ -250,7 +259,7 @@ extension TagChartsScrollViewController: TagChartsViewDelegate {
     }
 }
 
-//MARK: - UIGestureRecognizerDelegate
+// MARK: - UIGestureRecognizerDelegate
 extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
@@ -260,46 +269,48 @@ extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
             return true
         }
     }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer.view != otherGestureRecognizer.view 
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer.view != otherGestureRecognizer.view
     }
 }
 
 // MARK: - View configuration
 extension TagChartsScrollViewController {
- 
+
     private func configureViews() {
         configurePanGestureRecognozer()
         configureGestureInstructor()
     }
-    
+
     private func configureGestureInstructor() {
         GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
-   
+
     private func configurePanGestureRecognozer() {
         let gr = UIPanGestureRecognizer()
         gr.delegate = self
         gr.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(gr)
-        gr.addTarget(tagChartsDismissInteractiveTransition as Any, action:#selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
+        gr.addTarget(tagChartsDismissInteractiveTransition as Any,
+                     action: #selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
     }
-    
+
     private func configure(_ chartView: LineChartView) {
         chartView.delegate = self
-        
+
         chartView.chartDescription?.enabled = false
-        
+
         chartView.dragEnabled = true
         chartView.setScaleEnabled(true)
         chartView.pinchZoomEnabled = false
         chartView.highlightPerDragEnabled = false
-        
+
         chartView.backgroundColor = .clear
-        
+
         chartView.legend.enabled = false
-        
+
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
         xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
@@ -310,24 +321,24 @@ extension TagChartsScrollViewController {
         xAxis.granularity = 300
         xAxis.valueFormatter = DateValueFormatter()
         xAxis.granularityEnabled = true
-        
+
         let leftAxis = chartView.leftAxis
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
         leftAxis.drawGridLinesEnabled = true
-        
+
         leftAxis.labelTextColor = UIColor.white
-        
+
         chartView.rightAxis.enabled = false
         chartView.legend.form = .line
-        
+
         chartView.noDataTextColor = UIColor.white
         chartView.noDataText = "TagCharts.NoChartData.text".localized()
-        
+
         chartView.scaleXEnabled = true
         chartView.scaleYEnabled = true
     }
-    
+
     private func configure(_ set: LineChartDataSet) {
         set.axisDependency = .left
         set.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
@@ -342,7 +353,7 @@ extension TagChartsScrollViewController {
         set.drawFilledEnabled = true
         set.highlightEnabled = false
     }
-    
+
     private func split(_ values: [TagChartsPoint]) -> [IChartDataSet]? {
         let interval: TimeInterval = 60 * 60
         var points = [ChartDataEntry]()
@@ -364,7 +375,7 @@ extension TagChartsScrollViewController {
         sets.append(set)
         return sets
     }
-    
+
     private func zoomAndScrollToLast24h(_ values: [TagChartsPoint], _ chartView: LineChartView) {
         if let firstX = values.first?.date.timeIntervalSince1970,
             let lastX = values.last?.date.timeIntervalSince1970 {
@@ -374,7 +385,7 @@ extension TagChartsScrollViewController {
             chartView.moveViewToX(lastX - (60 * 60 * 24))
         }
     }
-    
+
     private func configureData(chartView: LineChartView, values: [TagChartsPoint]?) {
         if let values = values {
             configure(chartView)
@@ -383,7 +394,7 @@ extension TagChartsScrollViewController {
             zoomAndScrollToLast24h(values, chartView)
         }
     }
-    
+
     private func bindTemperature(view: TagChartsView, with viewModel: TagChartsViewModel) {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
@@ -391,7 +402,12 @@ extension TagChartsScrollViewController {
         let kelvin = viewModel.kelvin
         let temperatureChart = view.temperatureChart
 
-        let temperatureBlock: ((LineChartView,[TagChartsPoint]?) -> Void) = { [weak self, weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] chartView, _ in
+        let temperatureBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = {
+            [weak self,
+            weak temperatureUnit,
+            weak fahrenheit,
+            weak celsius,
+            weak kelvin] chartView, _ in
            if let temperatureUnit = temperatureUnit?.value {
                switch temperatureUnit {
                case .celsius:
@@ -428,7 +444,8 @@ extension TagChartsScrollViewController {
            }
         }
     }
-    
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindHumidity(view: TagChartsView, with viewModel: TagChartsViewModel) {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
@@ -439,8 +456,16 @@ extension TagChartsScrollViewController {
         let dk = viewModel.dewPointKelvin
         let humidityUnit = viewModel.humidityUnit
         let humidityChart = view.humidityChart
-        
-        let humidityBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = { [weak self, weak hu, weak rh, weak ah, weak tu, weak dc, weak df, weak dk] chartView, _ in
+
+        let humidityBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = {
+            [weak self,
+            weak hu,
+            weak rh,
+            weak ah,
+            weak tu,
+            weak dc,
+            weak df,
+            weak dk] chartView, _ in
             if let hu = hu?.value {
                 switch hu {
                 case .percent:
@@ -461,7 +486,7 @@ extension TagChartsScrollViewController {
                 }
             }
         }
-        
+
         view.humidityChart.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
         view.humidityChart.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
         view.humidityChart.bind(viewModel.dewPointKelvin, fire: false, block: humidityBlock)
@@ -473,9 +498,12 @@ extension TagChartsScrollViewController {
         view.humidityChart.bind(viewModel.temperatureUnit, fire: false, block: { chartView, _ in
             humidityBlock(chartView, nil)
         })
-        
+
         let temperatureUnit = viewModel.temperatureUnit
-        let humidityUnitBlock: ((UILabel, Any) -> Void) = { [weak humidityChart, weak temperatureUnit, weak humidityUnit] label, _ in
+        let humidityUnitBlock: ((UILabel, Any) -> Void) = {
+            [weak humidityChart,
+            weak temperatureUnit,
+            weak humidityUnit] label, _ in
             if let humidityUnit = humidityUnit?.value {
                 switch humidityUnit {
                 case .percent:
@@ -505,25 +533,25 @@ extension TagChartsScrollViewController {
         }
         view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
         view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
-        
+
     }
-    
+
     private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-        
+
         view.pressureChart.bind(viewModel.pressure) { [weak self] chartView, pressure in
             self?.configureData(chartView: chartView, values: pressure)
         }
-        
+
         view.pressureUnitLabel.text = "hPa".localized()
-        
+
         view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
             view.isHidden = !isConnected.bound
         }
-        
+
         view.alertImageView.bind(viewModel.alertState) { (imageView, state) in
            if let state = state {
                switch state {
@@ -535,16 +563,19 @@ extension TagChartsScrollViewController {
                    imageView.image = UIImage(named: "icon-alert-on")
                case .firing:
                    imageView.image = UIImage(named: "icon-alert-active")
-                   UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse], animations: { [weak imageView] in
-                       imageView?.alpha = 0.0
-                   })
+                   UIView.animate(withDuration: 0.5,
+                                  delay: 0,
+                                  options: [.repeat, .autoreverse],
+                                  animations: { [weak imageView] in
+                                    imageView?.alpha = 0.0
+                                })
                }
            } else {
                imageView.image = nil
            }
        }
     }
-    
+
 }
 
 // MARK: - Update UI
@@ -552,7 +583,7 @@ extension TagChartsScrollViewController {
     private func updateUI() {
         updateUIViewModels()
     }
-    
+
     private func updateUIViewModels() {
         if isViewLoaded {
             views.forEach({ $0.removeFromSuperview() })
@@ -562,7 +593,9 @@ extension TagChartsScrollViewController {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
                     // swiftlint:disable force_cast
-                    let view = Bundle.main.loadNibNamed("TagChartsView", owner: self, options: nil)?.first as! TagChartsView
+                    let view = Bundle.main.loadNibNamed("TagChartsView",
+                                                        owner: self,
+                                                        options: nil)?.first as! TagChartsView
                     // swiftlint:enable force_cast
                     view.delegate = self
                     view.translatesAutoresizingMaskIntoConstraints = false
@@ -572,8 +605,13 @@ extension TagChartsScrollViewController {
                     views.append(view)
                     leftView = view
                 }
-                scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal
-                    , toItem: scrollView, attribute: .trailing, multiplier: 1.0, constant: 0.0))
+                scrollView.addConstraint(NSLayoutConstraint(item: leftView,
+                                                            attribute: .trailing,
+                                                            relatedBy: .equal,
+                                                            toItem: scrollView,
+                                                            attribute: .trailing,
+                                                            multiplier: 1.0,
+                                                            constant: 0.0))
                 localize()
             }
         }
@@ -628,3 +666,4 @@ extension TagChartsScrollViewController {
         }
     }
 }
+// swiftlint:enable file_length

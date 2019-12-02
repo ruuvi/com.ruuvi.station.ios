@@ -19,7 +19,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
     var exportService: ExportService!
-    
+
     private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
     private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
     private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
@@ -31,7 +31,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var temperatureAlertDidChangeToken: NSObjectProtocol?
-    
+
     deinit {
         ruuviTagToken?.invalidate()
         advertisementToken?.invalidate()
@@ -52,7 +52,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
         }
     }
-    
+
     func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
@@ -69,23 +69,23 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
 // MARK: - TagSettingsViewOutput
 extension TagSettingsPresenter: TagSettingsViewOutput {
-    
+
     func viewWillAppear() {
         checkPushNotificationsStatus()
     }
-    
+
     func viewDidAskToDismiss() {
         router.dismiss()
     }
-    
+
     func viewDidAskToRandomizeBackground() {
         viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: ruuviTag.uuid)
     }
-    
+
     func viewDidAskToRemoveRuuviTag() {
         view.showTagRemovalConfirmationDialog()
     }
-    
+
     func viewDidConfirmTagRemoval() {
         let operation = ruuviTagService.delete(ruuviTag: ruuviTag)
         operation.on(success: { [weak self] _ in
@@ -94,7 +94,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidChangeTag(name: String) {
         let finalName = name.isEmpty ? (ruuviTag.mac ?? ruuviTag.uuid) : name
         let operation = ruuviTagService.update(name: finalName, of: ruuviTag)
@@ -102,17 +102,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidAskToCalibrateHumidity() {
         if let humidity = humidity {
             router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity)
         }
     }
-    
+
     func viewDidAskToSelectBackground(sourceView: UIView) {
         photoPickerPresenter.pick(sourceView: sourceView)
     }
-    
+
     func viewDidTapOnMacAddress() {
         if viewModel.mac.value != nil {
             view.showMacAddressDetail()
@@ -120,41 +120,41 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             view.showUpdateFirmwareDialog()
         }
     }
-    
+
     func viewDidTapOnUUID() {
         view.showUUIDDetail()
     }
-    
+
     func viewDidAskToLearnMoreAboutFirmwareUpdate() {
         UIApplication.shared.open(URL(string: "https://lab.ruuvi.com/dfu")!)
     }
-    
+
     func viewDidTapOnTxPower() {
         if viewModel.txPower.value == nil {
             view.showUpdateFirmwareDialog()
         }
     }
-    
+
     func viewDidTapOnMovementCounter() {
         if viewModel.movementCounter.value == nil {
             view.showUpdateFirmwareDialog()
         }
     }
-    
+
     func viewDidTapOnMeasurementSequenceNumber() {
         if viewModel.measurementSequenceNumber.value == nil {
             view.showUpdateFirmwareDialog()
         }
     }
-    
+
     func viewDidTapOnNoValuesView() {
         view.showUpdateFirmwareDialog()
     }
-    
+
     func viewDidTapOnHumidityAccessoryButton() {
         view.showHumidityIsClippedDialog()
     }
-    
+
     func viewDidAskToFixHumidityAdjustment() {
         if let humidity = humidity {
             let operation = calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag)
@@ -163,11 +163,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             })
         }
     }
-    
+
     func viewDidTapOnAlertsDisabledView() {
         let isPN = viewModel.isPushNotificationsEnabled.value ?? false
         let isCo = viewModel.isConnected.value ?? false
-        
+
         if !isPN && !isCo {
             view.showBothNotConnectedAndNoPNPermissionDialog()
         } else if !isPN {
@@ -176,11 +176,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             view.showNotConnectedDialog()
         }
     }
-    
+
     func viewDidAskToConnectFromAlertsDisabledDialog() {
         viewModel?.keepConnection.value = true
     }
-    
+
     func viewDidAskToExportLogs() {
         if let uuid = viewModel.uuid.value {
             exportService.csvLog(for: uuid).on(success: { [weak self] url in
@@ -212,34 +212,34 @@ extension TagSettingsPresenter {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
         viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag.uuid)
-        
+
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
-        
+
         if ruuviTag.name == ruuviTag.uuid || ruuviTag.name == ruuviTag.mac {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
         }
-        
+
         viewModel.isConnectable.value = ruuviTag.isConnectable
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
         viewModel.keepConnection.value = connectionPersistence.keepConnection(to: ruuviTag.uuid)
-        
+
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.uuid
         viewModel.version.value = ruuviTag.version
-        
+
         viewModel.relativeHumidity.value = humidity
         viewModel.humidityOffset.value = ruuviTag.humidityOffset
         viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate
-        
+
         viewModel.relativeHumidity.value = ruuviTag.data.last?.humidity.value
-        
+
         viewModel.voltage.value = ruuviTag.data.last?.voltage.value
         viewModel.accelerationX.value = ruuviTag.data.last?.accelerationX.value
         viewModel.accelerationY.value = ruuviTag.data.last?.accelerationY.value
         viewModel.accelerationZ.value = ruuviTag.data.last?.accelerationZ.value
-        
+
         // version 5 supports mc, msn, txPower
         if ruuviTag.version == 5 {
             viewModel.movementCounter.value = ruuviTag.data.last(where: { $0.movementCounter.value != nil })?.movementCounter.value
@@ -250,7 +250,7 @@ extension TagSettingsPresenter {
             viewModel.measurementSequenceNumber.value = nil
             viewModel.txPower.value = nil
         }
-        
+
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
@@ -266,7 +266,7 @@ extension TagSettingsPresenter {
             }
         }
     }
-    
+
     private func startObservingRuuviTag() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTag.observe { [weak self] (change) in
@@ -280,22 +280,22 @@ extension TagSettingsPresenter {
             }
         }
     }
-    
+
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
-        advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
+        advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
         })
         heartbeatToken?.invalidate()
-        heartbeatToken = background.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (observer, device) in
+        heartbeatToken = background.observe(self, uuid: ruuviTag.uuid, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
         })
     }
-    
+
     private func sync(device: RuuviTag) {
         humidity = device.humidity
         viewModel.voltage.value = device.voltage
@@ -314,12 +314,12 @@ extension TagSettingsPresenter {
         if viewModel.isConnected.value != device.isConnected {
             viewModel.isConnected.value = device.isConnected
         }
-        
+
         if let mac = device.mac {
             viewModel.mac.value = mac
         }
     }
-    
+
     private func bindViewModel(to ruuviTag: RuuviTagRealm) {
         let temperatureLower = viewModel.celsiusLowerBound
         let temperatureUpper = viewModel.celsiusUpperBound
@@ -345,13 +345,13 @@ extension TagSettingsPresenter {
             observer.alertService.setTemperature(description: temperatureAlertDescription, for: ruuviTag.uuid)
         }
     }
-    
+
     private func startObservingSettingsChanges() {
-        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
+        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (_) in
             self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
         }
     }
-    
+
     private func startObservingConnectionStatus() {
         connectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
@@ -360,7 +360,7 @@ extension TagSettingsPresenter {
                 self?.viewModel.isConnected.value = true
             }
         })
-        
+
         disconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
@@ -369,13 +369,13 @@ extension TagSettingsPresenter {
             }
         })
     }
-    
+
     private func startObservingApplicationState() {
-        appDidBecomeActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (notification) in
+        appDidBecomeActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
             self?.checkPushNotificationsStatus()
         })
     }
-    
+
     private func checkPushNotificationsStatus() {
         pushNotificationsManager.getRemoteNotificationsAuthorizationStatus { [weak self] (status) in
             switch status {
@@ -388,7 +388,7 @@ extension TagSettingsPresenter {
             }
         }
     }
-    
+
     private func startObservingAlertChanges() {
         temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String, uuid == self?.viewModel.uuid.value {

@@ -3,27 +3,27 @@ import CoreLocation
 import Future
 
 class LocationManagerImpl: NSObject, LocationManager {
-    
+
     var isLocationPermissionGranted: Bool {
         get {
             return CLLocationManager.locationServicesEnabled()
                 && (CLLocationManager.authorizationStatus() == .authorizedWhenInUse || CLLocationManager.authorizationStatus() == .authorizedAlways)
         }
     }
-    
+
     var isLocationPermissionDenied: Bool {
         return !CLLocationManager.locationServicesEnabled()
             || CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .denied
     }
-    
+
     var isLocationPermissionNotDetermined: Bool {
         return CLLocationManager.authorizationStatus() == .notDetermined
     }
-    
+
     private var locationManager: CLLocationManager
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
-    private var getCurrentLocationPromise: Promise<CLLocation,RUError>?
-    
+    private var getCurrentLocationPromise: Promise<CLLocation, RUError>?
+
     override init() {
         locationManager = CLLocationManager()
         super.init()
@@ -31,7 +31,7 @@ class LocationManagerImpl: NSObject, LocationManager {
         locationManager.distanceFilter = 100
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
-    
+
     func requestLocationPermission(completion: ((Bool) -> Void)?) {
         if isLocationPermissionGranted {
             completion?(true)
@@ -42,9 +42,9 @@ class LocationManagerImpl: NSObject, LocationManager {
             locationManager.requestWhenInUseAuthorization()
         }
     }
-    
-    func getCurrentLocation() -> Future<CLLocation,RUError> {
-        let promise = Promise<CLLocation,RUError>()
+
+    func getCurrentLocation() -> Future<CLLocation, RUError> {
+        let promise = Promise<CLLocation, RUError>()
         if isLocationPermissionDenied {
             promise.fail(error: .core(.locationPermissionDenied))
             return promise.future
@@ -60,11 +60,11 @@ class LocationManagerImpl: NSObject, LocationManager {
 }
 
 extension LocationManagerImpl: CLLocationManagerDelegate {
-    
+
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         requestLocationPermissionCallback?(status == .authorizedWhenInUse || status == .authorizedAlways)
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
         if let location = locations.last {
@@ -73,9 +73,9 @@ extension LocationManagerImpl: CLLocationManagerDelegate {
             getCurrentLocationPromise?.fail(error: .core(.failedToGetCurrentLocation))
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error.localizedDescription)
     }
-    
+
 }

@@ -7,10 +7,10 @@ class SettingsPresenter: SettingsModuleInput {
     var settings: Settings!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
-    
+
     private var languageToken: NSObjectProtocol?
     private var connectableRuuviTagsToken: NotificationToken?
-    
+
     deinit {
         connectableRuuviTagsToken?.invalidate()
         if let languageToken = languageToken {
@@ -24,11 +24,11 @@ extension SettingsPresenter: SettingsViewOutput {
         view.temperatureUnit = settings.temperatureUnit
         view.humidityUnit = settings.humidityUnit
         view.language = settings.language
-        
-        languageToken = NotificationCenter.default.addObserver(forName: .LanguageDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
+
+        languageToken = NotificationCenter.default.addObserver(forName: .LanguageDidChange, object: nil, queue: .main, using: { [weak self] (_) in
             self?.view.language = self?.settings.language ?? .english
         })
-        
+
         connectableRuuviTagsToken?.invalidate()
         connectableRuuviTagsToken = realmContext.main.objects(RuuviTagRealm.self).filter("isConnectable == true").observe({ [weak self] (change) in
             switch change {
@@ -41,31 +41,31 @@ extension SettingsPresenter: SettingsViewOutput {
             }
         })
     }
-    
+
     func viewDidChange(temperatureUnit: TemperatureUnit) {
         settings.temperatureUnit = temperatureUnit
     }
-    
+
     func viewDidChange(humidityUnit: HumidityUnit) {
         settings.humidityUnit = humidityUnit
     }
-    
+
     func viewDidTriggerClose() {
         router.dismiss()
     }
-    
+
     func viewDidTapOnLanguage() {
         router.openLanguage()
     }
-    
+
     func viewDidTapOnForeground() {
         router.openForeground()
     }
-    
+
     func viewDidTapOnBackground() {
         router.openBackground()
     }
-    
+
     func viewDidTapOnDefaults() {
         router.openDefaults()
     }

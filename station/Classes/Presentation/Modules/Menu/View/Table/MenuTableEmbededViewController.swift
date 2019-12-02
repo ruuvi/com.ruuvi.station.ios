@@ -2,7 +2,7 @@ import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     var output: MenuViewOutput!
-    
+
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!
     @IBOutlet weak var aboutCell: UITableViewCell!
     @IBOutlet weak var getMoreSensorsCell: UITableViewCell!
@@ -16,14 +16,14 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
 // MARK: - MenuViewInput
 extension MenuTableEmbededViewController {
     func localize() {
-        addANewSensorLabel.text = "Menu.Label.AddAnNewSensor.text".localized();
+        addANewSensorLabel.text = "Menu.Label.AddAnNewSensor.text".localized()
         appSettingsLabel.text = "Menu.Label.AppSettings.text".localized()
         aboutHelpLabel.text = "Menu.Label.AboutHelp.text".localized()
         getMoreSensorsLabel.text = "Menu.Label.GetMoreSensors.text".localized()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 

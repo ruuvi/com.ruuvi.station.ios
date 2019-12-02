@@ -1,18 +1,18 @@
 import UIKit
 
 class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
-    
+
     var manager: MenuTableTransitionManager
-    
+
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
-    
+
     @objc internal func handleHideMenuPan(_ pan: UIPanGestureRecognizer) {
         let translation = pan.translation(in: pan.view!)
         let direction: CGFloat = manager.presentDirection == .left ? -1 : 1
         let distance = translation.x / MenuTableTransitionManager.appScreenRect.width * direction
-        
+
         switch (pan.state) {
         case .began:
             if translation.x > 0 { return } // don't start gesture
@@ -30,20 +30,20 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
             }
         }
     }
-    
+
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.35
     }
-    
+
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let fromVC = transitionContext.viewController(forKey: .from)!
         let fromView = fromVC.view!
-        
+
         let appearedFrame = transitionContext.finalFrame(for: fromVC)
         let initialFrame = appearedFrame
         let finalFrame = CGRect(x: -appearedFrame.size.width, y: appearedFrame.origin.y, width: appearedFrame.size.width, height: appearedFrame.size.height)
         fromView.frame = initialFrame
-        
+
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration,
                        delay: 0,
@@ -52,7 +52,7 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        options: .curveEaseInOut,
                        animations: {
                         fromView.frame = finalFrame
-        }) { (finished) -> Void in
+        }) { (_) -> Void in
             if !transitionContext.transitionWasCancelled {
                 fromView.removeFromSuperview()
             }

@@ -12,18 +12,18 @@ class WebTagSettingsPresenter: WebTagSettingsModuleInput {
             photoPickerPresenter.delegate = self
         }
     }
-    
+
     private var webTagToken: NotificationToken?
     private var webTag: WebTagRealm! {
         didSet {
             syncViewModel()
         }
     }
-    
+
     deinit {
         webTagToken?.invalidate()
     }
-    
+
     func configure(webTag: WebTagRealm) {
         self.webTag = webTag
         startObservingWebTag()
@@ -35,15 +35,15 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     func viewDidAskToDismiss() {
         router.dismiss()
     }
-    
+
     func viewDidAskToRandomizeBackground() {
         view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid)
     }
-    
+
     func viewDidAskToSelectBackground(sourceView: UIView) {
         photoPickerPresenter.pick(sourceView: sourceView)
     }
-    
+
     func viewDidChangeTag(name: String) {
         let finalName = name.isEmpty ?
                         (webTag.location == nil
@@ -55,11 +55,11 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidAskToRemoveWebTag() {
         view.showTagRemovalConfirmationDialog()
     }
-    
+
     func viewDidConfirmTagRemoval() {
         let operation = webTagService.remove(webTag: webTag)
         operation.on(success: { [weak self] _ in
@@ -68,15 +68,15 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidAskToSelectLocation() {
         router.openLocationPicker(output: self)
     }
-    
+
     func viewDidAskToClearLocation() {
         view.showClearLocationConfirmationDialog()
     }
-    
+
     func viewDidConfirmToClearLocation() {
         let operation = webTagService.clearLocation(of: webTag)
         operation.on(failure: { [weak self] (error) in
@@ -121,11 +121,10 @@ extension WebTagSettingsPresenter {
             }
         })
     }
-    
-    
+
     private func syncViewModel() {
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
-        
+
         if webTag.name == WebTagLocationSource.manual.title {
             view.viewModel.name.value = nil
         } else {
@@ -138,7 +137,7 @@ extension WebTagSettingsPresenter {
         } else {
             view.viewModel.location.value = nil
         }
-        
+
         view.isNameChangedEnabled = view.viewModel.location.value != nil
     }
 }

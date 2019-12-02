@@ -5,7 +5,7 @@ import SwiftUI
 
 class BackgroundViewController: UIViewController {
     var output: BackgroundViewOutput!
-    
+
     var viewModels = [BackgroundViewModel]() {
         didSet {
 #if canImport(SwiftUI) && canImport(Combine)
@@ -16,7 +16,7 @@ class BackgroundViewController: UIViewController {
             table?.viewModels = viewModels
         }
     }
-    
+
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var listContainer: UIView!
 
@@ -24,7 +24,7 @@ class BackgroundViewController: UIViewController {
     @available(iOS 13, *)
     private lazy var env = BackgroundEnvironmentObject()
 #endif
-    
+
     private var table: BackgroundTableViewController?
 }
 
@@ -32,9 +32,9 @@ extension BackgroundViewController: BackgroundViewInput {
     func localize() {
         navigationItem.title = "Background.navigationItem.title".localized()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
@@ -45,7 +45,7 @@ extension BackgroundViewController {
         setupLocalization()
         configureViews()
     }
-    
+
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         #if SWIFTUI
         if #available(iOS 13, *) {
@@ -57,7 +57,7 @@ extension BackgroundViewController {
         return identifier == BackgroundEmbedSegue.table.rawValue
         #endif
     }
-    
+
     #if SWIFTUI && canImport(SwiftUI) && canImport(Combine)
     @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 13, *) {
@@ -72,7 +72,7 @@ extension BackgroundViewController {
         return nil
     }
     #endif
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case BackgroundEmbedSegue.table.rawValue:

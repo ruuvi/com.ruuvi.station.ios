@@ -2,7 +2,7 @@ import UIKit
 import UserNotifications
 
 class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
-    
+
     var pnTokenData: Data? {
         get {
             return UserDefaults.standard.data(forKey: pnTokenDataUDKey)
@@ -11,7 +11,7 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
             UserDefaults.standard.set(newValue, forKey: pnTokenDataUDKey)
         }
     }
-    
+
     func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
@@ -40,11 +40,11 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
             }
         }
     }
-    
+
     func registerForRemoteNotifications() {
         if #available(iOS 10.0, *) {
             let center  = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.sound, .alert, .badge]) { (granted, error) in
+            center.requestAuthorization(options: [.sound, .alert, .badge]) { (_, error) in
                 if error == nil {
                     DispatchQueue.main.async {
                         self.didAskForRemoteNotificationPermission = true
@@ -52,14 +52,13 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
                     }
                 }
             }
-        }
-        else {
+        } else {
             UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.sound, .alert, .badge], categories: nil))
             didAskForRemoteNotificationPermission = true
             UIApplication.shared.registerForRemoteNotifications()
         }
     }
-    
+
     private let pnTokenDataUDKey = "PushNotificationsManagerImpl.pnTokenDataUDKey"
     private let didAskForRemoteNotificationPermissionUDKey = "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
     private var didAskForRemoteNotificationPermission: Bool {
