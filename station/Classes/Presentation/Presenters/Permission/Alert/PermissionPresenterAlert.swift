@@ -3,8 +3,10 @@ import UIKit
 class PermissionPresenterAlert: PermissionPresenter {
     func presentNoPhotoLibraryPermission() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let alert = UIAlertController(title: nil, message: "PermissionPresenter.NoPhotoLibraryAccess.message".localized(), preferredStyle: .alert)
-        let settings = UIAlertAction(title: "PermissionPresenter.settings".localized(), style: .default) { (_) -> Void in
+        let message = "PermissionPresenter.NoPhotoLibraryAccess.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let actionTitle = "PermissionPresenter.settings".localized()
+        let settings = UIAlertAction(title: actionTitle, style: .default) { _ -> Void in
             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(settingsUrl, options: [:])
             }
@@ -17,9 +19,11 @@ class PermissionPresenterAlert: PermissionPresenter {
 
     func presentNoCameraPermission() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let alert = UIAlertController(title: nil, message: "PermissionPresenter.NoCameraAccess.message".localized(), preferredStyle: .alert)
+        let message = "PermissionPresenter.NoCameraAccess.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
-        let settings = UIAlertAction(title: "PermissionPresenter.settings".localized(), style: .default) { (_) -> Void in
+        let actionTitle = "PermissionPresenter.settings".localized()
+        let settings = UIAlertAction(title: actionTitle, style: .default) { (_) -> Void in
             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(settingsUrl, options: [:])
             }
@@ -31,9 +35,11 @@ class PermissionPresenterAlert: PermissionPresenter {
 
     func presentNoLocationPermission() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let alert = UIAlertController(title: nil, message: "PermissionPresenter.NoLocationAccess.message".localized(), preferredStyle: .alert)
+        let message = "PermissionPresenter.NoLocationAccess.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
-        let settings = UIAlertAction(title: "PermissionPresenter.settings".localized(), style: .default) { (_) -> Void in
+        let actionTitle = "PermissionPresenter.settings".localized()
+        let settings = UIAlertAction(title: actionTitle, style: .default) { _ -> Void in
             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(settingsUrl, options: [:])
             }
@@ -45,9 +51,11 @@ class PermissionPresenterAlert: PermissionPresenter {
 
     func presentNoPushNotificationsPermission() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let alert = UIAlertController(title: nil, message: "PermissionPresenter.NoPushNotificationsPermission.message".localized(), preferredStyle: .alert)
+        let message = "PermissionPresenter.NoPushNotificationsPermission.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
-        let settings = UIAlertAction(title: "PermissionPresenter.settings".localized(), style: .default) { (_) -> Void in
+        let actionTitle = "PermissionPresenter.settings".localized()
+        let settings = UIAlertAction(title: actionTitle, style: .default) { _ -> Void in
             if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(settingsUrl, options: [:])
             }

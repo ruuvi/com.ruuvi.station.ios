@@ -21,9 +21,13 @@ class BackgroundStepperTableViewCell: UITableViewCell {
         let result = Int(stepper.value)
         switch unit {
         case .minutes:
-            titleLabel.text = "Background.Interval.Every.string".localized() + " " + "\(result)" + " " + "Background.Interval.Min.string".localized()
+            titleLabel.text = "Background.Interval.Every.string".localized()
+                + " " + "\(result)"
+                + " " + "Background.Interval.Min.string".localized()
         case .seconds:
-            titleLabel.text = "Background.Interval.Every.string".localized() + " " + "\(result)" + " " + "Background.Interval.Sec.string".localized()
+            titleLabel.text = "Background.Interval.Every.string".localized()
+                + " " + "\(result)"
+                + " " + "Background.Interval.Sec.string".localized()
         }
 
         delegate?.backgroundStepper(cell: self, didChange: result)

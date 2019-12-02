@@ -51,7 +51,9 @@ extension WelcomeViewController {
         paragraphStyle.lineSpacing = 4
         paragraphStyle.alignment = .center
         let attrString = NSMutableAttributedString(string: "Welcome.description.text".localized())
-        attrString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttribute(.paragraphStyle,
+                                value: paragraphStyle,
+                                range: NSRange(location: 0, length: attrString.length))
         descriptionLabel.attributedText = attrString
     }
 }

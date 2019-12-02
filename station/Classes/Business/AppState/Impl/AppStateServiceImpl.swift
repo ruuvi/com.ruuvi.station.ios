@@ -9,7 +9,8 @@ class AppStateServiceImpl: AppStateService {
     var webTagDaemon: WebTagDaemon!
     var heartbeatDaemon: RuuviTagHeartbeatDaemon!
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         if settings.isAdvertisementDaemonOn { advertisementDaemon.start() }
         if settings.isConnectionDaemonOn { connectionDaemon.start() }
         if settings.isWebTagDaemonOn { webTagDaemon.start() }

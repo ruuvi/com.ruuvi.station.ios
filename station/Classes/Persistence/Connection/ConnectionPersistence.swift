@@ -28,32 +28,37 @@ protocol ConnectionPersistence {
 }
 
 extension Notification.Name {
-    static let ConnectionPersistenceDidStartToKeepConnection = Notification.Name("ConnectionPersistenceDidStartToKeepConnection")
-    static let ConnectionPersistenceDidStopToKeepConnection = Notification.Name("ConnectionPersistenceDidStopToKeepConnection")
-    static let ConnectionPersistenceDidStartReadingRSSI = Notification.Name("ConnectionPersistenceDidStartReadingRSSI")
-    static let ConnectionPersistenceDidStopReadingRSSI = Notification.Name("ConnectionPersistenceDidStopReadingRSSI")
-    static let ConnectionPersistenceDidChangeReadRSSIInterval = Notification.Name("ConnectionPersistenceDidChangeReadRSSIInterval")
+    static let ConnectionPersistenceDidStartToKeepConnection =
+        Notification.Name("ConnectionPersistenceDidStartToKeepConnection")
+    static let ConnectionPersistenceDidStopToKeepConnection =
+        Notification.Name("ConnectionPersistenceDidStopToKeepConnection")
+    static let ConnectionPersistenceDidStartReadingRSSI =
+        Notification.Name("ConnectionPersistenceDidStartReadingRSSI")
+    static let ConnectionPersistenceDidStopReadingRSSI =
+        Notification.Name("ConnectionPersistenceDidStopReadingRSSI")
+    static let ConnectionPersistenceDidChangeReadRSSIInterval =
+        Notification.Name("ConnectionPersistenceDidChangeReadRSSIInterval")
 }
 
-enum ConnectionPersistenceDidStartToKeepConnectionKey: String {
-    case uuid = "uuid"
-    case readRSSI = "readRSSI" // Bool
+enum CPDidStartToKeepConnectionKey: String {
+    case uuid
+    case readRSSI // Bool
 }
 
-enum ConnectionPersistenceDidStopToKeepConnectionKey: String {
-    case uuid = "uuid"
-    case readRSSI = "readRSSI" // Bool
+enum CPDidStopToKeepConnectionKey: String {
+    case uuid
+    case readRSSI // Bool
 }
 
-enum ConnectionPersistenceDidStartReadingRSSIKey: String {
-    case uuid = "uuid"
+enum CPDidStartReadingRSSIKey: String {
+    case uuid
 }
 
-enum ConnectionPersistenceDidStopReadingRSSIKey: String {
-    case uuid = "uuid"
+enum CPDidStopReadingRSSIKey: String {
+    case uuid
 }
 
-enum ConnectionPersistenceDidChangeReadRSSIIntervalKey: String {
-    case uuid = "uuid"
-    case interval = "interval" // Int (seconds)
+enum CPDidChangeReadRSSIIntervalKey: String {
+    case uuid
+    case interval // Int (seconds)
 }

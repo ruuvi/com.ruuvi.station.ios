@@ -15,11 +15,13 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         }
 
         let tagChartsLandscapeSwipeInstructionWasShown = DefaultsViewModel()
-        tagChartsLandscapeSwipeInstructionWasShown.title = "Defaults.TagChartsLandscapeSwipeInstructionWasShown.title".localized()
+        tagChartsLandscapeSwipeInstructionWasShown.title = "Defaults.ChartsSwipeInstructionWasShown.title".localized()
         tagChartsLandscapeSwipeInstructionWasShown.boolean.value = settings.tagChartsLandscapeSwipeInstructionWasShown
 
-        bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) { observer, tagChartsLandscapeSwipeInstructionWasShown in
-            observer.settings.tagChartsLandscapeSwipeInstructionWasShown = tagChartsLandscapeSwipeInstructionWasShown.bound
+        bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) {
+            observer, tagChartsLandscapeSwipeInstructionWasShown in
+            observer.settings.tagChartsLandscapeSwipeInstructionWasShown =
+                tagChartsLandscapeSwipeInstructionWasShown.bound
         }
 
         let connectionTimeout = DefaultsViewModel()
@@ -54,7 +56,12 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             observer.settings.alertsRepeatingIntervalSeconds = alertsInterval.bound
         }
 
-        view.viewModels = [welcomeShown, tagChartsLandscapeSwipeInstructionWasShown, connectionTimeout, serviceTimeout, cardsSwipeHint, alertsInterval]
+        view.viewModels = [welcomeShown,
+                           tagChartsLandscapeSwipeInstructionWasShown,
+                           connectionTimeout,
+                           serviceTimeout,
+                           cardsSwipeHint,
+                           alertsInterval]
     }
 }
 

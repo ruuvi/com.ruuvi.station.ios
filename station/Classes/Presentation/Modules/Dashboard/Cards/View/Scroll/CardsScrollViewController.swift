@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import Localize_Swift
 import GestureInstructions
@@ -74,11 +75,14 @@ extension CardsScrollViewController: CardsViewInput {
     }
 
     func showKeepConnectionDialog(for viewModel: CardsViewModel) {
-        let alert = UIAlertController(title: nil, message: "Cards.KeepConnectionDialog.message".localized(), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.Dismiss.title".localized(), style: .cancel, handler: { [weak self] _ in
+        let message = "Cards.KeepConnectionDialog.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = "Cards.KeepConnectionDialog.Dismiss.title".localized()
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
             self?.output.viewDidDismissKeepConnectionDialog(for: viewModel)
         }))
-        alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.KeepConnection.title".localized(), style: .default, handler: { [weak self] _ in
+        let keepTitle = "Cards.KeepConnectionDialog.KeepConnection.title".localized()
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnection(to: viewModel)
         }))
         present(alert, animated: true)
@@ -117,10 +121,10 @@ extension CardsScrollViewController {
         coordinator.animate(alongsideTransition: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
-        }) { [weak self] (_) in
+        }, completion: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
-        }
+        })
         super.viewWillTransition(to: size, with: coordinator)
     }
 }
@@ -151,7 +155,9 @@ extension CardsScrollViewController: CardViewDelegate {
 
 // MARK: - UITextFieldDelegate
 extension CardsScrollViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
         guard let textFieldText = textField.text,
             let rangeOfTextToReplace = Range(range, in: textFieldText) else {
                 return false
@@ -164,13 +170,15 @@ extension CardsScrollViewController: UITextFieldDelegate {
 
 // MARK: - Configure view
 extension CardsScrollViewController {
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         let kelvin = viewModel.kelvin
 
-        let temperatureBlock: ((UILabel, Double?) -> Void) = { [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
+        let temperatureBlock: ((UILabel, Double?) -> Void) = {
+            [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
                 switch temperatureUnit {
                 case .celsius:
@@ -202,7 +210,9 @@ extension CardsScrollViewController {
             temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
             temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
 
-            view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureLabel] label, temperatureUnit in
+            view.temperatureUnitLabel.bind(viewModel.temperatureUnit) {
+                [unowned temperatureLabel]
+                label, temperatureUnit in
                 if let temperatureUnit = temperatureUnit {
                     switch temperatureUnit {
                     case .celsius:
@@ -220,6 +230,7 @@ extension CardsScrollViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindHumidity(view: CardView, with viewModel: CardsViewModel) {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
@@ -237,7 +248,16 @@ extension CardsScrollViewController {
         case .web:
             rhFormat = "%.0f"
         }
-        let humidityBlock: ((UILabel, Double?) -> Void) = { [weak hu, weak rh, weak ah, weak ho, weak tu, weak dc, weak df, weak dk, weak humidityWarning] label, _ in
+        let humidityBlock: ((UILabel, Double?) -> Void) = {
+            [weak hu,
+            weak rh,
+            weak ah,
+            weak ho,
+            weak tu,
+            weak dc,
+            weak df,
+            weak dk,
+            weak humidityWarning] label, _ in
             if let hu = hu?.value {
                 switch hu {
                 case .percent:
@@ -312,6 +332,7 @@ extension CardsScrollViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bind(view: CardView, with viewModel: CardsViewModel) {
 
         view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
@@ -415,7 +436,10 @@ extension CardsScrollViewController {
                     imageView.image = UIImage(named: "icon-alert-on")
                 case .firing:
                     imageView.image = UIImage(named: "icon-alert-active")
-                    UIView.animate(withDuration: 0.5, delay: 0, options: [.repeat, .autoreverse], animations: { [weak imageView] in
+                    UIView.animate(withDuration: 0.5,
+                                   delay: 0,
+                                   options: [.repeat, .autoreverse],
+                                   animations: { [weak imageView] in
                         imageView?.alpha = 0.0
                     })
                 }
@@ -445,7 +469,8 @@ extension CardsScrollViewController: UIGestureRecognizerDelegate {
         }
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return gestureRecognizer.view != otherGestureRecognizer.view
     }
 }
@@ -467,14 +492,17 @@ extension CardsScrollViewController {
          gr.delegate = self
          gr.cancelsTouchesInView = true
          scrollView.addGestureRecognizer(gr)
-         gr.addTarget(tagChartsPresentInteractiveTransition as Any, action: #selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
+         gr.addTarget(tagChartsPresentInteractiveTransition as Any,
+                      action: #selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
      }
 
     private func configureEdgeGestureRecognozer() {
         let leftScreenEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer()
         leftScreenEdgeGestureRecognizer.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(leftScreenEdgeGestureRecognizer)
-        leftScreenEdgeGestureRecognizer.addTarget(menuPresentInteractiveTransition as Any, action: #selector(MenuTablePresentTransitionAnimation.handlePresentMenuLeftScreenEdge(_:)))
+        leftScreenEdgeGestureRecognizer
+            .addTarget(menuPresentInteractiveTransition as Any,
+                       action: #selector(MenuTablePresentTransitionAnimation.handlePresentMenuLeftScreenEdge(_:)))
         leftScreenEdgeGestureRecognizer.edges = .left
     }
 }
@@ -505,7 +533,13 @@ extension CardsScrollViewController {
                     leftView = view
                 }
                 localize()
-                scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal, toItem: scrollView, attribute: .trailing, multiplier: 1.0, constant: 0.0))
+                scrollView.addConstraint(NSLayoutConstraint(item: leftView,
+                                                            attribute: .trailing,
+                                                            relatedBy: .equal,
+                                                            toItem: scrollView,
+                                                            attribute: .trailing,
+                                                            multiplier: 1.0,
+                                                            constant: 0.0))
             }
         }
     }
@@ -548,3 +582,4 @@ extension CardsScrollViewController {
                                                     constant: 0.0))
     }
 }
+// swiftlint:enable file_length

@@ -38,7 +38,11 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
 
     override init() {
         super.init()
-        isOnToken = NotificationCenter.default.addObserver(forName: .isAdvertisementDaemonOnDidChange, object: nil, queue: .main) { [weak self] _ in
+        isOnToken = NotificationCenter
+            .default
+            .addObserver(forName: .isAdvertisementDaemonOnDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
             guard let sSelf = self else { return }
             if sSelf.settings.isAdvertisementDaemonOn {
                 sSelf.start()
@@ -60,7 +64,11 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                     self?.startObserving(ruuviTags: ruuviTags)
                 case .error(let error):
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: RUError.persistence(error)])
+                        NotificationCenter
+                            .default
+                            .post(name: .RuuviTagAdvertisementDaemonDidFail,
+                                  object: nil,
+                                  userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: RUError.persistence(error)])
                     }
                 }
             })
@@ -78,7 +86,9 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         for ruuviTag in ruuviTags {
-            observeTokens.append(foreground.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
+            observeTokens.append(foreground.observe(self,
+                                                    uuid: ruuviTag.uuid,
+                                                    options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
                 guard let sSelf = self else { return }
                 if let tag = device.ruuvi?.tag {
                     let pair = RuuviTagAdvertisementDaemonPair(ruuviTag: ruuviTag, device: tag)
@@ -109,7 +119,11 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     private func persist(_ ruuviTagData: RuuviTagDataRealm) {
         ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .RuuviTagAdvertisementDaemonDidFail, object: nil, userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+                NotificationCenter
+                    .default
+                    .post(name: .RuuviTagAdvertisementDaemonDidFail,
+                          object: nil,
+                          userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
             }
         })
     }

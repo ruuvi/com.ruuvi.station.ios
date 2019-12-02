@@ -36,7 +36,9 @@ extension LanguageTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // swiftlint:disable force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! LanguageTableViewCell
+        let cell = tableView
+            .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
+                                 for: indexPath) as! LanguageTableViewCell
         // swiftlint:enable force_cast
         cell.languageNameLabel.text = languages[indexPath.row].name
         return cell

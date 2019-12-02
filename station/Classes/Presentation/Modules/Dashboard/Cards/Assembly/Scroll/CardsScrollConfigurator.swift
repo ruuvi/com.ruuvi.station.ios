@@ -2,6 +2,7 @@ import UIKit
 import BTKit
 
 class CardsScrollConfigurator {
+    // swiftlint:disable:next function_body_length
     func configure(view: CardsScrollViewController) {
         let r = AppAssembly.shared.assembler.resolver
 
@@ -28,7 +29,9 @@ class CardsScrollConfigurator {
         router.delegate = presenter
 
         // swiftlint:disable force_cast
-        let menu = UIStoryboard(name: "Menu", bundle: .main).instantiateInitialViewController() as! UINavigationController
+        let menu = UIStoryboard(name: "Menu",
+                                bundle: .main)
+                                .instantiateInitialViewController() as! UINavigationController
         menu.modalPresentationStyle = .custom
         let menuTable = menu.topViewController as! MenuTableViewController
         let menuPresenter = menuTable.output as! MenuPresenter
@@ -44,7 +47,9 @@ class CardsScrollConfigurator {
         view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // swiftlint:disable force_cast
-        let tagCharts = UIStoryboard(name: "TagCharts", bundle: .main).instantiateInitialViewController() as! TagChartsScrollViewController
+        let tagCharts = UIStoryboard(name: "TagCharts",
+                                     bundle: .main)
+                                    .instantiateInitialViewController() as! TagChartsScrollViewController
         tagCharts.modalPresentationStyle = .custom
         let tagChartsPresenter = tagCharts.output as! TagChartsModuleInput
         // swiftlint:enable force_cast

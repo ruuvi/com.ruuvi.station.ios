@@ -25,12 +25,18 @@ extension SettingsPresenter: SettingsViewOutput {
         view.humidityUnit = settings.humidityUnit
         view.language = settings.language
 
-        languageToken = NotificationCenter.default.addObserver(forName: .LanguageDidChange, object: nil, queue: .main, using: { [weak self] (_) in
+        languageToken = NotificationCenter
+            .default
+            .addObserver(forName: .LanguageDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (_) in
             self?.view.language = self?.settings.language ?? .english
         })
 
         connectableRuuviTagsToken?.invalidate()
-        connectableRuuviTagsToken = realmContext.main.objects(RuuviTagRealm.self).filter("isConnectable == true").observe({ [weak self] (change) in
+        connectableRuuviTagsToken = realmContext.main.objects(RuuviTagRealm.self)
+            .filter("isConnectable == true").observe({ [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
                 self?.view.isBackgroundVisible = ruuviTags.count > 0

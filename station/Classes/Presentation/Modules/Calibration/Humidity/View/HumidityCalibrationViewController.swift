@@ -18,7 +18,9 @@ class HumidityCalibrationViewController: UIViewController {
     var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
     var lastCalibrationDate: Date? { didSet { updateUILastCalibrationDate() } }
 
+    // swiftlint:disable line_length
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!
+    // swiftlint:enable line_length
 }
 
 // MARK: - HumidityCalibrationViewInput
@@ -41,7 +43,9 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         let title = "HumidityCalibration.ClearCalibrationConfirmationAlert.title".localized()
         let message = "HumidityCalibration.ClearCalibrationConfirmationAlert.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
             self?.output.viewDidConfirmToClearHumidityOffset()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -108,7 +112,9 @@ extension HumidityCalibrationViewController {
             if let lastCalibrationDate = lastCalibrationDate {
                 let df = DateFormatter()
                 df.dateFormat = "dd MMMM yyyy"
-                lastCalibrationDateLabel.text = String.localizedStringWithFormat("HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
+                let format = "HumidityCalibration.lastCalibrationDate.format".localized()
+                lastCalibrationDateLabel.text = String.localizedStringWithFormat(format,
+                                                                                 df.string(from: lastCalibrationDate))
                 clearButton.isEnabled = true
             } else {
                 lastCalibrationDateLabel.text = nil
@@ -142,9 +148,8 @@ extension HumidityCalibrationViewController {
         let link = "HumidityCalibration.VideoTutorials.link".localized()
         if let linkRange = text.range(of: link) {
             descriptionLabel.addLink(to: videoTutorialsUrl, withRange: NSRange(linkRange, in: text))
-            descriptionLabel.linkAttributes = [
-                NSAttributedString.Key.foregroundColor: UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
-            ]
+            let color = UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+            descriptionLabel.linkAttributes = [NSAttributedString.Key.foregroundColor: color]
         }
         descriptionLabel.delegate = self
     }

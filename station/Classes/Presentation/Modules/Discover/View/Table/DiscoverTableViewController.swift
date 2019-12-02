@@ -80,8 +80,16 @@ class DiscoverTableViewController: UITableViewController {
     private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
     private let noDevicesCellReuseIdentifier = "DiscoverNoDevicesTableViewCellReuseIdentifier"
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
-    private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() { didSet { updateUIShownDevices() } }
-    private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() { didSet { updateUIShownWebTags() } }
+    private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() {
+        didSet {
+            updateUIShownDevices()
+        }
+    }
+    private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() {
+        didSet {
+            updateUIShownWebTags()
+        }
+    }
 }
 
 // MARK: - DiscoverViewInput
@@ -97,13 +105,16 @@ extension DiscoverTableViewController: DiscoverViewInput {
     }
 
     func showBluetoothDisabled() {
-        let alertVC = UIAlertController(title: "DiscoverTable.BluetoothDisabledAlert.title".localized(), message: "DiscoverTable.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
+        let title = "DiscoverTable.BluetoothDisabledAlert.title".localized()
+        let message = "DiscoverTable.BluetoothDisabledAlert.message".localized()
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
     func showWebTagInfoDialog() {
-        let alertVC = UIAlertController(title: nil, message: "DiscoverTable.WebTagsInfoDialog.message".localized(), preferredStyle: .alert)
+        let message = "DiscoverTable.WebTagsInfoDialog.message".localized()
+        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
@@ -168,23 +179,31 @@ extension DiscoverTableViewController {
         switch section {
         case .webTag:
             // swiftlint:disable force_cast
-            let cell = tableView.dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier, for: indexPath) as! DiscoverWebTagTableViewCell
+            let cell = tableView
+                .dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier,
+                                     for: indexPath) as! DiscoverWebTagTableViewCell
             // swiftlint:enable force_cast
             let tag = shownWebTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .device:
             // swiftlint:disable force_cast
-            let cell = tableView.dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier, for: indexPath) as! DiscoverDeviceTableViewCell
+            let cell = tableView
+                .dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier,
+                                     for: indexPath) as! DiscoverDeviceTableViewCell
             // swiftlint:enable force_cast
             let tag = shownDevices[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .noDevices:
             // swiftlint:disable force_cast
-            let cell = tableView.dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier, for: indexPath) as! DiscoverNoDevicesTableViewCell
+            let cell = tableView
+                .dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier,
+                                     for: indexPath) as! DiscoverNoDevicesTableViewCell
             // swiftlint:enable force_cast
-            cell.descriptionLabel.text = isBluetoothEnabled ? "DiscoverTable.NoDevicesSection.NotFound.text".localized() : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
+            cell.descriptionLabel.text = isBluetoothEnabled
+                ? "DiscoverTable.NoDevicesSection.NotFound.text".localized()
+                : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         }
     }
@@ -229,7 +248,9 @@ extension DiscoverTableViewController {
         switch section {
         case .webTag:
             // swiftlint:disable force_cast
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier) as! DiscoverWebTagsInfoHeaderFooterView
+            let header = tableView
+                .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
+                as! DiscoverWebTagsInfoHeaderFooterView
             // swiftlint:enable force_cast
             header.delegate = self
             return header
@@ -346,9 +367,11 @@ extension DiscoverTableViewController {
     private func displayName(for device: DiscoverDeviceViewModel) -> String {
         // identifier
         if let mac = device.mac {
-            return "DiscoverTable.RuuviDevice.prefix".localized() + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
+            return "DiscoverTable.RuuviDevice.prefix".localized()
+                + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            return "DiscoverTable.RuuviDevice.prefix".localized() + " " + device.uuid.prefix(4)
+            return "DiscoverTable.RuuviDevice.prefix".localized()
+                + " " + device.uuid.prefix(4)
         }
     }
 }

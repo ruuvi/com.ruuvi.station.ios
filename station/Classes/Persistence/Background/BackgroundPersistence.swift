@@ -5,8 +5,8 @@ extension Notification.Name {
     static let BackgroundPersistenceDidChangeBackground = Notification.Name("BackgroundPersistenceDidChangeBackground")
 }
 
-enum BackgroundPersistenceDidChangeBackgroundKey: String {
-    case uuid = "uuid"
+enum BPDidChangeBackgroundKey: String {
+    case uuid
 }
 
 protocol BackgroundPersistence {

@@ -2,7 +2,9 @@ import UIKit
 
 class SwipeDownToDismissNavigationController: UINavigationController, UIGestureRecognizerDelegate {
     lazy var panGR: UIPanGestureRecognizer = {
-        let panGR = UIPanGestureRecognizer(target: self, action: #selector(SwipeDownToDismissNavigationController.handlePanGesture(_:)))
+        let panGR = UIPanGestureRecognizer(target: self,
+                                           action: #selector
+                                            (SwipeDownToDismissNavigationController.handlePanGesture(_:)))
         panGR.delegate = self
         panGR.isEnabled = true
         return panGR
@@ -13,7 +15,8 @@ class SwipeDownToDismissNavigationController: UINavigationController, UIGestureR
         self.view.addGestureRecognizer(panGR)
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 

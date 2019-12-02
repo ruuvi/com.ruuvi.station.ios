@@ -71,7 +71,7 @@
 // Defaults
 "Defaults.navigationItem.title" = "Defaults";
 "Defaults.WelcomeShown.title" = "Welcome Shown";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
+"Defaults.ChartsSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
 "Defaults.Interval.Sec.string" = "sec";
 "Defaults.ConnectionTimeout.title" = "Connection Timeout";
 "Defaults.ServiceTimeout.title" = "Service Timeout";
@@ -234,7 +234,7 @@
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
 "TagSettings.Label.disabled.text" = "DISABLED?";
 "TagSettings.Label.alerts.text" = "ALERTS";
-"TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
 "TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
 "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
 "TagSettings.ConnectStatus.Connected" = "Connected";

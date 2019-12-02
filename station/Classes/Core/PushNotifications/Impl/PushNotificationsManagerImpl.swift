@@ -53,14 +53,18 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
                 }
             }
         } else {
-            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.sound, .alert, .badge], categories: nil))
+            let settings = UIUserNotificationSettings(types: [.sound, .alert, .badge], categories: nil)
+            UIApplication
+                .shared
+                .registerUserNotificationSettings(settings)
             didAskForRemoteNotificationPermission = true
             UIApplication.shared.registerForRemoteNotifications()
         }
     }
 
     private let pnTokenDataUDKey = "PushNotificationsManagerImpl.pnTokenDataUDKey"
-    private let didAskForRemoteNotificationPermissionUDKey = "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
+    private let didAskForRemoteNotificationPermissionUDKey =
+    "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
     private var didAskForRemoteNotificationPermission: Bool {
         get {
             return UserDefaults.standard.bool(forKey: didAskForRemoteNotificationPermissionUDKey)

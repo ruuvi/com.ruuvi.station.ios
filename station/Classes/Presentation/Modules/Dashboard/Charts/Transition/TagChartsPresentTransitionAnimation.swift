@@ -36,9 +36,9 @@ class TagChartsPresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        animations: {
                         toView.alpha = 1.0
                         toView.frame = finalFrame
-        }) { (_) -> Void in
+        }, completion: { (_) -> Void in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        }
+        })
     }
 
     func handlePresent(_ pan: UIPanGestureRecognizer) {
@@ -68,7 +68,7 @@ class TagChartsPresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         let direction: CGFloat = manager.presentDirection == .top ? 1 : -1
         let distance = translation.y / TagChartsTransitionManager.appScreenRect.height
         // now lets deal with different states that the gesture recognizer sends
-        switch (pan.state) {
+        switch pan.state {
         case .began, .changed:
             update(min(distance * direction, 1))
         default:

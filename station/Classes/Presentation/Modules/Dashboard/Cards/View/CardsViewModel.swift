@@ -207,7 +207,7 @@ extension CardsViewModel: Hashable {
 }
 
 extension CardsViewModel: Equatable {
-    public static func ==(lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
+    public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
         return lhs.uuid.value == rhs.uuid.value
     }
 }

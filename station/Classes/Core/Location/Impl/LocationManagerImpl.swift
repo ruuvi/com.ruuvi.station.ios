@@ -5,10 +5,10 @@ import Future
 class LocationManagerImpl: NSObject, LocationManager {
 
     var isLocationPermissionGranted: Bool {
-        get {
-            return CLLocationManager.locationServicesEnabled()
-                && (CLLocationManager.authorizationStatus() == .authorizedWhenInUse || CLLocationManager.authorizationStatus() == .authorizedAlways)
-        }
+
+        return CLLocationManager.locationServicesEnabled()
+                && (CLLocationManager.authorizationStatus() == .authorizedWhenInUse
+                || CLLocationManager.authorizationStatus() == .authorizedAlways)
     }
 
     var isLocationPermissionDenied: Bool {
