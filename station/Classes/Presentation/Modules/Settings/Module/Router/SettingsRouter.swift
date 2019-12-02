@@ -2,11 +2,11 @@ import LightRoute
 
 class SettingsRouter: SettingsRouterInput {
     weak var transitionHandler: TransitionHandler!
-    
+
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
     }
-    
+
     func openLanguage() {
         let factory = StoryboardFactory(storyboardName: "Language")
         try! transitionHandler
@@ -14,7 +14,7 @@ class SettingsRouter: SettingsRouterInput {
             .to(preferred: .navigation(style: .push))
             .perform()
     }
-    
+
     func openForeground() {
         let factory = StoryboardFactory(storyboardName: "Foreground")
         try! transitionHandler
@@ -24,7 +24,7 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
-    
+
     func openBackground() {
         let factory = StoryboardFactory(storyboardName: "Background")
         try! transitionHandler
@@ -34,7 +34,7 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
-    
+
     func openDefaults() {
         let factory = StoryboardFactory(storyboardName: "Defaults")
         try! transitionHandler

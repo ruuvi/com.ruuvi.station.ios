@@ -3,18 +3,18 @@ import RealmSwift
 import Foundation
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
-    
+
     var ruuviTagPersistence: RuuviTagPersistence!
     var foreground: BTForeground!
 
     private var token: NotificationToken?
     private var observeTokens = [ObservationToken]()
     private var realm: Realm!
-    
+
     @objc private class RuuviTagPropertiesDaemonPair: NSObject {
        var ruuviTag: RuuviTagRealm
        var device: RuuviTag
-       
+
        init(ruuviTag: RuuviTagRealm, device: RuuviTag) {
            self.ruuviTag = ruuviTag
            self.device = device
@@ -22,7 +22,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     deinit {
-       observeTokens.forEach( { $0.invalidate() })
+       observeTokens.forEach({ $0.invalidate() })
        observeTokens.removeAll()
        token?.invalidate()
     }
@@ -30,7 +30,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     func start() {
        start { [weak self] in
            self?.realm = try! Realm()
-           
+
            self?.token = self?.realm.objects(RuuviTagRealm.self).observe({ [weak self] (change) in
                switch change {
                case .initial(let ruuviTags):
@@ -47,17 +47,17 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     func stop() {
-       observeTokens.forEach( { $0.invalidate() })
+       observeTokens.forEach({ $0.invalidate() })
        observeTokens.removeAll()
        token?.invalidate()
        stopWork()
     }
 
     private func startObserving(ruuviTags: Results<RuuviTagRealm>) {
-       observeTokens.forEach( { $0.invalidate() })
+       observeTokens.forEach({ $0.invalidate() })
        observeTokens.removeAll()
        for ruuviTag in ruuviTags {
-           observeTokens.append(foreground.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (observer, device) in
+           observeTokens.append(foreground.observe(self, uuid: ruuviTag.uuid, options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
                guard let sSelf = self else { return }
                if let tag = device.ruuvi?.tag {
                    let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)

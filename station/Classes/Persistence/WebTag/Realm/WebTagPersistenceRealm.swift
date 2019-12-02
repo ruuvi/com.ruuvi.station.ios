@@ -3,11 +3,11 @@ import Future
 import CoreLocation
 
 class WebTagPersistenceRealm: WebTagPersistence {
-    
+
     var context: RealmContext!
-    
-    func clearLocation(of webTag: WebTagRealm) -> Future<Bool,RUError> {
-        let promise = Promise<Bool,RUError>()
+
+    func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {
             context.bgWorker.enqueue {
                 do {
@@ -39,9 +39,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
-    func update(location: Location, of webTag: WebTagRealm) -> Future<Bool,RUError> {
-        let promise = Promise<Bool,RUError>()
+
+    func update(location: Location, of webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {
             context.bgWorker.enqueue {
                 do {
@@ -77,9 +77,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
-    func persist(provider: WeatherProvider, location: Location) -> Future<WeatherProvider,RUError> {
-        let promise = Promise<WeatherProvider,RUError>()
+
+    func persist(provider: WeatherProvider, location: Location) -> Future<WeatherProvider, RUError> {
+        let promise = Promise<WeatherProvider, RUError>()
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
@@ -98,9 +98,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
-    func persist(provider: WeatherProvider) -> Future<WeatherProvider,RUError> {
-        let promise = Promise<WeatherProvider,RUError>()
+
+    func persist(provider: WeatherProvider) -> Future<WeatherProvider, RUError> {
+        let promise = Promise<WeatherProvider, RUError>()
         context.bgWorker.enqueue {
             let uuid = UUID().uuidString
             let webTag = WebTagRealm(uuid: uuid, provider: provider)
@@ -116,9 +116,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
-    func remove(webTag: WebTagRealm) -> Future<Bool,RUError> {
-        let promise = Promise<Bool,RUError>()
+
+    func remove(webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {
             context.bgWorker.enqueue {
                 do {
@@ -142,9 +142,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
-    func update(name: String, of webTag: WebTagRealm) -> Future<Bool,RUError> {
-        let promise = Promise<Bool,RUError>()
+
+    func update(name: String, of webTag: WebTagRealm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {
             context.bgWorker.enqueue {
                 do {
@@ -168,10 +168,10 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
+
     @discardableResult
-    func persist(currentLocation: Location, data: WPSData) -> Future<WPSData,RUError> {
-        let promise = Promise<WPSData,RUError>()
+    func persist(currentLocation: Location, data: WPSData) -> Future<WPSData, RUError> {
+        let promise = Promise<WPSData, RUError>()
         context.bgWorker.enqueue {
             let currentLocationWebTags = self.context.bg.objects(WebTagRealm.self).filter("location == nil")
             do {
@@ -195,10 +195,10 @@ class WebTagPersistenceRealm: WebTagPersistence {
         }
         return promise.future
     }
-    
+
     @discardableResult
-    func persist(location: Location, data: WPSData) -> Future<WPSData,RUError> {
-        let promise = Promise<WPSData,RUError>()
+    func persist(location: Location, data: WPSData) -> Future<WPSData, RUError> {
+        let promise = Promise<WPSData, RUError>()
         context.bgWorker.enqueue {
             let webTags = self.context.bg.objects(WebTagRealm.self)
                 .filter("location != nil AND location.latitude == %@ AND location.longitude == %@", location.coordinate.latitude, location.coordinate.longitude)

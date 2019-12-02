@@ -4,10 +4,10 @@ import BTKit
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {
         let r = AppAssembly.shared.assembler.resolver
-        
+
         let router = DiscoverRouter()
         router.transitionHandler = view
-        
+
         let presenter = DiscoverPresenter()
         presenter.view = view
         presenter.router = router
@@ -18,7 +18,7 @@ class DiscoverTableConfigurator {
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
-        
+
         view.output = presenter
     }
 }

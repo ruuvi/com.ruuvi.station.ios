@@ -3,13 +3,13 @@ import BTKit
 import RealmSwift
 
 class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
-    
+
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagPersistence: RuuviTagPersistence!
     var alertService: AlertService!
-    
+
     private var realm: Realm!
     private var ruuviTags: Results<RuuviTagRealm>?
     private var connectTokens = [String: ObservationToken]()
@@ -18,17 +18,17 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var connectionRemovedToken: NSObjectProtocol?
     private var savedDate = [String: Date]() // uuid:date
     private var ruuviTagsToken: NotificationToken?
-    
+
     @objc private class RuuviTagHeartbeatDaemonPair: NSObject {
         var uuid: String
         var device: RuuviTag
-        
+
         init(uuid: String, device: RuuviTag) {
             self.uuid = uuid
             self.device = device
         }
     }
-    
+
     override init() {
         super.init()
         connectionAddedToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStartToKeepConnection, object: nil, queue: .main, using: { [weak self] (notification) in
@@ -41,7 +41,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 modes: [RunLoop.Mode.default.rawValue])
             }
         })
-        
+
         connectionRemovedToken = NotificationCenter.default.addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection, object: nil, queue: .main, using: { [weak self] (notification) in
             guard let sSelf = self else { return }
             if let userInfo = notification.userInfo, let uuid = userInfo[ConnectionPersistenceDidStopToKeepConnectionKey.uuid] as? String {
@@ -53,7 +53,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             }
         })
     }
-    
+
     deinit {
         invalidateTokens()
         if let connectionAddedToken = connectionAddedToken {
@@ -63,7 +63,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             NotificationCenter.default.removeObserver(connectionRemovedToken)
         }
     }
-    
+
     func start() {
         start { [weak self] in
             self?.invalidateTokens()
@@ -89,13 +89,13 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 }).forEach({ self?.connect(uuid: $0)})
         }
     }
-    
+
     func stop() {
         invalidateTokens()
         connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
         stopWork()
     }
-    
+
     private func handleRuuviTagsChange() {
         connectionPersistence.keepConnectionUUIDs
             .filter { (uuid) -> Bool in
@@ -111,7 +111,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 }
             }.forEach({ disconnect(uuid: $0) })
     }
-    
+
     @objc private func connect(uuid: String) {
         disconnectTokens[uuid]?.invalidate()
         disconnectTokens.removeValue(forKey: uuid)
@@ -151,7 +151,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                             waitUntilDone: false,
                             modes: [RunLoop.Mode.default.rawValue])
                             observer.savedDate[uuid] = Date()
-                            
+
                         }
                     } else {
                         let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
@@ -189,7 +189,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             }
         })
     }
-    
+
     @objc private func disconnect(uuid: String) {
         connectTokens[uuid]?.invalidate()
         connectTokens.removeValue(forKey: uuid)
@@ -218,7 +218,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             }
         })
     }
-    
+
     @objc private func persist(_ pair: RuuviTagHeartbeatDaemonPair) {
         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == pair.device.uuid }) {
             let ruuviTagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: pair.device)
@@ -234,7 +234,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             }
         }
     }
-    
+
     private func invalidateTokens() {
         ruuviTagsToken?.invalidate()
         connectTokens.values.forEach({ $0.invalidate() })

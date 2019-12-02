@@ -1,30 +1,30 @@
 import Foundation
 
 protocol ConnectionPersistence {
-    
+
     var keepConnectionUUIDs: [String] { get }
     var readRSSIUUIDs: [String] { get }
-    
+
     func keepConnection(to uuid: String) -> Bool
     func setKeepConnection(_ value: Bool, for uuid: String)
-    
+
     func presentConnectionNotifications(for uuid: String) -> Bool
     func setPresentConnectionNotifications(_ value: Bool, for uuid: String)
-    
+
     func saveHeartbeats(uuid: String) -> Bool
     func setSaveHeartbeats(_ value: Bool, uuid: String)
-    
+
     func saveHeartbeatsInterval(uuid: String) -> Int
     func setSaveHeartbeatsInterval(_ value: Int, uuid: String)
-    
+
     func readRSSI(uuid: String) -> Bool
     func setReadRSSI(_ value: Bool, uuid: String)
-    
+
     func readRSSIInterval(uuid: String) -> Int
     func setReadRSSIInterval(_ value: Int, uuid: String)
-    
+
     func logSyncDate(uuid: String) -> Date?
-    func setLogSyncDate(_ value: Date?, uuid: String) 
+    func setLogSyncDate(_ value: Date?, uuid: String)
 }
 
 extension Notification.Name {

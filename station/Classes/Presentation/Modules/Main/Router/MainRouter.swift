@@ -6,10 +6,10 @@ protocol MainRouterInput {
 
 class MainRouter: MainRouterInput {
     static let shared = MainRouter()
-    
+
     weak var navigationController: UINavigationController!
     var navigationDelegate: MainNavigationDelegate!
-    
+
     func unwindToRoot() {
         if let presented = navigationController.topViewController?.presentedViewController {
             presented.dismiss(animated: true) {
@@ -19,7 +19,7 @@ class MainRouter: MainRouterInput {
             navigationController.popToRootViewController(animated: true)
         }
     }
-    
+
     func openCards() {
         assert(navigationController.topViewController is WelcomeViewController)
         // swiftlint:disable force_cast

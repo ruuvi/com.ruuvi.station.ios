@@ -8,11 +8,11 @@ class CardsScrollViewController: UIViewController {
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
-    
+
     @IBOutlet weak var scrollView: UIScrollView!
-    
+
     var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
-    
+
     private var views = [CardView]()
     private var currentPage: Int {
         if isViewLoaded {
@@ -21,7 +21,7 @@ class CardsScrollViewController: UIViewController {
             return 0
         }
     }
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -31,13 +31,13 @@ class CardsScrollViewController: UIViewController {
 extension CardsScrollViewController: CardsViewInput {
 
     func localize() {
-        
+
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func showWebTagAPILimitExceededError() {
         let title = "Cards.WebTagAPILimitExcededError.Alert.title".localized()
         let message = "Cards.WebTagAPILimitExcededError.Alert.message".localized()
@@ -53,11 +53,11 @@ extension CardsScrollViewController: CardsViewInput {
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
-    
+
     func showSwipeLeftRightHint() {
         gestureInstructor.show(.swipeRight, after: 0.1)
     }
-    
+
     func scroll(to index: Int, immediately: Bool = false) {
         if immediately {
             view.layoutIfNeeded()
@@ -72,7 +72,7 @@ extension CardsScrollViewController: CardsViewInput {
             }
         }
     }
-    
+
     func showKeepConnectionDialog(for viewModel: CardsViewModel) {
         let alert = UIAlertController(title: nil, message: "Cards.KeepConnectionDialog.message".localized(), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cards.KeepConnectionDialog.Dismiss.title".localized(), style: .cancel, handler: { [weak self] _ in
@@ -101,23 +101,23 @@ extension CardsScrollViewController {
         setupLocalization()
         output.viewDidLoad()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
     }
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let page = CGFloat(currentPage)
-        coordinator.animate(alongsideTransition: { [weak self] (context) in
+        coordinator.animate(alongsideTransition: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
-        }) { [weak self] (context) in
+        }) { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
         }
@@ -140,7 +140,7 @@ extension CardsScrollViewController: CardViewDelegate {
             output.viewDidTriggerChart(for: viewModels[index])
         }
     }
-    
+
     func card(view: CardView, didTriggerSettings sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
@@ -169,8 +169,8 @@ extension CardsScrollViewController {
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         let kelvin = viewModel.kelvin
-        
-        let temperatureBlock: ((UILabel,Double?) -> Void) = { [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
+
+        let temperatureBlock: ((UILabel, Double?) -> Void) = { [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
                 switch temperatureUnit {
                 case .celsius:
@@ -196,12 +196,12 @@ extension CardsScrollViewController {
                 label.text = "N/A".localized()
             }
         }
-        
+
         if let temperatureLabel = view.temperatureLabel {
             temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
             temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
             temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-            
+
             view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureLabel] label, temperatureUnit in
                 if let temperatureUnit = temperatureUnit {
                     switch temperatureUnit {
@@ -219,7 +219,7 @@ extension CardsScrollViewController {
             }
         }
     }
-    
+
     private func bindHumidity(view: CardView, with viewModel: CardsViewModel) {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
@@ -297,7 +297,7 @@ extension CardsScrollViewController {
                 label.text = "N/A".localized()
             }
         }
-        
+
         view.humidityLabel.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
         view.humidityLabel.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
         view.humidityLabel.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
@@ -311,22 +311,22 @@ extension CardsScrollViewController {
             humidityBlock(label, nil)
         }
     }
-    
+
     private func bind(view: CardView, with viewModel: CardsViewModel) {
-        
+
         view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
             view.isHidden = !isConnectable.bound
         }
-        
+
         view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
             view.isHidden = !isConnected.bound
         }
-        
+
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        
+
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-        
+
         let pressureFormat: String
         switch viewModel.type {
         case .ruuvi:
@@ -341,7 +341,7 @@ extension CardsScrollViewController {
                 label.text = "N/A".localized()
             }
         }
-        
+
         switch viewModel.type {
         case .ruuvi:
             let animated = viewModel.animateRSSI
@@ -370,10 +370,10 @@ extension CardsScrollViewController {
                 }
             }
         }
-        
+
         let isConnected = viewModel.isConnected
         let date = viewModel.date
-        
+
         view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
             if let isConnected = isConnected, isConnected, let date = date?.value {
                 label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
@@ -387,7 +387,7 @@ extension CardsScrollViewController {
             view?.updatedAt = date?.value
             view?.isConnected = isConnected
         }
-        
+
         view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
             if let isConnected = isConnected, isConnected.value.bound, let date = date {
                 label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
@@ -401,9 +401,9 @@ extension CardsScrollViewController {
             view?.updatedAt = date
             view?.isConnected = isConnected?.value
         }
-        
+
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
-        
+
         view.alertImageView.bind(viewModel.alertState) { (imageView, state) in
             if let state = state {
                 switch state {
@@ -423,7 +423,7 @@ extension CardsScrollViewController {
                 imageView.image = nil
             }
         }
-        
+
         switch viewModel.type {
         case .ruuvi:
             view.rssiCityImageView.image = UIImage(named: "icon-measure-signal")
@@ -431,10 +431,10 @@ extension CardsScrollViewController {
             view.rssiCityImageView.image = UIImage(named: "icon-measure-location")
         }
     }
-    
+
 }
 
-//MARK: - UIGestureRecognizerDelegate
+// MARK: - UIGestureRecognizerDelegate
 extension CardsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
@@ -444,12 +444,11 @@ extension CardsScrollViewController: UIGestureRecognizerDelegate {
             return true
         }
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return gestureRecognizer.view != otherGestureRecognizer.view
     }
 }
-
 
 // MARK: - View configuration
 extension CardsScrollViewController {
@@ -458,24 +457,24 @@ extension CardsScrollViewController {
         configurePanGestureRecognozer()
         configureGestureInstructor()
     }
-    
+
     private func configureGestureInstructor() {
         GestureInstructor.appearance.tapImage = UIImage(named: "gesture-assistant-hand")
     }
-    
+
      private func configurePanGestureRecognozer() {
          let gr = UIPanGestureRecognizer()
          gr.delegate = self
          gr.cancelsTouchesInView = true
          scrollView.addGestureRecognizer(gr)
-         gr.addTarget(tagChartsPresentInteractiveTransition as Any, action:#selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
+         gr.addTarget(tagChartsPresentInteractiveTransition as Any, action: #selector(TagChartsPresentTransitionAnimation.handlePresentPan(_:)))
      }
-    
+
     private func configureEdgeGestureRecognozer() {
         let leftScreenEdgeGestureRecognizer = UIScreenEdgePanGestureRecognizer()
         leftScreenEdgeGestureRecognizer.cancelsTouchesInView = true
         scrollView.addGestureRecognizer(leftScreenEdgeGestureRecognizer)
-        leftScreenEdgeGestureRecognizer.addTarget(menuPresentInteractiveTransition as Any, action:#selector(MenuTablePresentTransitionAnimation.handlePresentMenuLeftScreenEdge(_:)))
+        leftScreenEdgeGestureRecognizer.addTarget(menuPresentInteractiveTransition as Any, action: #selector(MenuTablePresentTransitionAnimation.handlePresentMenuLeftScreenEdge(_:)))
         leftScreenEdgeGestureRecognizer.edges = .left
     }
 }
@@ -485,12 +484,12 @@ extension CardsScrollViewController {
     private func updateUI() {
         updateUIViewModels()
     }
-    
+
     private func updateUIViewModels() {
         if isViewLoaded {
             views.forEach({ $0.removeFromSuperview() })
             views.removeAll()
-            
+
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
@@ -506,12 +505,11 @@ extension CardsScrollViewController {
                     leftView = view
                 }
                 localize()
-                scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal
-                    , toItem: scrollView, attribute: .trailing, multiplier: 1.0, constant: 0.0))
+                scrollView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .trailing, relatedBy: .equal, toItem: scrollView, attribute: .trailing, multiplier: 1.0, constant: 0.0))
             }
         }
     }
-    
+
     private func position(_ view: CardView, _ leftView: UIView) {
         scrollView.addConstraint(NSLayoutConstraint(item: view,
                                                     attribute: .leading,

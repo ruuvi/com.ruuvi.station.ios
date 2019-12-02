@@ -5,7 +5,7 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     var sourceView: UIView?
-    
+
     func pick(sourceView: UIView?) {
         self.sourceView = sourceView
         showSourceDialog()
@@ -14,7 +14,7 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
 
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: { [weak self] in
             guard let sSelf = self else { return }
             if let photo = info[.originalImage] as? UIImage {
@@ -26,14 +26,14 @@ extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigati
 
 // MARK: - Private
 extension PhotoPickerPresenterSheet {
-    
+
     private func showSourceDialog() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
         let sheet = UIAlertController(title: nil, message: "PhotoPicker.Sheet.message".localized(), preferredStyle: .actionSheet)
-        let library = UIAlertAction(title: "PhotoPicker.Sheet.library".localized(), style: .default) { [weak self] (action) in
+        let library = UIAlertAction(title: "PhotoPicker.Sheet.library".localized(), style: .default) { [weak self] (_) in
             self?.checkPhotoLibraryPermission()
         }
-        let camera = UIAlertAction(title: "PhotoPicker.Sheet.camera".localized(), style: .default) { [weak self] (action) in
+        let camera = UIAlertAction(title: "PhotoPicker.Sheet.camera".localized(), style: .default) { [weak self] (_) in
             self?.checkCameraPermission()
         }
         let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
@@ -49,7 +49,7 @@ extension PhotoPickerPresenterSheet {
         }
         viewController.present(sheet, animated: true)
     }
-    
+
     private func checkPhotoLibraryPermission() {
         if permissionsManager.isPhotoLibraryPermissionGranted {
             showPhotoLibrary()
@@ -63,7 +63,7 @@ extension PhotoPickerPresenterSheet {
             }
         }
     }
-    
+
     private func checkCameraPermission() {
         if permissionsManager.isCameraPermissionGranted {
             showCamera()
@@ -77,7 +77,7 @@ extension PhotoPickerPresenterSheet {
             }
         }
     }
-    
+
     private func showPhotoLibrary() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
         let vc = UIImagePickerController()
@@ -85,7 +85,7 @@ extension PhotoPickerPresenterSheet {
         vc.delegate = self
         viewController.present(vc, animated: true)
     }
-    
+
     private func showCamera() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
         let vc = UIImagePickerController()
@@ -93,5 +93,5 @@ extension PhotoPickerPresenterSheet {
         vc.delegate = self
         viewController.present(vc, animated: true)
     }
-    
+
 }

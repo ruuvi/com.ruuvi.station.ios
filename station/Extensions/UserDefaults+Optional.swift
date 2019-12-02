@@ -9,7 +9,7 @@ extension UserDefaults {
         }
         return nil
     }
-    
+
     func optionalInt(forKey defaultName: String) -> Int? {
         let defaults = self
         if let value = defaults.value(forKey: defaultName) {

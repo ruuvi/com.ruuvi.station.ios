@@ -2,7 +2,7 @@ import UIKit
 
 class ForegroundTableViewController: UITableViewController {
     var output: ForegroundViewOutput!
-    
+
     var viewModels = [ForegroundViewModel]() {
         didSet {
             if isViewLoaded {
@@ -10,7 +10,7 @@ class ForegroundTableViewController: UITableViewController {
             }
         }
     }
-    
+
     private let switchCellReuseIdentifier = "ForegroundSwitchTableViewCellReuseIdentifier"
     private let stepperCellReuseIdentifier = "ForegroundStepperTableViewCellReuseIdentifier"
 }
@@ -18,17 +18,17 @@ class ForegroundTableViewController: UITableViewController {
 // MARK: - ForegroundViewInput
 extension ForegroundTableViewController: ForegroundViewInput {
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func localize() {
-        
+
     }
 }
 
 // MARK: - View lifecycle
 extension ForegroundTableViewController {
-    
+
 }
 
 // MARK: - UITableViewDataSource
@@ -36,11 +36,11 @@ extension ForegroundTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return viewModels.count
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.section]
         if indexPath.row == 0 {

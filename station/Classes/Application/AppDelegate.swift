@@ -10,7 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var appStateService: AppStateService!
     var localNotificationsManager: LocalNotificationsManager!
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if canImport(Firebase)
         FirebaseApp.configure()
@@ -32,16 +32,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(_ application: UIApplication) {
         appStateService.applicationWillResignActive(application)
     }
-    
+
     func applicationDidEnterBackground(_ application: UIApplication) {
         appStateService.applicationDidEnterBackground(application)
     }
-    
+
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         appStateService.applicationWillEnterForeground(application)
     }
-    
+
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         appStateService.applicationDidBecomeActive(application)
@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
+
 }
 
 // MARK: - Push Notifications
@@ -61,7 +61,7 @@ extension AppDelegate {
             pnManager.pnTokenData = deviceToken
         }
     }
-    
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print(error.localizedDescription)
     }

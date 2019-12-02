@@ -7,7 +7,7 @@ private enum SettingsTableSection: Int {
 
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
-    
+
     @IBOutlet weak var defaultsTitleLabel: UILabel!
     @IBOutlet weak var defaultsCell: UITableViewCell!
     @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
@@ -22,13 +22,13 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var foregroundTitleLabel: UILabel!
     @IBOutlet weak var backgroundTitleLabel: UILabel!
     @IBOutlet weak var backgroundCell: UITableViewCell!
-    
+
     #if DEVELOPMENT
     private let showDefaults = true
     #else
     private let showDefaults = false
     #endif
-    
+
     var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
     var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
     var language: Language = .english { didSet { updateUILanguage() } }
@@ -51,15 +51,15 @@ extension SettingsTableViewController: SettingsViewInput {
         updateUILanguage()
         tableView.reloadData()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
 // MARK: - IBActions
 extension SettingsTableViewController {
-    
+
     @IBAction func temperatureUnitSegmentedControlValueChanged(_ sender: Any) {
         switch temperatureUnitSegmentedControl.selectedSegmentIndex {
         case 0:
@@ -72,7 +72,7 @@ extension SettingsTableViewController {
             break
         }
     }
-    
+
     @IBAction func humidityUnitSegmentedControlValueChanged(_ sender: Any) {
         switch humidityUnitSegmentedControl.selectedSegmentIndex {
         case 0:
@@ -85,7 +85,7 @@ extension SettingsTableViewController {
             break
         }
     }
-    
+
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerClose()
     }
@@ -114,7 +114,6 @@ extension SettingsTableViewController {
         }
     }
 
-    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case SettingsTableSection.general.rawValue:
@@ -125,7 +124,7 @@ extension SettingsTableViewController {
             return nil
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         switch section {
         case SettingsTableSection.general.rawValue:
@@ -134,7 +133,7 @@ extension SettingsTableViewController {
             return nil
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
@@ -161,19 +160,19 @@ extension SettingsTableViewController {
         updateUILanguage()
         updateUIIsBackgroundVisible()
     }
-    
+
     private func updateUIIsBackgroundVisible() {
         if isViewLoaded {
             tableView.reloadData()
         }
     }
-    
+
     private func updateUILanguage() {
         if isViewLoaded {
             languageValueLabel.text = language.name
         }
     }
-    
+
     private func updateUIHumidityUnit() {
         if isViewLoaded {
             switch humidityUnit {
@@ -186,7 +185,7 @@ extension SettingsTableViewController {
             }
         }
     }
-    
+
     private func updateUITemperatureUnit() {
         if isViewLoaded {
             switch temperatureUnit {

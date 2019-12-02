@@ -17,7 +17,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var exportService: ExportService!
     var alertService: AlertService!
     var background: BTBackground!
-    
+
     private var isLoading: Bool = false {
         didSet {
             if isLoading != oldValue {
@@ -39,7 +39,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var temperatureAlertDidChangeToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
-    
+
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -89,22 +89,22 @@ class TagChartsPresenter: TagChartsModuleInput {
             NotificationCenter.default.removeObserver(didDisconnectToken)
         }
     }
-    
+
     func configure(output: TagChartsModuleOutput) {
         self.output = output
     }
-    
+
     func configure(uuid: String) {
         self.tagUUID = uuid
     }
-    
+
     func dismiss() {
         router.dismiss()
     }
 }
 
 extension TagChartsPresenter: TagChartsViewOutput {
-    
+
     func viewDidLoad() {
         startObservingRuuviTags()
         startListeningToSettings()
@@ -112,28 +112,28 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingAlertChanges()
         startObservingDidConnectDisconnectNotifications()
     }
-    
+
     func viewWillAppear() {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
     }
-    
+
     func viewWillDisappear() {
         stopObservingBluetoothState()
     }
-    
+
     func viewDidTransition() {
         tryToShowSwipeUpHint()
     }
-    
+
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
-    
+
     func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
         router.dismiss()
     }
-    
+
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value?.last?.value)
@@ -141,7 +141,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             assert(false)
         }
     }
-    
+
     func viewDidScroll(to viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             tagUUID = uuid
@@ -149,11 +149,11 @@ extension TagChartsPresenter: TagChartsViewOutput {
             assert(false)
         }
     }
-    
+
     func viewDidTriggerSync(for viewModel: TagChartsViewModel) {
         view.showSyncConfirmationDialog(for: viewModel)
     }
-    
+
     func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             exportService.csvLog(for: uuid).on(success: { [weak self] url in
@@ -165,11 +165,11 @@ extension TagChartsPresenter: TagChartsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidTriggerClear(for viewModel: TagChartsViewModel) {
         view.showClearConfirmationDialog(for: viewModel)
     }
-    
+
     func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             let connectionTimeout: TimeInterval = settings.connectionTimeout
@@ -195,7 +195,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-    
+
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             let op = ruuviTagService.clearHistory(uuid: uuid)
@@ -214,17 +214,17 @@ extension TagChartsPresenter: MenuModuleOutput {
         module.dismiss()
         router.openDiscover()
     }
-    
+
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
         module.dismiss()
         router.openSettings()
     }
-    
+
     func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
         module.dismiss()
         router.openAbout()
     }
-    
+
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
         router.openRuuviWebsite()
@@ -242,20 +242,20 @@ extension TagChartsPresenter: AlertServiceObserver {
 
 // MARK: - Private
 extension TagChartsPresenter {
-    
+
     private func tryToShowSwipeUpHint() {
         if UIApplication.shared.statusBarOrientation.isLandscape && !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
             view.showSwipeUpInstruction()
         }
     }
-    
+
     private func scrollToCurrentTag() {
         if let index = viewModels.firstIndex(where: { $0.uuid.value == tagUUID }) {
             view.scroll(to: index, immediately: true)
         }
     }
-    
+
     private func syncViewModels() {
         if ruuviTags != nil {
             viewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
@@ -267,7 +267,7 @@ extension TagChartsPresenter {
                 viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.uuid) ? .registered : .empty
                 return viewModel
             }) ?? []
-            
+
             // if no tags, open discover
             if viewModels.count == 0 {
                 router.openDiscover()
@@ -276,7 +276,7 @@ extension TagChartsPresenter {
             }
         }
     }
-    
+
     private func restartObservingData() {
         ruuviTagDataTokens.forEach({ $0.invalidate() })
         ruuviTagDataTokens.removeAll()
@@ -293,7 +293,7 @@ extension TagChartsPresenter {
             })
         })
     }
-    
+
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
             .filter("isConnectable == true")
@@ -321,16 +321,16 @@ extension TagChartsPresenter {
             }
         }
     }
-    
+
     private func startListeningToSettings() {
-        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (notification) in
-            self?.viewModels.forEach( { $0.temperatureUnit.value = self?.settings.temperatureUnit } )
+        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (_) in
+            self?.viewModels.forEach({ $0.temperatureUnit.value = self?.settings.temperatureUnit })
         }
-        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
-            self?.viewModels.forEach( { $0.humidityUnit.value = self?.settings.humidityUnit } )
+        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (_) in
+            self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
         })
     }
-    
+
     private func startObservingBackgroundChanges() {
         backgroundToken = NotificationCenter.default.addObserver(forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main) { [weak self] notification in
             if let userInfo = notification.userInfo, let uuid = userInfo[BackgroundPersistenceDidChangeBackgroundKey.uuid] as? String {
@@ -340,7 +340,7 @@ extension TagChartsPresenter {
             }
         }
     }
-    
+
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn {
@@ -348,11 +348,11 @@ extension TagChartsPresenter {
             }
         })
     }
-    
+
     private func stopObservingBluetoothState() {
         stateToken?.invalidate()
     }
-    
+
     private func startObservingAlertChanges() {
         temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
             if let sSelf = self, let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
@@ -362,23 +362,23 @@ extension TagChartsPresenter {
             }
         })
     }
-    
+
     private func startListeningToAlertStatus() {
         ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
-    
+
     func startObservingDidConnectDisconnectNotifications() {
         didConnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = true
             }
         })
-        
+
         didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
             if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = false
             }
         })
     }
-    
+
 }

@@ -11,7 +11,7 @@ class ForegroundViewModel: Identifiable {
     var type: ForegroundType = .advertisement
     var isOn: Observable<Bool?> = Observable<Bool?>(true)
     var interval: Observable<Int?> = Observable<Int?>(1)
-    
+
     var title: String {
         switch type {
         case .advertisement:
@@ -22,7 +22,7 @@ class ForegroundViewModel: Identifiable {
             return "ForegroundRow.webTags.title".localized()
         }
     }
-    
+
     var section: String {
         switch type {
         case .advertisement:
@@ -33,5 +33,5 @@ class ForegroundViewModel: Identifiable {
             return "ForegroundRow.webTags.section".localized()
         }
     }
-    
+
 }

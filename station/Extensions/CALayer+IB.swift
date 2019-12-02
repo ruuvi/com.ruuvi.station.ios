@@ -1,7 +1,7 @@
 import UIKit
 
 extension CALayer {
-    
+
     @IBInspectable var borderColorIB: UIColor? {
         get {
             if let borderColorCG = borderColor {
@@ -14,7 +14,7 @@ extension CALayer {
             borderColor = newValue?.cgColor
         }
     }
-    
+
     @IBInspectable var shadowColorIB: UIColor? {
         get {
             if let shadowColorCG = shadowColor {

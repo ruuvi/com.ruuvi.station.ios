@@ -3,13 +3,13 @@ import UIKit
 
 class TagChartsRouter: TagChartsRouterInput {
     weak var transitionHandler: UIViewController!
-    
+
     private var menuTableTransition: MenuTableTransitioningDelegate!
-    
+
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
     }
-    
+
     func openMenu(output: MenuModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Menu")
         try! transitionHandler
@@ -24,14 +24,14 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(output: output)
             })
     }
-    
+
     func openSettings() {
         let factory = StoryboardFactory(storyboardName: "Settings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: SettingsModuleInput.self)
             .perform()
     }
-    
+
     func openDiscover() {
         let restorationId = "DiscoverTableNavigationController"
         let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
@@ -41,18 +41,18 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(isOpenedFromWelcome: false)
             })
     }
-    
+
     func openAbout() {
         let factory = StoryboardFactory(storyboardName: "About")
         try! transitionHandler
             .forStoryboard(factory: factory, to: AboutModuleInput.self)
             .perform()
     }
-    
+
     func openRuuviWebsite() {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
-    
+
     func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
@@ -61,7 +61,7 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(ruuviTag: ruuviTag, humidity: humidity)
             })
     }
-    
+
     func openWebTagSettings(webTag: WebTagRealm) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler

@@ -1,17 +1,17 @@
 import Foundation
 
 class SettingsUserDegaults: Settings {
-    
+
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
-    
+
     func keepConnectionDialogWasShown(for uuid: String) -> Bool {
         return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + uuid)
     }
-    
+
     func setKeepConnectionDialogWasShown(for uuid: String) {
         UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + uuid)
     }
-    
+
     var language: Language {
         get {
             if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
@@ -32,7 +32,7 @@ class SettingsUserDegaults: Settings {
         }
     }
     private let languageUDKey = "SettingsUserDegaults.languageUDKey"
-    
+
     var humidityUnit: HumidityUnit {
         get {
             switch humidityUnitInt {
@@ -60,7 +60,7 @@ class SettingsUserDegaults: Settings {
                       userInfo: nil)
         }
     }
-    
+
     var temperatureUnit: TemperatureUnit {
         get {
             switch temperatureUnitInt {
@@ -93,16 +93,16 @@ class SettingsUserDegaults: Settings {
                       userInfo: nil)
         }
     }
-    
+
     @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
-    
+
     @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
     var tagChartsLandscapeSwipeInstructionWasShown: Bool
-    
+
     @UserDefault("DashboardScrollViewController.hasShownSwipeAlert", defaultValue: false)
      var cardsSwipeHintWasShown: Bool
-    
+
     @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
     var isAdvertisementDaemonOn: Bool {
         didSet {
@@ -113,7 +113,7 @@ class SettingsUserDegaults: Settings {
                   userInfo: nil)
         }
     }
-    
+
     @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: false)
     var isConnectionDaemonOn: Bool {
         didSet {
@@ -124,7 +124,7 @@ class SettingsUserDegaults: Settings {
                   userInfo: nil)
         }
     }
-    
+
     @UserDefault("SettingsUserDegaults.isWebTagDaemonOn", defaultValue: true)
     var isWebTagDaemonOn: Bool {
         didSet {
@@ -135,9 +135,9 @@ class SettingsUserDegaults: Settings {
                   userInfo: nil)
         }
     }
-    
+
     @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 15)
-    var webTagDaemonIntervalMinutes: Int  {
+    var webTagDaemonIntervalMinutes: Int {
         didSet {
             NotificationCenter
             .default
@@ -146,25 +146,25 @@ class SettingsUserDegaults: Settings {
              userInfo: nil)
         }
     }
-    
+
     @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 15)
     var connectionTimeout: TimeInterval
-    
+
     @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 60)
     var serviceTimeout: TimeInterval
-    
+
     @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
     var connectionDaemonIntervalMinutes: Int
-    
+
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
     var advertisementDaemonIntervalMinutes: Int
-    
+
     @UserDefault("SettingsUserDegaults.alertsRepeatingIntervalSeconds", defaultValue: 3600)
     var alertsRepeatingIntervalSeconds: Int
-    
+
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
-    
+
     private var temperatureUnitInt: Int {
         get {
             let int = UserDefaults.standard.integer(forKey: temperatureUnitIntUDKey)
@@ -185,7 +185,7 @@ class SettingsUserDegaults: Settings {
         }
     }
     private let temperatureUnitIntUDKey = "SettingsUserDegaults.temperatureUnitIntUDKey"
-    
+
     private var humidityUnitInt: Int {
         get {
             return UserDefaults.standard.integer(forKey: humidityUnitIntUDKey)

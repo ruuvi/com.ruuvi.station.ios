@@ -4,10 +4,10 @@ import BTKit
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
         let r = AppAssembly.shared.assembler.resolver
-        
+
         let router = TagChartsRouter()
         router.transitionHandler = view
-        
+
         let presenter = TagChartsPresenter()
         presenter.view = view
         presenter.router = router
@@ -22,7 +22,7 @@ class TagChartsScrollConfigurator {
         presenter.exportService = r.resolve(ExportService.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.background = r.resolve(BTBackground.self)
-        
+
         view.output = presenter
     }
 }

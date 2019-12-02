@@ -11,12 +11,12 @@ protocol BackgroundStepperTableViewCellDelegate: class {
 
 class BackgroundStepperTableViewCell: UITableViewCell {
     weak var delegate: BackgroundStepperTableViewCellDelegate?
-    
+
     var unit: BackgroundStepperUnit = .minutes
-    
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var stepper: UIStepper!
-    
+
     @IBAction func stepperValueChanged(_ sender: Any) {
         let result = Int(stepper.value)
         switch unit {
@@ -25,7 +25,7 @@ class BackgroundStepperTableViewCell: UITableViewCell {
         case .seconds:
             titleLabel.text = "Background.Interval.Every.string".localized() + " " + "\(result)" + " " + "Background.Interval.Sec.string".localized()
         }
-        
+
         delegate?.backgroundStepper(cell: self, didChange: result)
     }
 }

@@ -2,7 +2,7 @@ import UIKit
 
 class DefaultsTableViewController: UITableViewController {
     var output: DefaultsViewOutput!
-    
+
     var viewModels = [DefaultsViewModel]() {
         didSet {
             if isViewLoaded {
@@ -17,26 +17,26 @@ class DefaultsTableViewController: UITableViewController {
 
 extension DefaultsTableViewController: DefaultsViewInput {
     func localize() {
-        
+
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
 }
 
 // MARK: - View lifecycle
 extension DefaultsTableViewController {
-    
+
 }
 
 // MARK: - UITableViewDataSource
 extension DefaultsTableViewController {
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModels.count
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
         if let boolean = viewModel.boolean.value {
@@ -58,7 +58,7 @@ extension DefaultsTableViewController {
             cell.delegate = self
             return cell
         }
-        
+
     }
 }
 

@@ -7,28 +7,28 @@ class SwipeDownToDismissNavigationController: UINavigationController, UIGestureR
         panGR.isEnabled = true
         return panGR
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addGestureRecognizer(panGR)
     }
-    
+
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
-    
+
     @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
         if let transition = transitioningDelegate as? SwipeDownToDismissTransitioningDelegate {
             let interactor = transition.interactionControllerForDismissal
-            let percentThreshold:CGFloat = 0.3
-            
+            let percentThreshold: CGFloat = 0.3
+
             // convert y-position to downward pull progress (percentage)
             let translation = sender.translation(in: view)
             let verticalMovement = translation.y / view.bounds.height
             let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
             let downwardMovementPercent = fminf(downwardMovement, 1.0)
             let progress = CGFloat(downwardMovementPercent)
-            
+
             switch sender.state {
             case .began:
                 if let tagSettings = topViewController as? UITableViewController,

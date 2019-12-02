@@ -7,7 +7,7 @@ protocol DiscoverViewInput: ViewInput {
     var savedWebTagProviders: [WeatherProvider] { get set }
     var isBluetoothEnabled: Bool { get set }
     var isCloseEnabled: Bool { get set }
-    
+
     func showBluetoothDisabled()
     func showWebTagInfoDialog()
 }

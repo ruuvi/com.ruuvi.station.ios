@@ -9,9 +9,9 @@ struct LocationApple: Location {
 }
 
 class LocationServiceApple: LocationService {
-    
-    func search(query: String) -> Future<[Location],RUError> {
-        let promise = Promise<[Location],RUError>()
+
+    func search(query: String) -> Future<[Location], RUError> {
+        let promise = Promise<[Location], RUError>()
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         let search = MKLocalSearch(request: request)
@@ -34,12 +34,12 @@ class LocationServiceApple: LocationService {
         }
         return promise.future
     }
-    
-    func reverseGeocode(coordinate: CLLocationCoordinate2D) -> Future<[Location],RUError> {
-        let promise = Promise<[Location],RUError>()
+
+    func reverseGeocode(coordinate: CLLocationCoordinate2D) -> Future<[Location], RUError> {
+        let promise = Promise<[Location], RUError>()
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let geoCoder = CLGeocoder()
-        
+
         let handler: CLGeocodeCompletionHandler = { (placemarks, error) in
             guard let placemarks = placemarks else {
                 if let error = error {
@@ -49,7 +49,7 @@ class LocationServiceApple: LocationService {
                 }
                 return
             }
-            
+
             var locations = [LocationApple]()
             for placemark in placemarks {
                 locations.append(LocationApple(city: placemark.locality,

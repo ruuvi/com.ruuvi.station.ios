@@ -31,7 +31,7 @@ struct TagChartsViewModel {
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var isConnected: Observable<Bool?> = Observable<Bool?>()
-    
+
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
@@ -60,10 +60,10 @@ struct TagChartsViewModel {
                     return nil
                 }
             })
-            
+
             let ho = ruuviTag.humidityOffset
             humidityOffset.value = ho
-            
+
             relativeHumidity.value = data.compactMap({
                 if let rh = $0.humidity.value {
                     var sh = rh + ho
@@ -75,7 +75,7 @@ struct TagChartsViewModel {
                     return nil
                 }
             })
-            
+
             absoluteHumidity.value = data.compactMap({
                 if let c = $0.celsius.value,
                     let rh = $0.humidity.value {
@@ -151,12 +151,12 @@ struct TagChartsViewModel {
             celsius.value = nil
             fahrenheit.value = nil
             kelvin.value = nil
-            
+
             let ho = ruuviTag.humidityOffset
             humidityOffset.value = ho
-            
+
             relativeHumidity.value = nil
-            
+
             absoluteHumidity.value = nil
             dewPointCelsius.value = nil
             dewPointFahrenheit.value = nil
@@ -164,7 +164,7 @@ struct TagChartsViewModel {
             pressure.value = nil
         }
     }
-    
+
     init(_ webTag: WebTagRealm) {
         type = .web
         uuid.value = webTag.uuid
@@ -266,6 +266,6 @@ struct TagChartsViewModel {
             dewPointKelvin.value = nil
             pressure.value = nil
         }
-        
+
     }
 }

@@ -5,9 +5,9 @@ enum DiscoverTableSection {
     case webTag
     case device
     case noDevices
-    
+
     static var count = 2 // displayed simultaneously
-    
+
     static func section(for index: Int, deviceCount: Int) -> DiscoverTableSection {
         if deviceCount > 0 {
             return index == 0 ? .webTag : .device
@@ -18,7 +18,7 @@ enum DiscoverTableSection {
 }
 
 class DiscoverTableViewController: UITableViewController {
-    
+
     var output: DiscoverViewOutput!
 
     @IBOutlet var closeBarButtonItem: UIBarButtonItem!
@@ -27,7 +27,7 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
-    
+
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
     var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
         didSet {
@@ -42,11 +42,11 @@ class DiscoverTableViewController: UITableViewController {
                 .sorted(by: { $0.locationType.title < $1.locationType.title })
         }
     }
-    
+
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() {
         didSet {
             shownDevices = devices
-                .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+                .filter({ !savedDevicesUUIDs.contains($0.uuid) })
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -59,7 +59,7 @@ class DiscoverTableViewController: UITableViewController {
     var savedDevicesUUIDs: [String] = [String]() {
         didSet {
             shownDevices = devices
-            .filter( { !savedDevicesUUIDs.contains($0.uuid) } )
+            .filter({ !savedDevicesUUIDs.contains($0.uuid) })
             .sorted(by: {
                 if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                     return rssi0 > rssi1
@@ -69,11 +69,11 @@ class DiscoverTableViewController: UITableViewController {
             })
         }
     }
-    
+
     var isBluetoothEnabled: Bool = true { didSet { updateUIISBluetoothEnabled() } }
-    
+
     var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
-    
+
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
@@ -91,17 +91,17 @@ extension DiscoverTableViewController: DiscoverViewInput {
         getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
         getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func showBluetoothDisabled() {
         let alertVC = UIAlertController(title: "DiscoverTable.BluetoothDisabledAlert.title".localized(), message: "DiscoverTable.BluetoothDisabledAlert.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
-    
+
     func showWebTagInfoDialog() {
         let alertVC = UIAlertController(title: nil, message: "DiscoverTable.WebTagsInfoDialog.message".localized(), preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
@@ -114,7 +114,7 @@ extension DiscoverTableViewController {
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerClose()
     }
-    
+
     @IBAction func getMoreSensorsTableFooterViewButtonTouchUpInside(_ sender: Any) {
         output.viewDidTapOnGetMoreSensors()
     }
@@ -122,7 +122,7 @@ extension DiscoverTableViewController {
 
 // MARK: - View lifecycle
 extension DiscoverTableViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
@@ -130,14 +130,14 @@ extension DiscoverTableViewController {
         updateUI()
         output.viewDidLoad()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationItem.setHidesBackButton(true, animated: animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
         output.viewWillAppear()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -150,7 +150,7 @@ extension DiscoverTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return DiscoverTableSection.count
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
@@ -162,7 +162,7 @@ extension DiscoverTableViewController {
             return 1
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
         switch section {
@@ -209,7 +209,7 @@ extension DiscoverTableViewController {
             break
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch s {
@@ -219,11 +219,11 @@ extension DiscoverTableViewController {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 40
     }
-    
+
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
@@ -237,7 +237,7 @@ extension DiscoverTableViewController {
             return nil
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
@@ -248,7 +248,7 @@ extension DiscoverTableViewController {
         default:
             return nil
         }
-        
+
     }
 }
 
@@ -265,11 +265,11 @@ extension DiscoverTableViewController {
         cell.nameLabel.text = tag.locationType.title
         cell.iconImageView.image = tag.icon
     }
-    
+
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverDeviceViewModel) {
-        
+
         cell.identifierLabel.text = displayName(for: device)
-        
+
         // RSSI
         if let rssi = device.rssi {
             cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized()
@@ -284,7 +284,7 @@ extension DiscoverTableViewController {
             cell.rssiImageView.image = nil
             cell.rssiLabel.text = nil
         }
-        
+
     }
 }
 
@@ -294,13 +294,13 @@ extension DiscoverTableViewController {
         configureTableView()
         configureBTDisabledImageView()
     }
-    
+
     private func configureTableView() {
         tableView.rowHeight = 44
         let nib = UINib(nibName: "DiscoverWebTagsInfoHeaderFooterView", bundle: nil)
         tableView.register(nib, forHeaderFooterViewReuseIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
     }
-    
+
     private func configureBTDisabledImageView() {
         btDisabledImageView.tintColor = .red
     }
@@ -314,7 +314,7 @@ extension DiscoverTableViewController {
         updateUIISBluetoothEnabled()
         updateUIIsCloseEnabled()
     }
-    
+
     private func updateUIIsCloseEnabled() {
         if isViewLoaded {
             if isCloseEnabled {
@@ -324,25 +324,25 @@ extension DiscoverTableViewController {
             }
         }
     }
-    
+
     private func updateUIISBluetoothEnabled() {
         if isViewLoaded {
             emptyDataSetView = isBluetoothEnabled ? getMoreSensorsEmptyDataSetView : btDisabledEmptyDataSetView
         }
     }
-    
+
     private func updateUIShownDevices() {
         if isViewLoaded {
             tableView.reloadData()
         }
     }
-    
+
     private func updateUIShownWebTags() {
         if isViewLoaded {
             tableView.reloadData()
         }
     }
-    
+
     private func displayName(for device: DiscoverDeviceViewModel) -> String {
         // identifier
         if let mac = device.mac {

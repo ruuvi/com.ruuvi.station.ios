@@ -8,15 +8,15 @@ enum TagSettingsTableSection: Int {
     case alerts = 3
     case calibration = 4
     case moreInfo = 5
-    
+
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
     }
-    
+
     static func showAlerts(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
     }
-    
+
     static func section(for index: Int) -> TagSettingsTableSection {
         return TagSettingsTableSection(rawValue: index) ?? .name
     }
@@ -24,7 +24,7 @@ enum TagSettingsTableSection: Int {
 
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
-    
+
     @IBOutlet weak var temperatureAlertTextField: UITextField!
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet var exportBarButtonItem: UIBarButtonItem!
@@ -72,18 +72,18 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var mcTitleLabel: UILabel!
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
-    
+
     @IBOutlet weak var temperatureAlertSwitch: UISwitch!
     @IBOutlet weak var temperatureAlertTitleLabel: UILabel!
     @IBOutlet weak var temperatureAlertDescriptionLabel: UILabel!
     @IBOutlet weak var temperatureAlertSlider: RURangeSeekSlider!
-    
+
     var viewModel: TagSettingsViewModel? { didSet { bindViewModel() } }
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
     }
-    
+
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
     private let maxCharsInTextFields = 100
@@ -108,7 +108,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
-        
+
         if let tu = viewModel?.temperatureUnit.value {
             switch tu {
             case .celsius:
@@ -121,17 +121,17 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         } else {
             temperatureAlertTitleLabel.text = "N/A".localized()
         }
-        
+
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
         temperatureAlertTextField.placeholder = "TagSettings.TemperatureAlert.Description.placeholder".localized()
         tableView.reloadData()
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func showTagRemovalConfirmationDialog() {
         let controller = UIAlertController(title: "TagSettings.confirmTagRemovalDialog.title".localized(), message: "TagSettings.confirmTagRemovalDialog.message".localized(), preferredStyle: .alert)
         controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
@@ -140,7 +140,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showMacAddressDetail() {
         let title = "TagSettings.Mac.Alert.title".localized()
         let controller = UIAlertController(title: title, message: viewModel?.mac.value, preferredStyle: .alert)
@@ -152,7 +152,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showUUIDDetail() {
         let title = "TagSettings.UUID.Alert.title".localized()
         let controller = UIAlertController(title: title, message: viewModel?.uuid.value, preferredStyle: .alert)
@@ -164,7 +164,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showUpdateFirmwareDialog() {
         let title = "TagSettings.UpdateFirmware.Alert.title".localized()
         let message = "TagSettings.UpdateFirmware.Alert.message".localized()
@@ -175,7 +175,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showHumidityIsClippedDialog() {
         let title = "TagSettings.HumidityIsClipped.Alert.title".localized()
         let message = "TagSettings.HumidityIsClipped.Alert.message".localized()
@@ -186,7 +186,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showBothNotConnectedAndNoPNPermissionDialog() {
         let message = "TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -196,7 +196,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showNotConnectedDialog() {
         let message = "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -206,7 +206,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showExportSheet(with path: URL) {
         var shareItems = [Any]()
         #if targetEnvironment(macCatalyst)
@@ -241,52 +241,52 @@ extension TagSettingsTableViewController {
         bindViewModels()
         updateUI()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
     }
 }
-    
+
 // MARK: - IBActions
 extension TagSettingsTableViewController {
     @IBAction func dismissBarButtonItemAction(_ sender: Any) {
         output.viewDidAskToDismiss()
     }
-    
+
     @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRemoveRuuviTag()
     }
-    
+
     @IBAction func randomizeBackgroundButtonTouchUpInside(_ sender: Any) {
         output.viewDidAskToRandomizeBackground()
     }
-    
+
     @IBAction func selectBackgroundButtonTouchUpInside(_ sender: UIButton) {
         output.viewDidAskToSelectBackground(sourceView: sender)
     }
-    
+
     @IBAction func tagNameTextFieldEditingDidEnd(_ sender: Any) {
         if let name = tagNameTextField.text {
             output.viewDidChangeTag(name: name)
         }
     }
-    
+
     @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
         viewModel?.isTemperatureAlertOn.value = temperatureAlertSwitch.isOn
     }
-    
+
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
         if !keepConnectionSwitch.isOn {
             viewModel?.isTemperatureAlertOn.value = false
         }
     }
-    
+
     @IBAction func exportBarButtonItemAction(_ sender: Any) {
         output.viewDidAskToExportLogs()
     }
-    
+
     @IBAction func temperatureAlertTextFieldEditingDidEnd(_ sender: Any) {
         viewModel?.temperatureAlertDescription.value = temperatureAlertTextField.text
     }
@@ -298,7 +298,7 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let newText = textField.text?.replace(with: string, in: range) else { return false }
         return newText.count <= maxCharsInTextFields
@@ -322,7 +322,7 @@ extension TagSettingsTableViewController: RangeSeekSliderDelegate {
                     viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
                 }
             }
-            
+
         }
     }
 }
@@ -352,7 +352,7 @@ extension TagSettingsTableViewController {
             }
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = TagSettingsTableSection.section(for: section)
         switch section {
@@ -366,7 +366,7 @@ extension TagSettingsTableViewController {
             return nil
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
@@ -377,7 +377,7 @@ extension TagSettingsTableViewController {
             }
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = TagSettingsTableSection.section(for: section)
         switch section {
@@ -401,7 +401,7 @@ extension TagSettingsTableViewController {
             return nil
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
@@ -415,7 +415,7 @@ extension TagSettingsTableViewController {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
@@ -427,7 +427,7 @@ extension TagSettingsTableViewController {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
@@ -439,7 +439,7 @@ extension TagSettingsTableViewController {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if viewModel?.isConnectable.value ?? false {
@@ -490,12 +490,12 @@ extension TagSettingsTableViewController {
     private func bindViewModels() {
         bindViewModel()
     }
-    
+
     private func bindViewModel() {
         bindHumidity()
         bindTemperatureAlert()
         if isViewLoaded, let viewModel = viewModel {
-            
+
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
                 if let isConnected = isConnected, isConnected {
                     label.text = "TagSettings.DataSource.Heartbeat.title".localized()
@@ -503,15 +503,14 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.DataSource.Advertisement.title".localized()
                 }
             }
-            
-            tableView.bind(viewModel.version) { (tableView, version) in
+
+            tableView.bind(viewModel.version) { (tableView, _) in
                 tableView.reloadData()
             }
-            
+
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
-            
-            
+
             uuidValueLabel.bind(viewModel.uuid) { label, uuid in
                 if let uuid = uuid {
                     label.text = uuid
@@ -519,7 +518,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             macAddressValueLabel.bind(viewModel.mac) { label, mac in
                 if let mac = mac {
                     label.text = mac
@@ -527,7 +526,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             voltageValueLabel.bind(viewModel.voltage) { label, voltage in
                 if let voltage = voltage {
                     label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
@@ -535,7 +534,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             accelerationXValueLabel.bind(viewModel.accelerationX) { label, accelerationX in
                 if let accelerationX = accelerationX {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationX) + " " + "g".localized()
@@ -543,7 +542,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             accelerationYValueLabel.bind(viewModel.accelerationY) { label, accelerationY in
                 if let accelerationY = accelerationY {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationY) + " " + "g".localized()
@@ -551,7 +550,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
                 if let accelerationZ = accelerationZ {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
@@ -559,7 +558,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             dataFormatValueLabel.bind(viewModel.version) { (label, version) in
                 if let version = version {
                     label.text = "\(version)"
@@ -575,7 +574,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             msnValueLabel.bind(viewModel.measurementSequenceNumber) { (label, msn) in
                 if let msn = msn {
                     label.text = "\(msn)"
@@ -583,7 +582,7 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-            
+
             txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
                 if let txPower = txPower {
                     label.text = "\(txPower)" + " " + "dBm".localized()
@@ -591,19 +590,19 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.EmptyValue.sign".localized()
                 }
             }
-        
-            tableView.bind(viewModel.isConnectable) { (tableView, isConnectable) in
+
+            tableView.bind(viewModel.isConnectable) { (tableView, _) in
                 tableView.reloadData()
             }
-            
-            tableView.bind(viewModel.isConnected) { (tableView, isConnected) in
+
+            tableView.bind(viewModel.isConnected) { (tableView, _) in
                 tableView.reloadData()
             }
-            
-            tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, isPushNotificationsEnabled) in
+
+            tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, _) in
                 tableView.reloadData()
             }
-            
+
             bind(viewModel.isConnectable) {
                 observer, isConnectable in
                 if isConnectable.bound {
@@ -623,13 +622,13 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.ConnectStatus.Disconnected".localized()
                 }
             }
-            
+
             let isConnected = viewModel.isConnected
-            
+
             keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
                 view.isOn = keepConnection.bound
             }
-            
+
             connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
                 let isConnected = isConnected?.value ?? false
                 if isConnected {
@@ -642,15 +641,15 @@ extension TagSettingsTableViewController {
             }
         }
     }
-    
+
     private func bindHumidity() {
        if isViewLoaded, let viewModel = viewModel {
            let humidity = viewModel.relativeHumidity
            let humidityOffset = viewModel.humidityOffset
            let humidityCell = calibrationHumidityCell
            let humidityTrailing = humidityLabelTrailing
-           
-           let humidityBlock: ((UILabel,Double?) -> Void) = { [weak humidity, weak humidityOffset, weak humidityCell, weak humidityTrailing] label, _ in
+
+           let humidityBlock: ((UILabel, Double?) -> Void) = { [weak humidity, weak humidityOffset, weak humidityCell, weak humidityTrailing] label, _ in
                if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
                    if humidityOffset > 0 {
                        let shownHumidity = humidity + humidityOffset
@@ -672,12 +671,12 @@ extension TagSettingsTableViewController {
                    label.text = nil
                }
            }
-           
+
            humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
            humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
        }
     }
-    
+
     private func bindTemperatureAlert() {
         if isViewLoaded, let viewModel = viewModel {
             temperatureAlertSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
@@ -686,16 +685,16 @@ extension TagSettingsTableViewController {
             temperatureAlertSlider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
                 slider.isEnabled = isOn.bound
             }
-            
-            temperatureAlertSlider.bind(viewModel.celsiusLowerBound) { [weak self] (slider, lower) in
+
+            temperatureAlertSlider.bind(viewModel.celsiusLowerBound) { [weak self] (_, _) in
                 self?.updateUICelsiusLowerBound()
                 self?.updateUITemperatureAlertDescription()
             }
-            temperatureAlertSlider.bind(viewModel.celsiusUpperBound) { [weak self] (slider, upper) in
+            temperatureAlertSlider.bind(viewModel.celsiusUpperBound) { [weak self] (_, _) in
                 self?.updateUICelsiusUpperBound()
                 self?.updateUITemperatureAlertDescription()
             }
-            
+
             temperatureAlertTitleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
                     switch tu {
@@ -710,7 +709,7 @@ extension TagSettingsTableViewController {
                     label.text = "N/A".localized()
                 }
             }
-            
+
             temperatureAlertSlider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
                 if let tu = temperatureUnit {
                     switch tu {
@@ -726,23 +725,22 @@ extension TagSettingsTableViewController {
                     }
                 }
             }
-            
-            temperatureAlertDescriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (label, isOn) in
+
+            temperatureAlertDescriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (_, _) in
                 self?.updateUITemperatureAlertDescription()
             }
-            
+
             let isPNEnabled = viewModel.isPushNotificationsEnabled
             let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
             let isConnected = viewModel.isConnected
-            
+
             temperatureAlertSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
                 let isPN = isPNEnabled?.value ?? false
                 let isEnabled = isPN && isConnected.bound
                 view.isEnabled = isEnabled
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
-            
-            
+
             temperatureAlertSwitch.bind(viewModel.isPushNotificationsEnabled) { [weak isConnected] view, isPushNotificationsEnabled in
                 let isPN = isPushNotificationsEnabled ?? false
                 let isCo = isConnected?.value ?? false
@@ -750,25 +748,25 @@ extension TagSettingsTableViewController {
                 view.isEnabled = isEnabled
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
-            
+
             temperatureAlertSlider.bind(viewModel.isConnected) { [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
                 let isPN = isPNEnabled?.value ?? false
                 let isOn = isTemperatureAlertOn?.value ?? false
                 slider.isEnabled = isConnected.bound && isOn && isPN
             }
-            
+
             temperatureAlertSlider.bind(viewModel.isPushNotificationsEnabled) { [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isCo = isConnected?.value ?? false
                 slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
             }
-            
+
             temperatureAlertTextField.bind(viewModel.temperatureAlertDescription) { (textField, temperatureAlertDescription) in
                 textField.text = temperatureAlertDescription
             }
         }
     }
-    
+
 }
 
 // MARK: - Update UI
@@ -778,7 +776,7 @@ extension TagSettingsTableViewController {
         updateUICelsiusLowerBound()
         updateUICelsiusUpperBound()
     }
-    
+
     private func updateUICelsiusLowerBound() {
         if isViewLoaded {
             if let temperatureUnit = viewModel?.temperatureUnit.value {
@@ -800,7 +798,7 @@ extension TagSettingsTableViewController {
             }
         }
     }
-    
+
     private func updateUICelsiusUpperBound() {
         if isViewLoaded {
             if let temperatureUnit = viewModel?.temperatureUnit.value {
@@ -822,7 +820,7 @@ extension TagSettingsTableViewController {
             }
         }
     }
-    
+
     private func updateUITemperatureAlertDescription() {
         if isViewLoaded {
             if let isTemperatureAlertOn = viewModel?.isTemperatureAlertOn.value, isTemperatureAlertOn {

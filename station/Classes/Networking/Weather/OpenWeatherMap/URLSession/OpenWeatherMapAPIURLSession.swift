@@ -2,17 +2,17 @@ import Foundation
 import Future
 
 class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
-    
+
     var apiKey: String = "provide api key in the /Classes/Networking/Assembly/Networking.plist file, NOT HERE!"
     var baseUrl: String = "https://api.openweathermap.org/data/2.5/"
-    
-    func loadCurrent(longitude: Double, latitude: Double) -> Future<OWMData,RUError> {
-        let promise = Promise<OWMData,RUError>()
+
+    func loadCurrent(longitude: Double, latitude: Double) -> Future<OWMData, RUError> {
+        let promise = Promise<OWMData, RUError>()
         let string = baseUrl + "weather?lat=\(latitude)&lon=\(longitude)&APPID=\(apiKey)"
         if let url = URL(string: string) {
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
-            
+
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 if let error = error {
                     promise.fail(error: .networking(error))

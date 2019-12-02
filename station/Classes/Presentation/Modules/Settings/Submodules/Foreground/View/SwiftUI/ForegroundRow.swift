@@ -5,13 +5,13 @@ import SwiftUI
 struct ForegroundRow: View {
 
     @EnvironmentObject var env: ForegroundEnvironmentObject
-    
+
     var daemon: ForegroundViewModel
 
     var index: Int {
         return env.daemons.firstIndex(where: { $0.id == daemon.id })!
     }
-    
+
     var body: some View {
         Toggle(isOn: $env.daemons[index].isOn.value.bound) {
             Text(daemon.title)

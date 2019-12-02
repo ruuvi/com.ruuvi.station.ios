@@ -1,34 +1,34 @@
 import UIKit
 
 class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning {
-    
+
     var manager: MenuTableTransitionManager
-    
+
     init(manager: MenuTableTransitionManager) {
         self.manager = manager
     }
-    
+
     @objc internal func handlePresentMenuLeftScreenEdge(_ edge: UIScreenEdgePanGestureRecognizer) {
         manager.presentDirection = .left
         handlePresentMenuPan(edge)
     }
-    
+
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.35
     }
-    
+
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let toVC = transitionContext.viewController(forKey: .to)!
         let toView = transitionContext.view(forKey: .to)!
-        
+
         let containerView = transitionContext.containerView
         containerView.addSubview(toView)
-        
+
         let appearedFrame = transitionContext.finalFrame(for: toVC)
         let initialFrame = CGRect(x: -appearedFrame.size.width, y: appearedFrame.origin.y, width: appearedFrame.size.width, height: appearedFrame.size.height)
         let finalFrame = appearedFrame
         toView.frame = initialFrame
-        
+
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration,
                        delay: 0,
@@ -37,35 +37,35 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        options: .curveEaseInOut,
                        animations: {
                         toView.frame = finalFrame
-        }) { (finished) -> Void in
+        }) { (_) -> Void in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
-    
+
     func handlePresentMenuPan(_ pan: UIPanGestureRecognizer) {
         guard let view = pan.view else {
             return
         }
-        
+
         let transform = view.transform
         view.transform = .identity
         let translation = pan.translation(in: pan.view!)
         view.transform = transform
-        
+
         // do some math to translate this to a percentage based value
         if !manager.isInteractive {
             if translation.x == 0 {
                 return // not sure which way the user is swiping yet, so do nothing
             }
-            
+
             if !(pan is UIScreenEdgePanGestureRecognizer) {
                 manager.presentDirection = translation.x > 0 ? .left : .right
             }
-            
+
             manager.isInteractive = true
             manager.container.present(manager.menu, animated: true)
         }
-        
+
         let direction: CGFloat = manager.presentDirection == .left ? 1 : -1
         let distance = translation.x / MenuTableTransitionManager.appScreenRect.width
         // now lets deal with different states that the gesture recognizer sends

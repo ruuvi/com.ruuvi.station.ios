@@ -4,7 +4,7 @@ import Localize_Swift
 
 class HumidityCalibrationViewController: UIViewController {
     var output: HumidityCalibrationViewOutput!
-    
+
     @IBOutlet weak var targetHumidityLabel: UILabel!
     @IBOutlet weak var descriptionLabel: NantesLabel!
     @IBOutlet weak var oldHumidityLabel: UILabel!
@@ -13,11 +13,11 @@ class HumidityCalibrationViewController: UIViewController {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var noteLabel: UILabel!
     @IBOutlet weak var calibrateButton: UIButton!
-    
+
     var oldHumidity: Double = 0 { didSet { updateUIOldHumidity() } }
     var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
     var lastCalibrationDate: Date? { didSet { updateUILastCalibrationDate() } }
-    
+
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!
 }
 
@@ -32,11 +32,11 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         closeButton.setTitle("HumidityCalibration.Button.Close.title".localized(), for: .normal)
         targetHumidityLabel.text = String.localizedStringWithFormat("%.2f", 75.0)
     }
-    
+
     func apply(theme: Theme) {
-        
+
     }
-    
+
     func showClearCalibrationConfirmationDialog() {
         let title = "HumidityCalibration.ClearCalibrationConfirmationAlert.title".localized()
         let message = "HumidityCalibration.ClearCalibrationConfirmationAlert.message".localized()
@@ -47,7 +47,7 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-    
+
     func showCalibrationConfirmationDialog() {
         let title = "HumidityCalibration.CalibrationConfirmationAlert.title".localized()
         let message = "HumidityCalibration.CalibrationConfirmationAlert.message".localized()
@@ -65,11 +65,11 @@ extension HumidityCalibrationViewController {
     @IBAction func closeButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerClose()
     }
-    
+
     @IBAction func calibrateButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerCalibrate()
     }
-    
+
     @IBAction func clearButtonTouchUpInside(_ sender: Any) {
         output.viewDidTriggerClearCalibration()
     }
@@ -102,7 +102,7 @@ extension HumidityCalibrationViewController {
         updateUIHumidityOffset()
         updateUILastCalibrationDate()
     }
-    
+
     private func updateUILastCalibrationDate() {
         if isViewLoaded {
             if let lastCalibrationDate = lastCalibrationDate {
@@ -116,13 +116,13 @@ extension HumidityCalibrationViewController {
             }
         }
     }
-    
+
     private func updateUIOldHumidity() {
         if isViewLoaded {
             oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
-    
+
     func updateUIHumidityOffset() {
         if isViewLoaded {
             oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
@@ -135,7 +135,7 @@ extension HumidityCalibrationViewController {
     private func configureViews() {
         configureDescriptionLabel()
     }
-    
+
     private func configureDescriptionLabel() {
         let text = "HumidityCalibration.Description.text".localized()
         descriptionLabel.text = text

@@ -5,12 +5,12 @@ protocol AlertService {
     func proccess(heartbeat ruuviTag: RuuviTag)
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)
     func hasRegistrations(for uuid: String) -> Bool
-    
+
     func isOn(type: AlertType, for uuid: String) -> Bool
     func alert(for uuid: String, of type: AlertType) -> AlertType?
     func register(type: AlertType, for uuid: String)
     func unregister(type: AlertType, for uuid: String)
-    
+
     // temperature
     func lowerCelsius(for uuid: String) -> Double?
     func setLower(celsius: Double?, for uuid: String)
