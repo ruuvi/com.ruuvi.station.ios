@@ -4,11 +4,9 @@ import UIKit
 class ActivitySpinnerView: UIView {
 
     override var layer: CAShapeLayer {
-        get {
-            // swiftlint:disable force_cast
-            return super.layer as! CAShapeLayer
-            // swiftlint:enable force_cast
-        }
+        // swiftlint:disable force_cast
+        return super.layer as! CAShapeLayer
+        // swiftlint:enable force_cast
     }
 
     override class var layerClass: AnyClass {
@@ -39,18 +37,17 @@ class ActivitySpinnerView: UIView {
     }
 
     class var poses: [Pose] {
-        get {
-            return [
-                Pose(0.0, 0.000, 0.7),
-                Pose(0.6, 0.500, 0.5),
-                Pose(0.6, 1.000, 0.3),
-                Pose(0.6, 1.500, 0.1),
-                Pose(0.2, 1.875, 0.1),
-                Pose(0.2, 2.250, 0.3),
-                Pose(0.2, 2.625, 0.5),
-                Pose(0.2, 3.000, 0.7)
-            ]
-        }
+
+        return [
+            Pose(0.0, 0.000, 0.7),
+            Pose(0.6, 0.500, 0.5),
+            Pose(0.6, 1.000, 0.3),
+            Pose(0.6, 1.500, 0.1),
+            Pose(0.2, 1.875, 0.1),
+            Pose(0.2, 2.250, 0.3),
+            Pose(0.2, 2.625, 0.5),
+            Pose(0.2, 3.000, 0.7)
+        ]
     }
 
     func stopAnimating() {

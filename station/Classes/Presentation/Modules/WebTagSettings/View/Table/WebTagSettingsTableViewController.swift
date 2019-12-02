@@ -44,7 +44,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         let title = "WebTagSettings.confirmTagRemovalDialog.title".localized()
         let message = "WebTagSettings.confirmTagRemovalDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
             self?.output.viewDidConfirmTagRemoval()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -55,7 +57,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         let title = "WebTagSettings.confirmClearLocationDialog.title".localized()
         let message = "WebTagSettings.confirmClearLocationDialog.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
             self?.output.viewDidConfirmToClearLocation()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))

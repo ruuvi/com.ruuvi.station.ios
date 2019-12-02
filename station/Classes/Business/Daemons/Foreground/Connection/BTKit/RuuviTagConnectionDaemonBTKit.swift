@@ -33,7 +33,11 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
 
     override init() {
         super.init()
-        isOnToken = NotificationCenter.default.addObserver(forName: .isConnectionDaemonOnDidChange, object: nil, queue: .main) { [weak self] _ in
+        isOnToken = NotificationCenter
+            .default
+            .addObserver(forName: .isConnectionDaemonOnDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
             guard let sSelf = self else { return }
             if sSelf.settings.isConnectionDaemonOn {
                 sSelf.start()
@@ -48,7 +52,9 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
             guard let sSelf = self else { return }
             sSelf.scanToken = sSelf.foreground.scan(sSelf, options: [.callbackQueue(.untouch)]) { (_, device) in
                 if let ruuviTag = device.ruuvi?.tag, ruuviTag.isConnectable {
-                    sSelf.perform(#selector(RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped:)),
+                    sSelf.perform(#selector
+                        (RuuviTagConnectionDaemonBTKit.onDidReceiveConnectableTagAdvertisement(ruuviTagWrapped:)
+                        ),
                     on: sSelf.thread,
                     with: RuuviTagConnectableDaemonWrapper(device: ruuviTag),
                     waitUntilDone: false,

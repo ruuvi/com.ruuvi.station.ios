@@ -14,7 +14,8 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
 
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: { [weak self] in
             guard let sSelf = self else { return }
             if let photo = info[.originalImage] as? UIImage {
@@ -29,11 +30,14 @@ extension PhotoPickerPresenterSheet {
 
     private func showSourceDialog() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let sheet = UIAlertController(title: nil, message: "PhotoPicker.Sheet.message".localized(), preferredStyle: .actionSheet)
-        let library = UIAlertAction(title: "PhotoPicker.Sheet.library".localized(), style: .default) { [weak self] (_) in
+        let message = "PhotoPicker.Sheet.message".localized()
+        let sheet = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+        let libraryTitle = "PhotoPicker.Sheet.library".localized()
+        let library = UIAlertAction(title: libraryTitle, style: .default) { [weak self] (_) in
             self?.checkPhotoLibraryPermission()
         }
-        let camera = UIAlertAction(title: "PhotoPicker.Sheet.camera".localized(), style: .default) { [weak self] (_) in
+        let cameraTitle = "PhotoPicker.Sheet.camera".localized()
+        let camera = UIAlertAction(title: cameraTitle, style: .default) { [weak self] (_) in
             self?.checkCameraPermission()
         }
         let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)

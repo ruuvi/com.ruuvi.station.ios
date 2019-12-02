@@ -3,7 +3,9 @@ import LightRoute
 class TagSettingsRouter: TagSettingsRouterInput {
     weak var transitionHandler: TransitionHandler!
 
+    // swiftlint:disable weak_delegate
     private lazy var humidityCalibrationTransitioningDelegate = HumidityCalibrationTransitioningDelegate()
+    // swiftlint:enable weak_delegate
 
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()

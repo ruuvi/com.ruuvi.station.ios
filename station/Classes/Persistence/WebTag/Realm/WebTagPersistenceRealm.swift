@@ -201,7 +201,9 @@ class WebTagPersistenceRealm: WebTagPersistence {
         let promise = Promise<WPSData, RUError>()
         context.bgWorker.enqueue {
             let webTags = self.context.bg.objects(WebTagRealm.self)
-                .filter("location != nil AND location.latitude == %@ AND location.longitude == %@", location.coordinate.latitude, location.coordinate.longitude)
+                .filter("location != nil AND location.latitude == %@ AND location.longitude == %@",
+                        location.coordinate.latitude,
+                        location.coordinate.longitude)
             do {
                 try webTags.forEach({ (webTag) in
                     if !webTag.isInvalidated {

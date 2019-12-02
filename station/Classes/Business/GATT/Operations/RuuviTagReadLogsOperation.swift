@@ -9,18 +9,18 @@ extension Notification.Name {
 }
 
 enum RuuviTagReadLogsOperationDidStartKey: String {
-    case uuid = "uuid"
-    case fromDate = "fromDate"
+    case uuid
+    case fromDate
 }
 
 enum RuuviTagReadLogsOperationDidFailKey: String {
-    case uuid = "uuid"
-    case error = "RUError"
+    case uuid
+    case error
 }
 
 enum RuuviTagReadLogsOperationDidFinishKey: String {
-    case uuid = "uuid"
-    case logs = "logs"
+    case uuid
+    case logs
 }
 
 class RuuviTagReadLogsOperation: AsyncOperation {
@@ -60,19 +60,24 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         self.serviceTimeout = serviceTimeout
     }
 
+    // swiftlint:disable:next function_body_length
     override func main() {
         let date = connectionPersistence.logSyncDate(uuid: uuid) ?? Date.distantPast
         let uuid = self.uuid
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart,
                                             object: nil,
-                                            userInfo: [RuuviTagReadLogsOperationDidStartKey.uuid: uuid, RuuviTagReadLogsOperationDidStartKey.fromDate: date])
+                                            userInfo:
+                [RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
+                 RuuviTagReadLogsOperationDidStartKey.fromDate: date])
         }
 
         background.services.ruuvi.nus.log(for: self,
                                           uuid: uuid,
                                           from: date,
-                                          options: [.callbackQueue(.untouch), .connectionTimeout(connectionTimeout ?? 0), .serviceTimeout(serviceTimeout ?? 0)],
+                                          options: [.callbackQueue(.untouch),
+                                                    .connectionTimeout(connectionTimeout ?? 0), .
+                                                        serviceTimeout(serviceTimeout ?? 0)],
                                           progress: progress) { (observer, result) in
             switch result {
             case .success(let logs):
@@ -82,14 +87,18 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFinish,
                                                         object: nil,
-                                                        userInfo: [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid, RuuviTagReadLogsOperationDidFinishKey.logs: logs])
+                                                        userInfo:
+                            [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
+                             RuuviTagReadLogsOperationDidFinishKey.logs: logs])
                     }
                     observer.state = .finished
                 }, failure: { error in
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
                                                         object: nil,
-                                                        userInfo: [RuuviTagReadLogsOperationDidFailKey.uuid: uuid, RuuviTagReadLogsOperationDidFailKey.error: error])
+                                                        userInfo:
+                            [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
+                             RuuviTagReadLogsOperationDidFailKey.error: error])
                     }
                     observer.error = error
                     observer.state = .finished
@@ -98,7 +107,9 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
                                                     object: nil,
-                                                    userInfo: [RuuviTagReadLogsOperationDidFailKey.uuid: uuid, RuuviTagReadLogsOperationDidFailKey.error: error])
+                                                    userInfo:
+                        [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
+                         RuuviTagReadLogsOperationDidFailKey.error: error])
                 }
                 observer.error = .btkit(error)
                 observer.state = .finished

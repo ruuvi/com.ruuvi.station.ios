@@ -54,9 +54,14 @@ class DiscoverPresenter: DiscoverModuleInput {
 // MARK: - DiscoverViewOutput
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        let current = DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .current, icon: UIImage(named: "icon-webtag-current"))
-        let manual = DiscoverWebTagViewModel(provider: .openWeatherMap, locationType: .manual, icon: UIImage(named: "icon-webtag-map"))
-        let isCurrentLocationTagAlreadyAdded = realmContext.main.objects(WebTagRealm.self).filter("location == nil").count > 0
+        let current = DiscoverWebTagViewModel(provider: .openWeatherMap,
+                                              locationType: .current,
+                                              icon: UIImage(named: "icon-webtag-current"))
+        let manual = DiscoverWebTagViewModel(provider: .openWeatherMap,
+                                             locationType: .manual,
+                                             icon: UIImage(named: "icon-webtag-map"))
+        let isCurrentLocationTagAlreadyAdded = realmContext.main.objects(WebTagRealm.self)
+            .filter("location == nil").count > 0
         if isCurrentLocationTagAlreadyAdded {
             view.webTags = [manual]
         } else {
@@ -267,9 +272,17 @@ extension DiscoverPresenter {
     private func updateViewDevices() {
         view.devices = ruuviTags.map { (ruuviTag) -> DiscoverDeviceViewModel in
             if let persistedRuuviTag = persistedRuuviTags.first(where: { $0.uuid == ruuviTag.uuid}) {
-                return DiscoverDeviceViewModel(uuid: ruuviTag.uuid, rssi: ruuviTag.rssi, mac: ruuviTag.mac, name: persistedRuuviTag.name, logo: ruuviLogoImage)
+                return DiscoverDeviceViewModel(uuid: ruuviTag.uuid,
+                                               rssi: ruuviTag.rssi,
+                                               mac: ruuviTag.mac,
+                                               name: persistedRuuviTag.name,
+                                               logo: ruuviLogoImage)
             } else {
-                return DiscoverDeviceViewModel(uuid: ruuviTag.uuid, rssi: ruuviTag.rssi, mac: ruuviTag.mac, name: nil, logo: ruuviLogoImage)
+                return DiscoverDeviceViewModel(uuid: ruuviTag.uuid,
+                                               rssi: ruuviTag.rssi,
+                                               mac: ruuviTag.mac,
+                                               name: nil,
+                                               logo: ruuviLogoImage)
             }
         }
     }

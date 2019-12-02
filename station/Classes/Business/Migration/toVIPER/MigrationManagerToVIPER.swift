@@ -6,12 +6,12 @@ class MigrationManagerToVIPER: MigrationManager {
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func migrateIfNeeded() {
         let config = Realm.Configuration(
             schemaVersion: 10,
             migrationBlock: { migration, oldSchemaVersion in
-                if (oldSchemaVersion < 2) {
+                if oldSchemaVersion < 2 {
                     migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, _) in
 
                         if let uuid = oldObject?["uuid"] as? String,
@@ -30,7 +30,11 @@ class MigrationManagerToVIPER: MigrationManager {
                                 realName = name
                             }
 
-                            let ruuviTag = migration.create(RuuviTagRealm.className(), value: ["uuid": uuid, "name": realName, "version": version, "mac": mac])
+                            let ruuviTag = migration.create(RuuviTagRealm.className(),
+                                                            value: ["uuid": uuid,
+                                                                    "name": realName,
+                                                                    "version": version,
+                                                                    "mac": mac])
 
                             if let temperature = oldObject?["temperature"] as? Double,
                                 let humidity = oldObject?["humidity"] as? Double,

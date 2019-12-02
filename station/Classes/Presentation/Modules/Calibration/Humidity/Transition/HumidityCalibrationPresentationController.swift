@@ -1,5 +1,6 @@
 import UIKit
 
+// swiftlint:disable:next type_name
 class HumidityCalibrationPresentationController: UIPresentationController {
 
     private lazy var dimmingView: UIView = {
@@ -11,43 +12,42 @@ class HumidityCalibrationPresentationController: UIPresentationController {
     }()
 
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(HumidityCalibrationPresentationController.dimmingViewTapped(_:)))
+        let tap = UITapGestureRecognizer(target: self,
+                                         action:
+            #selector(HumidityCalibrationPresentationController.dimmingViewTapped(_:)))
         return tap
     }()
 
     override var shouldPresentInFullscreen: Bool {
-        get {
-            return true
-        }
+        return true
     }
 
     override var adaptivePresentationStyle: UIModalPresentationStyle {
-        get {
-            return .overFullScreen
-        }
+        return .overFullScreen
     }
 
-    override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
+    override func size(forChildContentContainer container: UIContentContainer,
+                       withParentContainerSize parentSize: CGSize) -> CGSize {
         return CGSize(width: 300, height: 342)
     }
 
     override var frameOfPresentedViewInContainerView: CGRect {
-        get {
-            var presentedViewFrame = CGRect.zero
-            if let containerBounds = containerView?.bounds {
-                let size = self.size(forChildContentContainer: presentedViewController, withParentContainerSize: containerBounds.size)
-                presentedViewFrame.size = size
-                presentedViewFrame.origin.x = (containerBounds.size.width / 2.0) - (size.width / 2.0)
-                presentedViewFrame.origin.y = (containerBounds.height / 2.0) - (size.height / 2.0)
 
-                if #available(iOS 11.0, *),
-                    let bottomPadding = containerView?.safeAreaInsets.bottom {
-                    presentedViewFrame.origin.y -= bottomPadding
-                }
+        var presentedViewFrame = CGRect.zero
+        if let containerBounds = containerView?.bounds {
+            let size = self.size(forChildContentContainer: presentedViewController,
+                                 withParentContainerSize: containerBounds.size)
+            presentedViewFrame.size = size
+            presentedViewFrame.origin.x = (containerBounds.size.width / 2.0) - (size.width / 2.0)
+            presentedViewFrame.origin.y = (containerBounds.height / 2.0) - (size.height / 2.0)
+
+            if #available(iOS 11.0, *),
+                let bottomPadding = containerView?.safeAreaInsets.bottom {
+                presentedViewFrame.origin.y -= bottomPadding
             }
-
-            return presentedViewFrame
         }
+
+        return presentedViewFrame
     }
 
     override func presentationTransitionWillBegin() {

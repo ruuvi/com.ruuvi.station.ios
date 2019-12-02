@@ -21,48 +21,6 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     }
 
     @discardableResult
-    func update(mac: String?, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        do {
-            try realm.write {
-                ruuviTag.mac = mac
-            }
-            promise.succeed(value: true)
-        } catch {
-            promise.fail(error: .persistence(error))
-        }
-        return promise.future
-    }
-
-    @discardableResult
-    func update(isConnectable: Bool, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        do {
-            try realm.write {
-                ruuviTag.isConnectable = isConnectable
-            }
-            promise.succeed(value: true)
-        } catch {
-            promise.fail(error: .persistence(error))
-        }
-        return promise.future
-    }
-
-    @discardableResult
-    func update(version: Int, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        do {
-            try realm.write {
-                ruuviTag.version = version
-            }
-            promise.succeed(value: true)
-        } catch {
-            promise.fail(error: .persistence(error))
-        }
-        return promise.future
-    }
-
-    @discardableResult
     func persist(ruuviTag: RuuviTagRealm, data: RuuviTag) -> Future<RuuviTag, RUError> {
         let promise = Promise<RuuviTag, RUError>()
         if ruuviTag.realm == context.bg {
@@ -92,7 +50,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     }
 
-    func persist(ruuviTag: RuuviTag, name: String, humidityOffset: Double, humidityOffsetDate: Date?) -> Future<RuuviTag, RUError> {
+    func persist(ruuviTag: RuuviTag,
+                 name: String,
+                 humidityOffset: Double,
+                 humidityOffsetDate: Date?) -> Future<RuuviTag, RUError> {
         let promise = Promise<RuuviTag, RUError>()
         context.bgWorker.enqueue {
             do {
@@ -192,6 +153,78 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    private func fetch(uuid: String) -> RuuviTagRealm? {
+        return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
+    }
+
+    func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                if let existingTag = self.fetch(uuid: uuid) {
+                    try self.context.bg.write {
+                        if !existingTag.isInvalidated {
+                            for log in logs {
+                                let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log)
+                                self.context.bg.add(tagData, update: .modified)
+                            }
+                            promise.succeed(value: true)
+                        } else {
+                            promise.fail(error: .core(.objectInvalidated))
+                        }
+                    }
+                } else {
+                    promise.fail(error: .core(.objectNotFound))
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+
+        return promise.future
+    }
+
+    func clearHistory(uuid: String) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                if let existingTag = self.fetch(uuid: uuid) {
+                    try self.context.bg.write {
+                        if !existingTag.isInvalidated {
+                            self.context.bg.delete(existingTag.data)
+                            promise.succeed(value: true)
+                        } else {
+                            promise.fail(error: .core(.objectInvalidated))
+                        }
+                    }
+                } else {
+                    promise.fail(error: .core(.objectNotFound))
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+
+        return promise.future
+    }
+}
+
+// MARK: - Update
+extension RuuviTagPersistenceRealm {
+    @discardableResult
+    func update(mac: String?, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        do {
+            try realm.write {
+                ruuviTag.mac = mac
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
     func update(humidityOffset: Double, date: Date, of ruuviTag: RuuviTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if ruuviTag.realm == context.bg {
@@ -246,58 +279,31 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
-    private func fetch(uuid: String) -> RuuviTagRealm? {
-        return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
-    }
-
-    func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool, RUError> {
+    @discardableResult
+    func update(isConnectable: Bool, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        context.bgWorker.enqueue {
-            do {
-                if let existingTag = self.fetch(uuid: uuid) {
-                    try self.context.bg.write {
-                        if !existingTag.isInvalidated {
-                            for log in logs {
-                                let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log)
-                                self.context.bg.add(tagData, update: .modified)
-                            }
-                            promise.succeed(value: true)
-                        } else {
-                            promise.fail(error: .core(.objectInvalidated))
-                        }
-                    }
-                } else {
-                    promise.fail(error: .core(.objectNotFound))
-                }
-            } catch {
-                promise.fail(error: .persistence(error))
+        do {
+            try realm.write {
+                ruuviTag.isConnectable = isConnectable
             }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
         }
-
         return promise.future
     }
 
-    func clearHistory(uuid: String) -> Future<Bool, RUError> {
+    @discardableResult
+    func update(version: Int, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        context.bgWorker.enqueue {
-            do {
-                if let existingTag = self.fetch(uuid: uuid) {
-                    try self.context.bg.write {
-                        if !existingTag.isInvalidated {
-                            self.context.bg.delete(existingTag.data)
-                            promise.succeed(value: true)
-                        } else {
-                            promise.fail(error: .core(.objectInvalidated))
-                        }
-                    }
-                } else {
-                    promise.fail(error: .core(.objectNotFound))
-                }
-            } catch {
-                promise.fail(error: .persistence(error))
+        do {
+            try realm.write {
+                ruuviTag.version = version
             }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
         }
-
         return promise.future
     }
 }

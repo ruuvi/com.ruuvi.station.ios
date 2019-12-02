@@ -41,9 +41,12 @@ extension SettingsTableViewController: SettingsViewInput {
         navigationItem.title = "Settings.navigationItem.title".localized()
         temperatureUnitLabel.text = "Settings.Label.TemperatureUnit.text".localized()
         humidityUnitLabel.text = "Settings.Label.HumidityUnit.text".localized()
-        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(), forSegmentAt: 0)
-        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(), forSegmentAt: 1)
-        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(), forSegmentAt: 2)
+        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(),
+                                              forSegmentAt: 0)
+        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(),
+                                              forSegmentAt: 1)
+        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(),
+                                              forSegmentAt: 2)
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         backgroundTitleLabel.text = "Settings.Label.Background".localized()

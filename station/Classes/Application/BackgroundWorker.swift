@@ -13,7 +13,7 @@ class BackgroundWorker: NSObject {
             .components(separatedBy: .punctuationCharacters)[1]
 
         thread = Thread { [weak self] in
-            while (self != nil && !self!.thread.isCancelled) {
+            while self != nil && !self!.thread.isCancelled {
                 RunLoop.current.run(
                     mode: RunLoop.Mode.default,
                     before: Date.distantFuture)

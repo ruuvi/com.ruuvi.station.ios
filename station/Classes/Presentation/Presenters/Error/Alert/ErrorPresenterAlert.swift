@@ -2,6 +2,7 @@ import UIKit
 import Localize_Swift
 
 class ErrorPresenterAlert: ErrorPresenter {
+    // swiftlint:disable:next cyclomatic_complexity
     func present(error: Error) {
         if let ruError = error as? RUError {
             switch ruError {

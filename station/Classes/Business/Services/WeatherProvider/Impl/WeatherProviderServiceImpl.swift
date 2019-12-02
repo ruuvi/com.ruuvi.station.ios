@@ -15,7 +15,8 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                                    interval: TimeInterval,
                                    fire: Bool = true,
                                    closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
-        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
+        let timer = Timer.scheduledTimer(withTimeInterval: interval,
+                                         repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
                 timer.invalidate()
                 return
@@ -49,9 +50,11 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                                                   provider: WeatherProvider,
                                                   interval: TimeInterval,
                                                   fire: Bool = true,
-                                                  closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
+                                                  closure: @escaping (T, WPSData?, Location?, RUError?) -> Void)
+        -> RUObservationToken {
 
-        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self, weak observer] timer in
+        let timer = Timer.scheduledTimer(withTimeInterval: interval,
+                                         repeats: true) { [weak self, weak observer] timer in
             guard let observer = observer else {
                 timer.invalidate()
                 return

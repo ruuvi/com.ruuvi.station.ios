@@ -71,7 +71,7 @@
 // Defaults
 "Defaults.navigationItem.title" = "Значения";
 "Defaults.WelcomeShown.title" = "Приветствие Показано";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Свайп на Графиках";
+"Defaults.ChartsSwipeInstructionWasShown.title" = "Свайп на Графиках";
 "Defaults.Interval.Sec.string" = "сек";
 "Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
@@ -234,7 +234,7 @@
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
 "TagSettings.Label.disabled.text" = "DISABLED?";
 "TagSettings.Label.alerts.text" = "ALERTS";
-"TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
 "TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
 "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
 "TagSettings.ConnectStatus.Connected" = "Connected";

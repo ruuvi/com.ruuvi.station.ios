@@ -66,7 +66,10 @@ extension AboutViewController {
 
 // MARK: - UITextViewDelegate
 extension AboutViewController: UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+    func textView(_ textView: UITextView,
+                  shouldInteractWith URL: URL,
+                  in characterRange: NSRange,
+                  interaction: UITextItemInteraction) -> Bool {
         UIApplication.shared.open(URL, options: [:])
         return false
     }
@@ -120,11 +123,15 @@ extension AboutViewController {
         // reduce the linespacing below the titles
         let smallFont = UIFont(name: "Muli-Bold", size: 8) ?? UIFont.systemFont(ofSize: 8)
         for range in attrString.string.ranges(of: "\n") {
-            attrString.addAttribute(NSAttributedString.Key.font, value: smallFont, range: NSRange(range, in: attrString.string))
+            attrString.addAttribute(NSAttributedString.Key.font,
+                                    value: smallFont,
+                                    range: NSRange(range, in: attrString.string))
         }
 
         // make text color white
-        attrString.addAttribute(.foregroundColor, value: UIColor.white, range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttribute(.foregroundColor,
+                                value: UIColor.white,
+                                range: NSRange(location: 0, length: attrString.length))
 
         aboutTextView.attributedText = attrString
     }
@@ -134,7 +141,10 @@ private extension String {
     func ranges(of substring: String, options: CompareOptions = [], locale: Locale? = nil) -> [Range<Index>] {
         var ranges: [Range<Index>] = []
         while ranges.last.map({ $0.upperBound < self.endIndex }) ?? true,
-            let range = self.range(of: substring, options: options, range: (ranges.last?.upperBound ?? self.startIndex)..<self.endIndex, locale: locale) {
+            let range = self.range(of: substring,
+                                   options: options,
+                                   range: (ranges.last?.upperBound ?? self.startIndex)..<self.endIndex,
+                                   locale: locale) {
             ranges.append(range)
         }
         return ranges

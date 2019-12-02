@@ -4,9 +4,11 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
 
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
-    private let presentConnectionNotificationsArrayUDKey = "ConnectionPersistenceUserDefaults.presentConnectionNotifications.array"
+    private let presentConnectionNotificationsArrayUDKey =
+    "ConnectionPersistenceUserDefaults.presentConnectionNotifications.array"
+    private let saveHeartbeatsIntervalUDKeyPrefix =
+    "ConnectionPersistenceUserDefaults.saveHeartbeatsIntervalUDKeyPrefix."
     private let saveHeartbeatsUDKeyPrefix = "ConnectionPersistenceUserDefaults.saveHeartbeatsUDKeyPrefix."
-    private let saveHeartbeatsIntervalUDKeyPrefix = "ConnectionPersistenceUserDefaults.saveHeartbeatsIntervalUDKeyPrefix."
     private let readRSSIArrayUDKey = "ConnectionPersistenceUserDefaults.readRSSIArrayUDKey.array"
     private let readRSSIIntervalUDKeyPrefix = "ConnectionPersistenceUserDefaults.readRSSIIntervalUDKeyPrefix."
     private let logSyncDateUDKeyPrefix = "ConnectionPersistenceUserDefaults.logSyncDateUDKeyPrefix."
@@ -43,8 +45,10 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
                     prefs.set(array, forKey: keepConnectionArrayUDKey)
                     NotificationCenter.default.post(name: .ConnectionPersistenceDidStartToKeepConnection,
                                                     object: nil,
-                                                    userInfo: [ConnectionPersistenceDidStartToKeepConnectionKey.uuid: uuid,
-                                                               ConnectionPersistenceDidStartToKeepConnectionKey.readRSSI: readRSSI(uuid: uuid)])
+                                                    userInfo:
+                        [CPDidStartToKeepConnectionKey.uuid: uuid,
+
+                         CPDidStartToKeepConnectionKey.readRSSI: readRSSI(uuid: uuid)])
                 }
             } else {
                 var array = [String]()
@@ -52,8 +56,10 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
                 prefs.set(array, forKey: keepConnectionArrayUDKey)
                 NotificationCenter.default.post(name: .ConnectionPersistenceDidStartToKeepConnection,
                                                 object: nil,
-                                                userInfo: [ConnectionPersistenceDidStartToKeepConnectionKey.uuid: uuid,
-                                                           ConnectionPersistenceDidStartToKeepConnectionKey.readRSSI: readRSSI(uuid: uuid)])
+                                                userInfo:
+                    [CPDidStartToKeepConnectionKey.uuid: uuid,
+
+                     CPDidStartToKeepConnectionKey.readRSSI: readRSSI(uuid: uuid)])
             }
         } else {
             if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
@@ -62,8 +68,10 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
                     prefs.set(array, forKey: keepConnectionArrayUDKey)
                     NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,
                                                     object: nil,
-                                                    userInfo: [ConnectionPersistenceDidStopToKeepConnectionKey.uuid: uuid,
-                                                               ConnectionPersistenceDidStopToKeepConnectionKey.readRSSI: readRSSI(uuid: uuid)])
+                                                    userInfo:
+                        [CPDidStopToKeepConnectionKey.uuid: uuid,
+
+                         CPDidStopToKeepConnectionKey.readRSSI: readRSSI(uuid: uuid)])
                 }
             }
         }
@@ -121,20 +129,32 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
                 if !array.contains(uuid) {
                     array.append(uuid)
                     prefs.set(array, forKey: readRSSIArrayUDKey)
-                    NotificationCenter.default.post(name: .ConnectionPersistenceDidStartReadingRSSI, object: nil, userInfo: [ConnectionPersistenceDidStartReadingRSSIKey.uuid: uuid])
+                    NotificationCenter
+                        .default
+                        .post(name: .ConnectionPersistenceDidStartReadingRSSI,
+                              object: nil,
+                              userInfo: [CPDidStartReadingRSSIKey.uuid: uuid])
                 }
             } else {
                 var array = [String]()
                 array.append(uuid)
                 prefs.set(array, forKey: readRSSIArrayUDKey)
-                NotificationCenter.default.post(name: .ConnectionPersistenceDidStartReadingRSSI, object: nil, userInfo: [ConnectionPersistenceDidStartReadingRSSIKey.uuid: uuid])
+                NotificationCenter
+                    .default
+                    .post(name: .ConnectionPersistenceDidStartReadingRSSI,
+                          object: nil,
+                          userInfo: [CPDidStartReadingRSSIKey.uuid: uuid])
             }
         } else {
             if var array = prefs.array(forKey: readRSSIArrayUDKey) as? [String] {
                 if array.contains(uuid) {
                     array.removeAll(where: { $0 == uuid })
                     prefs.set(array, forKey: readRSSIArrayUDKey)
-                    NotificationCenter.default.post(name: .ConnectionPersistenceDidStopReadingRSSI, object: nil, userInfo: [ConnectionPersistenceDidStopReadingRSSIKey.uuid: uuid])
+                    NotificationCenter
+                        .default
+                        .post(name: .ConnectionPersistenceDidStopReadingRSSI,
+                              object: nil,
+                              userInfo: [CPDidStopReadingRSSIKey.uuid: uuid])
                 }
             }
         }
@@ -148,7 +168,8 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
         prefs.set(value, forKey: readRSSIIntervalUDKeyPrefix + uuid)
         NotificationCenter.default.post(name: .ConnectionPersistenceDidChangeReadRSSIInterval,
                                         object: nil,
-                                        userInfo: [ConnectionPersistenceDidChangeReadRSSIIntervalKey.uuid: uuid, ConnectionPersistenceDidChangeReadRSSIIntervalKey.interval: value])
+                                        userInfo: [CPDidChangeReadRSSIIntervalKey.uuid: uuid,
+                                                   CPDidChangeReadRSSIIntervalKey.interval: value])
     }
 
     func logSyncDate(uuid: String) -> Date? {

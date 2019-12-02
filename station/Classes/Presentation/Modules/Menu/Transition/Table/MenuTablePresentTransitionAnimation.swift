@@ -25,7 +25,10 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         containerView.addSubview(toView)
 
         let appearedFrame = transitionContext.finalFrame(for: toVC)
-        let initialFrame = CGRect(x: -appearedFrame.size.width, y: appearedFrame.origin.y, width: appearedFrame.size.width, height: appearedFrame.size.height)
+        let initialFrame = CGRect(x: -appearedFrame.size.width,
+                                  y: appearedFrame.origin.y,
+                                  width: appearedFrame.size.width,
+                                  height: appearedFrame.size.height)
         let finalFrame = appearedFrame
         toView.frame = initialFrame
 
@@ -37,9 +40,9 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        options: .curveEaseInOut,
                        animations: {
                         toView.frame = finalFrame
-        }) { (_) -> Void in
+        }, completion: { _ -> Void in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        }
+        })
     }
 
     func handlePresentMenuPan(_ pan: UIPanGestureRecognizer) {
@@ -69,7 +72,7 @@ class MenuTablePresentTransitionAnimation: UIPercentDrivenInteractiveTransition,
         let direction: CGFloat = manager.presentDirection == .left ? 1 : -1
         let distance = translation.x / MenuTableTransitionManager.appScreenRect.width
         // now lets deal with different states that the gesture recognizer sends
-        switch (pan.state) {
+        switch pan.state {
         case .began, .changed:
             update(min(distance * direction, 1))
         default:

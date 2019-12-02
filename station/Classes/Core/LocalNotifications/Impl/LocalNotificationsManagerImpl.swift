@@ -2,7 +2,7 @@ import UserNotifications
 import UIKit
 
 enum LocalNotificationType: String {
-    case temperature = "temperature"
+    case temperature
 }
 
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
@@ -21,7 +21,8 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
     private var temperatureDidChangeToken: NSObjectProtocol?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         setupLocalNotifications()
         startObserving()
     }
@@ -74,12 +75,14 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
             let content = UNMutableNotificationContent()
             content.sound = .default
             content.title = "LocalNotificationsManager.LowTemperature.title".localized()
-            content.userInfo = [alertCategoryUUIDKey: uuid, alertCategoryTypeKey: LocalNotificationType.temperature.rawValue]
+            content.userInfo = [alertCategoryUUIDKey: uuid,
+                                alertCategoryTypeKey: LocalNotificationType.temperature.rawValue]
             content.categoryIdentifier = alertCategory
 
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
-                content.body = alertService.temperatureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                content.body = alertService.temperatureDescription(for: ruuviTag.uuid)
+                    ?? (ruuviTag.mac ?? ruuviTag.uuid)
             } else {
                 content.body = uuid
             }
@@ -102,11 +105,13 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
             let content = UNMutableNotificationContent()
             content.sound = .default
             content.title = "LocalNotificationsManager.HighTemperature.title".localized()
-            content.userInfo = [alertCategoryUUIDKey: uuid, alertCategoryTypeKey: LocalNotificationType.temperature.rawValue]
+            content.userInfo = [alertCategoryUUIDKey: uuid,
+                                alertCategoryTypeKey: LocalNotificationType.temperature.rawValue]
             content.categoryIdentifier = alertCategory
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
-                content.body = alertService.temperatureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                content.body = alertService.temperatureDescription(for: ruuviTag.uuid)
+                    ?? (ruuviTag.mac ?? ruuviTag.uuid)
             } else {
                 content.body = uuid
             }
@@ -122,8 +127,13 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 // MARK: - Private
 extension LocalNotificationsManagerImpl {
     private func startObserving() {
-        temperatureDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main) { [weak self] (notification) in
-            if let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+        temperatureDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .AlertServiceTemperatureAlertDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
                 self?.lowTemperatureAlerts[uuid] = nil
                 self?.highTemperatureAlerts[uuid] = nil
             }
@@ -153,14 +163,18 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+                                withCompletionHandler
+        completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .badge, .sound])
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         guard let uuid = userInfo[alertCategoryUUIDKey] as? String else { completionHandler(); return }
-        guard let typeString = userInfo[alertCategoryTypeKey] as? String, let type = LocalNotificationType(rawValue: typeString) else { completionHandler(); return }
+        guard let typeString = userInfo[alertCategoryTypeKey] as? String,
+            let type = LocalNotificationType(rawValue: typeString) else { completionHandler(); return }
 
         switch type {
         case .temperature:

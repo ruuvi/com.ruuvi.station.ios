@@ -6,21 +6,15 @@ class PermissionsManagerImpl: PermissionsManager {
     var locationManager: LocationManager!
 
     var isPhotoLibraryPermissionGranted: Bool {
-        get {
-            return PHPhotoLibrary.authorizationStatus() == .authorized
-        }
+        return PHPhotoLibrary.authorizationStatus() == .authorized
     }
 
     var isCameraPermissionGranted: Bool {
-        get {
-            return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
-        }
+        return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
     }
 
     var isLocationPermissionGranted: Bool {
-        get {
-            return locationManager.isLocationPermissionGranted
-        }
+        return locationManager.isLocationPermissionGranted
     }
 
     func requestPhotoLibraryPermission(completion: ((Bool) -> Void)?) {

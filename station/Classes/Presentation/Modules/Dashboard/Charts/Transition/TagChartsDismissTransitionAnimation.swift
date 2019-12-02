@@ -17,7 +17,7 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
         let direction: CGFloat = manager.presentDirection == .top ? -1 : 1
         let distance = translation.y / TagChartsTransitionManager.appScreenRect.height * direction
 
-        switch (pan.state) {
+        switch pan.state {
         case .began:
             if translation.y > 0 { return } // don't start gesture
             manager.isInteractive = true
@@ -50,11 +50,11 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        animations: {
                         fromView.alpha = 0.0
                         fromView.frame = finalFrame
-        }) { (_) -> Void in
+        }, completion: { (_) -> Void in
             if !transitionContext.transitionWasCancelled {
                 fromView.removeFromSuperview()
             }
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        }
+        })
     }
 }

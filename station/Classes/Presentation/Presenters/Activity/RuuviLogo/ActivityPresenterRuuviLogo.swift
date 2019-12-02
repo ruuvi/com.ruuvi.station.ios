@@ -9,7 +9,10 @@ class ActivityPresenterRuuviLogo: ActivityPresenter {
 
     init() {
         // swiftlint:disable force_cast
-        hudViewController = UIStoryboard(name: "ActivityRuuviLogo", bundle: .main).instantiateViewController(withIdentifier: "ActivityRuuviLogoViewController") as! ActivityRuuviLogoViewController
+        hudViewController = UIStoryboard(name: "ActivityRuuviLogo",
+                                         bundle: .main)
+            .instantiateViewController(withIdentifier: "ActivityRuuviLogoViewController")
+            as! ActivityRuuviLogoViewController
         // swiftlint:enable force_cast
         window.windowLevel = .normal
         hudViewController.view.translatesAutoresizingMaskIntoConstraints = false

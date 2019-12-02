@@ -7,8 +7,10 @@ class CardsRouter: NSObject, CardsRouterInput {
     weak var tagCharts: UIViewController!
     var settings: Settings!
 
+    // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
     var tagChartsTransitioningDelegate: TagChartsTransitioningDelegate!
+    // swiftlint:enable weak_delegate
 
     private var menuTableTransition: MenuTableTransitioningDelegate!
 

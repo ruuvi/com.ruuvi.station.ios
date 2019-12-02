@@ -41,7 +41,9 @@ class TagChartsView: UIView, Localizable, UIScrollViewDelegate {
         super.awakeFromNib()
         setupLocalization()
         iPadDefaultConstraint.isActive = false
-        NotificationCenter.default.addObserver(self, selector: #selector(TagChartsView.handleRotation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(TagChartsView.handleRotation(_:)),
+                                               name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
     @objc private func handleRotation(_ notification: Notification) {

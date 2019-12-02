@@ -36,8 +36,13 @@ class WebTagServiceImpl: WebTagService {
                                                   provider: WeatherProvider,
                                                   interval: TimeInterval,
                                                   fire: Bool = true,
-                                                  closure: @escaping (T, WPSData?, Location?, RUError?) -> Void) -> RUObservationToken {
-        return weatherProviderService.observeCurrentLocationData(observer, provider: provider, interval: interval, fire: fire, closure: closure)
+                                                  closure: @escaping (T, WPSData?, Location?, RUError?) -> Void)
+        -> RUObservationToken {
+        return weatherProviderService.observeCurrentLocationData(observer,
+                                                                 provider: provider,
+                                                                 interval: interval,
+                                                                 fire: fire,
+                                                                 closure: closure)
     }
 
     @discardableResult
@@ -47,6 +52,11 @@ class WebTagServiceImpl: WebTagService {
                                    interval: TimeInterval,
                                    fire: Bool = true,
                                    closure: @escaping (T, WPSData?, RUError?) -> Void) -> RUObservationToken {
-        return weatherProviderService.observeData(observer, coordinate: coordinate, provider: provider, interval: interval, fire: fire, closure: closure)
+        return weatherProviderService.observeData(observer,
+                                                  coordinate: coordinate,
+                                                  provider: provider,
+                                                  interval: interval,
+                                                  fire: fire,
+                                                  closure: closure)
     }
 }

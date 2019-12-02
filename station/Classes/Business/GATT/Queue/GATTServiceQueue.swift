@@ -14,7 +14,10 @@ class GATTServiceQueue: GATTService {
     }()
 
     @discardableResult
-    func syncLogs(with uuid: String, progress: ((BTServiceProgress) -> Void)? = nil, connectionTimeout: TimeInterval? = nil, serviceTimeout: TimeInterval? = nil) -> Future<Bool, RUError> {
+    func syncLogs(with uuid: String,
+                  progress: ((BTServiceProgress) -> Void)? = nil,
+                  connectionTimeout: TimeInterval? = nil,
+                  serviceTimeout: TimeInterval? = nil) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if isSyncingLogs(with: uuid) {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))

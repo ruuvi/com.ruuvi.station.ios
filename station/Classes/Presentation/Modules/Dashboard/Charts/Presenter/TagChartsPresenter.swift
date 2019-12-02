@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -244,7 +245,8 @@ extension TagChartsPresenter: AlertServiceObserver {
 extension TagChartsPresenter {
 
     private func tryToShowSwipeUpHint() {
-        if UIApplication.shared.statusBarOrientation.isLandscape && !settings.tagChartsLandscapeSwipeInstructionWasShown {
+        if UIApplication.shared.statusBarOrientation.isLandscape
+            && !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
             view.showSwipeUpInstruction()
         }
@@ -323,20 +325,33 @@ extension TagChartsPresenter {
     }
 
     private func startListeningToSettings() {
-        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (_) in
+        temperatureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
             self?.viewModels.forEach({ $0.temperatureUnit.value = self?.settings.temperatureUnit })
         }
-        humidityUnitToken = NotificationCenter.default.addObserver(forName: .HumidityUnitDidChange, object: nil, queue: .main, using: { [weak self] (_) in
+        humidityUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
             self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
         })
     }
 
     private func startObservingBackgroundChanges() {
-        backgroundToken = NotificationCenter.default.addObserver(forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main) { [weak self] notification in
-            if let userInfo = notification.userInfo, let uuid = userInfo[BackgroundPersistenceDidChangeBackgroundKey.uuid] as? String {
-                if let viewModel = self?.view.viewModels.first(where: { $0.uuid.value == uuid }) {
+        backgroundToken = NotificationCenter
+            .default
+            .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
+                         object: nil,
+                         queue: .main) { [weak self] notification in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[BPDidChangeBackgroundKey.uuid] as? String,
+                let viewModel = self?.view.viewModels.first(where: { $0.uuid.value == uuid }) {
                     viewModel.background.value = self?.backgroundPersistence.background(for: uuid)
-                }
             }
         }
     }
@@ -354,8 +369,15 @@ extension TagChartsPresenter {
     }
 
     private func startObservingAlertChanges() {
-        temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
-            if let sSelf = self, let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+        temperatureAlertDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .AlertServiceTemperatureAlertDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let sSelf = self,
+                let userInfo = notification.userInfo,
+                let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
                 sSelf.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
                     viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
                 })
@@ -368,17 +390,31 @@ extension TagChartsPresenter {
     }
 
     func startObservingDidConnectDisconnectNotifications() {
-        didConnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+        didConnectToken = NotificationCenter
+            .default
+            .addObserver(forName: .BTBackgroundDidConnect,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
+                let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = true
             }
         })
 
-        didDisconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo, let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String, let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+        didDisconnectToken = NotificationCenter
+            .default
+            .addObserver(forName: .BTBackgroundDidDisconnect,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
+                let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = false
             }
         })
     }
-
 }
+// swiftlint:enable file_length

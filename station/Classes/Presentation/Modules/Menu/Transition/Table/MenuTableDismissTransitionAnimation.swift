@@ -13,7 +13,7 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
         let direction: CGFloat = manager.presentDirection == .left ? -1 : 1
         let distance = translation.x / MenuTableTransitionManager.appScreenRect.width * direction
 
-        switch (pan.state) {
+        switch pan.state {
         case .began:
             if translation.x > 0 { return } // don't start gesture
             manager.isInteractive = true
@@ -41,7 +41,10 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
 
         let appearedFrame = transitionContext.finalFrame(for: fromVC)
         let initialFrame = appearedFrame
-        let finalFrame = CGRect(x: -appearedFrame.size.width, y: appearedFrame.origin.y, width: appearedFrame.size.width, height: appearedFrame.size.height)
+        let finalFrame = CGRect(x: -appearedFrame.size.width,
+                                y: appearedFrame.origin.y,
+                                width: appearedFrame.size.width,
+                                height: appearedFrame.size.height)
         fromView.frame = initialFrame
 
         let duration = transitionDuration(using: transitionContext)
@@ -52,11 +55,11 @@ class MenuTableDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
                        options: .curveEaseInOut,
                        animations: {
                         fromView.frame = finalFrame
-        }) { (_) -> Void in
+        }, completion: { _ -> Void in
             if !transitionContext.transitionWasCancelled {
                 fromView.removeFromSuperview()
             }
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        }
+        })
     }
 }

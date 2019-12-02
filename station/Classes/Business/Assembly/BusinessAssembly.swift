@@ -2,6 +2,8 @@ import Swinject
 import BTKit
 
 class BusinessAssembly: Assembly {
+
+    // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
 
         container.register(AlertService.self) { r in

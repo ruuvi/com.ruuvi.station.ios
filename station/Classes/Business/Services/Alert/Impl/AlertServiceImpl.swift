@@ -86,7 +86,8 @@ class AlertServiceImpl: AlertService {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                if case .temperature(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let celsius = ruuviTag.celsius {
+                if case .temperature(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
+                    let celsius = ruuviTag.celsius {
                     if celsius < lower {
                         DispatchQueue.main.async { [weak self] in
                             self?.localNotificationsManager.notifyLowTemperature(for: ruuviTag.uuid, celsius: celsius)
@@ -102,8 +103,13 @@ class AlertServiceImpl: AlertService {
                         guard let sSelf = self else { return }
                         if let observers = sSelf.observations[ruuviTag.uuid] {
                             for i in 0..<observers.count {
-                                if let pointer = observers.pointer(at: i), let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue() as? AlertServiceObserver {
-                                    observer.alert(service: sSelf, didProcess: .temperature(lower: lower, upper: upper), isTriggered: isTriggered, for: ruuviTag.uuid)
+                                if let pointer = observers.pointer(at: i),
+                                    let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                                        as? AlertServiceObserver {
+                                    observer.alert(service: sSelf,
+                                                   didProcess: .temperature(lower: lower, upper: upper),
+                                                   isTriggered: isTriggered,
+                                                   for: ruuviTag.uuid)
                                 }
                             }
                         }
@@ -115,7 +121,11 @@ class AlertServiceImpl: AlertService {
     }
 
     private func postTemperatureAlertDidChange(with uuid: String) {
-        NotificationCenter.default.post(name: .AlertServiceTemperatureAlertDidChange, object: nil, userInfo: [AlertServiceTemperatureAlertDidChangeKey.uuid: uuid])
+        NotificationCenter
+            .default
+            .post(name: .AlertServiceTemperatureAlertDidChange,
+                  object: nil,
+                  userInfo: [AlertServiceTemperatureAlertDidChangeKey.uuid: uuid])
     }
 
 }

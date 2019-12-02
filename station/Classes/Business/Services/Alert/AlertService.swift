@@ -29,5 +29,5 @@ extension Notification.Name {
 }
 
 enum AlertServiceTemperatureAlertDidChangeKey: String {
-    case uuid = "uuid"
+    case uuid
 }

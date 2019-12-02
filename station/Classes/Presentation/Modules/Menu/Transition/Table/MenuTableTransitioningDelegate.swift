@@ -15,14 +15,18 @@ class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDel
         self.manager = manager
     }
 
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+    func presentationController(forPresented presented: UIViewController,
+                                presenting: UIViewController?,
+                                source: UIViewController) -> UIPresentationController? {
         let controller = MenuTablePresentationController(presentedViewController: presented, presenting: presenting)
         controller.menuWidth = manager.menuWidth
         controller.dismissTransition = dismiss
         return controller
     }
 
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return present
     }
 
@@ -30,11 +34,13 @@ class MenuTableTransitioningDelegate: NSObject, UIViewControllerTransitioningDel
         return dismiss
     }
 
-    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    func interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
         return manager.isInteractive ? present : nil
     }
 
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
         return manager.isInteractive ? dismiss : nil
     }
 

@@ -52,9 +52,9 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
             self?.view.selectedLocation = locations.first
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
-        }) {
+        }, completion: {
             self.isLoading = false
-        }
+        })
     }
 
     func viewDidLongPressOnMap(at coordinate: CLLocationCoordinate2D) {

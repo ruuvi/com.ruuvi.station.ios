@@ -1,7 +1,7 @@
 import Foundation
 
 class BackgroundViewModel: Identifiable {
-    var id: String { get { uuid }}
+    var id: String { uuid }
     var uuid: String
     var name = Observable<String?>()
     var keepConnection = Observable<Bool?>()

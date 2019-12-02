@@ -32,6 +32,7 @@ struct TagChartsViewModel {
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var isConnected: Observable<Bool?> = Observable<Bool?>()
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
@@ -165,6 +166,7 @@ struct TagChartsViewModel {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     init(_ webTag: WebTagRealm) {
         type = .web
         uuid.value = webTag.uuid

@@ -8,7 +8,9 @@ class MainRouter: MainRouterInput {
     static let shared = MainRouter()
 
     weak var navigationController: UINavigationController!
+    // swiftlint:disable weak_delegate
     var navigationDelegate: MainNavigationDelegate!
+    // swiftlint:enable weak_delegate
 
     func unwindToRoot() {
         if let presented = navigationController.topViewController?.presentedViewController {

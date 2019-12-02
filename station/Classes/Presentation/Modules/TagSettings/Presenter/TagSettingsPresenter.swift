@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -208,6 +209,8 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 
 // MARK: - Private
 extension TagSettingsPresenter {
+
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
@@ -242,8 +245,10 @@ extension TagSettingsPresenter {
 
         // version 5 supports mc, msn, txPower
         if ruuviTag.version == 5 {
-            viewModel.movementCounter.value = ruuviTag.data.last(where: { $0.movementCounter.value != nil })?.movementCounter.value
-            viewModel.measurementSequenceNumber.value = ruuviTag.data.last(where: { $0.measurementSequenceNumber.value != nil })?.measurementSequenceNumber.value
+            viewModel.movementCounter.value = ruuviTag.data
+                .last(where: { $0.movementCounter.value != nil })?.movementCounter.value
+            viewModel.measurementSequenceNumber.value = ruuviTag.data
+                .last(where: { $0.measurementSequenceNumber.value != nil })?.measurementSequenceNumber.value
             viewModel.txPower.value = ruuviTag.data.last(where: { $0.txPower.value != nil })?.txPower.value
         } else {
             viewModel.movementCounter.value = nil
@@ -323,12 +328,14 @@ extension TagSettingsPresenter {
     private func bindViewModel(to ruuviTag: RuuviTagRealm) {
         let temperatureLower = viewModel.celsiusLowerBound
         let temperatureUpper = viewModel.celsiusUpperBound
-        bind(viewModel.isTemperatureAlertOn, fire: false) { [weak temperatureLower, weak temperatureUpper] observer, isOn in
+        bind(viewModel.isTemperatureAlertOn, fire: false) {
+            [weak temperatureLower, weak temperatureUpper] observer, isOn in
             if let l = temperatureLower?.value, let u = temperatureUpper?.value {
                 if isOn.bound {
                     observer.alertService.register(type: .temperature(lower: l, upper: u), for: observer.ruuviTag.uuid)
                 } else {
-                    observer.alertService.unregister(type: .temperature(lower: l, upper: u), for: observer.ruuviTag.uuid)
+                    observer.alertService.unregister(type: .temperature(lower: l, upper: u),
+                                                     for: observer.ruuviTag.uuid)
                 }
             }
         }
@@ -347,13 +354,22 @@ extension TagSettingsPresenter {
     }
 
     private func startObservingSettingsChanges() {
-        temperatureUnitToken = NotificationCenter.default.addObserver(forName: .TemperatureUnitDidChange, object: nil, queue: .main) { [weak self] (_) in
+        temperatureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] (_) in
             self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
         }
     }
 
     private func startObservingConnectionStatus() {
-        connectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidConnect, object: nil, queue: .main, using: { [weak self] (notification) in
+        connectToken = NotificationCenter
+            .default
+            .addObserver(forName: .BTBackgroundDidConnect,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                 uuid == self?.ruuviTag.uuid {
@@ -361,7 +377,12 @@ extension TagSettingsPresenter {
             }
         })
 
-        disconnectToken = NotificationCenter.default.addObserver(forName: .BTBackgroundDidDisconnect, object: nil, queue: .main, using: { [weak self] (notification) in
+        disconnectToken = NotificationCenter
+            .default
+            .addObserver(forName: .BTBackgroundDidDisconnect,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
                 uuid == self?.ruuviTag.uuid {
@@ -371,7 +392,12 @@ extension TagSettingsPresenter {
     }
 
     private func startObservingApplicationState() {
-        appDidBecomeActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main, using: { [weak self] (_) in
+        appDidBecomeActiveToken = NotificationCenter
+            .default
+            .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (_) in
             self?.checkPushNotificationsStatus()
         })
     }
@@ -390,8 +416,15 @@ extension TagSettingsPresenter {
     }
 
     private func startObservingAlertChanges() {
-        temperatureAlertDidChangeToken = NotificationCenter.default.addObserver(forName: .AlertServiceTemperatureAlertDidChange, object: nil, queue: .main, using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo, let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String, uuid == self?.viewModel.uuid.value {
+        temperatureAlertDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .AlertServiceTemperatureAlertDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String,
+                uuid == self?.viewModel.uuid.value {
                 AlertType.allCases.forEach { (type) in
                     switch type {
                     case .temperature:
@@ -405,3 +438,4 @@ extension TagSettingsPresenter {
         })
     }
 }
+// swiftlint:enable file_length

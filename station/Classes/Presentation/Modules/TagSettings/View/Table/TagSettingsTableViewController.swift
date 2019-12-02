@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import RangeSeekSlider
 
@@ -112,11 +113,14 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         if let tu = viewModel?.temperatureUnit.value {
             switch tu {
             case .celsius:
-                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
+                    + " " + "°C".localized()
             case .fahrenheit:
-                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
+                    + " " + "°F".localized()
             case .kelvin:
-                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "K".localized()
+                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
+                    + " " + "K".localized()
             }
         } else {
             temperatureAlertTitleLabel.text = "N/A".localized()
@@ -133,8 +137,12 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
 
     func showTagRemovalConfirmationDialog() {
-        let controller = UIAlertController(title: "TagSettings.confirmTagRemovalDialog.title".localized(), message: "TagSettings.confirmTagRemovalDialog.message".localized(), preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "Confirm".localized(), style: .destructive, handler: { [weak self] _ in
+        let title = "TagSettings.confirmTagRemovalDialog.title".localized()
+        let message = "TagSettings.confirmTagRemovalDialog.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Confirm".localized(),
+                                           style: .destructive,
+                                           handler: { [weak self] _ in
             self?.output.viewDidConfirmTagRemoval()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -169,7 +177,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         let title = "TagSettings.UpdateFirmware.Alert.title".localized()
         let message = "TagSettings.UpdateFirmware.Alert.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title".localized(), style: .default, handler: { [weak self] _ in
+        let actionTitle = "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title".localized()
+        controller.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidAskToLearnMoreAboutFirmwareUpdate()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -180,7 +189,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         let title = "TagSettings.HumidityIsClipped.Alert.title".localized()
         let message = "TagSettings.HumidityIsClipped.Alert.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "TagSettings.HumidityIsClipped.Alert.Fix.button".localized(), style: .destructive, handler: { [weak self] _ in
+        let actionTitle = "TagSettings.HumidityIsClipped.Alert.Fix.button".localized()
+        controller.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output.viewDidAskToFixHumidityAdjustment()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -188,9 +198,10 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     }
 
     func showBothNotConnectedAndNoPNPermissionDialog() {
-        let message = "TagSettings.AlertsAreDisabled.Dialog.BecauseBothNotConnectedAndNoPNPermission.message".localized()
+        let message = "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "TagSettings.AlertsAreDisabled.Dialog.Connect.title".localized(), style: .default, handler: { [weak self] _ in
+        let actionTitle = "TagSettings.AlertsAreDisabled.Dialog.Connect.title".localized()
+        controller.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidAskToConnectFromAlertsDisabledDialog()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -200,7 +211,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
     func showNotConnectedDialog() {
         let message = "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message".localized()
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "TagSettings.AlertsAreDisabled.Dialog.Connect.title".localized(), style: .default, handler: { [weak self] _ in
+        let actionTitle = "TagSettings.AlertsAreDisabled.Dialog.Connect.title".localized()
+        controller.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidAskToConnectFromAlertsDisabledDialog()
         }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
@@ -299,7 +311,9 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
         return true
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
         guard let newText = textField.text?.replace(with: string, in: range) else { return false }
         return newText.count <= maxCharsInTextFields
     }
@@ -361,7 +375,8 @@ extension TagSettingsTableViewController {
         case .calibration:
             return "TagSettings.SectionHeader.Calibration.title".localized()
         case .connection:
-            return TagSettingsTableSection.showConnection(for: viewModel) ? "TagSettings.SectionHeader.Connection.title".localized() : nil
+            return TagSettingsTableSection.showConnection(for: viewModel)
+                ? "TagSettings.SectionHeader.Connection.title".localized() : nil
         default:
             return nil
         }
@@ -383,14 +398,16 @@ extension TagSettingsTableViewController {
         switch section {
         case .moreInfo:
             // swiftlint:disable force_cast
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier) as! TagSettingsMoreInfoHeaderFooterView
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: moreInfoSectionHeaderReuseIdentifier)
+                as! TagSettingsMoreInfoHeaderFooterView
             // swiftlint:enable force_cast
             header.delegate = self
             header.noValuesView.isHidden = viewModel?.version.value == 5
             return header
         case .alerts:
             // swiftlint:disable force_cast
-            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: alertsSectionHeaderReuseIdentifier) as! TagSettingsAlertsHeaderFooterView
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: alertsSectionHeaderReuseIdentifier)
+                as! TagSettingsAlertsHeaderFooterView
             // swiftlint:enable force_cast
             header.delegate = self
             let isPN = viewModel?.isPushNotificationsEnabled.value ?? false
@@ -410,7 +427,8 @@ extension TagSettingsTableViewController {
         case .alerts:
             return TagSettingsTableSection.showAlerts(for: viewModel) ? 44 : .leastNormalMagnitude
         case .connection:
-            return TagSettingsTableSection.showConnection(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+            return TagSettingsTableSection.showConnection(for: viewModel)
+                ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -420,9 +438,11 @@ extension TagSettingsTableViewController {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
         case .alerts:
-            return TagSettingsTableSection.showAlerts(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+            return TagSettingsTableSection.showAlerts(for: viewModel)
+                ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
         case .connection:
-            return TagSettingsTableSection.showConnection(for: viewModel) ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+            return TagSettingsTableSection.showConnection(for: viewModel)
+                ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -432,9 +452,11 @@ extension TagSettingsTableViewController {
         let s = TagSettingsTableSection.section(for: section)
         switch s {
         case .alerts:
-            return TagSettingsTableSection.showAlerts(for: viewModel) ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+            return TagSettingsTableSection.showAlerts(for: viewModel)
+                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .connection:
-            return TagSettingsTableSection.showConnection(for: viewModel) ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+            return TagSettingsTableSection.showConnection(for: viewModel)
+                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         default:
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
@@ -491,6 +513,7 @@ extension TagSettingsTableViewController {
         bindViewModel()
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel() {
         bindHumidity()
         bindTemperatureAlert()
@@ -649,16 +672,22 @@ extension TagSettingsTableViewController {
            let humidityCell = calibrationHumidityCell
            let humidityTrailing = humidityLabelTrailing
 
-           let humidityBlock: ((UILabel, Double?) -> Void) = { [weak humidity, weak humidityOffset, weak humidityCell, weak humidityTrailing] label, _ in
+           let humidityBlock: ((UILabel, Double?) -> Void) = {
+            [weak humidity,
+            weak humidityOffset,
+            weak humidityCell,
+            weak humidityTrailing] label, _ in
                if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
                    if humidityOffset > 0 {
                        let shownHumidity = humidity + humidityOffset
                        if shownHumidity > 100.0 {
-                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
+                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
+                            + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
                            humidityCell?.accessoryType = .detailButton
                            humidityTrailing?.constant = 0
                        } else {
-                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))" + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
+                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
+                            + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
                            humidityCell?.accessoryType = .none
                            humidityTrailing?.constant = 16.0
                        }
@@ -677,6 +706,7 @@ extension TagSettingsTableViewController {
        }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindTemperatureAlert() {
         if isViewLoaded, let viewModel = viewModel {
             temperatureAlertSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
@@ -741,7 +771,8 @@ extension TagSettingsTableViewController {
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
 
-            temperatureAlertSwitch.bind(viewModel.isPushNotificationsEnabled) { [weak isConnected] view, isPushNotificationsEnabled in
+            temperatureAlertSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isConnected] view, isPushNotificationsEnabled in
                 let isPN = isPushNotificationsEnabled ?? false
                 let isCo = isConnected?.value ?? false
                 let isEnabled = isPN && isCo
@@ -749,19 +780,22 @@ extension TagSettingsTableViewController {
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
 
-            temperatureAlertSlider.bind(viewModel.isConnected) { [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
+            temperatureAlertSlider.bind(viewModel.isConnected) {
+                [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
                 let isPN = isPNEnabled?.value ?? false
                 let isOn = isTemperatureAlertOn?.value ?? false
                 slider.isEnabled = isConnected.bound && isOn && isPN
             }
 
-            temperatureAlertSlider.bind(viewModel.isPushNotificationsEnabled) { [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+            temperatureAlertSlider.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isCo = isConnected?.value ?? false
                 slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
             }
 
-            temperatureAlertTextField.bind(viewModel.temperatureAlertDescription) { (textField, temperatureAlertDescription) in
+            temperatureAlertTextField.bind(viewModel.temperatureAlertDescription) {
+                (textField, temperatureAlertDescription) in
                 textField.text = temperatureAlertDescription
             }
         }
@@ -824,7 +858,9 @@ extension TagSettingsTableViewController {
     private func updateUITemperatureAlertDescription() {
         if isViewLoaded {
             if let isTemperatureAlertOn = viewModel?.isTemperatureAlertOn.value, isTemperatureAlertOn {
-                if let l = viewModel?.celsiusLowerBound.value, let u = viewModel?.celsiusUpperBound.value, let tu = viewModel?.temperatureUnit.value {
+                if let l = viewModel?.celsiusLowerBound.value,
+                    let u = viewModel?.celsiusUpperBound.value,
+                    let tu = viewModel?.temperatureUnit.value {
                     var la: Double
                     var ua: Double
                     switch tu {
@@ -838,7 +874,8 @@ extension TagSettingsTableViewController {
                         la = l.kelvin
                         ua = u.kelvin
                     }
-                    temperatureAlertDescriptionLabel.text = String(format: "TagSettings.Alerts.Temperature.description".localized(), la, ua)
+                    let format = "TagSettings.Alerts.Temperature.description".localized()
+                    temperatureAlertDescriptionLabel.text = String(format: format, la, ua)
                 } else {
                     temperatureAlertDescriptionLabel.text = "TagSettings.Alerts.Off".localized()
                 }
@@ -848,3 +885,4 @@ extension TagSettingsTableViewController {
         }
     }
 }
+// swiftlint:enable file_length

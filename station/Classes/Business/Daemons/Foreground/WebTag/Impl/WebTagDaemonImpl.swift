@@ -21,7 +21,12 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
 
     override init() {
         super.init()
-        isOnToken = NotificationCenter.default.addObserver(forName: .isWebTagDaemonOnDidChange, object: nil, queue: .main, using: { [weak self] _ in
+        isOnToken = NotificationCenter
+            .default
+            .addObserver(forName: .isWebTagDaemonOnDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
             guard let sSelf = self else { return }
             if sSelf.settings.isWebTagDaemonOn {
                 sSelf.start()
@@ -29,7 +34,12 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 sSelf.stop()
             }
         })
-        intervalToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
+        intervalToken = NotificationCenter
+            .default
+            .addObserver(forName: .WebTagDaemonIntervalDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
                             on: sSelf.thread,
@@ -85,12 +95,20 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
 
         for provider in WeatherProvider.allCases {
             if currentLocationWebTags.contains(where: { $0.provider == provider }) {
-                wsTokens.append(webTagService.observeCurrentLocationData(self, provider: provider, interval: pullInterval, fire: fire, closure: { (observer, data, location, error) in
+                wsTokens.append(webTagService.observeCurrentLocationData(self,
+                                                                         provider: provider,
+                                                                         interval: pullInterval,
+                                                                         fire: fire,
+                                                                         closure: { (observer, data, location, error) in
                     if let data = data, let location = location {
                         observer.webTagPersistence.persist(currentLocation: location, data: data)
                     } else if let error = error {
                         DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: .WebTagDaemonDidFail, object: nil, userInfo: [WebTagDaemonDidFailKey.error: error])
+                            NotificationCenter
+                                .default
+                                .post(name: .WebTagDaemonDidFail,
+                                      object: nil,
+                                      userInfo: [WebTagDaemonDidFailKey.error: error])
                         }
                     }
                 }))
@@ -102,12 +120,21 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
             guard let location = webTag.location else { return }
             let locationLocation = location.location
             let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-            wsTokens.append(webTagService.observeData(self, coordinate: coordinate, provider: webTag.provider, interval: pullInterval, fire: fire, closure: { (observer, data, error) in
+            wsTokens.append(webTagService.observeData(self,
+                                                      coordinate: coordinate,
+                                                      provider: webTag.provider,
+                                                      interval: pullInterval,
+                                                      fire: fire,
+                                                      closure: { (observer, data, error) in
                 if let data = data {
                     observer.webTagPersistence.persist(location: locationLocation, data: data)
                 } else if let error = error {
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .WebTagDaemonDidFail, object: nil, userInfo: [WebTagDaemonDidFailKey.error: error])
+                        NotificationCenter
+                            .default
+                            .post(name: .WebTagDaemonDidFail,
+                                  object: nil,
+                                  userInfo: [WebTagDaemonDidFailKey.error: error])
                     }
                 }
             }))

@@ -54,7 +54,10 @@ class WebTagLocationRealm: Object {
 
 extension WebTagLocationRealm {
     var location: Location {
-        return LocationWebTag(city: city, country: country, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        return LocationWebTag(city: city,
+                              country: country,
+                              coordinate: coordinate)
     }
 }
 
