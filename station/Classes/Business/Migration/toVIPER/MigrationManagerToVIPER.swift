@@ -91,6 +91,9 @@ class MigrationManagerToVIPER: MigrationManager {
                 } else if oldSchemaVersion < 10 {
                     // do nothing
                 }
+        }, shouldCompactOnLaunch: { totalBytes, usedBytes in
+            let fiveHundredMegabytes = 500 * 1024 * 1024
+            return (totalBytes > fiveHundredMegabytes) && (Double(usedBytes) / Double(totalBytes)) < 0.5
         })
         
         // Tell Realm to use this new configuration object for the default Realm
