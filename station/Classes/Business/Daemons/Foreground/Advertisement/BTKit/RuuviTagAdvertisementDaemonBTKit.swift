@@ -76,9 +76,18 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     }
 
     func stop() {
-        observeTokens.forEach({ $0.invalidate() })
+        perform(#selector(RuuviTagAdvertisementDaemonBTKit.stopDaemon),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
+    }
+
+    @objc private func stopDaemon() {
+        observeTokens.forEach( { $0.invalidate() })
         observeTokens.removeAll()
         token?.invalidate()
+        realm.invalidate()
         stopWork()
     }
 
