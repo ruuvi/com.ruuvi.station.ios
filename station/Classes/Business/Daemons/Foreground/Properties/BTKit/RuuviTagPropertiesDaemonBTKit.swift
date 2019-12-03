@@ -51,10 +51,19 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     func stop() {
-       observeTokens.forEach({ $0.invalidate() })
-       observeTokens.removeAll()
-       token?.invalidate()
-       stopWork()
+        perform(#selector(RuuviTagPropertiesDaemonBTKit.stopDaemon),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
+    }
+
+    @objc private func stopDaemon() {
+        observeTokens.forEach( { $0.invalidate() })
+        observeTokens.removeAll()
+        token?.invalidate()
+        realm.invalidate()
+        stopWork()
     }
 
     private func startObserving(ruuviTags: Results<RuuviTagRealm>) {

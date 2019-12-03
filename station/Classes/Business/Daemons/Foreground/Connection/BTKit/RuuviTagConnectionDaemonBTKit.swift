@@ -65,6 +65,14 @@ class RuuviTagConnectionDaemonBTKit: BackgroundWorker, RuuviTagConnectionDaemon 
     }
 
     func stop() {
+        perform(#selector(RuuviTagConnectionDaemonBTKit.stopDaemon),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
+    }
+
+    @objc private func stopDaemon() {
         scanToken?.invalidate()
         stopWork()
     }
