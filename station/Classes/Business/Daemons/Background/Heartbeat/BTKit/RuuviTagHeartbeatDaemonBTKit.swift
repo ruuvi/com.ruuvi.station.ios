@@ -90,8 +90,17 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
     
     func stop() {
+        perform(#selector(RuuviTagHeartbeatDaemonBTKit.stopDaemon),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
+    }
+
+    @objc private func stopDaemon() {
         invalidateTokens()
         connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
+        realm.invalidate()
         stopWork()
     }
     
