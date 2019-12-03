@@ -1,6 +1,7 @@
 import BTKit
 import Future
 import RealmSwift
+import Foundation
 
 protocol RuuviTagPersistence {
     func persist(ruuviTag: RuuviTag, name: String, humidityOffset: Double, humidityOffsetDate: Date?) -> Future<RuuviTag,RUError>

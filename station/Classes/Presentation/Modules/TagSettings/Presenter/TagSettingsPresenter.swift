@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import BTKit
+import UIKit
 
 class TagSettingsPresenter: TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!

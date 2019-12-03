@@ -1,5 +1,6 @@
 import RealmSwift
 import BTKit
+import Foundation
 
 class RuuviTagDataRealm: Object {
     
