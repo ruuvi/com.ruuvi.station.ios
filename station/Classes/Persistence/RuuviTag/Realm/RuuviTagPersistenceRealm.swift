@@ -1,6 +1,7 @@
 import RealmSwift
 import Future
 import BTKit
+import Foundation
 
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
     var context: RealmContext!
