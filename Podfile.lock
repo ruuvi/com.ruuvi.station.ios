@@ -87,7 +87,7 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
-  - Protobuf (3.11.0)
+  - Protobuf (3.11.1)
   - Realm (4.1.1):
     - Realm/Headers (= 4.1.1)
   - Realm/Headers (4.1.1)
@@ -178,7 +178,7 @@ SPEC CHECKSUMS:
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  Protobuf: 394b2bf29ec303f4325e3ee4892c09e675647152
+  Protobuf: 20d79da7f20b5928b80043b05080b816e802659e
   Realm: 25f0a8244cbb1c2271c922963ea8666fc2d8104d
   RealmSwift: 9e2657b33764f80e4a4dffd6d440e24715782052
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
