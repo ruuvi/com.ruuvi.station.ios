@@ -68,9 +68,18 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     }
     
     func stop() {
+        perform(#selector(WebTagDaemonImpl.stopDaemon),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
+    }
+
+    @objc private func stopDaemon() {
         wsTokens.forEach( { $0.invalidate() } )
         wsTokens.removeAll()
         token?.invalidate()
+        realm.invalidate()
         stopWork()
     }
     
