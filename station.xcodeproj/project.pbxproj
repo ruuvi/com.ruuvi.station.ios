@@ -1978,7 +1978,7 @@
 		0EBAF063232001080025A191 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				0EF6F5C3235E0ABD0052BA25 /* Background */,
+				0EF6F5C3235E0ABD0052BA25 /* Background (deprecated, per tag) */,
 				0E8A100023845E1200A9CBA6 /* Defaults */,
 				0ECFF34F235056770061D11B /* Foreground */,
 				0EBAF066232005600025A191 /* Language */,
@@ -2651,7 +2651,7 @@
 			path = SectionHeader;
 			sourceTree = "<group>";
 		};
-		0EF6F5C3235E0ABD0052BA25 /* Background */ = {
+		0EF6F5C3235E0ABD0052BA25 /* Background (deprecated, per tag) */ = {
 			isa = PBXGroup;
 			children = (
 				0EF6F5C8235E0AED0052BA25 /* Background.storyboard */,
@@ -2660,7 +2660,7 @@
 				0EF6F5C5235E0AD00052BA25 /* Router */,
 				0EF6F5C4235E0ACC0052BA25 /* View */,
 			);
-			path = Background;
+			path = "Background (deprecated, per tag)";
 			sourceTree = "<group>";
 		};
 		0EF6F5C4235E0ACC0052BA25 /* View */ = {
