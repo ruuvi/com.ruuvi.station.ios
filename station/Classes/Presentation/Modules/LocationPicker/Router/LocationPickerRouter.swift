@@ -1,9 +1,11 @@
 import LightRoute
+import UIKit
 
 class LocationPickerRouter: LocationPickerRouterInput {
-    weak var transitionHandler: TransitionHandler!
-
-    func dismiss() {
-        try! transitionHandler.closeCurrentModule().perform()
+    weak var transitionHandler: UIViewController!
+    
+    func dismiss(completion: (() -> Void)?) {
+        transitionHandler.dismiss(animated: true, completion: completion)
     }
+
 }
