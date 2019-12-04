@@ -6,4 +6,5 @@ protocol SettingsRouterInput {
     func openForeground()
     func openBackground()
     func openDefaults()
+    func openHeartbeat()
 }

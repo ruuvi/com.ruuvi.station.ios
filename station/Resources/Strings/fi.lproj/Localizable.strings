@@ -109,7 +109,7 @@
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
 // Heartbeat
-"Heartbeat.navigationItem.title" = "Taustaprosessit";
+"Heartbeat.navigationItem.title" = "Taustaprosessit"; // PLEASE CHECK
 "Heartbeat.PresentNotifications.title" = "Näytä ilmoituksia";
 "Heartbeat.SaveHeartbeats.title" = "Historian tallennusväli";
 "Heartbeat.Interval.Every.string" = "joka";
@@ -170,6 +170,7 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Background" = "Taustaprosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
+"Settings.Label.Heartbeat" = "Taustaprosessit"; // PLEASE CHECK
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
