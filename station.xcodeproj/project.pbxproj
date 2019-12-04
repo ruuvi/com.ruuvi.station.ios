@@ -129,6 +129,7 @@
 		0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */; };
 		0E7566172361B56500FCA977 /* BackgroundSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7566162361B56500FCA977 /* BackgroundSection.swift */; };
 		0E75661B2361C16100FCA977 /* RuuviTagReadLogsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */; };
+		0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
 		0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8A100123845E5100A9CBA6 /* Defaults.storyboard */; };
 		0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */; };
 		0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */; };
@@ -481,6 +482,7 @@
 		0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableConfigurator.swift; sourceTree = "<group>"; };
 		0E7566162361B56500FCA977 /* BackgroundSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSection.swift; sourceTree = "<group>"; };
 		0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagReadLogsOperation.swift; sourceTree = "<group>"; };
+		0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverModuleOutput.swift; sourceTree = "<group>"; };
 		0E8A100123845E5100A9CBA6 /* Defaults.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Defaults.storyboard; sourceTree = "<group>"; };
 		0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsViewController.swift; sourceTree = "<group>"; };
 		0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsViewInput.swift; sourceTree = "<group>"; };
@@ -1606,6 +1608,7 @@
 			isa = PBXGroup;
 			children = (
 				0E70A47222AF9953006CB87C /* DiscoverModuleInput.swift */,
+				0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */,
 				0E70A47422AF9978006CB87C /* DiscoverPresenter.swift */,
 			);
 			path = Presenter;
@@ -3214,6 +3217,7 @@
 				0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
+				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,

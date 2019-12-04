@@ -32,13 +32,13 @@ class TagChartsRouter: TagChartsRouterInput {
             .perform()
     }
     
-    func openDiscover() {
+    func openDiscover(output: DiscoverModuleOutput) {
         let restorationId = "DiscoverTableNavigationController"
         let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
         try! transitionHandler
             .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: false)
+                module.configure(isOpenedFromWelcome: false, output: output)
             })
     }
     

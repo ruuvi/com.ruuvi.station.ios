@@ -190,11 +190,32 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 }
 
+// MARK: - DiscoverModuleOutput
+extension TagChartsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
+        module.dismiss { [weak self] in
+            self?.router.dismiss()
+        }
+    }
+
+    func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
+        module.dismiss { [weak self] in
+            self?.router.dismiss()
+        }
+    }
+
+    func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
+        module.dismiss { [weak self] in
+            self?.router.dismiss()
+        }
+    }
+}
+
 // MARK: - MenuModuleOutput
 extension TagChartsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover()
+        router.openDiscover(output: self)
     }
     
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -241,7 +262,7 @@ extension TagChartsPresenter {
             
             // if no tags, open discover
             if viewModels.count == 0 {
-                router.openDiscover()
+                router.openDiscover(output: self)
             } else {
                 scrollToCurrentTag()
             }
