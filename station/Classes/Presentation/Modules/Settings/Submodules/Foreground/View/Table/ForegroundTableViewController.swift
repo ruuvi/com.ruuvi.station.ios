@@ -53,6 +53,8 @@ extension ForegroundTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier, for: indexPath) as! ForegroundStepperTableViewCell
             cell.titleLabel.text = "Foreground.Interval.Every.string".localized() + " " + "\(viewModel.interval.value.bound)" + " " + "Foreground.Interval.Min.string".localized()
             cell.stepper.value = Double(viewModel.interval.value.bound)
+            cell.stepper.minimumValue = Double(viewModel.minValue.value.bound)
+            cell.stepper.maximumValue = Double(viewModel.maxValue.value.bound)
             cell.delegate = self
             return cell
         }
