@@ -19,32 +19,15 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         return TimeInterval(settings.webTagDaemonIntervalMinutes * 60)
     }
     
-    override init() {
-        super.init()
-        isOnToken = NotificationCenter.default.addObserver(forName: .isWebTagDaemonOnDidChange, object: nil, queue: .main, using: { [weak self] _ in
-            guard let sSelf = self else { return }
-            if sSelf.settings.isWebTagDaemonOn {
-                sSelf.start()
-            } else {
-                sSelf.stop()
-            }
-        })
-        intervalToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
-            guard let sSelf = self else { return }
-            sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
-                            on: sSelf.thread,
-                            with: false,
-                            waitUntilDone: false,
-                            modes: [RunLoop.Mode.default.rawValue])
-        })
-    }
-    
     deinit {
         wsTokens.forEach( { $0.invalidate() } )
         wsTokens.removeAll()
         token?.invalidate()
         if let isOnToken = isOnToken {
             NotificationCenter.default.removeObserver(isOnToken)
+        }
+        if let intervalToken = intervalToken {
+            NotificationCenter.default.removeObserver(intervalToken)
         }
     }
     
@@ -64,6 +47,23 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                     print(error.localizedDescription)
                 }
             })
+
+            self?.isOnToken = NotificationCenter.default.addObserver(forName: .isWebTagDaemonOnDidChange, object: nil, queue: .main, using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                if sSelf.settings.isWebTagDaemonOn {
+                    sSelf.start()
+                } else {
+                    sSelf.stop()
+                }
+            })
+            self?.intervalToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
+                                on: sSelf.thread,
+                                with: false,
+                                waitUntilDone: false,
+                                modes: [RunLoop.Mode.default.rawValue])
+            })
         }
     }
     
@@ -79,6 +79,12 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         wsTokens.forEach( { $0.invalidate() } )
         wsTokens.removeAll()
         token?.invalidate()
+        if let isOnToken = isOnToken {
+            NotificationCenter.default.removeObserver(isOnToken)
+        }
+        if let intervalToken = intervalToken {
+            NotificationCenter.default.removeObserver(intervalToken)
+        }
         realm.invalidate()
         stopWork()
     }
