@@ -170,7 +170,7 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Background" = "Background";
 "Settings.Label.Defaults" = "Defaults";
-"Settings.Label.Heartbeat" = "Heartbeat";
+"Settings.Label.Heartbeat" = "Background";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

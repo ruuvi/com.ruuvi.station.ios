@@ -170,7 +170,7 @@
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Background" = "Фоновый Режим";
 "Settings.Label.Defaults" = "Значения";
-"Settings.Label.Heartbeat" = "Соединение";
+"Settings.Label.Heartbeat" = "Фоновый Режим";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
