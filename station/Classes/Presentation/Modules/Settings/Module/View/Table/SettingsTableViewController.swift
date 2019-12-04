@@ -7,7 +7,9 @@ private enum SettingsTableSection: Int {
 
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
-    
+
+    @IBOutlet weak var heartbeatTitleLabel: UILabel!
+    @IBOutlet weak var heartbeatCell: UITableViewCell!
     @IBOutlet weak var defaultsTitleLabel: UILabel!
     @IBOutlet weak var defaultsCell: UITableViewCell!
     @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
@@ -48,6 +50,7 @@ extension SettingsTableViewController: SettingsViewInput {
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         backgroundTitleLabel.text = "Settings.Label.Background".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
+        heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -146,6 +149,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnBackground()
             case defaultsCell:
                 output.viewDidTapOnDefaults()
+            case heartbeatCell:
+                output.viewDidTapOnHeartbeat()
             default:
                 break
             }
