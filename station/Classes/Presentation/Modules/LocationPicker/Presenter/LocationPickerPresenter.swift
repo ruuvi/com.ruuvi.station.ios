@@ -27,6 +27,10 @@ class LocationPickerPresenter: LocationPickerModuleInput {
     func configure(output: LocationPickerModuleOutput) {
         self.output = output
     }
+
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss(completion: completion)
+    }
 }
 
 extension LocationPickerPresenter: LocationPickerViewOutput {
@@ -41,8 +45,9 @@ extension LocationPickerPresenter: LocationPickerViewOutput {
     func viewDidTriggerDone() {
         if let location = view.selectedLocation {
             output?.locationPicker(module: self, didPick: location)
+        } else {
+            assert(false)
         }
-        router.dismiss()
     }
     
     func viewDidEnterSearchQuery(_ query: String) {

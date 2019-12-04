@@ -193,11 +193,26 @@ extension CardsPresenter: CardsViewOutput {
     }
 }
 
+// MARK: - DiscoverModuleOutput
+extension CardsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
+        module.dismiss()
+    }
+
+    func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
+        module.dismiss()
+    }
+    
+    func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
+        module.dismiss()
+    }
+}
+
 // MARK: - MenuModuleOutput
 extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?) {
         module.dismiss()
-        router.openDiscover()
+        router.openDiscover(output: self)
     }
     
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
@@ -256,7 +271,7 @@ extension CardsPresenter {
             
             // if no tags, open discover
             if viewModels.count == 0 {
-                router.openDiscover()
+                router.openDiscover(output: self)
             }
         }
     }
@@ -398,7 +413,6 @@ extension CardsPresenter {
                 if let ii = insertions.last {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-                        self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
                     if let viewModels = self?.viewModels, let settings = self?.settings, !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
@@ -426,7 +440,6 @@ extension CardsPresenter {
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-                        self?.tagCharts?.dismiss()
                         self?.view.scroll(to: index)
                     }
                     if let viewModels = self?.viewModels, let settings = self?.settings, !settings.cardsSwipeHintWasShown, viewModels.count > 1 {

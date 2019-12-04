@@ -36,6 +36,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
     private var isOpenedFromWelcome: Bool = true
     private var lastSelectedWebTag: DiscoverWebTagViewModel?
+    private weak var output: DiscoverModuleOutput?
     
     deinit {
         reloadTimer?.invalidate()
@@ -46,8 +47,13 @@ class DiscoverPresenter: DiscoverModuleInput {
         persistedWebTagsToken?.invalidate()
     }
     
-    func configure(isOpenedFromWelcome: Bool) {
+    func configure(isOpenedFromWelcome: Bool, output: DiscoverModuleOutput?) {
         self.isOpenedFromWelcome = isOpenedFromWelcome
+        self.output = output
+    }
+
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss(completion: completion)
     }
 }
 
@@ -88,10 +94,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
         if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
             let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: displayName)
             operation.on(success: { [weak self] (ruuviTag) in
-                if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                    self?.router.openCards()
+                guard let sSelf = self else { return }
+                if sSelf.isOpenedFromWelcome {
+                    sSelf.router.openCards()
                 } else {
-                    self?.router.dismiss()
+                    sSelf.output?.discover(module: sSelf, didAdd: ruuviTag)
                 }
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
@@ -119,14 +126,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }
     }
     
-    func viewDidTriggerContinue() {
-        if isOpenedFromWelcome {
-            router.openCards()
-        } else {
-            router.dismiss()
-        }
-    }
-    
     func viewDidTapOnGetMoreSensors() {
         router.openRuuviWebsite()
     }
@@ -147,18 +146,21 @@ extension DiscoverPresenter: DiscoverViewOutput {
 // MARK: - LocationPickerModuleOutput
 extension DiscoverPresenter: LocationPickerModuleOutput {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
-        guard let webTag = lastSelectedWebTag else { return }
-        let operation = webTagService.add(provider: webTag.provider, location: location)
-        operation.on(success: { [weak self] _ in
-            if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                self?.router.openCards()
-            } else {
-                self?.router.dismiss()
-            }
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
-        lastSelectedWebTag = nil
+        module.dismiss { [weak self] in
+            guard let webTag = self?.lastSelectedWebTag else { assert(false); return }
+            guard let operation = self?.webTagService.add(provider: webTag.provider, location: location) else { assert(false); return }
+            operation.on(success: { [weak self] _ in
+                guard let sSelf = self else { return }
+                if sSelf.isOpenedFromWelcome {
+                    sSelf.router.openCards()
+                } else {
+                    sSelf.output?.discover(module: sSelf, didAddWebTag: location)
+                }
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+            self?.lastSelectedWebTag = nil
+        }
     }
 }
 
@@ -168,10 +170,11 @@ extension DiscoverPresenter {
     private func persistWebTag(with provider: WeatherProvider) {
         let operation = webTagService.add(provider: provider)
         operation.on(success: { [weak self] _ in
-            if let isOpenedFromWelcome = self?.isOpenedFromWelcome, isOpenedFromWelcome {
-                self?.router.openCards()
+            guard let sSelf = self else { return }
+            if sSelf.isOpenedFromWelcome {
+                sSelf.router.openCards()
             } else {
-                self?.router.dismiss()
+                sSelf.output?.discover(module: sSelf, didAddWebTag: provider)
             }
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)

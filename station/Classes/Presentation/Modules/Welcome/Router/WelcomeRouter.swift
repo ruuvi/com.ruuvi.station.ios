@@ -9,7 +9,7 @@ class WelcomeRouter: WelcomeRouterInput {
             .forStoryboard(factory: factory, to: DiscoverModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: true)
+                module.configure(isOpenedFromWelcome: true, output: nil)
             })
     }
     

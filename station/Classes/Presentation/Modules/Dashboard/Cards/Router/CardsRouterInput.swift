@@ -2,7 +2,7 @@ import Foundation
 
 protocol CardsRouterInput {
     func openMenu(output: MenuModuleOutput)
-    func openDiscover()
+    func openDiscover(output: DiscoverModuleOutput)
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
