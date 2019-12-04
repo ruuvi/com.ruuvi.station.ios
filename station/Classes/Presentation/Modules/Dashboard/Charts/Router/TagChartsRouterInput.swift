@@ -2,7 +2,7 @@ import Foundation
 
 protocol TagChartsRouterInput {
     func dismiss()
-    func openDiscover()
+    func openDiscover(output: DiscoverModuleOutput)
     func openSettings()
     func openAbout()
     func openRuuviWebsite()

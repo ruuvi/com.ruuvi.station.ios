@@ -63,6 +63,8 @@ extension ForegroundTableViewController {
                 + " " + "\(viewModel.interval.value.bound)"
                 + " " + "Foreground.Interval.Min.string".localized()
             cell.stepper.value = Double(viewModel.interval.value.bound)
+            cell.stepper.minimumValue = Double(viewModel.minValue.value.bound)
+            cell.stepper.maximumValue = Double(viewModel.maxValue.value.bound)
             cell.delegate = self
             return cell
         }

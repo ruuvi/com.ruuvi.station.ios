@@ -11,6 +11,8 @@ class ForegroundViewModel: Identifiable {
     var type: ForegroundType = .advertisement
     var isOn: Observable<Bool?> = Observable<Bool?>(true)
     var interval: Observable<Int?> = Observable<Int?>(1)
+    var minValue: Observable<Int?> = Observable<Int?>(1)
+    var maxValue: Observable<Int?> = Observable<Int?>(3600)
 
     var title: String {
         switch type {

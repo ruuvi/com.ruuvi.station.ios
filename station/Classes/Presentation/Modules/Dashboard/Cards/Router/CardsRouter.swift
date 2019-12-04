@@ -30,7 +30,7 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
-    func openDiscover() {
+    func openDiscover(output: DiscoverModuleOutput) {
         let restorationId = "DiscoverTableNavigationController"
         let factory = StoryboardFactory(storyboardName: "Discover", bundle: .main, restorationId: restorationId)
         try! transitionHandler
@@ -39,7 +39,7 @@ class CardsRouter: NSObject, CardsRouterInput {
                 viewController.presentationController?.delegate = self
             })
             .then({ (module) -> Any? in
-                module.configure(isOpenedFromWelcome: false)
+                module.configure(isOpenedFromWelcome: false, output: output)
             })
     }
 

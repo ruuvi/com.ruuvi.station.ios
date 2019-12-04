@@ -3,7 +3,7 @@ import BTKit
 import UIKit
 
 class DiscoverRouter: DiscoverRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
 
     func openCards() {
         let factory = StoryboardFactory(storyboardName: "Cards")
@@ -26,7 +26,7 @@ class DiscoverRouter: DiscoverRouterInput {
             })
     }
 
-    func dismiss() {
-        try! transitionHandler.closeCurrentModule().perform()
+    func dismiss(completion: (() -> Void)?) {
+        transitionHandler.dismiss(animated: true, completion: completion)
     }
 }

@@ -5,5 +5,11 @@ protocol DiscoverRouterInput {
     func openCards()
     func openRuuviWebsite()
     func openLocationPicker(output: LocationPickerModuleOutput)
-    func dismiss()
+    func dismiss(completion: (() -> Void)?)
+}
+
+extension DiscoverRouterInput {
+    func dismiss() {
+        return dismiss(completion: nil)
+    }
 }
