@@ -108,6 +108,15 @@
 "ForegroundRow.webTags.title" = "Загружать из интернета";
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
 
+// Heartbeat
+"Heartbeat.navigationItem.title" = "Соединение";
+"Heartbeat.PresentNotifications.title" = "Показывать Уведомления";
+"Heartbeat.SaveHeartbeats.title" = "Сохранять Данные";
+"Heartbeat.Interval.Every.string" = "каждые";
+"Heartbeat.Interval.Min.string" = "мин";
+"Heartbeat.readRSSITitle.title" = "Считывать RSSI";
+"Heartbeat.Interval.Sec.string" = "сек";
+
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с поваренной солью. Посмотрите обучающие видео о том, как легко сделать это дома. ";
 "HumidityCalibration.VideoTutorials.link" = "обучающие видео";

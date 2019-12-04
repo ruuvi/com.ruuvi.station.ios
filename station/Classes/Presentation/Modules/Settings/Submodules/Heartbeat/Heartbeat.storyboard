@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8hB-Vn-evN">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="jku-f8-uQj">
+            <objects>
+                <viewController storyboardIdentifier="HeartbeatViewController" id="8hB-Vn-evN" customClass="HeartbeatViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qGL-d8-W1n">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ef3-zd-fTi">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <segue destination="O97-4W-9W0" kind="embed" identifier="EmbedHeartbeatSwiftUIHostingControllerSegueIdentifier" destinationCreationSelector="addSwiftUIView:" id="j1W-7n-11v"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kjx-Fi-b2F">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <connections>
+                                    <segue destination="ybW-bv-0sg" kind="embed" identifier="EmbedHeartbeatTableViewControllerSegueIdentifier" id="W3p-fb-eCR"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="kjx-Fi-b2F" firstAttribute="trailing" secondItem="vso-Qy-ULO" secondAttribute="trailing" id="0Vy-MN-gZj"/>
+                            <constraint firstItem="vso-Qy-ULO" firstAttribute="bottom" secondItem="kjx-Fi-b2F" secondAttribute="bottom" id="9BC-dy-bEK"/>
+                            <constraint firstItem="kjx-Fi-b2F" firstAttribute="top" secondItem="vso-Qy-ULO" secondAttribute="top" id="Ils-0U-nLJ"/>
+                            <constraint firstItem="kjx-Fi-b2F" firstAttribute="leading" secondItem="vso-Qy-ULO" secondAttribute="leading" id="LCr-xy-ihX"/>
+                            <constraint firstItem="vso-Qy-ULO" firstAttribute="bottom" secondItem="Ef3-zd-fTi" secondAttribute="bottom" id="Los-ca-ctG"/>
+                            <constraint firstItem="Ef3-zd-fTi" firstAttribute="trailing" secondItem="vso-Qy-ULO" secondAttribute="trailing" id="auQ-Pq-e2P"/>
+                            <constraint firstItem="Ef3-zd-fTi" firstAttribute="top" secondItem="vso-Qy-ULO" secondAttribute="top" id="kyX-HX-TI8"/>
+                            <constraint firstItem="Ef3-zd-fTi" firstAttribute="leading" secondItem="vso-Qy-ULO" secondAttribute="leading" id="vjt-bw-tPZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="vso-Qy-ULO"/>
+                    </view>
+                    <connections>
+                        <outlet property="listContainer" destination="Ef3-zd-fTi" id="aIE-qB-jMD"/>
+                        <outlet property="tableContainer" destination="kjx-Fi-b2F" id="B7q-vt-ZYO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="855-gI-5vo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="Smt-gY-MJ9" customClass="HeartbeatInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="8hB-Vn-evN" id="to0-CA-hQD"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-871.01449275362324" y="115.84821428571428"/>
+        </scene>
+        <!--Heartbeat Table View Controller-->
+        <scene sceneID="PIX-qB-MnA">
+            <objects>
+                <tableViewController storyboardIdentifier="HeartbeatTableViewController" id="ybW-bv-0sg" customClass="HeartbeatTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="2Jo-6y-F3p">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection id="Jw2-0e-Fb3">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="hsA-8F-pHH">
+                                        <rect key="frame" x="0.0" y="18" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hsA-8F-pHH" id="cXP-iU-bCg">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g7y-1h-mRv">
+                                                    <rect key="frame" x="20" y="11.5" width="34" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vo8-YF-xOw">
+                                                    <rect key="frame" x="343" y="6.5" width="51" height="31"/>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Vo8-YF-xOw" firstAttribute="centerY" secondItem="cXP-iU-bCg" secondAttribute="centerY" id="Cdz-3J-629"/>
+                                                <constraint firstItem="g7y-1h-mRv" firstAttribute="centerY" secondItem="cXP-iU-bCg" secondAttribute="centerY" id="b5c-tW-PGh"/>
+                                                <constraint firstItem="g7y-1h-mRv" firstAttribute="leading" secondItem="cXP-iU-bCg" secondAttribute="leading" constant="20" id="cBG-K8-F07"/>
+                                                <constraint firstAttribute="trailing" secondItem="Vo8-YF-xOw" secondAttribute="trailing" constant="22" id="eC1-48-3TI"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="ybW-bv-0sg" id="KM3-ob-SDt"/>
+                            <outlet property="delegate" destination="ybW-bv-0sg" id="WMP-SA-wxF"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aNB-Ak-4Id" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-84" y="506"/>
+        </scene>
+        <!--Hosting Controller-->
+        <scene sceneID="FUu-61-oG2">
+            <objects>
+                <hostingController id="O97-4W-9W0" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2DX-aI-Glx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-83" y="-145"/>
+        </scene>
+    </scenes>
+</document>
