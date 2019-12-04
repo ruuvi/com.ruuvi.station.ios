@@ -8,7 +8,8 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagPersistence: RuuviTagPersistence!
-    
+    var settings: Settings!
+
     private var realm: Realm!
     private var ruuviTags: Results<RuuviTagRealm>?
     private var connectTokens = [String: ObservationToken]()
@@ -130,7 +131,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                     NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.btkit(error)])
                 }
             case .disconnected:
-                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                if observer.settings.presentConnectionNotifications {
                     DispatchQueue.main.async { [weak observer] in
                         observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                     }
@@ -138,7 +139,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             case .already:
                 break // do nothing
             case .just:
-                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                if observer.settings.presentConnectionNotifications {
                     DispatchQueue.main.async { [weak observer] in
                         observer?.localNotificationsManager.showDidConnect(uuid: uuid)
                     }
@@ -146,9 +147,9 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             }
         }, heartbeat: { observer, device in
             if let ruuviTag = device.ruuvi?.tag,
-                observer.connectionPersistence.saveHeartbeats(uuid: ruuviTag.uuid) {
+            observer.settings.saveHeartbeats {
                 let uuid = ruuviTag.uuid
-                let interval = observer.connectionPersistence.saveHeartbeatsInterval(uuid: uuid)
+                let interval = observer.settings.saveHeartbeatsIntervalMinutes
                 if let date = observer.savedDate[uuid] {
                     if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
                         let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
@@ -181,13 +182,13 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             case .already:
                 break // do nothing
             case .bluetoothWasPoweredOff:
-                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                if observer.settings.presentConnectionNotifications {
                     DispatchQueue.main.async { [weak observer] in
                         observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                     }
                 }
             case .just:
-                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                if observer.settings.presentConnectionNotifications {
                     DispatchQueue.main.async { [weak observer] in
                         observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                     }
@@ -206,7 +207,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                     NotificationCenter.default.post(name: .RuuviTagHeartbeatDaemonDidFail, object: nil, userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.btkit(error)])
                 }
             case .just:
-                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                if observer.settings.presentConnectionNotifications {
                     DispatchQueue.main.async {
                         observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
                     }
@@ -216,7 +217,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             case .stillConnected:
                 break // do nothing
             case .bluetoothWasPoweredOff:
-                if observer.connectionPersistence.presentConnectionNotifications(for: uuid) {
+                if observer.settings.presentConnectionNotifications {
                     DispatchQueue.main.async {
                         observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
                     }
