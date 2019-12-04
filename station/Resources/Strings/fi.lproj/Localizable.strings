@@ -108,6 +108,15 @@
 "ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
+// Heartbeat
+"Heartbeat.navigationItem.title" = "Taustaprosessit";
+"Heartbeat.PresentNotifications.title" = "Näytä ilmoituksia";
+"Heartbeat.SaveHeartbeats.title" = "Historian tallennusväli";
+"Heartbeat.Interval.Every.string" = "joka";
+"Heartbeat.Interval.Min.string" = "min";
+"Heartbeat.readRSSITitle.title" = "Lue RSSI";
+"Heartbeat.Interval.Sec.string" = "sek";
+
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Video-ohje.";
 "HumidityCalibration.VideoTutorials.link" = "Video-ohje.";
