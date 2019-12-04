@@ -10,6 +10,8 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
         advertisement.type = .advertisement
         advertisement.isOn.value = settings.isAdvertisementDaemonOn
         advertisement.interval.value = settings.advertisementDaemonIntervalMinutes
+        advertisement.minValue.value = 1
+        advertisement.maxValue.value = 3600
         bind(advertisement.isOn, fire: false) { (observer, isOn) in
             observer.settings.isAdvertisementDaemonOn = isOn ?? true
         }
@@ -21,6 +23,8 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
         webTags.type = .webTags
         webTags.isOn.value = settings.isWebTagDaemonOn
         webTags.interval.value = settings.webTagDaemonIntervalMinutes
+        webTags.minValue.value = 15
+        webTags.maxValue.value = 3600
         bind(webTags.isOn, fire: false) { observer, isOn in
             observer.settings.isWebTagDaemonOn = isOn.bound
         }
