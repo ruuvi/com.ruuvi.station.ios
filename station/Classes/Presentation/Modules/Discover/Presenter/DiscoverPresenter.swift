@@ -155,8 +155,8 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
             } else {
                 self?.router.dismiss()
             }
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
         })
         lastSelectedWebTag = nil
     }
