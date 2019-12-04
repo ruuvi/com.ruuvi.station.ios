@@ -25,6 +25,11 @@ protocol Settings {
     var connectionTimeout: TimeInterval { get set }
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }
+    var presentConnectionNotifications: Bool { get set }
+    var saveHeartbeats: Bool { get set }
+    var saveHeartbeatsIntervalMinutes: Int { get set }
+    var readRSSI: Bool { get set }
+    var readRSSIIntervalSeconds: Int { get set }
     
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)

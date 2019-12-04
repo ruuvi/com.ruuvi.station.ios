@@ -158,10 +158,25 @@ class SettingsUserDegaults: Settings {
     
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
     var advertisementDaemonIntervalMinutes: Int
-    
+
+    @UserDefault("SettingsUserDegaults.presentConnectionNotifications", defaultValue: false)
+    var presentConnectionNotifications: Bool
+
+    @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: false)
+    var saveHeartbeats: Bool
+
+    @UserDefault("SettingsUserDegaults.saveHeartbeatsIntervalMinutes", defaultValue: 5)
+    var saveHeartbeatsIntervalMinutes: Int
+
+    @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: false)
+    var readRSSI: Bool
+
+    @UserDefault("SettingsUserDegaults.readRSSIIntervalSeconds", defaultValue: 5)
+    var readRSSIIntervalSeconds: Int
+
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
-    
+
     private var temperatureUnitInt: Int {
         get {
             let int = UserDefaults.standard.integer(forKey: temperatureUnitIntUDKey)
