@@ -102,6 +102,14 @@ extension HeartbeatTableViewController {
                             + " " + "\(interval.bound)"
                             + " " + "Heartbeat.Interval.Sec.string".localized()
             }
+
+            saveHeartbeatsIntervalStepper.bind(viewModel.saveHeartbeatsInterval) { (stepper, saveHeartbeatsInterval) in
+                stepper.value = Double(saveHeartbeatsInterval.bound)
+            }
+
+            readRSSIIntervalStepper.bind(viewModel.readRSSIInterval) { (stepper, readRSSIInterval) in
+                stepper.value = Double(readRSSIInterval.bound)
+            }
             
         }
     }
