@@ -75,8 +75,8 @@
 "Defaults.Interval.Sec.string" = "сек";
 "Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
-"Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
-"Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
+"Defaults.CardsSwipeHint.title" = "Свайп Подсказка на Графиках";
+"Defaults.AlertsRepeatInterval.title" = "Интервал Уведомлений";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
@@ -139,9 +139,9 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Соединился";
 "LocalNotificationsManager.DidDisconnect.title" = "Отсоединился";
-"LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
-"LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
-"LocalNotificationsManager.Disable.button" = "Turn Off";
+"LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
+"LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
+"LocalNotificationsManager.Disable.button" = "Отключить";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
@@ -154,7 +154,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
 "PermissionPresenter.settings" = "Настройки";
-"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
@@ -241,15 +241,15 @@
 "TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
-"TagSettings.Label.disabled.text" = "DISABLED?";
-"TagSettings.Label.alerts.text" = "ALERTS";
-"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
-"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
-"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
-"TagSettings.ConnectStatus.Connected" = "Connected";
-"TagSettings.ConnectStatus.Connecting" = "Connecting...";
-"TagSettings.ConnectStatus.Disconnected" = "Disconnected";
-"TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
+"TagSettings.Label.disabled.text" = "НЕДОСТУПНО?";
+"TagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
+"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Уведомления недоступны поскольку девайс не подсоединен и нет разрешения на показ уведомлений. Пожалуйста, сперва соединитесь с устройством.";
+"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Соединиться";
+"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Уведомления недоступны поскольку вы не подсоединены к устройству.";
+"TagSettings.ConnectStatus.Connected" = "Соединен";
+"TagSettings.ConnectStatus.Connecting" = "Соединяюсь...";
+"TagSettings.ConnectStatus.Disconnected" = "Отсоединен";
+"TagSettings.TemperatureAlert.Description.placeholder" = "Введите описание...";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
