@@ -31,18 +31,9 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     private var background: BTBackground
     private var connectionPersistence: ConnectionPersistence
     private var ruuviTagPersistence: RuuviTagPersistence
-    private var logToken: ObservationToken?
-    private var connectToken: ObservationToken?
-    private var disconnectToken: ObservationToken?
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
-    
-    deinit {
-        logToken?.invalidate()
-        connectToken?.invalidate()
-        disconnectToken?.invalidate()
-    }
     
     init(uuid: String, ruuviTagPersistence: RuuviTagPersistence, connectionPersistence: ConnectionPersistence, background: BTBackground, progress: ((BTServiceProgress) -> Void)? = nil, connectionTimeout: TimeInterval? = 0, serviceTimeout: TimeInterval? = 0) {
         self.uuid = uuid
