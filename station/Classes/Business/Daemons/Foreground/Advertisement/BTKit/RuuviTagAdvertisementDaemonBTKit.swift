@@ -84,7 +84,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     }
 
     @objc private func stopDaemon() {
-        observeTokens.forEach( { $0.invalidate() })
+        observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         token?.invalidate()
         realm.invalidate()

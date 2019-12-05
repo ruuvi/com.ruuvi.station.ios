@@ -137,7 +137,7 @@ class SettingsUserDegaults: Settings {
     }
 
     @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 60)
-    var webTagDaemonIntervalMinutes: Int  {
+    var webTagDaemonIntervalMinutes: Int {
 
         didSet {
             NotificationCenter
