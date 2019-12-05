@@ -110,7 +110,7 @@
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
 // Heartbeat
-"Heartbeat.navigationItem.title" = "Taustaprosessit"; 
+"Heartbeat.navigationItem.title" = "Taustaprosessit";
 "Heartbeat.PresentNotifications.title" = "Näytä ilmoituksia";
 "Heartbeat.SaveHeartbeats.title" = "Historian tallennusväli";
 "Heartbeat.Interval.Every.string" = "joka";
