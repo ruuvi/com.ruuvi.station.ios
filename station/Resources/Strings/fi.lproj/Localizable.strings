@@ -173,7 +173,6 @@
 "Settings.SectionHeader.Application.title" = "OHJELMA";
 "Settings.Label.Language.text" = "Kieli";
 "Settings.Label.Foreground" = "Prosessit";
-"Settings.Label.Background" = "Taustaprosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
 

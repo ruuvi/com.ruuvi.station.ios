@@ -173,7 +173,6 @@
 "Settings.SectionHeader.Application.title" = "ПРИЛОЖЕНИЕ";
 "Settings.Label.Language.text" = "Язык";
 "Settings.Label.Foreground" = "Активный Режим";
-"Settings.Label.Background" = "Фоновый Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
 
