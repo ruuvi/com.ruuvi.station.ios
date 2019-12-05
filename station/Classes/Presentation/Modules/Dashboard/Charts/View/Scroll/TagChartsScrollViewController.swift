@@ -186,6 +186,7 @@ extension TagChartsScrollViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        restartAnimations()
         output.viewWillAppear()
     }
 
@@ -668,6 +669,34 @@ extension TagChartsScrollViewController {
         } else {
             view.iPadLandscapeConstraint.isActive = false
             view.iPadPortraitConstraint.isActive = true
+        }
+    }
+
+    private func restartAnimations() {
+        // restart blinking animation of needed
+        for i in 0..<viewModels.count {
+            let viewModel = viewModels[i]
+            let view = views[i]
+            let imageView = view.alertImageView
+            if let state = viewModel.alertState.value {
+                imageView?.alpha = 1.0
+                switch state {
+                case .empty:
+                    imageView?.image = alertOffImage
+                case .registered:
+                    imageView?.image = alertOnImage
+                case .firing:
+                    imageView?.image = alertActiveImage
+                    UIView.animate(withDuration: 0.5,
+                                  delay: 0,
+                                  options: [.repeat, .autoreverse],
+                                  animations: { [weak imageView] in
+                                    imageView?.alpha = 0.0
+                                })
+                }
+            } else {
+                imageView?.image = nil
+            }
         }
     }
 }
