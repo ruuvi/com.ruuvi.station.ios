@@ -109,6 +109,15 @@
 "ForegroundRow.webTags.title" = "Load and save from web";
 "ForegroundRow.webTags.section" = "VIRTUAL SENSORS";
 
+// Heartbeat
+"Heartbeat.navigationItem.title" = "Background";
+"Heartbeat.PresentNotifications.title" = "Show Notifications";
+"Heartbeat.SaveHeartbeats.title" = "Data Logging Interval";
+"Heartbeat.Interval.Every.string" = "every";
+"Heartbeat.Interval.Min.string" = "min";
+"Heartbeat.readRSSITitle.title" = "Read RSSI";
+"Heartbeat.Interval.Sec.string" = "sec";
+
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
 "HumidityCalibration.VideoTutorials.link" = "video tutorials";
@@ -166,6 +175,7 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Background" = "Background";
 "Settings.Label.Defaults" = "Defaults";
+"Settings.Label.Heartbeat" = "Background";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

@@ -8,6 +8,8 @@ extension Notification.Name {
     static let isConnectionDaemonOnDidChange = Notification.Name("isConnectionDaemonOnDidChange")
     static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
     static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
+    static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
+    static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
 }
 
 protocol Settings {
@@ -26,7 +28,12 @@ protocol Settings {
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }
     var alertsRepeatingIntervalSeconds: Int { get set }
-
+    var presentConnectionNotifications: Bool { get set }
+    var saveHeartbeats: Bool { get set }
+    var saveHeartbeatsIntervalMinutes: Int { get set }
+    var readRSSI: Bool { get set }
+    var readRSSIIntervalSeconds: Int { get set }
+    
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)
 }
