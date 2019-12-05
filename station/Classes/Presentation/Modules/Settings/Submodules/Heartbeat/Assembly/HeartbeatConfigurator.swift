@@ -11,7 +11,7 @@ class HeartbeatConfigurator {
         presenter.router = router
         presenter.view = view
         presenter.settings = r.resolve(Settings.self)
-        
+
         view.output = presenter
     }
 }

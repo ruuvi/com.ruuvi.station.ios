@@ -7,6 +7,4 @@ enum HeartbeatEmbedSegue: String {
 
 class HeartbeatRouter: HeartbeatRouterInput {
     weak var transitionHandler: TransitionHandler!
-
-
 }

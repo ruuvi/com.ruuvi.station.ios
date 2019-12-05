@@ -9,4 +9,3 @@ extension LocationPickerRouterInput {
         dismiss(completion: nil)
     }
 }
-

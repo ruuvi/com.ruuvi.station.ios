@@ -62,7 +62,7 @@ class CardsPresenter: CardsModuleInput {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next cyclomatic_complexity
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
@@ -207,7 +207,7 @@ extension CardsPresenter: DiscoverModuleOutput {
     func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
         module.dismiss()
     }
-    
+
     func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
         module.dismiss()
     }
@@ -320,16 +320,26 @@ extension CardsPresenter {
                          using: { [weak self] _ in
             self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
         })
-        readRSSIToken = NotificationCenter.default.addObserver(forName: .ReadRSSIDidChange, object: nil, queue: .main, using: { [weak self] _ in
+        readRSSIToken = NotificationCenter
+            .default
+            .addObserver(forName: .ReadRSSIDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
             if let readRSSI = self?.settings.readRSSI, readRSSI {
                 self?.observeRuuviTagRSSI()
             } else {
                 self?.rssiTokens.values.forEach({ $0.invalidate() })
                 self?.rssiTimers.values.forEach({ $0.invalidate() })
-                self?.viewModels.forEach( { $0.update(rssi: nil) } )
+                self?.viewModels.forEach({ $0.update(rssi: nil) })
             }
         })
-        readRSSIIntervalToken = NotificationCenter.default.addObserver(forName: .ReadRSSIIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
+        readRSSIIntervalToken = NotificationCenter
+            .default
+            .addObserver(forName: .ReadRSSIIntervalDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
             self?.observeRuuviTagRSSI()
         })
     }
@@ -601,7 +611,6 @@ extension CardsPresenter {
 
     }
 
-    // swiftlint:disable:next function_body_length
     func startObservingConnectionPersistenceNotifications() {
         startKeepingConnectionToken = NotificationCenter
             .default

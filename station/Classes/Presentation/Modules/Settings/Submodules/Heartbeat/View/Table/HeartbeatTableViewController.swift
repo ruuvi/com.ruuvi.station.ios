@@ -110,7 +110,7 @@ extension HeartbeatTableViewController {
             readRSSIIntervalStepper.bind(viewModel.readRSSIInterval) { (stepper, readRSSIInterval) in
                 stepper.value = Double(readRSSIInterval.bound)
             }
-            
+
         }
     }
 

@@ -20,7 +20,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     }
 
     deinit {
-        wsTokens.forEach( { $0.invalidate() } )
+        wsTokens.forEach({ $0.invalidate() })
         wsTokens.removeAll()
         token?.invalidate()
         if let isOnToken = isOnToken {
@@ -65,7 +65,12 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 }
             })
 
-            self?.intervalToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
+            self?.intervalToken = NotificationCenter
+                .default
+                .addObserver(forName: .WebTagDaemonIntervalDidChange,
+                             object: nil,
+                             queue: .main,
+                             using: { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
                                 on: sSelf.thread,
@@ -85,7 +90,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     }
 
     @objc private func stopDaemon() {
-        wsTokens.forEach( { $0.invalidate() } )
+        wsTokens.forEach({ $0.invalidate() })
         wsTokens.removeAll()
         token?.invalidate()
         if let intervalToken = intervalToken {
@@ -95,6 +100,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         stopWork()
     }
 
+    // swiftlint:disable:next function_body_length
     @objc private func restartPulling(fire: Bool) {
 
         wsTokens.forEach({ $0.invalidate() })

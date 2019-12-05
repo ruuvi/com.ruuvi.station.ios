@@ -37,7 +37,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     private var isOpenedFromWelcome: Bool = true
     private var lastSelectedWebTag: DiscoverWebTagViewModel?
     private weak var output: DiscoverModuleOutput?
-    
+
     deinit {
         reloadTimer?.invalidate()
         scanToken?.invalidate()
@@ -153,7 +153,9 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
         module.dismiss { [weak self] in
             guard let webTag = self?.lastSelectedWebTag else { assert(false); return }
-            guard let operation = self?.webTagService.add(provider: webTag.provider, location: location) else { assert(false); return }
+            guard let operation = self?.webTagService
+                .add(provider: webTag.provider,
+                     location: location) else { assert(false); return }
             operation.on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.isOpenedFromWelcome {
