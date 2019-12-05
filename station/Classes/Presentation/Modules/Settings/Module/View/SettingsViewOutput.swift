@@ -7,7 +7,6 @@ protocol SettingsViewOutput {
     func viewDidTriggerClose()
     func viewDidTapOnLanguage()
     func viewDidTapOnForeground()
-    func viewDidTapOnBackground()
     func viewDidTapOnDefaults()
     func viewDidTapOnHeartbeat()
 }
