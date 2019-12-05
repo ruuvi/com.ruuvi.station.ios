@@ -8,6 +8,8 @@ extension Notification.Name {
     static let isConnectionDaemonOnDidChange = Notification.Name("isConnectionDaemonOnDidChange")
     static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
     static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
+    static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
+    static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
 }
 
 protocol Settings {

@@ -169,10 +169,26 @@ class SettingsUserDegaults: Settings {
     var saveHeartbeatsIntervalMinutes: Int
 
     @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: false)
-    var readRSSI: Bool
+    var readRSSI: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .ReadRSSIDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
 
     @UserDefault("SettingsUserDegaults.readRSSIIntervalSeconds", defaultValue: 5)
-    var readRSSIIntervalSeconds: Int
+    var readRSSIIntervalSeconds: Int {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .ReadRSSIIntervalDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
 
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
