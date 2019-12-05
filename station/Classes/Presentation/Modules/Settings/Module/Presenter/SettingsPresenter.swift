@@ -75,4 +75,8 @@ extension SettingsPresenter: SettingsViewOutput {
     func viewDidTapOnDefaults() {
         router.openDefaults()
     }
+
+    func viewDidTapOnHeartbeat() {
+        router.openHeartbeat()
+    }
 }

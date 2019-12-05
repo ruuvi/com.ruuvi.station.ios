@@ -44,4 +44,14 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
+
+    func openHeartbeat() {
+        let factory = StoryboardFactory(storyboardName: "Heartbeat")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: HeartbeatModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
 }

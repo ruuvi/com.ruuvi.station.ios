@@ -39,9 +39,8 @@ class CardsPresenter: CardsModuleInput {
     private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
     private var startKeepingConnectionToken: NSObjectProtocol?
     private var stopKeepingConnectionToken: NSObjectProtocol?
-    private var startReadingRSSIToken: NSObjectProtocol?
-    private var stopReadingRSSIToken: NSObjectProtocol?
-    private var readRSSIIntervalDidChangeToken: NSObjectProtocol?
+    private var readRSSIToken: NSObjectProtocol?
+    private var readRSSIIntervalToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var temperatureAlertDidChangeToken: NSObjectProtocol?
@@ -103,15 +102,6 @@ class CardsPresenter: CardsModuleInput {
         if let stopKeepingConnectionToken = stopKeepingConnectionToken {
             NotificationCenter.default.removeObserver(stopKeepingConnectionToken)
         }
-        if let startReadingRSSIToken = startReadingRSSIToken {
-            NotificationCenter.default.removeObserver(startReadingRSSIToken)
-        }
-        if let stopReadingRSSIToken = stopReadingRSSIToken {
-            NotificationCenter.default.removeObserver(stopReadingRSSIToken)
-        }
-        if let readRSSIIntervalDidChangeToken = readRSSIIntervalDidChangeToken {
-            NotificationCenter.default.removeObserver(readRSSIIntervalDidChangeToken)
-        }
         if let ruuviTagPropertiesDaemonFailureToken = ruuviTagPropertiesDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagPropertiesDaemonFailureToken)
         }
@@ -123,6 +113,12 @@ class CardsPresenter: CardsModuleInput {
         }
         if let temperatureAlertDidChangeToken = temperatureAlertDidChangeToken {
             NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
+        }
+        if let readRSSIToken = readRSSIToken {
+            NotificationCenter.default.removeObserver(readRSSIToken)
+        }
+        if let readRSSIIntervalToken = readRSSIIntervalToken {
+            NotificationCenter.default.removeObserver(readRSSIIntervalToken)
         }
     }
 }
@@ -324,6 +320,18 @@ extension CardsPresenter {
                          using: { [weak self] _ in
             self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
         })
+        readRSSIToken = NotificationCenter.default.addObserver(forName: .ReadRSSIDidChange, object: nil, queue: .main, using: { [weak self] _ in
+            if let readRSSI = self?.settings.readRSSI, readRSSI {
+                self?.observeRuuviTagRSSI()
+            } else {
+                self?.rssiTokens.values.forEach({ $0.invalidate() })
+                self?.rssiTimers.values.forEach({ $0.invalidate() })
+                self?.viewModels.forEach( { $0.update(rssi: nil) } )
+            }
+        })
+        readRSSIIntervalToken = NotificationCenter.default.addObserver(forName: .ReadRSSIIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
+            self?.observeRuuviTagRSSI()
+        })
     }
 
     private func observeRuuviTags() {
@@ -335,13 +343,12 @@ extension CardsPresenter {
     private func observeRuuviTagRSSI() {
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
-        connectionPersistence.readRSSIUUIDs
-            .filter({ connectionPersistence.keepConnectionUUIDs.contains($0)})
+        connectionPersistence.keepConnectionUUIDs
             .filter({ (uuid) -> Bool in
                 ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
             }).forEach { (uuid) in
-                if connectionPersistence.readRSSI(uuid: uuid) {
-                    let interval = connectionPersistence.readRSSIInterval(uuid: uuid)
+                if settings.readRSSI {
+                    let interval = settings.readRSSIIntervalSeconds
                     let timer = Timer
                         .scheduledTimer(withTimeInterval: TimeInterval(interval),
                                         repeats: true) { [weak self] timer in
@@ -368,7 +375,6 @@ extension CardsPresenter {
                                 default:
                                     observer.errorPresenter.present(error: error)
                                 }
-
                             }
                         })
                     }
@@ -614,39 +620,6 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
             self?.observeRuuviTagHeartbeats()
-            self?.observeRuuviTagRSSI()
-        })
-
-        startReadingRSSIToken = NotificationCenter
-            .default
-            .addObserver(forName: .ConnectionPersistenceDidStartReadingRSSI,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-            self?.observeRuuviTagRSSI()
-        })
-
-        stopReadingRSSIToken = NotificationCenter
-            .default
-            .addObserver(forName: .ConnectionPersistenceDidStopReadingRSSI,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] notification in
-            self?.observeRuuviTagRSSI()
-            if let userInfo = notification.userInfo,
-                let uuid = userInfo[CPDidStopReadingRSSIKey.uuid] as? String {
-                self?.viewModels
-                    .filter({ $0.uuid.value == uuid})
-                    .forEach({ $0.update(rssi: nil) })
-            }
-        })
-
-        readRSSIIntervalDidChangeToken = NotificationCenter
-            .default
-            .addObserver(forName: .ConnectionPersistenceDidChangeReadRSSIInterval,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
             self?.observeRuuviTagRSSI()
         })
     }

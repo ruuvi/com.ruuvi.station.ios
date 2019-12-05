@@ -87,6 +87,7 @@ class BusinessAssembly: Assembly {
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.alertService = r.resolve(AlertService.self)
+            service.settings = r.resolve(Settings.self)
             return service
         }.inObjectScope(.container)
 

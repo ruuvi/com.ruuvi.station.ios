@@ -19,6 +19,18 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         return TimeInterval(settings.webTagDaemonIntervalMinutes * 60)
     }
 
+    deinit {
+        wsTokens.forEach( { $0.invalidate() } )
+        wsTokens.removeAll()
+        token?.invalidate()
+        if let isOnToken = isOnToken {
+            NotificationCenter.default.removeObserver(isOnToken)
+        }
+        if let intervalToken = intervalToken {
+            NotificationCenter.default.removeObserver(intervalToken)
+        }
+    }
+
     override init() {
         super.init()
         isOnToken = NotificationCenter
@@ -34,28 +46,6 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 sSelf.stop()
             }
         })
-        intervalToken = NotificationCenter
-            .default
-            .addObserver(forName: .WebTagDaemonIntervalDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-            guard let sSelf = self else { return }
-            sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
-                            on: sSelf.thread,
-                            with: false,
-                            waitUntilDone: false,
-                            modes: [RunLoop.Mode.default.rawValue])
-        })
-    }
-
-    deinit {
-        wsTokens.forEach({ $0.invalidate() })
-        wsTokens.removeAll()
-        token?.invalidate()
-        if let isOnToken = isOnToken {
-            NotificationCenter.default.removeObserver(isOnToken)
-        }
     }
 
     func start() {
@@ -74,6 +64,15 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                     print(error.localizedDescription)
                 }
             })
+
+            self?.intervalToken = NotificationCenter.default.addObserver(forName: .WebTagDaemonIntervalDidChange, object: nil, queue: .main, using: { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
+                                on: sSelf.thread,
+                                with: false,
+                                waitUntilDone: false,
+                                modes: [RunLoop.Mode.default.rawValue])
+            })
         }
     }
 
@@ -89,6 +88,9 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         wsTokens.forEach( { $0.invalidate() } )
         wsTokens.removeAll()
         token?.invalidate()
+        if let intervalToken = intervalToken {
+            NotificationCenter.default.removeObserver(intervalToken)
+        }
         realm.invalidate()
         stopWork()
     }
@@ -99,9 +101,8 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         wsTokens.removeAll()
 
         guard let webTags = webTags else { return }
-
+        guard !webTags.isInvalidated else { return }
         let currentLocationWebTags = webTags.filter({ $0.location == nil })
-
         for provider in WeatherProvider.allCases {
             if currentLocationWebTags.contains(where: { $0.provider == provider }) {
                 wsTokens.append(webTagService.observeCurrentLocationData(self,
