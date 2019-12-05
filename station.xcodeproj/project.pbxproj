@@ -206,6 +206,16 @@
 		0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */; };
 		0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */; };
 		0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
+		0EAD33BE2398F03600EC5BAA /* RURangeSeekSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33BD2398F03600EC5BAA /* RURangeSeekSlider.swift */; };
+		0EAD33C12398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33BF2398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.swift */; };
+		0EAD33C22398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33C02398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.xib */; };
+		0EAD33C623990AFB00EC5BAA /* AlertServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33C523990AFB00EC5BAA /* AlertServiceImpl.swift */; };
+		0EAD33C823990B0100EC5BAA /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33C723990B0100EC5BAA /* AlertService.swift */; };
+		0EAD33CA23990B3900EC5BAA /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33C923990B3900EC5BAA /* AlertType.swift */; };
+		0EAD33CE23990B8200EC5BAA /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33CD23990B8200EC5BAA /* AlertPersistenceUserDefaults.swift */; };
+		0EAD33D023990B8700EC5BAA /* AlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33CF23990B8700EC5BAA /* AlertPersistence.swift */; };
+		0EAD33D223990D8800EC5BAA /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33D123990D8700EC5BAA /* String+Replace.swift */; };
+		0EAD33D423990D8C00EC5BAA /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33D323990D8C00EC5BAA /* Double+Temperature.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -574,6 +584,16 @@
 		0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagLocationSource.swift; sourceTree = "<group>"; };
 		0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
 		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
+		0EAD33BD2398F03600EC5BAA /* RURangeSeekSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RURangeSeekSlider.swift; sourceTree = "<group>"; };
+		0EAD33BF2398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
+		0EAD33C02398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
+		0EAD33C523990AFB00EC5BAA /* AlertServiceImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertServiceImpl.swift; sourceTree = "<group>"; };
+		0EAD33C723990B0100EC5BAA /* AlertService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
+		0EAD33C923990B3900EC5BAA /* AlertType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
+		0EAD33CD23990B8200EC5BAA /* AlertPersistenceUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPersistenceUserDefaults.swift; sourceTree = "<group>"; };
+		0EAD33CF23990B8700EC5BAA /* AlertPersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPersistence.swift; sourceTree = "<group>"; };
+		0EAD33D123990D8700EC5BAA /* String+Replace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Replace.swift"; sourceTree = "<group>"; };
+		0EAD33D323990D8C00EC5BAA /* Double+Temperature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Temperature.swift"; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -1053,6 +1073,8 @@
 				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
+				0EAD33D323990D8C00EC5BAA /* Double+Temperature.swift */,
+				0EAD33D123990D8700EC5BAA /* String+Replace.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1090,6 +1112,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DA922B387BE0032F6CA /* Assembly */,
+				0EAD33CB23990B7000EC5BAA /* Alert */,
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
 				0E390FE623602E0D00D600DB /* Connection */,
@@ -1460,6 +1483,7 @@
 		0E502FB822B27D3100E8A6CC /* Enums */ = {
 			isa = PBXGroup;
 			children = (
+				0EAD33C923990B3900EC5BAA /* AlertType.swift */,
 				0EF5B75322DE153A00D9D14A /* HumidityUnit.swift */,
 				0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */,
 				0E1C1D9F22B36C100032F6CA /* RUError.swift */,
@@ -2058,6 +2082,48 @@
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
 			);
 			path = Util;
+			sourceTree = "<group>";
+		};
+		0EAD33BC2398F01700EC5BAA /* RangeSeekSlider */ = {
+			isa = PBXGroup;
+			children = (
+				0EAD33BD2398F03600EC5BAA /* RURangeSeekSlider.swift */,
+			);
+			path = RangeSeekSlider;
+			sourceTree = "<group>";
+		};
+		0EAD33C323990AEB00EC5BAA /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				0EAD33C423990AF200EC5BAA /* Impl */,
+				0EAD33C723990B0100EC5BAA /* AlertService.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
+		0EAD33C423990AF200EC5BAA /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0EAD33C523990AFB00EC5BAA /* AlertServiceImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
+		0EAD33CB23990B7000EC5BAA /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				0EAD33CC23990B7800EC5BAA /* UserDefaults */,
+				0EAD33CF23990B8700EC5BAA /* AlertPersistence.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
+		0EAD33CC23990B7800EC5BAA /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				0EAD33CD23990B8200EC5BAA /* AlertPersistenceUserDefaults.swift */,
+			);
+			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		0EBAF062232000F50025A191 /* Module */ = {
@@ -2725,6 +2791,7 @@
 		0EF2862F22CBAFF10026C7A5 /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0EAD33BC2398F01700EC5BAA /* RangeSeekSlider */,
 				0EF4D0A522E0657F00947E04 /* SectionHeader */,
 				0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */,
 			);
@@ -2743,6 +2810,8 @@
 		0EF4D0A522E0657F00947E04 /* SectionHeader */ = {
 			isa = PBXGroup;
 			children = (
+				0EAD33BF2398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.swift */,
+				0EAD33C02398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.xib */,
 				0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */,
 				0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */,
 			);
@@ -2840,6 +2909,7 @@
 		0EFDD6D122BBD9AB00EADFC6 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0EAD33C323990AEB00EC5BAA /* Alert */,
 				0EFDD6D222BBD9C300EADFC6 /* Calibration */,
 				0E538362236ADC040007956D /* Export */,
 				0E046F5B22F18EB000BD4E9C /* Location */,
@@ -3106,6 +3176,7 @@
 				0EF6F5C9235E0AED0052BA25 /* Background.storyboard in Resources */,
 				0E1C1E1322B756D30032F6CA /* CardView.xib in Resources */,
 				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
+				0EAD33C22398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
@@ -3182,6 +3253,7 @@
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
+				0EAD33C12398F0D800EC5BAA /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
 				0EF6F5CF235E0CB80052BA25 /* BackgroundViewController.swift in Sources */,
 				0E9959AB235ED4A3001C37D8 /* BackgroundViewInput.swift in Sources */,
@@ -3219,6 +3291,7 @@
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
+				0EAD33CE23990B8200EC5BAA /* AlertPersistenceUserDefaults.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				0E9959B3235ED712001C37D8 /* BackgroundConfigurator.swift in Sources */,
@@ -3243,6 +3316,7 @@
 				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
 				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
+				0EAD33C623990AFB00EC5BAA /* AlertServiceImpl.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				0E9959B5235ED75D001C37D8 /* BackgroundPresenter.swift in Sources */,
@@ -3261,6 +3335,7 @@
 				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
 				0E7566172361B56500FCA977 /* BackgroundSection.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
+				0EAD33CA23990B3900EC5BAA /* AlertType.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
@@ -3269,6 +3344,7 @@
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
+				0EAD33D423990D8C00EC5BAA /* Double+Temperature.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
@@ -3293,6 +3369,7 @@
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
+				0EAD33C823990B0100EC5BAA /* AlertService.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
@@ -3307,6 +3384,8 @@
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */,
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
+				0EAD33BE2398F03600EC5BAA /* RURangeSeekSlider.swift in Sources */,
+				0EAD33D023990B8700EC5BAA /* AlertPersistence.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
@@ -3439,6 +3518,7 @@
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
 				0E046F5D22F18EC100BD4E9C /* LocationService.swift in Sources */,
 				0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */,
+				0EAD33D223990D8800EC5BAA /* String+Replace.swift in Sources */,
 				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E046F3F22F0702D00BD4E9C /* WebTagSettingsViewModel.swift in Sources */,
 				0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */,

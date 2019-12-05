@@ -2,6 +2,11 @@ import Swinject
 
 class PersistenceAssembly: Assembly {
     func assemble(container: Container) {
+
+        container.register(AlertPersistence.self) { _ in
+            let persistence = AlertPersistenceUserDefaults()
+            return persistence
+        }
         
         container.register(BackgroundPersistence.self) { r in
             let persistence = BackgroundPersistenceUserDefaults()

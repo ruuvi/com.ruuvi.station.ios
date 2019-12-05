@@ -71,11 +71,12 @@
 // Defaults
 "Defaults.navigationItem.title" = "Defaults";
 "Defaults.WelcomeShown.title" = "Welcome Shown";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
+"Defaults.ChartsSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
 "Defaults.Interval.Sec.string" = "sec";
 "Defaults.ConnectionTimeout.title" = "Connection Timeout";
 "Defaults.ServiceTimeout.title" = "Service Timeout";
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
+"Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
@@ -138,6 +139,9 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Connected";
 "LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
+"LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
+"LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
+"LocalNotificationsManager.Disable.button" = "Turn Off";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
@@ -150,6 +154,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station needs to access your camera to enable this feature.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station needs to access your location to enable this feature.";
 "PermissionPresenter.settings" = "Settings";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Pick a photo";
@@ -229,9 +234,23 @@
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "TagSettings.SectionHeader.Calibration.title" = "CALIBRATION";
+"TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.Alerts.Off" = "Off";
+"TagSettings.SectionHeader.Connection.title" = "CONNECTION";
+"TagSettings.KeepConnection.title" = "Keep Connection";
 "TagSettings.dataSourceTitleLabel.text" = "Data Received Via";
 "TagSettings.DataSource.Heartbeat.title" = "Heartbeat";
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
+"TagSettings.Label.disabled.text" = "DISABLED?";
+"TagSettings.Label.alerts.text" = "ALERTS";
+"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
+"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
+"TagSettings.ConnectStatus.Connected" = "Connected";
+"TagSettings.ConnectStatus.Connecting" = "Connecting...";
+"TagSettings.ConnectStatus.Disconnected" = "Disconnected";
+"TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

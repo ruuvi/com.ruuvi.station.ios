@@ -27,6 +27,7 @@ protocol Settings {
     var connectionTimeout: TimeInterval { get set }
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }
+    var alertsRepeatingIntervalSeconds: Int { get set }
     var presentConnectionNotifications: Bool { get set }
     var saveHeartbeats: Bool { get set }
     var saveHeartbeatsIntervalMinutes: Int { get set }

@@ -71,11 +71,12 @@
 // Defaults
 "Defaults.navigationItem.title" = "Oletusasetukset";
 "Defaults.WelcomeShown.title" = "Kiertoajelu näytetään";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Histogrammin selite näytetään vaakanäytöllä";
+"Defaults.ChartsSwipeInstructionWasShown.title" = "Histogrammin selite näytetään vaakanäytöllä";
 "Defaults.Interval.Sec.string" = "sek";
 "Defaults.ConnectionTimeout.title" = "Yhteyden aikakatkaisu";
 "Defaults.ServiceTimeout.title" = "Palvelun aikakatkaisu";
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
+"Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
@@ -109,7 +110,7 @@
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
 
 // Heartbeat
-"Heartbeat.navigationItem.title" = "Taustaprosessit"; 
+"Heartbeat.navigationItem.title" = "Taustaprosessit";
 "Heartbeat.PresentNotifications.title" = "Näytä ilmoituksia";
 "Heartbeat.SaveHeartbeats.title" = "Historian tallennusväli";
 "Heartbeat.Interval.Every.string" = "joka";
@@ -138,6 +139,9 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Yhdistetty";
 "LocalNotificationsManager.DidDisconnect.title" = "Yhteys katkaistu";
+"LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
+"LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
+"LocalNotificationsManager.Disable.button" = "Turn Off";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
@@ -150,6 +154,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Tämä ominaisuus vaatii oikeuden kameran käyttöön.";
 "PermissionPresenter.NoLocationAccess.message" = "Tämä ominaisuus vaatii oikeuden paikkatiedon käyttöön.";
 "PermissionPresenter.settings" = "Asetukset";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Valitse kuva";
@@ -229,9 +234,23 @@
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "TagSettings.SectionHeader.Calibration.title" = "KALIBROINTI";
+"TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"TagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.Alerts.Off" = "Off";
+"TagSettings.SectionHeader.Connection.title" = "CONNECTION";
+"TagSettings.KeepConnection.title" = "Säilytä yhteys";
 "TagSettings.dataSourceTitleLabel.text" = "Datalähde";
 "TagSettings.DataSource.Heartbeat.title" = "Syke";
 "TagSettings.DataSource.Advertisement.title" = "Laiteilmoitus";
+"TagSettings.Label.disabled.text" = "DISABLED?";
+"TagSettings.Label.alerts.text" = "ALERTS";
+"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
+"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
+"TagSettings.ConnectStatus.Connected" = "Connected";
+"TagSettings.ConnectStatus.Connecting" = "Connecting...";
+"TagSettings.ConnectStatus.Disconnected" = "Disconnected";
+"TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

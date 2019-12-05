@@ -71,11 +71,12 @@
 // Defaults
 "Defaults.navigationItem.title" = "Значения";
 "Defaults.WelcomeShown.title" = "Приветствие Показано";
-"Defaults.TagChartsLandscapeSwipeInstructionWasShown.title" = "Свайп на Графиках";
+"Defaults.ChartsSwipeInstructionWasShown.title" = "Свайп на Графиках";
 "Defaults.Interval.Sec.string" = "сек";
 "Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
+"Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
@@ -138,6 +139,9 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Соединился";
 "LocalNotificationsManager.DidDisconnect.title" = "Отсоединился";
+"LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
+"LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
+"LocalNotificationsManager.Disable.button" = "Turn Off";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
@@ -150,6 +154,7 @@
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
 "PermissionPresenter.settings" = "Настройки";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
@@ -229,9 +234,23 @@
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
+"TagSettings.temperatureAlertTitleLabel.text" = "Температура";
+"TagSettings.Alerts.Temperature.description" = "Уведомление когда < %.0f или > %.0f";
+"TagSettings.Alerts.Off" = "Отключено";
+"TagSettings.SectionHeader.Connection.title" = "СОЕДИНЕНИЕ";
+"TagSettings.KeepConnection.title" = "Держать Соединение";
 "TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
+"TagSettings.Label.disabled.text" = "DISABLED?";
+"TagSettings.Label.alerts.text" = "ALERTS";
+"TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alerts are disabled because both not connected to the device and missing Push Notification permission. Please connect to the device first.";
+"TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Connect";
+"TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alerts are disabled because you are not connected to the device.";
+"TagSettings.ConnectStatus.Connected" = "Connected";
+"TagSettings.ConnectStatus.Connecting" = "Connecting...";
+"TagSettings.ConnectStatus.Disconnected" = "Disconnected";
+"TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
