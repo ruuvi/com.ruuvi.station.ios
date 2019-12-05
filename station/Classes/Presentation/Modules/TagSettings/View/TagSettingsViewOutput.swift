@@ -1,6 +1,7 @@
 import UIKit
 
 protocol TagSettingsViewOutput {
+    func viewWillAppear()
     func viewDidAskToDismiss()
     func viewDidAskToRandomizeBackground()
     func viewDidAskToRemoveRuuviTag()
@@ -17,4 +18,7 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnNoValuesView()
     func viewDidTapOnHumidityAccessoryButton()
     func viewDidAskToFixHumidityAdjustment()
+    func viewDidTapOnAlertsDisabledView()
+    func viewDidAskToConnectFromAlertsDisabledDialog()
+    func viewDidAskToExportLogs()
 }

@@ -3,6 +3,17 @@ import BTKit
 
 class BusinessAssembly: Assembly {
     func assemble(container: Container) {
+
+        container.register(AlertService.self) { r in
+            let service = AlertServiceImpl()
+            service.alertPersistence = r.resolve(AlertPersistence.self)
+            return service
+        }.inObjectScope(.container).initCompleted { (r, service) in
+            // swiftlint:disable force_cast
+            let s = service as! AlertServiceImpl
+            // swiftlint:enable force_cast
+            s.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+        }
         
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()

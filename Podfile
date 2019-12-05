@@ -15,6 +15,7 @@ target 'station' do
   pod 'Humidity'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
+  pod 'RangeSeekSlider'
   pod 'RealmSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'

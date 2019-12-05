@@ -88,6 +88,7 @@ PODS:
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
   - Protobuf (3.11.1)
+  - RangeSeekSlider (1.8.0)
   - Realm (4.1.1):
     - Realm/Headers (= 4.1.1)
   - Realm/Headers (4.1.1)
@@ -109,6 +110,7 @@ DEPENDENCIES:
   - Humidity
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
+  - RangeSeekSlider
   - RealmSwift
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
@@ -137,6 +139,7 @@ SPEC REPOS:
     - Localize-Swift
     - nanopb
     - Protobuf
+    - RangeSeekSlider
     - Realm
     - RealmSwift
     - Swinject
@@ -179,12 +182,13 @@ SPEC CHECKSUMS:
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Protobuf: 20d79da7f20b5928b80043b05080b816e802659e
+  RangeSeekSlider: 650b11fa1edcb92e1e0ede797669d98622570fb5
   Realm: 25f0a8244cbb1c2271c922963ea8666fc2d8104d
   RealmSwift: 9e2657b33764f80e4a4dffd6d440e24715782052
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: ec974a07af3937f0d062643b6b1569e35b714e59
+PODFILE CHECKSUM: a5c33c16a42de645d6320cbb35e35c742e85554a
 
 COCOAPODS: 1.8.4

@@ -4,10 +4,10 @@ import BTKit
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
         let r = AppAssembly.shared.assembler.resolver
-        
+
         let router = TagSettingsRouter()
         router.transitionHandler = view
-        
+
         let presenter = TagSettingsPresenter()
         presenter.view = view
         presenter.router = router
@@ -18,7 +18,13 @@ class TagSettingsTableConfigurator {
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
-        
+        presenter.alertService = r.resolve(AlertService.self)
+        presenter.settings = r.resolve(Settings.self)
+        presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
+        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
+        presenter.exportService = r.resolve(ExportService.self)
+
         view.output = presenter
     }
 }
