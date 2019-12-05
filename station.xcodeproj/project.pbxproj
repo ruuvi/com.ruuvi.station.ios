@@ -862,6 +862,36 @@
 		0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
 		0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
 		0EA92FE12387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */; };
+		0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
+		0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
+		0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E84BF542397F29800A37E1A /* Heartbeat.storyboard */; };
+		0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6E2398031B00A37E1A /* HeartbeatInitializer.swift */; };
+		0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF702398035C00A37E1A /* HeartbeatConfigurator.swift */; };
+		0EAD33DA2399273D00EC5BAA /* HeartbeatModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6A239802A400A37E1A /* HeartbeatModuleInput.swift */; };
+		0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6C239802CA00A37E1A /* HeartbeatPresenter.swift */; };
+		0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF66239801AF00A37E1A /* HeartbeatRouterInput.swift */; };
+		0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF68239801C100A37E1A /* HeartbeatRouter.swift */; };
+		0EAD33DE2399273D00EC5BAA /* HeartbeatList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF622397F76A00A37E1A /* HeartbeatList.swift */; };
+		0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF602397F73100A37E1A /* HeartbeatEnvironmentObject.swift */; };
+		0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF642397F9DC00A37E1A /* HeartbeatTableViewController.swift */; };
+		0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF562397F33E00A37E1A /* HeartbeatViewInput.swift */; };
+		0EAD33E22399273D00EC5BAA /* HeartbeatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF582397F3C600A37E1A /* HeartbeatViewModel.swift */; };
+		0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5A2397F3DF00A37E1A /* HeartbeatViewOutput.swift */; };
+		0EAD33E42399273D00EC5BAA /* HeartbeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5E2397F6BE00A37E1A /* HeartbeatViewController.swift */; };
+		0EAD33E52399273E00EC5BAA /* Heartbeat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E84BF542397F29800A37E1A /* Heartbeat.storyboard */; };
+		0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6E2398031B00A37E1A /* HeartbeatInitializer.swift */; };
+		0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF702398035C00A37E1A /* HeartbeatConfigurator.swift */; };
+		0EAD33E82399273E00EC5BAA /* HeartbeatModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6A239802A400A37E1A /* HeartbeatModuleInput.swift */; };
+		0EAD33E92399273E00EC5BAA /* HeartbeatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6C239802CA00A37E1A /* HeartbeatPresenter.swift */; };
+		0EAD33EA2399273E00EC5BAA /* HeartbeatRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF66239801AF00A37E1A /* HeartbeatRouterInput.swift */; };
+		0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF68239801C100A37E1A /* HeartbeatRouter.swift */; };
+		0EAD33EC2399273E00EC5BAA /* HeartbeatList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF622397F76A00A37E1A /* HeartbeatList.swift */; };
+		0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF602397F73100A37E1A /* HeartbeatEnvironmentObject.swift */; };
+		0EAD33EE2399273E00EC5BAA /* HeartbeatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF642397F9DC00A37E1A /* HeartbeatTableViewController.swift */; };
+		0EAD33EF2399273E00EC5BAA /* HeartbeatViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF562397F33E00A37E1A /* HeartbeatViewInput.swift */; };
+		0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF582397F3C600A37E1A /* HeartbeatViewModel.swift */; };
+		0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5A2397F3DF00A37E1A /* HeartbeatViewOutput.swift */; };
+		0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5E2397F6BE00A37E1A /* HeartbeatViewController.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -3816,6 +3846,7 @@
 				0E6BAEBA23856A01003A2D4C /* Oswald-ExtraLight.ttf in Resources */,
 				0E6BAEBB23856A01003A2D4C /* Language.storyboard in Resources */,
 				0E6BAEBC23856A01003A2D4C /* Welcome.storyboard in Resources */,
+				0EAD33E52399273E00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E6BAEBD23856A01003A2D4C /* InfoPlist.strings in Resources */,
 				0E6BAEBE23856A01003A2D4C /* ActivityRuuviLogo.storyboard in Resources */,
 				0E6BAEBF23856A01003A2D4C /* Assets.xcassets in Resources */,
@@ -3856,6 +3887,7 @@
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
 				0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */,
 				0E8BD3F2238566AB008B31EF /* Welcome.storyboard in Resources */,
+				0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E8BD3F3238566AB008B31EF /* InfoPlist.strings in Resources */,
 				0E8BD3F4238566AB008B31EF /* ActivityRuuviLogo.storyboard in Resources */,
 				0E8BD3F5238566AB008B31EF /* Assets.xcassets in Resources */,
@@ -4056,6 +4088,7 @@
 				0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */,
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
+				0EAD33EC2399273E00EC5BAA /* HeartbeatList.swift in Sources */,
 				0E6BAD8823856A01003A2D4C /* DefaultsViewOutput.swift in Sources */,
 				0E6BAD8923856A01003A2D4C /* MenuPresenter.swift in Sources */,
 				0E6BAD8A23856A01003A2D4C /* ForegroundRouter.swift in Sources */,
@@ -4071,6 +4104,7 @@
 				0E6BAD9423856A01003A2D4C /* WebTagPersistenceRealm.swift in Sources */,
 				0E6BAD9523856A01003A2D4C /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E6BAD9623856A01003A2D4C /* PermissionPresenter.swift in Sources */,
+				0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E6BAD9723856A01003A2D4C /* LocationPickerRouterInput.swift in Sources */,
 				0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E6BAD9823856A01003A2D4C /* Language.swift in Sources */,
@@ -4100,6 +4134,7 @@
 				0E6BADB123856A01003A2D4C /* LocationPickerRouter.swift in Sources */,
 				0E6BADB223856A01003A2D4C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E6BADB323856A01003A2D4C /* MenuTableConfigurator.swift in Sources */,
+				0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */,
 				0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */,
 				0E6BADB523856A01003A2D4C /* RuuviTagConnectionDaemonBTKit.swift in Sources */,
 				0E6BADB623856A01003A2D4C /* HumidityCalibrationPresenter.swift in Sources */,
@@ -4150,6 +4185,7 @@
 				0E6BADE423856A01003A2D4C /* DefaultsConfigurator.swift in Sources */,
 				0E6BADE523856A01003A2D4C /* MenuRouter.swift in Sources */,
 				0E6BADE623856A01003A2D4C /* ForegroundRouterInput.swift in Sources */,
+				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
 				0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4165,6 +4201,7 @@
 				0E6BADF323856A01003A2D4C /* WelcomeRouter.swift in Sources */,
 				0E6BADF423856A01003A2D4C /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0E6BADF523856A01003A2D4C /* AlertType.swift in Sources */,
+				0EAD33EE2399273E00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
 				0E6BADF623856A01003A2D4C /* GATTService.swift in Sources */,
 				0E6BADF723856A01003A2D4C /* OpenWeatherMapAPI.swift in Sources */,
 				0E6BADF823856A01003A2D4C /* TagSettingsRouter.swift in Sources */,
@@ -4173,6 +4210,7 @@
 				0E6BADFB23856A01003A2D4C /* ForegroundEnvironmentObject.swift in Sources */,
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
 				0E6BADFD23856A01003A2D4C /* AlertService.swift in Sources */,
+				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E6BADFE23856A01003A2D4C /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E6BADFF23856A01003A2D4C /* Date+Ruuvi.swift in Sources */,
 				0E6BAE0123856A01003A2D4C /* ExportServiceTemp.swift in Sources */,
@@ -4188,10 +4226,13 @@
 				0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E6BAE0C23856A01003A2D4C /* ImagePersistence.swift in Sources */,
 				0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */,
+				0EAD33EA2399273E00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E6BAE0E23856A01003A2D4C /* RuuviTagPersistenceRealm.swift in Sources */,
+				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
 				0E6BAE1223856A01003A2D4C /* SettingsRouterInput.swift in Sources */,
+				0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				0E6BAE1323856A01003A2D4C /* ForegroundStepperTableViewCell.swift in Sources */,
 				0E6BAE1423856A01003A2D4C /* MenuTableTransitionManager.swift in Sources */,
 				0E6BAE1523856A01003A2D4C /* TagChartsViewOutput.swift in Sources */,
@@ -4213,6 +4254,7 @@
 				0E6BAE2623856A01003A2D4C /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0E6BAE2723856A01003A2D4C /* AboutModuleInput.swift in Sources */,
 				0E6BAE2823856A01003A2D4C /* WelcomeViewOutput.swift in Sources */,
+				0EAD33E82399273E00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				0E6BAE2923856A01003A2D4C /* MainNavigationDelegate.swift in Sources */,
 				0E6BAE2A23856A01003A2D4C /* TagChartsView.swift in Sources */,
 				0E6BAE2B23856A01003A2D4C /* RuuviTagPersistence.swift in Sources */,
@@ -4228,6 +4270,7 @@
 				0E6BAE3623856A01003A2D4C /* ActivityPresenter.swift in Sources */,
 				0E6BAE3723856A01003A2D4C /* MenuViewOutput.swift in Sources */,
 				0E6BAE3823856A01003A2D4C /* DiscoverViewInput.swift in Sources */,
+				0EAD33E92399273E00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E6BAE3923856A01003A2D4C /* LocationPickerAppleViewController.swift in Sources */,
 				0E6BAE3A23856A01003A2D4C /* TagSettingsTableConfigurator.swift in Sources */,
 				0E6BAE3B23856A01003A2D4C /* WebTagServiceImpl.swift in Sources */,
@@ -4236,6 +4279,7 @@
 				0E6BAE3E23856A01003A2D4C /* ActivitySpinnerView.swift in Sources */,
 				0E6BAE3F23856A01003A2D4C /* ImagePersistenceDocuments.swift in Sources */,
 				0E6BAE4023856A01003A2D4C /* ActivityPresenterRuuviLogo.swift in Sources */,
+				0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */,
 				0E6BAE4123856A01003A2D4C /* AboutViewController.swift in Sources */,
 				0E6BAE4223856A01003A2D4C /* DiscoverRouterInput.swift in Sources */,
 				0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */,
@@ -4283,6 +4327,7 @@
 				0E6BAE7023856A01003A2D4C /* TagChartsTransitionManager.swift in Sources */,
 				0E6BAE7123856A01003A2D4C /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E6BAE7223856A01003A2D4C /* TagChartsScrollInitializer.swift in Sources */,
+				0EAD33EF2399273E00EC5BAA /* HeartbeatViewInput.swift in Sources */,
 				0E6BAE7323856A01003A2D4C /* ForegroundConfigurator.swift in Sources */,
 				0E6BAE7423856A01003A2D4C /* AppDelegate.swift in Sources */,
 				0E6BAE7523856A01003A2D4C /* TagSettingsTableInitializer.swift in Sources */,
@@ -4311,6 +4356,7 @@
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
+				0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E6BAE8F23856A01003A2D4C /* SettingsModuleInput.swift in Sources */,
 				0E6BAE9023856A01003A2D4C /* CardsScrollConfigurator.swift in Sources */,
 				0E6BAE9223856A01003A2D4C /* RuuviTagHeartbeatDaemon.swift in Sources */,
@@ -4350,6 +4396,7 @@
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
 				0E8BD2BB238566AB008B31EF /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */,
+				0EAD33DE2399273D00EC5BAA /* HeartbeatList.swift in Sources */,
 				0E8BD2BE238566AB008B31EF /* DefaultsViewOutput.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				0E8BD2C0238566AB008B31EF /* ForegroundRouter.swift in Sources */,
@@ -4365,6 +4412,7 @@
 				0E8BD2CA238566AB008B31EF /* WebTagPersistenceRealm.swift in Sources */,
 				0E8BD2CB238566AB008B31EF /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E8BD2CC238566AB008B31EF /* PermissionPresenter.swift in Sources */,
+				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E8BD2CE238566AB008B31EF /* Language.swift in Sources */,
@@ -4394,6 +4442,7 @@
 				0E8BD2E7238566AB008B31EF /* LocationPickerRouter.swift in Sources */,
 				0E8BD2E8238566AB008B31EF /* WebTagSettingsModuleInput.swift in Sources */,
 				0E8BD2E9238566AB008B31EF /* MenuTableConfigurator.swift in Sources */,
+				0EAD33E22399273D00EC5BAA /* HeartbeatViewModel.swift in Sources */,
 				0E8BD2EA238566AB008B31EF /* WebTagDaemonImpl.swift in Sources */,
 				0E8BD2EB238566AB008B31EF /* RuuviTagConnectionDaemonBTKit.swift in Sources */,
 				0E8BD2EC238566AB008B31EF /* HumidityCalibrationPresenter.swift in Sources */,
@@ -4444,6 +4493,7 @@
 				0E8BD31A238566AB008B31EF /* DefaultsConfigurator.swift in Sources */,
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
+				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4459,6 +4509,7 @@
 				0E8BD329238566AB008B31EF /* WelcomeRouter.swift in Sources */,
 				0E8BD32A238566AB008B31EF /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				0E8BD32B238566AB008B31EF /* AlertType.swift in Sources */,
+				0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
 				0E8BD32C238566AB008B31EF /* GATTService.swift in Sources */,
 				0E8BD32D238566AB008B31EF /* OpenWeatherMapAPI.swift in Sources */,
 				0E8BD32E238566AB008B31EF /* TagSettingsRouter.swift in Sources */,
@@ -4467,6 +4518,7 @@
 				0E8BD331238566AB008B31EF /* ForegroundEnvironmentObject.swift in Sources */,
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
 				0E8BD333238566AB008B31EF /* AlertService.swift in Sources */,
+				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0E8BD337238566AB008B31EF /* ExportServiceTemp.swift in Sources */,
@@ -4482,10 +4534,13 @@
 				0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E8BD342238566AB008B31EF /* ImagePersistence.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
+				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E8BD344238566AB008B31EF /* RuuviTagPersistenceRealm.swift in Sources */,
+				0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E8BD346238566AB008B31EF /* LocationManager.swift in Sources */,
 				0E8BD348238566AB008B31EF /* SettingsRouterInput.swift in Sources */,
+				0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				0E8BD349238566AB008B31EF /* ForegroundStepperTableViewCell.swift in Sources */,
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
 				0E8BD34B238566AB008B31EF /* TagChartsViewOutput.swift in Sources */,
@@ -4507,6 +4562,7 @@
 				0E8BD35C238566AB008B31EF /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0E8BD35D238566AB008B31EF /* AboutModuleInput.swift in Sources */,
 				0E8BD35E238566AB008B31EF /* WelcomeViewOutput.swift in Sources */,
+				0EAD33DA2399273D00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				0E8BD35F238566AB008B31EF /* MainNavigationDelegate.swift in Sources */,
 				0E8BD360238566AB008B31EF /* TagChartsView.swift in Sources */,
 				0E8BD361238566AB008B31EF /* RuuviTagPersistence.swift in Sources */,
@@ -4522,6 +4578,7 @@
 				0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */,
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0E8BD36E238566AB008B31EF /* DiscoverViewInput.swift in Sources */,
+				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
 				0E8BD370238566AB008B31EF /* TagSettingsTableConfigurator.swift in Sources */,
 				0E8BD371238566AB008B31EF /* WebTagServiceImpl.swift in Sources */,
@@ -4530,6 +4587,7 @@
 				0E8BD374238566AB008B31EF /* ActivitySpinnerView.swift in Sources */,
 				0E8BD375238566AB008B31EF /* ImagePersistenceDocuments.swift in Sources */,
 				0E8BD376238566AB008B31EF /* ActivityPresenterRuuviLogo.swift in Sources */,
+				0EAD33E42399273D00EC5BAA /* HeartbeatViewController.swift in Sources */,
 				0E8BD377238566AB008B31EF /* AboutViewController.swift in Sources */,
 				0E8BD378238566AB008B31EF /* DiscoverRouterInput.swift in Sources */,
 				0E8BD379238566AB008B31EF /* ExportService.swift in Sources */,
@@ -4577,6 +4635,7 @@
 				0E8BD3A6238566AB008B31EF /* TagChartsTransitionManager.swift in Sources */,
 				0E8BD3A7238566AB008B31EF /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E8BD3A8238566AB008B31EF /* TagChartsScrollInitializer.swift in Sources */,
+				0EAD33E12399273D00EC5BAA /* HeartbeatViewInput.swift in Sources */,
 				0E8BD3A9238566AB008B31EF /* ForegroundConfigurator.swift in Sources */,
 				0E8BD3AA238566AB008B31EF /* AppDelegate.swift in Sources */,
 				0E8BD3AB238566AB008B31EF /* TagSettingsTableInitializer.swift in Sources */,
@@ -4605,6 +4664,7 @@
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
 				0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */,
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
+				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
 				0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */,
 				0E8BD3C8238566AB008B31EF /* RuuviTagHeartbeatDaemon.swift in Sources */,
