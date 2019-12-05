@@ -553,26 +553,26 @@ extension TagChartsScrollViewController {
         }
 
         view.alertImageView.bind(viewModel.alertState) { (imageView, state) in
-           if let state = state {
-               switch state {
-               case .empty:
-                   imageView.alpha = 1.0
-                   imageView.image = UIImage(named: "icon-alert-off")
-               case .registered:
-                   imageView.alpha = 1.0
-                   imageView.image = UIImage(named: "icon-alert-on")
-               case .firing:
-                   imageView.image = UIImage(named: "icon-alert-active")
-                   UIView.animate(withDuration: 0.5,
+            if let state = state {
+                switch state {
+                case .empty:
+                    imageView.alpha = 1.0
+                    imageView.image = UIImage(named: "icon-alert-off")
+                case .registered:
+                    imageView.alpha = 1.0
+                    imageView.image = UIImage(named: "icon-alert-on")
+                case .firing:
+                    imageView.image = UIImage(named: "icon-alert-active")
+                    UIView.animate(withDuration: 0.5,
                                   delay: 0,
                                   options: [.repeat, .autoreverse],
                                   animations: { [weak imageView] in
                                     imageView?.alpha = 0.0
                                 })
-               }
-           } else {
-               imageView.image = nil
-           }
+                }
+            } else {
+                imageView.image = nil
+            }
        }
     }
 
