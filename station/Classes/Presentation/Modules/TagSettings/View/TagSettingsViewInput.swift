@@ -10,5 +10,4 @@ protocol TagSettingsViewInput: ViewInput {
     func showHumidityIsClippedDialog()
     func showBothNotConnectedAndNoPNPermissionDialog()
     func showNotConnectedDialog()
-    func showExportSheet(with path: URL)
 }
