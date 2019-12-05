@@ -13,6 +13,9 @@ class TagChartsScrollViewController: UIViewController {
 
     var viewModels = [TagChartsViewModel]() { didSet { updateUIViewModels() }  }
 
+    private let alertActiveImage = UIImage(named: "icon-alert-active")
+    private let alertOffImage = UIImage(named: "icon-alert-off")
+    private let alertOnImage = UIImage(named: "icon-alert-on")
     private var views = [TagChartsView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
@@ -552,23 +555,25 @@ extension TagChartsScrollViewController {
             view.isHidden = !isConnected.bound
         }
 
-        view.alertImageView.bind(viewModel.alertState) { (imageView, state) in
+        view.alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
                 switch state {
                 case .empty:
                     imageView.alpha = 1.0
-                    imageView.image = UIImage(named: "icon-alert-off")
+                    imageView.image = self?.alertOffImage
                 case .registered:
                     imageView.alpha = 1.0
-                    imageView.image = UIImage(named: "icon-alert-on")
+                    imageView.image = self?.alertOnImage
                 case .firing:
-                    imageView.image = UIImage(named: "icon-alert-active")
-                    UIView.animate(withDuration: 0.5,
-                                  delay: 0,
-                                  options: [.repeat, .autoreverse],
-                                  animations: { [weak imageView] in
-                                    imageView?.alpha = 0.0
-                                })
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
                 }
             } else {
                 imageView.image = nil
