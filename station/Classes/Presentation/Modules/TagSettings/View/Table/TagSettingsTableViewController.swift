@@ -28,7 +28,6 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var temperatureAlertTextField: UITextField!
     @IBOutlet weak var connectStatusLabel: UILabel!
-    @IBOutlet var exportBarButtonItem: UIBarButtonItem!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
     @IBOutlet weak var temperatureAlertCell: UITableViewCell!
@@ -218,30 +217,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
-
-    func showExportSheet(with path: URL) {
-        var shareItems = [Any]()
-        #if targetEnvironment(macCatalyst)
-        if let nsUrl = NSURL(string: path.absoluteString) {
-            shareItems.append(nsUrl)
-        }
-        #else
-        shareItems.append(path)
-        #endif
-        let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
-        vc.excludedActivityTypes = [
-            UIActivity.ActivityType.assignToContact,
-            UIActivity.ActivityType.saveToCameraRoll,
-            UIActivity.ActivityType.postToFlickr,
-            UIActivity.ActivityType.postToVimeo,
-            UIActivity.ActivityType.postToTencentWeibo,
-            UIActivity.ActivityType.postToTwitter,
-            UIActivity.ActivityType.postToFacebook,
-            UIActivity.ActivityType.openInIBooks
-        ]
-        vc.popoverPresentationController?.barButtonItem = exportBarButtonItem
-        present(vc, animated: true)
-    }
 }
 
 // MARK: - View lifecycle
@@ -293,10 +268,6 @@ extension TagSettingsTableViewController {
         if !keepConnectionSwitch.isOn {
             viewModel?.isTemperatureAlertOn.value = false
         }
-    }
-
-    @IBAction func exportBarButtonItemAction(_ sender: Any) {
-        output.viewDidAskToExportLogs()
     }
 
     @IBAction func temperatureAlertTextFieldEditingDidEnd(_ sender: Any) {
@@ -626,14 +597,6 @@ extension TagSettingsTableViewController {
                 tableView.reloadData()
             }
 
-            bind(viewModel.isConnectable) {
-                observer, isConnectable in
-                if isConnectable.bound {
-                    observer.navigationItem.rightBarButtonItem = observer.exportBarButtonItem
-                } else {
-                    observer.navigationItem.rightBarButtonItem = nil
-                }
-            }
             let keepConnection = viewModel.keepConnection
             connectStatusLabel.bind(viewModel.isConnected) { [weak keepConnection] (label, isConnected) in
                 let keep = keepConnection?.value ?? false
