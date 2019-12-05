@@ -14,6 +14,9 @@ class CardsScrollViewController: UIViewController {
 
     var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
 
+    private let alertActiveImage = UIImage(named: "icon-alert-active")
+    private let alertOffImage = UIImage(named: "icon-alert-off")
+    private let alertOnImage = UIImage(named: "icon-alert-on")
     private var views = [CardView]()
     private var currentPage: Int {
         if isViewLoaded {
@@ -108,6 +111,7 @@ extension CardsScrollViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        restartAnimations()
         output.viewWillAppear()
     }
 
@@ -425,23 +429,25 @@ extension CardsScrollViewController {
 
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
 
-        view.alertImageView.bind(viewModel.alertState) { (imageView, state) in
+        view.alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
                 switch state {
                 case .empty:
                     imageView.alpha = 1.0
-                    imageView.image = UIImage(named: "icon-alert-off")
+                    imageView.image = self?.alertOffImage
                 case .registered:
                     imageView.alpha = 1.0
-                    imageView.image = UIImage(named: "icon-alert-on")
+                    imageView.image = self?.alertOnImage
                 case .firing:
-                    imageView.image = UIImage(named: "icon-alert-active")
-                    UIView.animate(withDuration: 0.5,
-                                   delay: 0,
-                                   options: [.repeat, .autoreverse],
-                                   animations: { [weak imageView] in
-                        imageView?.alpha = 0.0
-                    })
+                    if imageView.image != self?.alertActiveImage {
+                        imageView.image = self?.alertActiveImage
+                        UIView.animate(withDuration: 0.5,
+                                      delay: 0,
+                                      options: [.repeat, .autoreverse],
+                                      animations: { [weak imageView] in
+                                        imageView?.alpha = 0.0
+                                    })
+                    }
                 }
             } else {
                 imageView.image = nil
@@ -580,6 +586,34 @@ extension CardsScrollViewController {
                                                     attribute: .height,
                                                     multiplier: 1.0,
                                                     constant: 0.0))
+    }
+
+    private func restartAnimations() {
+        // restart blinking animation of needed
+        for i in 0..<viewModels.count {
+            let viewModel = viewModels[i]
+            let view = views[i]
+            let imageView = view.alertImageView
+            if let state = viewModel.alertState.value {
+                imageView?.alpha = 1.0
+                switch state {
+                case .empty:
+                    imageView?.image = alertOffImage
+                case .registered:
+                    imageView?.image = alertOnImage
+                case .firing:
+                    imageView?.image = alertActiveImage
+                    UIView.animate(withDuration: 0.5,
+                                  delay: 0,
+                                  options: [.repeat, .autoreverse],
+                                  animations: { [weak imageView] in
+                                    imageView?.alpha = 0.0
+                                })
+                }
+            } else {
+                imageView?.image = nil
+            }
+        }
     }
 }
 // swiftlint:enable file_length
