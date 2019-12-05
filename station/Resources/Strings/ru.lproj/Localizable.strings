@@ -109,7 +109,7 @@
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
 
 // Heartbeat
-"Heartbeat.navigationItem.title" = "Соединение";
+"Heartbeat.navigationItem.title" = "Фоновый Режим";
 "Heartbeat.PresentNotifications.title" = "Показывать Уведомления";
 "Heartbeat.SaveHeartbeats.title" = "Сохранять Данные";
 "Heartbeat.Interval.Every.string" = "каждые";
