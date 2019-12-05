@@ -173,7 +173,6 @@
 "Settings.SectionHeader.Application.title" = "APPLICATION";
 "Settings.Label.Language.text" = "Language";
 "Settings.Label.Foreground" = "Foreground";
-"Settings.Label.Background" = "Background";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
 

@@ -22,8 +22,6 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageCell: UITableViewCell!
     @IBOutlet weak var foregroundCell: UITableViewCell!
     @IBOutlet weak var foregroundTitleLabel: UILabel!
-    @IBOutlet weak var backgroundTitleLabel: UILabel!
-    @IBOutlet weak var backgroundCell: UITableViewCell!
     
     #if DEVELOPMENT
     private let showDefaults = true
@@ -48,7 +46,6 @@ extension SettingsTableViewController: SettingsViewInput {
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(), forSegmentAt: 2)
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
-        backgroundTitleLabel.text = "Settings.Label.Background".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
         updateUILanguage()
@@ -108,7 +105,7 @@ extension SettingsTableViewController {
 extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if !isBackgroundVisible && cell == backgroundCell {
+        if !isBackgroundVisible && cell == heartbeatCell {
             return 0
         } else if !showDefaults && cell == defaultsCell {
             return 0
@@ -145,8 +142,6 @@ extension SettingsTableViewController {
                 output.viewDidTapOnLanguage()
             case foregroundCell:
                 output.viewDidTapOnForeground()
-            case backgroundCell:
-                output.viewDidTapOnBackground()
             case defaultsCell:
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
