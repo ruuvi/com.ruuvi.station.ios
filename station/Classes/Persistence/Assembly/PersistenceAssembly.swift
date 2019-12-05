@@ -7,7 +7,7 @@ class PersistenceAssembly: Assembly {
             let persistence = AlertPersistenceUserDefaults()
             return persistence
         }
-
+        
         container.register(BackgroundPersistence.self) { r in
             let persistence = BackgroundPersistenceUserDefaults()
             persistence.imagePersistence = r.resolve(ImagePersistence.self)
