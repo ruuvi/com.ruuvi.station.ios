@@ -7,8 +7,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     var webTagService: WebTagService!
     var settings: Settings!
     var webTagPersistence: WebTagPersistence!
-
-    private var realm: Realm!
+    private var realm: Realm?
     private var token: NotificationToken?
     private var wsTokens = [RUObservationToken]()
     private var webTags: Results<WebTagRealm>?
@@ -50,9 +49,11 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
 
     func start() {
         start { [weak self] in
+            self?.stopDaemon()
+
             self?.realm = try! Realm()
 
-            self?.token = self?.realm.objects(WebTagRealm.self).observe({ [weak self] (change) in
+            self?.token = self?.realm?.objects(WebTagRealm.self).observe({ [weak self] (change) in
                 switch change {
                 case .initial(let webTags):
                     self?.webTags = webTags
@@ -87,6 +88,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 with: nil,
                 waitUntilDone: false,
                 modes: [RunLoop.Mode.default.rawValue])
+        stopWork()
     }
 
     @objc private func stopDaemon() {
@@ -96,8 +98,8 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         if let intervalToken = intervalToken {
             NotificationCenter.default.removeObserver(intervalToken)
         }
-        realm.invalidate()
-        stopWork()
+        webTags = nil
+        realm?.invalidate()
     }
 
     // swiftlint:disable:next function_body_length
