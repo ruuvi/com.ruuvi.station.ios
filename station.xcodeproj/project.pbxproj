@@ -14,8 +14,8 @@
 		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
 		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
 		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E03B7C623866CDC00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */; };
-		0E03B8052386741B00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwiftPackageProductDependency */; };
+		0E03B7C623866CDC00949713 /* Nantes in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* Nantes */; };
+		0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwinjectPropertyLoader */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -102,17 +102,17 @@
 		0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
 		0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */; };
 		0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
-		0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */; };
-		0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* Realm */; };
+		0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* RealmSwift */; };
+		0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* Localize_Swift */; };
+		0E4EAE4823863D4100BBDFBD /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* Future */; };
+		0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* BTKit */; };
+		0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* LightRoute */; };
+		0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* Humidity */; };
+		0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* Swinject */; };
+		0E4EAECA238656B100BBDFBD /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* Charts */; };
+		0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* GestureInstructions */; };
+		0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* RangeSeekSlider */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -892,6 +892,12 @@
 		0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF582397F3C600A37E1A /* HeartbeatViewModel.swift */; };
 		0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5A2397F3DF00A37E1A /* HeartbeatViewOutput.swift */; };
 		0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5E2397F6BE00A37E1A /* HeartbeatViewController.swift */; };
+		0EAD33F5239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */; };
+		0EAD33F6239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */; };
+		0EAD33F7239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */; };
+		0EAD33F9239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */; };
+		0EAD33FA239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */; };
+		0EAD33FB239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -1257,6 +1263,8 @@
 		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
 		0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
 		0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
+		0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertSliderCell.swift; sourceTree = "<group>"; };
+		0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertSliderCell.xib; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -1416,19 +1424,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E03B7C623866CDC00949713 /* BuildFile in Frameworks */,
-				0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */,
-				0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */,
-				0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */,
-				0E03B8052386741B00949713 /* BuildFile in Frameworks */,
-				0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */,
-				0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */,
+				0E03B7C623866CDC00949713 /* Nantes in Frameworks */,
+				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
+				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
+				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
+				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
+				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
+				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
+				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
+				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
+				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
+				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
+				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
+				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2814,6 +2822,15 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
+		0EAD33F3239A571B00EC5BAA /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */,
+				0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		0EBAF062232000F50025A191 /* Module */ = {
 			isa = PBXGroup;
 			children = (
@@ -3469,6 +3486,7 @@
 		0EF2862F22CBAFF10026C7A5 /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0EAD33F3239A571B00EC5BAA /* Cells */,
 				0E02ABB8237598B200ED4629 /* RangeSeekSlider */,
 				0EF4D0A522E0657F00947E04 /* SectionHeader */,
 				0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */,
@@ -3669,19 +3687,19 @@
 			);
 			name = station_mac;
 			packageProductDependencies = (
-				0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */,
-				0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */,
-				0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */,
-				0E03B8042386741B00949713 /* SwiftPackageProductDependency */,
+				0E4EAE3F23863BA600BBDFBD /* Realm */,
+				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
+				0E4EAE4423863CBC00BBDFBD /* Localize_Swift */,
+				0E4EAE4723863D4100BBDFBD /* Future */,
+				0E4EAE98238646FF00BBDFBD /* BTKit */,
+				0E4EAEB82386534B00BBDFBD /* LightRoute */,
+				0E4EAEC3238654AE00BBDFBD /* Humidity */,
+				0E4EAEC6238655FA00BBDFBD /* Swinject */,
+				0E4EAEC9238656B100BBDFBD /* Charts */,
+				0E4EAECC2386586C00BBDFBD /* GestureInstructions */,
+				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
+				0E03B7C523866CDC00949713 /* Nantes */,
+				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -3804,18 +3822,18 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */,
-				0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */,
-				0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */,
-				0E03B8032386741B00949713 /* RemoteSwiftPackageReference */,
+				0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */,
+				0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */,
+				0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */,
+				0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */,
+				0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */,
+				0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */,
+				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
+				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
+				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
+				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
+				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -3868,6 +3886,7 @@
 				0E6BAEC623856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */,
 				0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */,
+				0EAD33FB239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
 				0E6BAEC923856A01003A2D4C /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3909,6 +3928,7 @@
 				0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */,
+				0EAD33FA239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
 				0E8BD3FF238566AB008B31EF /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3950,6 +3970,7 @@
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
+				0EAD33F9239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
 				0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4233,6 +4254,7 @@
 				0E6BADE523856A01003A2D4C /* MenuRouter.swift in Sources */,
 				0E6BADE623856A01003A2D4C /* ForegroundRouterInput.swift in Sources */,
 				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
+				0EAD33F7239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
 				0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4541,6 +4563,7 @@
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
+				0EAD33F6239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4849,6 +4872,7 @@
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
+				0EAD33F5239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
@@ -5857,7 +5881,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */ = {
+		0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Nantes";
 			requirement = {
@@ -5865,7 +5889,7 @@
 				minimumVersion = 0.0.10;
 			};
 		};
-		0E03B8032386741B00949713 /* RemoteSwiftPackageReference */ = {
+		0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
 			requirement = {
@@ -5873,7 +5897,7 @@
 				minimumVersion = 1.0.2;
 			};
 		};
-		0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa";
 			requirement = {
@@ -5881,7 +5905,7 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
 			requirement = {
@@ -5889,7 +5913,7 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Future";
 			requirement = {
@@ -5897,7 +5921,7 @@
 				minimumVersion = 1.3.0;
 			};
 		};
-		0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
@@ -5905,7 +5929,7 @@
 				minimumVersion = 0.1.7;
 			};
 		};
-		0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
 			requirement = {
@@ -5913,7 +5937,7 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
 			requirement = {
@@ -5921,7 +5945,7 @@
 				minimumVersion = 0.0.8;
 			};
 		};
-		0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
 			requirement = {
@@ -5929,7 +5953,7 @@
 				minimumVersion = 2.7.1;
 			};
 		};
-		0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
@@ -5937,7 +5961,7 @@
 				minimumVersion = 3.4.0;
 			};
 		};
-		0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
 			requirement = {
@@ -5945,7 +5969,7 @@
 				minimumVersion = 0.0.2;
 			};
 		};
-		0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */ = {
+		0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
 			requirement = {
@@ -5956,69 +5980,69 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */ = {
+		0E03B7C523866CDC00949713 /* Nantes */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */;
+			package = 0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */;
 			productName = Nantes;
 		};
-		0E03B8042386741B00949713 /* SwiftPackageProductDependency */ = {
+		0E03B8042386741B00949713 /* SwinjectPropertyLoader */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B8032386741B00949713 /* RemoteSwiftPackageReference */;
+			package = 0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
 			productName = SwinjectPropertyLoader;
 		};
-		0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE3F23863BA600BBDFBD /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = Realm;
 		};
-		0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE4123863BA600BBDFBD /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = RealmSwift;
 		};
-		0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE4423863CBC00BBDFBD /* Localize_Swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */;
 			productName = Localize_Swift;
 		};
-		0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE4723863D4100BBDFBD /* Future */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */;
 			productName = Future;
 		};
-		0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAE98238646FF00BBDFBD /* BTKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */;
 			productName = BTKit;
 		};
-		0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEB82386534B00BBDFBD /* LightRoute */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */;
 			productName = LightRoute;
 		};
-		0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEC3238654AE00BBDFBD /* Humidity */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */;
 			productName = Humidity;
 		};
-		0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEC6238655FA00BBDFBD /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
 		};
-		0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAEC9238656B100BBDFBD /* Charts */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
 		};
-		0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAECC2386586C00BBDFBD /* GestureInstructions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */;
 			productName = GestureInstructions;
 		};
-		0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */ = {
+		0E4EAED623865CB500BBDFBD /* RangeSeekSlider */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */;
+			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
 			productName = RangeSeekSlider;
 		};
 /* End XCSwiftPackageProductDependency section */

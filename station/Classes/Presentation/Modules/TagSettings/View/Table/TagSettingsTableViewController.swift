@@ -26,11 +26,11 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
 
+    @IBOutlet weak var temperatureAlertCell: TagSettingsAlertSliderCell!
     @IBOutlet weak var temperatureAlertTextField: UITextField!
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
-    @IBOutlet weak var temperatureAlertCell: UITableViewCell!
     @IBOutlet weak var dataSourceTitleLabel: UILabel!
     @IBOutlet weak var dataSourceValueLabel: UILabel!
     @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
@@ -86,7 +86,6 @@ class TagSettingsTableViewController: UITableViewController {
 
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
-    private let maxCharsInTextFields = 100
 }
 
 // MARK: - TagSettingsViewInput
@@ -259,10 +258,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-    @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
-        viewModel?.isTemperatureAlertOn.value = temperatureAlertSwitch.isOn
-    }
-
     @IBAction func keepConnectionSwitchValueChanged(_ sender: Any) {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
         if !keepConnectionSwitch.isOn {
@@ -273,20 +268,51 @@ extension TagSettingsTableViewController {
     @IBAction func temperatureAlertTextFieldEditingDidEnd(_ sender: Any) {
         viewModel?.temperatureAlertDescription.value = temperatureAlertTextField.text
     }
+
+    @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
+        viewModel?.isTemperatureAlertOn.value = temperatureAlertSwitch.isOn
+    }
 }
 
-// MARK: - UITextFieldDelegate
-extension TagSettingsTableViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+// MARK: - TagSettingsAlertSliderCellDelegate
+extension TagSettingsTableViewController: TagSettingsAlertSliderCellDelegate {
+    func tagSettingsAlertSlider(cell: TagSettingsAlertSliderCell, didToggle isOn: Bool) {
+        switch cell {
+        case temperatureAlertCell:
+            viewModel?.isTemperatureAlertOn.value = isOn
+        default:
+            break
+        }
     }
 
-    func textField(_ textField: UITextField,
-                   shouldChangeCharactersIn range: NSRange,
-                   replacementString string: String) -> Bool {
-        guard let newText = textField.text?.replace(with: string, in: range) else { return false }
-        return newText.count <= maxCharsInTextFields
+    func tagSettingsAlertSlider(cell: TagSettingsAlertSliderCell, didEnter description: String?) {
+        switch cell {
+        case temperatureAlertCell:
+            viewModel?.temperatureAlertDescription.value = description
+        default:
+            break
+        }
+    }
+
+    func tagSettingsAlertSlider(cell: TagSettingsAlertSliderCell, didSlideTo minValue: CGFloat, maxValue: CGFloat) {
+        switch cell {
+        case temperatureAlertCell:
+            if let tu = viewModel?.temperatureUnit.value {
+                switch tu {
+                case .celsius:
+                    viewModel?.celsiusLowerBound.value = Double(minValue)
+                    viewModel?.celsiusUpperBound.value = Double(maxValue)
+                case .fahrenheit:
+                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromFahrenheit
+                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromFahrenheit
+                case .kelvin:
+                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromKelvin
+                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
+                }
+            }
+        default:
+            break
+        }
     }
 }
 
@@ -307,7 +333,6 @@ extension TagSettingsTableViewController: RangeSeekSliderDelegate {
                     viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
                 }
             }
-
         }
     }
 }
@@ -475,6 +500,7 @@ extension TagSettingsTableViewController {
         let alertsSectionNib = UINib(nibName: "TagSettingsAlertsHeaderFooterView", bundle: nil)
         tableView.register(alertsSectionNib, forHeaderFooterViewReuseIdentifier: alertsSectionHeaderReuseIdentifier)
         temperatureAlertSlider.delegate = self
+        temperatureAlertCell.delegate = self
     }
 }
 
@@ -488,6 +514,7 @@ extension TagSettingsTableViewController {
     private func bindViewModel() {
         bindHumidity()
         bindTemperatureAlert()
+        bindTemperatureAlertCell()
         if isViewLoaded, let viewModel = viewModel {
 
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
@@ -667,6 +694,100 @@ extension TagSettingsTableViewController {
            humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
            humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
        }
+    }
+
+    private func bindTemperatureAlertCell() {
+        if isViewLoaded, let viewModel = viewModel {
+            temperatureAlertCell.isOnSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
+            temperatureAlertCell.slider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
+                slider.isEnabled = isOn.bound
+            }
+
+            temperatureAlertCell.slider.bind(viewModel.celsiusLowerBound) { [weak self] (_, _) in
+                self?.updateUICelsiusLowerBound()
+                self?.updateUITemperatureAlertDescription()
+            }
+            temperatureAlertCell.slider.bind(viewModel.celsiusUpperBound) { [weak self] (_, _) in
+                self?.updateUICelsiusUpperBound()
+                self?.updateUITemperatureAlertDescription()
+            }
+
+            temperatureAlertCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
+                if let tu = temperatureUnit {
+                    switch tu {
+                    case .celsius:
+                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+                    case .fahrenheit:
+                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+                    case .kelvin:
+                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " "  + "K".localized()
+                    }
+                } else {
+                    label.text = "N/A".localized()
+                }
+            }
+
+            temperatureAlertCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
+                if let tu = temperatureUnit {
+                    switch tu {
+                    case .celsius:
+                        slider.minValue = -40
+                        slider.maxValue = 85
+                    case .fahrenheit:
+                        slider.minValue = -40
+                        slider.maxValue = 185
+                    case .kelvin:
+                        slider.minValue = 233
+                        slider.maxValue = 358
+                    }
+                }
+            }
+
+            temperatureAlertCell.descriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (_, _) in
+                self?.updateUITemperatureAlertDescription()
+            }
+
+            let isPNEnabled = viewModel.isPushNotificationsEnabled
+            let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
+            let isConnected = viewModel.isConnected
+
+            temperatureAlertCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isEnabled = isPN && isConnected.bound
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            temperatureAlertCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isConnected] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isCo = isConnected?.value ?? false
+                let isEnabled = isPN && isCo
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            temperatureAlertCell.slider.bind(viewModel.isConnected) {
+                [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isOn = isTemperatureAlertOn?.value ?? false
+                slider.isEnabled = isConnected.bound && isOn && isPN
+            }
+
+            temperatureAlertCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+                let isOn = isTemperatureAlertOn?.value ?? false
+                let isCo = isConnected?.value ?? false
+                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            }
+
+            temperatureAlertCell.textField.bind(viewModel.temperatureAlertDescription) {
+                (textField, temperatureAlertDescription) in
+                textField.text = temperatureAlertDescription
+            }
+        }
     }
 
     // swiftlint:disable:next function_body_length
