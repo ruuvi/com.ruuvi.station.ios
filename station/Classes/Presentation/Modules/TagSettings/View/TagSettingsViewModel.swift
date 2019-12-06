@@ -22,12 +22,12 @@ struct TagSettingsViewModel {
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
 
     let temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
-    let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>()
+    let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let celsiusLowerBound: Observable<Double?> = Observable<Double?>()
     let celsiusUpperBound: Observable<Double?> = Observable<Double?>()
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
 
-    let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>()
+    let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>()
     let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>()
     let relativeHumidityAlertDescription: Observable<String?> = Observable<String?>()
