@@ -7,7 +7,7 @@ protocol TagSettingsAlertSliderCellDelegate: class {
     func tagSettingsAlertSlider(cell: TagSettingsAlertSliderCell, didSlideTo minValue: CGFloat, maxValue: CGFloat)
 }
 
-class TagSettingsAlertSliderCell: UITableViewCell {
+class TagSettingsAlertSliderCell: UITableViewCell, Localizable {
     weak var delegate: TagSettingsAlertSliderCellDelegate?
 
     @IBOutlet weak var titleLabel: UILabel!
@@ -21,6 +21,11 @@ class TagSettingsAlertSliderCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         slider.delegate = self
+        setupLocalization()
+    }
+
+    func localize() {
+        textField.placeholder = "TagSettings.TemperatureAlert.Description.placeholder".localized()
     }
 }
 

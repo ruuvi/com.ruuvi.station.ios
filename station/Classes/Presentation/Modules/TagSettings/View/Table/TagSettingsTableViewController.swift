@@ -27,7 +27,6 @@ class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
 
     @IBOutlet weak var temperatureAlertCell: TagSettingsAlertSliderCell!
-    @IBOutlet weak var temperatureAlertTextField: UITextField!
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
@@ -73,11 +72,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
 
-    @IBOutlet weak var temperatureAlertSwitch: UISwitch!
-    @IBOutlet weak var temperatureAlertTitleLabel: UILabel!
-    @IBOutlet weak var temperatureAlertDescriptionLabel: UILabel!
-    @IBOutlet weak var temperatureAlertSlider: RURangeSeekSlider!
-
     var viewModel: TagSettingsViewModel? { didSet { bindViewModel() } }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -108,25 +102,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
 
-        if let tu = viewModel?.temperatureUnit.value {
-            switch tu {
-            case .celsius:
-                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
-                    + " " + "°C".localized()
-            case .fahrenheit:
-                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
-                    + " " + "°F".localized()
-            case .kelvin:
-                temperatureAlertTitleLabel.text = "TagSettings.temperatureAlertTitleLabel.text".localized()
-                    + " " + "K".localized()
-            }
-        } else {
-            temperatureAlertTitleLabel.text = "N/A".localized()
-        }
-
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
-        temperatureAlertTextField.placeholder = "TagSettings.TemperatureAlert.Description.placeholder".localized()
         tableView.reloadData()
     }
 
@@ -264,14 +241,6 @@ extension TagSettingsTableViewController {
             viewModel?.isTemperatureAlertOn.value = false
         }
     }
-
-    @IBAction func temperatureAlertTextFieldEditingDidEnd(_ sender: Any) {
-        viewModel?.temperatureAlertDescription.value = temperatureAlertTextField.text
-    }
-
-    @IBAction func temperatureAlertSwitchValueChanged(_ sender: Any) {
-        viewModel?.isTemperatureAlertOn.value = temperatureAlertSwitch.isOn
-    }
 }
 
 // MARK: - TagSettingsAlertSliderCellDelegate
@@ -312,27 +281,6 @@ extension TagSettingsTableViewController: TagSettingsAlertSliderCellDelegate {
             }
         default:
             break
-        }
-    }
-}
-
-// MARK: - RangeSeekSliderDelegate
-extension TagSettingsTableViewController: RangeSeekSliderDelegate {
-    func rangeSeekSlider(_ slider: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
-        if slider === temperatureAlertSlider {
-            if let tu = viewModel?.temperatureUnit.value {
-                switch tu {
-                case .celsius:
-                    viewModel?.celsiusLowerBound.value = Double(minValue)
-                    viewModel?.celsiusUpperBound.value = Double(maxValue)
-                case .fahrenheit:
-                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromFahrenheit
-                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromFahrenheit
-                case .kelvin:
-                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromKelvin
-                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
-                }
-            }
         }
     }
 }
@@ -499,7 +447,6 @@ extension TagSettingsTableViewController {
         tableView.register(moreInfoSectionNib, forHeaderFooterViewReuseIdentifier: moreInfoSectionHeaderReuseIdentifier)
         let alertsSectionNib = UINib(nibName: "TagSettingsAlertsHeaderFooterView", bundle: nil)
         tableView.register(alertsSectionNib, forHeaderFooterViewReuseIdentifier: alertsSectionHeaderReuseIdentifier)
-        temperatureAlertSlider.delegate = self
         temperatureAlertCell.delegate = self
     }
 }
@@ -513,7 +460,6 @@ extension TagSettingsTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel() {
         bindHumidity()
-        bindTemperatureAlert()
         bindTemperatureAlertCell()
         if isViewLoaded, let viewModel = viewModel {
 
@@ -790,101 +736,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next function_body_length
-    private func bindTemperatureAlert() {
-        if isViewLoaded, let viewModel = viewModel {
-            temperatureAlertSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
-                view.isOn = isOn.bound
-            }
-            temperatureAlertSlider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
-                slider.isEnabled = isOn.bound
-            }
-
-            temperatureAlertSlider.bind(viewModel.celsiusLowerBound) { [weak self] (_, _) in
-                self?.updateUICelsiusLowerBound()
-                self?.updateUITemperatureAlertDescription()
-            }
-            temperatureAlertSlider.bind(viewModel.celsiusUpperBound) { [weak self] (_, _) in
-                self?.updateUICelsiusUpperBound()
-                self?.updateUITemperatureAlertDescription()
-            }
-
-            temperatureAlertTitleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
-                if let tu = temperatureUnit {
-                    switch tu {
-                    case .celsius:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
-                    case .fahrenheit:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
-                    case .kelvin:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " "  + "K".localized()
-                    }
-                } else {
-                    label.text = "N/A".localized()
-                }
-            }
-
-            temperatureAlertSlider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
-                if let tu = temperatureUnit {
-                    switch tu {
-                    case .celsius:
-                        slider.minValue = -40
-                        slider.maxValue = 85
-                    case .fahrenheit:
-                        slider.minValue = -40
-                        slider.maxValue = 185
-                    case .kelvin:
-                        slider.minValue = 233
-                        slider.maxValue = 358
-                    }
-                }
-            }
-
-            temperatureAlertDescriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (_, _) in
-                self?.updateUITemperatureAlertDescription()
-            }
-
-            let isPNEnabled = viewModel.isPushNotificationsEnabled
-            let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
-            let isConnected = viewModel.isConnected
-
-            temperatureAlertSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isEnabled = isPN && isConnected.bound
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
-            temperatureAlertSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isConnected] view, isPushNotificationsEnabled in
-                let isPN = isPushNotificationsEnabled ?? false
-                let isCo = isConnected?.value ?? false
-                let isEnabled = isPN && isCo
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
-            temperatureAlertSlider.bind(viewModel.isConnected) {
-                [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isOn = isTemperatureAlertOn?.value ?? false
-                slider.isEnabled = isConnected.bound && isOn && isPN
-            }
-
-            temperatureAlertSlider.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-                let isOn = isTemperatureAlertOn?.value ?? false
-                let isCo = isConnected?.value ?? false
-                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
-            }
-
-            temperatureAlertTextField.bind(viewModel.temperatureAlertDescription) {
-                (textField, temperatureAlertDescription) in
-                textField.text = temperatureAlertDescription
-            }
-        }
-    }
-
 }
 
 // MARK: - Update UI
@@ -901,18 +752,18 @@ extension TagSettingsTableViewController {
                 if let lower = viewModel?.celsiusLowerBound.value {
                     switch temperatureUnit {
                     case .celsius:
-                        temperatureAlertSlider.selectedMinValue = CGFloat(lower)
+                        temperatureAlertCell.slider.selectedMinValue = CGFloat(lower)
                     case .fahrenheit:
-                        temperatureAlertSlider.selectedMinValue = CGFloat(lower.fahrenheit)
+                        temperatureAlertCell.slider.selectedMinValue = CGFloat(lower.fahrenheit)
                     case .kelvin:
-                        temperatureAlertSlider.selectedMinValue = CGFloat(lower.kelvin)
+                        temperatureAlertCell.slider.selectedMinValue = CGFloat(lower.kelvin)
                     }
                 } else {
-                    temperatureAlertSlider.selectedMinValue = -40
+                    temperatureAlertCell.slider.selectedMinValue = -40
                 }
             } else {
-                temperatureAlertSlider.minValue = -40
-                temperatureAlertSlider.selectedMinValue = -40
+                temperatureAlertCell.slider.minValue = -40
+                temperatureAlertCell.slider.selectedMinValue = -40
             }
         }
     }
@@ -923,18 +774,18 @@ extension TagSettingsTableViewController {
                 if let upper = viewModel?.celsiusUpperBound.value {
                     switch temperatureUnit {
                     case .celsius:
-                        temperatureAlertSlider.selectedMaxValue = CGFloat(upper)
+                        temperatureAlertCell.slider.selectedMaxValue = CGFloat(upper)
                     case .fahrenheit:
-                        temperatureAlertSlider.selectedMaxValue = CGFloat(upper.fahrenheit)
+                        temperatureAlertCell.slider.selectedMaxValue = CGFloat(upper.fahrenheit)
                     case .kelvin:
-                        temperatureAlertSlider.selectedMaxValue = CGFloat(upper.kelvin)
+                        temperatureAlertCell.slider.selectedMaxValue = CGFloat(upper.kelvin)
                     }
                 } else {
-                    temperatureAlertSlider.selectedMaxValue = 85
+                    temperatureAlertCell.slider.selectedMaxValue = 85
                 }
             } else {
-                temperatureAlertSlider.maxValue = 85
-                temperatureAlertSlider.selectedMaxValue = 85
+                temperatureAlertCell.slider.maxValue = 85
+                temperatureAlertCell.slider.selectedMaxValue = 85
             }
         }
     }
@@ -959,12 +810,12 @@ extension TagSettingsTableViewController {
                         ua = u.kelvin
                     }
                     let format = "TagSettings.Alerts.Temperature.description".localized()
-                    temperatureAlertDescriptionLabel.text = String(format: format, la, ua)
+                    temperatureAlertCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    temperatureAlertDescriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    temperatureAlertCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
                 }
             } else {
-                temperatureAlertDescriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                temperatureAlertCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
             }
         }
     }
