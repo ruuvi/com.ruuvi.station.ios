@@ -250,6 +250,8 @@
 "TagSettings.ConnectStatus.Connecting" = "Yhdistetään...";
 "TagSettings.ConnectStatus.Disconnected" = "Ei yhteyttä";
 "TagSettings.TemperatureAlert.Description.placeholder" = "Muokkaa kuvausta...";
+"TagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

@@ -250,6 +250,8 @@
 "TagSettings.ConnectStatus.Connecting" = "Connecting...";
 "TagSettings.ConnectStatus.Disconnected" = "Disconnected";
 "TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
+"TagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";

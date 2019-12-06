@@ -105,6 +105,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
+        relativeHumidityAlertCell.titleLabel.text = "TagSettings.RelativeAirHumidityAlert.title".localized() + " " + "%".localized()
         tableView.reloadData()
     }
 
@@ -240,6 +241,7 @@ extension TagSettingsTableViewController {
         viewModel?.keepConnection.value = keepConnectionSwitch.isOn
         if !keepConnectionSwitch.isOn {
             viewModel?.isTemperatureAlertOn.value = false
+            viewModel?.isRelativeHumidityAlertOn.value = false
         }
     }
 }
@@ -250,6 +252,8 @@ extension TagSettingsTableViewController: TagSettingsAlertSliderCellDelegate {
         switch cell {
         case temperatureAlertCell:
             viewModel?.isTemperatureAlertOn.value = isOn
+        case relativeHumidityAlertCell:
+            viewModel?.isRelativeHumidityAlertOn.value = isOn
         default:
             break
         }
@@ -259,6 +263,8 @@ extension TagSettingsTableViewController: TagSettingsAlertSliderCellDelegate {
         switch cell {
         case temperatureAlertCell:
             viewModel?.temperatureAlertDescription.value = description
+        case relativeHumidityAlertCell:
+            viewModel?.relativeHumidityAlertDescription.value = description
         default:
             break
         }
@@ -280,6 +286,9 @@ extension TagSettingsTableViewController: TagSettingsAlertSliderCellDelegate {
                     viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
                 }
             }
+        case relativeHumidityAlertCell:
+            viewModel?.relativeHumidityLowerBound.value = Double(minValue)
+            viewModel?.relativeHumidityUpperBound.value = Double(maxValue)
         default:
             break
         }
@@ -451,6 +460,7 @@ extension TagSettingsTableViewController {
         let alertsSectionNib = UINib(nibName: "TagSettingsAlertsHeaderFooterView", bundle: nil)
         tableView.register(alertsSectionNib, forHeaderFooterViewReuseIdentifier: alertsSectionHeaderReuseIdentifier)
         temperatureAlertCell.delegate = self
+        relativeHumidityAlertCell.delegate = self
     }
 }
 
@@ -464,6 +474,7 @@ extension TagSettingsTableViewController {
     private func bindViewModel() {
         bindHumidity()
         bindTemperatureAlertCell()
+        bindRelativeHumidityCell()
         if isViewLoaded, let viewModel = viewModel {
 
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
@@ -645,6 +656,70 @@ extension TagSettingsTableViewController {
        }
     }
 
+    private func bindRelativeHumidityCell() {
+        if isViewLoaded, let viewModel = viewModel {
+            relativeHumidityAlertCell.isOnSwitch.bind(viewModel.isRelativeHumidityAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
+
+            relativeHumidityAlertCell.slider.bind(viewModel.isRelativeHumidityAlertOn) { (slider, isOn) in
+                slider.isEnabled = isOn.bound
+            }
+
+            relativeHumidityAlertCell.slider.bind(viewModel.relativeHumidityLowerBound) { [weak self] (_, _) in
+                self?.updateUIRelativeHumidityLowerBound()
+                self?.updateUIRelativeHumidityAlertDescription()
+            }
+
+            relativeHumidityAlertCell.slider.bind(viewModel.relativeHumidityUpperBound) { [weak self] (_, _) in
+                self?.updateUIRelativeHumidityUpperBound()
+                self?.updateUIRelativeHumidityAlertDescription()
+            }
+            relativeHumidityAlertCell.descriptionLabel.bind(viewModel.isRelativeHumidityAlertOn) { [weak self] (_, _) in
+                self?.updateUIRelativeHumidityAlertDescription()
+            }
+
+            let isPNEnabled = viewModel.isPushNotificationsEnabled
+            let isRelativeHumidityAlertOn = viewModel.isRelativeHumidityAlertOn
+            let isConnected = viewModel.isConnected
+
+            relativeHumidityAlertCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isEnabled = isPN && isConnected.bound
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            relativeHumidityAlertCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isConnected] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isCo = isConnected?.value ?? false
+                let isEnabled = isPN && isCo
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            relativeHumidityAlertCell.slider.bind(viewModel.isConnected) {
+                [weak isRelativeHumidityAlertOn, weak isPNEnabled] (slider, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isOn = isRelativeHumidityAlertOn?.value ?? false
+                slider.isEnabled = isConnected.bound && isOn && isPN
+            }
+
+            relativeHumidityAlertCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isRelativeHumidityAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+                let isOn = isRelativeHumidityAlertOn?.value ?? false
+                let isCo = isConnected?.value ?? false
+                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            }
+
+            relativeHumidityAlertCell.textField.bind(viewModel.relativeHumidityAlertDescription) {
+                (textField, relativeHumidityAlertDescription) in
+                textField.text = relativeHumidityAlertDescription
+            }
+        }
+    }
+
     private func bindTemperatureAlertCell() {
         if isViewLoaded, let viewModel = viewModel {
             temperatureAlertCell.isOnSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
@@ -747,6 +822,47 @@ extension TagSettingsTableViewController {
         updateUITemperatureAlertDescription()
         updateUICelsiusLowerBound()
         updateUICelsiusUpperBound()
+
+        updateUIRelativeHumidityAlertDescription()
+        updateUIRelativeHumidityLowerBound()
+        updateUIRelativeHumidityUpperBound()
+    }
+
+    private func updateUIRelativeHumidityLowerBound() {
+        if isViewLoaded {
+            if let lower = viewModel?.relativeHumidityLowerBound.value {
+                relativeHumidityAlertCell.slider.selectedMinValue = CGFloat(lower)
+            } else {
+                relativeHumidityAlertCell.slider.selectedMinValue = 0
+            }
+        }
+    }
+
+    private func updateUIRelativeHumidityUpperBound() {
+        if isViewLoaded {
+            if let upper = viewModel?.relativeHumidityUpperBound.value {
+                relativeHumidityAlertCell.slider.selectedMaxValue = CGFloat(upper)
+            } else {
+                relativeHumidityAlertCell.slider.selectedMaxValue = 100
+            }
+        }
+    }
+
+    private func updateUIRelativeHumidityAlertDescription() {
+        if isViewLoaded {
+            if let isRelativeHumidityAlertOn = viewModel?.isRelativeHumidityAlertOn.value,
+                isRelativeHumidityAlertOn {
+                if let l = viewModel?.relativeHumidityLowerBound.value,
+                    let u = viewModel?.relativeHumidityUpperBound.value {
+                    let format = "TagSettings.Alerts.RelativeHumidity.description".localized()
+                    relativeHumidityAlertCell.descriptionLabel.text = String(format: format, l, u)
+                } else {
+                    relativeHumidityAlertCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                }
+            } else {
+                relativeHumidityAlertCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+            }
+        }
     }
 
     private func updateUICelsiusLowerBound() {
