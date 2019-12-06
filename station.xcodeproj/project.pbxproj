@@ -345,6 +345,7 @@
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
 		982140F205635956CE87A7C8 /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C63E3127C431CC1D1B7BF597 /* Pods_station.framework */; };
+		DD87A71F1D950EC597182CA8 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC768C6DF670CFD5B5EB7F82 /* Pods_stationTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -695,6 +696,7 @@
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
 		0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagService.swift; sourceTree = "<group>"; };
 		0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagServiceImpl.swift; sourceTree = "<group>"; };
+		4D5337908904ED7C0A7AB939 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2D20B0C45900CDF4B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -715,7 +717,9 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		8C1B90D8BD437119FDF93157 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		C63E3127C431CC1D1B7BF597 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C739F35942B56EDF1CEE7CDF /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
 		E5BD94ED361A51B3923DA53E /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		EC768C6DF670CFD5B5EB7F82 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -731,6 +735,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD87A71F1D950EC597182CA8 /* Pods_stationTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2844,6 +2849,8 @@
 			children = (
 				E5BD94ED361A51B3923DA53E /* Pods-station.debug.xcconfig */,
 				8C1B90D8BD437119FDF93157 /* Pods-station.release.xcconfig */,
+				4D5337908904ED7C0A7AB939 /* Pods-stationTests.debug.xcconfig */,
+				C739F35942B56EDF1CEE7CDF /* Pods-stationTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -2917,6 +2924,7 @@
 			isa = PBXGroup;
 			children = (
 				C63E3127C431CC1D1B7BF597 /* Pods_station.framework */,
+				EC768C6DF670CFD5B5EB7F82 /* Pods_stationTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2947,9 +2955,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D5020B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "stationTests" */;
 			buildPhases = (
+				BCD8D5A9AE77D64B157F752F /* [CP] Check Pods Manifest.lock */,
 				64333D3520B0C45A00CDF4B6 /* Sources */,
 				64333D3620B0C45A00CDF4B6 /* Frameworks */,
 				64333D3720B0C45A00CDF4B6 /* Resources */,
+				1761479A33F66A39580A6D70 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3088,6 +3098,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1761479A33F66A39580A6D70 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		A26B6ABAF495BEC95D8595E4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3101,6 +3126,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BCD8D5A9AE77D64B157F752F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-stationTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C707B0E2ECDE4CBBBC6F0CB3 /* [CP] Check Pods Manifest.lock */ = {
@@ -3828,11 +3875,13 @@
 		};
 		64333D5120B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4D5337908904ED7C0A7AB939 /* Pods-stationTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
+				HEADER_SEARCH_PATHS = "${SRCROOT}/Pods/Firebase/CoreOnly/Sources";
 				INFOPLIST_FILE = stationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3849,11 +3898,13 @@
 		};
 		64333D5220B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C739F35942B56EDF1CEE7CDF /* Pods-stationTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
+				HEADER_SEARCH_PATHS = "${SRCROOT}/Pods/Firebase/CoreOnly/Sources";
 				INFOPLIST_FILE = stationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
