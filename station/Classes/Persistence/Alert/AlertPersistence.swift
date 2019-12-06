@@ -13,4 +13,12 @@ protocol AlertPersistence {
     func setUpper(celsius: Double?, for uuid: String)
     func temperatureDescription(for uuid: String) -> String?
     func setTemperature(description: String?, for uuid: String)
+
+    // relative humidity
+    func lowerRelativeHumidity(for uuid: String) -> Double?
+    func setLower(relativeHumidity: Double?, for uuid: String)
+    func upperRelativeHumidity(for uuid: String) -> Double?
+    func setUpper(relativeHumidity: Double?, for uuid: String)
+    func relativeHumidityDescription(for uuid: String) -> String?
+    func setRelativeHumidity(description: String?, for uuid: String)
 }

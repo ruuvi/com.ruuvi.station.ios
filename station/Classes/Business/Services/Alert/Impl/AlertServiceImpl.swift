@@ -55,33 +55,6 @@ class AlertServiceImpl: AlertService {
         }
     }
 
-    func lowerCelsius(for uuid: String) -> Double? {
-        return alertPersistence.lowerCelsius(for: uuid)
-    }
-
-    func setLower(celsius: Double?, for uuid: String) {
-        alertPersistence.setLower(celsius: celsius, for: uuid)
-        postTemperatureAlertDidChange(with: uuid)
-    }
-
-    func upperCelsius(for uuid: String) -> Double? {
-        return alertPersistence.upperCelsius(for: uuid)
-    }
-
-    func setUpper(celsius: Double?, for uuid: String) {
-        alertPersistence.setUpper(celsius: celsius, for: uuid)
-        postTemperatureAlertDidChange(with: uuid)
-    }
-
-    func temperatureDescription(for uuid: String) -> String? {
-        return alertPersistence.temperatureDescription(for: uuid)
-    }
-
-    func setTemperature(description: String?, for uuid: String) {
-        alertPersistence.setTemperature(description: description, for: uuid)
-        postTemperatureAlertDidChange(with: uuid)
-    }
-
     func proccess(heartbeat ruuviTag: RuuviTag) {
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -119,13 +92,81 @@ class AlertServiceImpl: AlertService {
             }
         }
     }
+}
 
+// MARK: - Temperature
+extension AlertServiceImpl {
+
+    func lowerCelsius(for uuid: String) -> Double? {
+        return alertPersistence.lowerCelsius(for: uuid)
+    }
+
+    func setLower(celsius: Double?, for uuid: String) {
+        alertPersistence.setLower(celsius: celsius, for: uuid)
+        postTemperatureAlertDidChange(with: uuid)
+    }
+
+    func upperCelsius(for uuid: String) -> Double? {
+        return alertPersistence.upperCelsius(for: uuid)
+    }
+
+    func setUpper(celsius: Double?, for uuid: String) {
+        alertPersistence.setUpper(celsius: celsius, for: uuid)
+        postTemperatureAlertDidChange(with: uuid)
+    }
+
+    func temperatureDescription(for uuid: String) -> String? {
+        return alertPersistence.temperatureDescription(for: uuid)
+    }
+
+    func setTemperature(description: String?, for uuid: String) {
+        alertPersistence.setTemperature(description: description, for: uuid)
+        postTemperatureAlertDidChange(with: uuid)
+    }
+    
     private func postTemperatureAlertDidChange(with uuid: String) {
         NotificationCenter
             .default
             .post(name: .AlertServiceTemperatureAlertDidChange,
                   object: nil,
-                  userInfo: [AlertServiceTemperatureAlertDidChangeKey.uuid: uuid])
+                  userInfo: [AlertServiceDidChangeKey.uuid: uuid])
+    }
+}
+
+// MARK: - Relative Humidity
+extension AlertServiceImpl {
+    func lowerRelativeHumidity(for uuid: String) -> Double? {
+        return alertPersistence.lowerRelativeHumidity(for: uuid)
     }
 
+    func setLower(relativeHumidity: Double?, for uuid: String) {
+        alertPersistence.setLower(relativeHumidity: relativeHumidity, for: uuid)
+        postRelativeHumidityAlertDidChange(with: uuid)
+    }
+
+    func upperRelativeHumidity(for uuid: String) -> Double? {
+        return alertPersistence.upperRelativeHumidity(for: uuid)
+    }
+
+    func setUpper(relativeHumidity: Double?, for uuid: String) {
+        alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: uuid)
+        postRelativeHumidityAlertDidChange(with: uuid)
+    }
+
+    func relativeHumidityDescription(for uuid: String) -> String? {
+        return alertPersistence.relativeHumidityDescription(for: uuid)
+    }
+
+    func setRelativeHumidity(description: String?, for uuid: String) {
+        alertPersistence.setRelativeHumidity(description: description, for: uuid)
+        postRelativeHumidityAlertDidChange(with: uuid)
+    }
+
+    private func postRelativeHumidityAlertDidChange(with uuid: String) {
+        NotificationCenter
+            .default
+            .post(name: .AlertServiceRelativeHumidityAlertDidChange,
+                  object: nil,
+                  userInfo: [AlertServiceDidChangeKey.uuid: uuid])
+    }
 }

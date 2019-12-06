@@ -133,7 +133,7 @@ extension LocalNotificationsManagerImpl {
                          object: nil,
                          queue: .main) { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+                let uuid = userInfo[AlertServiceDidChangeKey.uuid] as? String {
                 self?.lowTemperatureAlerts[uuid] = nil
                 self?.highTemperatureAlerts[uuid] = nil
             }

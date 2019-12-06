@@ -3,11 +3,26 @@ import Foundation
 class AlertPersistenceUserDefaults: AlertPersistence {
 
     private let prefs = UserDefaults.standard
-    private let temperatureLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
-    private let temperatureUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureUpperBoundUDKeyPrefix."
-    private let temperatureAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
-    private let temperatureAlertDescriptionUDKeyPrefix =
-    "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
+
+    // temperature
+    private let temperatureLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
+    private let temperatureUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureUpperBoundUDKeyPrefix."
+    private let temperatureAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
+    private let temperatureAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
+
+    // relativeHumidity
+    private let relativeHumidityLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
+    private let relativeHumidityUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityUpperBoundUDKeyPrefix."
+    private let relativeHumidityAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertIsOnUDKeyPrefix."
+    private let relativeHumidityAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
 
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
@@ -37,7 +52,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
         }
     }
+}
 
+// MARK: - Temperature
+extension AlertPersistenceUserDefaults {
     func lowerCelsius(for uuid: String) -> Double? {
         return prefs.optionalDouble(forKey: temperatureLowerBoundUDKeyPrefix + uuid)
     }
@@ -60,5 +78,32 @@ class AlertPersistenceUserDefaults: AlertPersistence {
 
     func setTemperature(description: String?, for uuid: String) {
         prefs.set(description, forKey: temperatureAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Relative Humidity
+extension AlertPersistenceUserDefaults {
+    func lowerRelativeHumidity(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(relativeHumidity: Double?, for uuid: String) {
+        prefs.set(relativeHumidity, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperRelativeHumidity(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(relativeHumidity: Double?, for uuid: String) {
+        prefs.set(relativeHumidity, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func relativeHumidityDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: relativeHumidityAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setRelativeHumidity(description: String?, for uuid: String) {
+        prefs.set(description, forKey: relativeHumidityAlertDescriptionUDKeyPrefix + uuid)
     }
 }

@@ -398,7 +398,7 @@ extension TagChartsPresenter {
                          using: { [weak self] (notification) in
             if let sSelf = self,
                 let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String {
+                let uuid = userInfo[AlertServiceDidChangeKey.uuid] as? String {
                 sSelf.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
                     viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
                 })

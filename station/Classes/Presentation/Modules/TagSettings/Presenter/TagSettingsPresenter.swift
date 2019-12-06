@@ -410,7 +410,7 @@ extension TagSettingsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceTemperatureAlertDidChangeKey.uuid] as? String,
+                let uuid = userInfo[AlertServiceDidChangeKey.uuid] as? String,
                 uuid == self?.viewModel.uuid.value {
                 AlertType.allCases.forEach { (type) in
                     switch type {
