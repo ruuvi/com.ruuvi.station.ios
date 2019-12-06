@@ -261,6 +261,7 @@ extension CardsPresenter {
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
+                viewModel.isConnected.value = false
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
