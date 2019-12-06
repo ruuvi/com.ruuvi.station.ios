@@ -26,6 +26,7 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
 
+    @IBOutlet weak var relativeHumidityAlertCell: TagSettingsAlertSliderCell!
     @IBOutlet weak var temperatureAlertCell: TagSettingsAlertSliderCell!
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
@@ -411,7 +412,9 @@ extension TagSettingsTableViewController {
         if viewModel?.isConnectable.value ?? false {
             switch cell {
             case temperatureAlertCell:
-                return 192
+                return 208
+            case relativeHumidityAlertCell:
+                return 208
             default:
                 return 44
             }

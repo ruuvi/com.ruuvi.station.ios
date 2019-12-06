@@ -9,21 +9,21 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertSliderCellReuseIdentifier" rowHeight="192" id="hXX-gX-hmU" customClass="TagSettingsAlertSliderCell" customModule="station" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="192"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertSliderCellReuseIdentifier" rowHeight="224" id="hXX-gX-hmU" customClass="TagSettingsAlertSliderCell" customModule="station" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="208"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hXX-gX-hmU" id="Z55-S7-qe2">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="192"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="208"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2Y-av-Er2">
-                        <rect key="frame" x="20" y="8" width="98" height="20.5"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Relative Air Humidity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2Y-av-Er2">
+                        <rect key="frame" x="20" y="8" width="159" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alert when less than -40 or more than 85" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbz-vA-kga">
-                        <rect key="frame" x="20" y="36.5" width="251" height="16"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alert when less than 0 or more than 100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbz-vA-kga">
+                        <rect key="frame" x="20" y="37" width="242" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -35,7 +35,7 @@
                         </connections>
                     </switch>
                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="P9p-Mu-AWu" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
-                        <rect key="frame" x="20" y="52.5" width="374" height="80"/>
+                        <rect key="frame" x="20" y="53" width="374" height="80"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -43,16 +43,16 @@
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="minValue">
-                                <real key="value" value="-40"/>
+                                <real key="value" value="0.0"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
-                                <real key="value" value="85"/>
+                                <real key="value" value="100"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
-                                <real key="value" value="-40"/>
+                                <real key="value" value="0.0"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="number" keyPath="selectedMaxValue">
-                                <real key="value" value="85"/>
+                                <real key="value" value="100"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="colorBetweenHandles">
                                 <color key="value" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -73,7 +73,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Set custom description..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mJF-2G-bwE">
-                        <rect key="frame" x="20" y="148" width="374" height="34"/>
+                        <rect key="frame" x="20" y="148.5" width="374" height="34"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done"/>
                         <connections>
@@ -104,7 +104,7 @@
                 <outlet property="textField" destination="mJF-2G-bwE" id="bVc-lp-BW5"/>
                 <outlet property="titleLabel" destination="Q2Y-av-Er2" id="1DY-mB-Wcq"/>
             </connections>
-            <point key="canvasLocation" x="130" y="-56"/>
+            <point key="canvasLocation" x="128.98550724637681" y="-50.892857142857139"/>
         </tableViewCell>
     </objects>
 </document>
