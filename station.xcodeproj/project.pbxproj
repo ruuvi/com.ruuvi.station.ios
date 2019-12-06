@@ -14,8 +14,8 @@
 		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
 		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
 		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E03B7C623866CDC00949713 /* Nantes in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* Nantes */; };
-		0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwinjectPropertyLoader */; };
+		0E03B7C623866CDC00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */; };
+		0E03B8052386741B00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwiftPackageProductDependency */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -102,17 +102,17 @@
 		0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
 		0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E3FF734238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib */; };
 		0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
-		0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* Realm */; };
-		0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* RealmSwift */; };
-		0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* Localize_Swift */; };
-		0E4EAE4823863D4100BBDFBD /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* Future */; };
-		0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* BTKit */; };
-		0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* LightRoute */; };
-		0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* Humidity */; };
-		0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* Swinject */; };
-		0E4EAECA238656B100BBDFBD /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* Charts */; };
-		0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* GestureInstructions */; };
-		0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* RangeSeekSlider */; };
+		0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -1029,6 +1029,7 @@
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
 		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
 		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
+		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1400,11 +1401,14 @@
 		64678190225D02CE0072856A /* Muli-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Muli-Bold.ttf"; sourceTree = "<group>"; };
 		6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Bold.ttf"; sourceTree = "<group>"; };
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		66B644F5882FD18597C94131 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
 		E0AF644945993BDDC431BB15 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D1852F3ACF9D6D3C517CAC /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
+		F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1412,19 +1416,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E03B7C623866CDC00949713 /* Nantes in Frameworks */,
-				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
-				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
-				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
-				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
-				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
-				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
-				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
-				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
-				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
-				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
-				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
-				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
+				0E03B7C623866CDC00949713 /* BuildFile in Frameworks */,
+				0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */,
+				0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */,
+				0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */,
+				0E03B8052386741B00949713 /* BuildFile in Frameworks */,
+				0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1448,6 +1452,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3561,6 +3566,7 @@
 			children = (
 				E0AF644945993BDDC431BB15 /* Pods_station.framework */,
 				9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */,
+				66B644F5882FD18597C94131 /* Pods_stationTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3572,6 +3578,8 @@
 				520AA9C689A77F459B6F75DD /* Pods-station.release.xcconfig */,
 				F0D1852F3ACF9D6D3C517CAC /* Pods-station_dev.debug.xcconfig */,
 				DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */,
+				B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */,
+				F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3661,19 +3669,19 @@
 			);
 			name = station_mac;
 			packageProductDependencies = (
-				0E4EAE3F23863BA600BBDFBD /* Realm */,
-				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
-				0E4EAE4423863CBC00BBDFBD /* Localize_Swift */,
-				0E4EAE4723863D4100BBDFBD /* Future */,
-				0E4EAE98238646FF00BBDFBD /* BTKit */,
-				0E4EAEB82386534B00BBDFBD /* LightRoute */,
-				0E4EAEC3238654AE00BBDFBD /* Humidity */,
-				0E4EAEC6238655FA00BBDFBD /* Swinject */,
-				0E4EAEC9238656B100BBDFBD /* Charts */,
-				0E4EAECC2386586C00BBDFBD /* GestureInstructions */,
-				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
-				0E03B7C523866CDC00949713 /* Nantes */,
-				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
+				0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */,
+				0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */,
+				0E03B8042386741B00949713 /* SwiftPackageProductDependency */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -3722,9 +3730,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D5020B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "stationTests" */;
 			buildPhases = (
+				30582735056681E097862099 /* [CP] Check Pods Manifest.lock */,
 				64333D3520B0C45A00CDF4B6 /* Sources */,
 				64333D3620B0C45A00CDF4B6 /* Frameworks */,
 				64333D3720B0C45A00CDF4B6 /* Resources */,
+				81DF8161DB2993FD3B70D2C3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3794,18 +3804,18 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */,
-				0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */,
-				0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */,
-				0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */,
-				0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */,
-				0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */,
-				0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */,
-				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
-				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
-				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
-				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
-				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
+				0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */,
+				0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */,
+				0E03B8032386741B00949713 /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -4010,6 +4020,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		30582735056681E097862099 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-stationTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3D9639921DA2EAF91C684581 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4030,6 +4062,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		81DF8161DB2993FD3B70D2C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		971D876D128B4722B3C74751 /* [CP] Check Pods Manifest.lock */ = {
@@ -5668,6 +5715,7 @@
 		};
 		64333D5120B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -5689,6 +5737,7 @@
 		};
 		64333D5220B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -5808,7 +5857,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */ = {
+		0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Nantes";
 			requirement = {
@@ -5816,7 +5865,7 @@
 				minimumVersion = 0.0.10;
 			};
 		};
-		0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
+		0E03B8032386741B00949713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
 			requirement = {
@@ -5824,7 +5873,7 @@
 				minimumVersion = 1.0.2;
 			};
 		};
-		0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa";
 			requirement = {
@@ -5832,7 +5881,7 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
+		0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
 			requirement = {
@@ -5840,7 +5889,7 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */ = {
+		0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Future";
 			requirement = {
@@ -5848,7 +5897,7 @@
 				minimumVersion = 1.3.0;
 			};
 		};
-		0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */ = {
+		0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
@@ -5856,7 +5905,7 @@
 				minimumVersion = 0.1.7;
 			};
 		};
-		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
+		0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
 			requirement = {
@@ -5864,7 +5913,7 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */ = {
+		0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
 			requirement = {
@@ -5872,7 +5921,7 @@
 				minimumVersion = 0.0.8;
 			};
 		};
-		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
+		0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
 			requirement = {
@@ -5880,7 +5929,7 @@
 				minimumVersion = 2.7.1;
 			};
 		};
-		0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */ = {
+		0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
@@ -5888,7 +5937,7 @@
 				minimumVersion = 3.4.0;
 			};
 		};
-		0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
+		0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
 			requirement = {
@@ -5896,7 +5945,7 @@
 				minimumVersion = 0.0.2;
 			};
 		};
-		0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
+		0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
 			requirement = {
@@ -5907,69 +5956,69 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E03B7C523866CDC00949713 /* Nantes */ = {
+		0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */;
+			package = 0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */;
 			productName = Nantes;
 		};
-		0E03B8042386741B00949713 /* SwinjectPropertyLoader */ = {
+		0E03B8042386741B00949713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
+			package = 0E03B8032386741B00949713 /* RemoteSwiftPackageReference */;
 			productName = SwinjectPropertyLoader;
 		};
-		0E4EAE3F23863BA600BBDFBD /* Realm */ = {
+		0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Realm;
 		};
-		0E4EAE4123863BA600BBDFBD /* RealmSwift */ = {
+		0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
 			productName = RealmSwift;
 		};
-		0E4EAE4423863CBC00BBDFBD /* Localize_Swift */ = {
+		0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */;
+			package = 0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Localize_Swift;
 		};
-		0E4EAE4723863D4100BBDFBD /* Future */ = {
+		0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */;
+			package = 0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Future;
 		};
-		0E4EAE98238646FF00BBDFBD /* BTKit */ = {
+		0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */;
+			package = 0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = BTKit;
 		};
-		0E4EAEB82386534B00BBDFBD /* LightRoute */ = {
+		0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */;
+			package = 0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = LightRoute;
 		};
-		0E4EAEC3238654AE00BBDFBD /* Humidity */ = {
+		0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */;
+			package = 0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Humidity;
 		};
-		0E4EAEC6238655FA00BBDFBD /* Swinject */ = {
+		0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */;
+			package = 0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Swinject;
 		};
-		0E4EAEC9238656B100BBDFBD /* Charts */ = {
+		0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */;
+			package = 0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Charts;
 		};
-		0E4EAECC2386586C00BBDFBD /* GestureInstructions */ = {
+		0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */;
+			package = 0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = GestureInstructions;
 		};
-		0E4EAED623865CB500BBDFBD /* RangeSeekSlider */ = {
+		0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
+			package = 0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */;
 			productName = RangeSeekSlider;
 		};
 /* End XCSwiftPackageProductDependency section */
