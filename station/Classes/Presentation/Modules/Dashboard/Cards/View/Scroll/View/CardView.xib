@@ -108,11 +108,11 @@
                     <rect key="frame" x="200" y="4" width="32" height="44"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-alert-off" translatesAutoresizingMaskIntoConstraints="NO" id="nUO-2p-J6T">
-                            <rect key="frame" x="3" y="9" width="26" height="26"/>
+                            <rect key="frame" x="2" y="8" width="28" height="28"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="26" id="49k-vW-KoL"/>
-                                <constraint firstAttribute="width" constant="26" id="p7u-Ok-AfS"/>
+                                <constraint firstAttribute="height" constant="28" id="49k-vW-KoL"/>
+                                <constraint firstAttribute="width" constant="28" id="p7u-Ok-AfS"/>
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="70F-k5-7Gz">

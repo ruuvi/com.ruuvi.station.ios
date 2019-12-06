@@ -62,11 +62,11 @@
                     <rect key="frame" x="200" y="4" width="32" height="44"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.60000002384185791" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-alert-off" translatesAutoresizingMaskIntoConstraints="NO" id="OYa-yr-WdL">
-                            <rect key="frame" x="3" y="9" width="26" height="26"/>
+                            <rect key="frame" x="2" y="8" width="28" height="28"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="26" id="BqH-aL-wFP"/>
-                                <constraint firstAttribute="width" constant="26" id="q3C-pr-RcK"/>
+                                <constraint firstAttribute="height" constant="28" id="BqH-aL-wFP"/>
+                                <constraint firstAttribute="width" constant="28" id="q3C-pr-RcK"/>
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TLn-MZ-Wkf">
@@ -403,8 +403,8 @@
                     <exclude reference="ilF-mO-Eqs"/>
                     <exclude reference="vK5-uE-Msx"/>
                     <exclude reference="wKY-1L-TdV"/>
-                    <exclude reference="j93-FJ-j2L"/>
                     <exclude reference="vWg-T0-Jog"/>
+                    <exclude reference="j93-FJ-j2L"/>
                 </mask>
             </variation>
             <variation key="heightClass=compact">
@@ -412,8 +412,8 @@
                     <exclude reference="ux4-4j-SY4"/>
                     <include reference="1ko-dJ-N1I"/>
                     <include reference="vK5-uE-Msx"/>
-                    <include reference="j93-FJ-j2L"/>
                     <include reference="vWg-T0-Jog"/>
+                    <include reference="j93-FJ-j2L"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular">
