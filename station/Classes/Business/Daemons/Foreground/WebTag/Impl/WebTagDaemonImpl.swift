@@ -50,9 +50,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     func start() {
         start { [weak self] in
             self?.stopDaemon()
-
             self?.realm = try! Realm()
-
             self?.token = self?.realm?.objects(WebTagRealm.self).observe({ [weak self] (change) in
                 switch change {
                 case .initial(let webTags):
@@ -88,18 +86,28 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 with: nil,
                 waitUntilDone: false,
                 modes: [RunLoop.Mode.default.rawValue])
+        perform(#selector(WebTagDaemonImpl.invalidateRealm),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
         stopWork()
+    }
+
+    @objc private func invalidateRealm() {
+        realm?.invalidate()
+        realm = nil
     }
 
     @objc private func stopDaemon() {
         wsTokens.forEach({ $0.invalidate() })
         wsTokens.removeAll()
         token?.invalidate()
+        token = nil
         if let intervalToken = intervalToken {
             NotificationCenter.default.removeObserver(intervalToken)
         }
         webTags = nil
-        realm?.invalidate()
     }
 
     // swiftlint:disable:next function_body_length
