@@ -1,18 +1,19 @@
 import XCTest
+@testable import station
 
 class StationTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
-
-    func testPerformanceExample() {
-        self.measure {
-        }
+    func testWebTagDaemonCrash() {
+        NotificationCenter
+        .default
+        .post(name: .isWebTagDaemonOnDidChange,
+              object: self,
+              userInfo: nil)
+        NotificationCenter
+        .default
+        .post(name: .WebTagDaemonIntervalDidChange,
+         object: self,
+         userInfo: nil)
     }
 
 }
