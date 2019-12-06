@@ -281,6 +281,7 @@ extension CardsPresenter {
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
+                viewModel.isConnected.value = false
                 return viewModel
             }) ?? []
             viewModels = ruuviViewModels + webViewModels
