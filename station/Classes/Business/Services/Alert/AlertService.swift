@@ -29,14 +29,13 @@ protocol AlertService {
 }
 
 protocol AlertServiceObserver: class {
-    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool, for uuid: String)
+    func alert(service: AlertService, isTriggered: Bool, for uuid: String)
 }
 
 extension Notification.Name {
-    static let AlertServiceTemperatureAlertDidChange = Notification.Name("AlertServiceTemperatureAlertIsOnDidChange")
-    static let AlertServiceRelativeHumidityAlertDidChange = Notification.Name("AlertServiceRelativeHumidityAlertDidChange")
+    static let AlertServiceAlertDidChange = Notification.Name("AlertServiceAlertDidChange")
 }
 
-enum AlertServiceDidChangeKey: String {
+enum AlertServiceAlertDidChangeKey: String {
     case uuid
 }

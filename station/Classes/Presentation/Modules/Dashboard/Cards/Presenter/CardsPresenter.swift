@@ -254,7 +254,7 @@ extension CardsPresenter: CardsRouterDelegate {
 
 // MARK: - AlertServiceObserver
 extension CardsPresenter: AlertServiceObserver {
-    func alert(service: AlertService, didProcess alert: AlertType, isTriggered: Bool, for uuid: String) {
+    func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter({ $0.uuid.value == uuid })
             .forEach({ $0.alertState.value = isTriggered ? .firing : .registered })
@@ -665,13 +665,13 @@ extension CardsPresenter {
     private func startObservingAlertChanges() {
         temperatureAlertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceTemperatureAlertDidChange,
+            .addObserver(forName: .AlertServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
             if let sSelf = self,
                 let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceDidChangeKey.uuid] as? String {
+                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
                 sSelf.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
                     viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
                 })

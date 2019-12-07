@@ -142,6 +142,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
 "LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.Disable.button" = "Отключить";
+"LocalNotificationsManager.LowRelativeHumidity.title" = "Relative Air Humidity too low!";
+"LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";

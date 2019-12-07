@@ -3,6 +3,7 @@ import UIKit
 
 enum LocalNotificationType: String {
     case temperature
+    case relativeHumidity
 }
 
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
@@ -13,13 +14,15 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
+    var lowRelativeHumidityAlerts = [String: Date]()
+    var highRelativeHumidityAlerts = [String: Date]()
 
     private let alertCategory = "com.ruuvi.station.alerts"
     private let alertCategoryDisableAction = "com.ruuvi.station.alerts.disable"
     private let alertCategoryUUIDKey = "uuid"
     private let alertCategoryTypeKey = "type"
 
-    private var temperatureDidChangeToken: NSObjectProtocol?
+    private var alertDidChangeToken: NSObjectProtocol?
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -28,8 +31,8 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     deinit {
-        if let temperatureDidChangeToken = temperatureDidChangeToken {
-            NotificationCenter.default.removeObserver(temperatureDidChangeToken)
+        if let alertDidChangeToken = alertDidChangeToken {
+            NotificationCenter.default.removeObserver(alertDidChangeToken)
         }
     }
 
@@ -87,7 +90,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
                 content.body = uuid
             }
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: uuid + "temperature", content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: uuid + LocalNotificationType.temperature.rawValue, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             lowTemperatureAlerts[uuid] = Date()
         }
@@ -116,9 +119,65 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
                 content.body = uuid
             }
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: uuid + "temperature", content: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: uuid + LocalNotificationType.temperature.rawValue, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
             highTemperatureAlerts[uuid] = Date()
+        }
+    }
+
+    func notifyLowRelativeHumidity(for uuid: String, relativeHumidity: Double) {
+        var needsToShow: Bool
+        if let shownDate = lowRelativeHumidityAlerts[uuid] {
+            needsToShow = Date().timeIntervalSince(shownDate) > TimeInterval(settings.alertsRepeatingIntervalSeconds)
+        } else {
+            needsToShow = true
+        }
+        if needsToShow {
+            let content = UNMutableNotificationContent()
+            content.sound = .default
+            content.title = "LocalNotificationsManager.LowRelativeHumidity.title".localized()
+            content.userInfo = [alertCategoryUUIDKey: uuid,
+                                alertCategoryTypeKey: LocalNotificationType.relativeHumidity.rawValue]
+            content.categoryIdentifier = alertCategory
+            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+                content.subtitle = ruuviTag.name
+                content.body = alertService.relativeHumidityDescription(for: ruuviTag.uuid)
+                    ?? (ruuviTag.mac ?? ruuviTag.uuid)
+            } else {
+                content.body = uuid
+            }
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: uuid + LocalNotificationType.relativeHumidity.rawValue, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            lowRelativeHumidityAlerts[uuid] = Date()
+        }
+    }
+
+    func notifyHighRelativeHumidity(for uuid: String, relativeHumidity: Double) {
+        var needsToShow: Bool
+        if let shownDAte = highRelativeHumidityAlerts[uuid] {
+            needsToShow = Date().timeIntervalSince(shownDAte) > TimeInterval(settings.alertsRepeatingIntervalSeconds)
+        } else {
+            needsToShow = true
+        }
+        if needsToShow {
+            let content = UNMutableNotificationContent()
+            content.sound = .default
+            content.title = "LocalNotificationsManager.HighRelativeHumidity.title".localized()
+            content.userInfo = [alertCategoryUUIDKey: uuid,
+                                alertCategoryTypeKey: LocalNotificationType.relativeHumidity.rawValue]
+            content.categoryIdentifier = alertCategory
+            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+                content.subtitle = ruuviTag.name
+                content.body = alertService.relativeHumidityDescription(for: ruuviTag.uuid)
+                    ?? (ruuviTag.mac ?? ruuviTag.uuid)
+            } else {
+                content.body = uuid
+            }
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: uuid + LocalNotificationType.relativeHumidity.rawValue, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            highRelativeHumidityAlerts[uuid] = Date()
         }
     }
 
@@ -127,15 +186,17 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 // MARK: - Private
 extension LocalNotificationsManagerImpl {
     private func startObserving() {
-        temperatureDidChangeToken = NotificationCenter
+        alertDidChangeToken = NotificationCenter
             .default
-            .addObserver(forName: .AlertServiceTemperatureAlertDidChange,
+            .addObserver(forName: .AlertServiceAlertDidChange,
                          object: nil,
                          queue: .main) { [weak self] (notification) in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceDidChangeKey.uuid] as? String {
+                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
                 self?.lowTemperatureAlerts[uuid] = nil
                 self?.highTemperatureAlerts[uuid] = nil
+                self?.lowRelativeHumidityAlerts[uuid] = nil
+                self?.highRelativeHumidityAlerts[uuid] = nil
             }
         }
     }
@@ -181,6 +242,13 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             switch response.actionIdentifier {
             case alertCategoryDisableAction:
                 alertService.unregister(type: .temperature(lower: 0, upper: 0), for: uuid)
+            default:
+                break
+            }
+        case .relativeHumidity:
+            switch response.actionIdentifier {
+            case alertCategoryDisableAction:
+                alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }

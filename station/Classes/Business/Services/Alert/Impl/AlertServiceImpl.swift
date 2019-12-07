@@ -41,56 +41,73 @@ class AlertServiceImpl: AlertService {
 
     func register(type: AlertType, for uuid: String) {
         alertPersistence.register(type: type, for: uuid)
-        switch type {
-        case .temperature:
-            postTemperatureAlertDidChange(with: uuid)
-        }
+        postAlertDidChange(with: uuid)
     }
 
     func unregister(type: AlertType, for uuid: String) {
         alertPersistence.unregister(type: type, for: uuid)
-        switch type {
-        case .temperature:
-            postTemperatureAlertDidChange(with: uuid)
-        }
+        postAlertDidChange(with: uuid)
     }
 
     func proccess(heartbeat ruuviTag: RuuviTag) {
+        var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
                 if case .temperature(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
                     let celsius = ruuviTag.celsius {
-                    if celsius < lower {
+                    let isLower = celsius < lower
+                    let isUpper = celsius > upper
+                    if isLower {
                         DispatchQueue.main.async { [weak self] in
                             self?.localNotificationsManager.notifyLowTemperature(for: ruuviTag.uuid, celsius: celsius)
                         }
-                    } else if celsius > upper {
+                    } else if isUpper {
                         DispatchQueue.main.async { [weak self] in
                             self?.localNotificationsManager.notifyHighTemperature(for: ruuviTag.uuid, celsius: celsius)
                         }
                     }
-
-                    let isTriggered = celsius < lower || celsius > upper
-                    DispatchQueue.main.async { [weak self] in
-                        guard let sSelf = self else { return }
-                        if let observers = sSelf.observations[ruuviTag.uuid] {
-                            for i in 0..<observers.count {
-                                if let pointer = observers.pointer(at: i),
-                                    let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                                        as? AlertServiceObserver {
-                                    observer.alert(service: sSelf,
-                                                   didProcess: .temperature(lower: lower, upper: upper),
-                                                   isTriggered: isTriggered,
-                                                   for: ruuviTag.uuid)
-                                }
-                            }
+                    isTriggered = isTriggered || isLower || isUpper
+                }
+            case .relativeHumidity:
+                if case .relativeHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let relativeHumidity = ruuviTag.humidity {
+                    let isLower = relativeHumidity < lower
+                    let isUpper = relativeHumidity > upper
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyLowRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyHighRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
                         }
                     }
-
+                    isTriggered = isTriggered || isLower || isUpper
                 }
             }
         }
+        DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
+            if let observers = sSelf.observations[ruuviTag.uuid] {
+                for i in 0..<observers.count {
+                    if let pointer = observers.pointer(at: i),
+                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                            as? AlertServiceObserver {
+                        observer.alert(service: sSelf,
+                                       isTriggered: isTriggered,
+                                       for: ruuviTag.uuid)
+                    }
+                }
+            }
+        }
+    }
+
+    private func postAlertDidChange(with uuid: String) {
+        NotificationCenter
+            .default
+            .post(name: .AlertServiceAlertDidChange,
+                  object: nil,
+                  userInfo: [AlertServiceAlertDidChangeKey.uuid: uuid])
     }
 }
 
@@ -103,7 +120,7 @@ extension AlertServiceImpl {
 
     func setLower(celsius: Double?, for uuid: String) {
         alertPersistence.setLower(celsius: celsius, for: uuid)
-        postTemperatureAlertDidChange(with: uuid)
+        postAlertDidChange(with: uuid)
     }
 
     func upperCelsius(for uuid: String) -> Double? {
@@ -112,7 +129,7 @@ extension AlertServiceImpl {
 
     func setUpper(celsius: Double?, for uuid: String) {
         alertPersistence.setUpper(celsius: celsius, for: uuid)
-        postTemperatureAlertDidChange(with: uuid)
+        postAlertDidChange(with: uuid)
     }
 
     func temperatureDescription(for uuid: String) -> String? {
@@ -121,15 +138,7 @@ extension AlertServiceImpl {
 
     func setTemperature(description: String?, for uuid: String) {
         alertPersistence.setTemperature(description: description, for: uuid)
-        postTemperatureAlertDidChange(with: uuid)
-    }
-    
-    private func postTemperatureAlertDidChange(with uuid: String) {
-        NotificationCenter
-            .default
-            .post(name: .AlertServiceTemperatureAlertDidChange,
-                  object: nil,
-                  userInfo: [AlertServiceDidChangeKey.uuid: uuid])
+        postAlertDidChange(with: uuid)
     }
 }
 
@@ -141,7 +150,7 @@ extension AlertServiceImpl {
 
     func setLower(relativeHumidity: Double?, for uuid: String) {
         alertPersistence.setLower(relativeHumidity: relativeHumidity, for: uuid)
-        postRelativeHumidityAlertDidChange(with: uuid)
+        postAlertDidChange(with: uuid)
     }
 
     func upperRelativeHumidity(for uuid: String) -> Double? {
@@ -150,7 +159,7 @@ extension AlertServiceImpl {
 
     func setUpper(relativeHumidity: Double?, for uuid: String) {
         alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: uuid)
-        postRelativeHumidityAlertDidChange(with: uuid)
+        postAlertDidChange(with: uuid)
     }
 
     func relativeHumidityDescription(for uuid: String) -> String? {
@@ -159,14 +168,7 @@ extension AlertServiceImpl {
 
     func setRelativeHumidity(description: String?, for uuid: String) {
         alertPersistence.setRelativeHumidity(description: description, for: uuid)
-        postRelativeHumidityAlertDidChange(with: uuid)
+        postAlertDidChange(with: uuid)
     }
 
-    private func postRelativeHumidityAlertDidChange(with uuid: String) {
-        NotificationCenter
-            .default
-            .post(name: .AlertServiceRelativeHumidityAlertDidChange,
-                  object: nil,
-                  userInfo: [AlertServiceDidChangeKey.uuid: uuid])
-    }
 }
