@@ -34,6 +34,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .relativeHumidity:
+            if prefs.bool(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid),
+                let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid) {
+                return .relativeHumidity(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
         }
     }
 
@@ -43,6 +51,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+        case .relativeHumidity(let lower, let upper):
+            prefs.set(true, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
         }
     }
 
@@ -50,6 +62,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
+        case .relativeHumidity:
+            prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
         }
     }
 }

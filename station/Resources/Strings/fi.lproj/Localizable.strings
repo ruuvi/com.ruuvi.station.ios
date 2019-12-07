@@ -142,6 +142,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian matala!";
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.Disable.button" = "Poista käytöstä";
+"LocalNotificationsManager.LowRelativeHumidity.title" = "Relative Air Humidity too low!";
+"LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
