@@ -86,16 +86,18 @@ class AlertServiceImpl: AlertService {
                 }
             }
         }
-        DispatchQueue.main.async { [weak self] in
-            guard let sSelf = self else { return }
-            if let observers = sSelf.observations[ruuviTag.uuid] {
-                for i in 0..<observers.count {
-                    if let pointer = observers.pointer(at: i),
-                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                            as? AlertServiceObserver {
-                        observer.alert(service: sSelf,
-                                       isTriggered: isTriggered,
-                                       for: ruuviTag.uuid)
+        if hasRegistrations(for: ruuviTag.uuid) {
+            DispatchQueue.main.async { [weak self] in
+                guard let sSelf = self else { return }
+                if let observers = sSelf.observations[ruuviTag.uuid] {
+                    for i in 0..<observers.count {
+                        if let pointer = observers.pointer(at: i),
+                            let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                                as? AlertServiceObserver {
+                            observer.alert(service: sSelf,
+                                           isTriggered: isTriggered,
+                                           for: ruuviTag.uuid)
+                        }
                     }
                 }
             }
