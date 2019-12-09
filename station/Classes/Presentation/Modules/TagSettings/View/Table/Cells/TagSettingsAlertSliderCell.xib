@@ -174,7 +174,7 @@
                 <outlet property="slider" destination="aRB-Ag-zam" id="5l5-LM-7LR"/>
                 <outlet property="textField" destination="T4V-md-jyh" id="0WG-zQ-Uca"/>
             </connections>
-            <point key="canvasLocation" x="129" y="185"/>
+            <point key="canvasLocation" x="128.98550724637681" y="184.82142857142856"/>
         </tableViewCell>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="IN6-0e-O1v" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
@@ -212,6 +212,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="descriptionLabel" destination="26G-Vi-N4b" id="y8I-aO-aHa"/>
                 <outlet property="isOnSwitch" destination="5p9-3F-dMt" id="DMJ-RK-8MM"/>
                 <outlet property="titleLabel" destination="uxX-SI-LMj" id="LF7-Td-cY4"/>
             </connections>

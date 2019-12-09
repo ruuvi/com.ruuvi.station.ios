@@ -38,4 +38,5 @@ extension Notification.Name {
 
 enum AlertServiceAlertDidChangeKey: String {
     case uuid
+    case type
 }
