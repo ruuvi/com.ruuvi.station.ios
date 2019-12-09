@@ -341,11 +341,14 @@ extension TagSettingsPresenter {
         bind(viewModel.isTemperatureAlertOn, fire: false) {
             [weak temperatureLower, weak temperatureUpper] observer, isOn in
             if let l = temperatureLower?.value, let u = temperatureUpper?.value {
-                if isOn.bound {
-                    observer.alertService.register(type: .temperature(lower: l, upper: u), for: ruuviTag.uuid)
-                } else {
-                    observer.alertService.unregister(type: .temperature(lower: l, upper: u),
-                                                     for: ruuviTag.uuid)
+                let type: AlertType = .temperature(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: ruuviTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                    }
                 }
             }
         }
@@ -364,10 +367,14 @@ extension TagSettingsPresenter {
         let relativeHumidityUpper = viewModel.relativeHumidityUpperBound
         bind(viewModel.isRelativeHumidityAlertOn, fire: false) { [weak relativeHumidityLower, weak relativeHumidityUpper] observer, isOn in
             if let l = relativeHumidityLower?.value, let u = relativeHumidityUpper?.value {
-                if isOn.bound {
-                    observer.alertService.register(type: .relativeHumidity(lower: l, upper: u), for: ruuviTag.uuid)
-                } else {
-                    observer.alertService.unregister(type: .relativeHumidity(lower: l, upper: u), for: ruuviTag.uuid)
+                let type: AlertType = .relativeHumidity(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: ruuviTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                    }
                 }
             }
         }
@@ -454,8 +461,8 @@ extension TagSettingsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
-                uuid == self?.viewModel.uuid.value {
-                AlertType.allCases.forEach { (type) in
+                uuid == self?.viewModel.uuid.value,
+                let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
                     switch type {
                     case .temperature:
                         let isOn = self?.alertService.isOn(type: type, for: uuid)
@@ -468,7 +475,6 @@ extension TagSettingsPresenter {
                             self?.viewModel.isRelativeHumidityAlertOn.value = isOn
                         }
                     }
-                }
             }
         })
     }
