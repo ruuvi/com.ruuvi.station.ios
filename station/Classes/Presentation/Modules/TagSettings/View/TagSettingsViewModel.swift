@@ -31,4 +31,9 @@ struct TagSettingsViewModel {
     let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
     let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>(100)
     let relativeHumidityAlertDescription: Observable<String?> = Observable<String?>()
+
+    let isAbsoluteHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let absoluteHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
+    let absoluteHumidityUpperBound: Observable<Double?> = Observable<Double?>(40)
+    let absoluteHumidityAlertDescription: Observable<String?> = Observable<String?>()
 }
