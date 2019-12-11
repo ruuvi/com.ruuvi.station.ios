@@ -10,6 +10,7 @@ protocol CardsViewInput: ViewInput {
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
     func showKeepConnectionDialog(for viewModel: CardsViewModel)
+    func showReverseGeocodingFailed()
 }
 
 extension CardsViewInput {

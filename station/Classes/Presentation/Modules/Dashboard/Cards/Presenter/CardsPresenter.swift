@@ -544,6 +544,13 @@ extension CardsPresenter {
                     }
                 } else if case .parse(let parseError) = error, parseError == OWMError.apiLimitExceeded {
                     self?.view.showWebTagAPILimitExceededError()
+                } else if case .map(let mapError) = error {
+                    let nsError = mapError as NSError
+                    if nsError.code == 2, nsError.domain == "kCLErrorDomain"  {
+                        self?.view.showReverseGeocodingFailed()
+                    } else {
+                        self?.errorPresenter.present(error: error)
+                    }
                 } else {
                     self?.errorPresenter.present(error: error)
                 }
