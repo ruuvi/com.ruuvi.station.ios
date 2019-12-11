@@ -147,6 +147,8 @@
 "LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
 "LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absolute Air Humidity too low!";
 "LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absolute Air Humidity too high!";
+"LocalNotificationsManager.LowDewPoint.title" = "Dew Point is too low!";
+"LocalNotificationsManager.HighDewPoint.title" = "Dew Point is too high!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";

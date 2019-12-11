@@ -287,6 +287,20 @@ extension TagSettingsPresenter {
                         viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
                     }
                 }
+            case .dewPoint:
+                if case .dewPoint(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
+                    viewModel.isDewPointAlertOn.value = true
+                    viewModel.dewPointCelsiusLowerBound.value = lower
+                    viewModel.dewPointCelsiusUpperBound.value = upper
+                } else {
+                    viewModel.isDewPointAlertOn.value = false
+                    if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: ruuviTag.uuid) {
+                        viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
+                    }
+                    if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: ruuviTag.uuid) {
+                        viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
+                    }
+                }
             }
         }
     }
@@ -402,7 +416,7 @@ extension TagSettingsPresenter {
             observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: ruuviTag.uuid)
         }
 
-        // bind absolute humidity alert
+        // absolute humidity alert
         let absoluteHumidityLower = viewModel.absoluteHumidityLowerBound
         let absoluteHumidityUpper = viewModel.absoluteHumidityUpperBound
         bind(viewModel.isAbsoluteHumidityAlertOn, fire: false) { [weak absoluteHumidityLower, weak absoluteHumidityUpper] observer, isOn in
@@ -429,6 +443,33 @@ extension TagSettingsPresenter {
 
         bind(viewModel.absoluteHumidityAlertDescription, fire: false) { observer, absoluteHumidityAlertDescription in
             observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: ruuviTag.uuid)
+        }
+
+        // dew point alert
+        let dewPointLower = viewModel.dewPointCelsiusLowerBound
+        let dewPointUpper = viewModel.dewPointCelsiusUpperBound
+        bind(viewModel.isDewPointAlertOn, fire: false) {
+            [weak dewPointLower, weak dewPointUpper] observer, isOn in
+            if let l = dewPointLower?.value, let u = dewPointUpper?.value {
+                let type: AlertType = .dewPoint(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: ruuviTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                    }
+                }
+            }
+        }
+        bind(viewModel.dewPointCelsiusLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLowerDewPoint(celsius: lower, for: ruuviTag.uuid)
+        }
+        bind(viewModel.dewPointCelsiusUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpperDewPoint(celsius: upper, for: ruuviTag.uuid)
+        }
+        bind(viewModel.dewPointAlertDescription, fire: false) {observer, dewPointAlertDescription in
+            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: ruuviTag.uuid)
         }
 
     }
@@ -521,6 +562,11 @@ extension TagSettingsPresenter {
                         let isOn = self?.alertService.isOn(type: type, for: uuid)
                         if isOn != self?.viewModel.isAbsoluteHumidityAlertOn.value {
                             self?.viewModel.isAbsoluteHumidityAlertOn.value = isOn
+                        }
+                    case .dewPoint:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.viewModel.isDewPointAlertOn.value {
+                            self?.viewModel.isDewPointAlertOn.value = isOn
                         }
                     }
             }

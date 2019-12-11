@@ -113,6 +113,31 @@ class AlertServiceImpl: AlertService {
 
                     isTriggered = isTriggered || isLower || isUpper
                 }
+            case .dewPoint:
+                if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let rh = ruuviTag.humidity, let c = ruuviTag.celsius {
+                    let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
+                    var sh = rh + ho
+                    if sh > 100.0 {
+                        sh = 100.0
+                    }
+                    let h = Humidity(c: c, rh: sh / 100.0)
+                    if let Td = h.Td {
+                        let isLower = Td < lower
+                        let isUpper = Td > upper
+
+                        if isLower {
+                            DispatchQueue.main.async { [weak self] in
+                                self?.localNotificationsManager.notifyLowDewPoint(for: ruuviTag.uuid, dewPointCelsius: Td)
+                            }
+                        } else if isUpper {
+                            DispatchQueue.main.async { [weak self] in
+                                self?.localNotificationsManager.notifyHighDewPoint(for: ruuviTag.uuid, dewPointCelsius: Td)
+                            }
+                        }
+
+                        isTriggered = isTriggered || isLower || isUpper
+                    }
+                }
             }
         }
         if hasRegistrations(for: ruuviTag.uuid) {
@@ -248,6 +273,42 @@ extension AlertServiceImpl {
         alertPersistence.setAbsoluteHumidity(description: description, for: uuid)
         if let l = lowerAbsoluteHumidity(for: uuid), let u = upperAbsoluteHumidity(for: uuid) {
             postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
+        }
+    }
+}
+
+// MARK: - Dew Point
+extension AlertServiceImpl {
+    func lowerDewPointCelsius(for uuid: String) -> Double? {
+        return alertPersistence.lowerDewPointCelsius(for: uuid)
+    }
+
+    func setLowerDewPoint(celsius: Double?, for uuid: String) {
+        alertPersistence.setLowerDewPoint(celsius: celsius, for: uuid)
+        if let l = celsius, let u = upperDewPointCelsius(for: uuid) {
+            postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
+        }
+    }
+
+    func upperDewPointCelsius(for uuid: String) -> Double? {
+        return alertPersistence.upperDewPointCelsius(for: uuid)
+    }
+
+    func setUpperDewPoint(celsius: Double?, for uuid: String) {
+        alertPersistence.setUpperDewPoint(celsius: celsius, for: uuid)
+        if let u = celsius, let l = lowerDewPointCelsius(for: uuid) {
+            postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
+        }
+    }
+
+    func dewPointDescription(for uuid: String) -> String? {
+        return alertPersistence.dewPointDescription(for: uuid)
+    }
+
+    func setDewPoint(description: String?, for uuid: String) {
+        alertPersistence.setDewPoint(description: description, for: uuid)
+        if let l = lowerDewPointCelsius(for: uuid), let u = upperDewPointCelsius(for: uuid) {
+            postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
         }
     }
 }
