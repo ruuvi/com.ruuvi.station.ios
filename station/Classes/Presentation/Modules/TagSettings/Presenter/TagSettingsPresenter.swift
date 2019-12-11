@@ -27,6 +27,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
     private var connectToken: NSObjectProtocol?
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -38,6 +39,9 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         heartbeatToken?.invalidate()
         if let temperatureUnitToken = temperatureUnitToken {
             NotificationCenter.default.removeObserver(temperatureUnitToken)
+        }
+        if let humidityUnitToken = humidityUnitToken {
+            NotificationCenter.default.removeObserver(humidityUnitToken)
         }
         if let connectToken = connectToken {
             NotificationCenter.default.removeObserver(connectToken)
@@ -200,6 +204,7 @@ extension TagSettingsPresenter {
     // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
+        viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
         viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag.uuid)
 
@@ -479,9 +484,17 @@ extension TagSettingsPresenter {
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
-                         queue: .main) { [weak self] (_) in
+                         queue: .main) { [weak self] _ in
             self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
         }
+        humidityUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.viewModel.humidityUnit.value = self?.settings.humidityUnit
+        })
     }
 
     private func startObservingConnectionStatus() {

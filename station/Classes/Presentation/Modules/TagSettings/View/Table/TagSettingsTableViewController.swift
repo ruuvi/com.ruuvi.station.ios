@@ -383,23 +383,24 @@ extension TagSettingsTableViewController {
         if viewModel?.isConnectable.value ?? false {
             let headerHeight: CGFloat = 64
             let controlsHeight: CGFloat = 148
+            let hu = viewModel?.humidityUnit.value
             switch cell {
             case temperatureAlertHeaderCell:
                 return headerHeight
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
             case relativeHumidityAlertHeaderCell:
-                return headerHeight
+                return (hu == .percent) ? headerHeight : 0
             case relativeHumidityAlertControlsCell:
-                return (viewModel?.isRelativeHumidityAlertOn.value ?? false) ? controlsHeight : 0
+                return ((hu == .percent) && (viewModel?.isRelativeHumidityAlertOn.value ?? false)) ? controlsHeight : 0
             case absoluteHumidityAlertHeaderCell:
-                return headerHeight
+                return (hu == .gm3) ? headerHeight : 0
             case absoluteHumidityAlertControlsCell:
-                return (viewModel?.isAbsoluteHumidityAlertOn.value ?? false) ? controlsHeight : 0
+                return ((hu == .gm3) && (viewModel?.isAbsoluteHumidityAlertOn.value ?? false)) ? controlsHeight : 0
             case dewPointAlertHeaderCell:
-                return headerHeight
+                return (hu == .dew) ? headerHeight : 0
             case dewPointAlertControlsCell:
-                return (viewModel?.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
+                return ((hu == .dew) && (viewModel?.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
             default:
                 return 44
             }
@@ -561,6 +562,10 @@ extension TagSettingsTableViewController {
             }
 
             tableView.bind(viewModel.version) { (tableView, _) in
+                tableView.reloadData()
+            }
+
+            tableView.bind(viewModel.humidityUnit) { (tableView, humidityUnit) in
                 tableView.reloadData()
             }
 
