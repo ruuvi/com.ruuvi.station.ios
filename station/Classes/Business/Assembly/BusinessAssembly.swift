@@ -9,6 +9,7 @@ class BusinessAssembly: Assembly {
         container.register(AlertService.self) { r in
             let service = AlertServiceImpl()
             service.alertPersistence = r.resolve(AlertPersistence.self)
+            service.calibrationService = r.resolve(CalibrationService.self)
             return service
         }.inObjectScope(.container).initCompleted { (r, service) in
             // swiftlint:disable force_cast
