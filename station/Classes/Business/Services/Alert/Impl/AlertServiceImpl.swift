@@ -1,9 +1,11 @@
 import Foundation
 import BTKit
+import Humidity
 
 class AlertServiceImpl: AlertService {
 
     var alertPersistence: AlertPersistence!
+    var calibrationService: CalibrationService!
     weak var localNotificationsManager: LocalNotificationsManager!
 
     private var observations = [String: NSPointerArray]()
@@ -82,6 +84,33 @@ class AlertServiceImpl: AlertService {
                             self?.localNotificationsManager.notifyHighRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
                         }
                     }
+                    isTriggered = isTriggered || isLower || isUpper
+                }
+            case .absoluteHumidity:
+                if case .absoluteHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
+                    let rh = ruuviTag.humidity,
+                    let c = ruuviTag.celsius {
+                    let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
+                    var sh = rh + ho
+                    if sh > 100.0 {
+                        sh = 100.0
+                    }
+                    let h = Humidity(c: c, rh: sh / 100.0)
+                    let ah = h.ah
+
+                    let isLower = ah < lower
+                    let isUpper = ah > upper
+
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyLowAbsoluteHumidity(for: ruuviTag.uuid, absoluteHumidity: ah)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyHighAbsoluteHumidity(for: ruuviTag.uuid, absoluteHumidity: ah)
+                        }
+                    }
+
                     isTriggered = isTriggered || isLower || isUpper
                 }
             }
@@ -185,5 +214,40 @@ extension AlertServiceImpl {
             postAlertDidChange(with: uuid, of: .relativeHumidity(lower: l, upper: u))
         }
     }
+}
 
+// MARK: - Absoulte Humidity
+extension AlertServiceImpl {
+    func lowerAbsoluteHumidity(for uuid: String) -> Double? {
+        return alertPersistence.lowerAbsoluteHumidity(for: uuid)
+    }
+
+    func setLower(absoluteHumidity: Double?, for uuid: String) {
+        alertPersistence.setLower(absoluteHumidity: absoluteHumidity, for: uuid)
+        if let l = absoluteHumidity, let u = upperAbsoluteHumidity(for: uuid) {
+            postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
+        }
+    }
+
+    func upperAbsoluteHumidity(for uuid: String) -> Double? {
+        return alertPersistence.upperAbsoluteHumidity(for: uuid)
+    }
+
+    func setUpper(absoluteHumidity: Double?, for uuid: String) {
+        alertPersistence.setUpper(absoluteHumidity: absoluteHumidity, for: uuid)
+        if let u = absoluteHumidity, let l = lowerAbsoluteHumidity(for: uuid) {
+            postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
+        }
+    }
+
+    func absoluteHumidityDescription(for uuid: String) -> String? {
+        return alertPersistence.absoluteHumidityDescription(for: uuid)
+    }
+
+    func setAbsoluteHumidity(description: String?, for uuid: String) {
+        alertPersistence.setAbsoluteHumidity(description: description, for: uuid)
+        if let l = lowerAbsoluteHumidity(for: uuid), let u = upperAbsoluteHumidity(for: uuid) {
+            postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
+        }
+    }
 }

@@ -273,6 +273,20 @@ extension TagSettingsPresenter {
                         viewModel.relativeHumidityUpperBound.value = relativeHumidityUpper
                     }
                 }
+            case .absoluteHumidity:
+                if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
+                    viewModel.isAbsoluteHumidityAlertOn.value = true
+                    viewModel.absoluteHumidityLowerBound.value = lower
+                    viewModel.absoluteHumidityUpperBound.value = upper
+                } else {
+                    viewModel.isAbsoluteHumidityAlertOn.value = false
+                    if let absoluteHumidityLower = alertService.lowerAbsoluteHumidity(for: ruuviTag.uuid) {
+                        viewModel.absoluteHumidityLowerBound.value = absoluteHumidityLower
+                    }
+                    if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: ruuviTag.uuid) {
+                        viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
+                    }
+                }
             }
         }
     }
@@ -388,6 +402,35 @@ extension TagSettingsPresenter {
             observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: ruuviTag.uuid)
         }
 
+        // bind absolute humidity alert
+        let absoluteHumidityLower = viewModel.absoluteHumidityLowerBound
+        let absoluteHumidityUpper = viewModel.absoluteHumidityUpperBound
+        bind(viewModel.isAbsoluteHumidityAlertOn, fire: false) { [weak absoluteHumidityLower, weak absoluteHumidityUpper] observer, isOn in
+            if let l = absoluteHumidityLower?.value, let u = absoluteHumidityUpper?.value {
+                let type: AlertType = .absoluteHumidity(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: ruuviTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                    }
+                }
+            }
+        }
+
+        bind(viewModel.absoluteHumidityLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(absoluteHumidity: lower, for: ruuviTag.uuid)
+        }
+
+        bind(viewModel.absoluteHumidityUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(absoluteHumidity: upper, for: ruuviTag.uuid)
+        }
+
+        bind(viewModel.absoluteHumidityAlertDescription, fire: false) { observer, absoluteHumidityAlertDescription in
+            observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: ruuviTag.uuid)
+        }
+
     }
 
     private func startObservingSettingsChanges() {
@@ -473,6 +516,11 @@ extension TagSettingsPresenter {
                         let isOn = self?.alertService.isOn(type: type, for: uuid)
                         if isOn != self?.viewModel.isRelativeHumidityAlertOn.value {
                             self?.viewModel.isRelativeHumidityAlertOn.value = isOn
+                        }
+                    case .absoluteHumidity:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.viewModel.isAbsoluteHumidityAlertOn.value {
+                            self?.viewModel.isAbsoluteHumidityAlertOn.value = isOn
                         }
                     }
             }
