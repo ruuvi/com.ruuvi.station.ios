@@ -259,6 +259,8 @@
 "TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
 "TagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
 "TagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
