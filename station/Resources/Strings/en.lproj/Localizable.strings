@@ -57,6 +57,7 @@
 "Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
 "Cards.Connected.title" = "Connected";
+"Cards.Error.ReverseGeocodingFailed.message" = "Failed loading data for Virtual Sensor. Reverse geocode operation limit exceeded.";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Failed to get PNG representation";
