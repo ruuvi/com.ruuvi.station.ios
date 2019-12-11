@@ -57,6 +57,7 @@
 "Cards.KeepConnectionDialog.Dismiss.title" = "Закрыть";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
 "Cards.Connected.title" = "Соединен";
+"Cards.Error.ReverseGeocodingFailed.message" = "Не удалось загрузить данные для виртуального сенсора. Превышен лимит операций обратного геокодирования.";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
