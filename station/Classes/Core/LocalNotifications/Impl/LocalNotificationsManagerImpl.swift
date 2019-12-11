@@ -5,6 +5,7 @@ enum LocalNotificationType: String {
     case temperature
     case relativeHumidity
     case absoluteHumidity
+    case dewPoint
 }
 
 enum LocalNotificationReason {
@@ -24,6 +25,8 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var highRelativeHumidityAlerts = [String: Date]()
     var lowAbsoluteHumidityAlerts = [String: Date]()
     var highAbsoluteHumidityAlerts = [String: Date]()
+    var lowDewPointAlerts = [String: Date]()
+    var highDewPointAlerts = [String: Date]()
 
     private let alertCategory = "com.ruuvi.station.alerts"
     private let alertCategoryDisableAction = "com.ruuvi.station.alerts.disable"
@@ -99,6 +102,13 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         notify(type: .absoluteHumidity, reason: .higher, for: uuid)
     }
 
+    func notifyLowDewPoint(for uuid: String, dewPointCelsius: Double) {
+        notify(type: .dewPoint, reason: .lower, for: uuid)
+    }
+
+    func notifyHighDewPoint(for uuid: String, dewPointCelsius: Double) {
+        notify(type: .dewPoint, reason: .higher, for: uuid)
+    }
 }
 
 // MARK: - Private
@@ -118,6 +128,8 @@ extension LocalNotificationsManagerImpl {
                 cache = lowRelativeHumidityAlerts
             case .absoluteHumidity:
                 cache = lowAbsoluteHumidityAlerts
+            case .dewPoint:
+                cache = lowDewPointAlerts
             }
         case .higher:
             switch type {
@@ -127,6 +139,8 @@ extension LocalNotificationsManagerImpl {
                 cache = highRelativeHumidityAlerts
             case .absoluteHumidity:
                 cache = highAbsoluteHumidityAlerts
+            case .dewPoint:
+                cache = highDewPointAlerts
             }
         }
 
@@ -148,6 +162,8 @@ extension LocalNotificationsManagerImpl {
                     title = "LocalNotificationsManager.LowRelativeHumidity.title".localized()
                 case .absoluteHumidity:
                     title = "LocalNotificationsManager.LowAbsoluteHumidity.title".localized()
+                case .dewPoint:
+                    title = "LocalNotificationsManager.LowDewPoint.title".localized()
                 }
             case .higher:
                 switch type {
@@ -157,6 +173,8 @@ extension LocalNotificationsManagerImpl {
                     title = "LocalNotificationsManager.HighRelativeHumidity.title".localized()
                 case .absoluteHumidity:
                     title = "LocalNotificationsManager.HighAbsoluteHumidity.title".localized()
+                case .dewPoint:
+                    title = "LocalNotificationsManager.HighDewPoint.title".localized()
                 }
             }
             content.title = title
@@ -173,6 +191,8 @@ extension LocalNotificationsManagerImpl {
                     body = alertService.relativeHumidityDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 case .absoluteHumidity:
                     body = alertService.absoluteHumidityDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                case .dewPoint:
+                    body = alertService.dewPointDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 }
                 content.body = body
             } else {
@@ -191,6 +211,8 @@ extension LocalNotificationsManagerImpl {
                     lowRelativeHumidityAlerts[uuid] = Date()
                 case .absoluteHumidity:
                     lowAbsoluteHumidityAlerts[uuid] = Date()
+                case .dewPoint:
+                    lowDewPointAlerts[uuid] = Date()
                 }
             case .higher:
                 switch type {
@@ -200,6 +222,8 @@ extension LocalNotificationsManagerImpl {
                     highRelativeHumidityAlerts[uuid] = Date()
                 case .absoluteHumidity:
                     highAbsoluteHumidityAlerts[uuid] = Date()
+                case .dewPoint:
+                    highDewPointAlerts[uuid] = Date()
                 }
             }
         }
@@ -224,6 +248,9 @@ extension LocalNotificationsManagerImpl {
                 case .absoluteHumidity:
                     self?.lowAbsoluteHumidityAlerts[uuid] = nil
                     self?.highAbsoluteHumidityAlerts[uuid] = nil
+                case .dewPoint:
+                    self?.lowDewPointAlerts[uuid] = nil
+                    self?.highDewPointAlerts[uuid] = nil
                 }
             }
         }
@@ -284,6 +311,13 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             switch response.actionIdentifier {
             case alertCategoryDisableAction:
                 alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
+            default:
+                break
+            }
+        case .dewPoint:
+            switch response.actionIdentifier {
+            case alertCategoryDisableAction:
+                alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }
