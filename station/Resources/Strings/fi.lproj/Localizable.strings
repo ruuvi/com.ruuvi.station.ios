@@ -57,6 +57,7 @@
 "Cards.KeepConnectionDialog.Dismiss.title" = "Hylkää";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Säilytä yhteys";
 "Cards.Connected.title" = "Yhdistetty";
+"Cards.Error.ReverseGeocodingFailed.message" = "Virtuaalisen anturin tietojen lataaminen epäonnistui. Maantieteellisten koordinaattien käänteishaun toimintaraja ylittyi.";
 
 // CoreError
 "CoreError.failedToGetPngRepresentation" = "PNG-muunnosta ei voida tehdä";

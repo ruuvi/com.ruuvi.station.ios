@@ -90,6 +90,13 @@ extension CardsScrollViewController: CardsViewInput {
         }))
         present(alert, animated: true)
     }
+
+    func showReverseGeocodingFailed() {
+        let message = "Cards.Error.ReverseGeocodingFailed.message".localized()
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - IBActions
