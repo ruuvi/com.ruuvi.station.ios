@@ -263,6 +263,8 @@
 "TagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
+"TagSettings.PressureAlert.title" = "Air Pressure";
+"TagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
