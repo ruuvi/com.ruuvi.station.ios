@@ -15,4 +15,6 @@ protocol LocalNotificationsManager: class {
     func notifyHighAbsoluteHumidity(for uuid: String, absoluteHumidity: Double)
     func notifyLowDewPoint(for uuid: String, dewPointCelsius: Double)
     func notifyHighDewPoint(for uuid: String, dewPointCelsius: Double)
+    func notifyLowPressure(for uuid: String, pressure: Double)
+    func notifyHighPressure(for uuid: String, pressure: Double)
 }

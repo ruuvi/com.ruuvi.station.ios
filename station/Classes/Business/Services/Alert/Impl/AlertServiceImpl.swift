@@ -138,6 +138,21 @@ class AlertServiceImpl: AlertService {
                         isTriggered = isTriggered || isLower || isUpper
                     }
                 }
+            case .pressure:
+                if case .pressure(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let pressure = ruuviTag.pressure {
+                    let isLower = pressure < lower
+                    let isUpper = pressure > upper
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyLowPressure(for: ruuviTag.uuid, pressure: pressure)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notifyHighPressure(for: ruuviTag.uuid, pressure: pressure)
+                        }
+                    }
+                    isTriggered = isTriggered || isLower || isUpper
+                }
             }
         }
         if hasRegistrations(for: ruuviTag.uuid) {
@@ -309,6 +324,42 @@ extension AlertServiceImpl {
         alertPersistence.setDewPoint(description: description, for: uuid)
         if let l = lowerDewPointCelsius(for: uuid), let u = upperDewPointCelsius(for: uuid) {
             postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
+        }
+    }
+}
+
+// MARK: - Pressure
+extension AlertServiceImpl {
+    func lowerPressure(for uuid: String) -> Double? {
+        return alertPersistence.lowerPressure(for: uuid)
+    }
+
+    func setLower(pressure: Double?, for uuid: String) {
+        alertPersistence.setLower(pressure: pressure, for: uuid)
+        if let l = pressure, let u = upperPressure(for: uuid) {
+            postAlertDidChange(with: uuid, of: .pressure(lower: l, upper: u))
+        }
+    }
+
+    func upperPressure(for uuid: String) -> Double? {
+        return alertPersistence.upperPressure(for: uuid)
+    }
+
+    func setUpper(pressure: Double?, for uuid: String) {
+        alertPersistence.setUpper(pressure: pressure, for: uuid)
+        if let u = pressure, let l = lowerPressure(for: uuid) {
+            postAlertDidChange(with: uuid, of: .pressure(lower: l, upper: u))
+        }
+    }
+
+    func pressureDescription(for uuid: String) -> String? {
+        return alertPersistence.pressureDescription(for: uuid)
+    }
+
+    func setPressure(description: String?, for uuid: String) {
+        alertPersistence.setPressure(description: description, for: uuid)
+        if let l = lowerPressure(for: uuid), let u = upperPressure(for: uuid) {
+            postAlertDidChange(with: uuid, of: .pressure(lower: l, upper: u))
         }
     }
 }

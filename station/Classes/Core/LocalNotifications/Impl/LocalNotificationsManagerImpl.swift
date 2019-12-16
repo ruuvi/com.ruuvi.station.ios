@@ -6,6 +6,7 @@ enum LocalNotificationType: String {
     case relativeHumidity
     case absoluteHumidity
     case dewPoint
+    case pressure
 }
 
 enum LocalNotificationReason {
@@ -27,6 +28,8 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var highAbsoluteHumidityAlerts = [String: Date]()
     var lowDewPointAlerts = [String: Date]()
     var highDewPointAlerts = [String: Date]()
+    var lowPressureAlerts = [String: Date]()
+    var highPressureAlerts = [String: Date]()
 
     private let alertCategory = "com.ruuvi.station.alerts"
     private let alertCategoryDisableAction = "com.ruuvi.station.alerts.disable"
@@ -109,6 +112,14 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     func notifyHighDewPoint(for uuid: String, dewPointCelsius: Double) {
         notify(type: .dewPoint, reason: .higher, for: uuid)
     }
+
+    func notifyLowPressure(for uuid: String, pressure: Double) {
+        notify(type: .pressure, reason: .lower, for: uuid)
+    }
+
+    func notifyHighPressure(for uuid: String, pressure: Double) {
+        notify(type: .pressure, reason: .higher, for: uuid)
+    }
 }
 
 // MARK: - Private
@@ -130,6 +141,8 @@ extension LocalNotificationsManagerImpl {
                 cache = lowAbsoluteHumidityAlerts
             case .dewPoint:
                 cache = lowDewPointAlerts
+            case .pressure:
+                cache = lowPressureAlerts
             }
         case .higher:
             switch type {
@@ -141,6 +154,8 @@ extension LocalNotificationsManagerImpl {
                 cache = highAbsoluteHumidityAlerts
             case .dewPoint:
                 cache = highDewPointAlerts
+            case .pressure:
+                cache = highPressureAlerts
             }
         }
 
@@ -164,6 +179,8 @@ extension LocalNotificationsManagerImpl {
                     title = "LocalNotificationsManager.LowAbsoluteHumidity.title".localized()
                 case .dewPoint:
                     title = "LocalNotificationsManager.LowDewPoint.title".localized()
+                case .pressure:
+                    title = "LocalNotificationsManager.LowPressure.title".localized()
                 }
             case .higher:
                 switch type {
@@ -175,6 +192,8 @@ extension LocalNotificationsManagerImpl {
                     title = "LocalNotificationsManager.HighAbsoluteHumidity.title".localized()
                 case .dewPoint:
                     title = "LocalNotificationsManager.HighDewPoint.title".localized()
+                case .pressure:
+                    title = "LocalNotificationsManager.HighPressure.title".localized()
                 }
             }
             content.title = title
@@ -193,6 +212,8 @@ extension LocalNotificationsManagerImpl {
                     body = alertService.absoluteHumidityDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 case .dewPoint:
                     body = alertService.dewPointDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                case .pressure:
+                    body = alertService.pressureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 }
                 content.body = body
             } else {
@@ -213,6 +234,8 @@ extension LocalNotificationsManagerImpl {
                     lowAbsoluteHumidityAlerts[uuid] = Date()
                 case .dewPoint:
                     lowDewPointAlerts[uuid] = Date()
+                case .pressure:
+                    lowPressureAlerts[uuid] = Date()
                 }
             case .higher:
                 switch type {
@@ -224,6 +247,8 @@ extension LocalNotificationsManagerImpl {
                     highAbsoluteHumidityAlerts[uuid] = Date()
                 case .dewPoint:
                     highDewPointAlerts[uuid] = Date()
+                case .pressure:
+                    highPressureAlerts[uuid] = Date()
                 }
             }
         }
@@ -251,6 +276,9 @@ extension LocalNotificationsManagerImpl {
                 case .dewPoint:
                     self?.lowDewPointAlerts[uuid] = nil
                     self?.highDewPointAlerts[uuid] = nil
+                case .pressure:
+                    self?.lowPressureAlerts[uuid] = nil
+                    self?.highPressureAlerts[uuid] = nil
                 }
             }
         }
@@ -318,6 +346,13 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             switch response.actionIdentifier {
             case alertCategoryDisableAction:
                 alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
+            default:
+                break
+            }
+        case .pressure:
+            switch response.actionIdentifier {
+            case alertCategoryDisableAction:
+                alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }

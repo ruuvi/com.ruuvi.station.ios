@@ -306,6 +306,20 @@ extension TagSettingsPresenter {
                         viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
                     }
                 }
+            case .pressure:
+                if case .pressure(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
+                    viewModel.isPressureAlertOn.value = true
+                    viewModel.pressureLowerBound.value = lower
+                    viewModel.pressureUpperBound.value = upper
+                } else {
+                    viewModel.isPressureAlertOn.value = false
+                    if let pressureLowerBound = alertService.lowerPressure(for: ruuviTag.uuid) {
+                        viewModel.pressureLowerBound.value = pressureLowerBound
+                    }
+                    if let pressureUpperBound = alertService.upperPressure(for: ruuviTag.uuid) {
+                        viewModel.pressureUpperBound.value = pressureUpperBound
+                    }
+                }
             }
         }
     }
@@ -473,10 +487,39 @@ extension TagSettingsPresenter {
         bind(viewModel.dewPointCelsiusUpperBound, fire: false) { observer, upper in
             observer.alertService.setUpperDewPoint(celsius: upper, for: ruuviTag.uuid)
         }
-        bind(viewModel.dewPointAlertDescription, fire: false) {observer, dewPointAlertDescription in
+        bind(viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
             observer.alertService.setDewPoint(description: dewPointAlertDescription, for: ruuviTag.uuid)
         }
 
+        // pressure
+        let pressureLower = viewModel.pressureLowerBound
+        let pressureUpper = viewModel.pressureUpperBound
+        bind(viewModel.isPressureAlertOn, fire: false) {
+            [weak pressureLower, weak pressureUpper] observer, isOn in
+            if let l = pressureLower?.value, let u = pressureUpper?.value {
+                let type: AlertType = .pressure(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: ruuviTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                    }
+                }
+            }
+        }
+
+        bind(viewModel.pressureLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(pressure: lower, for: ruuviTag.uuid)
+        }
+
+        bind(viewModel.pressureUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(pressure: upper, for: ruuviTag.uuid)
+        }
+
+        bind(viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in
+            observer.alertService.setPressure(description: pressureAlertDescription, for: ruuviTag.uuid)
+        }
     }
 
     private func startObservingSettingsChanges() {
@@ -580,6 +623,11 @@ extension TagSettingsPresenter {
                         let isOn = self?.alertService.isOn(type: type, for: uuid)
                         if isOn != self?.viewModel.isDewPointAlertOn.value {
                             self?.viewModel.isDewPointAlertOn.value = isOn
+                        }
+                    case .pressure:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.viewModel.isPressureAlertOn.value {
+                            self?.viewModel.isPressureAlertOn.value = isOn
                         }
                     }
             }
