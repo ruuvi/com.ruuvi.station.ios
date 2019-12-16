@@ -149,6 +149,8 @@
 "LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absolute Air Humidity too high!";
 "LocalNotificationsManager.LowDewPoint.title" = "Dew Point is too low!";
 "LocalNotificationsManager.HighDewPoint.title" = "Dew Point is too high!";
+"LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
+"LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Add a New Sensor";
