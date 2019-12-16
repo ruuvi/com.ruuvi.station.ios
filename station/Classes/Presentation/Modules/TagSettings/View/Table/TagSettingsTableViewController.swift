@@ -26,6 +26,9 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
 
+    @IBOutlet weak var pressureAlertHeaderCell: TagSettingsAlertHeaderCell!
+    @IBOutlet weak var pressureAlertControlsCell: TagSettingsAlertControlsCell!
+
     @IBOutlet weak var dewPointAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var dewPointAlertControlsCell: TagSettingsAlertControlsCell!
 
@@ -117,6 +120,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
         relativeHumidityAlertHeaderCell.titleLabel.text = "TagSettings.RelativeAirHumidityAlert.title".localized() + " " + "%".localized()
         absoluteHumidityAlertHeaderCell.titleLabel.text = "TagSettings.AbsoluteAirHumidityAlert.title".localized() + " " + "g/m³".localized()
+        pressureAlertHeaderCell.titleLabel.text = "TagSettings.PressureAlert.title".localized() + " " + "hPa".localized()
         tableView.reloadData()
     }
 
@@ -401,6 +405,10 @@ extension TagSettingsTableViewController {
                 return (hu == .dew) ? headerHeight : 0
             case dewPointAlertControlsCell:
                 return ((hu == .dew) && (viewModel?.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
+            case pressureAlertHeaderCell:
+                return headerHeight
+            case pressureAlertControlsCell:
+                return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
             default:
                 return 44
             }
@@ -421,6 +429,10 @@ extension TagSettingsTableViewController {
             case dewPointAlertHeaderCell:
                 return 0
             case dewPointAlertControlsCell:
+                return 0
+            case pressureAlertHeaderCell:
+                return 0
+            case pressureAlertControlsCell:
                 return 0
             default:
                 return 44
@@ -455,6 +467,8 @@ extension TagSettingsTableViewController: TagSettingsAlertHeaderCellDelegate {
             viewModel?.isAbsoluteHumidityAlertOn.value = isOn
         case dewPointAlertHeaderCell:
             viewModel?.isDewPointAlertOn.value = isOn
+        case pressureAlertHeaderCell:
+            viewModel?.isPressureAlertOn.value = isOn
         default:
             break
         }
@@ -473,6 +487,8 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
             viewModel?.absoluteHumidityAlertDescription.value = description
         case dewPointAlertControlsCell:
             viewModel?.dewPointAlertDescription.value = description
+        case pressureAlertControlsCell:
+            viewModel?.pressureAlertDescription.value = description
         default:
             break
         }
@@ -514,6 +530,9 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
                     viewModel?.dewPointCelsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
                 }
             }
+        case pressureAlertControlsCell:
+            viewModel?.pressureLowerBound.value = Double(minValue)
+            viewModel?.pressureUpperBound.value = Double(maxValue)
         default:
             break
         }
@@ -535,6 +554,8 @@ extension TagSettingsTableViewController {
         absoluteHumidityAlertControlsCell.delegate = self
         dewPointAlertHeaderCell.delegate = self
         dewPointAlertControlsCell.delegate = self
+        pressureAlertHeaderCell.delegate = self
+        pressureAlertControlsCell.delegate = self
     }
 }
 
@@ -551,6 +572,7 @@ extension TagSettingsTableViewController {
         bindRelativeHumidityCells()
         bindAbsoluteHumidityCells()
         bindDewPointAlertCells()
+        bindPressureAlertCells()
         if isViewLoaded, let viewModel = viewModel {
 
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
@@ -835,6 +857,75 @@ extension TagSettingsTableViewController {
         }
     }
 
+    private func bindPressureAlertCells() {
+       if isViewLoaded, let viewModel = viewModel {
+           pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
+               view.isOn = isOn.bound
+           }
+
+           pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
+               slider.isEnabled = isOn.bound
+           }
+
+           pressureAlertControlsCell.slider.bind(viewModel.pressureLowerBound) { [weak self] (_, _) in
+               self?.updateUIPressureLowerBound()
+               self?.updateUIPressureAlertDescription()
+           }
+
+           pressureAlertControlsCell.slider.bind(viewModel.pressureUpperBound) { [weak self] (_, _) in
+               self?.updateUIPressureUpperBound()
+               self?.updateUIPressureAlertDescription()
+           }
+           pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) { [weak self] (_, _) in
+               self?.updateUIPressureAlertDescription()
+           }
+
+           let isPNEnabled = viewModel.isPushNotificationsEnabled
+           let isPressureAlertOn = viewModel.isPressureAlertOn
+           let isConnected = viewModel.isConnected
+
+           pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+               let isPN = isPNEnabled?.value ?? false
+               let isEnabled = isPN && isConnected.bound
+               view.isEnabled = isEnabled
+               view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+           }
+
+           pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+               [weak isConnected] view, isPushNotificationsEnabled in
+               let isPN = isPushNotificationsEnabled ?? false
+               let isCo = isConnected?.value ?? false
+               let isEnabled = isPN && isCo
+               view.isEnabled = isEnabled
+               view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+           }
+
+           pressureAlertControlsCell.slider.bind(viewModel.isConnected) {
+               [weak isPressureAlertOn, weak isPNEnabled] (slider, isConnected) in
+               let isPN = isPNEnabled?.value ?? false
+               let isOn = isPressureAlertOn?.value ?? false
+               slider.isEnabled = isConnected.bound && isOn && isPN
+           }
+
+           pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+               [weak isPressureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+               let isOn = isPressureAlertOn?.value ?? false
+               let isCo = isConnected?.value ?? false
+               slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+           }
+
+           pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
+               (textField, pressureAlertDescription) in
+               textField.text = pressureAlertDescription
+           }
+
+           tableView.bind(viewModel.isPressureAlertOn) { (tableView, isOn) in
+               tableView.beginUpdates()
+               tableView.endUpdates()
+           }
+       }
+    }
+
     private func bindRelativeHumidityCells() {
         if isViewLoaded, let viewModel = viewModel {
             relativeHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isRelativeHumidityAlertOn) { (view, isOn) in
@@ -1095,6 +1186,26 @@ extension TagSettingsTableViewController {
         updateUIDewPointCelsiusUpperBound()
     }
 
+    private func updateUIPressureLowerBound() {
+        if isViewLoaded {
+            if let lower = viewModel?.pressureLowerBound.value {
+                pressureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+            } else {
+                pressureAlertControlsCell.slider.selectedMinValue = 300
+            }
+        }
+    }
+
+    private func updateUIPressureUpperBound() {
+        if isViewLoaded {
+            if let upper = viewModel?.pressureUpperBound.value {
+                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+            } else {
+                pressureAlertControlsCell.slider.selectedMaxValue = 1100
+            }
+        }
+    }
+
     private func updateUIAbsoluteHumidityLowerBound() {
         if isViewLoaded {
             if let lower = viewModel?.absoluteHumidityLowerBound.value {
@@ -1146,6 +1257,23 @@ extension TagSettingsTableViewController {
                 }
             } else {
                 absoluteHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+            }
+        }
+    }
+
+    private func updateUIPressureAlertDescription() {
+        if isViewLoaded {
+            if let isPressureAlertOn = viewModel?.isPressureAlertOn.value,
+                isPressureAlertOn {
+                if let l = viewModel?.pressureLowerBound.value,
+                    let u = viewModel?.pressureUpperBound.value {
+                    let format = "TagSettings.Alerts.Pressure.description".localized()
+                    pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
+                } else {
+                    pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                }
+            } else {
+                pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
             }
         }
     }

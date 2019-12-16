@@ -43,4 +43,10 @@ struct TagSettingsViewModel {
     let dewPointCelsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
     let dewPointCelsiusUpperBound: Observable<Double?> = Observable<Double?>(85)
     let dewPointAlertDescription: Observable<String?> = Observable<String?>()
+
+    let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let pressureLowerBound: Observable<Double?> = Observable<Double?>(300)
+    let pressureUpperBound: Observable<Double?> = Observable<Double?>(1100)
+    let pressureAlertDescription: Observable<String?> = Observable<String?>()
+
 }
