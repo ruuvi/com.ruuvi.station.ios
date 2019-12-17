@@ -10,7 +10,7 @@ protocol TrippleChartViewDelegate: class {
 }
 
 @IBDesignable
-class TrippleChartView: UIView {
+class TrippleChartView: UIView, Localizable {
 
     weak var delegate: TrippleChartViewDelegate?
 
@@ -72,7 +72,7 @@ class TrippleChartView: UIView {
         delegate?.trippleChart(view: self, didTriggerCards: sender)
     }
 
-    private lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont(name: "Montserrat-Bold", size: 20)
@@ -97,18 +97,21 @@ class TrippleChartView: UIView {
     lazy var temperatureChart: LineChartView = {
         let chart = LineChartView()
         chart.translatesAutoresizingMaskIntoConstraints = false
+        chart.noDataTextColor = .white
         return chart
     }()
 
     lazy var humidityChart: LineChartView = {
         let chart = LineChartView()
         chart.translatesAutoresizingMaskIntoConstraints = false
+        chart.noDataTextColor = .white
         return chart
     }()
 
     lazy var pressureChart: LineChartView = {
         let chart = LineChartView()
         chart.translatesAutoresizingMaskIntoConstraints = false
+        chart.noDataTextColor = .white
         return chart
     }()
 
@@ -119,7 +122,7 @@ class TrippleChartView: UIView {
         return view
     }()
 
-    private lazy var temperatureUnitLabel: UILabel = {
+    lazy var temperatureUnitLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
@@ -128,7 +131,7 @@ class TrippleChartView: UIView {
         return label
     }()
 
-    private lazy var humidityUnitLabel: UILabel = {
+    lazy var humidityUnitLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
@@ -137,7 +140,7 @@ class TrippleChartView: UIView {
         return label
     }()
 
-    private lazy var pressureUnitLabel: UILabel = {
+    lazy var pressureUnitLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
@@ -146,7 +149,7 @@ class TrippleChartView: UIView {
         return label
     }()
 
-    private lazy var syncButton: UIButton = {
+    lazy var syncButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("SYNC".localized(), for: .normal)
         button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 15)
@@ -162,7 +165,7 @@ class TrippleChartView: UIView {
         delegate?.trippleChart(view: self, didTriggerSync: sender)
     }
 
-    private lazy var clearButton: UIButton = {
+    lazy var clearButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("CLEAR".localized(), for: .normal)
         button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 15)
@@ -178,7 +181,7 @@ class TrippleChartView: UIView {
         delegate?.trippleChart(view: self, didTriggerClear: sender)
     }
 
-    private lazy var exportButton: UIButton = {
+    lazy var exportButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("EXPORT".localized(), for: .normal)
         button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 15)
@@ -194,16 +197,35 @@ class TrippleChartView: UIView {
         delegate?.trippleChart(view: self, didTriggerExport: sender)
     }
 
+    lazy var syncStatusLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Status...".localized()
+        label.isHidden = true
+        return label
+    }()
+
     private let dynamicBundle = Bundle(for: TrippleChartView.self)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
+        setupLocalization()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         commonInit()
+        setupLocalization()
+    }
+
+    // MARK: - Localizable
+    func localize() {
+        clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
+        syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
+        exportButton.setTitle("TagCharts.Export.title".localized(), for: .normal)
+        pressureUnitLabel.text = "hPa".localized()
     }
 
     private func commonInit() {
@@ -274,6 +296,22 @@ class TrippleChartView: UIView {
                                                                attribute: .leading,
                                                                multiplier: 1.0,
                                                                constant: -8))
+
+        bottomButtonContainer.addSubview(syncStatusLabel)
+        bottomButtonContainer.addConstraint(NSLayoutConstraint(item: bottomButtonContainer,
+                                                               attribute: .centerX,
+                                                               relatedBy: .equal,
+                                                               toItem: syncStatusLabel,
+                                                               attribute: .centerX,
+                                                               multiplier: 1.0,
+                                                               constant: 0.0))
+        bottomButtonContainer.addConstraint(NSLayoutConstraint(item: bottomButtonContainer,
+                                                               attribute: .centerY,
+                                                               relatedBy: .equal,
+                                                               toItem: syncStatusLabel,
+                                                               attribute: .centerY,
+                                                               multiplier: 1.0,
+                                                               constant: 0.0))
     }
 
     private func position(bottomButtonContainer: UIView) {
