@@ -14,6 +14,16 @@ class TrippleChartView: UIView, Localizable {
 
     weak var delegate: TrippleChartViewDelegate?
 
+    lazy var landscapeConstraint: NSLayoutConstraint = {
+        return NSLayoutConstraint(item: scrollContainer,
+                                  attribute: .height,
+                                  relatedBy: .equal,
+                                  toItem: scrollView,
+                                  attribute: .height,
+                                  multiplier: 3.0,
+                                  constant: 0.0)
+    }()
+
     private lazy var backgroundImage = UIImage(named: "bg1", in: dynamicBundle, compatibleWith: nil)
     lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView(image: backgroundImage)
@@ -85,6 +95,7 @@ class TrippleChartView: UIView, Localizable {
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isPagingEnabled = true
         return scrollView
     }()
 
@@ -246,6 +257,8 @@ class TrippleChartView: UIView, Localizable {
         addSubview(bottomButtonContainer)
         setupBottomButtonsContainer()
         position(bottomButtonContainer: bottomButtonContainer)
+
+        landscapeConstraint.isActive = UIApplication.shared.statusBarOrientation.isLandscape
     }
 
     private func setupBottomButtonsContainer() {
