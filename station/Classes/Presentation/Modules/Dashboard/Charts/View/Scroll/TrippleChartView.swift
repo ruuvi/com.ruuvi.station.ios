@@ -1,9 +1,18 @@
 import UIKit
 import Charts
 
+protocol TrippleChartViewDelegate: class {
+    func trippleChart(view: TrippleChartView, didTriggerCards sender: Any)
+    func trippleChart(view: TrippleChartView, didTriggerSettings sender: Any)
+    func trippleChart(view: TrippleChartView, didTriggerClear sender: Any)
+    func trippleChart(view: TrippleChartView, didTriggerSync sender: Any)
+    func trippleChart(view: TrippleChartView, didTriggerExport sender: Any)
+}
+
 @IBDesignable
 class TrippleChartView: UIView {
 
+    weak var delegate: TrippleChartViewDelegate?
 
     private lazy var backgroundImage = UIImage(named: "bg1", in: dynamicBundle, compatibleWith: nil)
     lazy var backgroundImageView: UIImageView = {
@@ -19,8 +28,13 @@ class TrippleChartView: UIView {
         button.tintColor = .white
         button.setImage(settingsButtonImage, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(TrippleChartView.settingsButtonTouchUpInside(_:)), for: .touchUpInside)
         return button
     }()
+
+    @objc private func settingsButtonTouchUpInside(_ sender: Any) {
+        delegate?.trippleChart(view: self, didTriggerSettings: sender)
+    }
 
     private lazy var backgroundOverlayImage = UIImage(named: "tag_bg_layer", in: dynamicBundle, compatibleWith: nil)
     private lazy var backgroundOverlayImageView: UIImageView = {
@@ -50,8 +64,13 @@ class TrippleChartView: UIView {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(TrippleChartView.cardsButtonTouchUpInside(_:)), for: .touchUpInside)
         return button
     }()
+
+    @objc private func cardsButtonTouchUpInside(_ sender: Any) {
+        delegate?.trippleChart(view: self, didTriggerCards: sender)
+    }
 
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
@@ -135,8 +154,13 @@ class TrippleChartView: UIView {
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 22
+        button.addTarget(self, action: #selector(TrippleChartView.syncButtonTouchUpInside(_:)), for: .touchUpInside)
         return button
     }()
+
+    @objc private func syncButtonTouchUpInside(_ sender: Any) {
+        delegate?.trippleChart(view: self, didTriggerSync: sender)
+    }
 
     private lazy var clearButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -146,8 +170,13 @@ class TrippleChartView: UIView {
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 22
+        button.addTarget(self, action: #selector(TrippleChartView.clearButtonTouchUpInside(_:)), for: .touchUpInside)
         return button
     }()
+
+    @objc private func clearButtonTouchUpInside(_ sender: Any) {
+        delegate?.trippleChart(view: self, didTriggerClear: sender)
+    }
 
     private lazy var exportButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -157,8 +186,13 @@ class TrippleChartView: UIView {
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 22
+        button.addTarget(self, action: #selector(TrippleChartView.exportButtonTouchUpInside(_:)), for: .touchUpInside)
         return button
     }()
+
+    @objc private func exportButtonTouchUpInside(_ sender: Any) {
+        delegate?.trippleChart(view: self, didTriggerExport: sender)
+    }
 
     private let dynamicBundle = Bundle(for: TrippleChartView.self)
 
