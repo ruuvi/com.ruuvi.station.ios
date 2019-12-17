@@ -176,11 +176,6 @@ extension TagChartsScrollViewController {
         coordinator.animate(alongsideTransition: { [weak self] (context) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
-            self?.views.forEach({ (view) in
-                view.landscapeConstraint.isActive = UIApplication.shared.statusBarOrientation.isLandscape
-                view.setNeedsLayout()
-                view.layoutIfNeeded()
-            })
         }) { [weak self] (context) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
