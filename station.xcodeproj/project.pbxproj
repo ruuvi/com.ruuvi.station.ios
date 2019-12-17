@@ -209,6 +209,7 @@
 		0EAD33D023990B8700EC5BAA /* AlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33CF23990B8700EC5BAA /* AlertPersistence.swift */; };
 		0EAD33D223990D8800EC5BAA /* String+Replace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33D123990D8700EC5BAA /* String+Replace.swift */; };
 		0EAD33D423990D8C00EC5BAA /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33D323990D8C00EC5BAA /* Double+Temperature.swift */; };
+		0EBA390123A8B40300314224 /* TrippleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBA390023A8B40300314224 /* TrippleChartView.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -571,6 +572,7 @@
 		0EAD33CF23990B8700EC5BAA /* AlertPersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPersistence.swift; sourceTree = "<group>"; };
 		0EAD33D123990D8700EC5BAA /* String+Replace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Replace.swift"; sourceTree = "<group>"; };
 		0EAD33D323990D8C00EC5BAA /* Double+Temperature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Double+Temperature.swift"; sourceTree = "<group>"; };
+		0EBA390023A8B40300314224 /* TrippleChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrippleChartView.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -1892,6 +1894,7 @@
 				0E8FD0E02333799B00FFA577 /* TagChartsView.xib */,
 				0E8FD0DE2333797300FFA577 /* TagChartsView.swift */,
 				0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */,
+				0EBA390023A8B40300314224 /* TrippleChartView.swift */,
 			);
 			path = Scroll;
 			sourceTree = "<group>";
@@ -3303,6 +3306,7 @@
 				0E9D5F202351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift in Sources */,
 				0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
+				0EBA390123A8B40300314224 /* TrippleChartView.swift in Sources */,
 				0E046F4A22F1820400BD4E9C /* LocationPickerViewOutput.swift in Sources */,
 				0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
