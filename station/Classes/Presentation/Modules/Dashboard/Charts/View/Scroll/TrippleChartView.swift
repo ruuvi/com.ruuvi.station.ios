@@ -23,6 +23,15 @@ class TrippleChartView: UIView, Localizable {
                                   multiplier: 3.0,
                                   constant: 0.0)
     }()
+    lazy var portraitConstraint: NSLayoutConstraint = {
+        return NSLayoutConstraint(item: scrollView,
+                                  attribute: .centerY,
+                                  relatedBy: .equal,
+                                  toItem: scrollContainer,
+                                  attribute: .centerY,
+                                  multiplier: 1.0,
+                                  constant: 0.0)
+    }()
 
     private lazy var backgroundImage = UIImage(named: "bg1", in: dynamicBundle, compatibleWith: nil)
     lazy var backgroundImageView: UIImageView = {
@@ -231,6 +240,10 @@ class TrippleChartView: UIView, Localizable {
         setupLocalization()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: - Localizable
     func localize() {
         clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
@@ -258,7 +271,20 @@ class TrippleChartView: UIView, Localizable {
         setupBottomButtonsContainer()
         position(bottomButtonContainer: bottomButtonContainer)
 
-        landscapeConstraint.isActive = UIApplication.shared.statusBarOrientation.isLandscape
+        handleRotation()
+        NotificationCenter.default.addObserver(self, selector: #selector(TrippleChartView.handleRotation), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    @objc private func handleRotation() {
+        let isLandscape = UIApplication.shared.statusBarOrientation.isLandscape
+        if isLandscape {
+            portraitConstraint.isActive = !isLandscape
+            landscapeConstraint.isActive = isLandscape
+        } else {
+            landscapeConstraint.isActive = isLandscape
+            portraitConstraint.isActive = !isLandscape
+        }
+
     }
 
     private func setupBottomButtonsContainer() {
@@ -410,13 +436,6 @@ class TrippleChartView: UIView, Localizable {
     private func setupScrollView() {
         scrollView.addSubview(scrollContainer)
         wrap(view: scrollContainer, into: scrollView)
-        scrollView.addConstraint(NSLayoutConstraint(item: scrollView,
-                                                    attribute: .centerY,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollContainer,
-                                                    attribute: .centerY,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
         scrollView.addConstraint(NSLayoutConstraint(item: scrollView,
                                                     attribute: .centerX,
                                                     relatedBy: .equal,
