@@ -10,7 +10,7 @@ protocol TrippleChartViewDelegate: class {
 }
 
 @IBDesignable
-class TrippleChartView: UIView, Localizable {
+class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
 
     weak var delegate: TrippleChartViewDelegate?
 
@@ -105,6 +105,7 @@ class TrippleChartView: UIView, Localizable {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.isPagingEnabled = true
+        scrollView.delegate = self
         return scrollView
     }()
 
@@ -227,6 +228,7 @@ class TrippleChartView: UIView, Localizable {
     }()
 
     private let dynamicBundle = Bundle(for: TrippleChartView.self)
+    private var contentOffset: CGPoint = .zero
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -252,6 +254,11 @@ class TrippleChartView: UIView, Localizable {
         pressureUnitLabel.text = "hPa".localized()
     }
 
+    // MARK: - UIScrollViewDelegate
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        contentOffset = scrollView.contentOffset
+    }
+
     private func commonInit() {
         addSubview(backgroundImageView)
         wrap(view: backgroundImageView, into: self)
@@ -273,6 +280,14 @@ class TrippleChartView: UIView, Localizable {
 
         handleRotation()
         NotificationCenter.default.addObserver(self, selector: #selector(TrippleChartView.handleRotation), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(TrippleChartView.recoverContentOffset), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    @objc private func recoverContentOffset() {
+        let isLandscape = UIApplication.shared.statusBarOrientation.isLandscape
+        if isLandscape {
+            scrollView.setContentOffset(contentOffset, animated: true)
+        }
     }
 
     @objc private func handleRotation() {
