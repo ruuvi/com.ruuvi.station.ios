@@ -59,7 +59,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     private lazy var backgroundOverlayImageView: UIImageView = {
         let imageView = UIImageView(image: backgroundOverlayImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
 
