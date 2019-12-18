@@ -201,7 +201,7 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 // MARK: - Private
 extension TagSettingsPresenter {
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -376,7 +376,7 @@ extension TagSettingsPresenter {
             viewModel.mac.value = mac
         }
     }
-
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel(to ruuviTag: RuuviTagRealm) {
         bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
             observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
@@ -412,7 +412,8 @@ extension TagSettingsPresenter {
         // relative humidity alert
         let relativeHumidityLower = viewModel.relativeHumidityLowerBound
         let relativeHumidityUpper = viewModel.relativeHumidityUpperBound
-        bind(viewModel.isRelativeHumidityAlertOn, fire: false) { [weak relativeHumidityLower, weak relativeHumidityUpper] observer, isOn in
+        bind(viewModel.isRelativeHumidityAlertOn, fire: false) {
+            [weak relativeHumidityLower, weak relativeHumidityUpper] observer, isOn in
             if let l = relativeHumidityLower?.value, let u = relativeHumidityUpper?.value {
                 let type: AlertType = .relativeHumidity(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
@@ -438,7 +439,8 @@ extension TagSettingsPresenter {
         // absolute humidity alert
         let absoluteHumidityLower = viewModel.absoluteHumidityLowerBound
         let absoluteHumidityUpper = viewModel.absoluteHumidityUpperBound
-        bind(viewModel.isAbsoluteHumidityAlertOn, fire: false) { [weak absoluteHumidityLower, weak absoluteHumidityUpper] observer, isOn in
+        bind(viewModel.isAbsoluteHumidityAlertOn, fire: false) {
+            [weak absoluteHumidityLower, weak absoluteHumidityUpper] observer, isOn in
             if let l = absoluteHumidityLower?.value, let u = absoluteHumidityUpper?.value {
                 let type: AlertType = .absoluteHumidity(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
@@ -592,6 +594,7 @@ extension TagSettingsPresenter {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default

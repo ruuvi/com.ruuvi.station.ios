@@ -51,6 +51,7 @@ class AlertServiceImpl: AlertService {
         postAlertDidChange(with: uuid, of: type)
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func proccess(heartbeat ruuviTag: RuuviTag) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -72,16 +73,19 @@ class AlertServiceImpl: AlertService {
                     isTriggered = isTriggered || isLower || isUpper
                 }
             case .relativeHumidity:
-                if case .relativeHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let relativeHumidity = ruuviTag.humidity {
+                if case .relativeHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
+                    let relativeHumidity = ruuviTag.humidity {
                     let isLower = relativeHumidity < lower
                     let isUpper = relativeHumidity > upper
                     if isLower {
                         DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notifyLowRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
+                            self?.localNotificationsManager
+                                .notifyLowRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
                         }
                     } else if isUpper {
                         DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notifyHighRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
+                            self?.localNotificationsManager
+                                .notifyHighRelativeHumidity(for: ruuviTag.uuid, relativeHumidity: relativeHumidity)
                         }
                     }
                     isTriggered = isTriggered || isLower || isUpper
@@ -103,18 +107,21 @@ class AlertServiceImpl: AlertService {
 
                     if isLower {
                         DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notifyLowAbsoluteHumidity(for: ruuviTag.uuid, absoluteHumidity: ah)
+                            self?.localNotificationsManager
+                                .notifyLowAbsoluteHumidity(for: ruuviTag.uuid, absoluteHumidity: ah)
                         }
                     } else if isUpper {
                         DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notifyHighAbsoluteHumidity(for: ruuviTag.uuid, absoluteHumidity: ah)
+                            self?.localNotificationsManager
+                                .notifyHighAbsoluteHumidity(for: ruuviTag.uuid, absoluteHumidity: ah)
                         }
                     }
 
                     isTriggered = isTriggered || isLower || isUpper
                 }
             case .dewPoint:
-                if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let rh = ruuviTag.humidity, let c = ruuviTag.celsius {
+                if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
+                    let rh = ruuviTag.humidity, let c = ruuviTag.celsius {
                     let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
                     var sh = rh + ho
                     if sh > 100.0 {
@@ -127,11 +134,13 @@ class AlertServiceImpl: AlertService {
 
                         if isLower {
                             DispatchQueue.main.async { [weak self] in
-                                self?.localNotificationsManager.notifyLowDewPoint(for: ruuviTag.uuid, dewPointCelsius: Td)
+                                self?.localNotificationsManager
+                                    .notifyLowDewPoint(for: ruuviTag.uuid, dewPointCelsius: Td)
                             }
                         } else if isUpper {
                             DispatchQueue.main.async { [weak self] in
-                                self?.localNotificationsManager.notifyHighDewPoint(for: ruuviTag.uuid, dewPointCelsius: Td)
+                                self?.localNotificationsManager
+                                    .notifyHighDewPoint(for: ruuviTag.uuid, dewPointCelsius: Td)
                             }
                         }
 
@@ -139,16 +148,19 @@ class AlertServiceImpl: AlertService {
                     }
                 }
             case .pressure:
-                if case .pressure(let lower, let upper) = alert(for: ruuviTag.uuid, of: type), let pressure = ruuviTag.pressure {
+                if case .pressure(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
+                    let pressure = ruuviTag.pressure {
                     let isLower = pressure < lower
                     let isUpper = pressure > upper
                     if isLower {
                         DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notifyLowPressure(for: ruuviTag.uuid, pressure: pressure)
+                            self?.localNotificationsManager
+                                .notifyLowPressure(for: ruuviTag.uuid, pressure: pressure)
                         }
                     } else if isUpper {
                         DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notifyHighPressure(for: ruuviTag.uuid, pressure: pressure)
+                            self?.localNotificationsManager
+                                .notifyHighPressure(for: ruuviTag.uuid, pressure: pressure)
                         }
                     }
                     isTriggered = isTriggered || isLower || isUpper

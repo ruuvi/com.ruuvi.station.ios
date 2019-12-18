@@ -125,6 +125,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 // MARK: - Private
 extension LocalNotificationsManagerImpl {
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func notify(type: LocalNotificationType,
                         reason: LocalNotificationReason,
                         for uuid: String) {
@@ -205,15 +206,20 @@ extension LocalNotificationsManagerImpl {
                 let body: String
                 switch type {
                 case .temperature:
-                    body = alertService.temperatureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                    body = alertService.temperatureDescription(for: ruuviTag.uuid)
+                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 case .relativeHumidity:
-                    body = alertService.relativeHumidityDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                    body = alertService.relativeHumidityDescription(for: ruuviTag.uuid)
+                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 case .absoluteHumidity:
-                    body = alertService.absoluteHumidityDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                    body = alertService.absoluteHumidityDescription(for: ruuviTag.uuid)
+                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 case .dewPoint:
-                    body = alertService.dewPointDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                    body = alertService.dewPointDescription(for: ruuviTag.uuid)
+                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 case .pressure:
-                    body = alertService.pressureDescription(for: ruuviTag.uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+                    body = alertService.pressureDescription(for: ruuviTag.uuid)
+                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
                 }
                 content.body = body
             } else {
@@ -312,6 +318,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler([.alert, .badge, .sound])
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
