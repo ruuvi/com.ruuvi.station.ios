@@ -112,7 +112,6 @@
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Фоновый Режим";
-"Heartbeat.PresentNotifications.title" = "Показывать Уведомления";
 "Heartbeat.SaveHeartbeats.title" = "Сохранять Данные";
 "Heartbeat.Interval.Every.string" = "каждые";
 "Heartbeat.Interval.Min.string" = "мин";

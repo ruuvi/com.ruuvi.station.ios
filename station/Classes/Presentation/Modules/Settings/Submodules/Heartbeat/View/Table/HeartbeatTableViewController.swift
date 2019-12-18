@@ -10,8 +10,6 @@ class HeartbeatTableViewController: UITableViewController {
         }
     }
 
-    @IBOutlet weak var presentConnectionNotificationsTitleLabel: UILabel!
-    @IBOutlet weak var presentConnectionNotificationsSwitch: UISwitch!
     @IBOutlet weak var saveHeartbeatsTitleLabel: UILabel!
     @IBOutlet weak var saveHeartbeatsSwitch: UISwitch!
     @IBOutlet weak var saveHeartbeatsIntervalLabel: UILabel!
@@ -30,7 +28,6 @@ extension HeartbeatTableViewController: HeartbeatViewInput {
     }
 
     func localize() {
-        presentConnectionNotificationsTitleLabel.text = viewModel.presentNotificationsTitle
         saveHeartbeatsTitleLabel.text = viewModel.saveHeartbeatsTitle
         saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.Every.string".localized()
             + " " + "\(viewModel.saveHeartbeatsInterval.value.bound)"
@@ -59,10 +56,6 @@ extension HeartbeatTableViewController {
     @IBAction func saveHeartbeatsSwitchValueChanged(_ sender: Any) {
         viewModel.saveHeartbeats.value = saveHeartbeatsSwitch.isOn
     }
-
-    @IBAction func presentConnectionNotificationsSwitchValueChanged(_ sender: Any) {
-        viewModel.presentConnectionNotifications.value = presentConnectionNotificationsSwitch.isOn
-    }
 }
 
 // MARK: - View lifecycle
@@ -79,9 +72,6 @@ extension HeartbeatTableViewController {
 
     private func bindViewModel() {
         if isViewLoaded {
-            presentConnectionNotificationsSwitch.bind(viewModel.presentConnectionNotifications) { (view, isOn) in
-                view.isOn = isOn.bound
-            }
 
             saveHeartbeatsSwitch.bind(viewModel.saveHeartbeats) { (view, isOn) in
                 view.isOn = isOn.bound

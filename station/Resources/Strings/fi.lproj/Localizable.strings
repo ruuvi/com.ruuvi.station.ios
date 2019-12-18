@@ -112,7 +112,6 @@
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Taustaprosessit";
-"Heartbeat.PresentNotifications.title" = "Näytä ilmoituksia";
 "Heartbeat.SaveHeartbeats.title" = "Historian tallennusväli";
 "Heartbeat.Interval.Every.string" = "joka";
 "Heartbeat.Interval.Min.string" = "min";

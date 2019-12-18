@@ -7,15 +7,10 @@ class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
 
     func configure() {
         let viewModel = HeartbeatViewModel()
-        viewModel.presentConnectionNotifications.value = settings.presentConnectionNotifications
         viewModel.saveHeartbeats.value = settings.saveHeartbeats
         viewModel.saveHeartbeatsInterval.value = settings.saveHeartbeatsIntervalMinutes
         viewModel.readRSSI.value = settings.readRSSI
         viewModel.readRSSIInterval.value = settings.readRSSIIntervalSeconds
-
-        bind(viewModel.presentConnectionNotifications, fire: false) { observer, presentConnectionNotifications in
-            observer.settings.presentConnectionNotifications = presentConnectionNotifications.bound
-        }
 
         bind(viewModel.saveHeartbeats, fire: false) { observer, saveHeartbeats in
             observer.settings.saveHeartbeats = saveHeartbeats.bound
