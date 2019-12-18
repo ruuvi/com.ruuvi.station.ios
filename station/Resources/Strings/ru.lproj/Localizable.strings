@@ -268,6 +268,8 @@
 "TagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Connection.description" = "Alert when connected/disconnected";
 "TagSettings.ConnectionAlert.title" = "Connection";
+"TagSettings.MovementAlert.title" = "Movement";
+"TagSettings.Alerts.Movement.description" = "Alert when tag is moved";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
