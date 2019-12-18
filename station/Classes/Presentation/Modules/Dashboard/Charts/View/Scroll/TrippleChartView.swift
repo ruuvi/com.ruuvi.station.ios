@@ -14,29 +14,95 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
 
     weak var delegate: TrippleChartViewDelegate?
 
-    private lazy var landscapeConstraint: NSLayoutConstraint = {
-        return NSLayoutConstraint(item: scrollContainer,
-                                  attribute: .height,
-                                  relatedBy: .equal,
-                                  toItem: scrollView,
-                                  attribute: .height,
-                                  multiplier: 3.0,
-                                  constant: 0.0)
+    private lazy var landscapeConstraints: [NSLayoutConstraint] = {
+        let dummyLogoViewWidthConstraint = NSLayoutConstraint(item: dummyLogoView,
+                                                              attribute: .width,
+                                                              relatedBy: .equal,
+                                                              toItem: nil,
+                                                              attribute: .notAnAttribute,
+                                                              multiplier: 1.0,
+                                                              constant: 246)
+        dummyLogoViewWidthConstraint.priority = .defaultLow
+        return [dummyLogoViewWidthConstraint,
+                NSLayoutConstraint(item: scrollContainer,
+                                   attribute: .height,
+                                   relatedBy: .equal,
+                                   toItem: scrollView,
+                                   attribute: .height,
+                                   multiplier: 3.0,
+                                   constant: 0.0),
+                NSLayoutConstraint(item: nameLabel,
+                                   attribute: .leading,
+                                   relatedBy: .equal,
+                                   toItem: dummyLogoView,
+                                   attribute: .trailing,
+                                   multiplier: 1.0,
+                                   constant: 8),
+                NSLayoutConstraint(item: nameLabel,
+                                   attribute: .centerY,
+                                   relatedBy: .equal,
+                                   toItem: settingsButton,
+                                   attribute: .centerY,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                NSLayoutConstraint(item: cardsContainer,
+                                   attribute: .leading,
+                                   relatedBy: .greaterThanOrEqual,
+                                   toItem: nameLabel,
+                                   attribute: .trailing,
+                                   multiplier: 1.0,
+                                   constant: 8)]
     }()
-    private lazy var portraitConstraint: NSLayoutConstraint = {
-        return NSLayoutConstraint(item: scrollView,
-                                  attribute: .centerY,
-                                  relatedBy: .equal,
-                                  toItem: scrollContainer,
-                                  attribute: .centerY,
-                                  multiplier: 1.0,
-                                  constant: 0.0)
+    private lazy var portraitConstraints: [NSLayoutConstraint] = {
+        var topNameLabelConstraint: NSLayoutConstraint
+        if #available(iOS 11.0, *) {
+            let guide = safeAreaLayoutGuide
+             topNameLabelConstraint = nameLabel.topAnchor.constraint(equalTo: guide.topAnchor, constant: 60)
+
+        } else {
+            topNameLabelConstraint = NSLayoutConstraint(item: nameLabel,
+                                                        attribute: .top,
+                                                        relatedBy: .equal,
+                                                        toItem: self,
+                                                        attribute: .top,
+                                                        multiplier: 1.0,
+                                                        constant: 60)
+        }
+        return [topNameLabelConstraint,
+                NSLayoutConstraint(item: scrollView,
+                                   attribute: .centerY,
+                                   relatedBy: .equal,
+                                   toItem: scrollContainer,
+                                   attribute: .centerY,
+                                   multiplier: 1.0,
+                                   constant: 0.0),
+                NSLayoutConstraint(item: nameLabel,
+                                   attribute: .width,
+                                   relatedBy: .equal,
+                                   toItem: nil,
+                                   attribute: .notAnAttribute,
+                                   multiplier: 1.0,
+                                   constant: 271),
+                NSLayoutConstraint(item: nameLabel,
+                                   attribute: .centerX,
+                                   relatedBy: .equal,
+                                   toItem: self,
+                                   attribute: .centerX,
+                                   multiplier: 1.0,
+                                   constant: 0),
+                NSLayoutConstraint(item: dummyLogoView,
+                                   attribute: .width,
+                                   relatedBy: .equal,
+                                   toItem: nil,
+                                   attribute: .notAnAttribute,
+                                   multiplier: 1.0,
+                                   constant: 50)]
     }()
 
     private lazy var dummyLogoView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .red
+        view.backgroundColor = .clear
         return view
     }()
 
@@ -304,11 +370,11 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     @objc private func handleRotation() {
         let isLandscape = UIApplication.shared.statusBarOrientation.isLandscape
         if isLandscape {
-            portraitConstraint.isActive = !isLandscape
-            landscapeConstraint.isActive = isLandscape
+            NSLayoutConstraint.deactivate(portraitConstraints)
+            NSLayoutConstraint.activate(landscapeConstraints)
         } else {
-            landscapeConstraint.isActive = isLandscape
-            portraitConstraint.isActive = !isLandscape
+            NSLayoutConstraint.deactivate(landscapeConstraints)
+            NSLayoutConstraint.activate(portraitConstraints)
         }
     }
 
@@ -320,13 +386,6 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                                        attribute: .notAnAttribute,
                                                        multiplier: 1.0,
                                                        constant: 36))
-        dummyLogoView.addConstraint(NSLayoutConstraint(item: dummyLogoView,
-                                                       attribute: .width,
-                                                       relatedBy: .equal,
-                                                       toItem: nil,
-                                                       attribute: .notAnAttribute,
-                                                       multiplier: 1.0,
-                                                       constant: 246))
 
         if #available(iOS 11.0, *) {
             let guide = safeAreaLayoutGuide
@@ -666,36 +725,12 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
 
     private func positionName(label: UILabel) {
         label.addConstraint(NSLayoutConstraint(item: label,
-                                               attribute: .width,
-                                               relatedBy: .equal,
-                                               toItem: nil,
-                                               attribute: .notAnAttribute,
-                                               multiplier: 1.0,
-                                               constant: 271))
-
-        label.addConstraint(NSLayoutConstraint(item: label,
                                                attribute: .height,
                                                relatedBy: .equal,
                                                toItem: nil,
                                                attribute: .notAnAttribute,
                                                multiplier: 1.0,
                                                constant: 21))
-
-        addConstraint(NSLayoutConstraint(item: label,
-                                         attribute: .centerX,
-                                         relatedBy: .equal,
-                                         toItem: self,
-                                         attribute: .centerX,
-                                         multiplier: 1.0,
-                                         constant: 0))
-
-        if #available(iOS 11.0, *) {
-            let guide = safeAreaLayoutGuide
-             addConstraint(label.topAnchor.constraint(equalTo: guide.topAnchor, constant: 60))
-
-        } else {
-            addConstraint(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 60))
-        }
     }
 
     private func positionCards(container: UIView) {
