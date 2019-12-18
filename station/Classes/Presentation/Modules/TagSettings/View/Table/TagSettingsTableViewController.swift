@@ -269,6 +269,10 @@ extension TagSettingsTableViewController {
         if !keepConnectionSwitch.isOn {
             viewModel?.isTemperatureAlertOn.value = false
             viewModel?.isRelativeHumidityAlertOn.value = false
+            viewModel?.isAbsoluteHumidityAlertOn.value = false
+            viewModel?.isDewPointAlertOn.value = false
+            viewModel?.isPressureAlertOn.value = false
+            viewModel?.isMovementAlertOn.value = false
         }
     }
 }
