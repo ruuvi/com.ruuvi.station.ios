@@ -16,7 +16,8 @@ enum AlertType: CaseIterable {
                 .absoluteHumidity(lower: 0, upper: 0),
                 .dewPoint(lower: 0, upper: 0),
                 .pressure(lower: 0, upper: 0),
-                .connection]
+                .connection,
+                .movement]
     }
 }
 
