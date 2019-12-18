@@ -33,6 +33,13 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                   constant: 0.0)
     }()
 
+    private lazy var dummyLogoView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
+        return view
+    }()
+
     private lazy var backgroundImage = UIImage(named: "bg1", in: dynamicBundle, compatibleWith: nil)
     lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView(image: backgroundImage)
@@ -279,6 +286,8 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         addSubview(bottomButtonContainer)
         setupBottomButtonsContainer()
         position(bottomButtonContainer: bottomButtonContainer)
+        addSubview(dummyLogoView)
+        position(dummyLogoView: dummyLogoView)
 
         handleRotation()
         NotificationCenter.default.addObserver(self, selector: #selector(TrippleChartView.handleRotation), name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -300,6 +309,46 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         } else {
             landscapeConstraint.isActive = isLandscape
             portraitConstraint.isActive = !isLandscape
+        }
+    }
+
+    private func position(dummyLogoView: UIView) {
+        dummyLogoView.addConstraint(NSLayoutConstraint(item: dummyLogoView,
+                                                       attribute: .height,
+                                                       relatedBy: .equal,
+                                                       toItem: nil,
+                                                       attribute: .notAnAttribute,
+                                                       multiplier: 1.0,
+                                                       constant: 36))
+        dummyLogoView.addConstraint(NSLayoutConstraint(item: dummyLogoView,
+                                                       attribute: .width,
+                                                       relatedBy: .equal,
+                                                       toItem: nil,
+                                                       attribute: .notAnAttribute,
+                                                       multiplier: 1.0,
+                                                       constant: 246))
+
+        if #available(iOS 11.0, *) {
+            let guide = safeAreaLayoutGuide
+            addConstraint(dummyLogoView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 8))
+            addConstraint(dummyLogoView.topAnchor.constraint(equalTo: guide.topAnchor, constant: 8))
+
+        } else {
+            addConstraint(NSLayoutConstraint(item: dummyLogoView,
+                                             attribute: .leading,
+                                             relatedBy: .equal,
+                                             toItem: self,
+                                             attribute: .leading,
+                                             multiplier: 1.0,
+                                             constant: 8))
+
+            addConstraint(NSLayoutConstraint(item: dummyLogoView,
+                                             attribute: .top,
+                                             relatedBy: .equal,
+                                             toItem: self,
+                                             attribute: .top,
+                                             multiplier: 1.0,
+                                             constant: 28))
         }
     }
 
@@ -737,7 +786,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
             addConstraint(button.topAnchor.constraint(equalTo: guide.topAnchor, constant: 8))
 
         } else {
-            addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 8))
+            addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 28))
             addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -8))
         }
     }
