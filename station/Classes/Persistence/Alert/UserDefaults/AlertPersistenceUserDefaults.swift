@@ -58,6 +58,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let connectionAlertIsOnUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
 
+    // movement
+    private let movementAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.movementAlertIsOnUDKeyPrefix."
+
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
@@ -107,6 +111,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                  return nil
             }
+        case .movement:
+            if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid) {
+                return .movement
+            } else {
+                return nil
+            }
         }
     }
 
@@ -134,6 +144,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .movement:
+            prefs.set(true, forKey: movementAlertIsOnUDKeyPrefix + uuid)
         }
     }
 
@@ -151,6 +163,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
         case .connection:
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
+        case .movement:
+            prefs.set(false, forKey: movementAlertIsOnUDKeyPrefix + uuid)
         }
     }
 }

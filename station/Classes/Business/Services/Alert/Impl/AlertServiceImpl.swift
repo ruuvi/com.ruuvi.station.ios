@@ -168,6 +168,8 @@ class AlertServiceImpl: AlertService {
             case .connection:
                 //do nothing
                 break
+            case .movement:
+                print("TODO")
             }
         }
         if hasRegistrations(for: ruuviTag.uuid) {
