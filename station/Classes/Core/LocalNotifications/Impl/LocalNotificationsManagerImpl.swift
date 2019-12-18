@@ -288,6 +288,9 @@ extension LocalNotificationsManagerImpl {
                 case .connection:
                     // do nothing
                     break
+                case .movement:
+                    // do nothing
+                    break
                 }
             }
         }

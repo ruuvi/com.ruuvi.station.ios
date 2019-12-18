@@ -326,6 +326,12 @@ extension TagSettingsPresenter {
                 } else {
                     viewModel.isConnectionAlertOn.value = false
                 }
+            case .movement:
+                if case .movement = alertService.alert(for: ruuviTag.uuid, of: type) {
+                    viewModel.isMovementAlertOn.value = true
+                } else {
+                    viewModel.isMovementAlertOn.value = false
+                }
             }
         }
     }
@@ -541,6 +547,19 @@ extension TagSettingsPresenter {
                 }
             }
         }
+
+        // movement
+        bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in
+            let type: AlertType = .movement
+            let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+            if currentState != isOn.bound {
+                if isOn.bound {
+                    observer.alertService.register(type: type, for: ruuviTag.uuid)
+                } else {
+                    observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                }
+            }
+        }
     }
 
     private func startObservingSettingsChanges() {
@@ -655,6 +674,11 @@ extension TagSettingsPresenter {
                         let isOn = self?.alertService.isOn(type: type, for: uuid)
                         if isOn != self?.viewModel.isConnectionAlertOn.value {
                             self?.viewModel.isConnectionAlertOn.value = isOn
+                        }
+                    case .movement:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.viewModel.isMovementAlertOn.value {
+                            self?.viewModel.isMovementAlertOn.value = isOn
                         }
                     }
             }
