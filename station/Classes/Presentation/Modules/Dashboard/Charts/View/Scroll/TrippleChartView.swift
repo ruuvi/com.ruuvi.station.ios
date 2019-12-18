@@ -14,7 +14,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
 
     weak var delegate: TrippleChartViewDelegate?
 
-    lazy var landscapeConstraint: NSLayoutConstraint = {
+    private lazy var landscapeConstraint: NSLayoutConstraint = {
         return NSLayoutConstraint(item: scrollContainer,
                                   attribute: .height,
                                   relatedBy: .equal,
@@ -23,7 +23,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                   multiplier: 3.0,
                                   constant: 0.0)
     }()
-    lazy var portraitConstraint: NSLayoutConstraint = {
+    private lazy var portraitConstraint: NSLayoutConstraint = {
         return NSLayoutConstraint(item: scrollView,
                                   attribute: .centerY,
                                   relatedBy: .equal,
