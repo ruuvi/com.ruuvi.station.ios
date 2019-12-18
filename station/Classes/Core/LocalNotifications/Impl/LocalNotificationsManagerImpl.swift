@@ -285,6 +285,9 @@ extension LocalNotificationsManagerImpl {
                 case .pressure:
                     self?.lowPressureAlerts[uuid] = nil
                     self?.highPressureAlerts[uuid] = nil
+                case .connection:
+                    // do nothing
+                    break
                 }
             }
         }

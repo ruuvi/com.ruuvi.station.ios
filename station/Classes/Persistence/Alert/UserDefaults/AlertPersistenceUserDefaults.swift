@@ -54,6 +54,11 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let pressureAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.pressureAlertDescriptionUDKeyPrefix."
 
+    // connection
+    private let connectionAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
         case .temperature:
@@ -96,6 +101,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .connection:
+            if prefs.bool(forKey: connectionAlertIsOnUDKeyPrefix + uuid) {
+                return .connection
+            } else {
+                 return nil
+            }
         }
     }
 
@@ -121,6 +132,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
+        case .connection:
+            prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         }
     }
 
@@ -136,6 +149,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
+        case .connection:
+            prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         }
     }
 }

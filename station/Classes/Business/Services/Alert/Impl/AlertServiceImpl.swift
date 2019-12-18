@@ -165,6 +165,9 @@ class AlertServiceImpl: AlertService {
                     }
                     isTriggered = isTriggered || isLower || isUpper
                 }
+            case .connection:
+                //do nothing
+                break
             }
         }
         if hasRegistrations(for: ruuviTag.uuid) {

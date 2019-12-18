@@ -320,6 +320,12 @@ extension TagSettingsPresenter {
                         viewModel.pressureUpperBound.value = pressureUpperBound
                     }
                 }
+            case .connection:
+                if case .connection = alertService.alert(for: ruuviTag.uuid, of: type) {
+                    viewModel.isConnectionAlertOn.value = true
+                } else {
+                    viewModel.isConnectionAlertOn.value = false
+                }
             }
         }
     }
@@ -522,6 +528,19 @@ extension TagSettingsPresenter {
         bind(viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in
             observer.alertService.setPressure(description: pressureAlertDescription, for: ruuviTag.uuid)
         }
+
+        // connection
+        bind(viewModel.isConnectionAlertOn, fire: false) { observer, isOn in
+            let type: AlertType = .connection
+            let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
+            if currentState != isOn.bound {
+                if isOn.bound {
+                    observer.alertService.register(type: type, for: ruuviTag.uuid)
+                } else {
+                    observer.alertService.unregister(type: type, for: ruuviTag.uuid)
+                }
+            }
+        }
     }
 
     private func startObservingSettingsChanges() {
@@ -631,6 +650,11 @@ extension TagSettingsPresenter {
                         let isOn = self?.alertService.isOn(type: type, for: uuid)
                         if isOn != self?.viewModel.isPressureAlertOn.value {
                             self?.viewModel.isPressureAlertOn.value = isOn
+                        }
+                    case .connection:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.viewModel.isConnectionAlertOn.value {
+                            self?.viewModel.isConnectionAlertOn.value = isOn
                         }
                     }
             }
