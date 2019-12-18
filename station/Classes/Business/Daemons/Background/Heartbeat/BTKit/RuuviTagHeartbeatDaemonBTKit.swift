@@ -159,7 +159,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                                userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.btkit(error)])
                  }
              case .disconnected:
-                if observer.settings.presentConnectionNotifications {
+                if observer.alertService.isOn(type: .connection, for: uuid) {
                      DispatchQueue.main.async { [weak observer] in
                          observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                      }
@@ -167,7 +167,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
              case .already:
                  break // do nothing
              case .just:
-                if observer.settings.presentConnectionNotifications {
+                if observer.alertService.isOn(type: .connection, for: uuid) {
                      DispatchQueue.main.async { [weak observer] in
                          observer?.localNotificationsManager.showDidConnect(uuid: uuid)
                      }
@@ -216,13 +216,13 @@ extension RuuviTagHeartbeatDaemonBTKit {
              case .already:
                  break // do nothing
              case .bluetoothWasPoweredOff:
-                if observer.settings.presentConnectionNotifications {
+                if observer.alertService.isOn(type: .connection, for: uuid) {
                      DispatchQueue.main.async { [weak observer] in
                          observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                      }
                  }
              case .just:
-                if observer.settings.presentConnectionNotifications {
+                if observer.alertService.isOn(type: .connection, for: uuid) {
                      DispatchQueue.main.async { [weak observer] in
                          observer?.localNotificationsManager.showDidDisconnect(uuid: uuid)
                      }
@@ -249,7 +249,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                                userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.btkit(error)])
                  }
              case .just:
-                if observer.settings.presentConnectionNotifications {
+                if observer.alertService.isOn(type: .connection, for: uuid) {
                      DispatchQueue.main.async {
                          observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
                      }
@@ -259,7 +259,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
              case .stillConnected:
                  break // do nothing
              case .bluetoothWasPoweredOff:
-                if observer.settings.presentConnectionNotifications {
+                if observer.alertService.isOn(type: .connection, for: uuid) {
                      DispatchQueue.main.async {
                          observer.localNotificationsManager.showDidDisconnect(uuid: uuid)
                      }
