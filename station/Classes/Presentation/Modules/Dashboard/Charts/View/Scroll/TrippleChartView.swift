@@ -38,6 +38,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         let imageView = UIImageView(image: backgroundImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
 
@@ -60,6 +61,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         let imageView = UIImageView(image: backgroundOverlayImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleToFill
+        imageView.clipsToBounds = true
         return imageView
     }()
 
@@ -299,7 +301,6 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
             landscapeConstraint.isActive = isLandscape
             portraitConstraint.isActive = !isLandscape
         }
-
     }
 
     private func setupBottomButtonsContainer() {
