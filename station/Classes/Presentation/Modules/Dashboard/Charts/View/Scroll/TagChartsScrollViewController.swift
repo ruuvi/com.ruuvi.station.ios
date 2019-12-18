@@ -16,7 +16,7 @@ class TagChartsScrollViewController: UIViewController {
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
-    private var views = [TagChartsView]()
+    private var views = [TrippleChartView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
@@ -200,9 +200,6 @@ extension TagChartsScrollViewController {
         coordinator.animate(alongsideTransition: { [weak self] _ in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
-            self?.views.forEach({ (view) in
-                self?.configureiPadConstraints(for: view)
-            })
         }, completion: { [weak self] (_) in
             let width = coordinator.containerView.bounds.width
             self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
@@ -225,37 +222,37 @@ extension TagChartsScrollViewController: ChartViewDelegate {
 
 }
 
-// MARK: - TagChartsViewDelegate
-extension TagChartsScrollViewController: TagChartsViewDelegate {
-    func tagCharts(view: TagChartsView, didTriggerCards sender: Any) {
+// MARK: - TrippleChartViewDelegate
+extension TagChartsScrollViewController: TrippleChartViewDelegate {
+    func trippleChart(view: TrippleChartView, didTriggerCards sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerCards(for: viewModels[index])
         }
     }
 
-    func tagCharts(view: TagChartsView, didTriggerSettings sender: Any) {
+    func trippleChart(view: TrippleChartView, didTriggerSettings sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerSettings(for: viewModels[index])
         }
     }
 
-    func tagCharts(view: TagChartsView, didTriggerSync sender: Any) {
-        if let index = views.firstIndex(of: view),
-            index < viewModels.count {
-            output.viewDidTriggerSync(for: viewModels[index])
-        }
-    }
-
-    func tagCharts(view: TagChartsView, didTriggerClear sender: Any) {
+    func trippleChart(view: TrippleChartView, didTriggerClear sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerClear(for: viewModels[index])
         }
     }
 
-    func tagCharts(view: TagChartsView, didTriggerExport sender: Any) {
+    func trippleChart(view: TrippleChartView, didTriggerSync sender: Any) {
+        if let index = views.firstIndex(of: view),
+            index < viewModels.count {
+            output.viewDidTriggerSync(for: viewModels[index])
+        }
+    }
+
+    func trippleChart(view: TrippleChartView, didTriggerExport sender: Any) {
         if let index = views.firstIndex(of: view),
             index < viewModels.count {
             output.viewDidTriggerExport(for: viewModels[index])
@@ -399,7 +396,7 @@ extension TagChartsScrollViewController {
         }
     }
 
-    private func bindTemperature(view: TagChartsView, with viewModel: TagChartsViewModel) {
+    private func bindTemperature(view: TrippleChartView, with viewModel: TagChartsViewModel) {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
@@ -429,28 +426,28 @@ extension TagChartsScrollViewController {
         view.temperatureChart.bind(viewModel.celsius, fire: false, block: temperatureBlock)
         view.temperatureChart.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
         view.temperatureChart.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-
-        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [unowned temperatureChart] label, temperatureUnit in
-           if let temperatureUnit = temperatureUnit {
-               switch temperatureUnit {
-               case .celsius:
-                   label.text = "°C".localized()
-               case .fahrenheit:
-                   label.text = "°F".localized()
-               case .kelvin:
-                   label.text = "K".localized()
-               }
-           } else {
-               label.text = "N/A".localized()
-           }
-           if let temperatureChart = temperatureChart {
-               temperatureBlock(temperatureChart, nil)
-           }
+        
+        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [weak temperatureChart] label, temperatureUnit in
+            if let temperatureUnit = temperatureUnit {
+                switch temperatureUnit {
+                case .celsius:
+                    label.text = "°C".localized()
+                case .fahrenheit:
+                    label.text = "°F".localized()
+                case .kelvin:
+                    label.text = "K".localized()
+                }
+            } else {
+                label.text = "N/A".localized()
+            }
+            if let temperatureChart = temperatureChart {
+                temperatureBlock(temperatureChart, nil)
+            }
         }
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func bindHumidity(view: TagChartsView, with viewModel: TagChartsViewModel) {
+    private func bindHumidity(view: TrippleChartView, with viewModel: TagChartsViewModel) {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
         let ah = viewModel.absoluteHumidity
@@ -540,9 +537,11 @@ extension TagChartsScrollViewController {
 
     }
 
-    private func bind(view: TagChartsView, with viewModel: TagChartsViewModel) {
+    private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
+        
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
+        view.backgroundImageView.bind(viewModel.background) { $0.image = $1 }
+
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
 
@@ -598,11 +597,7 @@ extension TagChartsScrollViewController {
             if viewModels.count > 0 {
                 var leftView: UIView = scrollView
                 for viewModel in viewModels {
-                    // swiftlint:disable force_cast
-                    let view = Bundle.main.loadNibNamed("TagChartsView",
-                                                        owner: self,
-                                                        options: nil)?.first as! TagChartsView
-                    // swiftlint:enable force_cast
+                    let view = TrippleChartView()
                     view.delegate = self
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
@@ -622,54 +617,13 @@ extension TagChartsScrollViewController {
             }
         }
     }
-
-    private func position(_ view: TagChartsView, _ leftView: UIView) {
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .leading,
-                                                    relatedBy: .equal,
-                                                    toItem: leftView,
-                                                    attribute: leftView == scrollView ? .leading : .trailing,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .top,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .top,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .bottom,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .bottom,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .width,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .width,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .height,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .height,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        configureiPadConstraints(for: view)
-    }
-
-    private func configureiPadConstraints(for view: TagChartsView) {
-        if UIApplication.shared.statusBarOrientation.isLandscape {
-            view.iPadLandscapeConstraint.isActive = true
-            view.iPadPortraitConstraint.isActive = false
-        } else {
-            view.iPadLandscapeConstraint.isActive = false
-            view.iPadPortraitConstraint.isActive = true
-        }
+    
+    private func position(_ view: UIView, _ leftView: UIView) {
+        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: leftView, attribute: leftView == scrollView ? .leading : .trailing, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1.0, constant: 0.0))
     }
 
     private func restartAnimations() {
@@ -679,14 +633,14 @@ extension TagChartsScrollViewController {
             let view = views[i]
             let imageView = view.alertImageView
             if let state = viewModel.alertState.value {
-                imageView?.alpha = 1.0
+                imageView.alpha = 1.0
                 switch state {
                 case .empty:
-                    imageView?.image = alertOffImage
+                    imageView.image = alertOffImage
                 case .registered:
-                    imageView?.image = alertOnImage
+                    imageView.image = alertOnImage
                 case .firing:
-                    imageView?.image = alertActiveImage
+                    imageView.image = alertActiveImage
                     UIView.animate(withDuration: 0.5,
                                   delay: 0,
                                   options: [.repeat, .autoreverse],
@@ -695,7 +649,7 @@ extension TagChartsScrollViewController {
                                 })
                 }
             } else {
-                imageView?.image = nil
+                imageView.image = nil
             }
         }
     }

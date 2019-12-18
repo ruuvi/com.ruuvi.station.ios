@@ -310,7 +310,6 @@
 		0E6BAE2723856A01003A2D4C /* AboutModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FC22B7D2C90015F9E0 /* AboutModuleInput.swift */; };
 		0E6BAE2823856A01003A2D4C /* WelcomeViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214822B8FC570015F9E0 /* WelcomeViewOutput.swift */; };
 		0E6BAE2923856A01003A2D4C /* MainNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */; };
-		0E6BAE2A23856A01003A2D4C /* TagChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DE2333797300FFA577 /* TagChartsView.swift */; };
 		0E6BAE2B23856A01003A2D4C /* RuuviTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */; };
 		0E6BAE2C23856A01003A2D4C /* PermissionsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */; };
 		0E6BAE2D23856A01003A2D4C /* WebTagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */; };
@@ -458,7 +457,6 @@
 		0E6BAEC623856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
 		0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
-		0E6BAEC923856A01003A2D4C /* TagChartsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E02333799B00FFA577 /* TagChartsView.xib */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
@@ -486,6 +484,9 @@
 		0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6C239802CA00A37E1A /* HeartbeatPresenter.swift */; };
 		0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6E2398031B00A37E1A /* HeartbeatInitializer.swift */; };
 		0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF702398035C00A37E1A /* HeartbeatConfigurator.swift */; };
+		0E86AD0E23AA3A8400E70EAD /* TrippleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E86AD0D23AA3A8400E70EAD /* TrippleChartView.swift */; };
+		0E86AD0F23AA3A8400E70EAD /* TrippleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E86AD0D23AA3A8400E70EAD /* TrippleChartView.swift */; };
+		0E86AD1023AA3A8400E70EAD /* TrippleChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E86AD0D23AA3A8400E70EAD /* TrippleChartView.swift */; };
 		0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8A100123845E5100A9CBA6 /* Defaults.storyboard */; };
 		0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */; };
 		0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */; };
@@ -670,7 +671,6 @@
 		0E8BD35D238566AB008B31EF /* AboutModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20FC22B7D2C90015F9E0 /* AboutModuleInput.swift */; };
 		0E8BD35E238566AB008B31EF /* WelcomeViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214822B8FC570015F9E0 /* WelcomeViewOutput.swift */; };
 		0E8BD35F238566AB008B31EF /* MainNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213E22B8FB840015F9E0 /* MainNavigationDelegate.swift */; };
-		0E8BD360238566AB008B31EF /* TagChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DE2333797300FFA577 /* TagChartsView.swift */; };
 		0E8BD361238566AB008B31EF /* RuuviTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */; };
 		0E8BD362238566AB008B31EF /* PermissionsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301122CF636500B52E39 /* PermissionsManagerImpl.swift */; };
 		0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3A22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift */; };
@@ -818,7 +818,6 @@
 		0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
 		0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
-		0E8BD3FF238566AB008B31EF /* TagChartsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E02333799B00FFA577 /* TagChartsView.xib */; };
 		0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */; };
 		0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
 		0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C223335DA700FFA577 /* TagChartsViewInput.swift */; };
@@ -833,8 +832,6 @@
 		0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */; };
 		0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */; };
 		0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */; };
-		0E8FD0DF2333797300FFA577 /* TagChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DE2333797300FFA577 /* TagChartsView.swift */; };
-		0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E02333799B00FFA577 /* TagChartsView.xib */; };
 		0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */; };
 		0E9959B8235EF24D001C37D8 /* RuuviTagHeartbeatDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959B7235EF24D001C37D8 /* RuuviTagHeartbeatDaemon.swift */; };
 		0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9959BA235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift */; };
@@ -1210,6 +1207,7 @@
 		0E84BF6C239802CA00A37E1A /* HeartbeatPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatPresenter.swift; sourceTree = "<group>"; };
 		0E84BF6E2398031B00A37E1A /* HeartbeatInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatInitializer.swift; sourceTree = "<group>"; };
 		0E84BF702398035C00A37E1A /* HeartbeatConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatConfigurator.swift; sourceTree = "<group>"; };
+		0E86AD0D23AA3A8400E70EAD /* TrippleChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrippleChartView.swift; sourceTree = "<group>"; };
 		0E8A100123845E5100A9CBA6 /* Defaults.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Defaults.storyboard; sourceTree = "<group>"; };
 		0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsViewController.swift; sourceTree = "<group>"; };
 		0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsViewInput.swift; sourceTree = "<group>"; };
@@ -1241,8 +1239,6 @@
 		0E8FD0D423336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsPresentTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E8FD0D623336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsDismissTransitionAnimation.swift; sourceTree = "<group>"; };
 		0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsViewModel.swift; sourceTree = "<group>"; };
-		0E8FD0DE2333797300FFA577 /* TagChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsView.swift; sourceTree = "<group>"; };
-		0E8FD0E02333799B00FFA577 /* TagChartsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagChartsView.xib; sourceTree = "<group>"; };
 		0E8FD0E22333893600FFA577 /* TagChartsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsModuleOutput.swift; sourceTree = "<group>"; };
 		0E9959B7235EF24D001C37D8 /* RuuviTagHeartbeatDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagHeartbeatDaemon.swift; sourceTree = "<group>"; };
 		0E9959BA235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagHeartbeatDaemonBTKit.swift; sourceTree = "<group>"; };
@@ -2664,8 +2660,7 @@
 		0E8FD0DA23336FCA00FFA577 /* Scroll */ = {
 			isa = PBXGroup;
 			children = (
-				0E8FD0E02333799B00FFA577 /* TagChartsView.xib */,
-				0E8FD0DE2333797300FFA577 /* TagChartsView.swift */,
+				0E86AD0D23AA3A8400E70EAD /* TrippleChartView.swift */,
 				0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */,
 			);
 			path = Scroll;
@@ -3897,7 +3892,6 @@
 				0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */,
 				0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */,
 				0EAD33FB239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
-				0E6BAEC923856A01003A2D4C /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3939,7 +3933,6 @@
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */,
 				0EAD33FA239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
-				0E8BD3FF238566AB008B31EF /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3981,7 +3974,6 @@
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
 				0EAD33F9239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
-				0E8FD0E12333799B00FFA577 /* TagChartsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4234,6 +4226,7 @@
 				0E6BADC623856A01003A2D4C /* Observable.swift in Sources */,
 				0E6BADC723856A01003A2D4C /* ForegroundTableViewController.swift in Sources */,
 				0E6BADC923856A01003A2D4C /* CalibrationPersistence.swift in Sources */,
+				0E86AD1023AA3A8400E70EAD /* TrippleChartView.swift in Sources */,
 				0E6BADCA23856A01003A2D4C /* TagSettingsViewOutput.swift in Sources */,
 				0E6BADCB23856A01003A2D4C /* ForegroundViewModel.swift in Sources */,
 				0E6BADCC23856A01003A2D4C /* CardsViewModel.swift in Sources */,
@@ -4336,7 +4329,6 @@
 				0E6BAE2823856A01003A2D4C /* WelcomeViewOutput.swift in Sources */,
 				0EAD33E82399273E00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				0E6BAE2923856A01003A2D4C /* MainNavigationDelegate.swift in Sources */,
-				0E6BAE2A23856A01003A2D4C /* TagChartsView.swift in Sources */,
 				0E6BAE2B23856A01003A2D4C /* RuuviTagPersistence.swift in Sources */,
 				0E6BAE2C23856A01003A2D4C /* PermissionsManagerImpl.swift in Sources */,
 				0E6BAE2D23856A01003A2D4C /* WebTagSettingsTableInitializer.swift in Sources */,
@@ -4545,6 +4537,7 @@
 				0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */,
 				0E8BD2FD238566AB008B31EF /* ForegroundTableViewController.swift in Sources */,
 				0E8BD2FF238566AB008B31EF /* CalibrationPersistence.swift in Sources */,
+				0E86AD0F23AA3A8400E70EAD /* TrippleChartView.swift in Sources */,
 				0E8BD300238566AB008B31EF /* TagSettingsViewOutput.swift in Sources */,
 				0E8BD301238566AB008B31EF /* ForegroundViewModel.swift in Sources */,
 				0E8BD302238566AB008B31EF /* CardsViewModel.swift in Sources */,
@@ -4647,7 +4640,6 @@
 				0E8BD35E238566AB008B31EF /* WelcomeViewOutput.swift in Sources */,
 				0EAD33DA2399273D00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				0E8BD35F238566AB008B31EF /* MainNavigationDelegate.swift in Sources */,
-				0E8BD360238566AB008B31EF /* TagChartsView.swift in Sources */,
 				0E8BD361238566AB008B31EF /* RuuviTagPersistence.swift in Sources */,
 				0E8BD362238566AB008B31EF /* PermissionsManagerImpl.swift in Sources */,
 				0E8BD363238566AB008B31EF /* WebTagSettingsTableInitializer.swift in Sources */,
@@ -4856,6 +4848,7 @@
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
+				0E86AD0E23AA3A8400E70EAD /* TrippleChartView.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
@@ -4956,7 +4949,6 @@
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
 				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,
 				0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */,
-				0E8FD0DF2333797300FFA577 /* TagChartsView.swift in Sources */,
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
 				0E046F3B22F05AA800BD4E9C /* WebTagSettingsTableInitializer.swift in Sources */,
