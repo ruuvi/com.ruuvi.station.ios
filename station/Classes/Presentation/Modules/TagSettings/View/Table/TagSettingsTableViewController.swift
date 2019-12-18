@@ -888,21 +888,10 @@ extension TagSettingsTableViewController {
                 self?.updateUIConnectionAlertDescription()
             }
 
-            let isPNEnabled = viewModel.isPushNotificationsEnabled
-            let isConnected = viewModel.isConnected
-
-            connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isEnabled = isPN && isConnected.bound
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
             connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isConnected] view, isPushNotificationsEnabled in
+                view, isPushNotificationsEnabled in
                 let isPN = isPushNotificationsEnabled ?? false
-                let isCo = isConnected?.value ?? false
-                let isEnabled = isPN && isCo
+                let isEnabled = isPN
                 view.isEnabled = isEnabled
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
