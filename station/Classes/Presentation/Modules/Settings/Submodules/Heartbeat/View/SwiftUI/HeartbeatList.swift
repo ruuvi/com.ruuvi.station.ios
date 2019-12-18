@@ -9,10 +9,6 @@ struct HeartbeatList: View {
 
     var body: some View {
         VStack {
-            Toggle(isOn: self.$env.viewModel.presentConnectionNotifications.value.bound) {
-                Text(self.env.viewModel.presentNotificationsTitle)
-            }
-
             Toggle(isOn: self.$env.viewModel.saveHeartbeats.value.bound) {
                 Text(self.env.viewModel.saveHeartbeatsTitle)
             }

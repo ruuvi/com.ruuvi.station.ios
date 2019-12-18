@@ -112,7 +112,6 @@
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Background";
-"Heartbeat.PresentNotifications.title" = "Show Notifications";
 "Heartbeat.SaveHeartbeats.title" = "Data Logging Interval";
 "Heartbeat.Interval.Every.string" = "every";
 "Heartbeat.Interval.Min.string" = "min";

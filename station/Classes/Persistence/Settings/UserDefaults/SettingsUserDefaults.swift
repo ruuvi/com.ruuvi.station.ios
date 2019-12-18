@@ -163,9 +163,6 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.alertsRepeatingIntervalSeconds", defaultValue: 3600)
     var alertsRepeatingIntervalSeconds: Int
 
-    @UserDefault("SettingsUserDegaults.presentConnectionNotifications", defaultValue: false)
-    var presentConnectionNotifications: Bool
-
     @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: false)
     var saveHeartbeats: Bool
 
