@@ -49,4 +49,5 @@ struct TagSettingsViewModel {
     let pressureUpperBound: Observable<Double?> = Observable<Double?>(1100)
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
 
+    let isConnectionAlertOn: Observable<Bool?> = Observable<Bool?>(false)
 }

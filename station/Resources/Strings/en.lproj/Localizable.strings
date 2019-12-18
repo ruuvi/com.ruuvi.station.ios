@@ -267,6 +267,8 @@
 "TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
 "TagSettings.PressureAlert.title" = "Air Pressure";
 "TagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.Alerts.Connection.description" = "Alert when connected/disconnected";
+"TagSettings.ConnectionAlert.title" = "Connection";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Both callback result and error are nil";
