@@ -426,7 +426,7 @@ extension TagChartsScrollViewController {
         view.temperatureChart.bind(viewModel.celsius, fire: false, block: temperatureBlock)
         view.temperatureChart.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
         view.temperatureChart.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-        
+
         view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [weak temperatureChart] label, temperatureUnit in
             if let temperatureUnit = temperatureUnit {
                 switch temperatureUnit {
@@ -538,7 +538,7 @@ extension TagChartsScrollViewController {
     }
 
     private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        
+
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImageView.bind(viewModel.background) { $0.image = $1 }
 
@@ -617,13 +617,43 @@ extension TagChartsScrollViewController {
             }
         }
     }
-    
+
     private func position(_ view: UIView, _ leftView: UIView) {
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .leading, relatedBy: .equal, toItem: leftView, attribute: leftView == scrollView ? .leading : .trailing, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1.0, constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1.0, constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .leading,
+                                                    relatedBy: .equal,
+                                                    toItem: leftView,
+                                                    attribute: leftView == scrollView ? .leading : .trailing,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .top,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .top,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .bottom,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .bottom,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .width,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .width,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        scrollView.addConstraint(NSLayoutConstraint(item: view,
+                                                    attribute: .height,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .height,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
     }
 
     private func restartAnimations() {

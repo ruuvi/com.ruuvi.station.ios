@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import Charts
 
@@ -9,7 +10,7 @@ protocol TrippleChartViewDelegate: class {
     func trippleChart(view: TrippleChartView, didTriggerExport sender: Any)
 }
 
-@IBDesignable
+// swiftlint:disable:next type_body_length
 class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
 
     weak var delegate: TrippleChartViewDelegate?
@@ -138,7 +139,9 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         return imageView
     }()
 
-    private lazy var settingsButtonImage = UIImage(named: "baseline_settings_white_48pt", in: dynamicBundle, compatibleWith: nil)
+    private lazy var settingsButtonImage = UIImage(named: "baseline_settings_white_48pt",
+                                                   in: dynamicBundle,
+                                                   compatibleWith: nil)
     lazy var settingsButton: UIButton = {
         let button = UIButton(type: .custom)
         button.tintColor = .white
@@ -382,8 +385,18 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         position(dummyLogoView: dummyLogoView)
 
         handleRotation()
-        NotificationCenter.default.addObserver(self, selector: #selector(TrippleChartView.handleRotation), name: UIDevice.orientationDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(TrippleChartView.recoverContentOffset), name: UIDevice.orientationDidChangeNotification, object: nil)
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(TrippleChartView.handleRotation),
+                         name: UIDevice.orientationDidChangeNotification,
+                         object: nil)
+        NotificationCenter
+            .default
+            .addObserver(self,
+                         selector: #selector(TrippleChartView.recoverContentOffset),
+                         name: UIDevice.orientationDidChangeNotification,
+                         object: nil)
     }
 
     @objc private func recoverContentOffset() {
@@ -421,6 +434,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                          constant: 0.0))
     }
 
+    // swiftlint:disable:next function_body_length
     private func setupAlertView() {
         alertView.addSubview(alertImageView)
         alertView.addSubview(alertButton)
@@ -504,6 +518,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func setupBottomButtonsContainer() {
         bottomButtonContainer.addSubview(syncButton)
         bottomButtonContainer.addConstraint(NSLayoutConstraint(item: bottomButtonContainer,
@@ -570,6 +585,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                                                constant: 0.0))
     }
 
+    // swiftlint:disable:next function_body_length
     private func position(bottomButtonContainer: UIView) {
 
         bottomButtonContainer.addConstraint(NSLayoutConstraint(item: bottomButtonContainer,
@@ -664,6 +680,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         setupUnitLabels()
     }
 
+    // swiftlint:disable:next function_body_length
     private func setupUnitLabels() {
         temperatureChart.addSubview(temperatureUnitLabel)
         temperatureChart.addConstraint(NSLayoutConstraint(item: temperatureUnitLabel,
@@ -714,6 +731,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                                        constant: 8))
     }
 
+    // swiftlint:disable:next function_body_length
     private func setupScrollContainer() {
         scrollContainer.addSubview(temperatureChart)
         scrollContainer.addSubview(humidityChart)
@@ -843,6 +861,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                          constant: 0.0))
     }
 
+    // swiftlint:disable:next function_body_length
     private func setupCardsContainer() {
         cardsContainer.addSubview(cardsImageView)
         cardsContainer.addSubview(cardsButton)
@@ -914,8 +933,20 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
             addConstraint(button.topAnchor.constraint(equalTo: guide.topAnchor, constant: 8))
 
         } else {
-            addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 28))
-            addConstraint(NSLayoutConstraint(item: button, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -8))
+            addConstraint(NSLayoutConstraint(item: button,
+                                             attribute: .top,
+                                             relatedBy: .equal,
+                                             toItem: self,
+                                             attribute: .top,
+                                             multiplier: 1.0,
+                                             constant: 28))
+            addConstraint(NSLayoutConstraint(item: button,
+                                             attribute: .trailing,
+                                             relatedBy: .equal,
+                                             toItem: self,
+                                             attribute: .trailing,
+                                             multiplier: 1.0,
+                                             constant: -8))
         }
     }
 
@@ -950,3 +981,4 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                          constant: 0.0))
     }
 }
+// swiftlint:enable file_length

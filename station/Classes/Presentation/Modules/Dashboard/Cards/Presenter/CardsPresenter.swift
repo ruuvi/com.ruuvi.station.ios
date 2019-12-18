@@ -525,7 +525,7 @@ extension CardsPresenter {
         }
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func startObservingDaemonsErrors() {
         webTagDaemonFailureToken = NotificationCenter
             .default
@@ -546,7 +546,7 @@ extension CardsPresenter {
                     self?.view.showWebTagAPILimitExceededError()
                 } else if case .map(let mapError) = error {
                     let nsError = mapError as NSError
-                    if nsError.code == 2, nsError.domain == "kCLErrorDomain"  {
+                    if nsError.code == 2, nsError.domain == "kCLErrorDomain" {
                         self?.view.showReverseGeocodingFailed()
                     } else {
                         self?.errorPresenter.present(error: error)

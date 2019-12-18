@@ -118,9 +118,15 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
 
         updateUITemperatureAlertDescription()
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
-        relativeHumidityAlertHeaderCell.titleLabel.text = "TagSettings.RelativeAirHumidityAlert.title".localized() + " " + "%".localized()
-        absoluteHumidityAlertHeaderCell.titleLabel.text = "TagSettings.AbsoluteAirHumidityAlert.title".localized() + " " + "g/m³".localized()
-        pressureAlertHeaderCell.titleLabel.text = "TagSettings.PressureAlert.title".localized() + " " + "hPa".localized()
+        relativeHumidityAlertHeaderCell.titleLabel.text
+            = "TagSettings.RelativeAirHumidityAlert.title".localized()
+            + " " + "%".localized()
+        absoluteHumidityAlertHeaderCell.titleLabel.text
+            = "TagSettings.AbsoluteAirHumidityAlert.title".localized()
+            + " " + "g/m³".localized()
+        pressureAlertHeaderCell.titleLabel.text
+            = "TagSettings.PressureAlert.title".localized()
+            + " " + "hPa".localized()
         tableView.reloadData()
     }
 
@@ -382,6 +388,7 @@ extension TagSettingsTableViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if viewModel?.isConnectable.value ?? false {
@@ -475,7 +482,7 @@ extension TagSettingsTableViewController: TagSettingsAlertHeaderCellDelegate {
     }
 }
 
-// MARK - TagSettingsAlertControlsCellDelegate
+// MARK: - TagSettingsAlertControlsCellDelegate
 extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didEnter description: String?) {
         switch cell {
@@ -494,6 +501,7 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didSlideTo minValue: CGFloat, maxValue: CGFloat) {
         switch cell {
         case temperatureAlertControlsCell:
@@ -587,7 +595,7 @@ extension TagSettingsTableViewController {
                 tableView.reloadData()
             }
 
-            tableView.bind(viewModel.humidityUnit) { (tableView, humidityUnit) in
+            tableView.bind(viewModel.humidityUnit) { tableView, _ in
                 tableView.reloadData()
             }
 
@@ -758,6 +766,7 @@ extension TagSettingsTableViewController {
        }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindTemperatureAlertCells() {
         if isViewLoaded, let viewModel = viewModel {
             temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
@@ -815,7 +824,8 @@ extension TagSettingsTableViewController {
             let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
             let isConnected = viewModel.isConnected
 
-            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
+                [weak isPNEnabled] (view, isConnected) in
                 let isPN = isPNEnabled?.value ?? false
                 let isEnabled = isPN && isConnected.bound
                 view.isEnabled = isEnabled
@@ -850,13 +860,14 @@ extension TagSettingsTableViewController {
                 textField.text = temperatureAlertDescription
             }
 
-            tableView.bind(viewModel.isTemperatureAlertOn) { (tableView, isOn) in
+            tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindPressureAlertCells() {
        if isViewLoaded, let viewModel = viewModel {
            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
@@ -919,13 +930,14 @@ extension TagSettingsTableViewController {
                textField.text = pressureAlertDescription
            }
 
-           tableView.bind(viewModel.isPressureAlertOn) { (tableView, isOn) in
+           tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
                tableView.beginUpdates()
                tableView.endUpdates()
            }
        }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindRelativeHumidityCells() {
         if isViewLoaded, let viewModel = viewModel {
             relativeHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isRelativeHumidityAlertOn) { (view, isOn) in
@@ -945,7 +957,8 @@ extension TagSettingsTableViewController {
                 self?.updateUIRelativeHumidityUpperBound()
                 self?.updateUIRelativeHumidityAlertDescription()
             }
-            relativeHumidityAlertHeaderCell.descriptionLabel.bind(viewModel.isRelativeHumidityAlertOn) { [weak self] (_, _) in
+            relativeHumidityAlertHeaderCell.descriptionLabel.bind(viewModel.isRelativeHumidityAlertOn) {
+                [weak self] (_, _) in
                 self?.updateUIRelativeHumidityAlertDescription()
             }
 
@@ -953,7 +966,8 @@ extension TagSettingsTableViewController {
             let isRelativeHumidityAlertOn = viewModel.isRelativeHumidityAlertOn
             let isConnected = viewModel.isConnected
 
-            relativeHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+            relativeHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
+                [weak isPNEnabled] (view, isConnected) in
                 let isPN = isPNEnabled?.value ?? false
                 let isEnabled = isPN && isConnected.bound
                 view.isEnabled = isEnabled
@@ -988,13 +1002,14 @@ extension TagSettingsTableViewController {
                 textField.text = relativeHumidityAlertDescription
             }
 
-            tableView.bind(viewModel.isRelativeHumidityAlertOn) { (tableView, isOn) in
+            tableView.bind(viewModel.isRelativeHumidityAlertOn) { tableView, _ in
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindAbsoluteHumidityCells() {
         if isViewLoaded, let viewModel = viewModel {
             absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isAbsoluteHumidityAlertOn) { (view, isOn) in
@@ -1014,7 +1029,8 @@ extension TagSettingsTableViewController {
                 self?.updateUIAbsoluteHumidityUpperBound()
                 self?.updateUIAbsoluteHumidityAlertDescription()
             }
-            absoluteHumidityAlertHeaderCell.descriptionLabel.bind(viewModel.isAbsoluteHumidityAlertOn) { [weak self] (_, _) in
+            absoluteHumidityAlertHeaderCell.descriptionLabel.bind(viewModel.isAbsoluteHumidityAlertOn) {
+                [weak self] (_, _) in
                 self?.updateUIAbsoluteHumidityAlertDescription()
             }
 
@@ -1022,7 +1038,8 @@ extension TagSettingsTableViewController {
             let isAbsoluteHumidityAlertOn = viewModel.isAbsoluteHumidityAlertOn
             let isConnected = viewModel.isConnected
 
-            absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+            absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
+                [weak isPNEnabled] (view, isConnected) in
                 let isPN = isPNEnabled?.value ?? false
                 let isEnabled = isPN && isConnected.bound
                 view.isEnabled = isEnabled
@@ -1057,13 +1074,14 @@ extension TagSettingsTableViewController {
                 textField.text = absoluteHumidityAlertDescription
             }
 
-            tableView.bind(viewModel.isAbsoluteHumidityAlertOn) { (tableView, isOn) in
+            tableView.bind(viewModel.isAbsoluteHumidityAlertOn) { tableView, _ in
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bindDewPointAlertCells() {
         if isViewLoaded, let viewModel = viewModel {
             dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isDewPointAlertOn) { (view, isOn) in
@@ -1158,7 +1176,7 @@ extension TagSettingsTableViewController {
                 textField.text = dewPointAlertDescription
             }
 
-            tableView.bind(viewModel.isDewPointAlertOn) { (tableView, isOn) in
+            tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
@@ -1249,7 +1267,8 @@ extension TagSettingsTableViewController {
     private func updateUIAbsoluteHumidityAlertDescription() {
         if isViewLoaded {
             if let isAbsoluteHumidityAlertOn = viewModel?.isAbsoluteHumidityAlertOn.value, isAbsoluteHumidityAlertOn {
-                if let l = viewModel?.absoluteHumidityLowerBound.value, let u = viewModel?.absoluteHumidityUpperBound.value {
+                if let l = viewModel?.absoluteHumidityLowerBound.value,
+                    let u = viewModel?.absoluteHumidityUpperBound.value {
                     let format = "TagSettings.Alerts.AbsoluteHumidity.description".localized()
                     absoluteHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
