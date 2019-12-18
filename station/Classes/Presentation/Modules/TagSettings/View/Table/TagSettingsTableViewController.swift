@@ -26,6 +26,8 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
 
+    @IBOutlet weak var connectionAlertHeaderCell: TagSettingsAlertHeaderCell!
+
     @IBOutlet weak var pressureAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var pressureAlertControlsCell: TagSettingsAlertControlsCell!
 
@@ -127,6 +129,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         pressureAlertHeaderCell.titleLabel.text
             = "TagSettings.PressureAlert.title".localized()
             + " " + "hPa".localized()
+        connectionAlertHeaderCell.titleLabel.text = "TagSettings.ConnectionAlert.title".localized()
         tableView.reloadData()
     }
 
@@ -416,6 +419,8 @@ extension TagSettingsTableViewController {
                 return headerHeight
             case pressureAlertControlsCell:
                 return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
+            case connectionAlertHeaderCell:
+                return headerHeight
             default:
                 return 44
             }
@@ -440,6 +445,8 @@ extension TagSettingsTableViewController {
             case pressureAlertHeaderCell:
                 return 0
             case pressureAlertControlsCell:
+                return 0
+            case connectionAlertHeaderCell:
                 return 0
             default:
                 return 44
@@ -476,6 +483,8 @@ extension TagSettingsTableViewController: TagSettingsAlertHeaderCellDelegate {
             viewModel?.isDewPointAlertOn.value = isOn
         case pressureAlertHeaderCell:
             viewModel?.isPressureAlertOn.value = isOn
+        case connectionAlertHeaderCell:
+            viewModel?.isConnectionAlertOn.value = isOn
         default:
             break
         }
@@ -564,6 +573,7 @@ extension TagSettingsTableViewController {
         dewPointAlertControlsCell.delegate = self
         pressureAlertHeaderCell.delegate = self
         pressureAlertControlsCell.delegate = self
+        connectionAlertHeaderCell.delegate = self
     }
 }
 
@@ -581,6 +591,7 @@ extension TagSettingsTableViewController {
         bindAbsoluteHumidityCells()
         bindDewPointAlertCells()
         bindPressureAlertCells()
+        bindConnectionAlertCell()
         if isViewLoaded, let viewModel = viewModel {
 
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
@@ -864,6 +875,38 @@ extension TagSettingsTableViewController {
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
+        }
+    }
+
+    private func bindConnectionAlertCell() {
+        if isViewLoaded, let viewModel = viewModel {
+            connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isConnectionAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
+
+            connectionAlertHeaderCell.descriptionLabel.bind(viewModel.isConnectionAlertOn) { [weak self] (_, _) in
+                self?.updateUIConnectionAlertDescription()
+            }
+
+            let isPNEnabled = viewModel.isPushNotificationsEnabled
+            let isConnected = viewModel.isConnected
+
+            connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isEnabled = isPN && isConnected.bound
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isConnected] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isCo = isConnected?.value ?? false
+                let isEnabled = isPN && isCo
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
         }
     }
 
@@ -1276,6 +1319,17 @@ extension TagSettingsTableViewController {
                 }
             } else {
                 absoluteHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+            }
+        }
+    }
+
+    private func updateUIConnectionAlertDescription() {
+        if isViewLoaded {
+            if let isConnectionAlertOn = viewModel?.isConnectionAlertOn.value, isConnectionAlertOn {
+                connectionAlertHeaderCell.descriptionLabel.text
+                    = "TagSettings.Alerts.Connection.description".localized()
+            } else {
+                connectionAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
             }
         }
     }
