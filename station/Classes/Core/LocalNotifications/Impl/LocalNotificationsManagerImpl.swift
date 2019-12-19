@@ -1,7 +1,7 @@
 import UserNotifications
 import UIKit
 
-enum LocalNotificationType: String {
+enum LowHighNotificationType: String {
     case temperature
     case relativeHumidity
     case absoluteHumidity
@@ -9,7 +9,7 @@ enum LocalNotificationType: String {
     case pressure
 }
 
-enum LocalNotificationReason {
+enum LowHighNotificationReason {
     case higher
     case lower
 }
@@ -31,10 +31,10 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var lowPressureAlerts = [String: Date]()
     var highPressureAlerts = [String: Date]()
 
-    private let alertCategory = "com.ruuvi.station.alerts"
-    private let alertCategoryDisableAction = "com.ruuvi.station.alerts.disable"
-    private let alertCategoryUUIDKey = "uuid"
-    private let alertCategoryTypeKey = "type"
+    private let lowHighAlertCategory = "com.ruuvi.station.alerts.lh"
+    private let lowHighAlertCategoryDisableAction = "com.ruuvi.station.alerts.lh.disable"
+    private let lowHighAlertCategoryUUIDKey = "com.ruuvi.station.alerts.lh.uuid"
+    private let lowHighAlertCategoryTypeKey = "com.ruuvi.station.alerts.lh.type"
 
     private var alertDidChangeToken: NSObjectProtocol?
 
@@ -140,8 +140,8 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 extension LocalNotificationsManagerImpl {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func notify(type: LocalNotificationType,
-                        reason: LocalNotificationReason,
+    private func notify(type: LowHighNotificationType,
+                        reason: LowHighNotificationReason,
                         for uuid: String) {
         var needsToShow: Bool
         var cache: [String: Date]
@@ -212,9 +212,9 @@ extension LocalNotificationsManagerImpl {
                 }
             }
             content.title = title
-            content.userInfo = [alertCategoryUUIDKey: uuid,
-                                alertCategoryTypeKey: type.rawValue]
-            content.categoryIdentifier = alertCategory
+            content.userInfo = [lowHighAlertCategoryUUIDKey: uuid,
+                                lowHighAlertCategoryTypeKey: type.rawValue]
+            content.categoryIdentifier = lowHighAlertCategory
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
                 let body: String
@@ -319,11 +319,11 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.delegate = self
 
         // alerts actions and categories
-        let disableAction = UNNotificationAction(identifier: alertCategoryDisableAction,
+        let disableAction = UNNotificationAction(identifier: lowHighAlertCategoryDisableAction,
                                                  title: "LocalNotificationsManager.Disable.button".localized(),
                                                  options: UNNotificationActionOptions(rawValue: 0))
         let disableAlertCategory =
-              UNNotificationCategory(identifier: alertCategory,
+              UNNotificationCategory(identifier: lowHighAlertCategory,
                                      actions: [disableAction],
                                      intentIdentifiers: [],
                                      options: .customDismissAction)
@@ -343,42 +343,42 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        guard let uuid = userInfo[alertCategoryUUIDKey] as? String else { completionHandler(); return }
-        guard let typeString = userInfo[alertCategoryTypeKey] as? String,
-            let type = LocalNotificationType(rawValue: typeString) else { completionHandler(); return }
+        guard let uuid = userInfo[lowHighAlertCategoryUUIDKey] as? String else { completionHandler(); return }
+        guard let typeString = userInfo[lowHighAlertCategoryTypeKey] as? String,
+            let type = LowHighNotificationType(rawValue: typeString) else { completionHandler(); return }
 
         switch type {
         case .temperature:
             switch response.actionIdentifier {
-            case alertCategoryDisableAction:
+            case lowHighAlertCategoryDisableAction:
                 alertService.unregister(type: .temperature(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }
         case .relativeHumidity:
             switch response.actionIdentifier {
-            case alertCategoryDisableAction:
+            case lowHighAlertCategoryDisableAction:
                 alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }
         case .absoluteHumidity:
             switch response.actionIdentifier {
-            case alertCategoryDisableAction:
+            case lowHighAlertCategoryDisableAction:
                 alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }
         case .dewPoint:
             switch response.actionIdentifier {
-            case alertCategoryDisableAction:
+            case lowHighAlertCategoryDisableAction:
                 alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
             default:
                 break
             }
         case .pressure:
             switch response.actionIdentifier {
-            case alertCategoryDisableAction:
+            case lowHighAlertCategoryDisableAction:
                 alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
             default:
                 break
