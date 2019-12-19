@@ -4,12 +4,10 @@ import Future
 class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
 
     var apiKey: String = "provide api key in the /Classes/Networking/Assembly/Networking.plist file, NOT HERE!"
-    var baseUrl: String = "https://api.openweathermap.org/data/2.5/"
 
     func loadCurrent(longitude: Double, latitude: Double) -> Future<OWMData, RUError> {
         let promise = Promise<OWMData, RUError>()
-        let string = baseUrl + "weather?lat=\(latitude)&lon=\(longitude)&APPID=\(apiKey)"
-        if let url = URL(string: string) {
+        if let url = currentWeatherUrl(latitude: latitude, longitude: longitude) {
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
 
@@ -57,5 +55,19 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
             promise.fail(error: .expected(.missingOpenWeatherMapAPIKey))
         }
         return promise.future
+    }
+
+    private func currentWeatherUrl(latitude: Double, longitude: Double) -> URL? {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https";
+        urlComponents.host = "api.openweathermap.org";
+        urlComponents.path = "/data/2.5/weather";
+
+        let latitudeQuery = URLQueryItem(name: "lat", value: "\(latitude)")
+        let longitudeQuery = URLQueryItem(name: "lon", value: "\(longitude)")
+        let apiKeyQuery = URLQueryItem(name: "APPID", value: apiKey)
+        urlComponents.queryItems = [latitudeQuery, longitudeQuery, apiKeyQuery]
+
+        return urlComponents.url
     }
 }
