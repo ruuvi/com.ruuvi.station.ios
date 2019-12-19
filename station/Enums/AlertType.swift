@@ -8,7 +8,7 @@ enum AlertType: CaseIterable {
     case dewPoint(lower: Double, upper: Double)
     case pressure(lower: Double, upper: Double)
     case connection
-    case movement
+    case movement(last: Int)
 
     static var allCases: [AlertType] {
         return [.temperature(lower: 0, upper: 0),
@@ -17,7 +17,7 @@ enum AlertType: CaseIterable {
                 .dewPoint(lower: 0, upper: 0),
                 .pressure(lower: 0, upper: 0),
                 .connection,
-                .movement]
+                .movement(last: 0)]
     }
 }
 

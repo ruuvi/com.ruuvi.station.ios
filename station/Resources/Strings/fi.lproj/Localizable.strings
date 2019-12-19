@@ -150,6 +150,7 @@
 "LocalNotificationsManager.HighDewPoint.title" = "Dew Point is too high!";
 "LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
 "LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
+"LocalNotificationsManager.DidMove.title" = "Movement detected!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";

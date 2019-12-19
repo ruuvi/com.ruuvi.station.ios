@@ -550,7 +550,8 @@ extension TagSettingsPresenter {
 
         // movement
         bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in
-            let type: AlertType = .movement
+            let last = ruuviTag.data.sorted(byKeyPath: "date").last?.movementCounter.value ?? 0
+            let type: AlertType = .movement(last: last)
             let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
             if currentState != isOn.bound {
                 if isOn.bound {

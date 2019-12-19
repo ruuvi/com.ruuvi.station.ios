@@ -61,6 +61,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     // movement
     private let movementAlertIsOnUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertIsOnUDKeyPrefix."
+    private let movementAlertCounterUDPrefix
+        = "AlertPersistenceUserDefaults.movementAlertCounterUDPrefix."
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
@@ -112,8 +114,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
                  return nil
             }
         case .movement:
-            if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid) {
-                return .movement
+            if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid),
+                let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid) {
+                return .movement(last: counter)
             } else {
                 return nil
             }
@@ -144,8 +147,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: pressureUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
-        case .movement:
+        case .movement(let last):
             prefs.set(true, forKey: movementAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(last, forKey: movementAlertCounterUDPrefix + uuid)
         }
     }
 
@@ -301,5 +305,16 @@ extension AlertPersistenceUserDefaults {
 
     func setPressure(description: String?, for uuid: String) {
         prefs.set(description, forKey: pressureAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Movement
+extension AlertPersistenceUserDefaults {
+    func movementCounter(for uuid: String) -> Int? {
+        return prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid)
+    }
+
+    func setMovement(counter: Int?, for uuid: String) {
+        prefs.set(counter, forKey: movementAlertCounterUDPrefix + uuid)
     }
 }
