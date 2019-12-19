@@ -17,4 +17,5 @@ protocol LocalNotificationsManager: class {
     func notifyHighDewPoint(for uuid: String, dewPointCelsius: Double)
     func notifyLowPressure(for uuid: String, pressure: Double)
     func notifyHighPressure(for uuid: String, pressure: Double)
+    func notifyDidMove(for uuid: String, counter: Int)
 }

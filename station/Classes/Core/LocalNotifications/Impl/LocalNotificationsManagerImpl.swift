@@ -81,6 +81,20 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 
+    func notifyDidMove(for uuid: String, counter: Int) {
+        let content = UNMutableNotificationContent()
+        content.title = "LocalNotificationsManager.DidMove.title".localized()
+        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+            content.subtitle = ruuviTag.name
+            content.body = ruuviTag.mac ?? ruuviTag.uuid
+        } else {
+            content.body = uuid
+        }
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+
     func notifyLowTemperature(for uuid: String, celsius: Double) {
         notify(type: .temperature, reason: .lower, for: uuid)
     }

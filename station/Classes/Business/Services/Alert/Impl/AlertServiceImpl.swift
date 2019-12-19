@@ -169,9 +169,24 @@ class AlertServiceImpl: AlertService {
                 //do nothing
                 break
             case .movement:
-                print("TODO")
+                if case .movement(let last) = alert(for: ruuviTag.uuid, of: type),
+                    let movementCounter = ruuviTag.movementCounter {
+                    let isGreater = movementCounter > last
+                    if isGreater {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager
+                                .notifyDidMove(for: ruuviTag.uuid, counter: movementCounter)
+                        }
+                    }
+                    isTriggered = isTriggered || isGreater
+                }
             }
         }
+
+        if let movementCounter = ruuviTag.movementCounter {
+            setMovement(counter: movementCounter, for: ruuviTag.uuid)
+        }
+
         if hasRegistrations(for: ruuviTag.uuid) {
             DispatchQueue.main.async { [weak self] in
                 guard let sSelf = self else { return }
@@ -377,6 +392,20 @@ extension AlertServiceImpl {
         alertPersistence.setPressure(description: description, for: uuid)
         if let l = lowerPressure(for: uuid), let u = upperPressure(for: uuid) {
             postAlertDidChange(with: uuid, of: .pressure(lower: l, upper: u))
+        }
+    }
+}
+
+// MARK: - Movement
+extension AlertServiceImpl {
+    func movementCounter(for uuid: String) -> Int? {
+        return alertPersistence.movementCounter(for: uuid)
+    }
+
+    func setMovement(counter: Int?, for uuid: String) {
+        alertPersistence.setMovement(counter: counter, for: uuid)
+        if let c = counter {
+            postAlertDidChange(with: uuid, of: .movement(last: c))
         }
     }
 }
