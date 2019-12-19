@@ -14,6 +14,13 @@ enum LowHighNotificationReason {
     case lower
 }
 
+struct LocalAlertCategory {
+    var id: String
+    var disable: String
+    var uuidKey: String
+    var typeKey: String
+}
+
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
     var realmContext: RealmContext!
@@ -30,11 +37,11 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var highDewPointAlerts = [String: Date]()
     var lowPressureAlerts = [String: Date]()
     var highPressureAlerts = [String: Date]()
-
-    private let lowHighAlertCategory = "com.ruuvi.station.alerts.lh"
-    private let lowHighAlertCategoryDisableAction = "com.ruuvi.station.alerts.lh.disable"
-    private let lowHighAlertCategoryUUIDKey = "com.ruuvi.station.alerts.lh.uuid"
-    private let lowHighAlertCategoryTypeKey = "com.ruuvi.station.alerts.lh.type"
+    
+    private let lowHigh = LocalAlertCategory(id: "com.ruuvi.station.alerts.lh",
+                                             disable: "com.ruuvi.station.alerts.lh.disable",
+                                             uuidKey: "com.ruuvi.station.alerts.lh.uuid",
+                                             typeKey: "com.ruuvi.station.alerts.lh.type")
 
     private var alertDidChangeToken: NSObjectProtocol?
 
@@ -212,9 +219,8 @@ extension LocalNotificationsManagerImpl {
                 }
             }
             content.title = title
-            content.userInfo = [lowHighAlertCategoryUUIDKey: uuid,
-                                lowHighAlertCategoryTypeKey: type.rawValue]
-            content.categoryIdentifier = lowHighAlertCategory
+            content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
+            content.categoryIdentifier = lowHigh.id
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
                 let body: String
@@ -319,11 +325,11 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.delegate = self
 
         // alerts actions and categories
-        let disableAction = UNNotificationAction(identifier: lowHighAlertCategoryDisableAction,
+        let disableAction = UNNotificationAction(identifier: lowHigh.disable,
                                                  title: "LocalNotificationsManager.Disable.button".localized(),
                                                  options: UNNotificationActionOptions(rawValue: 0))
         let disableAlertCategory =
-              UNNotificationCategory(identifier: lowHighAlertCategory,
+            UNNotificationCategory(identifier: lowHigh.id,
                                      actions: [disableAction],
                                      intentIdentifiers: [],
                                      options: .customDismissAction)
@@ -342,11 +348,11 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        if let uuid = userInfo[lowHighAlertCategoryUUIDKey] as? String,
-            let typeString = userInfo[lowHighAlertCategoryTypeKey] as? String,
+        if let uuid = userInfo[lowHigh.uuidKey] as? String,
+            let typeString = userInfo[lowHigh.typeKey] as? String,
             let type = LowHighNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
-            case lowHighAlertCategoryDisableAction:
+            case lowHigh.disable:
                 switch type {
                 case .temperature:
                     alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
