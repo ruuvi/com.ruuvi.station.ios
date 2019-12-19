@@ -1,5 +1,13 @@
+// swiftlint:disable file_length
 import UserNotifications
 import UIKit
+
+struct LocalAlertCategory {
+    var id: String
+    var disable: String
+    var uuidKey: String
+    var typeKey: String
+}
 
 enum LowHighNotificationType: String {
     case temperature
@@ -14,11 +22,9 @@ enum LowHighNotificationReason {
     case lower
 }
 
-struct LocalAlertCategory {
-    var id: String
-    var disable: String
-    var uuidKey: String
-    var typeKey: String
+enum BlastNotificationType: String {
+    case connection
+    case movement
 }
 
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
@@ -37,11 +43,15 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var highDewPointAlerts = [String: Date]()
     var lowPressureAlerts = [String: Date]()
     var highPressureAlerts = [String: Date]()
-    
+
     private let lowHigh = LocalAlertCategory(id: "com.ruuvi.station.alerts.lh",
                                              disable: "com.ruuvi.station.alerts.lh.disable",
                                              uuidKey: "com.ruuvi.station.alerts.lh.uuid",
                                              typeKey: "com.ruuvi.station.alerts.lh.type")
+    private let blast = LocalAlertCategory(id: "com.ruuvi.station.alerts.blast",
+                                           disable: "com.ruuvi.station.alerts.blast.disable",
+                                           uuidKey: "com.ruuvi.station.alerts.blast.uuid",
+                                           typeKey: "com.ruuvi.station.alerts.blast.type")
 
     private var alertDidChangeToken: NSObjectProtocol?
 
@@ -61,6 +71,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
         let content = UNMutableNotificationContent()
         content.title = "LocalNotificationsManager.DidConnect.title".localized()
+        content.sound = .default
+        content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
+        content.categoryIdentifier = blast.id
 
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
@@ -76,6 +89,10 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
     func showDidDisconnect(uuid: String) {
         let content = UNMutableNotificationContent()
+        content.sound = .default
+        content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
+        content.categoryIdentifier = blast.id
+
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
@@ -90,6 +107,10 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
     func notifyDidMove(for uuid: String, counter: Int) {
         let content = UNMutableNotificationContent()
+        content.sound = .default
+        content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
+        content.categoryIdentifier = blast.id
+
         content.title = "LocalNotificationsManager.DidMove.title".localized()
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
@@ -325,16 +346,23 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.delegate = self
 
         // alerts actions and categories
-        let disableAction = UNNotificationAction(identifier: lowHigh.disable,
-                                                 title: "LocalNotificationsManager.Disable.button".localized(),
-                                                 options: UNNotificationActionOptions(rawValue: 0))
-        let disableAlertCategory =
-            UNNotificationCategory(identifier: lowHigh.id,
-                                     actions: [disableAction],
-                                     intentIdentifiers: [],
-                                     options: .customDismissAction)
+        let disableLowHighAction = UNNotificationAction(identifier: lowHigh.disable,
+                                                        title: "LocalNotificationsManager.Disable.button".localized(),
+                                                        options: UNNotificationActionOptions(rawValue: 0))
+        let lowHighCategory = UNNotificationCategory(identifier: lowHigh.id,
+                                                     actions: [disableLowHighAction],
+                                                     intentIdentifiers: [],
+                                                     options: .customDismissAction)
 
-        nc.setNotificationCategories([disableAlertCategory])
+        let disableBlastAction = UNNotificationAction(identifier: blast.disable,
+                                                      title: "LocalNotificationsManager.Disable.button".localized(),
+                                                      options: UNNotificationActionOptions(rawValue: 0))
+        let blastCategory = UNNotificationCategory(identifier: blast.id,
+                                                   actions: [disableBlastAction],
+                                                   intentIdentifiers: [],
+                                                   options: .customDismissAction)
+
+        nc.setNotificationCategories([lowHighCategory, blastCategory])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -344,6 +372,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler([.alert, .badge, .sound])
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -369,8 +398,22 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
             default:
                 break
             }
+        } else if let uuid = userInfo[blast.uuidKey] as? String,
+            let typeString = userInfo[blast.typeKey] as? String,
+            let type = BlastNotificationType(rawValue: typeString) {
+            switch response.actionIdentifier {
+            case blast.disable:
+                switch type {
+                case .connection:
+                    alertService.unregister(type: .connection, for: uuid)
+                case .movement:
+                    alertService.unregister(type: .movement(last: 0), for: uuid)
+                }
+            default:
+                break
+            }
         }
         completionHandler()
     }
-
 }
+// swiftlint:enable file_length
