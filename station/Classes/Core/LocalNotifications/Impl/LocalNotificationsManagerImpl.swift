@@ -338,53 +338,32 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler([.alert, .badge, .sound])
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        guard let uuid = userInfo[lowHighAlertCategoryUUIDKey] as? String else { completionHandler(); return }
-        guard let typeString = userInfo[lowHighAlertCategoryTypeKey] as? String,
-            let type = LowHighNotificationType(rawValue: typeString) else { completionHandler(); return }
-
-        switch type {
-        case .temperature:
+        if let uuid = userInfo[lowHighAlertCategoryUUIDKey] as? String,
+            let typeString = userInfo[lowHighAlertCategoryTypeKey] as? String,
+            let type = LowHighNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case lowHighAlertCategoryDisableAction:
-                alertService.unregister(type: .temperature(lower: 0, upper: 0), for: uuid)
-            default:
-                break
-            }
-        case .relativeHumidity:
-            switch response.actionIdentifier {
-            case lowHighAlertCategoryDisableAction:
-                alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
-            default:
-                break
-            }
-        case .absoluteHumidity:
-            switch response.actionIdentifier {
-            case lowHighAlertCategoryDisableAction:
-                alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
-            default:
-                break
-            }
-        case .dewPoint:
-            switch response.actionIdentifier {
-            case lowHighAlertCategoryDisableAction:
-                alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
-            default:
-                break
-            }
-        case .pressure:
-            switch response.actionIdentifier {
-            case lowHighAlertCategoryDisableAction:
-                alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
+                switch type {
+                case .temperature:
+                    alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
+                        uuid)
+                case .relativeHumidity:
+                    alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
+                case .absoluteHumidity:
+                    alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
+                case .dewPoint:
+                    alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
+                case .pressure:
+                    alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
+                }
             default:
                 break
             }
         }
-
         completionHandler()
     }
 

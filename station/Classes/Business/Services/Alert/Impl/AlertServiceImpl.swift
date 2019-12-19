@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import BTKit
 import Humidity
@@ -409,3 +410,4 @@ extension AlertServiceImpl {
         }
     }
 }
+// swiftlint:enable file_length
