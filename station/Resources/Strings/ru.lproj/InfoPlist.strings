@@ -1,6 +1,6 @@
 NSBluetoothPeripheralUsageDescription = "Приложение использует Bluetooth LE, чтобы читать данные с сенсоров.";
 NSBluetoothAlwaysUsageDescription = "Приложение использует Bluetooth LE, чтобы читать данные с сенсоров.";
-NSCameraUsageDescription = "Ruuvi Station необходим доступ к камере, чтобы использовать эту функцию.";
-NSLocationAlwaysUsageDescription = "Ruuvi Station необходим доступ к локационным сервисам, чтобы использовать эту функцию.";
-NSLocationWhenInUseUsageDescription = "Ruuvi Station необходим доступ к локационным сервисам, чтобы использовать эту функцию.";
-NSPhotoLibraryUsageDescription = "Ruuvi Station необходим доступ к библиотеке фотографий, чтобы использовать эту функцию.";
+NSCameraUsageDescription = "Приложение использует камеру, чтобы фотографировать и ставить новые фотографии как фон для сенсоров.";
+NSLocationAlwaysUsageDescription = "Приложению необходим доступ к локационным сервисам чтобы определить ваше месторасполодение на карте и предоставить погодные данные для вашего текущего месторасположения.";
+NSLocationWhenInUseUsageDescription = "Приложению необходим доступ к локационным сервисам чтобы определить ваше месторасполодение на карте и предоставить погодные данные для вашего текущего месторасположения.";
+NSPhotoLibraryUsageDescription = "Приложению нужен доступ к вашей библиотеке, чтобы вы могли выбрать фото фона сенсора.";
