@@ -3,5 +3,4 @@ NSBluetoothAlwaysUsageDescription = "Приложение использует B
 NSCameraUsageDescription = "Ruuvi Station необходим доступ к камере, чтобы использовать эту функцию.";
 NSLocationAlwaysUsageDescription = "Ruuvi Station необходим доступ к локационным сервисам, чтобы использовать эту функцию.";
 NSLocationWhenInUseUsageDescription = "Ruuvi Station необходим доступ к локационным сервисам, чтобы использовать эту функцию.";
-NSMicrophoneUsageDescription = "Ruuvi Station необходим доступ к микрофону, чтобы использовать эту функцию.";
 NSPhotoLibraryUsageDescription = "Ruuvi Station необходим доступ к библиотеке фотографий, чтобы использовать эту функцию.";
