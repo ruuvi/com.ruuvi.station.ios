@@ -1,7 +1,7 @@
 import UIKit
 
 class PermissionPresenterAlert: PermissionPresenter {
-    
+
     func presentNoPhotoLibraryPermission() {
         let message = "PermissionPresenter.NoPhotoLibraryAccess.message".localized()
         presentAlert(with: message)

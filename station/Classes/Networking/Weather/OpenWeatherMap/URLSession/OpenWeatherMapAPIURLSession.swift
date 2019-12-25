@@ -59,9 +59,9 @@ class OpenWeatherMapAPIURLSession: OpenWeatherMapAPI {
 
     private func currentWeatherUrl(latitude: Double, longitude: Double) -> URL? {
         var urlComponents = URLComponents()
-        urlComponents.scheme = "https";
-        urlComponents.host = "api.openweathermap.org";
-        urlComponents.path = "/data/2.5/weather";
+        urlComponents.scheme = "https"
+        urlComponents.host = "api.openweathermap.org"
+        urlComponents.path = "/data/2.5/weather"
 
         let latitudeQuery = URLQueryItem(name: "lat", value: "\(latitude)")
         let longitudeQuery = URLQueryItem(name: "lon", value: "\(longitude)")
