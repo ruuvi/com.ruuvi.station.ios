@@ -47,7 +47,7 @@ class AlertServiceImpl: AlertService {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func proccess(heartbeat ruuviTag: RuuviTag) {
+    func process(heartbeat ruuviTag: RuuviTag) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
