@@ -2,7 +2,7 @@ import Foundation
 import BTKit
 
 protocol AlertService {
-    func proccess(heartbeat ruuviTag: RuuviTag)
+    func process(heartbeat ruuviTag: RuuviTag)
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)
     func hasRegistrations(for uuid: String) -> Bool
 

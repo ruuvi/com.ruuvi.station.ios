@@ -175,7 +175,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
              }
          }, heartbeat: { observer, device in
              if let ruuviTag = device.ruuvi?.tag {
-                 observer.alertService.proccess(heartbeat: ruuviTag)
+                 observer.alertService.process(heartbeat: ruuviTag)
                 if observer.settings.saveHeartbeats {
                      let uuid = ruuviTag.uuid
                      let interval = observer.settings.saveHeartbeatsIntervalMinutes
