@@ -25,13 +25,7 @@ class AlertServiceImpl: AlertService {
     }
 
     func hasRegistrations(for uuid: String) -> Bool {
-        var hasRegistrations = false
-        AlertType.allCases.forEach { (type) in
-            if isOn(type: type, for: uuid) {
-                hasRegistrations = true
-            }
-        }
-        return hasRegistrations
+        return AlertType.allCases.contains(where: { isOn(type: $0, for: uuid) } )
     }
 
     func isOn(type: AlertType, for uuid: String) -> Bool {
