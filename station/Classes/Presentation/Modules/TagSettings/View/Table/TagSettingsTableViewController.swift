@@ -887,8 +887,10 @@ extension TagSettingsTableViewController {
             }
 
             tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
             }
         }
     }
@@ -1009,8 +1011,10 @@ extension TagSettingsTableViewController {
            }
 
            tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
-               tableView.beginUpdates()
-               tableView.endUpdates()
+               if tableView.window != nil {
+                   tableView.beginUpdates()
+                   tableView.endUpdates()
+               }
            }
        }
     }
@@ -1081,8 +1085,10 @@ extension TagSettingsTableViewController {
             }
 
             tableView.bind(viewModel.isRelativeHumidityAlertOn) { tableView, _ in
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
             }
         }
     }
@@ -1153,8 +1159,10 @@ extension TagSettingsTableViewController {
             }
 
             tableView.bind(viewModel.isAbsoluteHumidityAlertOn) { tableView, _ in
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
             }
         }
     }
@@ -1255,8 +1263,10 @@ extension TagSettingsTableViewController {
             }
 
             tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
             }
         }
     }
