@@ -71,7 +71,6 @@
 		0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */; };
 		0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */; };
 		0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC322B395C00032F6CA /* ErrorPresenterAlert.swift */; };
-		0E1C1DC622B396040032F6CA /* UIViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC522B396040032F6CA /* UIViewController+Show.swift */; };
 		0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */; };
 		0E1C1DD122B3BDFC0032F6CA /* Cards.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */; };
 		0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD222B3BF180032F6CA /* CardsViewInput.swift */; };
@@ -213,7 +212,6 @@
 		0E6BADC223856A01003A2D4C /* CardsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DDE22B3C2330032F6CA /* CardsPresenter.swift */; };
 		0E6BADC323856A01003A2D4C /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
 		0E6BADC423856A01003A2D4C /* CoreAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301522CF640000B52E39 /* CoreAssembly.swift */; };
-		0E6BADC523856A01003A2D4C /* UIViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC522B396040032F6CA /* UIViewController+Show.swift */; };
 		0E6BADC623856A01003A2D4C /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0E6BADC723856A01003A2D4C /* ForegroundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF6F5C1235E02000052BA25 /* ForegroundTableViewController.swift */; };
 		0E6BADC923856A01003A2D4C /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
@@ -574,7 +572,6 @@
 		0E8BD2F8238566AB008B31EF /* CardsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DDE22B3C2330032F6CA /* CardsPresenter.swift */; };
 		0E8BD2F9238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3FF7362381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift */; };
 		0E8BD2FA238566AB008B31EF /* CoreAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301522CF640000B52E39 /* CoreAssembly.swift */; };
-		0E8BD2FB238566AB008B31EF /* UIViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC522B396040032F6CA /* UIViewController+Show.swift */; };
 		0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F4F22CCB92000172EEB /* Observable.swift */; };
 		0E8BD2FD238566AB008B31EF /* ForegroundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF6F5C1235E02000052BA25 /* ForegroundTableViewController.swift */; };
 		0E8BD2FF238566AB008B31EF /* CalibrationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6CE22BBD96C00EADFC6 /* CalibrationPersistence.swift */; };
@@ -1117,7 +1114,6 @@
 		0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAssembly.swift; sourceTree = "<group>"; };
 		0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		0E1C1DC322B395C00032F6CA /* ErrorPresenterAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenterAlert.swift; sourceTree = "<group>"; };
-		0E1C1DC522B396040032F6CA /* UIViewController+Show.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Show.swift"; sourceTree = "<group>"; };
 		0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceViewModel.swift; sourceTree = "<group>"; };
 		0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Cards.storyboard; sourceTree = "<group>"; };
 		0E1C1DD222B3BF180032F6CA /* CardsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsViewInput.swift; sourceTree = "<group>"; };
@@ -1810,7 +1806,6 @@
 		0E09672322AE895600E85F48 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0E1C1DC522B396040032F6CA /* UIViewController+Show.swift */,
 				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
 				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
 				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
@@ -4222,7 +4217,6 @@
 				0E6BADC223856A01003A2D4C /* CardsPresenter.swift in Sources */,
 				0E6BADC323856A01003A2D4C /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
 				0E6BADC423856A01003A2D4C /* CoreAssembly.swift in Sources */,
-				0E6BADC523856A01003A2D4C /* UIViewController+Show.swift in Sources */,
 				0E6BADC623856A01003A2D4C /* Observable.swift in Sources */,
 				0E6BADC723856A01003A2D4C /* ForegroundTableViewController.swift in Sources */,
 				0E6BADC923856A01003A2D4C /* CalibrationPersistence.swift in Sources */,
@@ -4533,7 +4527,6 @@
 				0E8BD2F8238566AB008B31EF /* CardsPresenter.swift in Sources */,
 				0E8BD2F9238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
 				0E8BD2FA238566AB008B31EF /* CoreAssembly.swift in Sources */,
-				0E8BD2FB238566AB008B31EF /* UIViewController+Show.swift in Sources */,
 				0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */,
 				0E8BD2FD238566AB008B31EF /* ForegroundTableViewController.swift in Sources */,
 				0E8BD2FF238566AB008B31EF /* CalibrationPersistence.swift in Sources */,
@@ -4844,7 +4837,6 @@
 				0E1C1DDF22B3C2330032F6CA /* CardsPresenter.swift in Sources */,
 				0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
 				0E5C301622CF640000B52E39 /* CoreAssembly.swift in Sources */,
-				0E1C1DC622B396040032F6CA /* UIViewController+Show.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,

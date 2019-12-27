@@ -41,7 +41,7 @@ class ErrorPresenterAlert: ErrorPresenter {
         let action = UIAlertAction(title: "ErrorPresenterAlert.OK".localized(), style: .cancel, handler: nil)
         alert.addAction(action)
         DispatchQueue.main.async {
-            alert.show()
+            UIApplication.shared.topViewController()?.present(alert, animated: true)
         }
     }
 }

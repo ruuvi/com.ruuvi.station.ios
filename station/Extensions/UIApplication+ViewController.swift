@@ -9,7 +9,7 @@ extension UIApplication {
         if let selected = (base as? UITabBarController)?.selectedViewController {
             return topViewController(selected)
         }
-        if let presented = base?.presentedViewController {
+        if let presented = base?.presentedViewController, !presented.isBeingDismissed {
             return topViewController(presented)
         }
         return base
