@@ -939,6 +939,12 @@
 		0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
 		0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */; };
 		0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */; };
+		0EE49B9523B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
+		0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
+		0EE49B9723B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */; };
+		0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
+		0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
+		0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
 		0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */; };
 		0EE5B47F2351865300D5ED32 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47E2351865300D5ED32 /* UserDefault.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
@@ -1308,6 +1314,8 @@
 		0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderService.swift; sourceTree = "<group>"; };
 		0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderServiceImpl.swift; sourceTree = "<group>"; };
 		0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
+		0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
+		0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundEnvironmentObject.swift; sourceTree = "<group>"; };
 		0EE5B47E2351865300D5ED32 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -1568,6 +1576,7 @@
 		0E046F2C22F0563E00BD4E9C /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				0EE49B9323B74704003012C2 /* Cells */,
 				0E046F2D22F0569000BD4E9C /* WebTagSettingsTableViewController.swift */,
 			);
 			path = Table;
@@ -3095,6 +3104,15 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
+		0EE49B9323B74704003012C2 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				0EE49B9423B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift */,
+				0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		0EE5B4802351AB3C00D5ED32 /* Table */ = {
 			isa = PBXGroup;
 			children = (
@@ -4207,6 +4225,7 @@
 				0E6BADB823856A01003A2D4C /* RealmContext.swift in Sources */,
 				0E6BADB923856A01003A2D4C /* RealmContextImpl.swift in Sources */,
 				0E6BADBA23856A01003A2D4C /* SettingsRouter.swift in Sources */,
+				0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E6BADBC23856A01003A2D4C /* WeatherProviderServiceImpl.swift in Sources */,
 				0E6BADBD23856A01003A2D4C /* SwipeDownToDismissNavigationController.swift in Sources */,
@@ -4263,6 +4282,7 @@
 				0E6BADEF23856A01003A2D4C /* WebTagLocationSource.swift in Sources */,
 				0E6BADF023856A01003A2D4C /* MenuTableInitializer.swift in Sources */,
 				0E6BADF123856A01003A2D4C /* LocationPickerViewOutput.swift in Sources */,
+				0EE49B9723B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */,
 				0E6BADF223856A01003A2D4C /* WebTagSettingsTableViewController.swift in Sources */,
 				0E6BADF323856A01003A2D4C /* WelcomeRouter.swift in Sources */,
 				0E6BADF423856A01003A2D4C /* BackgroundPersistenceUserDefaults.swift in Sources */,
@@ -4517,6 +4537,7 @@
 				0E8BD2EE238566AB008B31EF /* RealmContext.swift in Sources */,
 				0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */,
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
+				0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EA92FDC2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD2F2238566AB008B31EF /* WeatherProviderServiceImpl.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
@@ -4573,6 +4594,7 @@
 				0E8BD325238566AB008B31EF /* WebTagLocationSource.swift in Sources */,
 				0E8BD326238566AB008B31EF /* MenuTableInitializer.swift in Sources */,
 				0E8BD327238566AB008B31EF /* LocationPickerViewOutput.swift in Sources */,
+				0EE49B9623B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */,
 				0E8BD328238566AB008B31EF /* WebTagSettingsTableViewController.swift in Sources */,
 				0E8BD329238566AB008B31EF /* WelcomeRouter.swift in Sources */,
 				0E8BD32A238566AB008B31EF /* BackgroundPersistenceUserDefaults.swift in Sources */,
@@ -4827,6 +4849,7 @@
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
 				0EA92FDB2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
+				0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8A10162384612300A9CBA6 /* DefaultsRouterInput.swift in Sources */,
@@ -4883,6 +4906,7 @@
 				0EA1ECF72306D49800E5AEE4 /* WebTagLocationSource.swift in Sources */,
 				0E1C1E0322B400590032F6CA /* MenuTableInitializer.swift in Sources */,
 				0E046F4A22F1820400BD4E9C /* LocationPickerViewOutput.swift in Sources */,
+				0EE49B9523B74775003012C2 /* WebTagSettingsAlertHeaderCell.swift in Sources */,
 				0E046F2E22F0569000BD4E9C /* WebTagSettingsTableViewController.swift in Sources */,
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,

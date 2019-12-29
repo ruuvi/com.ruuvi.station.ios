@@ -1,12 +1,15 @@
 import UIKit
 import RealmSwift
 
-class WebTagSettingsPresenter: WebTagSettingsModuleInput {
+class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
     var router: WebTagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
     var errorPresenter: ErrorPresenter!
     var webTagService: WebTagService!
+    var settings: Settings!
+    var alertService: AlertService!
+    var pushNotificationsManager: PushNotificationsManager!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
             photoPickerPresenter.delegate = self
@@ -14,24 +17,38 @@ class WebTagSettingsPresenter: WebTagSettingsModuleInput {
     }
 
     private var webTagToken: NotificationToken?
+    private var temperatureUnitToken: NSObjectProtocol?
+    private var appDidBecomeActiveToken: NSObjectProtocol?
     private var webTag: WebTagRealm! {
         didSet {
             syncViewModel()
+            bindViewModel(to: webTag)
         }
     }
 
     deinit {
         webTagToken?.invalidate()
+        if let temperatureUnitToken = temperatureUnitToken {
+            NotificationCenter.default.removeObserver(temperatureUnitToken)
+        }
+        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
+            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
+        }
     }
 
     func configure(webTag: WebTagRealm) {
         self.webTag = webTag
         startObservingWebTag()
+        startObservingSettingsChanges()
     }
 }
 
 // MARK: - WebTagSettingsViewOutput
 extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
+    func viewWillAppear() {
+        checkPushNotificationsStatus()
+    }
+
     func viewDidAskToDismiss() {
         router.dismiss()
     }
@@ -85,6 +102,19 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 }
 
+// MARK: - Observations
+extension WebTagSettingsPresenter {
+    private func startObservingSettingsChanges() {
+        temperatureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .TemperatureUnitDidChange,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+            self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
+        }
+    }
+}
+
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
@@ -109,6 +139,35 @@ extension WebTagSettingsPresenter: LocationPickerModuleOutput {
 
 // MARK: - Private
 extension WebTagSettingsPresenter {
+
+    private func bindViewModel(to webTag: WebTagRealm) {
+        // temperature alert
+        let temperatureLower = view.viewModel.celsiusLowerBound
+        let temperatureUpper = view.viewModel.celsiusUpperBound
+        bind(view.viewModel.isTemperatureAlertOn, fire: false) {
+            [weak temperatureLower, weak temperatureUpper] observer, isOn in
+            if let l = temperatureLower?.value, let u = temperatureUpper?.value {
+                let type: AlertType = .temperature(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: webTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                    }
+                }
+            }
+        }
+        bind(view.viewModel.celsiusLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(celsius: lower, for: webTag.uuid)
+        }
+        bind(view.viewModel.celsiusUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(celsius: upper, for: webTag.uuid)
+        }
+        bind(view.viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
+            observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag.uuid)
+        }
+    }
     private func startObservingWebTag() {
         webTagToken = webTag.observe({ [weak self] (change) in
             switch change {
@@ -122,7 +181,19 @@ extension WebTagSettingsPresenter {
         })
     }
 
+    private func startObservingApplicationState() {
+        appDidBecomeActiveToken = NotificationCenter
+            .default
+            .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (_) in
+            self?.checkPushNotificationsStatus()
+        })
+    }
+
     private func syncViewModel() {
+        view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
 
         if webTag.name == WebTagLocationSource.manual.title {
@@ -139,5 +210,35 @@ extension WebTagSettingsPresenter {
         }
 
         view.isNameChangedEnabled = view.viewModel.location.value != nil
+
+        view.viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: webTag.uuid)
+
+        let temperatureAlertType: AlertType = .temperature(lower: 0, upper: 0)
+        if case .temperature(let lower, let upper) = alertService.alert(for: webTag.uuid, of: temperatureAlertType) {
+            view.viewModel.isTemperatureAlertOn.value = true
+            view.viewModel.celsiusLowerBound.value = lower
+            view.viewModel.celsiusUpperBound.value = upper
+        } else {
+            view.viewModel.isTemperatureAlertOn.value = false
+            if let celsiusLower = alertService.lowerCelsius(for: webTag.uuid) {
+                view.viewModel.celsiusLowerBound.value = celsiusLower
+            }
+            if let celsiusUpper = alertService.upperCelsius(for: webTag.uuid) {
+                view.viewModel.celsiusUpperBound.value = celsiusUpper
+            }
+        }
+    }
+
+    private func checkPushNotificationsStatus() {
+        pushNotificationsManager.getRemoteNotificationsAuthorizationStatus { [weak self] (status) in
+            switch status {
+            case .notDetermined:
+                self?.pushNotificationsManager.registerForRemoteNotifications()
+            case .authorized:
+                self?.view.viewModel.isPushNotificationsEnabled.value = true
+            case .denied:
+                self?.view.viewModel.isPushNotificationsEnabled.value = false
+            }
+        }
     }
 }

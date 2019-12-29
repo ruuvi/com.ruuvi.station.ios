@@ -297,6 +297,10 @@
 "WebTagSettings.Button.Remove.title" = "POISTA";
 "WebTagSettings.SectionHeader.Name.title" = "NIMI";
 "WebTagSettings.SectionHeader.MoreInfo.title" = "LISÄTIETOJA";
+"WebTagSettings.SectionHeader.Alerts.title" = "ALERTS";
+"WebTagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.Alerts.Off" = "Off";
+"WebTagSettings.temperatureAlertTitleLabel.text" = "Temperature";
 
 // Welcome
 "Welcome.description.text" = "Etsi lähistöllä olevia antureita napauttamalla Skannaa.";
