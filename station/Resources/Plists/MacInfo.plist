@@ -34,15 +34,13 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>The app uses Bluetooth LE to read data from RuuviTag sensors.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Ruuvi Station needs to access your camera to enable this feature.</string>
+	<string>Ruuvi Station needs to access your camera in order to be able to capture photos and use them as tag background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Ruuvi Station needs to access your location in order to enable this feature.</string>
+	<string>Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Ruuvi Station needs to access your location in order to enable this feature.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Ruuvi Station needs to access your microphone to enable this feature.</string>
+	<string>Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ruuvi Station needs to access your camera roll to enable this feature.</string>
+	<string>Ruuvi Station needs to access your camera roll to enable selecting the background for the tag.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Oswald-Bold.ttf</string>

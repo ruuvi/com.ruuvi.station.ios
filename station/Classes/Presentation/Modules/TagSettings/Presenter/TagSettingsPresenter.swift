@@ -207,6 +207,10 @@ extension TagSettingsPresenter {
         viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
         viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag.uuid)
+        viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: ruuviTag.uuid)
+        viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: ruuviTag.uuid)
+        viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: ruuviTag.uuid)
+        viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag.uuid)
 
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
 
