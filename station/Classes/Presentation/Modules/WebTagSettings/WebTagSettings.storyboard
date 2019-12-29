@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D1d-zv-30m">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="D1d-zv-30m">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -154,7 +154,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oqj-rp-dBd">
-                            <rect key="frame" x="0.0" y="457.5" width="414" height="100"/>
+                            <rect key="frame" x="0.0" y="725.5" width="414" height="100"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="udR-S3-e8A">
@@ -216,10 +216,125 @@ IMAGE</string>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="ALERTS" id="cGM-Cp-u17">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="WebTagSettingsAlertHeaderCellReuseIdentifier" rowHeight="64" id="YxQ-fW-Uqe" customClass="WebTagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="395.5" width="414" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YxQ-fW-Uqe" id="0Ek-G3-ztA">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wYi-c5-4Ie">
+                                                    <rect key="frame" x="20" y="8" width="98" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alert when less than 0 or more than 100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6PJ-g8-QhY">
+                                                    <rect key="frame" x="20" y="37" width="242" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Iqb-VO-42F">
+                                                    <rect key="frame" x="345" y="8" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="isOnSwitchValueChanged:" destination="YxQ-fW-Uqe" eventType="valueChanged" id="22g-QA-mfi"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="6PJ-g8-QhY" firstAttribute="top" secondItem="wYi-c5-4Ie" secondAttribute="bottom" constant="8" id="4BX-HW-Y6t"/>
+                                                <constraint firstItem="wYi-c5-4Ie" firstAttribute="top" secondItem="0Ek-G3-ztA" secondAttribute="top" constant="8" id="6Wt-BY-gF2"/>
+                                                <constraint firstItem="Iqb-VO-42F" firstAttribute="top" secondItem="0Ek-G3-ztA" secondAttribute="top" constant="8" id="MHB-PU-dSy"/>
+                                                <constraint firstAttribute="trailing" secondItem="Iqb-VO-42F" secondAttribute="trailing" constant="20" id="Okw-3T-xUt"/>
+                                                <constraint firstItem="6PJ-g8-QhY" firstAttribute="leading" secondItem="wYi-c5-4Ie" secondAttribute="leading" id="Rzw-Pq-Dbb"/>
+                                                <constraint firstItem="wYi-c5-4Ie" firstAttribute="leading" secondItem="0Ek-G3-ztA" secondAttribute="leading" constant="20" id="dSh-xP-YCL"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="1024" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="6PJ-g8-QhY" id="QMY-bX-kPA"/>
+                                            <outlet property="isOnSwitch" destination="Iqb-VO-42F" id="hsP-gy-2J0"/>
+                                            <outlet property="titleLabel" destination="wYi-c5-4Ie" id="4Zi-UD-fi0"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="WebTagSettingsAlertControlsCellReuseIdentifier" rowHeight="148" id="X65-Z2-Dv4" customClass="WebTagSettingsAlertControlsCell" customModule="station" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="459.5" width="414" height="148"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X65-Z2-Dv4" id="hxx-k5-T0z">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="148"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Set custom description..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tdp-yO-a1V">
+                                                    <rect key="frame" x="20" y="95.5" width="374" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done"/>
+                                                    <connections>
+                                                        <action selector="textFieldEditingDidEnd:" destination="X65-Z2-Dv4" eventType="editingDidEnd" id="Y6a-Zv-s9R"/>
+                                                        <outlet property="delegate" destination="X65-Z2-Dv4" id="T17-H1-IbB"/>
+                                                    </connections>
+                                                </textField>
+                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="hkH-pf-QUg" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="80"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="80" id="L7D-Ac-eJL"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="minValue">
+                                                            <real key="value" value="0.0"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
+                                                            <real key="value" value="100"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
+                                                            <real key="value" value="-40"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="selectedMaxValue">
+                                                            <real key="value" value="85"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="colorBetweenHandles">
+                                                            <color key="value" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="handleColor">
+                                                            <color key="value" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="step">
+                                                            <real key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="handleDiameter">
+                                                            <real key="value" value="24"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="enableStep" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="hkH-pf-QUg" firstAttribute="leading" secondItem="hxx-k5-T0z" secondAttribute="leading" constant="20" id="8ET-Y2-mqd"/>
+                                                <constraint firstItem="tdp-yO-a1V" firstAttribute="leading" secondItem="hxx-k5-T0z" secondAttribute="leading" constant="20" id="JVN-XW-JRb"/>
+                                                <constraint firstAttribute="trailing" secondItem="tdp-yO-a1V" secondAttribute="trailing" constant="20" id="QKC-kU-Zye"/>
+                                                <constraint firstItem="tdp-yO-a1V" firstAttribute="top" secondItem="hkH-pf-QUg" secondAttribute="bottom" constant="15.5" id="Rjk-Be-34B"/>
+                                                <constraint firstAttribute="trailing" secondItem="hkH-pf-QUg" secondAttribute="trailing" constant="20" id="i7X-X9-K2e"/>
+                                                <constraint firstItem="hkH-pf-QUg" firstAttribute="top" secondItem="hxx-k5-T0z" secondAttribute="top" id="iNe-NF-SYL"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="slider" destination="hkH-pf-QUg" id="9cb-mh-caq"/>
+                                            <outlet property="textField" destination="tdp-yO-a1V" id="ljv-w2-79P"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection headerTitle="MORE INFO" id="gbe-iT-FAt">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="hQf-Gu-PPo">
-                                        <rect key="frame" x="0.0" y="395.5" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="663.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hQf-Gu-PPo" id="5Sv-7R-KLh">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -289,6 +404,8 @@ IMAGE</string>
                         <outlet property="tagNameCell" destination="CHg-xn-GrS" id="USS-CE-b8i"/>
                         <outlet property="tagNameTextField" destination="PNI-Wm-pcd" id="Wz3-66-q2h"/>
                         <outlet property="tagNameTitleLabel" destination="Cgq-f8-wPO" id="uK9-aT-f4S"/>
+                        <outlet property="temperatureAlertControlsCell" destination="X65-Z2-Dv4" id="ucJ-Or-CZu"/>
+                        <outlet property="temperatureAlertHeaderCell" destination="YxQ-fW-Uqe" id="flZ-rB-AM6"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4k-YF-pYJ" userLabel="First Responder" sceneMemberID="firstResponder"/>

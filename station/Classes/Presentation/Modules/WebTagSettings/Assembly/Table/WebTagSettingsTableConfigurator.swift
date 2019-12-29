@@ -14,7 +14,10 @@ class WebTagSettingsTableConfigurator {
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.webTagService = r.resolve(WebTagService.self)
-
+        presenter.settings = r.resolve(Settings.self)
+        presenter.alertService = r.resolve(AlertService.self)
+        presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
+        
         view.output = presenter
     }
 }
