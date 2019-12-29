@@ -1309,7 +1309,7 @@
 		0EDAC96A22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherProviderServiceImpl.swift; sourceTree = "<group>"; };
 		0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
 		0EE49BAF23B8C025003012C2 /* DevInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = DevInfo.plist; sourceTree = "<group>"; };
-		0EE49BB023B8C025003012C2 /* SUIInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SUIInfo.plist; sourceTree = "<group>"; };
+		0EE49BB023B8C025003012C2 /* MacInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = "<group>"; };
 		0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundEnvironmentObject.swift; sourceTree = "<group>"; };
 		0EE5B47E2351865300D5ED32 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -1753,7 +1753,7 @@
 				0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */,
 				64333D3420B0C45A00CDF4B6 /* Info.plist */,
 				0EE49BAF23B8C025003012C2 /* DevInfo.plist */,
-				0EE49BB023B8C025003012C2 /* SUIInfo.plist */,
+				0EE49BB023B8C025003012C2 /* MacInfo.plist */,
 			);
 			path = Plists;
 			sourceTree = "<group>";
@@ -5154,7 +5154,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
-				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/SUIInfo.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/MacInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5198,7 +5198,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
-				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/SUIInfo.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/MacInfo.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
