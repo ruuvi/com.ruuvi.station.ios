@@ -26,7 +26,19 @@ class BusinessAssembly: Assembly {
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
+            service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             return service
+        }.inObjectScope(.container)
+
+        container.register(BackgroundTaskService.self) { r in
+            if #available(iOS 13, *) {
+                let service = BackgroundTaskServiceiOS13()
+                service.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
+                return service
+            } else {
+                let service = BackgroundTaskServiceiOS12()
+                return service
+            }
         }.inObjectScope(.container)
 
         container.register(CalibrationService.self) { r in
@@ -123,6 +135,13 @@ class BusinessAssembly: Assembly {
             daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
             return daemon
         }.inObjectScope(.container)
+
+        container.register(WebTagOperationsManager.self) { r in
+            let manager = WebTagOperationsManager()
+            manager.alertService = r.resolve(AlertService.self)
+            manager.weatherProviderService = r.resolve(WeatherProviderService.self)
+            return manager
+        }
 
         container.register(WebTagService.self) { r in
             let service = WebTagServiceImpl()

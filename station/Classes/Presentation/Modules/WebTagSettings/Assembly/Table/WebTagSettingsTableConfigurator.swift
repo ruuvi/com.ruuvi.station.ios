@@ -17,7 +17,7 @@ class WebTagSettingsTableConfigurator {
         presenter.settings = r.resolve(Settings.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
-        
+
         view.output = presenter
     }
 }

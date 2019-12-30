@@ -100,6 +100,12 @@
 		0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */; };
 		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
 		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
+		0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
+		0E31B03A23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
+		0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
+		0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */; };
+		0E31B03E23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */; };
+		0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */; };
 		0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */; };
 		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
@@ -945,6 +951,18 @@
 		0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
 		0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
 		0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */; };
+		0EE49BB623B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BB523B8C8C0003012C2 /* BackgroundTaskService.swift */; };
+		0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BB523B8C8C0003012C2 /* BackgroundTaskService.swift */; };
+		0EE49BB823B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BB523B8C8C0003012C2 /* BackgroundTaskService.swift */; };
+		0EE49BBB23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BBA23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift */; };
+		0EE49BBC23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BBA23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift */; };
+		0EE49BBD23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BBA23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift */; };
+		0EE49BC023B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BBF23B8CC35003012C2 /* WebTagRefreshDataOperation.swift */; };
+		0EE49BC123B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BBF23B8CC35003012C2 /* WebTagRefreshDataOperation.swift */; };
+		0EE49BC223B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BBF23B8CC35003012C2 /* WebTagRefreshDataOperation.swift */; };
+		0EE49BC423B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BC323B8CE12003012C2 /* WebTagOperationsManager.swift */; };
+		0EE49BC523B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BC323B8CE12003012C2 /* WebTagOperationsManager.swift */; };
+		0EE49BC623B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE49BC323B8CE12003012C2 /* WebTagOperationsManager.swift */; };
 		0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */; };
 		0EE5B47F2351865300D5ED32 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE5B47E2351865300D5ED32 /* UserDefault.swift */; };
 		0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20BA22B76FB70015F9E0 /* Settings.swift */; };
@@ -1149,6 +1167,8 @@
 		0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsRouterDelegate.swift; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
+		0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskServiceiOS12.swift; sourceTree = "<group>"; };
+		0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWebTagRefreshDataOperation.swift; sourceTree = "<group>"; };
 		0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitionManager.swift; sourceTree = "<group>"; };
 		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
@@ -1318,6 +1338,10 @@
 		0EE49B9823B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0EE49BB123B8C40D003012C2 /* MacInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MacInfo.plist; sourceTree = "<group>"; };
 		0EE49BB223B8C40D003012C2 /* DevInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = DevInfo.plist; sourceTree = "<group>"; };
+		0EE49BB523B8C8C0003012C2 /* BackgroundTaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskService.swift; sourceTree = "<group>"; };
+		0EE49BBA23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskServiceiOS13.swift; sourceTree = "<group>"; };
+		0EE49BBF23B8CC35003012C2 /* WebTagRefreshDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagRefreshDataOperation.swift; sourceTree = "<group>"; };
+		0EE49BC323B8CE12003012C2 /* WebTagOperationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagOperationsManager.swift; sourceTree = "<group>"; };
 		0EE5B47C23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundEnvironmentObject.swift; sourceTree = "<group>"; };
 		0EE5B47E2351865300D5ED32 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		0EEB20BA22B76FB70015F9E0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -2185,6 +2209,14 @@
 				0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */,
 			);
 			path = Queue;
+			sourceTree = "<group>";
+		};
+		0E31B03723B9EFEF00660412 /* iOS12 */ = {
+			isa = PBXGroup;
+			children = (
+				0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */,
+			);
+			path = iOS12;
 			sourceTree = "<group>";
 		};
 		0E390FE0236021BC00D600DB /* LocalNotifications */ = {
@@ -3117,6 +3149,51 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		0EE49BB323B8C89D003012C2 /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				0EE49BBE23B8CBC1003012C2 /* Operations */,
+				0EE49BB423B8C8AC003012C2 /* Task */,
+			);
+			path = Background;
+			sourceTree = "<group>";
+		};
+		0EE49BB423B8C8AC003012C2 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				0E31B03723B9EFEF00660412 /* iOS12 */,
+				0EE49BB923B8C8D1003012C2 /* iOS13 */,
+				0EE49BB523B8C8C0003012C2 /* BackgroundTaskService.swift */,
+			);
+			path = Task;
+			sourceTree = "<group>";
+		};
+		0EE49BB923B8C8D1003012C2 /* iOS13 */ = {
+			isa = PBXGroup;
+			children = (
+				0EE49BBA23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift */,
+			);
+			path = iOS13;
+			sourceTree = "<group>";
+		};
+		0EE49BBE23B8CBC1003012C2 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				0EE49BC723B8CE19003012C2 /* WebTag */,
+			);
+			path = Operations;
+			sourceTree = "<group>";
+		};
+		0EE49BC723B8CE19003012C2 /* WebTag */ = {
+			isa = PBXGroup;
+			children = (
+				0EE49BC323B8CE12003012C2 /* WebTagOperationsManager.swift */,
+				0EE49BBF23B8CC35003012C2 /* WebTagRefreshDataOperation.swift */,
+				0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */,
+			);
+			path = WebTag;
+			sourceTree = "<group>";
+		};
 		0EE5B4802351AB3C00D5ED32 /* Table */ = {
 			isa = PBXGroup;
 			children = (
@@ -3266,6 +3343,7 @@
 			isa = PBXGroup;
 			children = (
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
+				0EE49BB323B8C89D003012C2 /* Background */,
 				0E5C302322D0B16300B52E39 /* AppState */,
 				0EEB210922B7D8110015F9E0 /* Daemons */,
 				0E75661C2361C18C00FCA977 /* GATT */,
@@ -4185,6 +4263,7 @@
 				0E6BAD8E23856A01003A2D4C /* WelcomeConfigurator.swift in Sources */,
 				0E6BAD8F23856A01003A2D4C /* ForegroundModuleInput.swift in Sources */,
 				0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */,
+				0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E6BAD9223856A01003A2D4C /* AsyncOperation.swift in Sources */,
 				0E6BAD9323856A01003A2D4C /* TagChartsViewModel.swift in Sources */,
@@ -4204,6 +4283,7 @@
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E6BADA123856A01003A2D4C /* WebTagSettingsViewInput.swift in Sources */,
+				0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				0E6BADA223856A01003A2D4C /* WelcomeRouterInput.swift in Sources */,
 				0E6BADA423856A01003A2D4C /* MenuModuleOutput.swift in Sources */,
 				0E6BADA523856A01003A2D4C /* CalibrationServiceImpl.swift in Sources */,
@@ -4275,6 +4355,7 @@
 				0E6BADE623856A01003A2D4C /* ForegroundRouterInput.swift in Sources */,
 				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0EAD33F7239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
+				0EE49BB823B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
 				0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4318,6 +4399,7 @@
 				0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */,
 				0EAD33EA2399273E00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E6BAE0E23856A01003A2D4C /* RuuviTagPersistenceRealm.swift in Sources */,
+				0EE49BBD23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
@@ -4339,6 +4421,7 @@
 				0E6BAE2123856A01003A2D4C /* UserDefault.swift in Sources */,
 				0E6BAE2223856A01003A2D4C /* PushNotificationsManagerImpl.swift in Sources */,
 				0E6BAE2323856A01003A2D4C /* ForegroundViewOutput.swift in Sources */,
+				0EE49BC223B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F38239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E6BAE2423856A01003A2D4C /* LanguageModuleInput.swift in Sources */,
 				0E6BAE2523856A01003A2D4C /* PresentationAssembly.swift in Sources */,
@@ -4391,6 +4474,7 @@
 				0E6BAE5323856A01003A2D4C /* PhotoPickerPresenter.swift in Sources */,
 				0E6BAE5423856A01003A2D4C /* LocationPickerPresenter.swift in Sources */,
 				0E6BAE5623856A01003A2D4C /* BusinessAssembly.swift in Sources */,
+				0EE49BC623B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
 				0E6BAE5723856A01003A2D4C /* DefaultsModuleInput.swift in Sources */,
 				0E6BAE5823856A01003A2D4C /* SettingsUserDefaults.swift in Sources */,
 				0E6BAE5923856A01003A2D4C /* RuuviTagAdvertisementDaemon.swift in Sources */,
@@ -4497,6 +4581,7 @@
 				0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */,
 				0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */,
 				0E8BD2C6238566AB008B31EF /* AboutViewOutput.swift in Sources */,
+				0E31B03A23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0E8BD2C7238566AB008B31EF /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E8BD2C8238566AB008B31EF /* AsyncOperation.swift in Sources */,
 				0E8BD2C9238566AB008B31EF /* TagChartsViewModel.swift in Sources */,
@@ -4516,6 +4601,7 @@
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
 				0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E8BD2D7238566AB008B31EF /* WebTagSettingsViewInput.swift in Sources */,
+				0E31B03E23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				0E8BD2D8238566AB008B31EF /* WelcomeRouterInput.swift in Sources */,
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
 				0E8BD2DB238566AB008B31EF /* CalibrationServiceImpl.swift in Sources */,
@@ -4587,6 +4673,7 @@
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0EAD33F6239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
+				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4630,6 +4717,7 @@
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E8BD344238566AB008B31EF /* RuuviTagPersistenceRealm.swift in Sources */,
+				0EE49BBC23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E8BD346238566AB008B31EF /* LocationManager.swift in Sources */,
@@ -4651,6 +4739,7 @@
 				0E8BD357238566AB008B31EF /* UserDefault.swift in Sources */,
 				0E8BD358238566AB008B31EF /* PushNotificationsManagerImpl.swift in Sources */,
 				0E8BD359238566AB008B31EF /* ForegroundViewOutput.swift in Sources */,
+				0EE49BC123B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E8BD35A238566AB008B31EF /* LanguageModuleInput.swift in Sources */,
 				0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */,
@@ -4703,6 +4792,7 @@
 				0E8BD389238566AB008B31EF /* PhotoPickerPresenter.swift in Sources */,
 				0E8BD38A238566AB008B31EF /* LocationPickerPresenter.swift in Sources */,
 				0E8BD38C238566AB008B31EF /* BusinessAssembly.swift in Sources */,
+				0EE49BC523B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
 				0E8BD38D238566AB008B31EF /* DefaultsModuleInput.swift in Sources */,
 				0E8BD38E238566AB008B31EF /* SettingsUserDefaults.swift in Sources */,
 				0E8BD38F238566AB008B31EF /* RuuviTagAdvertisementDaemon.swift in Sources */,
@@ -4809,6 +4899,7 @@
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
+				0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
@@ -4828,6 +4919,7 @@
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
+				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
@@ -4899,6 +4991,7 @@
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
 				0EAD33F5239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
+				0EE49BB623B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
@@ -4942,6 +5035,7 @@
 				0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */,
 				0EEB20D322B7C7AC0015F9E0 /* SettingsTableViewController.swift in Sources */,
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
+				0EE49BBB23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
@@ -4963,6 +5057,7 @@
 				0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */,
 				0ECFF35E23506BC40061D11B /* ForegroundViewOutput.swift in Sources */,
 				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
+				0EE49BC023B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
@@ -5015,6 +5110,7 @@
 				0E8A10182384613E00A9CBA6 /* DefaultsModuleInput.swift in Sources */,
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
 				0EEB210622B7D7C30015F9E0 /* RuuviTagAdvertisementDaemon.swift in Sources */,
+				0EE49BC423B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
 				0EF2863B22CBB08C0026C7A5 /* TagSettingsPresenter.swift in Sources */,
 				0E8FD0E32333893600FFA577 /* TagChartsModuleOutput.swift in Sources */,
 				0EF5B75422DE153A00D9D14A /* HumidityUnit.swift in Sources */,
