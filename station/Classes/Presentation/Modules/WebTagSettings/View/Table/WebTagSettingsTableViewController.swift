@@ -286,7 +286,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
         }
     }
 
-    func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell, didSlideTo minValue: CGFloat, maxValue: CGFloat) {
+    func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell,
+                                     didSlideTo minValue: CGFloat,
+                                     maxValue: CGFloat) {
         switch cell {
         case temperatureAlertControlsCell:
             if let tu = viewModel.temperatureUnit.value {
@@ -363,11 +365,14 @@ extension WebTagSettingsTableViewController {
                 if let tu = temperatureUnit {
                     switch tu {
                     case .celsius:
-                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized()
+                            + " " + "°C".localized()
                     case .fahrenheit:
-                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized()
+                            + " " + "°F".localized()
                     case .kelvin:
-                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized() + " "  + "K".localized()
+                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized()
+                            + " "  + "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
