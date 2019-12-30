@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import UserNotifications
 import UIKit
 
@@ -376,4 +375,3 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler()
     }
 }
-// swiftlint:enable file_length
