@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -34,15 +32,12 @@
                                         </constraints>
                                     </imageView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pyx-d9-7cb">
-                                        <rect key="frame" x="36" y="220" width="342" height="716"/>
+                                        <rect key="frame" x="36" y="220" width="342" height="722.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" red="0.41568627450000001" green="0.91764705879999997" blue="0.88235294119999996" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="716" id="dg8-xC-6sC"/>
-                                        </constraints>
                                         <attributedString key="attributedText">
                                             <fragment>
-                                                <mutableString key="content">ABOUT / HELP  Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.   OPERATIONS MANUAL  We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals   TROUBLESHOOTING  </mutableString>
+                                                <string key="content">ABOUT / HELP  Ruuvi Station is an easy-to-use but powerful tool to supercharge your RuuviTag sensor nodes. Just add some sensors and you're ready to go.   OPERATIONS MANUAL  We've designed the app to be self-explanatory but also comprehensive manuals are available for both RuuviTag and Ruuvi Station: ruuvi.com/manuals   TROUBLESHOOTING  </string>
                                                 <attributes>
                                                     <color key="NSColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <font key="NSFont" metaFont="system" size="16"/>
@@ -62,7 +57,7 @@
                                             <fragment content=" ">
                                                 <attributes>
                                                     <color key="NSColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="18" name=".AppleSystemUIFont"/>
+                                                    <font key="NSFont" metaFont="system" size="18"/>
                                                     <font key="NSOriginalFont" metaFont="system" size="18"/>
                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
@@ -98,7 +93,7 @@
                                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZT-Oy-FFh">
-                                        <rect key="frame" x="182.5" y="944" width="49" height="16"/>
+                                        <rect key="frame" x="182.5" y="950.5" width="49" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -125,7 +120,7 @@
                                     <constraint firstAttribute="width" constant="36" id="Jzn-C6-dGd"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button" image="baseline_keyboard_backspace_white_48pt"/>
+                                <state key="normal" image="dismiss-modal-icon"/>
                                 <connections>
                                     <action selector="backButtonTouchUpInside:" destination="Jxi-gj-SMg" eventType="touchUpInside" id="SfR-Nw-BF4"/>
                                 </connections>
@@ -176,8 +171,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="baseline_keyboard_backspace_white_48pt" width="48" height="48"/>
         <image name="bg9" width="960" height="1440"/>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
         <image name="gradient_layer" width="359" height="641"/>
         <image name="logo_white" width="721" height="101"/>
         <image name="ruuvi_station" width="300" height="208"/>

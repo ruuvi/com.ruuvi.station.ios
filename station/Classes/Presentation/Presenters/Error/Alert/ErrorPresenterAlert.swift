@@ -5,9 +5,25 @@ class ErrorPresenterAlert: ErrorPresenter {
     func present(error: Error) {
         if let ruError = error as? RUError {
             switch ruError {
+            case .btkit(let error):
+                presentAlert(error: error)
+            case .bluetooth(let error):
+                presentAlert(error: error)
             case .core(let error):
                 presentAlert(error: error)
             case .persistence(let error):
+                presentAlert(error: error)
+            case .networking(let error):
+                presentAlert(error: error)
+            case .parse(let error):
+                presentAlert(error: error)
+            case .map(let error):
+                presentAlert(error: error)
+            case .expected(let error):
+                presentAlert(error: error)
+            case .unexpected(let error):
+                presentAlert(error: error)
+            case .writeToDisk(let error):
                 presentAlert(error: error)
             }
         } else {
@@ -23,6 +39,8 @@ class ErrorPresenterAlert: ErrorPresenter {
         let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
         let action = UIAlertAction(title: "ErrorPresenterAlert.OK".localized(), style: .cancel, handler: nil)
         alert.addAction(action)
-        alert.show()
+        DispatchQueue.main.async {
+            alert.show()
+        }
     }
 }

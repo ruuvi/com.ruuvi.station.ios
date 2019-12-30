@@ -9,6 +9,7 @@ class AppAssembly {
             [
                 BusinessAssembly(),
                 CoreAssembly(),
+                NetworkingAssembly(),
                 PersistenceAssembly(),
                 PresentationAssembly()
             ])

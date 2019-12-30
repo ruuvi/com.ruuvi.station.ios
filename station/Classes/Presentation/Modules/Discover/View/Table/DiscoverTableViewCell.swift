@@ -1,6 +1,6 @@
 import UIKit
 
-class DiscoverTableViewCell: UITableViewCell {
+class DiscoverDeviceTableViewCell: UITableViewCell {
     @IBOutlet weak var identifierLabel: UILabel!
     @IBOutlet weak var rssiImageView: UIImageView!
 }

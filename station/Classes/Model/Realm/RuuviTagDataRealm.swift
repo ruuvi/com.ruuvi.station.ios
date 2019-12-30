@@ -1,13 +1,16 @@
 import RealmSwift
 import BTKit
+import Foundation
 
 class RuuviTagDataRealm: Object {
     
     @objc dynamic var ruuviTag: RuuviTagRealm?
     @objc dynamic var date: Date = Date()
+    @objc dynamic var compoundKey: String = UUID().uuidString
     
     // all versions
-    @objc dynamic var rssi: Int = 0
+//    @objc dynamic var rssi: Int = 0
+    let rssi = RealmOptional<Int>()
     let celsius = RealmOptional<Double>()
     let humidity = RealmOptional<Double>()
     let pressure = RealmOptional<Double>()
@@ -31,10 +34,22 @@ class RuuviTagDataRealm: Object {
         }
     }
     
+    var kelvin: Double? {
+        if let celsius = celsius.value {
+            return celsius + 273.15
+        } else {
+            return nil
+        }
+    }
+    
+    override static func primaryKey() -> String? {
+        return "compoundKey"
+    }
+    
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
-        self.rssi = data.rssi
+        self.rssi.value = data.rssi
         self.celsius.value = data.celsius
         self.humidity.value = data.humidity
         self.pressure.value = data.pressure
@@ -45,5 +60,16 @@ class RuuviTagDataRealm: Object {
         self.movementCounter.value = data.movementCounter
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
+        self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
+    }
+    
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
+        self.init()
+        self.ruuviTag = ruuviTag
+        self.date = data.date
+        self.celsius.value = data.temperature
+        self.humidity.value = data.humidity
+        self.pressure.value = data.pressure
+        self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
 }

@@ -1,11 +1,13 @@
 import RealmSwift
 import BTKit
+import Foundation
 
 class RuuviTagRealm: Object {
     @objc dynamic var uuid: String = ""
     @objc dynamic var name: String = ""
     @objc dynamic var mac: String?
     @objc dynamic var version: Int = 0
+    @objc dynamic var isConnectable: Bool = false
     
     // calibration
     @objc dynamic var humidityOffset: Double = 0
@@ -23,5 +25,6 @@ class RuuviTagRealm: Object {
         self.name = name
         self.mac = ruuviTag.mac
         self.version = ruuviTag.version
+        self.isConnectable = ruuviTag.isConnectable
     }
 }

@@ -5,14 +5,18 @@ import Localize_Swift
 class HumidityCalibrationViewController: UIViewController {
     var output: HumidityCalibrationViewOutput!
     
+    @IBOutlet weak var targetHumidityLabel: UILabel!
     @IBOutlet weak var descriptionLabel: TTTAttributedLabel!
     @IBOutlet weak var oldHumidityLabel: UILabel!
     @IBOutlet weak var lastCalibrationDateLabel: UILabel!
     @IBOutlet weak var clearButton: UIButton!
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var noteLabel: UILabel!
+    @IBOutlet weak var calibrateButton: UIButton!
     
     var oldHumidity: Double = 0 { didSet { updateUIOldHumidity() } }
     var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
-    var lastCalibrationDate: Date? { didSet { updateUILastCAlibrationDate() } }
+    var lastCalibrationDate: Date? { didSet { updateUILastCalibrationDate() } }
     
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!
 }
@@ -20,8 +24,15 @@ class HumidityCalibrationViewController: UIViewController {
 // MARK: - HumidityCalibrationViewInput
 extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
     func localize() {
-        
+        configureDescriptionLabel()
+        updateUILastCalibrationDate()
+        noteLabel.text = "HumidityCalibration.Label.note.text".localized()
+        clearButton.setTitle("HumidityCalibration.Button.Clear.title".localized(), for: .normal)
+        calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
+        closeButton.setTitle("HumidityCalibration.Button.Close.title".localized(), for: .normal)
+        targetHumidityLabel.text = String.localizedStringWithFormat("%.2f", 75.0)
     }
+    
     func apply(theme: Theme) {
         
     }
@@ -64,6 +75,7 @@ extension HumidityCalibrationViewController {
 extension HumidityCalibrationViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         configureViews()
         updateUI()
         output.viewDidLoad()
@@ -84,15 +96,15 @@ extension HumidityCalibrationViewController {
     private func updateUI() {
         updateUIOldHumidity()
         updateUIHumidityOffset()
-        updateUILastCAlibrationDate()
+        updateUILastCalibrationDate()
     }
     
-    private func updateUILastCAlibrationDate() {
+    private func updateUILastCalibrationDate() {
         if isViewLoaded {
             if let lastCalibrationDate = lastCalibrationDate {
                 let df = DateFormatter()
                 df.dateFormat = "dd MMMM yyyy"
-                lastCalibrationDateLabel.text = String(format: "HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
+                lastCalibrationDateLabel.text = String.localizedStringWithFormat("HumidityCalibration.lastCalibrationDate.format".localized(), df.string(from: lastCalibrationDate))
                 clearButton.isEnabled = true
             } else {
                 lastCalibrationDateLabel.text = nil
@@ -103,13 +115,13 @@ extension HumidityCalibrationViewController {
     
     private func updateUIOldHumidity() {
         if isViewLoaded {
-            oldHumidityLabel.text = String(format: "%.2f", oldHumidity + humidityOffset) + " %"
+            oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
     
     func updateUIHumidityOffset() {
         if isViewLoaded {
-            oldHumidityLabel.text = String(format: "%.2f", oldHumidity + humidityOffset) + " %"
+            oldHumidityLabel.text = String.localizedStringWithFormat("%.2f", oldHumidity + humidityOffset) + " %"
         }
     }
 }
@@ -117,11 +129,18 @@ extension HumidityCalibrationViewController {
 // MARK: - View configuration
 extension HumidityCalibrationViewController {
     private func configureViews() {
+        configureDescriptionLabel()
+    }
+    
+    private func configureDescriptionLabel() {
         let text = "HumidityCalibration.Description.text".localized()
         descriptionLabel.text = text
         let link = "HumidityCalibration.VideoTutorials.link".localized()
         if let linkRange = text.range(of: link) {
             descriptionLabel.addLink(to: videoTutorialsUrl, with: NSRange(linkRange, in: text))
+            let linkAttributes = NSMutableDictionary(dictionary: descriptionLabel.linkAttributes)
+            linkAttributes[NSAttributedString.Key.foregroundColor] = UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+            descriptionLabel.linkAttributes = linkAttributes as? [AnyHashable : Any]
         }
         descriptionLabel.delegate = self
     }

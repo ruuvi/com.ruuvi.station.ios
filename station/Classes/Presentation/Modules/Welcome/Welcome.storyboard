@@ -110,6 +110,11 @@
                     <navigationItem key="navigationItem" id="Ih4-as-gq9">
                         <barButtonItem key="backBarButtonItem" title=" " id="oH5-OL-Oqi"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="nYg-3d-wZG" id="Fm0-rc-r37"/>
+                        <outlet property="scanButton" destination="lZQ-4e-haS" id="exR-Xz-Chy"/>
+                        <outlet property="welcomeImageView" destination="Skh-Bs-GdI" id="REy-Cl-41C"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lEW-DO-NLc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="XvO-ne-sbc" customClass="WelcomeInitializer" customModule="station" customModuleProvider="target">
