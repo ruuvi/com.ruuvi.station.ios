@@ -39,7 +39,7 @@ class LocationManagerImpl: NSObject, LocationManager {
             completion?(false)
         } else {
             requestLocationPermissionCallback = completion
-            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
         }
     }
 
