@@ -14,7 +14,8 @@ class AboutViewController: UIViewController {
 // MARK: - AboutViewInput
 extension AboutViewController: AboutViewInput {
     func localize() {
-        
+        configureTextView()
+        configureVersionLabel()
     }
     
     func apply(theme: Theme) {
@@ -35,6 +36,7 @@ extension AboutViewController {
 extension AboutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLocalization()
         configureViews()
     }
     
@@ -73,7 +75,7 @@ extension AboutViewController: UITextViewDelegate {
 // MARK: - View configuration
 extension AboutViewController {
     private func configureViews() {
-        boldifyTextView()
+        configureTextView()
         configureVersionLabel()
     }
     
@@ -86,24 +88,40 @@ extension AboutViewController {
         }
     }
     
-    private func boldifyTextView() {
-        // this is stupid but for some reasons setting the font to bold in ib did not work
-        let attrString = NSMutableAttributedString(attributedString: aboutTextView.attributedText)
+    private func configureTextView() {
+        
+        let text = "About.AboutHelp.header".localized() + "\n\n" +
+            "About.AboutHelp.contents".localized() + "\n\n\n\n" +
+            "About.OperationsManual.header".localized() + "\n\n" +
+            "About.OperationsManual.contents".localized() + "\n\n\n\n" +
+            "About.Troubleshooting.header".localized() + "\n\n" +
+            "About.Troubleshooting.contents".localized() + "\n\n\n\n" +
+            "About.OpenSource.header".localized() + "\n\n" +
+            "About.OpenSource.contents".localized() + "\n\n\n\n" +
+            "About.More.header".localized() + "\n\n" +
+            "About.More.contents".localized() + "\n";
+        
+        let attrString = NSMutableAttributedString(string: text)
         let muliRegular = UIFont(name: "Muli-Regular", size: 16.0) ?? UIFont.systemFont(ofSize: 16)
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         
-        let makeBold = ["ABOUT / HELP", "OPERATIONS MANUAL", "TROUBLESHOOTING", "OPEN-SOURCE", "MORE TO READ"]
+        // make headers bold
+        let makeBold = ["About.AboutHelp.header".localized(), "About.OperationsManual.header".localized(), "About.Troubleshooting.header".localized(), "About.OpenSource.header".localized(), "About.More.header".localized()]
         let boldFont = UIFont(name: "Montserrat-Bold", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .bold)
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
         }
-        // .. and this is to reduce the linespacing below the titles
+        // reduce the linespacing below the titles
         let smallFont = UIFont(name: "Muli-Bold", size: 8) ?? UIFont.systemFont(ofSize: 8)
-        for range in attrString.string.ranges(of: "  ") {
+        for range in attrString.string.ranges(of: "\n") {
             attrString.addAttribute(NSAttributedString.Key.font, value: smallFont, range: NSRange(range, in: attrString.string))
         }
+        
+        // make text color white
+        attrString.addAttribute(.foregroundColor, value: UIColor.white, range:  NSRange(location: 0, length: attrString.length))
+        
         aboutTextView.attributedText = attrString
     }
 }

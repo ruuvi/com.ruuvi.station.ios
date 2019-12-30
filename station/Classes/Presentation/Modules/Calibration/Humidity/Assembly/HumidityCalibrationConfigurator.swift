@@ -13,7 +13,8 @@ class HumidityCalibrationConfigurator {
         presenter.router = router
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.scanner = r.resolve(BTScanner.self)
+        presenter.foreground = r.resolve(BTForeground.self)
+        presenter.background = r.resolve(BTBackground.self)
         
         view.output = presenter
     }

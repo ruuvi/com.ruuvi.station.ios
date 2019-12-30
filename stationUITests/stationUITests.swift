@@ -1,14 +1,6 @@
-//
-//  stationUITests.swift
-//  stationUITests
-//
-//  Created by Elias Berg on 19/05/2018.
-//  Copyright © 2018 Ruuvi Innovations Oy. All rights reserved.
-//
-
 import XCTest
 
-class stationUITests: XCTestCase {
+class StationUITests: XCTestCase {
         
     override func setUp() {
         super.setUp()

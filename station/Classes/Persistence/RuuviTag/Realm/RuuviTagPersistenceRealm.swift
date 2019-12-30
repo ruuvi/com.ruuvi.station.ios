@@ -1,6 +1,7 @@
 import RealmSwift
 import Future
 import BTKit
+import Foundation
 
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
     var context: RealmContext!
@@ -10,7 +11,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         let promise = Promise<Bool,RUError>()
         do {
             try realm.write {
-                realm.add(ruuviTagData)
+                realm.add(ruuviTagData, update: .modified)
             }
             promise.succeed(value: true)
         } catch {
@@ -25,6 +26,20 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         do {
             try realm.write {
                 ruuviTag.mac = mac
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+    
+    @discardableResult
+    func update(isConnectable: Bool, of ruuviTag: RuuviTagRealm, realm: Realm) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        do {
+            try realm.write {
+                ruuviTag.isConnectable = isConnectable
             }
             promise.succeed(value: true)
         } catch {
@@ -231,8 +246,58 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
     
-    
     private func fetch(uuid: String) -> RuuviTagRealm? {
         return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
+    }
+    
+    func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        context.bgWorker.enqueue {
+            do {
+                if let existingTag = self.fetch(uuid: uuid) {
+                    try self.context.bg.write {
+                        if !existingTag.isInvalidated {
+                            for log in logs {
+                                let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log)
+                                self.context.bg.add(tagData, update: .modified)
+                            }
+                            promise.succeed(value: true)
+                        } else {
+                            promise.fail(error: .core(.objectInvalidated))
+                        }
+                    }
+                } else {
+                    promise.fail(error: .core(.objectNotFound))
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        
+        return promise.future
+    }
+    
+    func clearHistory(uuid: String) -> Future<Bool,RUError> {
+        let promise = Promise<Bool,RUError>()
+        context.bgWorker.enqueue {
+            do {
+                if let existingTag = self.fetch(uuid: uuid) {
+                    try self.context.bg.write {
+                        if !existingTag.isInvalidated {
+                            self.context.bg.delete(existingTag.data)
+                            promise.succeed(value: true)
+                        } else {
+                            promise.fail(error: .core(.objectInvalidated))
+                        }
+                    }
+                } else {
+                    promise.fail(error: .core(.objectNotFound))
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        
+        return promise.future
     }
 }

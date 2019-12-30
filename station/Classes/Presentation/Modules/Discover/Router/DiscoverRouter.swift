@@ -1,13 +1,14 @@
 import LightRoute
 import BTKit
+import UIKit
 
 class DiscoverRouter: DiscoverRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
     
-    func openDashboard() {
-        let factory = StoryboardFactory(storyboardName: "Dashboard")
+    func openCards() {
+        let factory = StoryboardFactory(storyboardName: "Cards")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: DashboardModuleInput.self)
+            .forStoryboard(factory: factory, to: CardsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .perform()
     }
@@ -16,7 +17,16 @@ class DiscoverRouter: DiscoverRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
     
-    func dismiss() {
-        try! transitionHandler.closeCurrentModule().perform()
+    func openLocationPicker(output: LocationPickerModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "LocationPicker")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: LocationPickerModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(output: output)
+            })
+    }
+    
+    func dismiss(completion: (() -> Void)?) {
+        transitionHandler.dismiss(animated: true, completion: completion)
     }
 }

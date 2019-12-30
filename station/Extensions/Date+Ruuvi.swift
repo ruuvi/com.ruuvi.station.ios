@@ -1,33 +1,25 @@
-//
-//  Date+Ruuvi.swift
-//  station
-//
-//  Created by Rinat Enikeev on 7/10/19.
-//  Copyright © 2019 Ruuvi Innovations Oy. All rights reserved.
-//
-
 import Foundation
 
 extension Date {
     var ruuviAgo: String {
         let elapsed = Int(Date().timeIntervalSince(self))
-        var output = "Updated "
+        var output = "Updated".localized() + " "
         // show date if the tag has not been seen for 24h
         if elapsed >= 24 * 60 * 60 {
             let df = DateFormatter()
-            df.dateFormat = "EEE MMM dd HH:mm:ss ZZZZ yyyy"
+            df.dateFormat = "E MMM dd yyyy HH:mm:ss"
             output += df.string(from: self)
         } else {
             let seconds = elapsed % 60
             let minutes = (elapsed / 60) % 60
             let hours   = (elapsed / (60*60)) % 24
             if hours > 0 {
-                output += String(hours) + " h "
+                output += String(hours) + " " + "h".localized() + " "
             }
             if minutes > 0 {
-                output += String(minutes) + " min "
+                output += String(minutes) + " " + "min".localized() + " "
             }
-            output += String(seconds) + " s ago"
+            output += String(seconds) + " " + "s".localized() + " " + "ago".localized()
         }
         return output
     }

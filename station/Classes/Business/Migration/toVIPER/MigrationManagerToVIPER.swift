@@ -1,4 +1,5 @@
 import RealmSwift
+import Foundation
 
 class MigrationManagerToVIPER: MigrationManager {
     
@@ -7,7 +8,7 @@ class MigrationManagerToVIPER: MigrationManager {
     
     func migrateIfNeeded() {
         let config = Realm.Configuration(
-            schemaVersion: 3,
+            schemaVersion: 10,
             migrationBlock: { migration, oldSchemaVersion in
                 if (oldSchemaVersion < 2) {
                     migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, newObject) in
@@ -63,7 +64,36 @@ class MigrationManagerToVIPER: MigrationManager {
                             newObject?["pressure"] = value
                         }
                     }
+                } else if oldSchemaVersion < 4 {
+                    migration.enumerateObjects(ofType: WebTagRealm.className(), { (oldObject, newObject) in
+                        if let location = oldObject?["location"] as? WebTagLocationRealm, let city = location.city {
+                            newObject?["name"] = city
+                        } else {
+                            newObject?["name"] = ""
+                        }
+                    })
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
+                    migration.deleteData(forType: WebTagDataRealm.className())
+                } else if oldSchemaVersion < 5 {
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
+                    migration.deleteData(forType: WebTagDataRealm.className())
+                } else if oldSchemaVersion < 6 {
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
+                    migration.deleteData(forType: WebTagDataRealm.className())
+                }  else if oldSchemaVersion < 7 {
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
+                    migration.deleteData(forType: WebTagDataRealm.className())
+                } else if oldSchemaVersion < 8 {
+                    migration.deleteData(forType: RuuviTagDataRealm.className())
+                    migration.deleteData(forType: WebTagDataRealm.className())
+                } else if oldSchemaVersion < 9 {
+                    // do nothing
+                } else if oldSchemaVersion < 10 {
+                    // do nothing
                 }
+        }, shouldCompactOnLaunch: { totalBytes, usedBytes in
+            let fiveHundredMegabytes = 500 * 1024 * 1024
+            return (totalBytes > fiveHundredMegabytes) && (Double(usedBytes) / Double(totalBytes)) < 0.5
         })
         
         // Tell Realm to use this new configuration object for the default Realm

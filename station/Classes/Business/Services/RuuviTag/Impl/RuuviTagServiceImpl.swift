@@ -1,12 +1,13 @@
 import Foundation
-import BTKit
 import Future
+import BTKit
 
 class RuuviTagServiceImpl: RuuviTagService {
     var ruuviTagPersistence: RuuviTagPersistence!
     var calibrationService: CalibrationService!
     var backgroundPersistence: BackgroundPersistence!
-    
+    var connectionPersistence: ConnectionPersistence!
+        
     func persist(ruuviTag: RuuviTag, name: String) -> Future<RuuviTag,RUError> {
         let offsetData = calibrationService.humidityOffset(for: ruuviTag.uuid)
         return ruuviTagPersistence.persist(ruuviTag: ruuviTag, name: name, humidityOffset: offsetData.0, humidityOffsetDate: offsetData.1)
@@ -19,5 +20,10 @@ class RuuviTagServiceImpl: RuuviTagService {
     
     func update(name: String, of ruuviTag: RuuviTagRealm) -> Future<Bool,RUError> {
         return ruuviTagPersistence.update(name: name, of: ruuviTag)
+    }
+    
+    func clearHistory(uuid: String) -> Future<Bool,RUError> {
+        connectionPersistence.setLogSyncDate(nil, uuid: uuid)
+        return ruuviTagPersistence.clearHistory(uuid: uuid)
     }
 }

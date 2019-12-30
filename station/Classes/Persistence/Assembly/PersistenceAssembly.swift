@@ -2,6 +2,11 @@ import Swinject
 
 class PersistenceAssembly: Assembly {
     func assemble(container: Container) {
+
+        container.register(AlertPersistence.self) { _ in
+            let persistence = AlertPersistenceUserDefaults()
+            return persistence
+        }
         
         container.register(BackgroundPersistence.self) { r in
             let persistence = BackgroundPersistenceUserDefaults()
@@ -11,6 +16,11 @@ class PersistenceAssembly: Assembly {
         
         container.register(CalibrationPersistence.self) { r in
             let persistence = CalibrationPersistenceUserDefaults()
+            return persistence
+        }
+        
+        container.register(ConnectionPersistence.self) { r in
+            let persistence = ConnectionPersistenceUserDefaults()
             return persistence
         }
         
@@ -35,5 +45,10 @@ class PersistenceAssembly: Assembly {
             return settings
         }.inObjectScope(.container)
         
+        container.register(WebTagPersistence.self) { r in
+            let persistence = WebTagPersistenceRealm()
+            persistence.context = r.resolve(RealmContext.self)
+            return persistence
+        }
     }
 }

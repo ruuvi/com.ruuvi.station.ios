@@ -2,6 +2,37 @@ import Foundation
 
 class SettingsUserDegaults: Settings {
     
+    private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
+    
+    func keepConnectionDialogWasShown(for uuid: String) -> Bool {
+        return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + uuid)
+    }
+    
+    func setKeepConnectionDialogWasShown(for uuid: String) {
+        UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + uuid)
+    }
+    
+    var language: Language {
+        get {
+            if let savedCode = UserDefaults.standard.string(forKey: languageUDKey) {
+                return Language(rawValue: savedCode) ?? .english
+            } else if let regionCode = Locale.current.languageCode {
+                return Language(rawValue: regionCode) ?? .english
+            } else {
+                return .english
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: languageUDKey)
+            NotificationCenter
+                .default
+                .post(name: .LanguageDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+    private let languageUDKey = "SettingsUserDegaults.languageUDKey"
+    
     var humidityUnit: HumidityUnit {
         get {
             switch humidityUnitInt {
@@ -32,10 +63,29 @@ class SettingsUserDegaults: Settings {
     
     var temperatureUnit: TemperatureUnit {
         get {
-            return useFahrenheit ? .fahrenheit : .celsius
+            switch temperatureUnitInt {
+            case 0:
+                return useFahrenheit ? .fahrenheit : .celsius
+            case 1:
+                return .kelvin
+            case 2:
+                return .celsius
+            case 3:
+                return .fahrenheit
+            default:
+                return .celsius
+            }
         }
         set {
             useFahrenheit = newValue == .fahrenheit
+            switch newValue {
+            case .kelvin:
+                temperatureUnitInt = 1
+            case .celsius:
+                temperatureUnitInt = 2
+            case .fahrenheit:
+                temperatureUnitInt = 3
+            }
             NotificationCenter
                 .default
                 .post(name: .TemperatureUnitDidChange,
@@ -44,35 +94,128 @@ class SettingsUserDegaults: Settings {
         }
     }
     
-    var welcomeShown: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: welcomeShownUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: welcomeShownUDKey)
-        }
-    }
-    private let welcomeShownUDKey = "SettingsUserDegaults.welcomeShown"
+    @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
+    var welcomeShown: Bool
     
-    var experimentalUX: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: experimentalUXUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: experimentalUXUDKey)
-        }
-    }
-    private let experimentalUXUDKey = "SettingsUserDegaults.experimentalUX"
+    @UserDefault("SettingsUserDegaults.tagChartsLandscapeSwipeInstructionWasShown", defaultValue: false)
+    var tagChartsLandscapeSwipeInstructionWasShown: Bool
     
-    private var useFahrenheit: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: useFahrenheitUDKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: useFahrenheitUDKey)
+    @UserDefault("DashboardScrollViewController.hasShownSwipeAlert", defaultValue: false)
+     var cardsSwipeHintWasShown: Bool
+    
+    @UserDefault("SettingsUserDegaults.isAdvertisementDaemonOn", defaultValue: true)
+    var isAdvertisementDaemonOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .isAdvertisementDaemonOnDidChange,
+                  object: self,
+                  userInfo: nil)
         }
     }
-    private let useFahrenheitUDKey = "SettingsUserDegaults.useFahrenheit"
+    
+    @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: false)
+    var isConnectionDaemonOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .isConnectionDaemonOnDidChange,
+                  object: self,
+                  userInfo: nil)
+        }
+    }
+    
+    @UserDefault("SettingsUserDegaults.isWebTagDaemonOn", defaultValue: true)
+    var isWebTagDaemonOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .isWebTagDaemonOnDidChange,
+                  object: self,
+                  userInfo: nil)
+        }
+    }
+    
+    @UserDefault("SettingsUserDegaults.webTagDaemonIntervalMinutes", defaultValue: 60)
+    var webTagDaemonIntervalMinutes: Int  {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .WebTagDaemonIntervalDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
+    
+    @UserDefault("SettingsUserDegaults.connectionTimeout", defaultValue: 15)
+    var connectionTimeout: TimeInterval
+    
+    @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 60)
+    var serviceTimeout: TimeInterval
+    
+    @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
+    var connectionDaemonIntervalMinutes: Int
+    
+    @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
+    var advertisementDaemonIntervalMinutes: Int
+
+    @UserDefault("SettingsUserDegaults.alertsRepeatingIntervalSeconds", defaultValue: 3600)
+    var alertsRepeatingIntervalSeconds: Int
+    
+    @UserDefault("SettingsUserDegaults.presentConnectionNotifications", defaultValue: false)
+    var presentConnectionNotifications: Bool
+
+    @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: false)
+    var saveHeartbeats: Bool
+
+    @UserDefault("SettingsUserDegaults.saveHeartbeatsIntervalMinutes", defaultValue: 5)
+    var saveHeartbeatsIntervalMinutes: Int
+
+    @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: false)
+    var readRSSI: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .ReadRSSIDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
+
+    @UserDefault("SettingsUserDegaults.readRSSIIntervalSeconds", defaultValue: 5)
+    var readRSSIIntervalSeconds: Int {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .ReadRSSIIntervalDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
+
+    @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
+    private var useFahrenheit: Bool
+
+    private var temperatureUnitInt: Int {
+        get {
+            let int = UserDefaults.standard.integer(forKey: temperatureUnitIntUDKey)
+            if int == 0 {
+                if useFahrenheit {
+                    temperatureUnit = .fahrenheit
+                    return 3
+                } else {
+                    temperatureUnit = .celsius
+                    return 2
+                }
+            } else {
+                return int
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: temperatureUnitIntUDKey)
+        }
+    }
+    private let temperatureUnitIntUDKey = "SettingsUserDegaults.temperatureUnitIntUDKey"
     
     private var humidityUnitInt: Int {
         get {
