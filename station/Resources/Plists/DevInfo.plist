@@ -4,8 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.ruuvi.station.RuuviTagBackgroundAdvertisementTaskDaemoniOS13</string>
-		<string>com.ruuvi.station.RuuviTagBackgroundAdvertisementProcessDaemoniOS13</string>
+		<string>com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

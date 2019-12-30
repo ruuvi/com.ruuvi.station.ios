@@ -18,8 +18,8 @@ enum LowHighNotificationType: String {
 }
 
 enum LowHighNotificationReason {
-    case higher
-    case lower
+    case high
+    case low
 }
 
 enum BlastNotificationType: String {
@@ -122,59 +122,17 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
-
-    func notifyLowTemperature(for uuid: String, celsius: Double) {
-        notify(type: .temperature, reason: .lower, for: uuid)
-    }
-
-    func notifyHighTemperature(for uuid: String, celsius: Double) {
-        notify(type: .temperature, reason: .higher, for: uuid)
-    }
-
-    func notifyLowRelativeHumidity(for uuid: String, relativeHumidity: Double) {
-        notify(type: .relativeHumidity, reason: .lower, for: uuid)
-    }
-
-    func notifyHighRelativeHumidity(for uuid: String, relativeHumidity: Double) {
-        notify(type: .relativeHumidity, reason: .higher, for: uuid)
-    }
-
-    func notifyLowAbsoluteHumidity(for uuid: String, absoluteHumidity: Double) {
-        notify(type: .absoluteHumidity, reason: .lower, for: uuid)
-    }
-
-    func notifyHighAbsoluteHumidity(for uuid: String, absoluteHumidity: Double) {
-        notify(type: .absoluteHumidity, reason: .higher, for: uuid)
-    }
-
-    func notifyLowDewPoint(for uuid: String, dewPointCelsius: Double) {
-        notify(type: .dewPoint, reason: .lower, for: uuid)
-    }
-
-    func notifyHighDewPoint(for uuid: String, dewPointCelsius: Double) {
-        notify(type: .dewPoint, reason: .higher, for: uuid)
-    }
-
-    func notifyLowPressure(for uuid: String, pressure: Double) {
-        notify(type: .pressure, reason: .lower, for: uuid)
-    }
-
-    func notifyHighPressure(for uuid: String, pressure: Double) {
-        notify(type: .pressure, reason: .higher, for: uuid)
-    }
 }
 
-// MARK: - Private
+// MARK: - Notify
 extension LocalNotificationsManagerImpl {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func notify(type: LowHighNotificationType,
-                        reason: LowHighNotificationReason,
-                        for uuid: String) {
+    func notify(_ reason: LowHighNotificationReason, _ type: LowHighNotificationType, for uuid: String) {
         var needsToShow: Bool
         var cache: [String: Date]
         switch reason {
-        case .lower:
+        case .low:
             switch type {
             case .temperature:
                 cache = lowTemperatureAlerts
@@ -187,7 +145,7 @@ extension LocalNotificationsManagerImpl {
             case .pressure:
                 cache = lowPressureAlerts
             }
-        case .higher:
+        case .high:
             switch type {
             case .temperature:
                 cache = highTemperatureAlerts
@@ -203,7 +161,8 @@ extension LocalNotificationsManagerImpl {
         }
 
         if let shownDate = cache[uuid] {
-            needsToShow = Date().timeIntervalSince(shownDate) > TimeInterval(settings.alertsRepeatingIntervalSeconds)
+            needsToShow = Date().timeIntervalSince(shownDate) >
+                TimeInterval(settings.alertsRepeatingIntervalSeconds)
         } else {
             needsToShow = true
         }
@@ -212,7 +171,7 @@ extension LocalNotificationsManagerImpl {
             content.sound = .default
             let title: String
             switch reason {
-            case .lower:
+            case .low:
                 switch type {
                 case .temperature:
                     title = "LocalNotificationsManager.LowTemperature.title".localized()
@@ -225,7 +184,7 @@ extension LocalNotificationsManagerImpl {
                 case .pressure:
                     title = "LocalNotificationsManager.LowPressure.title".localized()
                 }
-            case .higher:
+            case .high:
                 switch type {
                 case .temperature:
                     title = "LocalNotificationsManager.HighTemperature.title".localized()
@@ -244,34 +203,31 @@ extension LocalNotificationsManagerImpl {
             content.categoryIdentifier = lowHigh.id
             if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
-                let body: String
-                switch type {
-                case .temperature:
-                    body = alertService.temperatureDescription(for: ruuviTag.uuid)
-                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
-                case .relativeHumidity:
-                    body = alertService.relativeHumidityDescription(for: ruuviTag.uuid)
-                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
-                case .absoluteHumidity:
-                    body = alertService.absoluteHumidityDescription(for: ruuviTag.uuid)
-                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
-                case .dewPoint:
-                    body = alertService.dewPointDescription(for: ruuviTag.uuid)
-                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
-                case .pressure:
-                    body = alertService.pressureDescription(for: ruuviTag.uuid)
-                        ?? (ruuviTag.mac ?? ruuviTag.uuid)
-                }
-                content.body = body
-            } else {
-                content.body = uuid
+            } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
+                content.subtitle = webTag.name
             }
+
+            let body: String
+            switch type {
+            case .temperature:
+                body = alertService.temperatureDescription(for: uuid) ?? uuid
+            case .relativeHumidity:
+                body = alertService.relativeHumidityDescription(for: uuid) ?? uuid
+            case .absoluteHumidity:
+                body = alertService.absoluteHumidityDescription(for: uuid) ?? uuid
+            case .dewPoint:
+                body = alertService.dewPointDescription(for: uuid) ?? uuid
+            case .pressure:
+                body = alertService.pressureDescription(for: uuid) ?? uuid
+            }
+            content.body = body
+
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
             let request = UNNotificationRequest(identifier: uuid + type.rawValue, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 
             switch reason {
-            case .lower:
+            case .low:
                 switch type {
                 case .temperature:
                     lowTemperatureAlerts[uuid] = Date()
@@ -284,7 +240,7 @@ extension LocalNotificationsManagerImpl {
                 case .pressure:
                     lowPressureAlerts[uuid] = Date()
                 }
-            case .higher:
+            case .high:
                 switch type {
                 case .temperature:
                     highTemperatureAlerts[uuid] = Date()
@@ -300,6 +256,10 @@ extension LocalNotificationsManagerImpl {
             }
         }
     }
+}
+
+// MARK: - Private
+extension LocalNotificationsManagerImpl {
 
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
