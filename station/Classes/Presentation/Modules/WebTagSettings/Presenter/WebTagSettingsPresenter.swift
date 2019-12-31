@@ -1,5 +1,6 @@
 import UIKit
 import RealmSwift
+import CoreLocation
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
@@ -10,6 +11,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var settings: Settings!
     var alertService: AlertService!
     var pushNotificationsManager: PushNotificationsManager!
+    var permissionsManager: PermissionsManager!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
             photoPickerPresenter.delegate = self
@@ -40,6 +42,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         self.webTag = webTag
         startObservingWebTag()
         startObservingSettingsChanges()
+        startObservingApplicationState()
     }
 }
 
@@ -99,6 +102,10 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+    }
+
+    func viewDidTapOnAlertsDisabledView() {
+        
     }
 }
 
@@ -189,10 +196,13 @@ extension WebTagSettingsPresenter {
                          queue: .main,
                          using: { [weak self] (_) in
             self?.checkPushNotificationsStatus()
+            self?.view.viewModel.isLocationAuthorizedAlways.value
+                = self?.permissionsManager.locationAuthorizationStatus == .authorizedAlways 
         })
     }
 
     private func syncViewModel() {
+        view.viewModel.isLocationAuthorizedAlways.value = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
 

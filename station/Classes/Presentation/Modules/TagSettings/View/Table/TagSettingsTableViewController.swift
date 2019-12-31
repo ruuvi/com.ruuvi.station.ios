@@ -18,8 +18,8 @@ enum TagSettingsTableSection: Int {
         return viewModel?.isConnectable.value ?? false
     }
 
-    static func section(for index: Int) -> TagSettingsTableSection {
-        return TagSettingsTableSection(rawValue: index) ?? .name
+    static func section(for sectionIndex: Int) -> TagSettingsTableSection {
+        return TagSettingsTableSection(rawValue: sectionIndex) ?? .name
     }
 }
 
