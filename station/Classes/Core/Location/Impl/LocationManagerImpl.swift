@@ -11,6 +11,10 @@ class LocationManagerImpl: NSObject, LocationManager {
                 || CLLocationManager.authorizationStatus() == .authorizedAlways)
     }
 
+    var locationAuthorizationStatus: CLAuthorizationStatus {
+        return CLLocationManager.authorizationStatus()
+    }
+
     var isLocationPermissionDenied: Bool {
         return !CLLocationManager.locationServicesEnabled()
             || CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .denied

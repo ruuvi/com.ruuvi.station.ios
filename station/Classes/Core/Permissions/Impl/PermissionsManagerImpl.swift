@@ -17,6 +17,10 @@ class PermissionsManagerImpl: PermissionsManager {
         return locationManager.isLocationPermissionGranted
     }
 
+    var locationAuthorizationStatus: CLAuthorizationStatus {
+        return locationManager.locationAuthorizationStatus
+    }
+
     func requestPhotoLibraryPermission(completion: ((Bool) -> Void)?) {
         PHPhotoLibrary.requestAuthorization({ (status) in
             DispatchQueue.main.async {
