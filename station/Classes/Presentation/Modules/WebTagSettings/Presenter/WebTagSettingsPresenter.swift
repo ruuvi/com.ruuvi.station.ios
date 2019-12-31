@@ -141,6 +141,7 @@ extension WebTagSettingsPresenter: LocationPickerModuleOutput {
         operation.on(failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
+        module.dismiss()
     }
 }
 
