@@ -15,4 +15,10 @@ class WebTagSettingsRouter: WebTagSettingsRouterInput {
                 module.configure(output: output)
             })
     }
+
+    func openSettings() {
+        if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(settingsUrl, options: [:])
+        }
+    }
 }

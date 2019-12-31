@@ -12,6 +12,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var alertService: AlertService!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
+    var permissionPresenter: PermissionPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
             photoPickerPresenter.delegate = self
@@ -105,7 +106,27 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidTapOnAlertsDisabledView() {
-        
+        let isPN = view.viewModel.isPushNotificationsEnabled.value ?? false
+        let isFixed = view.viewModel.location.value != nil
+        let isLA = view.viewModel.isLocationAuthorizedAlways.value ?? false
+
+        if isFixed {
+            if !isPN {
+                permissionPresenter.presentNoPushNotificationsPermission()
+            }
+        } else {
+            if !isPN && !isLA {
+                view.showBothNoPNPermissionAndNoLocationPermission()
+            } else if !isLA {
+                permissionPresenter.presentNoLocationPermission()
+            } else if !isPN {
+                permissionPresenter.presentNoPushNotificationsPermission()
+            }
+        }
+    }
+
+    func viewDidAskToOpenSettings() {
+        router.openSettings()
     }
 }
 
