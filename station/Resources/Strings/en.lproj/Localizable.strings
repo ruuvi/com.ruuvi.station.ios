@@ -297,10 +297,11 @@
 "WebTagSettings.Button.Remove.title" = "REMOVE THIS VIRTUAL SENSOR";
 "WebTagSettings.SectionHeader.Name.title" = "NAME";
 "WebTagSettings.SectionHeader.MoreInfo.title" = "MORE INFO";
-"WebTagSettings.SectionHeader.Alerts.title" = "ALERTS";
 "WebTagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.Alerts.Off" = "Off";
 "WebTagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"WebTagSettings.Label.disabled.text" = "DISABLED?";
+"WebTagSettings.Label.alerts.text" = "ALERTS";
 
 // Welcome
 "Welcome.description.text" = "To find nearby sensors and receive live sensor data, press scan.";

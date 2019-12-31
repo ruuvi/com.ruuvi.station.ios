@@ -297,10 +297,11 @@
 "WebTagSettings.Button.Remove.title" = "УДАЛИТЬ";
 "WebTagSettings.SectionHeader.Name.title" = "ИМЯ";
 "WebTagSettings.SectionHeader.MoreInfo.title" = "ДОПОЛНИТЕЛЬНО";
-"WebTagSettings.SectionHeader.Alerts.title" = "ALERTS";
 "WebTagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.Alerts.Off" = "Off";
 "WebTagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"WebTagSettings.Label.disabled.text" = "НЕДОСТУПНО?";
+"WebTagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";

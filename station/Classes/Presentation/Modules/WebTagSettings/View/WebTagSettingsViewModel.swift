@@ -13,4 +13,6 @@ struct WebTagSettingsViewModel {
     let celsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
     let celsiusUpperBound: Observable<Double?> = Observable<Double?>(85)
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
+
+    let isLocationAuthorizedAlways: Observable<Bool?> = Observable<Bool?>(false)
 }

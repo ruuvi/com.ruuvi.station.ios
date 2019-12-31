@@ -1,10 +1,14 @@
 // swiftlint:disable file_length
 import UIKit
 
-private enum WebTagSettingsSection: Int {
+private enum WebTagSettingsTableSection: Int {
     case name = 0
     case alerts = 1
     case moreInfo = 2
+
+    static func section(for sectionIndex: Int) -> WebTagSettingsTableSection {
+        return WebTagSettingsTableSection(rawValue: sectionIndex) ?? .name
+    }
 }
 
 class WebTagSettingsTableViewController: UITableViewController {
@@ -27,6 +31,8 @@ class WebTagSettingsTableViewController: UITableViewController {
     var isNameChangedEnabled: Bool = true { didSet { updateUIIsNamaChangeEnabled() } }
 
     var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
+
+    private let alertsSectionHeaderReuseIdentifier = "WebTagSettingsAlertsHeaderFooterView"
 }
 
 // MARK: - WebTagSettingsViewInput
@@ -148,18 +154,54 @@ extension WebTagSettingsTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let section = WebTagSettingsTableSection.section(for: section)
         switch section {
-        case WebTagSettingsSection.name.rawValue:
+        case .name:
             return "WebTagSettings.SectionHeader.Name.title".localized()
-        case WebTagSettingsSection.alerts.rawValue:
-            return "WebTagSettings.SectionHeader.Alerts.title".localized()
-        case WebTagSettingsSection.moreInfo.rawValue:
+        case .moreInfo:
             return "WebTagSettings.SectionHeader.MoreInfo.title".localized()
         default:
             return nil
         }
     }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let section = WebTagSettingsTableSection.section(for: section)
+        switch section {
+        case .alerts:
+            // swiftlint:disable force_cast
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: alertsSectionHeaderReuseIdentifier)
+                as! WebTagSettingsAlertsHeaderFooterView
+            // swiftlint:enable force_cast
+            header.delegate = self
+            let isCurrentLocation = viewModel.location.value == nil
+            let isLocationAlwaysAuthorized = viewModel.isLocationAuthorizedAlways.value ?? false
+            let isVisible = isCurrentLocation && !isLocationAlwaysAuthorized
+            header.disabledView.isHidden = !isVisible
+            return header
+        default:
+            return nil
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let s = WebTagSettingsTableSection.section(for: section)
+        switch s {
+        case .alerts:
+            return 44
+        default:
+            return super.tableView(tableView, heightForHeaderInSection: section)
+        }
+    }
 }
+
+// MARK: - WebTagSettingsAlertsHeaderFooterViewDelegate
+extension WebTagSettingsTableViewController: WebTagSettingsAlertsHeaderFooterViewDelegate {
+    func webTagSettingsAlerts(headerView: WebTagSettingsAlertsHeaderFooterView, didTapOnDisabled button: UIButton) {
+        output.viewDidTapOnAlertsDisabledView()
+    }
+}
+
 // MARK: - UITextFieldDelegate
 extension WebTagSettingsTableViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -171,6 +213,8 @@ extension WebTagSettingsTableViewController: UITextFieldDelegate {
 // MARK: - View configuration
 extension WebTagSettingsTableViewController {
     private func configureViews() {
+        let alertsSectionNib = UINib(nibName: "WebTagSettingsAlertsHeaderFooterView", bundle: nil)
+        tableView.register(alertsSectionNib, forHeaderFooterViewReuseIdentifier: alertsSectionHeaderReuseIdentifier)
         temperatureAlertHeaderCell.delegate = self
         temperatureAlertControlsCell.delegate = self
     }
@@ -323,6 +367,11 @@ extension WebTagSettingsTableViewController {
             clearButton?.isHidden = location == nil
             clearWidth?.constant = location == nil ? 0 : 36
         })
+
+        tableView.bind(viewModel.isLocationAuthorizedAlways) { tableView, _ in
+            tableView.reloadData()
+        }
+
         bindTemperatureAlertCells()
     }
 
@@ -383,17 +432,25 @@ extension WebTagSettingsTableViewController {
             }
 
             let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
+            let isLocationAuthorizedAlways = viewModel.isLocationAuthorizedAlways
+            let location = viewModel.location
             temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                view, isPushNotificationsEnabled in
+                [weak isLocationAuthorizedAlways, weak location] view, isPushNotificationsEnabled in
                 let isPN = isPushNotificationsEnabled ?? false
-                let isEnabled = isPN
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isPN && (isLA || isFixed)
                 view.isEnabled = isEnabled
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
             temperatureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isTemperatureAlertOn] (slider, isPushNotificationsEnabled) in
+                [weak isTemperatureAlertOn, weak isLocationAuthorizedAlways, weak location] (slider, isPushNotificationsEnabled) in
                 let isOn = isTemperatureAlertOn?.value ?? false
-                slider.isEnabled = isPushNotificationsEnabled.bound && isOn
+                let isPN = isPushNotificationsEnabled.bound
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
             }
 
             temperatureAlertControlsCell.textField.bind(viewModel.temperatureAlertDescription) {
