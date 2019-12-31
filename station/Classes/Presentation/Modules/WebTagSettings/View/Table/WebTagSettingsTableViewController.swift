@@ -372,6 +372,12 @@ extension WebTagSettingsTableViewController {
         tableView.bind(viewModel.isLocationAuthorizedAlways) { tableView, _ in
             tableView.reloadData()
         }
+        tableView.bind(viewModel.isPushNotificationsEnabled) { tableView, _ in
+            tableView.reloadData()
+        }
+        tableView.bind(viewModel.location) { tableView, _ in
+            tableView.reloadData()
+        }
 
         bindTemperatureAlertCells()
     }
