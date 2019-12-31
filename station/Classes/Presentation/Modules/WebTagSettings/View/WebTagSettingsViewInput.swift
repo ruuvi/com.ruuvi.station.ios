@@ -6,4 +6,5 @@ protocol WebTagSettingsViewInput: ViewInput {
 
     func showTagRemovalConfirmationDialog()
     func showClearLocationConfirmationDialog()
+    func showBothNoPNPermissionAndNoLocationPermission()
 }

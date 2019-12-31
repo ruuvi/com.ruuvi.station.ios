@@ -12,4 +12,5 @@ protocol WebTagSettingsViewOutput {
     func viewDidAskToClearLocation()
     func viewDidConfirmToClearLocation()
     func viewDidTapOnAlertsDisabledView()
+    func viewDidAskToOpenSettings()
 }

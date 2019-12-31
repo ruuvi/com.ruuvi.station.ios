@@ -76,6 +76,16 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         present(controller, animated: true)
     }
 
+    func showBothNoPNPermissionAndNoLocationPermission() {
+        let message = "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message".localized()
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let actionTitle = "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title".localized()
+        controller.addAction(UIAlertAction(title: actionTitle, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidAskToOpenSettings()
+        }))
+        controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - IBActions

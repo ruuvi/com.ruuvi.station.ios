@@ -302,6 +302,8 @@
 "WebTagSettings.temperatureAlertTitleLabel.text" = "Temperature";
 "WebTagSettings.Label.disabled.text" = "DISABLED?";
 "WebTagSettings.Label.alerts.text" = "ALERTS";
+"WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "In order to enable Virtual Sensor alerts please grant location always and notification permissions in Settings.";
+"WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Settings";
 
 // Welcome
 "Welcome.description.text" = "To find nearby sensors and receive live sensor data, press scan.";
