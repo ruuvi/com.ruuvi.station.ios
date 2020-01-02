@@ -10,7 +10,7 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     func register() {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: webTagRefresh, using: nil) { task in
             if let bgTask = task as? BGAppRefreshTask {
-                self.handleAppRefresh(task: bgTask)
+                self.handleWebTagRefresh(task: bgTask)
             } else {
                 fatalError()
             }
@@ -18,12 +18,8 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     }
 
     func schedule() {
-        scheduleAppRefresh()
-    }
-
-    func scheduleAppRefresh() {
         let request = BGAppRefreshTaskRequest(identifier: webTagRefresh)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: 60)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 5 * 60)
 
         do {
             try BGTaskScheduler.shared.submit(request)
@@ -32,9 +28,8 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
         }
     }
 
-    // Fetch the latest feed entries from server.
-    private func handleAppRefresh(task: BGAppRefreshTask) {
-        scheduleAppRefresh()
+    private func handleWebTagRefresh(task: BGAppRefreshTask) {
+        schedule()
 
         let operations = webTagOperationsManager.backgroundRefresh()
 
