@@ -31,7 +31,7 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     private func handleWebTagRefresh(task: BGAppRefreshTask) {
         schedule()
 
-        let operations = webTagOperationsManager.backgroundRefresh()
+        let operations = webTagOperationsManager.alertsPullOperations()
 
         if operations.count > 0 {
             let queue = OperationQueue()

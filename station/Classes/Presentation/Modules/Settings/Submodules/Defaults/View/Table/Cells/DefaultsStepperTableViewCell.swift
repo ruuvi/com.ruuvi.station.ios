@@ -6,6 +6,7 @@ protocol DefaultsStepperTableViewCellDelegate: class {
 
 class DefaultsStepperTableViewCell: UITableViewCell {
     weak var delegate: DefaultsStepperTableViewCellDelegate?
+    var unit: DefaultsIntegerUnit = .seconds
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var stepper: UIStepper!
@@ -14,7 +15,14 @@ class DefaultsStepperTableViewCell: UITableViewCell {
 
     @IBAction func stepperValueChanged(_ sender: Any) {
         let result = Int(stepper.value)
-        titleLabel.text = prefix + " " + "(" + "\(result)" + " " + "Defaults.Interval.Sec.string".localized() + ")"
+        let unitString: String
+        switch unit {
+        case .minutes:
+            unitString = "Defaults.Interval.Min.string".localized()
+        case .seconds:
+            unitString = "Defaults.Interval.Sec.string".localized()
+        }
+        titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"
         delegate?.defaultsStepper(cell: self, didChange: result)
     }
 }

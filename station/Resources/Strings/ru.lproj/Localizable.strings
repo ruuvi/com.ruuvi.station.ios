@@ -74,10 +74,12 @@
 "Defaults.WelcomeShown.title" = "Приветствие Показано";
 "Defaults.ChartsSwipeInstructionWasShown.title" = "Свайп на Графиках";
 "Defaults.Interval.Sec.string" = "сек";
+"Defaults.Interval.Min.string" = "мин";
 "Defaults.ConnectionTimeout.title" = "Таймаут (соед.)";
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
 "Defaults.CardsSwipeHint.title" = "Свайп Подсказка на Графиках";
 "Defaults.AlertsRepeatInterval.title" = "Интервал Уведомлений";
+"Defaults.WebPullInterval.title" = "Web Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";

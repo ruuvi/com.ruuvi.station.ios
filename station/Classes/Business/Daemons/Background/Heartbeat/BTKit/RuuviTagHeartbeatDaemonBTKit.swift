@@ -10,6 +10,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var ruuviTagPersistence: RuuviTagPersistence!
     var alertService: AlertService!
     var settings: Settings!
+    var pullWebDaemon: PullWebDaemon!
 
     private var realm: Realm!
     private var ruuviTags: Results<RuuviTagRealm>?
@@ -174,6 +175,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                  }
              }
          }, heartbeat: { observer, device in
+             observer.pullWebDaemon.wakeUp()
              if let ruuviTag = device.ruuvi?.tag {
                  observer.alertService.process(heartbeat: ruuviTag)
                 if observer.settings.saveHeartbeats {
