@@ -74,10 +74,12 @@
 "Defaults.WelcomeShown.title" = "Kiertoajelu näytetään";
 "Defaults.ChartsSwipeInstructionWasShown.title" = "Histogrammin selite näytetään vaakanäytöllä";
 "Defaults.Interval.Sec.string" = "sek";
+"Defaults.Interval.Min.string" = "min";
 "Defaults.ConnectionTimeout.title" = "Yhteyden aikakatkaisu";
 "Defaults.ServiceTimeout.title" = "Palvelun aikakatkaisu";
 "Defaults.CardsSwipeHint.title" = "Pyyhkäisyvinkki näytettiin";
 "Defaults.AlertsRepeatInterval.title" = "Hälytysväli";
+"Defaults.WebPullInterval.title" = "Web Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";

@@ -219,7 +219,7 @@ extension WebTagSettingsPresenter {
                          using: { [weak self] (_) in
             self?.checkPushNotificationsStatus()
             self?.view.viewModel.isLocationAuthorizedAlways.value
-                = self?.permissionsManager.locationAuthorizationStatus == .authorizedAlways 
+                = self?.permissionsManager.locationAuthorizationStatus == .authorizedAlways
         })
     }
 

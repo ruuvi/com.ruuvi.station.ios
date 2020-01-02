@@ -112,6 +112,12 @@
 		0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */; };
 		0E31B04723BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */; };
 		0E31B04823BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */; };
+		0E31B04B23BDED3C00660412 /* PullWebDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04A23BDED3B00660412 /* PullWebDaemon.swift */; };
+		0E31B04C23BDED3C00660412 /* PullWebDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04A23BDED3B00660412 /* PullWebDaemon.swift */; };
+		0E31B04D23BDED3C00660412 /* PullWebDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04A23BDED3B00660412 /* PullWebDaemon.swift */; };
+		0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04F23BDED6C00660412 /* PullWebDaemonOperations.swift */; };
+		0E31B05123BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04F23BDED6C00660412 /* PullWebDaemonOperations.swift */; };
+		0E31B05223BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B04F23BDED6C00660412 /* PullWebDaemonOperations.swift */; };
 		0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */; };
 		0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */; };
 		0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */; };
@@ -1177,6 +1183,8 @@
 		0E31B03C23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWebTagRefreshDataOperation.swift; sourceTree = "<group>"; };
 		0E31B04123BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebTagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E31B04523BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebTagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
+		0E31B04A23BDED3B00660412 /* PullWebDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullWebDaemon.swift; sourceTree = "<group>"; };
+		0E31B04F23BDED6C00660412 /* PullWebDaemonOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullWebDaemonOperations.swift; sourceTree = "<group>"; };
 		0E341BBC2372E75C0085BB54 /* TagChartsTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsTransitionManager.swift; sourceTree = "<group>"; };
 		0E390FE1236021DE00D600DB /* LocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManager.swift; sourceTree = "<group>"; };
 		0E390FE4236021FE00D600DB /* LocalNotificationsManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationsManagerImpl.swift; sourceTree = "<group>"; };
@@ -2237,6 +2245,23 @@
 			path = SectionHeader;
 			sourceTree = "<group>";
 		};
+		0E31B04923BDEC5100660412 /* PullWeb */ = {
+			isa = PBXGroup;
+			children = (
+				0E31B04E23BDED5400660412 /* Operations */,
+				0E31B04A23BDED3B00660412 /* PullWebDaemon.swift */,
+			);
+			path = PullWeb;
+			sourceTree = "<group>";
+		};
+		0E31B04E23BDED5400660412 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				0E31B04F23BDED6C00660412 /* PullWebDaemonOperations.swift */,
+			);
+			path = Operations;
+			sourceTree = "<group>";
+		};
 		0E390FE0236021BC00D600DB /* LocalNotifications */ = {
 			isa = PBXGroup;
 			children = (
@@ -2773,6 +2798,7 @@
 		0E9D5F2A2355799E0076FFD8 /* Background */ = {
 			isa = PBXGroup;
 			children = (
+				0E31B04923BDEC5100660412 /* PullWeb */,
 				0E0A381A23619536003A0364 /* Heartbeat */,
 			);
 			path = Background;
@@ -4283,6 +4309,7 @@
 				0E6BAD8D23856A01003A2D4C /* MigrationManager.swift in Sources */,
 				0E6BAD8E23856A01003A2D4C /* WelcomeConfigurator.swift in Sources */,
 				0E6BAD8F23856A01003A2D4C /* ForegroundModuleInput.swift in Sources */,
+				0E31B05223BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
 				0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */,
 				0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */,
@@ -4513,6 +4540,7 @@
 				0E6BAE6623856A01003A2D4C /* DiscoverModuleInput.swift in Sources */,
 				0E6BAE6823856A01003A2D4C /* SettingsTableConfigurator.swift in Sources */,
 				0E6BAE6923856A01003A2D4C /* RuuviTagPropertiesDaemon.swift in Sources */,
+				0E31B04D23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E6BAE6A23856A01003A2D4C /* LanguageTableInitializer.swift in Sources */,
 				0E6BAE6B23856A01003A2D4C /* LocationPickerModuleOutput.swift in Sources */,
 				0E6BAE6C23856A01003A2D4C /* DiscoverTableConfigurator.swift in Sources */,
@@ -4602,6 +4630,7 @@
 				0E8BD2C3238566AB008B31EF /* MigrationManager.swift in Sources */,
 				0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */,
 				0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */,
+				0E31B05123BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
 				0E8BD2C6238566AB008B31EF /* AboutViewOutput.swift in Sources */,
 				0E31B03A23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0E8BD2C7238566AB008B31EF /* HumidityCalibrationModuleInput.swift in Sources */,
@@ -4832,6 +4861,7 @@
 				0E8BD39C238566AB008B31EF /* DiscoverModuleInput.swift in Sources */,
 				0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */,
 				0E8BD39F238566AB008B31EF /* RuuviTagPropertiesDaemon.swift in Sources */,
+				0E31B04C23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E8BD3A0238566AB008B31EF /* LanguageTableInitializer.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
@@ -4921,6 +4951,7 @@
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
+				0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
@@ -5151,6 +5182,7 @@
 				0EC61FD52373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift in Sources */,
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
+				0E31B04B23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,

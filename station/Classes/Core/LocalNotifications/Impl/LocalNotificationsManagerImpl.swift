@@ -161,7 +161,7 @@ extension LocalNotificationsManagerImpl {
 
         if let shownDate = cache[uuid] {
             needsToShow = Date().timeIntervalSince(shownDate) >
-                TimeInterval(settings.alertsRepeatingIntervalSeconds)
+                TimeInterval(settings.alertsRepeatingIntervalMinutes * 60)
         } else {
             needsToShow = true
         }

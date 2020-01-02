@@ -450,7 +450,8 @@ extension WebTagSettingsTableViewController {
             let isLocationAuthorizedAlways = viewModel.isLocationAuthorizedAlways
             let location = viewModel.location
 
-            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.location) { [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways] (view, location) in
+            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.location)
+            { [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways] (view, location) in
                 let isPN = isPushNotificationsEnabled?.value ?? false
                 let isLA = isLocationAuthorizedAlways?.value ?? false
                 let isFixed = location != nil
@@ -458,7 +459,8 @@ extension WebTagSettingsTableViewController {
                 view.isEnabled = isEnabled
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
-            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isLocationAuthorizedAlways) { [weak isPushNotificationsEnabled, weak location] (view, isLocationAuthorizedAlways) in
+            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isLocationAuthorizedAlways)
+            { [weak isPushNotificationsEnabled, weak location] (view, isLocationAuthorizedAlways) in
                 let isPN = isPushNotificationsEnabled?.value ?? false
                 let isLA = isLocationAuthorizedAlways.bound
                 let isFixed = location?.value != nil
@@ -476,7 +478,9 @@ extension WebTagSettingsTableViewController {
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.isTemperatureAlertOn) { [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways, weak location]  (slider, isOn) in
+            temperatureAlertControlsCell.slider.bind(viewModel.isTemperatureAlertOn)
+            { [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways, weak location]
+                (slider, isOn) in
                 let isOn = isOn.bound
                 let isPN = isPushNotificationsEnabled?.value ?? false
                 let isLA = isLocationAuthorizedAlways?.value ?? false
@@ -484,7 +488,8 @@ extension WebTagSettingsTableViewController {
                 let isEnabled = isOn && isPN && (isLA || isFixed)
                 slider.isEnabled = isEnabled
             }
-            temperatureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+            temperatureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled)
+            {
                 [weak isTemperatureAlertOn, weak isLocationAuthorizedAlways, weak location] (slider, isPushNotificationsEnabled) in
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isPN = isPushNotificationsEnabled.bound
@@ -494,7 +499,9 @@ extension WebTagSettingsTableViewController {
                 slider.isEnabled = isEnabled
             }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.location) { [weak isTemperatureAlertOn, weak isLocationAuthorizedAlways, weak isPushNotificationsEnabled] (slider, location) in
+            temperatureAlertControlsCell.slider.bind(viewModel.location)
+            { [weak isTemperatureAlertOn, weak isLocationAuthorizedAlways, weak isPushNotificationsEnabled]
+                (slider, location) in
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isPN = isPushNotificationsEnabled?.value ?? false
                 let isLA = isLocationAuthorizedAlways?.value ?? false
@@ -503,7 +510,8 @@ extension WebTagSettingsTableViewController {
                 slider.isEnabled = isEnabled
             }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.isLocationAuthorizedAlways) { [weak isTemperatureAlertOn, weak isPushNotificationsEnabled, weak location] (slider, isLocationAuthorizedAlways) in
+            temperatureAlertControlsCell.slider.bind(viewModel.isLocationAuthorizedAlways)
+            { [weak isTemperatureAlertOn, weak isPushNotificationsEnabled, weak location] (slider, isLocationAuthorizedAlways) in
                 let isOn = isTemperatureAlertOn?.value ?? false
                 let isPN = isPushNotificationsEnabled?.value ?? false
                 let isLA = isLocationAuthorizedAlways.bound

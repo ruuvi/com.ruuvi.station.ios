@@ -74,6 +74,13 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(PullWebDaemon.self) { r in
+            let daemon = PullWebDaemonOperations()
+            daemon.settings = r.resolve(Settings.self)
+            daemon.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
+            return daemon
+        }.inObjectScope(.container)
+
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
@@ -101,6 +108,7 @@ class BusinessAssembly: Assembly {
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.alertService = r.resolve(AlertService.self)
             service.settings = r.resolve(Settings.self)
+            service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             return service
         }.inObjectScope(.container)
 

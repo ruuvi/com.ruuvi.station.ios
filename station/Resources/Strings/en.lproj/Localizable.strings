@@ -74,10 +74,12 @@
 "Defaults.WelcomeShown.title" = "Welcome Shown";
 "Defaults.ChartsSwipeInstructionWasShown.title" = "Charts Swipe Hint Was Shown";
 "Defaults.Interval.Sec.string" = "sec";
+"Defaults.Interval.Min.string" = "min";
 "Defaults.ConnectionTimeout.title" = "Connection Timeout";
 "Defaults.ServiceTimeout.title" = "Service Timeout";
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
 "Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
+"Defaults.WebPullInterval.title" = "Web Alerts Interval";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";

@@ -27,6 +27,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         let connectionTimeout = DefaultsViewModel()
         connectionTimeout.title = "Defaults.ConnectionTimeout.title".localized()
         connectionTimeout.integer.value = Int(settings.connectionTimeout)
+        connectionTimeout.unit = .seconds
 
         bind(connectionTimeout.integer, fire: false) { observer, connectionTimeout in
             observer.settings.connectionTimeout = TimeInterval(connectionTimeout.bound)
@@ -35,6 +36,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         let serviceTimeout = DefaultsViewModel()
         serviceTimeout.title = "Defaults.ServiceTimeout.title".localized()
         serviceTimeout.integer.value = Int(settings.serviceTimeout)
+        serviceTimeout.unit = .seconds
 
         bind(serviceTimeout.integer, fire: false) { observer, serviceTimeout in
             observer.settings.serviceTimeout = TimeInterval(serviceTimeout.bound)
@@ -50,10 +52,20 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
 
         let alertsInterval = DefaultsViewModel()
         alertsInterval.title = "Defaults.AlertsRepeatInterval.title".localized()
-        alertsInterval.integer.value = settings.alertsRepeatingIntervalSeconds
+        alertsInterval.integer.value = settings.alertsRepeatingIntervalMinutes
+        alertsInterval.unit = .minutes
 
         bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
-            observer.settings.alertsRepeatingIntervalSeconds = alertsInterval.bound
+            observer.settings.alertsRepeatingIntervalMinutes = alertsInterval.bound
+        }
+
+        let webPullInterval = DefaultsViewModel()
+        webPullInterval.title = "Defaults.WebPullInterval.title".localized()
+        webPullInterval.integer.value = settings.webPullIntervalMunites
+        webPullInterval.unit = .minutes
+
+        bind(webPullInterval.integer, fire: false) { observer, webPullInterval in
+            observer.settings.webPullIntervalMunites = webPullInterval.bound
         }
 
         view.viewModels = [welcomeShown,
@@ -61,7 +73,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            connectionTimeout,
                            serviceTimeout,
                            cardsSwipeHint,
-                           alertsInterval]
+                           alertsInterval,
+                           webPullInterval]
     }
 }
 

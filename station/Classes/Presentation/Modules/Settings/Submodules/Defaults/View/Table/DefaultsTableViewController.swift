@@ -56,9 +56,16 @@ extension DefaultsTableViewController {
                                      for: indexPath) as! DefaultsStepperTableViewCell
             // swiftlint:enable force_cast
             let title = viewModel.title ?? ""
+            let unitString: String
+            switch viewModel.unit {
+            case .minutes:
+                unitString = "Defaults.Interval.Min.string".localized()
+            case .seconds:
+                unitString = "Defaults.Interval.Sec.string".localized()
+            }
             cell.titleLabel.text = title + " "
                 + "(" + "\(viewModel.integer.value.bound)" + " "
-                + "Defaults.Interval.Sec.string".localized() + ")"
+                + unitString + ")"
             cell.prefix = title
             cell.stepper.value = Double(viewModel.integer.value.bound)
             cell.delegate = self
