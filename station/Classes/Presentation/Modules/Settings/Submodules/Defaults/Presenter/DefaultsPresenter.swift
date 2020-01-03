@@ -61,11 +61,11 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
 
         let webPullInterval = DefaultsViewModel()
         webPullInterval.title = "Defaults.WebPullInterval.title".localized()
-        webPullInterval.integer.value = settings.webPullIntervalMunites
+        webPullInterval.integer.value = settings.webPullIntervalMinutes
         webPullInterval.unit = .minutes
 
         bind(webPullInterval.integer, fire: false) { observer, webPullInterval in
-            observer.settings.webPullIntervalMunites = webPullInterval.bound
+            observer.settings.webPullIntervalMinutes = webPullInterval.bound
         }
 
         view.viewModels = [welcomeShown,

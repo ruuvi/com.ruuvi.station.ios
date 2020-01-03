@@ -17,7 +17,7 @@ class PullWebDaemonOperations: PullWebDaemon {
 
     private func needsToPullWebTagData() -> Bool {
         let elapsed = Int(Date().timeIntervalSince(webTagLastPullDate))
-        return elapsed > settings.webPullIntervalMunites * 60
+        return elapsed > settings.webPullIntervalMinutes * 60
     }
 
     private func pullWebTagData() {
