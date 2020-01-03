@@ -32,7 +32,7 @@ protocol Settings {
     var saveHeartbeatsIntervalMinutes: Int { get set }
     var readRSSI: Bool { get set }
     var readRSSIIntervalSeconds: Int { get set }
-    var webPullIntervalMunites: Int { get set }
+    var webPullIntervalMinutes: Int { get set }
 
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)

@@ -169,8 +169,8 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.saveHeartbeatsIntervalMinutes", defaultValue: 5)
     var saveHeartbeatsIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.webPullIntervalMunites", defaultValue: 15)
-    var webPullIntervalMunites: Int
+    @UserDefault("SettingsUserDegaults.webPullIntervalMinutes", defaultValue: 15)
+    var webPullIntervalMinutes: Int
 
     @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: false)
     var readRSSI: Bool {
