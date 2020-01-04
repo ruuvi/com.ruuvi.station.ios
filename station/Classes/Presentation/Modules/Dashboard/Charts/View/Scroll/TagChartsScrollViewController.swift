@@ -319,7 +319,11 @@ extension TagChartsScrollViewController {
         set.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
         set.lineWidth = 1.5
         set.drawCirclesEnabled = true
-        set.circleRadius = 2
+        if set.entries.count == 1 {
+            set.circleRadius = 6
+        } else {
+            set.circleRadius = 2
+        }
         set.drawValuesEnabled = false
         set.fillAlpha = 0.26
         set.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
@@ -333,17 +337,23 @@ extension TagChartsScrollViewController {
         let interval: TimeInterval = 60 * 60
         var points = [ChartDataEntry]()
         var sets = [IChartDataSet]()
-        var prevoiusValue: TimeInterval = Date.distantPast.timeIntervalSince1970
+        var previousValue: TimeInterval
+        if values.count > 0 {
+            previousValue = values[0].date.timeIntervalSince1970
+        } else {
+            previousValue = Date.distantPast.timeIntervalSince1970
+        }
         for value in values {
-            if value.date.timeIntervalSince1970 - prevoiusValue < interval {
+            if value.date.timeIntervalSince1970 - previousValue < interval {
                 points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
             } else {
                 let set = LineChartDataSet(entries: points, label: "Temperature")
                 configure(set)
                 sets.append(set)
                 points = [ChartDataEntry]()
+                points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
             }
-            prevoiusValue = value.date.timeIntervalSince1970
+            previousValue = value.date.timeIntervalSince1970
         }
         let set = LineChartDataSet(entries: points, label: "Temperature")
         configure(set)
