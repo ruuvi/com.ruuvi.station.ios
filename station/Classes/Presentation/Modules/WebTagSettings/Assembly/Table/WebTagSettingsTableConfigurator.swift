@@ -19,7 +19,7 @@ class WebTagSettingsTableConfigurator {
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
-    
+
         view.output = presenter
     }
 }

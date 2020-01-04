@@ -224,7 +224,8 @@ extension WebTagSettingsPresenter {
     }
 
     private func syncViewModel() {
-        view.viewModel.isLocationAuthorizedAlways.value = permissionsManager.locationAuthorizationStatus == .authorizedAlways
+        view.viewModel.isLocationAuthorizedAlways.value
+            = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
 
