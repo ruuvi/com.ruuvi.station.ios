@@ -54,7 +54,7 @@
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Too many requests";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Please try again in 5 minutes";
 "Cards.KeepConnectionDialog.message" = "Seems like you are running a connectable firmware on your Ruuvi device. Would you like to keep the connection open to this Ruuvi device in the background? This will allow histograms and alerts to work even when the application is minimized.";
-"Cards.KeepConnectionDialog.Dismiss.title" = "Dismiss";
+"Cards.KeepConnectionDialog.Dismiss.title" = "Cancel";
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Keep Connection";
 "Cards.Connected.title" = "Connected";
 "Cards.Error.ReverseGeocodingFailed.message" = "Failed loading data for Virtual Sensor. Reverse geocode operation limit exceeded.";
