@@ -149,6 +149,7 @@ class BusinessAssembly: Assembly {
             let manager = WebTagOperationsManager()
             manager.alertService = r.resolve(AlertService.self)
             manager.weatherProviderService = r.resolve(WeatherProviderService.self)
+            manager.webTagPersistence = r.resolve(WebTagPersistence.self)
             return manager
         }
 
