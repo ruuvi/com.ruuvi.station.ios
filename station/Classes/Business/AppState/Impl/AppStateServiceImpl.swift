@@ -8,6 +8,7 @@ class AppStateServiceImpl: AppStateService {
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var webTagDaemon: WebTagDaemon!
     var heartbeatDaemon: RuuviTagHeartbeatDaemon!
+    var pullWebDaemon: PullWebDaemon!
     var backgroundTaskService: BackgroundTaskService!
 
     func application(_ application: UIApplication,
@@ -17,6 +18,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn { webTagDaemon.start() }
         heartbeatDaemon.start()
         propertiesDaemon.start()
+        pullWebDaemon.start()
         backgroundTaskService.register()
     }
 
@@ -33,6 +35,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isConnectionDaemonOn { connectionDaemon.stop() }
         if settings.isWebTagDaemonOn { webTagDaemon.stop() }
         propertiesDaemon.stop()
+        pullWebDaemon.stop()
         backgroundTaskService.schedule()
     }
 
@@ -41,5 +44,6 @@ class AppStateServiceImpl: AppStateService {
         if settings.isConnectionDaemonOn { connectionDaemon.start() }
         if settings.isWebTagDaemonOn { webTagDaemon.start() }
         propertiesDaemon.start()
+        pullWebDaemon.start()
     }
 }
