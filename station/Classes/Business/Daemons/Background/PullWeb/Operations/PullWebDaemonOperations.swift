@@ -1,18 +1,45 @@
 import Foundation
 
-class PullWebDaemonOperations: PullWebDaemon {
+class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
 
     var settings: Settings!
     var webTagOperationsManager: WebTagOperationsManager!
 
     @UserDefault("PullWebDaemonOperations.webTagLastPullDate", defaultValue: Date())
     private var webTagLastPullDate: Date
+    private var timer: Timer?
 
-    func wakeUp() {
+    @objc func wakeUp() {
         if needsToPullWebTagData() {
             pullWebTagData()
             webTagLastPullDate = Date()
         }
+    }
+
+    func start() {
+        start { [weak self] in
+            guard let sSelf = self else { return }
+            let timer = Timer.scheduledTimer(timeInterval: 60,
+                                             target: sSelf,
+                                             selector: #selector(PullWebDaemonOperations.wakeUp),
+                                             userInfo: nil,
+                                             repeats: true)
+            RunLoop.current.add(timer, forMode: .common)
+            sSelf.timer = timer
+        }
+    }
+
+    func stop() {
+        perform(#selector(PullWebDaemonOperations.stopDaemon),
+                on: thread,
+                with: nil,
+                waitUntilDone: false,
+                modes: [RunLoop.Mode.default.rawValue])
+    }
+
+    @objc private func stopDaemon() {
+        timer?.invalidate()
+        stopWork()
     }
 
     private func needsToPullWebTagData() -> Bool {

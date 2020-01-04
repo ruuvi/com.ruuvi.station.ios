@@ -63,6 +63,7 @@ extension DefaultsTableViewController {
             case .seconds:
                 unitString = "Defaults.Interval.Sec.string".localized()
             }
+            cell.unit = viewModel.unit
             cell.titleLabel.text = title + " "
                 + "(" + "\(viewModel.integer.value.bound)" + " "
                 + unitString + ")"

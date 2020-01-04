@@ -26,6 +26,7 @@ class BusinessAssembly: Assembly {
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
+            service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             return service
         }.inObjectScope(.container)
