@@ -422,6 +422,7 @@ extension CardsPresenter {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
+                        self?.tagCharts?.configure(uuid: uuid)
                     }
                     if let viewModels = self?.viewModels, let settings = self?.settings, !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
                         self?.view.showSwipeLeftRightHint()
@@ -449,6 +450,7 @@ extension CardsPresenter {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
+                        self?.tagCharts?.configure(uuid: uuid)
                     }
                     if let viewModels = self?.viewModels, let settings = self?.settings, !settings.cardsSwipeHintWasShown, viewModels.count > 1 {
                         self?.view.showSwipeLeftRightHint()
