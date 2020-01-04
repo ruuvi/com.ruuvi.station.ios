@@ -6,6 +6,24 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     var settings: Settings!
 
     func configure() {
+        view.viewModels = [buildWelcomeShown(),
+                           buildChartsSwipeInstruction(),
+                           buildConnectionTimeout(),
+                           buildServiceTimeout(),
+                           buildCardsSwipeHint(),
+                           buildAlertsInterval(),
+                           buildWebPullInterval()]
+    }
+}
+
+// MARK: - DefaultsViewOutput
+extension DefaultsPresenter: DefaultsViewOutput {
+
+}
+
+// MARK: Private
+extension DefaultsPresenter {
+    private func buildWelcomeShown() -> DefaultsViewModel {
         let welcomeShown = DefaultsViewModel()
         welcomeShown.title = "Defaults.WelcomeShown.title".localized()
         welcomeShown.boolean.value = settings.welcomeShown
@@ -13,7 +31,10 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
             observer.settings.welcomeShown = welcomeShown.bound
         }
+        return welcomeShown
+    }
 
+    private func buildChartsSwipeInstruction() -> DefaultsViewModel {
         let tagChartsLandscapeSwipeInstructionWasShown = DefaultsViewModel()
         tagChartsLandscapeSwipeInstructionWasShown.title = "Defaults.ChartsSwipeInstructionWasShown.title".localized()
         tagChartsLandscapeSwipeInstructionWasShown.boolean.value = settings.tagChartsLandscapeSwipeInstructionWasShown
@@ -23,7 +44,10 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
             observer.settings.tagChartsLandscapeSwipeInstructionWasShown =
                 tagChartsLandscapeSwipeInstructionWasShown.bound
         }
+        return tagChartsLandscapeSwipeInstructionWasShown
+    }
 
+    private func buildConnectionTimeout() -> DefaultsViewModel {
         let connectionTimeout = DefaultsViewModel()
         connectionTimeout.title = "Defaults.ConnectionTimeout.title".localized()
         connectionTimeout.integer.value = Int(settings.connectionTimeout)
@@ -32,7 +56,10 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         bind(connectionTimeout.integer, fire: false) { observer, connectionTimeout in
             observer.settings.connectionTimeout = TimeInterval(connectionTimeout.bound)
         }
+        return connectionTimeout
+    }
 
+    private func buildServiceTimeout() -> DefaultsViewModel {
         let serviceTimeout = DefaultsViewModel()
         serviceTimeout.title = "Defaults.ServiceTimeout.title".localized()
         serviceTimeout.integer.value = Int(settings.serviceTimeout)
@@ -41,7 +68,10 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         bind(serviceTimeout.integer, fire: false) { observer, serviceTimeout in
             observer.settings.serviceTimeout = TimeInterval(serviceTimeout.bound)
         }
+        return serviceTimeout
+    }
 
+    private func buildCardsSwipeHint() -> DefaultsViewModel {
         let cardsSwipeHint = DefaultsViewModel()
         cardsSwipeHint.title = "Defaults.CardsSwipeHint.title".localized()
         cardsSwipeHint.boolean.value = settings.cardsSwipeHintWasShown
@@ -49,7 +79,10 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         bind(cardsSwipeHint.boolean, fire: false) { observer, cardsSwipeHintWasShown in
             observer.settings.cardsSwipeHintWasShown = cardsSwipeHintWasShown.bound
         }
+        return cardsSwipeHint
+    }
 
+    private func buildAlertsInterval() -> DefaultsViewModel {
         let alertsInterval = DefaultsViewModel()
         alertsInterval.title = "Defaults.AlertsRepeatInterval.title".localized()
         alertsInterval.integer.value = settings.alertsRepeatingIntervalMinutes
@@ -58,7 +91,10 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
             observer.settings.alertsRepeatingIntervalMinutes = alertsInterval.bound
         }
+        return alertsInterval
+    }
 
+    private func buildWebPullInterval() -> DefaultsViewModel {
         let webPullInterval = DefaultsViewModel()
         webPullInterval.title = "Defaults.WebPullInterval.title".localized()
         webPullInterval.integer.value = settings.webPullIntervalMinutes
@@ -67,17 +103,6 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
         bind(webPullInterval.integer, fire: false) { observer, webPullInterval in
             observer.settings.webPullIntervalMinutes = webPullInterval.bound
         }
-
-        view.viewModels = [welcomeShown,
-                           tagChartsLandscapeSwipeInstructionWasShown,
-                           connectionTimeout,
-                           serviceTimeout,
-                           cardsSwipeHint,
-                           alertsInterval,
-                           webPullInterval]
+        return webPullInterval
     }
-}
-
-extension DefaultsPresenter: DefaultsViewOutput {
-
 }
