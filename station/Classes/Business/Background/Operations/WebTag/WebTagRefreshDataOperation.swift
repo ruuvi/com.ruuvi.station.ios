@@ -4,32 +4,39 @@ import CoreLocation
 class WebTagRefreshDataOperation: AsyncOperation {
 
     private var uuid: String
-    private var latitude: Double
-    private var longitude: Double
+    private var location: Location
     private var provider: WeatherProvider
     private var weatherProviderService: WeatherProviderService
     private var alertService: AlertService
+    private var webTagPersistence: WebTagPersistence!
 
     init(uuid: String,
-         latitude: Double,
-         longitude: Double,
+         location: Location,
          provider: WeatherProvider,
          weatherProviderService: WeatherProviderService,
-         alertService: AlertService) {
+         alertService: AlertService,
+         webTagPersistence: WebTagPersistence) {
         self.uuid = uuid
-        self.latitude = latitude
-        self.longitude = longitude
+        self.location = location
         self.provider = provider
         self.weatherProviderService = weatherProviderService
         self.alertService = alertService
+        self.webTagPersistence = webTagPersistence
     }
 
     override func main() {
-        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         let uuid = self.uuid
-        weatherProviderService.loadData(coordinate: coordinate, provider: provider).on(success: { [weak self] data in
-            self?.alertService.process(data: data, for: uuid)
-            self?.state = .finished
+        weatherProviderService.loadData(coordinate: location.coordinate, provider: provider).on(success: {
+            [weak self] data in
+            guard let sSelf = self else { return }
+            sSelf.alertService.process(data: data, for: uuid)
+            let persist = sSelf.webTagPersistence.persist(location: sSelf.location, data: data)
+            persist.on(success: { [weak sSelf] _ in
+                sSelf?.state = .finished
+            }, failure: { [weak sSelf] error in
+                print(error.localizedDescription)
+                sSelf?.state = .finished
+            })
         }, failure: { [weak self] error in
             print(error.localizedDescription)
             self?.state = .finished
