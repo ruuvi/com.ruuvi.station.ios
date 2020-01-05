@@ -306,6 +306,8 @@
 "WebTagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "In order to enable Virtual Sensor alerts please grant location always and notification permissions in Settings.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Settings";
+"WebTagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
+"WebTagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";

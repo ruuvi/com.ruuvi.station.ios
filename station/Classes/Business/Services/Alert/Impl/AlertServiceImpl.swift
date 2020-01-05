@@ -209,6 +209,21 @@ class AlertServiceImpl: AlertService {
                         }
                     }
                 }
+            case .relativeHumidity:
+                if case .relativeHumidity(let lower, let upper) = alert(for: uuid, of: type),
+                    let relativeHumidity = data.humidity {
+                    let isLower = relativeHumidity < lower
+                    let isUpper = relativeHumidity > upper
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.low, .relativeHumidity, for: uuid)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.high, .relativeHumidity, for: uuid)
+                        }
+                    }
+                }
             default:
                 break
             }
