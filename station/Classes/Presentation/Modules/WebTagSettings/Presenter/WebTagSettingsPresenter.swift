@@ -21,6 +21,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
 
     private var webTagToken: NotificationToken?
     private var temperatureUnitToken: NSObjectProtocol?
+    private var humidityUnitToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var webTag: WebTagRealm! {
         didSet {
@@ -36,6 +37,9 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         }
         if let appDidBecomeActiveToken = appDidBecomeActiveToken {
             NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
+        }
+        if let humidityUnitToken = humidityUnitToken {
+            NotificationCenter.default.removeObserver(humidityUnitToken)
         }
     }
 
@@ -140,6 +144,14 @@ extension WebTagSettingsPresenter {
                          queue: .main) { [weak self] _ in
             self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
         }
+        humidityUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
+        })
     }
 }
 
@@ -196,6 +208,34 @@ extension WebTagSettingsPresenter {
         bind(view.viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
             observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag.uuid)
         }
+
+        // relative humidity alert
+        let relativeHumidityLower = view.viewModel.relativeHumidityLowerBound
+        let relativeHumidityUpper = view.viewModel.relativeHumidityUpperBound
+        bind(view.viewModel.isRelativeHumidityAlertOn, fire: false) {
+            [weak relativeHumidityLower, weak relativeHumidityUpper] observer, isOn in
+            if let l = relativeHumidityLower?.value, let u = relativeHumidityUpper?.value {
+                let type: AlertType = .relativeHumidity(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: webTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                    }
+                }
+            }
+        }
+        bind(view.viewModel.relativeHumidityLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(relativeHumidity: lower, for: webTag.uuid)
+        }
+        bind(view.viewModel.relativeHumidityUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(relativeHumidity: upper, for: webTag.uuid)
+        }
+        bind(view.viewModel.relativeHumidityAlertDescription, fire: false) {
+            observer, relativeHumidityAlertDescription in
+            observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: webTag.uuid)
+        }
     }
     private func startObservingWebTag() {
         webTagToken = webTag.observe({ [weak self] (change) in
@@ -227,6 +267,7 @@ extension WebTagSettingsPresenter {
         view.viewModel.isLocationAuthorizedAlways.value
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
+        view.viewModel.humidityUnit.value = settings.humidityUnit
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
 
         if webTag.name == WebTagLocationSource.manual.title {
@@ -258,6 +299,22 @@ extension WebTagSettingsPresenter {
             }
             if let celsiusUpper = alertService.upperCelsius(for: webTag.uuid) {
                 view.viewModel.celsiusUpperBound.value = celsiusUpper
+            }
+        }
+
+        let relativeHumidityAlertType: AlertType = .relativeHumidity(lower: 0, upper: 0)
+        if case .relativeHumidity(let lower, let upper)
+            = alertService.alert(for: webTag.uuid, of: relativeHumidityAlertType) {
+            view.viewModel.isRelativeHumidityAlertOn.value = true
+            view.viewModel.relativeHumidityLowerBound.value = lower
+            view.viewModel.relativeHumidityUpperBound.value = upper
+        } else {
+            view.viewModel.isRelativeHumidityAlertOn.value = false
+            if let realtiveHumidityLower = alertService.lowerRelativeHumidity(for: webTag.uuid) {
+               view.viewModel.relativeHumidityLowerBound.value = realtiveHumidityLower
+            }
+            if let relativeHumidityUpper = alertService.upperRelativeHumidity(for: webTag.uuid) {
+               view.viewModel.relativeHumidityUpperBound.value = relativeHumidityUpper
             }
         }
     }
