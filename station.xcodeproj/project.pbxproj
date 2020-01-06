@@ -910,12 +910,6 @@
 		0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF582397F3C600A37E1A /* HeartbeatViewModel.swift */; };
 		0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5A2397F3DF00A37E1A /* HeartbeatViewOutput.swift */; };
 		0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF5E2397F6BE00A37E1A /* HeartbeatViewController.swift */; };
-		0EAD33F5239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */; };
-		0EAD33F6239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */; };
-		0EAD33F7239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */; };
-		0EAD33F9239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */; };
-		0EAD33FA239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */; };
-		0EAD33FB239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -1305,8 +1299,6 @@
 		0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUObservationToken.swift; sourceTree = "<group>"; };
 		0EA92FDA2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertsHeaderFooterView.swift; sourceTree = "<group>"; };
 		0EA92FDE2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertsHeaderFooterView.xib; sourceTree = "<group>"; };
-		0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertSliderCell.swift; sourceTree = "<group>"; };
-		0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsAlertSliderCell.xib; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -2912,8 +2904,6 @@
 		0EAD33F3239A571B00EC5BAA /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				0EAD33F8239A578700EC5BAA /* TagSettingsAlertSliderCell.xib */,
-				0EAD33F4239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift */,
 				0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */,
 				0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */,
 			);
@@ -4031,7 +4021,6 @@
 				0E6BAEC623856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */,
 				0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */,
-				0EAD33FB239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4073,7 +4062,6 @@
 				0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */,
-				0EAD33FA239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4115,7 +4103,6 @@
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
-				0EAD33F9239A578700EC5BAA /* TagSettingsAlertSliderCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4402,7 +4389,6 @@
 				0E6BADE523856A01003A2D4C /* MenuRouter.swift in Sources */,
 				0E6BADE623856A01003A2D4C /* ForegroundRouterInput.swift in Sources */,
 				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
-				0EAD33F7239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
 				0EE49BB823B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
 				0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */,
@@ -4723,7 +4709,6 @@
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
-				0EAD33F6239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
@@ -5044,7 +5029,6 @@
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
-				0EAD33F5239A575A00EC5BAA /* TagSettingsAlertSliderCell.swift in Sources */,
 				0EE49BB623B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
