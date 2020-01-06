@@ -14,6 +14,8 @@ private enum WebTagSettingsTableSection: Int {
 class WebTagSettingsTableViewController: UITableViewController {
     var output: WebTagSettingsViewOutput!
 
+    @IBOutlet weak var absoluteHumidityAlertHeaderCell: WebTagSettingsAlertHeaderCell!
+    @IBOutlet weak var absoluteHumidityAlertControlsCell: WebTagSettingsAlertControlsCell!
     @IBOutlet weak var relativeHumidityAlertHeaderCell: WebTagSettingsAlertHeaderCell!
     @IBOutlet weak var relativeHumidityAlertControlsCell: WebTagSettingsAlertControlsCell!
     @IBOutlet weak var temperatureAlertHeaderCell: WebTagSettingsAlertHeaderCell!
@@ -48,6 +50,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         relativeHumidityAlertHeaderCell.titleLabel.text
         = "WebTagSettings.RelativeAirHumidityAlert.title".localized()
         + " " + "%".localized()
+        absoluteHumidityAlertHeaderCell.titleLabel.text
+        = "WebTagSettings.AbsoluteAirHumidityAlert.title".localized()
+        + " " + "g/m³".localized()
 
         tableView.reloadData()
     }
@@ -170,6 +175,10 @@ extension WebTagSettingsTableViewController {
             return (hu == .percent) ? headerHeight : 0
         case relativeHumidityAlertControlsCell:
             return ((hu == .percent) && (viewModel.isRelativeHumidityAlertOn.value ?? false)) ? controlsHeight : 0
+        case absoluteHumidityAlertHeaderCell:
+            return (hu == .gm3) ? headerHeight : 0
+        case absoluteHumidityAlertControlsCell:
+            return ((hu == .gm3) && (viewModel.isAbsoluteHumidityAlertOn.value ?? false)) ? controlsHeight : 0
         default:
             return 44
         }
@@ -242,6 +251,8 @@ extension WebTagSettingsTableViewController {
         temperatureAlertControlsCell.delegate = self
         relativeHumidityAlertHeaderCell.delegate = self
         relativeHumidityAlertControlsCell.delegate = self
+        absoluteHumidityAlertHeaderCell.delegate = self
+        absoluteHumidityAlertControlsCell.delegate = self
     }
 }
 
@@ -256,6 +267,43 @@ extension WebTagSettingsTableViewController {
             tagNameTextField.isEnabled = isNameChangedEnabled
         }
     }
+
+    private func updateUIAbsoluteHumidityLowerBound() {
+        if isViewLoaded {
+            if let lower = viewModel.absoluteHumidityLowerBound.value {
+                absoluteHumidityAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+            } else {
+                absoluteHumidityAlertControlsCell.slider.selectedMinValue = 0
+            }
+        }
+    }
+
+    private func updateUIAbsoluteHumidityUpperBound() {
+        if isViewLoaded {
+            if let upper = viewModel.absoluteHumidityUpperBound.value {
+                absoluteHumidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+            } else {
+                absoluteHumidityAlertControlsCell.slider.selectedMaxValue = 40
+            }
+        }
+    }
+
+    private func updateUIAbsoluteHumidityAlertDescription() {
+        if isViewLoaded {
+            if let isAbsoluteHumidityAlertOn = viewModel.isAbsoluteHumidityAlertOn.value, isAbsoluteHumidityAlertOn {
+                if let l = viewModel.absoluteHumidityLowerBound.value,
+                    let u = viewModel.absoluteHumidityUpperBound.value {
+                    let format = "WebTagSettings.Alerts.AbsoluteHumidity.description".localized()
+                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
+                } else {
+                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                }
+            } else {
+                absoluteHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+            }
+        }
+    }
+
 
     private func updateUIRelativeHumidityAlertDescription() {
         if isViewLoaded {
@@ -376,7 +424,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertHeaderCellDelega
         case temperatureAlertHeaderCell:
             viewModel.isTemperatureAlertOn.value = isOn
         case relativeHumidityAlertHeaderCell:
-                   viewModel.isRelativeHumidityAlertOn.value = isOn
+            viewModel.isRelativeHumidityAlertOn.value = isOn
+        case absoluteHumidityAlertHeaderCell:
+            viewModel.isAbsoluteHumidityAlertOn.value = isOn
         default:
             break
         }
@@ -391,6 +441,8 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
             viewModel.temperatureAlertDescription.value = description
         case relativeHumidityAlertControlsCell:
             viewModel.relativeHumidityAlertDescription.value = description
+        case absoluteHumidityAlertControlsCell:
+            viewModel.absoluteHumidityAlertDescription.value = description
         default:
             break
         }
@@ -417,6 +469,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
         case relativeHumidityAlertControlsCell:
             viewModel.relativeHumidityLowerBound.value = Double(minValue)
             viewModel.relativeHumidityUpperBound.value = Double(maxValue)
+        case absoluteHumidityAlertControlsCell:
+            viewModel.absoluteHumidityLowerBound.value = Double(minValue)
+            viewModel.absoluteHumidityUpperBound.value = Double(maxValue)
         default:
             break
         }
@@ -449,6 +504,123 @@ extension WebTagSettingsTableViewController {
 
         bindTemperatureAlertCells()
         bindRelativeHumidityCells()
+        bindAbsoluteHumidityCells()
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func bindAbsoluteHumidityCells() {
+        if isViewLoaded {
+            absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isAbsoluteHumidityAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
+
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.isAbsoluteHumidityAlertOn) { (slider, isOn) in
+                slider.isEnabled = isOn.bound
+            }
+
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.absoluteHumidityLowerBound) { [weak self] (_, _) in
+                self?.updateUIAbsoluteHumidityLowerBound()
+                self?.updateUIAbsoluteHumidityAlertDescription()
+            }
+
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.absoluteHumidityUpperBound) { [weak self] (_, _) in
+                self?.updateUIAbsoluteHumidityUpperBound()
+                self?.updateUIAbsoluteHumidityAlertDescription()
+            }
+            absoluteHumidityAlertHeaderCell.descriptionLabel.bind(viewModel.isAbsoluteHumidityAlertOn) {
+                [weak self] (_, _) in
+                self?.updateUIAbsoluteHumidityAlertDescription()
+            }
+
+            let isPushNotificationsEnabled = viewModel.isPushNotificationsEnabled
+            let isAHAlertOn = viewModel.isAbsoluteHumidityAlertOn
+            let isLocationAuthorizedAlways = viewModel.isLocationAuthorizedAlways
+            let location = viewModel.location
+
+            absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.location) {
+                [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways] (view, location) in
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location != nil
+                let isEnabled = isPN && (isLA || isFixed)
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+            absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isLocationAuthorizedAlways) {
+                [weak isPushNotificationsEnabled, weak location] (view, isLocationAuthorizedAlways) in
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways.bound
+                let isFixed = location?.value != nil
+                let isEnabled = isPN && (isLA || isFixed)
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+            absoluteHumidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isLocationAuthorizedAlways, weak location] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isPN && (isLA || isFixed)
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.isAbsoluteHumidityAlertOn) {
+                [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways, weak location]
+                (slider, isOn) in
+                let isOn = isOn.bound
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+
+                [weak isAHAlertOn, weak isLocationAuthorizedAlways, weak location]
+                (slider, isPushNotificationsEnabled) in
+                let isOn = isAHAlertOn?.value ?? false
+                let isPN = isPushNotificationsEnabled.bound
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.location) {
+                [weak isAHAlertOn, weak isLocationAuthorizedAlways, weak isPushNotificationsEnabled]
+                (slider, location) in
+                let isOn = isAHAlertOn?.value ?? false
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            absoluteHumidityAlertControlsCell.slider.bind(viewModel.isLocationAuthorizedAlways) {
+                [weak isAHAlertOn, weak isPushNotificationsEnabled, weak location]
+                (slider, isLocationAuthorizedAlways) in
+                let isOn = isAHAlertOn?.value ?? false
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways.bound
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            absoluteHumidityAlertControlsCell.textField.bind(viewModel.absoluteHumidityAlertDescription) {
+                (textField, absoluteHumidityAlertDescription) in
+                textField.text = absoluteHumidityAlertDescription
+            }
+
+            tableView.bind(viewModel.isAbsoluteHumidityAlertOn) { tableView, _ in
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
+            }
+        }
     }
 
     // swiftlint:disable:next function_body_length

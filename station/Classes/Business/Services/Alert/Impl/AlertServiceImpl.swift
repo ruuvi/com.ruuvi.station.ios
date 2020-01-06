@@ -224,6 +224,26 @@ class AlertServiceImpl: AlertService {
                         }
                     }
                 }
+            case .absoluteHumidity:
+                if case .absoluteHumidity(let lower, let upper) = alert(for: uuid, of: type),
+                    let rh = data.humidity,
+                    let c = data.celsius {
+                    let h = Humidity(c: c, rh: rh / 100.0)
+                    let ah = h.ah
+
+                    let isLower = ah < lower
+                    let isUpper = ah > upper
+
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: uuid)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
+                        }
+                    }
+                }
             default:
                 break
             }
