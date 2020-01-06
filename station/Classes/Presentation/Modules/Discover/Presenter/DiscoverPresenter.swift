@@ -278,12 +278,14 @@ extension DiscoverPresenter {
         view.devices = ruuviTags.map { (ruuviTag) -> DiscoverDeviceViewModel in
             if let persistedRuuviTag = persistedRuuviTags.first(where: { $0.uuid == ruuviTag.uuid}) {
                 return DiscoverDeviceViewModel(uuid: ruuviTag.uuid,
+                                               isConnectable: ruuviTag.isConnectable,
                                                rssi: ruuviTag.rssi,
                                                mac: ruuviTag.mac,
                                                name: persistedRuuviTag.name,
                                                logo: ruuviLogoImage)
             } else {
                 return DiscoverDeviceViewModel(uuid: ruuviTag.uuid,
+                                               isConnectable: ruuviTag.isConnectable,
                                                rssi: ruuviTag.rssi,
                                                mac: ruuviTag.mac,
                                                name: nil,
