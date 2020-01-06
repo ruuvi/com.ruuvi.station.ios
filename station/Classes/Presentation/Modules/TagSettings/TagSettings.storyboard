@@ -863,6 +863,7 @@ IMAGE</string>
                                                 <constraint firstItem="ZWR-Xz-RXr" firstAttribute="top" secondItem="LWA-77-ySg" secondAttribute="top" constant="8" id="rXB-pE-Nh8"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="1024" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <connections>
                                             <outlet property="descriptionLabel" destination="gcK-XU-dmr" id="Cg6-dn-dEm"/>
                                             <outlet property="isOnSwitch" destination="ZWR-Xz-RXr" id="eJc-XQ-EP9"/>
