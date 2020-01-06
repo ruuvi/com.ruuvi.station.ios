@@ -310,6 +310,8 @@
 "WebTagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
 "WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
 
 // Welcome
 "Welcome.description.text" = "To find nearby sensors and receive live sensor data, press scan.";

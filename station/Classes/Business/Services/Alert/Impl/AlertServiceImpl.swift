@@ -192,6 +192,7 @@ class AlertServiceImpl: AlertService {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func process(data: WPSData, for uuid: String) {
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -241,6 +242,25 @@ class AlertServiceImpl: AlertService {
                     } else if isUpper {
                         DispatchQueue.main.async { [weak self] in
                             self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
+                        }
+                    }
+                }
+            case .dewPoint:
+                if case .dewPoint(let lower, let upper) = alert(for: uuid, of: type),
+                    let rh = data.humidity, let c = data.celsius {
+                    let h = Humidity(c: c, rh: rh / 100.0)
+                    if let Td = h.Td {
+                        let isLower = Td < lower
+                        let isUpper = Td > upper
+
+                        if isLower {
+                            DispatchQueue.main.async { [weak self] in
+                                self?.localNotificationsManager.notify(.low, .dewPoint, for: uuid)
+                            }
+                        } else if isUpper {
+                            DispatchQueue.main.async { [weak self] in
+                                self?.localNotificationsManager.notify(.high, .dewPoint, for: uuid)
+                            }
                         }
                     }
                 }
