@@ -588,6 +588,43 @@ extension TagSettingsTableViewController {
         pressureAlertControlsCell.delegate = self
         connectionAlertHeaderCell.delegate = self
         movementAlertHeaderCell.delegate = self
+        configureMinMaxForSliders()
+    }
+
+    private func configureMinMaxForSliders() {
+        let tu = viewModel?.temperatureUnit.value ?? .celsius
+        switch tu {
+        case .celsius:
+            temperatureAlertControlsCell.slider.minValue = -40
+            temperatureAlertControlsCell.slider.maxValue = 85
+        case .fahrenheit:
+            temperatureAlertControlsCell.slider.minValue = -40
+            temperatureAlertControlsCell.slider.maxValue = 185
+        case .kelvin:
+            temperatureAlertControlsCell.slider.minValue = 233
+            temperatureAlertControlsCell.slider.maxValue = 358
+        }
+
+        relativeHumidityAlertControlsCell.slider.minValue = 0
+        relativeHumidityAlertControlsCell.slider.maxValue = 100
+
+        absoluteHumidityAlertControlsCell.slider.minValue = 0
+        absoluteHumidityAlertControlsCell.slider.maxValue = 40
+
+        switch tu {
+        case .celsius:
+            dewPointAlertControlsCell.slider.minValue = -40
+            dewPointAlertControlsCell.slider.maxValue = 85
+        case .fahrenheit:
+            dewPointAlertControlsCell.slider.minValue = -40
+            dewPointAlertControlsCell.slider.maxValue = 185
+        case .kelvin:
+            dewPointAlertControlsCell.slider.minValue = 233
+            dewPointAlertControlsCell.slider.maxValue = 358
+        }
+
+        pressureAlertControlsCell.slider.minValue = 300
+        pressureAlertControlsCell.slider.maxValue = 1100
     }
 }
 

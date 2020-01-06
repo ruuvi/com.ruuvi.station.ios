@@ -285,10 +285,10 @@ IMAGE</string>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="minValue">
-                                                            <real key="value" value="-1000"/>
+                                                            <real key="value" value="-40"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
-                                                            <real key="value" value="1000"/>
+                                                            <real key="value" value="85"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
                                                             <real key="value" value="-40"/>
@@ -396,10 +396,10 @@ IMAGE</string>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="minValue">
-                                                            <real key="value" value="-1000"/>
+                                                            <real key="value" value="0.0"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
-                                                            <real key="value" value="1000"/>
+                                                            <real key="value" value="100"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
                                                             <real key="value" value="0.0"/>
@@ -507,10 +507,10 @@ IMAGE</string>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="minValue">
-                                                            <real key="value" value="-1000"/>
+                                                            <real key="value" value="0.0"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
-                                                            <real key="value" value="1000"/>
+                                                            <real key="value" value="40"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
                                                             <real key="value" value="0.0"/>
@@ -618,10 +618,10 @@ IMAGE</string>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="minValue">
-                                                            <real key="value" value="-1000"/>
+                                                            <real key="value" value="-40"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
-                                                            <real key="value" value="1000"/>
+                                                            <real key="value" value="85"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
                                                             <real key="value" value="-40"/>
@@ -729,10 +729,10 @@ IMAGE</string>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="minValue">
-                                                            <real key="value" value="-1000"/>
+                                                            <real key="value" value="300"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
-                                                            <real key="value" value="3000"/>
+                                                            <real key="value" value="1100"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
                                                             <real key="value" value="300"/>
