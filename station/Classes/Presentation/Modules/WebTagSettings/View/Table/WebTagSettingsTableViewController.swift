@@ -167,6 +167,7 @@ extension WebTagSettingsTableViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         let headerHeight: CGFloat = 64
@@ -622,6 +623,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell,
                                      didSlideTo minValue: CGFloat,
                                      maxValue: CGFloat) {
