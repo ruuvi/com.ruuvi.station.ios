@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import RealmSwift
 import CoreLocation
@@ -181,6 +182,7 @@ extension WebTagSettingsPresenter: LocationPickerModuleOutput {
 // MARK: - Private
 extension WebTagSettingsPresenter {
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel(to webTag: WebTagRealm) {
         // temperature alert
         let temperatureLower = view.viewModel.celsiusLowerBound
@@ -351,6 +353,7 @@ extension WebTagSettingsPresenter {
         })
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
         view.viewModel.isLocationAuthorizedAlways.value
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
@@ -475,3 +478,4 @@ extension WebTagSettingsPresenter {
         }
     }
 }
+// swiftlint:enable file_length
