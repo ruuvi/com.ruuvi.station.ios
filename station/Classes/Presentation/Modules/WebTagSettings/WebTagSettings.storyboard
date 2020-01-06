@@ -17,7 +17,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="WebTagSettingsTableViewController" id="NzI-p7-FEP" customClass="WebTagSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bOY-b2-yiX">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="1600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="2000"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="wjL-K0-qgg">
@@ -154,7 +154,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oqj-rp-dBd">
-                            <rect key="frame" x="0.0" y="1445.5" width="414" height="100"/>
+                            <rect key="frame" x="0.0" y="1685.5" width="414" height="100"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="udR-S3-e8A">
@@ -662,12 +662,123 @@ IMAGE</string>
                                             <outlet property="textField" destination="WzQ-3h-Xup" id="NwM-Ch-pp7"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="WebTagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="HOC-mt-yIQ" customClass="WebTagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="1327.5" width="414" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HOC-mt-yIQ" id="NLJ-Vs-Tvc">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pressure" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OTF-lu-rbw">
+                                                    <rect key="frame" x="20" y="8" width="68" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alert when less than 300 or more than 1100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CvL-eJ-h8K">
+                                                    <rect key="frame" x="20" y="37" width="264" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jHj-iI-Q5b">
+                                                    <rect key="frame" x="345" y="8" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="isOnSwitchValueChanged:" destination="HOC-mt-yIQ" eventType="valueChanged" id="84i-zk-Wem"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="jHj-iI-Q5b" secondAttribute="trailing" constant="20" id="HJb-vd-K9o"/>
+                                                <constraint firstItem="OTF-lu-rbw" firstAttribute="leading" secondItem="NLJ-Vs-Tvc" secondAttribute="leading" constant="20" id="I4x-Fs-EJD"/>
+                                                <constraint firstItem="CvL-eJ-h8K" firstAttribute="top" secondItem="OTF-lu-rbw" secondAttribute="bottom" constant="8" id="Stz-gq-qUS"/>
+                                                <constraint firstItem="jHj-iI-Q5b" firstAttribute="top" secondItem="NLJ-Vs-Tvc" secondAttribute="top" constant="8" id="bXL-Qh-hSb"/>
+                                                <constraint firstItem="CvL-eJ-h8K" firstAttribute="leading" secondItem="OTF-lu-rbw" secondAttribute="leading" id="enD-74-Zq5"/>
+                                                <constraint firstItem="OTF-lu-rbw" firstAttribute="top" secondItem="NLJ-Vs-Tvc" secondAttribute="top" constant="8" id="nIP-9V-J5U"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <inset key="separatorInset" minX="1024" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="descriptionLabel" destination="CvL-eJ-h8K" id="m4X-6w-Lew"/>
+                                            <outlet property="isOnSwitch" destination="jHj-iI-Q5b" id="9bx-SL-UXg"/>
+                                            <outlet property="titleLabel" destination="OTF-lu-rbw" id="hS2-1g-N5U"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="WebTagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="Ia5-ze-g3a" customClass="WebTagSettingsAlertControlsCell" customModule="station" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="1403.5" width="414" height="164"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ia5-ze-g3a" id="99H-hV-LLZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="164"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Set custom description..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mKC-4S-X21">
+                                                    <rect key="frame" x="20" y="103.5" width="374" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" returnKeyType="done"/>
+                                                    <connections>
+                                                        <action selector="textFieldEditingDidEnd:" destination="Ia5-ze-g3a" eventType="editingDidEnd" id="AhI-cC-wcp"/>
+                                                        <outlet property="delegate" destination="Ia5-ze-g3a" id="XeA-pU-0qJ"/>
+                                                    </connections>
+                                                </textField>
+                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="52m-7O-v2V" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
+                                                    <rect key="frame" x="20" y="8" width="374" height="80"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="80" id="lqm-yD-hLO"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="minValue">
+                                                            <real key="value" value="-1000"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
+                                                            <real key="value" value="3000"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="selectedMinValue">
+                                                            <real key="value" value="300"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="selectedMaxValue">
+                                                            <real key="value" value="1100"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="colorBetweenHandles">
+                                                            <color key="value" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="handleColor">
+                                                            <color key="value" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="step">
+                                                            <real key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="lineHeight">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="handleDiameter">
+                                                            <real key="value" value="24"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="enableStep" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="52m-7O-v2V" secondAttribute="trailing" constant="20" id="3Wk-sv-in1"/>
+                                                <constraint firstItem="mKC-4S-X21" firstAttribute="leading" secondItem="99H-hV-LLZ" secondAttribute="leading" constant="20" id="ANy-uk-Dcp"/>
+                                                <constraint firstItem="52m-7O-v2V" firstAttribute="leading" secondItem="99H-hV-LLZ" secondAttribute="leading" constant="20" id="QQ7-O7-khk"/>
+                                                <constraint firstItem="mKC-4S-X21" firstAttribute="top" secondItem="52m-7O-v2V" secondAttribute="bottom" constant="15.5" id="RE9-t5-1sz"/>
+                                                <constraint firstItem="52m-7O-v2V" firstAttribute="top" secondItem="99H-hV-LLZ" secondAttribute="top" constant="8" id="eYY-cg-UhD"/>
+                                                <constraint firstAttribute="trailing" secondItem="mKC-4S-X21" secondAttribute="trailing" constant="20" id="mgr-6t-nUq"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="slider" destination="52m-7O-v2V" id="G8o-Af-MX2"/>
+                                            <outlet property="textField" destination="mKC-4S-X21" id="iFB-iu-eWB"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="MORE INFO" id="gbe-iT-FAt">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="hQf-Gu-PPo">
-                                        <rect key="frame" x="0.0" y="1383.5" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="1623.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="hQf-Gu-PPo" id="5Sv-7R-KLh">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -725,7 +836,7 @@ IMAGE</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <size key="freeformSize" width="414" height="1600"/>
+                    <size key="freeformSize" width="414" height="2000"/>
                     <connections>
                         <outlet property="absoluteHumidityAlertControlsCell" destination="kRZ-tM-ktY" id="zys-nV-QK4"/>
                         <outlet property="absoluteHumidityAlertHeaderCell" destination="jtI-uv-aoT" id="CMv-Tw-Gf2"/>
@@ -738,6 +849,8 @@ IMAGE</string>
                         <outlet property="locationCell" destination="hQf-Gu-PPo" id="KDJ-Rd-eai"/>
                         <outlet property="locationTitleLabel" destination="1s6-W8-Oue" id="xSS-9l-vZ6"/>
                         <outlet property="locationValueLabel" destination="Mbw-j0-4bQ" id="Ddn-dK-jvZ"/>
+                        <outlet property="pressureAlertControlsCell" destination="Ia5-ze-g3a" id="Fug-9I-PUS"/>
+                        <outlet property="pressureAlertHeaderCell" destination="HOC-mt-yIQ" id="gIB-ke-O2G"/>
                         <outlet property="relativeHumidityAlertControlsCell" destination="Hxk-sX-Q74" id="pYm-P2-pUc"/>
                         <outlet property="relativeHumidityAlertHeaderCell" destination="IgB-Td-irc" id="Ke6-15-iX5"/>
                         <outlet property="removeThisWebTagButton" destination="udR-S3-e8A" id="1He-v3-iUG"/>

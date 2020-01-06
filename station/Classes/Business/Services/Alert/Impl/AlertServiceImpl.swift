@@ -264,6 +264,21 @@ class AlertServiceImpl: AlertService {
                         }
                     }
                 }
+            case .pressure:
+                if case .pressure(let lower, let upper) = alert(for: uuid, of: type),
+                    let pressure = data.pressure {
+                    let isLower = pressure < lower
+                    let isUpper = pressure > upper
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.low, .pressure, for: uuid)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.high, .pressure, for: uuid)
+                        }
+                    }
+                }
             default:
                 break
             }

@@ -312,6 +312,8 @@
 "WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
+"WebTagSettings.PressureAlert.title" = "Air Pressure";
+"WebTagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";

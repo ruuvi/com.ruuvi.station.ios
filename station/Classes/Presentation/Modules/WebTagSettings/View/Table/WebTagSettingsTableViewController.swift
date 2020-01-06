@@ -14,6 +14,8 @@ private enum WebTagSettingsTableSection: Int {
 class WebTagSettingsTableViewController: UITableViewController {
     var output: WebTagSettingsViewOutput!
 
+    @IBOutlet weak var pressureAlertHeaderCell: WebTagSettingsAlertHeaderCell!
+    @IBOutlet weak var pressureAlertControlsCell: WebTagSettingsAlertControlsCell!
     @IBOutlet weak var dewPointAlertHeaderCell: WebTagSettingsAlertHeaderCell!
     @IBOutlet weak var dewPointAlertControlsCell: WebTagSettingsAlertControlsCell!
     @IBOutlet weak var absoluteHumidityAlertHeaderCell: WebTagSettingsAlertHeaderCell!
@@ -55,7 +57,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         absoluteHumidityAlertHeaderCell.titleLabel.text
         = "WebTagSettings.AbsoluteAirHumidityAlert.title".localized()
         + " " + "g/m³".localized()
-
+        pressureAlertHeaderCell.titleLabel.text
+        = "WebTagSettings.PressureAlert.title".localized()
+        + " " + "hPa".localized()
         tableView.reloadData()
     }
 
@@ -185,6 +189,10 @@ extension WebTagSettingsTableViewController {
             return (hu == .dew) ? headerHeight : 0
         case dewPointAlertControlsCell:
             return ((hu == .dew) && (viewModel.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
+        case pressureAlertHeaderCell:
+            return headerHeight
+        case pressureAlertControlsCell:
+            return (viewModel.isPressureAlertOn.value ?? false) ? controlsHeight : 0
         default:
             return 44
         }
@@ -261,6 +269,8 @@ extension WebTagSettingsTableViewController {
         absoluteHumidityAlertControlsCell.delegate = self
         dewPointAlertHeaderCell.delegate = self
         dewPointAlertControlsCell.delegate = self
+        pressureAlertHeaderCell.delegate = self
+        pressureAlertControlsCell.delegate = self
     }
 }
 
@@ -273,6 +283,43 @@ extension WebTagSettingsTableViewController {
     private func updateUIIsNamaChangeEnabled() {
         if isViewLoaded {
             tagNameTextField.isEnabled = isNameChangedEnabled
+        }
+    }
+
+    private func updateUIPressureLowerBound() {
+        if isViewLoaded {
+            if let lower = viewModel.pressureLowerBound.value {
+                pressureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+            } else {
+                pressureAlertControlsCell.slider.selectedMinValue = 300
+            }
+        }
+    }
+
+    private func updateUIPressureUpperBound() {
+        if isViewLoaded {
+            if let upper = viewModel.pressureUpperBound.value {
+                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+            } else {
+                pressureAlertControlsCell.slider.selectedMaxValue = 1100
+            }
+        }
+    }
+
+    private func updateUIPressureAlertDescription() {
+        if isViewLoaded {
+            if let isPressureAlertOn = viewModel.isPressureAlertOn.value,
+                isPressureAlertOn {
+                if let l = viewModel.pressureLowerBound.value,
+                    let u = viewModel.pressureUpperBound.value {
+                    let format = "WebTagSettings.Alerts.Pressure.description".localized()
+                    pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
+                } else {
+                    pressureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                }
+            } else {
+                pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+            }
         }
     }
 
@@ -510,6 +557,8 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertHeaderCellDelega
             viewModel.isAbsoluteHumidityAlertOn.value = isOn
         case dewPointAlertHeaderCell:
             viewModel.isDewPointAlertOn.value = isOn
+        case pressureAlertHeaderCell:
+            viewModel.isPressureAlertOn.value = isOn
         default:
             break
         }
@@ -528,6 +577,8 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
             viewModel.absoluteHumidityAlertDescription.value = description
         case dewPointAlertControlsCell:
             viewModel.dewPointAlertDescription.value = description
+        case pressureAlertControlsCell:
+            viewModel.pressureAlertDescription.value = description
         default:
             break
         }
@@ -571,6 +622,9 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
                     viewModel.dewPointCelsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
                 }
             }
+        case pressureAlertControlsCell:
+            viewModel.pressureLowerBound.value = Double(minValue)
+            viewModel.pressureUpperBound.value = Double(maxValue)
         default:
             break
         }
@@ -605,6 +659,124 @@ extension WebTagSettingsTableViewController {
         bindRelativeHumidityCells()
         bindAbsoluteHumidityCells()
         bindDewPointAlertCells()
+        bindPressureAlertCells()
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func bindPressureAlertCells() {
+        if isViewLoaded {
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
+                slider.isEnabled = isOn.bound
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.pressureLowerBound) { [weak self] (_, _) in
+                self?.updateUIPressureLowerBound()
+                self?.updateUIPressureAlertDescription()
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.pressureUpperBound) { [weak self] (_, _) in
+                self?.updateUIPressureUpperBound()
+                self?.updateUIPressureAlertDescription()
+            }
+            pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) {
+                [weak self] (_, _) in
+                self?.updateUIPressureAlertDescription()
+            }
+
+            let isPushNotificationsEnabled = viewModel.isPushNotificationsEnabled
+            let isPressureAlertOn = viewModel.isPressureAlertOn
+            let isLocationAuthorizedAlways = viewModel.isLocationAuthorizedAlways
+            let location = viewModel.location
+
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.location) {
+                [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways] (view, location) in
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location != nil
+                let isEnabled = isPN && (isLA || isFixed)
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isLocationAuthorizedAlways) {
+                [weak isPushNotificationsEnabled, weak location] (view, isLocationAuthorizedAlways) in
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways.bound
+                let isFixed = location?.value != nil
+                let isEnabled = isPN && (isLA || isFixed)
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isLocationAuthorizedAlways, weak location] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isPN && (isLA || isFixed)
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) {
+                [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways, weak location]
+                (slider, isOn) in
+                let isOn = isOn.bound
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+
+                [weak isPressureAlertOn, weak isLocationAuthorizedAlways, weak location]
+                (slider, isPushNotificationsEnabled) in
+                let isOn = isPressureAlertOn?.value ?? false
+                let isPN = isPushNotificationsEnabled.bound
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.location) {
+                [weak isPressureAlertOn, weak isLocationAuthorizedAlways, weak isPushNotificationsEnabled]
+                (slider, location) in
+                let isOn = isPressureAlertOn?.value ?? false
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways?.value ?? false
+                let isFixed = location != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.isLocationAuthorizedAlways) {
+                [weak isPressureAlertOn, weak isPushNotificationsEnabled, weak location]
+                (slider, isLocationAuthorizedAlways) in
+                let isOn = isPressureAlertOn?.value ?? false
+                let isPN = isPushNotificationsEnabled?.value ?? false
+                let isLA = isLocationAuthorizedAlways.bound
+                let isFixed = location?.value != nil
+                let isEnabled = isOn && isPN && (isLA || isFixed)
+                slider.isEnabled = isEnabled
+            }
+
+            pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
+                (textField, pressureAlertDescription) in
+                textField.text = pressureAlertDescription
+            }
+
+            tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
+            }
+        }
     }
 
     // swiftlint:disable:next function_body_length
