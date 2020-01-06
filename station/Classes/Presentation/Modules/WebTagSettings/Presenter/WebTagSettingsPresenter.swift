@@ -263,8 +263,36 @@ extension WebTagSettingsPresenter {
             observer.alertService.setUpper(absoluteHumidity: upper, for: webTag.uuid)
         }
 
-        bind(view.viewModel.absoluteHumidityAlertDescription, fire: false) { observer, absoluteHumidityAlertDescription in
+        bind(view.viewModel.absoluteHumidityAlertDescription, fire: false) {
+            observer, absoluteHumidityAlertDescription in
             observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: webTag.uuid)
+        }
+
+        // dew point alert
+        let dewPointLower = view.viewModel.dewPointCelsiusLowerBound
+        let dewPointUpper = view.viewModel.dewPointCelsiusUpperBound
+        bind(view.viewModel.isDewPointAlertOn, fire: false) {
+            [weak dewPointLower, weak dewPointUpper] observer, isOn in
+            if let l = dewPointLower?.value, let u = dewPointUpper?.value {
+                let type: AlertType = .dewPoint(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: webTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                    }
+                }
+            }
+        }
+        bind(view.viewModel.dewPointCelsiusLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLowerDewPoint(celsius: lower, for: webTag.uuid)
+        }
+        bind(view.viewModel.dewPointCelsiusUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpperDewPoint(celsius: upper, for: webTag.uuid)
+        }
+        bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
+            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
         }
     }
     private func startObservingWebTag() {
@@ -315,10 +343,15 @@ extension WebTagSettingsPresenter {
 
         view.isNameChangedEnabled = view.viewModel.location.value != nil
 
-        view.viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: webTag.uuid)
-        view.viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: webTag.uuid)
-        view.viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: webTag.uuid)
-
+        view.viewModel.temperatureAlertDescription.value
+            = alertService.temperatureDescription(for: webTag.uuid)
+        view.viewModel.relativeHumidityAlertDescription.value
+            = alertService.relativeHumidityDescription(for: webTag.uuid)
+        view.viewModel.absoluteHumidityAlertDescription.value
+            = alertService.absoluteHumidityDescription(for: webTag.uuid)
+        view.viewModel.dewPointAlertDescription.value
+            = alertService.dewPointDescription(for: webTag.uuid)
+        
         let temperatureAlertType: AlertType = .temperature(lower: 0, upper: 0)
         if case .temperature(let lower, let upper) = alertService.alert(for: webTag.uuid, of: temperatureAlertType) {
             view.viewModel.isTemperatureAlertOn.value = true
@@ -351,7 +384,8 @@ extension WebTagSettingsPresenter {
         }
 
         let absoluteHumidityAlertType: AlertType = .absoluteHumidity(lower: 0, upper: 0)
-        if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: webTag.uuid, of: absoluteHumidityAlertType) {
+        if case .absoluteHumidity(let lower, let upper)
+            = alertService.alert(for: webTag.uuid, of: absoluteHumidityAlertType) {
             view.viewModel.isAbsoluteHumidityAlertOn.value = true
             view.viewModel.absoluteHumidityLowerBound.value = lower
             view.viewModel.absoluteHumidityUpperBound.value = upper
@@ -362,6 +396,21 @@ extension WebTagSettingsPresenter {
             }
             if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: webTag.uuid) {
                 view.viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
+            }
+        }
+
+        let dewPointAlertType: AlertType = .dewPoint(lower: 0, upper: 0)
+        if case .dewPoint(let lower, let upper) = alertService.alert(for: webTag.uuid, of: dewPointAlertType) {
+            view.viewModel.isDewPointAlertOn.value = true
+            view.viewModel.dewPointCelsiusLowerBound.value = lower
+            view.viewModel.dewPointCelsiusUpperBound.value = upper
+        } else {
+            view.viewModel.isDewPointAlertOn.value = false
+            if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: webTag.uuid) {
+                view.viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
+            }
+            if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: webTag.uuid) {
+                view.viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
             }
         }
     }
