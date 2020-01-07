@@ -53,4 +53,5 @@ struct TagSettingsViewModel {
     let connectionAlertDescription: Observable<String?> = Observable<String?>()
 
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let movementAlertDescription: Observable<String?> = Observable<String?>()
 }

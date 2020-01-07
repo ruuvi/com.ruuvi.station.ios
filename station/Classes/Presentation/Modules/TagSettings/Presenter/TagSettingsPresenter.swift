@@ -212,6 +212,7 @@ extension TagSettingsPresenter {
         viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: ruuviTag.uuid)
         viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag.uuid)
         viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag.uuid)
+        viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag.uuid)
 
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
 
@@ -569,6 +570,10 @@ extension TagSettingsPresenter {
                     observer.alertService.unregister(type: type, for: ruuviTag.uuid)
                 }
             }
+        }
+
+        bind(viewModel.movementAlertDescription, fire: false) { observer, movementAlertDescription in
+            observer.alertService.setMovement(description: movementAlertDescription, for: ruuviTag.uuid)
         }
     }
 

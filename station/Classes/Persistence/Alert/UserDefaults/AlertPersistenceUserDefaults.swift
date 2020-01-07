@@ -65,6 +65,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.movementAlertIsOnUDKeyPrefix."
     private let movementAlertCounterUDPrefix
         = "AlertPersistenceUserDefaults.movementAlertCounterUDPrefix."
+    private let movementAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
@@ -317,7 +319,7 @@ extension AlertPersistenceUserDefaults {
     }
 
     func setConnection(description: String?, for uuid: String) {
-        return prefs.set(description, forKey: connectionAlertDescriptionUDKeyPrefix + uuid)
+        prefs.set(description, forKey: connectionAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 
@@ -329,5 +331,13 @@ extension AlertPersistenceUserDefaults {
 
     func setMovement(counter: Int?, for uuid: String) {
         prefs.set(counter, forKey: movementAlertCounterUDPrefix + uuid)
+    }
+
+    func movementDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: movementAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setMovement(description: String?, for uuid: String) {
+        prefs.set(description, forKey: movementAlertDescriptionUDKeyPrefix + uuid)
     }
 }
