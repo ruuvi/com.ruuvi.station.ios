@@ -260,7 +260,7 @@
 "TagSettings.ConnectStatus.Connected" = "Connected";
 "TagSettings.ConnectStatus.Connecting" = "Connecting...";
 "TagSettings.ConnectStatus.Disconnected" = "Disconnected";
-"TagSettings.TemperatureAlert.Description.placeholder" = "Set custom description...";
+"TagSettings.Alert.CustomDescription.placeholder" = "Set custom description...";
 "TagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
 "TagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";

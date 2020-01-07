@@ -50,16 +50,28 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         backgroundImageLabel.text = "WebTagSettings.Label.BackgroundImage.text".localized()
         tagNameTitleLabel.text = "WebTagSettings.Label.TagName.text".localized()
         locationTitleLabel.text = "WebTagSettings.Label.Location.text".localized()
+
         removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
         relativeHumidityAlertHeaderCell.titleLabel.text
-        = "WebTagSettings.RelativeAirHumidityAlert.title".localized()
-        + " " + "%".localized()
+            = "WebTagSettings.RelativeAirHumidityAlert.title".localized()
+            + " " + "%".localized()
         absoluteHumidityAlertHeaderCell.titleLabel.text
-        = "WebTagSettings.AbsoluteAirHumidityAlert.title".localized()
-        + " " + "g/m³".localized()
+            = "WebTagSettings.AbsoluteAirHumidityAlert.title".localized()
+            + " " + "g/m³".localized()
         pressureAlertHeaderCell.titleLabel.text
-        = "WebTagSettings.PressureAlert.title".localized()
-        + " " + "hPa".localized()
+            = "WebTagSettings.PressureAlert.title".localized()
+            + " " + "hPa".localized()
+        temperatureAlertControlsCell.textField.placeholder
+            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        relativeHumidityAlertControlsCell.textField.placeholder
+            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        absoluteHumidityAlertControlsCell.textField.placeholder
+            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        dewPointAlertControlsCell.textField.placeholder
+            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        pressureAlertControlsCell.textField.placeholder
+            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+
         tableView.reloadData()
     }
 
