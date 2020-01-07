@@ -6,4 +6,5 @@ protocol MenuViewOutput {
     func viewDidSelectAbout()
     func viewDidSelectGetMoreSensors()
     func viewDidSelectSettings()
+    func viewDidSelectFeedback()
 }

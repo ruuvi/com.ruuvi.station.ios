@@ -63,6 +63,7 @@ enum CoreError: Error {
     case locationPermissionNotDetermined
     case objectNotFound
     case objectInvalidated
+    case unableToSendEmail
 }
 
 extension CoreError: LocalizedError {
@@ -84,6 +85,8 @@ extension CoreError: LocalizedError {
             return "CoreError.objectNotFound".localized()
         case .objectInvalidated:
             return "CoreError.objectInvalidated".localized()
+        case .unableToSendEmail:
+            return "CoreError.unableToSendEmail".localized()
         }
     }
 }

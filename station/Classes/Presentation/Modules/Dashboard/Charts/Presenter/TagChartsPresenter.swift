@@ -18,6 +18,9 @@ class TagChartsPresenter: TagChartsModuleInput {
     var exportService: ExportService!
     var alertService: AlertService!
     var background: BTBackground!
+    var mailComposerPresenter: MailComposerPresenter!
+    var feedbackEmail: String!
+    var feedbackSubject: String!
 
     private var isLoading: Bool = false {
         didSet {
@@ -250,6 +253,11 @@ extension TagChartsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
         router.openRuuviWebsite()
+    }
+
+    func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
+        module.dismiss()
+        mailComposerPresenter.present(email: feedbackEmail, subject: feedbackSubject)
     }
 }
 

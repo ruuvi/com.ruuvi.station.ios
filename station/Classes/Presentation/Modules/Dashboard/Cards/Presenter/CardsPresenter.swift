@@ -18,6 +18,9 @@ class CardsPresenter: CardsModuleInput {
     var permissionsManager: PermissionsManager!
     var connectionPersistence: ConnectionPersistence!
     var alertService: AlertService!
+    var mailComposerPresenter: MailComposerPresenter!
+    var feedbackEmail: String!
+    var feedbackSubject: String!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -233,6 +236,11 @@ extension CardsPresenter: MenuModuleOutput {
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
         router.openRuuviWebsite()
+    }
+
+    func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
+        module.dismiss()
+        mailComposerPresenter.present(email: feedbackEmail, subject: feedbackSubject)
     }
 }
 

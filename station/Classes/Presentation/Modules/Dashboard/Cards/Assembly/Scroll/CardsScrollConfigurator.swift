@@ -25,6 +25,9 @@ class CardsScrollConfigurator {
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         presenter.alertService = r.resolve(AlertService.self)
+        presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
+        presenter.feedbackEmail = r.property("Feedback Email")!
+        presenter.feedbackSubject = r.property("Feedback Subject")!
 
         router.delegate = presenter
 

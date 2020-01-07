@@ -68,6 +68,7 @@
 "CoreError.locationPermissionNotDetermined" = "Sijainnin käyttöoikeuden tilaa ei ole päätetty";
 "CoreError.objectNotFound" = "Kohdetta ei löydy";
 "CoreError.objectInvalidated" = "Kohde mitätöity";
+"CoreError.unableToSendEmail" = "Unable to send email";
 
 // Defaults
 "Defaults.navigationItem.title" = "Oletusasetukset";

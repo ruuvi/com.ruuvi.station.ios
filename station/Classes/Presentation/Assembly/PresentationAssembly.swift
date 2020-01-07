@@ -1,7 +1,11 @@
 import Swinject
+import SwinjectPropertyLoader
 
 class PresentationAssembly: Assembly {
     func assemble(container: Container) {
+
+        let config = PlistPropertyLoader(bundle: .main, name: "Presentation")
+        try! container.applyPropertyLoader(config)
 
         container.register(ActivityPresenter.self) { _ in
             let presenter = ActivityPresenterRuuviLogo()
@@ -10,6 +14,12 @@ class PresentationAssembly: Assembly {
 
         container.register(ErrorPresenter.self) { _ in
             let presenter = ErrorPresenterAlert()
+            return presenter
+        }
+
+        container.register(MailComposerPresenter.self) { r in
+            let presenter = MailComposerPresenterMessageUI()
+            presenter.errorPresenter = r.resolve(ErrorPresenter.self)
             return presenter
         }
 
