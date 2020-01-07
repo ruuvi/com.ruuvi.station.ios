@@ -57,6 +57,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     // connection
     private let connectionAlertIsOnUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
+    private let connectionAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.connectionAlertDescriptionUDKeyPrefix."
 
     // movement
     private let movementAlertIsOnUDKeyPrefix
@@ -305,6 +307,17 @@ extension AlertPersistenceUserDefaults {
 
     func setPressure(description: String?, for uuid: String) {
         prefs.set(description, forKey: pressureAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Connection
+extension AlertPersistenceUserDefaults {
+    func connectionDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: connectionAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setConnection(description: String?, for uuid: String) {
+        return prefs.set(description, forKey: connectionAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

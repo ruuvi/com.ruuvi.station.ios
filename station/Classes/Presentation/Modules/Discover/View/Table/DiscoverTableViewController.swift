@@ -306,7 +306,6 @@ extension DiscoverTableViewController {
             cell.rssiImageView.image = nil
             cell.rssiLabel.text = nil
         }
-
     }
 }
 

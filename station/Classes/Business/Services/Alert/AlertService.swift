@@ -53,6 +53,10 @@ protocol AlertService {
     func pressureDescription(for uuid: String) -> String?
     func setPressure(description: String?, for uuid: String)
 
+    // connection
+    func connectionDescription(for uuid: String) -> String?
+    func setConnection(description: String?, for uuid: String)
+    
     // movement
     func movementCounter(for uuid: String) -> Int?
     func setMovement(counter: Int?, for uuid: String)
