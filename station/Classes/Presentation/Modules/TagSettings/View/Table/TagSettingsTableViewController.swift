@@ -104,6 +104,8 @@ class TagSettingsTableViewController: UITableViewController {
 
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
+
+    // swiftlint:disable:next function_body_length
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
