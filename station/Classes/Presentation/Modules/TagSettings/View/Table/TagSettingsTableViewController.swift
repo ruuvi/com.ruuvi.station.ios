@@ -26,6 +26,7 @@ enum TagSettingsTableSection: Int {
 class TagSettingsTableViewController: UITableViewController {
     var output: TagSettingsViewOutput!
 
+    @IBOutlet weak var movementAlertDescriptionCell: TagSettingsAlertDescriptionCell!
     @IBOutlet weak var movementAlertHeaderCell: TagSettingsAlertHeaderCell!
 
     @IBOutlet weak var connectionAlertDescriptionCell: TagSettingsAlertDescriptionCell!
@@ -434,6 +435,8 @@ extension TagSettingsTableViewController {
                 return (viewModel?.isConnectionAlertOn.value ?? false) ? descriptionHeight : 0
             case movementAlertHeaderCell:
                 return headerHeight
+            case movementAlertDescriptionCell:
+                return (viewModel?.isMovementAlertOn.value ?? false) ? descriptionHeight : 0
             default:
                 return 44
             }
@@ -464,6 +467,8 @@ extension TagSettingsTableViewController {
             case connectionAlertDescriptionCell:
                 return 0
             case movementAlertHeaderCell:
+                return 0
+            case movementAlertDescriptionCell:
                 return 0
             default:
                 return 44
@@ -516,6 +521,8 @@ extension TagSettingsTableViewController: TagSettingsAlertDescriptionCellDelegat
         switch cell {
         case connectionAlertDescriptionCell:
             viewModel?.connectionAlertDescription.value = description
+        case movementAlertDescriptionCell:
+            viewModel?.movementAlertDescription.value = description
         default:
             break
         }
@@ -607,6 +614,7 @@ extension TagSettingsTableViewController {
         connectionAlertHeaderCell.delegate = self
         connectionAlertDescriptionCell.delegate = self
         movementAlertHeaderCell.delegate = self
+        movementAlertDescriptionCell.delegate = self
         configureMinMaxForSliders()
     }
 
@@ -1010,6 +1018,18 @@ extension TagSettingsTableViewController {
                 let isEnabled = isPN && isCo
                 view.isEnabled = isEnabled
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
+
+            movementAlertDescriptionCell.textField.bind(viewModel.movementAlertDescription) {
+                (textField, movementAlertDescription) in
+                textField.text = movementAlertDescription
+            }
+
+            tableView.bind(viewModel.isMovementAlertOn) { tableView, _ in
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
             }
         }
     }

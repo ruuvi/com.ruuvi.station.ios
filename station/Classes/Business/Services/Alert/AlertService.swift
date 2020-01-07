@@ -60,6 +60,8 @@ protocol AlertService {
     // movement
     func movementCounter(for uuid: String) -> Int?
     func setMovement(counter: Int?, for uuid: String)
+    func movementDescription(for uuid: String) -> String?
+    func setMovement(description: String?, for uuid: String)
 }
 
 protocol AlertServiceObserver: class {
