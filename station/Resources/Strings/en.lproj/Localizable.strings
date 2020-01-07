@@ -68,6 +68,7 @@
 "CoreError.locationPermissionNotDetermined" = "Location permission authorization status is not determined";
 "CoreError.objectNotFound" = "Object not found";
 "CoreError.objectInvalidated" = "Object invalidated";
+"CoreError.unableToSendEmail" = "Unable to send email";
 
 // Defaults
 "Defaults.navigationItem.title" = "Defaults";

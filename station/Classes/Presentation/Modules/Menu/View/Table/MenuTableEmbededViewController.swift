@@ -3,6 +3,7 @@ import UIKit
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     var output: MenuViewOutput!
 
+    @IBOutlet weak var feedbackCell: UITableViewCell!
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!
     @IBOutlet weak var aboutCell: UITableViewCell!
     @IBOutlet weak var getMoreSensorsCell: UITableViewCell!
@@ -49,6 +50,8 @@ extension MenuTableEmbededViewController {
                 output.viewDidSelectGetMoreSensors()
             case settingsCell:
                 output.viewDidSelectSettings()
+            case feedbackCell:
+                output.viewDidSelectFeedback()
             default:
                 break
             }

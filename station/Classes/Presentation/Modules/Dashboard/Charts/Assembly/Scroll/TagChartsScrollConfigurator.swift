@@ -22,6 +22,9 @@ class TagChartsScrollConfigurator {
         presenter.exportService = r.resolve(ExportService.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.background = r.resolve(BTBackground.self)
+        presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
+        presenter.feedbackEmail = r.property("Feedback Email")!
+        presenter.feedbackSubject = r.property("Feedback Subject")!
 
         view.output = presenter
     }

@@ -68,6 +68,7 @@
 "CoreError.locationPermissionNotDetermined" = "Права на использование локационных сервисов не определены";
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
+"CoreError.unableToSendEmail" = "Unable to send email";
 
 // Defaults
 "Defaults.navigationItem.title" = "Значения";

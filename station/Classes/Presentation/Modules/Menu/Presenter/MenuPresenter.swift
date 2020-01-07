@@ -35,4 +35,8 @@ extension MenuPresenter: MenuViewOutput {
     func viewDidSelectSettings() {
         output?.menu(module: self, didSelectSettings: nil)
     }
+
+    func viewDidSelectFeedback() {
+        output?.menu(module: self, didSelectFeedback: nil)
+    }
 }

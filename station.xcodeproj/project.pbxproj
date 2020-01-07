@@ -49,6 +49,15 @@
 		0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
+		0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
+		0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
+		0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */; };
+		0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */; };
+		0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */; };
+		0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */; };
+		0E197C6F23C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
+		0E197C7023C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
+		0E197C7123C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
 		0E1B2F32239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
 		0E1B2F33239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
 		0E1B2F34239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
@@ -1127,6 +1136,9 @@
 		0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Optional.swift"; sourceTree = "<group>"; };
 		0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertDescriptionCell.swift; sourceTree = "<group>"; };
+		0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenter.swift; sourceTree = "<group>"; };
+		0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenterMessageUI.swift; sourceTree = "<group>"; };
+		0E197C6E23C4A7D00074015B /* Presentation.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Presentation.plist; sourceTree = "<group>"; };
 		0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
 		0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0E1C1D9022B35D6A0032F6CA /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
@@ -1895,6 +1907,23 @@
 			path = BTKit;
 			sourceTree = "<group>";
 		};
+		0E197C6423C4A44C0074015B /* MailComposer */ = {
+			isa = PBXGroup;
+			children = (
+				0E197C6923C4A4960074015B /* MessageUI */,
+				0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */,
+			);
+			path = MailComposer;
+			sourceTree = "<group>";
+		};
+		0E197C6923C4A4960074015B /* MessageUI */ = {
+			isa = PBXGroup;
+			children = (
+				0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */,
+			);
+			path = MessageUI;
+			sourceTree = "<group>";
+		};
 		0E1C1D9222B360160032F6CA /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
@@ -1978,6 +2007,7 @@
 			children = (
 				0E1C1DAD22B38F320032F6CA /* Activity */,
 				0E1C1DBF22B3954E0032F6CA /* Error */,
+				0E197C6423C4A44C0074015B /* MailComposer */,
 				0E5C301722CF642F00B52E39 /* Permission */,
 				0EC50F5722CF61F700172EEB /* PhotoPicker */,
 			);
@@ -2016,6 +2046,7 @@
 			isa = PBXGroup;
 			children = (
 				0E1C1DBD22B3921E0032F6CA /* PresentationAssembly.swift */,
+				0E197C6E23C4A7D00074015B /* Presentation.plist */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -3995,6 +4026,7 @@
 				0E6BAEA923856A01003A2D4C /* Montserrat-Regular.ttf in Resources */,
 				0E6BAEAA23856A01003A2D4C /* About.storyboard in Resources */,
 				0E6BAEAB23856A01003A2D4C /* GoogleService-Info.plist in Resources */,
+				0E197C7123C4A7D00074015B /* Presentation.plist in Resources */,
 				0E31B04823BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E6BAEAC23856A01003A2D4C /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E6BAEAD23856A01003A2D4C /* Networking.plist in Resources */,
@@ -4036,6 +4068,7 @@
 				0E8BD3DF238566AB008B31EF /* Montserrat-Regular.ttf in Resources */,
 				0E8BD3E0238566AB008B31EF /* About.storyboard in Resources */,
 				0E8BD3E1238566AB008B31EF /* GoogleService-Info.plist in Resources */,
+				0E197C7023C4A7D00074015B /* Presentation.plist in Resources */,
 				0E31B04723BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3E2238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E8BD3E3238566AB008B31EF /* Networking.plist in Resources */,
@@ -4077,6 +4110,7 @@
 				6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */,
 				0EEB20EF22B7D1580015F9E0 /* About.storyboard in Resources */,
 				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
+				0E197C6F23C4A7D00074015B /* Presentation.plist in Resources */,
 				0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
@@ -4321,6 +4355,8 @@
 				0E6BAD9D23856A01003A2D4C /* ForegroundList.swift in Sources */,
 				0E6BAD9E23856A01003A2D4C /* SettingsPresenter.swift in Sources */,
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
+				0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
+				0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E6BADA123856A01003A2D4C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
@@ -4642,6 +4678,8 @@
 				0E8BD2D3238566AB008B31EF /* ForegroundList.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
+				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
+				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E8BD2D7238566AB008B31EF /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03E23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
@@ -4963,6 +5001,8 @@
 				0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
+				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
+				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
