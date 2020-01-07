@@ -291,7 +291,7 @@ extension DiscoverTableViewController {
 
         cell.identifierLabel.text = displayName(for: device)
         cell.isConnectableImageView.isHidden = !device.isConnectable
-    
+
         // RSSI
         if let rssi = device.rssi {
             cell.rssiLabel.text = "\(rssi)" + " " + "dBm".localized()
