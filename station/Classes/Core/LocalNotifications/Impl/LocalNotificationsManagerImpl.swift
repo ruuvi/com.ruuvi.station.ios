@@ -76,9 +76,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
-            content.body = ruuviTag.mac ?? ruuviTag.uuid
+            content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
         } else {
-            content.body = uuid
+            content.body = alertService.connectionDescription(for: uuid) ?? uuid
         }
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
@@ -95,9 +95,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
-            content.body = ruuviTag.mac ?? ruuviTag.uuid
+            content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
         } else {
-            content.body = uuid
+            content.body = alertService.connectionDescription(for: uuid) ?? uuid
         }
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)

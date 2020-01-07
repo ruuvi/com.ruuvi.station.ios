@@ -28,6 +28,7 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var movementAlertHeaderCell: TagSettingsAlertHeaderCell!
 
+    @IBOutlet weak var connectionAlertDescriptionCell: TagSettingsAlertDescriptionCell!
     @IBOutlet weak var connectionAlertHeaderCell: TagSettingsAlertHeaderCell!
 
     @IBOutlet weak var pressureAlertHeaderCell: TagSettingsAlertHeaderCell!
@@ -404,6 +405,7 @@ extension TagSettingsTableViewController {
         if viewModel?.isConnectable.value ?? false {
             let headerHeight: CGFloat = 64
             let controlsHeight: CGFloat = 148
+            let descriptionHeight: CGFloat = 60
             let hu = viewModel?.humidityUnit.value
             switch cell {
             case temperatureAlertHeaderCell:
@@ -428,6 +430,8 @@ extension TagSettingsTableViewController {
                 return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
             case connectionAlertHeaderCell:
                 return headerHeight
+            case connectionAlertDescriptionCell:
+                return (viewModel?.isConnectionAlertOn.value ?? false) ? descriptionHeight : 0
             case movementAlertHeaderCell:
                 return headerHeight
             default:
@@ -456,6 +460,8 @@ extension TagSettingsTableViewController {
             case pressureAlertControlsCell:
                 return 0
             case connectionAlertHeaderCell:
+                return 0
+            case connectionAlertDescriptionCell:
                 return 0
             case movementAlertHeaderCell:
                 return 0
@@ -498,6 +504,18 @@ extension TagSettingsTableViewController: TagSettingsAlertHeaderCellDelegate {
             viewModel?.isConnectionAlertOn.value = isOn
         case movementAlertHeaderCell:
             viewModel?.isMovementAlertOn.value = isOn
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - TagSettingsAlertDescriptionCellDelegate
+extension TagSettingsTableViewController: TagSettingsAlertDescriptionCellDelegate {
+    func tagSettingsAlertDescription(cell: TagSettingsAlertDescriptionCell, didEnter description: String?) {
+        switch cell {
+        case connectionAlertDescriptionCell:
+            viewModel?.connectionAlertDescription.value = description
         default:
             break
         }
@@ -587,6 +605,7 @@ extension TagSettingsTableViewController {
         pressureAlertHeaderCell.delegate = self
         pressureAlertControlsCell.delegate = self
         connectionAlertHeaderCell.delegate = self
+        connectionAlertDescriptionCell.delegate = self
         movementAlertHeaderCell.delegate = self
         configureMinMaxForSliders()
     }
@@ -642,7 +661,7 @@ extension TagSettingsTableViewController {
         bindAbsoluteHumidityCells()
         bindDewPointAlertCells()
         bindPressureAlertCells()
-        bindConnectionAlertCell()
+        bindConnectionAlertCells()
         bindMovementAlertCell()
         if isViewLoaded, let viewModel = viewModel {
 
@@ -932,7 +951,7 @@ extension TagSettingsTableViewController {
         }
     }
 
-    private func bindConnectionAlertCell() {
+    private func bindConnectionAlertCells() {
         if isViewLoaded, let viewModel = viewModel {
             connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isConnectionAlertOn) { (view, isOn) in
                 view.isOn = isOn.bound
@@ -950,6 +969,17 @@ extension TagSettingsTableViewController {
                 view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
             }
 
+            connectionAlertDescriptionCell.textField.bind(viewModel.connectionAlertDescription) {
+                (textField, connectionAlertDescription) in
+                textField.text = connectionAlertDescription
+            }
+
+            tableView.bind(viewModel.isConnectionAlertOn) { tableView, _ in
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
+            }
         }
     }
 

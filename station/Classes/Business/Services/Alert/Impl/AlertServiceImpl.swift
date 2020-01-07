@@ -476,6 +476,18 @@ extension AlertServiceImpl {
     }
 }
 
+// MARK: - Connections
+extension AlertServiceImpl {
+    func connectionDescription(for uuid: String) -> String? {
+        return alertPersistence.connectionDescription(for: uuid)
+    }
+
+    func setConnection(description: String?, for uuid: String) {
+        alertPersistence.setConnection(description: description, for: uuid)
+        postAlertDidChange(with: uuid, of: .connection)
+    }
+}
+
 // MARK: - Movement
 extension AlertServiceImpl {
     func movementCounter(for uuid: String) -> Int? {

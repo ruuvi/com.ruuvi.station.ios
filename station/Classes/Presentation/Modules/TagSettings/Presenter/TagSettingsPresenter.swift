@@ -211,6 +211,7 @@ extension TagSettingsPresenter {
         viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: ruuviTag.uuid)
         viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: ruuviTag.uuid)
         viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: ruuviTag.uuid)
+        viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag.uuid)
 
         viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
 
@@ -550,6 +551,10 @@ extension TagSettingsPresenter {
                     observer.alertService.unregister(type: type, for: ruuviTag.uuid)
                 }
             }
+        }
+
+        bind(viewModel.connectionAlertDescription, fire: false) { observer, connectionAlertDescription in
+            observer.alertService.setConnection(description: connectionAlertDescription, for: ruuviTag.uuid)
         }
 
         // movement
