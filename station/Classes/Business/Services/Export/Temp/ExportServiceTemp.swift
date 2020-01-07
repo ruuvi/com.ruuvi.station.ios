@@ -211,7 +211,7 @@ extension ExportServiceTemp {
        dateFormatter.dateFormat = "yyMMdd-HHmm"
        let date = dateFormatter.string(from: Date())
        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-       let fileName = webTag.name + "_" + date + ".csv"
+       let fileName = webTag.name + "-" + date + ".csv"
        let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
        var csvText = "\(webTag.name)\n"
            + "Date,"
