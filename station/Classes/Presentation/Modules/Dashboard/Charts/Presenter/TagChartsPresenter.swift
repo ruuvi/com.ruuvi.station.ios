@@ -21,6 +21,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
+    var infoProvider: InfoProvider!
 
     private var isLoading: Bool = false {
         didSet {
@@ -257,7 +258,13 @@ extension TagChartsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
         module.dismiss()
-        mailComposerPresenter.present(email: feedbackEmail, subject: feedbackSubject)
+        infoProvider.summary { [weak self] summary in
+            guard let sSelf = self else { return }
+            sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
+                                                subject: sSelf.feedbackSubject,
+                                                body: "\n\n" + summary)
+        }
+
     }
 }
 

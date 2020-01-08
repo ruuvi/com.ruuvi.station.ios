@@ -5,12 +5,15 @@ class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
 
     var errorPresenter: ErrorPresenter!
 
-    func present(email: String, subject: String) {
+    func present(email: String, subject: String, body: String?) {
         guard let viewController = UIApplication.shared.topViewController() else { return }
         if MFMailComposeViewController.canSendMail() {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = self
             mail.setSubject(subject)
+            if let body = body {
+                mail.setMessageBody(body, isHTML: false)
+            }
             mail.setToRecipients([email])
             viewController.present(mail, animated: true)
         } else {

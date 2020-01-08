@@ -12,6 +12,11 @@ class CoreAssembly: Assembly {
             return BTKit.background
         }.inObjectScope(.container)
 
+        container.register(InfoProvider.self) { _ in
+            let provider = InfoProviderImpl()
+            return provider
+        }
+
         container.register(LocalNotificationsManager.self) { r in
             let manager = LocalNotificationsManagerImpl()
             manager.realmContext = r.resolve(RealmContext.self)
