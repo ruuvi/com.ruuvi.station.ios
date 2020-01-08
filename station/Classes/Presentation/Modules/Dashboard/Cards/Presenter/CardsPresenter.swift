@@ -21,6 +21,7 @@ class CardsPresenter: CardsModuleInput {
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
+    var infoProvider: InfoProvider!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -240,7 +241,12 @@ extension CardsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectFeedback sender: Any?) {
         module.dismiss()
-        mailComposerPresenter.present(email: feedbackEmail, subject: feedbackSubject)
+        infoProvider.summary { [weak self] summary in
+            guard let sSelf = self else { return }
+            sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
+                                                subject: sSelf.feedbackSubject,
+                                                body: "\n\n" + summary)
+        }
     }
 }
 

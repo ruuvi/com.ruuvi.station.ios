@@ -9,8 +9,16 @@ class PermissionsManagerImpl: PermissionsManager {
         return PHPhotoLibrary.authorizationStatus() == .authorized
     }
 
+    var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
+        return PHPhotoLibrary.authorizationStatus()
+    }
+
     var isCameraPermissionGranted: Bool {
         return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
+    }
+
+    var cameraAuthorizationStatus: AVAuthorizationStatus {
+        return AVCaptureDevice.authorizationStatus(for: .video)
     }
 
     var isLocationPermissionGranted: Bool {

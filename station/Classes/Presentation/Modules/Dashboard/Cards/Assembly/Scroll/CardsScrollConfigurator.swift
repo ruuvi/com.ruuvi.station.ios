@@ -28,6 +28,7 @@ class CardsScrollConfigurator {
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!
+        presenter.infoProvider = r.resolve(InfoProvider.self)
 
         router.delegate = presenter
 

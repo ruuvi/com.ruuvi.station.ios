@@ -58,6 +58,18 @@
 		0E197C6F23C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
 		0E197C7023C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
 		0E197C7123C4A7D00074015B /* Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C6E23C4A7D00074015B /* Presentation.plist */; };
+		0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7323C5C7A20074015B /* InfoProvider.swift */; };
+		0E197C7523C5C7A20074015B /* InfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7323C5C7A20074015B /* InfoProvider.swift */; };
+		0E197C7623C5C7A20074015B /* InfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7323C5C7A20074015B /* InfoProvider.swift */; };
+		0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */; };
+		0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */; };
+		0E197C7B23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */; };
+		0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */; };
+		0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */; };
+		0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */; };
+		0E197C8123C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */; };
+		0E197C8223C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */; };
+		0E197C8323C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */; };
 		0E1B2F32239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
 		0E1B2F33239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
 		0E1B2F34239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */; };
@@ -1139,6 +1151,10 @@
 		0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenter.swift; sourceTree = "<group>"; };
 		0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenterMessageUI.swift; sourceTree = "<group>"; };
 		0E197C6E23C4A7D00074015B /* Presentation.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Presentation.plist; sourceTree = "<group>"; };
+		0E197C7323C5C7A20074015B /* InfoProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProvider.swift; sourceTree = "<group>"; };
+		0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProviderImpl.swift; sourceTree = "<group>"; };
+		0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+ReadableModel.swift"; sourceTree = "<group>"; };
+		0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iOSDeviceModelMapping.plist; sourceTree = "<group>"; };
 		0E1B2F31239DEF120060C469 /* TagSettingsAlertHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertHeaderCell.swift; sourceTree = "<group>"; };
 		0E1B2F35239DF0120060C469 /* TagSettingsAlertControlsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertControlsCell.swift; sourceTree = "<group>"; };
 		0E1C1D9022B35D6A0032F6CA /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
@@ -1808,6 +1824,7 @@
 		0E09671A22AE769F00E85F48 /* Plists */ = {
 			isa = PBXGroup;
 			children = (
+				0E197C8023C5CDBE0074015B /* iOSDeviceModelMapping.plist */,
 				0ECDF1B42313D65500A09ACA /* GoogleService-Info.plist */,
 				64333D3420B0C45A00CDF4B6 /* Info.plist */,
 				0EE49BB223B8C40D003012C2 /* DevInfo.plist */,
@@ -1874,6 +1891,7 @@
 				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
 				0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */,
 				0E9E7759238CCE5F006D7013 /* String+Replace.swift */,
+				0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1922,6 +1940,23 @@
 				0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */,
 			);
 			path = MessageUI;
+			sourceTree = "<group>";
+		};
+		0E197C7223C5C7770074015B /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				0E197C7723C5CCA60074015B /* Impl */,
+				0E197C7323C5C7A20074015B /* InfoProvider.swift */,
+			);
+			path = Info;
+			sourceTree = "<group>";
+		};
+		0E197C7723C5CCA60074015B /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				0E197C7823C5CCBB0074015B /* InfoProviderImpl.swift */,
+			);
+			path = Impl;
 			sourceTree = "<group>";
 		};
 		0E1C1D9222B360160032F6CA /* Persistence */ = {
@@ -2376,6 +2411,7 @@
 			isa = PBXGroup;
 			children = (
 				0E5C301422CF63E700B52E39 /* Assembly */,
+				0E197C7223C5C7770074015B /* Info */,
 				0E9F97A922EB1CBC0015ADE2 /* Location */,
 				0E390FE0236021BC00D600DB /* LocalNotifications */,
 				0E5C300D22CF633600B52E39 /* Permissions */,
@@ -4056,6 +4092,7 @@
 				0E6BAEC423856A01003A2D4C /* Settings.storyboard in Resources */,
 				0E6BAEC523856A01003A2D4C /* Muli-Bold.ttf in Resources */,
 				0E6BAEC623856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
+				0E197C8323C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */,
 				0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */,
 			);
@@ -4098,6 +4135,7 @@
 				0E8BD3FA238566AB008B31EF /* Settings.storyboard in Resources */,
 				0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */,
 				0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
+				0E197C8223C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */,
 			);
@@ -4140,6 +4178,7 @@
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
+				0E197C8123C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
 			);
@@ -4346,6 +4385,7 @@
 				0E6BAD9623856A01003A2D4C /* PermissionPresenter.swift in Sources */,
 				0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E6BAD9723856A01003A2D4C /* LocationPickerRouterInput.swift in Sources */,
+				0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E6BAD9823856A01003A2D4C /* Language.swift in Sources */,
 				0E6BAD9923856A01003A2D4C /* TagChartsTransitioningDelegate.swift in Sources */,
@@ -4486,6 +4526,7 @@
 				0E6BAE1523856A01003A2D4C /* TagChartsViewOutput.swift in Sources */,
 				0E6BAE1623856A01003A2D4C /* DefaultsRouter.swift in Sources */,
 				0E6BAE1723856A01003A2D4C /* ForegroundViewInput.swift in Sources */,
+				0E197C7623C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E6BAE1823856A01003A2D4C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E6BAE1923856A01003A2D4C /* RuuviTagConnectionDaemon.swift in Sources */,
 				0E6BAE1A23856A01003A2D4C /* RuuviTagService.swift in Sources */,
@@ -4613,6 +4654,7 @@
 				0E6BAE9023856A01003A2D4C /* CardsScrollConfigurator.swift in Sources */,
 				0E6BAE9223856A01003A2D4C /* RuuviTagHeartbeatDaemon.swift in Sources */,
 				0E6BAE9323856A01003A2D4C /* WebTagSettingsViewOutput.swift in Sources */,
+				0E197C7B23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E6BAE9423856A01003A2D4C /* CardsRouter.swift in Sources */,
 				0E6BAE9523856A01003A2D4C /* WelcomeViewController.swift in Sources */,
 				0E6BAE9623856A01003A2D4C /* CardsRouterInput.swift in Sources */,
@@ -4669,6 +4711,7 @@
 				0E8BD2CC238566AB008B31EF /* PermissionPresenter.swift in Sources */,
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
+				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E8BD2CE238566AB008B31EF /* Language.swift in Sources */,
 				0E8BD2CF238566AB008B31EF /* TagChartsTransitioningDelegate.swift in Sources */,
@@ -4809,6 +4852,7 @@
 				0E8BD34B238566AB008B31EF /* TagChartsViewOutput.swift in Sources */,
 				0E8BD34C238566AB008B31EF /* DefaultsRouter.swift in Sources */,
 				0E8BD34D238566AB008B31EF /* ForegroundViewInput.swift in Sources */,
+				0E197C7523C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E8BD34E238566AB008B31EF /* WebTagSettingsRouterInput.swift in Sources */,
 				0E8BD34F238566AB008B31EF /* RuuviTagConnectionDaemon.swift in Sources */,
 				0E8BD350238566AB008B31EF /* RuuviTagService.swift in Sources */,
@@ -4936,6 +4980,7 @@
 				0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */,
 				0E8BD3C8238566AB008B31EF /* RuuviTagHeartbeatDaemon.swift in Sources */,
 				0E8BD3C9238566AB008B31EF /* WebTagSettingsViewOutput.swift in Sources */,
+				0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
 				0E8BD3CB238566AB008B31EF /* WelcomeViewController.swift in Sources */,
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
@@ -4992,6 +5037,7 @@
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
+				0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language.swift in Sources */,
 				0E84BF592397F3C600A37E1A /* HeartbeatViewModel.swift in Sources */,
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
@@ -5132,6 +5178,7 @@
 				0E8A10142384610400A9CBA6 /* DefaultsRouter.swift in Sources */,
 				0ECFF36023506BD60061D11B /* ForegroundViewInput.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
+				0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0ED23649234F19DC00CE6AA3 /* RuuviTagConnectionDaemon.swift in Sources */,
 				0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */,
 				0E9F979022EAF0790015ADE2 /* WebTagRealm.swift in Sources */,
@@ -5259,6 +5306,7 @@
 				0E1C1DE422B3C2710032F6CA /* CardsRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
+				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
