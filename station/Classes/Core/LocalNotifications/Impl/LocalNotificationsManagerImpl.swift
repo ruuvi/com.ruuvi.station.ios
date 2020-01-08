@@ -372,6 +372,12 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
                 break
             }
         }
+
+        if let uuid = userInfo[lowHigh.uuidKey] as? String
+                     ?? userInfo[blast.uuidKey] as? String {
+            NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
+        }
+
         completionHandler()
     }
 }
