@@ -1,6 +1,14 @@
 import Foundation
 import UIKit
 
+extension Notification.Name {
+    static let LNMDidReceive = Notification.Name("LNMDidReceive")
+}
+
+enum LNMDidReceiveKey: String {
+    case uuid
+}
+
 protocol LocalNotificationsManager: class {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)

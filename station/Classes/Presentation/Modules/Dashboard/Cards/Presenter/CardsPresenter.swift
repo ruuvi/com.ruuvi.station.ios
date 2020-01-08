@@ -49,6 +49,7 @@ class CardsPresenter: CardsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var temperatureAlertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
+    private var lnmDidReceiveToken: NSObjectProtocol?
     private var webTags: Results<WebTagRealm>? {
         didSet {
             syncViewModels()
@@ -124,6 +125,9 @@ class CardsPresenter: CardsModuleInput {
         if let readRSSIIntervalToken = readRSSIIntervalToken {
             NotificationCenter.default.removeObserver(readRSSIIntervalToken)
         }
+        if let lnmDidReceiveToken = lnmDidReceiveToken {
+            NotificationCenter.default.removeObserver(lnmDidReceiveToken)
+        }
     }
 }
 
@@ -138,6 +142,7 @@ extension CardsPresenter: CardsViewOutput {
         startObservingConnectionPersistenceNotifications()
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
+        startObservingLocalNotificationsManager()
         pushNotificationsManager.registerForRemoteNotifications()
     }
 
@@ -704,6 +709,22 @@ extension CardsPresenter {
 
     private func startListeningToAlertStatus() {
         ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+    }
+
+    private func startObservingLocalNotificationsManager() {
+        lnmDidReceiveToken = NotificationCenter
+            .default
+            .addObserver(forName: .LNMDidReceive,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String {
+                if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                    self?.view.scroll(to: index)
+                    self?.tagCharts?.configure(uuid: uuid)
+                }
+            }
+        })
     }
 }
 // swiftlint:enable file_length
