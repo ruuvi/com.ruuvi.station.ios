@@ -57,6 +57,17 @@ extension CardsScrollViewController: CardsViewInput {
 
             let updateHumidity = humidityUpdateBlock(for: viewModel, in: view)
             updateHumidity(view.humidityLabel, nil) // can be nil, not used
+
+            switch viewModel.type {
+            case .ruuvi:
+                let rssiUpdate = rssiUpdateBlock(for: viewModel)
+                view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+            case .web:
+                let locationUpdate = locationUpdateBlock(for: viewModel)
+                view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
+            }
+
+            
         }
     }
 
@@ -345,6 +356,36 @@ extension CardsScrollViewController {
         }
         return humidityBlock
     }
+
+    private func rssiUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void  {
+        let animated = viewModel.animateRSSI
+        return { [weak animated] label, rssi in
+            if let rssi = rssi {
+                label.text = "\(rssi)" + " " + "dBm".localized()
+                if let animated = animated?.value, animated {
+                    label.alpha = 0.0
+                    UIView.animate(withDuration: 1.0, animations: {
+                        label.alpha = 1.0
+                    })
+                }
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+    }
+
+    private func locationUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Location?) -> Void {
+        let location = viewModel.location
+        return { [weak location] (label, currentLocation) in
+            if let location = location?.value {
+                label.text = location.city ?? location.country
+            } else if let currentLocation = currentLocation {
+                label.text = currentLocation.city ?? currentLocation.country
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
+    }
 }
 
 // MARK: - Configure view
@@ -415,31 +456,11 @@ extension CardsScrollViewController {
 
         switch viewModel.type {
         case .ruuvi:
-            let animated = viewModel.animateRSSI
-            view.rssiCityLabel.bind(viewModel.rssi) { [weak animated] label, rssi in
-                if let rssi = rssi {
-                    label.text = "\(rssi)" + " " + "dBm".localized()
-                    if let animated = animated?.value, animated {
-                        label.alpha = 0.0
-                        UIView.animate(withDuration: 1.0, animations: {
-                            label.alpha = 1.0
-                        })
-                    }
-                } else {
-                    label.text = "N/A".localized()
-                }
-            }
+            let rssiUpdate = rssiUpdateBlock(for: viewModel)
+            view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
         case .web:
-            let location = viewModel.location
-            view.rssiCityLabel.bind(viewModel.currentLocation) { [weak location] (label, currentLocation) in
-                if let location = location?.value {
-                    label.text = location.city ?? location.country
-                } else if let currentLocation = currentLocation {
-                    label.text = currentLocation.city ?? currentLocation.country
-                } else {
-                    label.text = "N/A".localized()
-                }
-            }
+            let locationUpdate = locationUpdateBlock(for: viewModel)
+            view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
         }
 
         let isConnected = viewModel.isConnected
