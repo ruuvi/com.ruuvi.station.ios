@@ -44,7 +44,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var temperatureAlertDidChangeToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
-
+    private var lnmDidReceiveToken: NSObjectProtocol?
+    
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -93,6 +94,9 @@ class TagChartsPresenter: TagChartsModuleInput {
         if let didDisconnectToken = didDisconnectToken {
             NotificationCenter.default.removeObserver(didDisconnectToken)
         }
+        if let lnmDidReceiveToken = lnmDidReceiveToken {
+            NotificationCenter.default.removeObserver(lnmDidReceiveToken)
+        }
     }
 
     func configure(output: TagChartsModuleOutput) {
@@ -116,6 +120,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingBackgroundChanges()
         startObservingAlertChanges()
         startObservingDidConnectDisconnectNotifications()
+        startObservingLocalNotificationsManager()
     }
 
     func viewWillAppear() {
@@ -449,6 +454,23 @@ extension TagChartsPresenter {
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
                 let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
                 viewModel.isConnected.value = false
+            }
+        })
+    }
+
+    private func startObservingLocalNotificationsManager() {
+        lnmDidReceiveToken = NotificationCenter
+            .default
+            .addObserver(forName: .LNMDidReceive,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String {
+                if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                    self?.view.scroll(to: index)
+                } else {
+                    self?.dismiss()
+                }
             }
         })
     }
