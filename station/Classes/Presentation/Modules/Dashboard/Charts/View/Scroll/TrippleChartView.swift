@@ -902,7 +902,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                                         toItem: cardsButton,
                                                         attribute: .centerX,
                                                         multiplier: 1.0,
-                                                        constant: 0.0))
+                                                        constant: 4.0))
         cardsContainer.addConstraint(NSLayoutConstraint(item: cardsImageView,
                                                         attribute: .centerY,
                                                         relatedBy: .equal,
