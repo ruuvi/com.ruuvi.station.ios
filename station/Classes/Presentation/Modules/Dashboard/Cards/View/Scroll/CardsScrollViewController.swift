@@ -39,6 +39,8 @@ extension CardsScrollViewController: CardsViewInput {
             let view = views[i]
             let updatePressure = pressureUpdateBlock(for: viewModel)
             updatePressure(view.pressureLabel, viewModel.pressure.value)
+            let updateTemperature = temperatureUpdateBlock(for: viewModel)
+            updateTemperature(view.temperatureLabel, nil) // can be nil, not used
         }
     }
 
@@ -201,12 +203,8 @@ extension CardsScrollViewController {
             }
         }
     }
-}
 
-// MARK: - Configure view
-extension CardsScrollViewController {
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
+    private func temperatureUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Double?) -> Void {
         let temperatureUnit = viewModel.temperatureUnit
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
@@ -239,12 +237,21 @@ extension CardsScrollViewController {
                 label.text = "N/A".localized()
             }
         }
+        return temperatureBlock
+    }
+}
+
+// MARK: - Configure view
+extension CardsScrollViewController {
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
+        let temperatureBlock = temperatureUpdateBlock(for: viewModel)
+
+        view.temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
+        view.temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
+        view.temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
 
         if let temperatureLabel = view.temperatureLabel {
-            temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
-            temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
-            temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-
             view.temperatureUnitLabel.bind(viewModel.temperatureUnit) {
                 [unowned temperatureLabel]
                 label, temperatureUnit in
