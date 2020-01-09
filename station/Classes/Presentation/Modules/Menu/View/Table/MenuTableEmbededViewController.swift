@@ -8,6 +8,7 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     @IBOutlet weak var aboutCell: UITableViewCell!
     @IBOutlet weak var getMoreSensorsCell: UITableViewCell!
     @IBOutlet weak var settingsCell: UITableViewCell!
+    @IBOutlet weak var feedbackLabel: UILabel!
     @IBOutlet weak var addANewSensorLabel: UILabel!
     @IBOutlet weak var appSettingsLabel: UILabel!
     @IBOutlet weak var aboutHelpLabel: UILabel!
@@ -21,6 +22,7 @@ extension MenuTableEmbededViewController {
         appSettingsLabel.text = "Menu.Label.AppSettings.text".localized()
         aboutHelpLabel.text = "Menu.Label.AboutHelp.text".localized()
         getMoreSensorsLabel.text = "Menu.Label.GetMoreSensors.text".localized()
+        feedbackLabel.text = "Menu.Label.Feedback.text".localized()
     }
 
     func apply(theme: Theme) {

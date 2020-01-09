@@ -160,6 +160,7 @@
 "Menu.Label.AppSettings.text" = "Asetukset";
 "Menu.Label.AboutHelp.text" = "Tietoa / Apua";
 "Menu.Label.GetMoreSensors.text" = "Osta lisää antureita";
+"Menu.Label.Feedback.text" = "Send Feedback";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Tämä ominaisuus vaatii oikeuden gallerian käyttöön.";
