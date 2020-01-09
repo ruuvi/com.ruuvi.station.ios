@@ -160,6 +160,7 @@
 "Menu.Label.AppSettings.text" = "App Settings";
 "Menu.Label.AboutHelp.text" = "About / Help";
 "Menu.Label.GetMoreSensors.text" = "Get More Sensors";
+"Menu.Label.Feedback.text" = "Send Feedback";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";

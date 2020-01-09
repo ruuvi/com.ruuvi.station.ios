@@ -160,6 +160,7 @@
 "Menu.Label.AppSettings.text" = "Настройки";
 "Menu.Label.AboutHelp.text" = "О Приложении";
 "Menu.Label.GetMoreSensors.text" = "Больше Сенсоров";
+"Menu.Label.Feedback.text" = "Отправить Отзыв";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";
