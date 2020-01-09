@@ -10,7 +10,9 @@ class InfoProviderImpl: InfoProvider {
     }
 
     var appVersion: String {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
+        return version + "(" + build + ")"
     }
 
     var appName: String {
