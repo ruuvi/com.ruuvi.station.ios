@@ -53,12 +53,13 @@ class CardsPresenter: CardsModuleInput {
     private var webTags: Results<WebTagRealm>? {
         didSet {
             syncViewModels()
+            startListeningToWebTagsAlertStatus()
         }
     }
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
-            startListeningToAlertStatus()
+            startListeningToRuuviTagsAlertStatus()
         }
     }
     private var viewModels = [CardsViewModel]() {
@@ -707,8 +708,12 @@ extension CardsPresenter {
         })
     }
 
-    private func startListeningToAlertStatus() {
+    private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+    }
+
+    private func startListeningToWebTagsAlertStatus() {
+        webTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
 
     private func startObservingLocalNotificationsManager() {

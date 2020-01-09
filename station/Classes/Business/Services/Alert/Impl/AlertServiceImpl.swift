@@ -46,6 +46,18 @@ class AlertServiceImpl: AlertService {
         postAlertDidChange(with: uuid, of: type)
     }
 
+    private func postAlertDidChange(with uuid: String, of type: AlertType) {
+        NotificationCenter
+            .default
+            .post(name: .AlertServiceAlertDidChange,
+                  object: nil,
+                  userInfo: [AlertServiceAlertDidChangeKey.uuid: uuid,
+                             AlertServiceAlertDidChangeKey.type: type])
+    }
+}
+
+// MARK: - Process Physical Sensors
+extension AlertServiceImpl {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func process(heartbeat ruuviTag: RuuviTag) {
         var isTriggered = false
@@ -191,9 +203,13 @@ class AlertServiceImpl: AlertService {
             }
         }
     }
+}
 
+// MARK: - Process Virtual Sensors
+extension AlertServiceImpl {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func process(data: WPSData, for uuid: String) {
+        var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
@@ -209,6 +225,7 @@ class AlertServiceImpl: AlertService {
                             self?.localNotificationsManager.notify(.high, .temperature, for: uuid)
                         }
                     }
+                    isTriggered = isTriggered || isLower || isUpper
                 }
             case .relativeHumidity:
                 if case .relativeHumidity(let lower, let upper) = alert(for: uuid, of: type),
@@ -224,6 +241,7 @@ class AlertServiceImpl: AlertService {
                             self?.localNotificationsManager.notify(.high, .relativeHumidity, for: uuid)
                         }
                     }
+                    isTriggered = isTriggered || isLower || isUpper
                 }
             case .absoluteHumidity:
                 if case .absoluteHumidity(let lower, let upper) = alert(for: uuid, of: type),
@@ -244,6 +262,7 @@ class AlertServiceImpl: AlertService {
                             self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
                         }
                     }
+                    isTriggered = isTriggered || isLower || isUpper
                 }
             case .dewPoint:
                 if case .dewPoint(let lower, let upper) = alert(for: uuid, of: type),
@@ -262,6 +281,7 @@ class AlertServiceImpl: AlertService {
                                 self?.localNotificationsManager.notify(.high, .dewPoint, for: uuid)
                             }
                         }
+                        isTriggered = isTriggered || isLower || isUpper
                     }
                 }
             case .pressure:
@@ -278,20 +298,29 @@ class AlertServiceImpl: AlertService {
                             self?.localNotificationsManager.notify(.high, .pressure, for: uuid)
                         }
                     }
+                    isTriggered = isTriggered || isLower || isUpper
                 }
             default:
                 break
             }
         }
-    }
 
-    private func postAlertDidChange(with uuid: String, of type: AlertType) {
-        NotificationCenter
-            .default
-            .post(name: .AlertServiceAlertDidChange,
-                  object: nil,
-                  userInfo: [AlertServiceAlertDidChangeKey.uuid: uuid,
-                             AlertServiceAlertDidChangeKey.type: type])
+        if hasRegistrations(for: uuid) {
+            DispatchQueue.main.async { [weak self] in
+                guard let sSelf = self else { return }
+                if let observers = sSelf.observations[uuid] {
+                    for i in 0..<observers.count {
+                        if let pointer = observers.pointer(at: i),
+                            let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                                as? AlertServiceObserver {
+                            observer.alert(service: sSelf,
+                                           isTriggered: isTriggered,
+                                           for: uuid)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

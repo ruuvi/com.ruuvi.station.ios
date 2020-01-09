@@ -66,8 +66,6 @@ extension CardsScrollViewController: CardsViewInput {
                 let locationUpdate = locationUpdateBlock(for: viewModel)
                 view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
-
-
         }
     }
 
