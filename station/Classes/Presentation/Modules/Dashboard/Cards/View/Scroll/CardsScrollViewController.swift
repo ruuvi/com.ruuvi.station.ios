@@ -45,15 +45,18 @@ extension CardsScrollViewController: CardsViewInput {
             if let temperatureUnit = viewModel.temperatureUnit.value {
                 switch temperatureUnit {
                 case .celsius:
-                    view.temperatureLabel.text = "°C".localized()
+                    view.temperatureUnitLabel.text = "°C".localized()
                 case .fahrenheit:
-                    view.temperatureLabel.text = "°F".localized()
+                    view.temperatureUnitLabel.text = "°F".localized()
                 case .kelvin:
-                    view.temperatureLabel.text = "K".localized()
+                    view.temperatureUnitLabel.text = "K".localized()
                 }
             } else {
-                view.temperatureLabel.text = "N/A".localized()
+                view.temperatureUnitLabel.text = "N/A".localized()
             }
+
+            let updateHumidity = humidityUpdateBlock(for: viewModel, in: view)
+            updateHumidity(view.humidityLabel, nil) // can be nil, not used
         }
     }
 
@@ -252,41 +255,8 @@ extension CardsScrollViewController {
         }
         return temperatureBlock
     }
-}
 
-// MARK: - Configure view
-extension CardsScrollViewController {
-
-    private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
-        let temperatureBlock = temperatureUpdateBlock(for: viewModel)
-
-        view.temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
-        view.temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
-        view.temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-
-        if let temperatureLabel = view.temperatureLabel {
-            view.temperatureUnitLabel.bind(viewModel.temperatureUnit) {
-                [unowned temperatureLabel]
-                label, temperatureUnit in
-                if let temperatureUnit = temperatureUnit {
-                    switch temperatureUnit {
-                    case .celsius:
-                        label.text = "°C".localized()
-                    case .fahrenheit:
-                        label.text = "°F".localized()
-                    case .kelvin:
-                        label.text = "K".localized()
-                    }
-                } else {
-                    label.text = "N/A".localized()
-                }
-                temperatureBlock(temperatureLabel, nil)
-            }
-        }
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func bindHumidity(view: CardView, with viewModel: CardsViewModel) {
+    private func humidityUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Double?) -> Void {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
         let ah = viewModel.absoluteHumidity
@@ -372,7 +342,43 @@ extension CardsScrollViewController {
                 label.text = "N/A".localized()
             }
         }
+        return humidityBlock
+    }
+}
 
+// MARK: - Configure view
+extension CardsScrollViewController {
+
+    private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
+        let temperatureBlock = temperatureUpdateBlock(for: viewModel)
+
+        view.temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
+        view.temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
+        view.temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
+
+        if let temperatureLabel = view.temperatureLabel {
+            view.temperatureUnitLabel.bind(viewModel.temperatureUnit) {
+                [unowned temperatureLabel]
+                label, temperatureUnit in
+                if let temperatureUnit = temperatureUnit {
+                    switch temperatureUnit {
+                    case .celsius:
+                        label.text = "°C".localized()
+                    case .fahrenheit:
+                        label.text = "°F".localized()
+                    case .kelvin:
+                        label.text = "K".localized()
+                    }
+                } else {
+                    label.text = "N/A".localized()
+                }
+                temperatureBlock(temperatureLabel, nil)
+            }
+        }
+    }
+
+    private func bindHumidity(view: CardView, with viewModel: CardsViewModel) {
+        let humidityBlock = humidityUpdateBlock(for: viewModel, in: view)
         view.humidityLabel.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
         view.humidityLabel.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
         view.humidityLabel.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
