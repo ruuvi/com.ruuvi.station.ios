@@ -41,6 +41,19 @@ extension CardsScrollViewController: CardsViewInput {
             updatePressure(view.pressureLabel, viewModel.pressure.value)
             let updateTemperature = temperatureUpdateBlock(for: viewModel)
             updateTemperature(view.temperatureLabel, nil) // can be nil, not used
+
+            if let temperatureUnit = viewModel.temperatureUnit.value {
+                switch temperatureUnit {
+                case .celsius:
+                    view.temperatureLabel.text = "°C".localized()
+                case .fahrenheit:
+                    view.temperatureLabel.text = "°F".localized()
+                case .kelvin:
+                    view.temperatureLabel.text = "K".localized()
+                }
+            } else {
+                view.temperatureLabel.text = "N/A".localized()
+            }
         }
     }
 
@@ -243,7 +256,7 @@ extension CardsScrollViewController {
 
 // MARK: - Configure view
 extension CardsScrollViewController {
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+
     private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
         let temperatureBlock = temperatureUpdateBlock(for: viewModel)
 
