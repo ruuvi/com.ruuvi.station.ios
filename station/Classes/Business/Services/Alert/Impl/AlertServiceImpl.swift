@@ -81,9 +81,14 @@ extension AlertServiceImpl {
                 }
             case .relativeHumidity:
                 if case .relativeHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: type),
-                    let relativeHumidity = ruuviTag.humidity {
-                    let isLower = relativeHumidity < lower
-                    let isUpper = relativeHumidity > upper
+                    let rh = ruuviTag.humidity {
+                    let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
+                    var sh = rh + ho
+                    if sh > 100.0 {
+                        sh = 100.0
+                    }
+                    let isLower = sh < lower
+                    let isUpper = sh > upper
                     if isLower {
                         DispatchQueue.main.async { [weak self] in
                             self?.localNotificationsManager.notify(.low, .relativeHumidity, for: ruuviTag.uuid)
@@ -165,7 +170,7 @@ extension AlertServiceImpl {
                     isTriggered = isTriggered || isLower || isUpper
                 }
             case .connection:
-                //do nothing
+                //do nothing, see RuuviTagHeartbeatDaemon
                 break
             case .movement:
                 if case .movement(let last) = alert(for: ruuviTag.uuid, of: type),
