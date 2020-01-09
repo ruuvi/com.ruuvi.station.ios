@@ -2,6 +2,7 @@
 import Foundation
 import RealmSwift
 import BTKit
+import Humidity
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -22,6 +23,7 @@ class CardsPresenter: CardsModuleInput {
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
+    var calibrationService: CalibrationService!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -47,7 +49,7 @@ class CardsPresenter: CardsModuleInput {
     private var readRSSIIntervalToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
-    private var temperatureAlertDidChangeToken: NSObjectProtocol?
+    private var alertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var webTags: Results<WebTagRealm>? {
@@ -117,8 +119,8 @@ class CardsPresenter: CardsModuleInput {
         if let didDisconnectToken = didDisconnectToken {
             NotificationCenter.default.removeObserver(didDisconnectToken)
         }
-        if let temperatureAlertDidChangeToken = temperatureAlertDidChangeToken {
-            NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
+        if let alertDidChangeToken = alertDidChangeToken {
+            NotificationCenter.default.removeObserver(alertDidChangeToken)
         }
         if let readRSSIToken = readRSSIToken {
             NotificationCenter.default.removeObserver(readRSSIToken)
@@ -692,20 +694,95 @@ extension CardsPresenter {
     }
 
     private func startObservingAlertChanges() {
-        temperatureAlertDidChangeToken = NotificationCenter
+        alertDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .AlertServiceAlertDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-            if let sSelf = self,
-                let userInfo = notification.userInfo,
+            if let userInfo = notification.userInfo,
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
-                sSelf.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
-                    viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
+                self?.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
+                    self?.updateAlertState(for: viewModel)
                 })
             }
         })
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func updateAlertState(for viewModel: CardsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            if alertService.hasRegistrations(for: uuid) {
+                var isTriggered = false
+                AlertType.allCases.forEach { type in
+                    switch type {
+                    case .temperature:
+                        if case .temperature(let lower, let upper) = alertService.alert(for: uuid, of: type),
+                            let celsius = viewModel.celsius.value {
+                            let isLower = celsius < lower
+                            let isUpper = celsius > upper
+                            isTriggered = isTriggered || isLower || isUpper
+                        }
+                    case .relativeHumidity:
+                        if case .relativeHumidity(let lower, let upper) = alertService.alert(for: uuid, of: type),
+                            let rh = viewModel.relativeHumidity.value {
+                            let ho = calibrationService.humidityOffset(for: uuid).0
+                            var sh = rh + ho
+                            if sh > 100.0 {
+                                sh = 100.0
+                            }
+                            let isLower = sh < lower
+                            let isUpper = sh > upper
+                            isTriggered = isTriggered || isLower || isUpper
+                        }
+                    case .absoluteHumidity:
+                        if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: uuid, of: type),
+                            let rh = viewModel.relativeHumidity.value,
+                            let c = viewModel.celsius.value {
+                            let ho = calibrationService.humidityOffset(for: uuid).0
+                            var sh = rh + ho
+                            if sh > 100.0 {
+                                sh = 100.0
+                            }
+                            let h = Humidity(c: c, rh: sh / 100.0)
+                            let ah = h.ah
+
+                            let isLower = ah < lower
+                            let isUpper = ah > upper
+                            isTriggered = isTriggered || isLower || isUpper
+                        }
+                    case .dewPoint:
+                        if case .dewPoint(let lower, let upper) = alertService.alert(for: uuid, of: type),
+                            let rh = viewModel.relativeHumidity.value,
+                            let c = viewModel.celsius.value {
+                            let ho = calibrationService.humidityOffset(for: uuid).0
+                            var sh = rh + ho
+                            if sh > 100.0 {
+                                sh = 100.0
+                            }
+                            let h = Humidity(c: c, rh: sh / 100.0)
+                            if let Td = h.Td {
+                                let isLower = Td < lower
+                                let isUpper = Td > upper
+                                isTriggered = isTriggered || isLower || isUpper
+                            }
+                        }
+                    case .pressure:
+                        if case .pressure(let lower, let upper) = alertService.alert(for: uuid, of: type),
+                            let pressure = viewModel.pressure.value {
+                            let isLower = pressure < lower
+                            let isUpper = pressure > upper
+                            isTriggered = isTriggered || isLower || isUpper
+                        }
+                    default:
+                        break
+                    }
+                }
+                viewModel.alertState.value = isTriggered ? .firing : .registered
+            } else {
+                viewModel.alertState.value = .empty
+            }
+        }
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
