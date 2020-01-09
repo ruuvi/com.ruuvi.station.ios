@@ -256,6 +256,7 @@ extension CardsScrollViewController {
         return temperatureBlock
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func humidityUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Double?) -> Void {
         let hu = viewModel.humidityUnit
         let rh = viewModel.relativeHumidity
