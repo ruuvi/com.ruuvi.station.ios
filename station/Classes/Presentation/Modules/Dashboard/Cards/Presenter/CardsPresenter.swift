@@ -67,7 +67,7 @@ class CardsPresenter: CardsModuleInput {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     deinit {
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
