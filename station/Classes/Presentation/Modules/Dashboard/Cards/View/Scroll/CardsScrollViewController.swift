@@ -442,8 +442,14 @@ extension CardsScrollViewController {
             view.isHidden = !isConnectable.bound
         }
 
+        let type = viewModel.type
         view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
-            view.isHidden = !isConnected.bound
+            switch type {
+            case .ruuvi:
+                view.isHidden = !isConnected.bound
+            case .web:
+                view.isHidden = false
+            }
         }
 
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
