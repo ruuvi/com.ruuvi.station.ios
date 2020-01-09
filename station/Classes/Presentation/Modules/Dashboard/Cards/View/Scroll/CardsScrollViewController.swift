@@ -35,7 +35,11 @@ class CardsScrollViewController: UIViewController {
 extension CardsScrollViewController: CardsViewInput {
 
     func localize() {
-
+        for (i, viewModel) in viewModels.enumerated() where i < views.count {
+            let view = views[i]
+            let updatePressure = pressureUpdateBlock(for: viewModel)
+            updatePressure(view.pressureLabel, viewModel.pressure.value)
+        }
     }
 
     func apply(theme: Theme) {
@@ -176,6 +180,26 @@ extension CardsScrollViewController: UITextFieldDelegate {
         let substringToReplace = textFieldText[rangeOfTextToReplace]
         let count = textFieldText.count - substringToReplace.count + string.count
         return count <= 30
+    }
+}
+
+// MARK: - Update Blocks
+extension CardsScrollViewController {
+    private func pressureUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Double?) -> Void {
+        let pressureFormat: String
+        switch viewModel.type {
+        case .ruuvi:
+            pressureFormat = "%.2f"
+        case .web:
+            pressureFormat = "%.0f"
+        }
+        return { label, pressure in
+            if let pressure = pressure {
+                label.text = String.localizedStringWithFormat(pressureFormat, pressure) + " " + "hPa".localized()
+            } else {
+                label.text = "N/A".localized()
+            }
+        }
     }
 }
 
@@ -359,20 +383,8 @@ extension CardsScrollViewController {
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
 
-        let pressureFormat: String
-        switch viewModel.type {
-        case .ruuvi:
-            pressureFormat = "%.2f"
-        case .web:
-            pressureFormat = "%.0f"
-        }
-        view.pressureLabel.bind(viewModel.pressure) { label, pressure in
-            if let pressure = pressure {
-                label.text = String.localizedStringWithFormat(pressureFormat, pressure) + " " + "hPa".localized()
-            } else {
-                label.text = "N/A".localized()
-            }
-        }
+        let pressureUpdate = pressureUpdateBlock(for: viewModel)
+        view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
 
         switch viewModel.type {
         case .ruuvi:
