@@ -68,7 +68,7 @@
 "CoreError.locationPermissionNotDetermined" = "Права на использование локационных сервисов не определены";
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
-"CoreError.unableToSendEmail" = "Unable to send email";
+"CoreError.unableToSendEmail" = "Невозможно отправить электронное письмо";
 
 // Defaults
 "Defaults.navigationItem.title" = "Значения";
@@ -80,7 +80,7 @@
 "Defaults.ServiceTimeout.title" = "Таймаут (обм.)";
 "Defaults.CardsSwipeHint.title" = "Свайп Подсказка на Графиках";
 "Defaults.AlertsRepeatInterval.title" = "Интервал Уведомлений";
-"Defaults.WebPullInterval.title" = "Web Alerts Interval";
+"Defaults.WebPullInterval.title" = "Интервал Уведомления для Виртуальных Сенсоров";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
@@ -145,15 +145,15 @@
 "LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
 "LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.Disable.button" = "Отключить";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "Relative Air Humidity too low!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absolute Air Humidity too low!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absolute Air Humidity too high!";
-"LocalNotificationsManager.LowDewPoint.title" = "Dew Point is too low!";
-"LocalNotificationsManager.HighDewPoint.title" = "Dew Point is too high!";
-"LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
-"LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
-"LocalNotificationsManager.DidMove.title" = "Movement detected!";
+"LocalNotificationsManager.LowRelativeHumidity.title" = "Низкая Относительная Влажность воздуха!";
+"LocalNotificationsManager.HighRelativeHumidity.title" = "ВЫсокая Относительная Влажность воздуха!";
+"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Низкая Абсолютная Влажность воздуха!";
+"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Высокая Абсолютная Влажность Воздуха!";
+"LocalNotificationsManager.LowDewPoint.title" = "Ниже Точки Росы!";
+"LocalNotificationsManager.HighDewPoint.title" = "Выше Точки Росы!";
+"LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
+"LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
+"LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
@@ -262,18 +262,18 @@
 "TagSettings.ConnectStatus.Connecting" = "Соединяюсь...";
 "TagSettings.ConnectStatus.Disconnected" = "Отсоединен";
 "TagSettings.Alert.CustomDescription.placeholder" = "Введите описание...";
-"TagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
-"TagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
-"TagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
-"TagSettings.PressureAlert.title" = "Air Pressure";
-"TagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.Alerts.Connection.description" = "Alert when connected/disconnected";
-"TagSettings.ConnectionAlert.title" = "Connection";
-"TagSettings.MovementAlert.title" = "Movement";
-"TagSettings.Alerts.Movement.description" = "Alert when tag is moved";
+"TagSettings.Alerts.RelativeHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.RelativeAirHumidityAlert.title" = "Отновительная Влажность Воздуха";
+"TagSettings.AbsoluteAirHumidityAlert.title" = "Абсолютная Влажность Воздуха";
+"TagSettings.Alerts.AbsoluteHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
+"TagSettings.PressureAlert.title" = "Атмосферное Давление";
+"TagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.Alerts.Connection.description" = "Уведомить при установке/разрыве соединения";
+"TagSettings.ConnectionAlert.title" = "Соединение";
+"TagSettings.MovementAlert.title" = "Движение";
+"TagSettings.Alerts.Movement.description" = "Уведомить при движении";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
@@ -300,21 +300,21 @@
 "WebTagSettings.Button.Remove.title" = "УДАЛИТЬ";
 "WebTagSettings.SectionHeader.Name.title" = "ИМЯ";
 "WebTagSettings.SectionHeader.MoreInfo.title" = "ДОПОЛНИТЕЛЬНО";
-"WebTagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.Alerts.Off" = "Off";
-"WebTagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"WebTagSettings.Alerts.Temperature.description" = "Уведомить если меньше %.0f или больше %.0f";
+"WebTagSettings.Alerts.Off" = "Отключено";
+"WebTagSettings.temperatureAlertTitleLabel.text" = "Температура";
 "WebTagSettings.Label.disabled.text" = "НЕДОСТУПНО?";
 "WebTagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
-"WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "In order to enable Virtual Sensor alerts please grant location always and notification permissions in Settings.";
-"WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Settings";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
-"WebTagSettings.PressureAlert.title" = "Air Pressure";
-"WebTagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Чтобы включить уведомления для Виртуальных Сенсоров, пожалуйста дайте разрешение на использование геолокации в Настройках.";
+"WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Настройки";
+"WebTagSettings.RelativeAirHumidityAlert.title" = "Относительная Влажность Воздуха";
+"WebTagSettings.Alerts.RelativeHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Абсолютная Влажность Воздуха";
+"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"WebTagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
+"WebTagSettings.PressureAlert.title" = "Атмосферное Давление";
+"WebTagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 
 // Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";
