@@ -67,7 +67,7 @@ extension CardsScrollViewController: CardsViewInput {
                 view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
 
-            
+
         }
     }
 
@@ -357,7 +357,7 @@ extension CardsScrollViewController {
         return humidityBlock
     }
 
-    private func rssiUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void  {
+    private func rssiUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void {
         let animated = viewModel.animateRSSI
         return { [weak animated] label, rssi in
             if let rssi = rssi {
