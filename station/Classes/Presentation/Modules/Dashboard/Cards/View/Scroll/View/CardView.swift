@@ -10,6 +10,7 @@ class CardView: UIView {
 
     weak var delegate: CardViewDelegate?
 
+    @IBOutlet weak var chartsButtonWidth: NSLayoutConstraint!
     @IBOutlet weak var alertImageView: UIImageView!
     @IBOutlet weak var alertView: UIView!
     @IBOutlet weak var humidityWarningImageView: UIImageView!

@@ -134,7 +134,7 @@
                         <constraint firstItem="70F-k5-7Gz" firstAttribute="top" secondItem="hpa-Bf-Gq0" secondAttribute="top" id="ycj-Fk-Ofn"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eca-Uk-3ms">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eca-Uk-3ms">
                     <rect key="frame" x="232" y="4" width="44" height="44"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-charts-button" translatesAutoresizingMaskIntoConstraints="NO" id="Nz1-d1-VfQ">
@@ -246,6 +246,7 @@
                 <outlet property="alertView" destination="hpa-Bf-Gq0" id="6Na-8P-E4e"/>
                 <outlet property="backgroundImage" destination="pZx-ro-mwa" id="sld-pS-lHK"/>
                 <outlet property="chartsButtonContainerView" destination="eca-Uk-3ms" id="Njl-47-jzN"/>
+                <outlet property="chartsButtonWidth" destination="Imk-4H-LTV" id="Kkw-9M-rEs"/>
                 <outlet property="humidityLabel" destination="XwV-cb-60i" id="ETY-XG-Dbv"/>
                 <outlet property="humidityWarningImageView" destination="XbS-ri-gks" id="JVl-I2-kxW"/>
                 <outlet property="nameLabel" destination="bjH-UG-dwW" id="Mvh-u2-RLu"/>

@@ -601,6 +601,12 @@ extension CardsScrollViewController {
                     // swiftlint:disable force_cast
                     let view = Bundle.main.loadNibNamed("CardView", owner: self, options: nil)?.first as! CardView
                     // swiftlint:enable force_cast
+                    switch viewModel.type {
+                    case .ruuvi:
+                        view.chartsButtonWidth.constant = 44
+                    case .web:
+                        view.chartsButtonWidth.constant = 4
+                    }
                     view.translatesAutoresizingMaskIntoConstraints = false
                     scrollView.addSubview(view)
                     position(view, leftView)
