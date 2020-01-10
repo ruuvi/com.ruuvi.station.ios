@@ -685,7 +685,7 @@ extension CardsScrollViewController {
 
     private func restartAnimations() {
         // restart blinking animation if needed
-        for i in 0..<viewModels.count {
+        for i in 0..<viewModels.count where i < views.count {
             let viewModel = viewModels[i]
             let view = views[i]
             let imageView = view.alertImageView
