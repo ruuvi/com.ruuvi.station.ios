@@ -41,7 +41,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
-    private var temperatureAlertDidChangeToken: NSObjectProtocol?
+    private var alertDidChangeToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
@@ -85,8 +85,8 @@ class TagChartsPresenter: TagChartsModuleInput {
         if let backgroundToken = backgroundToken {
             NotificationCenter.default.removeObserver(backgroundToken)
         }
-        if let temperatureAlertDidChangeToken = temperatureAlertDidChangeToken {
-            NotificationCenter.default.removeObserver(temperatureAlertDidChangeToken)
+        if let alertDidChangeToken = alertDidChangeToken {
+            NotificationCenter.default.removeObserver(alertDidChangeToken)
         }
         if let didConnectToken = didConnectToken {
             NotificationCenter.default.removeObserver(didConnectToken)
@@ -278,7 +278,12 @@ extension TagChartsPresenter: AlertServiceObserver {
     func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter({ $0.uuid.value == uuid })
-            .forEach({ $0.alertState.value = isTriggered ? .firing : .registered })
+            .forEach({
+                let newValue: AlertState = isTriggered ? .firing : .registered
+                if newValue != $0.alertState.value {
+                    $0.alertState.value = newValue
+                }
+            })
     }
 }
 
@@ -410,7 +415,7 @@ extension TagChartsPresenter {
     }
 
     private func startObservingAlertChanges() {
-        temperatureAlertDidChangeToken = NotificationCenter
+        alertDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .AlertServiceAlertDidChange,
                          object: nil,

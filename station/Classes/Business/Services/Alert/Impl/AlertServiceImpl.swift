@@ -530,9 +530,7 @@ extension AlertServiceImpl {
 
     func setMovement(counter: Int?, for uuid: String) {
         alertPersistence.setMovement(counter: counter, for: uuid)
-        if let c = counter {
-            postAlertDidChange(with: uuid, of: .movement(last: c))
-        }
+        // no need to post an update, this is not user initiated action
     }
 
     func movementDescription(for uuid: String) -> String? {

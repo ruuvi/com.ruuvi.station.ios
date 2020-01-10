@@ -279,7 +279,12 @@ extension CardsPresenter: AlertServiceObserver {
     func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter({ $0.uuid.value == uuid })
-            .forEach({ $0.alertState.value = isTriggered ? .firing : .registered })
+            .forEach({
+                let newValue: AlertState = isTriggered ? .firing : .registered
+                if newValue != $0.alertState.value {
+                    $0.alertState.value = newValue
+                }
+            })
     }
 }
 
@@ -712,6 +717,7 @@ extension CardsPresenter {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func updateAlertState(for viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
+            var newValue: AlertState
             if alertService.hasRegistrations(for: uuid) {
                 var isTriggered = false
                 AlertType.allCases.forEach { type in
@@ -778,9 +784,12 @@ extension CardsPresenter {
                         break
                     }
                 }
-                viewModel.alertState.value = isTriggered ? .firing : .registered
+                newValue = isTriggered ? .firing : .registered
             } else {
-                viewModel.alertState.value = .empty
+                newValue = .empty
+            }
+            if newValue != viewModel.alertState.value {
+                viewModel.alertState.value = newValue
             }
         }
     }
