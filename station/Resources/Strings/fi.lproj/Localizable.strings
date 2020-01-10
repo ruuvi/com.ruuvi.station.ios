@@ -80,7 +80,7 @@
 "Defaults.ServiceTimeout.title" = "Palvelun aikakatkaisu";
 "Defaults.CardsSwipeHint.title" = "Pyyhkäisyvinkki näytettiin";
 "Defaults.AlertsRepeatInterval.title" = "Hälytysväli";
-"Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli;
+"Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
