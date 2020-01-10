@@ -29,22 +29,33 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## Features
 
-- [x] Temperature (°C, °F)
+- [x] Temperature (°C, °F, K)
 - [x] Humidity (relative in %, absolute in g/m³)
-- [x] Dew Point (°C, °F)
+- [x] Dew Point (°C, °F, K)
 - [x] Air Pressure (hPa)
 - [x] Acceleration (g)
+- [x] Charts
+- [x] Background logging
+- [x] Localization (English, Finnish, Russian)
+- [x] Virtual Sensors 
 
 ## Requirements
 
 - iOS 10.0+
-- Xcode 10.3
+- Xcode 11.3
 
-## How to build
+## How to use
 
 1. Clone the repo
-2. cd into repo and run: ```pod install```
-3. Build with Xcode
+2. ```cd``` into repo and run: ```pod install```
+3. Open ```station.xcworkspace```
+4. Configure Signing  
+
+Optional: 
+5. Obtain [OpenWeatherMap](https://openweathermap.org) API Key and put it into ```/station/Classes/Networking/Assembly/Networking.plist```
+6. Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
+
+Build and Run on your device!
 
 ## Get in touch
 
