@@ -14,6 +14,7 @@ class CardsScrollViewController: UIViewController {
 
     var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
 
+    private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
@@ -28,6 +29,12 @@ class CardsScrollViewController: UIViewController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    deinit {
+        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
+            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
+        }
     }
 }
 
@@ -558,6 +565,17 @@ extension CardsScrollViewController {
         configureEdgeGestureRecognozer()
         configurePanGestureRecognozer()
         configureGestureInstructor()
+        configureRestartAnimationsOnAppDidBecomeActive()
+    }
+
+    private func configureRestartAnimationsOnAppDidBecomeActive() {
+        appDidBecomeActiveToken = NotificationCenter
+            .default
+            .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.restartAnimations()
+        }
     }
 
     private func configureGestureInstructor() {
@@ -666,7 +684,7 @@ extension CardsScrollViewController {
     }
 
     private func restartAnimations() {
-        // restart blinking animation of needed
+        // restart blinking animation if needed
         for i in 0..<viewModels.count {
             let viewModel = viewModels[i]
             let view = views[i]
