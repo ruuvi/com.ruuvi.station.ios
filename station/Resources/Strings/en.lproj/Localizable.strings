@@ -143,7 +143,7 @@
 "LocalNotificationsManager.DidConnect.title" = "Connected";
 "LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
 "LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
-"LocalNotificationsManager.HighTemperature.title" = "Temprature too high!";
+"LocalNotificationsManager.HighTemperature.title" = "Temperature too high!";
 "LocalNotificationsManager.Disable.button" = "Turn Off";
 "LocalNotificationsManager.LowRelativeHumidity.title" = "Relative Air Humidity too low!";
 "LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
