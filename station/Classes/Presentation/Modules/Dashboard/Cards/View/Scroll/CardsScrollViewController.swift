@@ -698,6 +698,7 @@ extension CardsScrollViewController {
                     imageView?.image = alertOnImage
                 case .firing:
                     imageView?.image = alertActiveImage
+                    imageView?.layer.removeAllAnimations()
                     UIView.animate(withDuration: 0.5,
                                   delay: 0,
                                   options: [.repeat, .autoreverse],
