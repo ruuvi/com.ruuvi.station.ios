@@ -68,7 +68,7 @@
 "CoreError.locationPermissionNotDetermined" = "Sijainnin käyttöoikeuden tilaa ei ole päätetty";
 "CoreError.objectNotFound" = "Kohdetta ei löydy";
 "CoreError.objectInvalidated" = "Kohde mitätöity";
-"CoreError.unableToSendEmail" = "Unable to send email";
+"CoreError.unableToSendEmail" = "Sähköpostin lähetys epäonnistui";
 
 // Defaults
 "Defaults.navigationItem.title" = "Oletusasetukset";
@@ -80,7 +80,7 @@
 "Defaults.ServiceTimeout.title" = "Palvelun aikakatkaisu";
 "Defaults.CardsSwipeHint.title" = "Pyyhkäisyvinkki näytettiin";
 "Defaults.AlertsRepeatInterval.title" = "Hälytysväli";
-"Defaults.WebPullInterval.title" = "Web Alerts Interval";
+"Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli;
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
@@ -142,32 +142,32 @@
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Yhdistetty";
 "LocalNotificationsManager.DidDisconnect.title" = "Yhteys katkaistu";
-"LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian matala!";
+"LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.Disable.button" = "Poista käytöstä";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "Relative Air Humidity too low!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absolute Air Humidity too low!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absolute Air Humidity too high!";
-"LocalNotificationsManager.LowDewPoint.title" = "Dew Point is too low!";
-"LocalNotificationsManager.HighDewPoint.title" = "Dew Point is too high!";
-"LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
-"LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
-"LocalNotificationsManager.DidMove.title" = "Movement detected!";
+"LocalNotificationsManager.LowRelativeHumidity.title" = "Suhteellinen ilmankosteus liian alhainen!";
+"LocalNotificationsManager.HighRelativeHumidity.title" = "Suhteellinen ilmankosteus liian korkea!";
+"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absoluuttinen ilmankosteus liian alhainen!";
+"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absoluuttinen ilmankosteus liian korkea!";
+"LocalNotificationsManager.LowDewPoint.title" = "Kastepiste liian alhainen!";
+"LocalNotificationsManager.HighDewPoint.title" = "Kastepiste liian korkea!";
+"LocalNotificationsManager.LowPressure.title" = "Ilmanpaine liian alhainen!";
+"LocalNotificationsManager.HighPressure.title" = "Ilmanpaine liian korkea!";
+"LocalNotificationsManager.DidMove.title" = "Liike havaittu!";
 
 // Menu
 "Menu.Label.AddAnNewSensor.text" = "Lisää uusi anturi";
 "Menu.Label.AppSettings.text" = "Asetukset";
 "Menu.Label.AboutHelp.text" = "Tietoa / Apua";
 "Menu.Label.GetMoreSensors.text" = "Osta lisää antureita";
-"Menu.Label.Feedback.text" = "Send Feedback";
+"Menu.Label.Feedback.text" = "Lähetä palautetta";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Tämä ominaisuus vaatii oikeuden gallerian käyttöön.";
 "PermissionPresenter.NoCameraAccess.message" = "Tämä ominaisuus vaatii oikeuden kameran käyttöön.";
 "PermissionPresenter.NoLocationAccess.message" = "Tämä ominaisuus vaatii oikeuden paikkatiedon käyttöön.";
 "PermissionPresenter.settings" = "Asetukset";
-"PermissionPresenter.NoPushNotificationsPermission.message" = "Tämä ominaisuus vaatii oikeuden palveluilmoitusten näyttämiseen";
+"PermissionPresenter.NoPushNotificationsPermission.message" = "Tämä ominaisuus vaatii oikeuden palveluilmoitusten näyttämiseen.";
 
 // PhotoPicker
 "PhotoPicker.Sheet.message" = "Valitse kuva";
@@ -263,18 +263,18 @@
 "TagSettings.ConnectStatus.Connecting" = "Yhdistetään...";
 "TagSettings.ConnectStatus.Disconnected" = "Ei yhteyttä";
 "TagSettings.Alert.CustomDescription.placeholder" = "Muokkaa kuvausta...";
-"TagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
-"TagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
-"TagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
-"TagSettings.PressureAlert.title" = "Air Pressure";
-"TagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.Alerts.Connection.description" = "Alert when connected/disconnected";
-"TagSettings.ConnectionAlert.title" = "Connection";
-"TagSettings.MovementAlert.title" = "Movement";
-"TagSettings.Alerts.Movement.description" = "Alert when tag is moved";
+"TagSettings.Alerts.RelativeHumidity.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"TagSettings.RelativeAirHumidityAlert.title" = "Suhteellinen ilmankosteus";
+"TagSettings.AbsoluteAirHumidityAlert.title" = "Absoluuttinen ilmankosteus";
+"TagSettings.Alerts.AbsoluteHumidity.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"TagSettings.Alerts.DewPoint.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
+"TagSettings.PressureAlert.title" = "Ilmanpaine";
+"TagSettings.Alerts.Pressure.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"TagSettings.Alerts.Connection.description" = "Hälytä jos yhdistetty/yhteys menetetty";
+"TagSettings.ConnectionAlert.title" = "Yhteys";
+"TagSettings.MovementAlert.title" = "Liike";
+"TagSettings.Alerts.Movement.description" = "Hälytä jos liike havaittu";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";
@@ -301,21 +301,21 @@
 "WebTagSettings.Button.Remove.title" = "POISTA";
 "WebTagSettings.SectionHeader.Name.title" = "NIMI";
 "WebTagSettings.SectionHeader.MoreInfo.title" = "LISÄTIETOJA";
-"WebTagSettings.Alerts.Temperature.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.Alerts.Off" = "Off";
-"WebTagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"WebTagSettings.Alerts.Temperature.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"WebTagSettings.Alerts.Off" = "Pois käytöstä";
+"WebTagSettings.temperatureAlertTitleLabel.text" = "Lämpötila";
 "WebTagSettings.Label.disabled.text" = "POIS KÄYTÖSTÄ?";
 "WebTagSettings.Label.alerts.text" = "HÄLYTYKSET";
-"WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "In order to enable Virtual Sensor alerts please grant location always and notification permissions in Settings.";
-"WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Settings";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
-"WebTagSettings.PressureAlert.title" = "Air Pressure";
-"WebTagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Virtuaalisten antureiden hälytysominaisuus tarvitsee oikeuden sekä paikkatiedon että palveluilmoitusten näyttämiseen. Tarkasta sovellusasetukset.";
+"WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Asetukset";
+"WebTagSettings.RelativeAirHumidityAlert.title" = "Suhteellinen ilmankosteus";
+"WebTagSettings.Alerts.RelativeHumidity.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absoluuttinen ilmankosteus";
+"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"WebTagSettings.Alerts.DewPoint.description" = "Hälytä jos alle %.0f tai yli %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
+"WebTagSettings.PressureAlert.title" = "Ilmanpaine";
+"WebTagSettings.Alerts.Pressure.description" = "Hälytä jos alle %.0f tai yli %.0f";
 
 // Welcome
 "Welcome.description.text" = "Etsi lähistöllä olevia antureita napauttamalla Skannaa.";
