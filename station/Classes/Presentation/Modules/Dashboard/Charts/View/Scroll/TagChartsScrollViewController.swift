@@ -13,12 +13,19 @@ class TagChartsScrollViewController: UIViewController {
 
     var viewModels = [TagChartsViewModel]() { didSet { updateUIViewModels() }  }
 
+    private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
     private var views = [TrippleChartView]()
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+    }
+
+    deinit {
+        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
+            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
+        }
     }
 }
 
@@ -283,6 +290,17 @@ extension TagChartsScrollViewController {
     private func configureViews() {
         configurePanGestureRecognozer()
         configureGestureInstructor()
+        configureRestartAnimationsOnAppDidBecomeActive()
+    }
+
+    private func configureRestartAnimationsOnAppDidBecomeActive() {
+        appDidBecomeActiveToken = NotificationCenter
+            .default
+            .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.restartAnimations()
+        }
     }
 
     private func configureGestureInstructor() {
@@ -667,7 +685,7 @@ extension TagChartsScrollViewController {
     }
 
     private func restartAnimations() {
-        // restart blinking animation of needed
+        // restart blinking animation if needed
         for i in 0..<viewModels.count {
             let viewModel = viewModels[i]
             let view = views[i]
