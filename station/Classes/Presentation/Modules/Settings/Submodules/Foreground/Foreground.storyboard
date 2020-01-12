@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cEH-jp-CFZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cEH-jp-CFZ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -67,20 +67,20 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ForegroundSwitchTableViewCellReuseIdentifier" id="tVj-OS-6gR" customClass="ForegroundSwitchTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.5" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="55.5" width="414" height="43"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tVj-OS-6gR" id="Fv1-DR-8SN">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save advertisements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aZ-xA-XHB">
-                                            <rect key="frame" x="20" y="11.5" width="160" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" text="Save advertisements" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aZ-xA-XHB">
+                                            <rect key="frame" x="20" y="11" width="160" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g5J-eE-q7M">
-                                            <rect key="frame" x="343" y="6.5" width="51" height="31"/>
+                                            <rect key="frame" x="343" y="6" width="51" height="31"/>
                                             <connections>
                                                 <action selector="isOnSwitchValueChanged:" destination="tVj-OS-6gR" eventType="valueChanged" id="fzr-BK-l76"/>
                                             </connections>
@@ -88,8 +88,10 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="6aZ-xA-XHB" firstAttribute="leading" secondItem="Fv1-DR-8SN" secondAttribute="leading" constant="20" id="Gvj-PH-aby"/>
-                                        <constraint firstItem="6aZ-xA-XHB" firstAttribute="centerY" secondItem="Fv1-DR-8SN" secondAttribute="centerY" id="HUs-25-3yD"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="6aZ-xA-XHB" secondAttribute="bottom" id="RP5-ZZ-U7d"/>
+                                        <constraint firstItem="6aZ-xA-XHB" firstAttribute="top" secondItem="Fv1-DR-8SN" secondAttribute="topMargin" id="Tk5-mh-vs3"/>
                                         <constraint firstAttribute="trailing" secondItem="g5J-eE-q7M" secondAttribute="trailing" constant="22" id="m4W-iy-AJt"/>
+                                        <constraint firstItem="g5J-eE-q7M" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6aZ-xA-XHB" secondAttribute="trailing" constant="8" id="mt6-e3-JZU"/>
                                         <constraint firstItem="g5J-eE-q7M" firstAttribute="centerY" secondItem="Fv1-DR-8SN" secondAttribute="centerY" id="n5Z-XX-5tm"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -99,20 +101,20 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ForegroundStepperTableViewCellReuseIdentifier" id="Yut-oe-khx" customClass="ForegroundStepperTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="99" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="98.5" width="414" height="43"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Yut-oe-khx" id="YHt-Am-HF1">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="shH-yE-orM">
-                                            <rect key="frame" x="20" y="11.5" width="90" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" text="Every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="shH-yE-orM">
+                                            <rect key="frame" x="20" y="11" width="89.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="Mhv-xB-AFm">
-                                            <rect key="frame" x="300" y="6" width="94" height="32"/>
+                                            <rect key="frame" x="300" y="5.5" width="94" height="32"/>
                                             <connections>
                                                 <action selector="stepperValueChanged:" destination="Yut-oe-khx" eventType="valueChanged" id="08l-cz-2pE"/>
                                             </connections>
@@ -120,9 +122,11 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="Mhv-xB-AFm" secondAttribute="trailing" constant="20" id="7dp-7y-Q5E"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="shH-yE-orM" secondAttribute="bottom" id="Fda-my-p3t"/>
                                         <constraint firstItem="shH-yE-orM" firstAttribute="leading" secondItem="YHt-Am-HF1" secondAttribute="leading" constant="20" id="IBx-69-YGc"/>
+                                        <constraint firstItem="shH-yE-orM" firstAttribute="top" secondItem="YHt-Am-HF1" secondAttribute="topMargin" id="cNA-7O-Ko1"/>
                                         <constraint firstItem="Mhv-xB-AFm" firstAttribute="centerY" secondItem="YHt-Am-HF1" secondAttribute="centerY" id="o9r-Ke-WTB"/>
-                                        <constraint firstItem="shH-yE-orM" firstAttribute="centerY" secondItem="YHt-Am-HF1" secondAttribute="centerY" id="zbv-24-Aik"/>
+                                        <constraint firstItem="Mhv-xB-AFm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="shH-yE-orM" secondAttribute="trailing" constant="8" id="ppR-MR-Ma0"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
