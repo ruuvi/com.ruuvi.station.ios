@@ -24,6 +24,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
+    private var alertDidChangeToken: NSObjectProtocol?
     private var webTag: WebTagRealm! {
         didSet {
             syncViewModel()
@@ -42,6 +43,9 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         if let humidityUnitToken = humidityUnitToken {
             NotificationCenter.default.removeObserver(humidityUnitToken)
         }
+        if let alertDidChangeToken = alertDidChangeToken {
+            NotificationCenter.default.removeObserver(alertDidChangeToken)
+        }
     }
 
     func configure(webTag: WebTagRealm) {
@@ -49,6 +53,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         startObservingWebTag()
         startObservingSettingsChanges()
         startObservingApplicationState()
+        startObservingAlertChanges()
     }
 }
 
@@ -476,6 +481,55 @@ extension WebTagSettingsPresenter {
                 self?.view.viewModel.isPushNotificationsEnabled.value = false
             }
         }
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private func startObservingAlertChanges() {
+        alertDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .AlertServiceAlertDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
+                uuid == self?.view.viewModel.uuid.value,
+                let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                    switch type {
+                    case .temperature:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.view.viewModel.isTemperatureAlertOn.value {
+                            self?.view.viewModel.isTemperatureAlertOn.value = isOn
+                        }
+                    case .relativeHumidity:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.view.viewModel.isRelativeHumidityAlertOn.value {
+                            self?.view.viewModel.isRelativeHumidityAlertOn.value = isOn
+                        }
+                    case .absoluteHumidity:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.view.viewModel.isAbsoluteHumidityAlertOn.value {
+                            self?.view.viewModel.isAbsoluteHumidityAlertOn.value = isOn
+                        }
+                    case .dewPoint:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.view.viewModel.isDewPointAlertOn.value {
+                            self?.view.viewModel.isDewPointAlertOn.value = isOn
+                        }
+                    case .pressure:
+                        let isOn = self?.alertService.isOn(type: type, for: uuid)
+                        if isOn != self?.view.viewModel.isPressureAlertOn.value {
+                            self?.view.viewModel.isPressureAlertOn.value = isOn
+                        }
+                    case .connection:
+                        // do nothing, no connection alert here
+                        break
+                    case .movement:
+                        // do nothing, no movement alert here
+                        break
+                    }
+            }
+        })
     }
 }
 // swiftlint:enable file_length
