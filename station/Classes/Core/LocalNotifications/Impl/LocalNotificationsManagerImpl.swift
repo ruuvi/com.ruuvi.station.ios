@@ -269,22 +269,38 @@ extension LocalNotificationsManagerImpl {
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                let isOn = self?.alertService.isOn(type: type, for: uuid) ?? false
                 switch type {
                 case .temperature:
                     self?.lowTemperatureAlerts[uuid] = nil
                     self?.highTemperatureAlerts[uuid] = nil
+                    if !isOn {
+                        self?.cancel(.temperature, for: uuid)
+                    }
                 case .relativeHumidity:
                     self?.lowRelativeHumidityAlerts[uuid] = nil
                     self?.highRelativeHumidityAlerts[uuid] = nil
+                    if !isOn {
+                        self?.cancel(.relativeHumidity, for: uuid)
+                    }
                 case .absoluteHumidity:
                     self?.lowAbsoluteHumidityAlerts[uuid] = nil
                     self?.highAbsoluteHumidityAlerts[uuid] = nil
+                    if !isOn {
+                        self?.cancel(.absoluteHumidity, for: uuid)
+                    }
                 case .dewPoint:
                     self?.lowDewPointAlerts[uuid] = nil
                     self?.highDewPointAlerts[uuid] = nil
+                    if !isOn {
+                        self?.cancel(.dewPoint, for: uuid)
+                    }
                 case .pressure:
                     self?.lowPressureAlerts[uuid] = nil
                     self?.highPressureAlerts[uuid] = nil
+                    if !isOn {
+                        self?.cancel(.pressure, for: uuid)
+                    }
                 case .connection:
                     // do nothing
                     break
@@ -380,4 +396,11 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
 
         completionHandler()
     }
+
+    private func cancel(_ type: LowHighNotificationType, for uuid: String) {
+        let nc = UNUserNotificationCenter.current()
+        nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
+        nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
+    }
+
 }
