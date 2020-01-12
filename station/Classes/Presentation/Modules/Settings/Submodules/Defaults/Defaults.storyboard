@@ -87,7 +87,6 @@
                                         </switch>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="sSV-H8-HDl" firstAttribute="centerY" secondItem="5Bt-BE-uZ1" secondAttribute="centerY" id="5MB-z2-Jzk"/>
                                         <constraint firstItem="cQz-uX-Wih" firstAttribute="centerY" secondItem="5Bt-BE-uZ1" secondAttribute="centerY" id="9Nb-54-yLi"/>
                                         <constraint firstItem="sSV-H8-HDl" firstAttribute="leading" secondItem="5Bt-BE-uZ1" secondAttribute="leading" constant="20" id="FJP-VN-Ya8"/>
                                         <constraint firstItem="cQz-uX-Wih" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sSV-H8-HDl" secondAttribute="trailing" constant="8" id="Mlt-cF-99w"/>
@@ -125,7 +124,6 @@
                                         <constraint firstItem="FAN-7G-a2z" firstAttribute="top" secondItem="nL2-8M-Kqk" secondAttribute="topMargin" id="KMV-ph-eFW"/>
                                         <constraint firstItem="cyL-uz-kqt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FAN-7G-a2z" secondAttribute="trailing" constant="8" id="Wuf-t0-ByG"/>
                                         <constraint firstItem="cyL-uz-kqt" firstAttribute="centerY" secondItem="nL2-8M-Kqk" secondAttribute="centerY" id="YHM-48-Zif"/>
-                                        <constraint firstItem="FAN-7G-a2z" firstAttribute="centerY" secondItem="nL2-8M-Kqk" secondAttribute="centerY" id="ceN-KK-Lcf"/>
                                         <constraint firstItem="FAN-7G-a2z" firstAttribute="bottom" secondItem="nL2-8M-Kqk" secondAttribute="bottomMargin" id="i1g-OC-b70"/>
                                         <constraint firstItem="FAN-7G-a2z" firstAttribute="leading" secondItem="nL2-8M-Kqk" secondAttribute="leading" constant="20" id="i25-GR-vTw"/>
                                         <constraint firstAttribute="trailing" secondItem="cyL-uz-kqt" secondAttribute="trailing" constant="20" id="pKg-2o-1PI"/>
