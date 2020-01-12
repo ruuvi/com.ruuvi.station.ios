@@ -422,7 +422,7 @@ extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if viewModel?.isConnectable.value ?? false {
-            let headerHeight: CGFloat = 64
+            let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
             let hu = viewModel?.humidityUnit.value
