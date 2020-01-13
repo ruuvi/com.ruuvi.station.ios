@@ -617,7 +617,8 @@ extension TagSettingsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                uuid == self?.ruuviTag.uuid {
+                !(self?.ruuviTag.isInvalidated ?? true)
+                && uuid == self?.ruuviTag.uuid  {
                 self?.viewModel.isConnected.value = false
             }
         })
