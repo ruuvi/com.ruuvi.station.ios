@@ -99,5 +99,6 @@ iOSInjectionProject/
 
 .DS_Store
 
-# Sensitive data files
-station/Classes/Networking/Assembly/Networking.plist
+# ---- SonarQube
+.sonar/
+.scannerwork/
