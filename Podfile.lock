@@ -88,7 +88,7 @@ PODS:
   - nanopb/encode (0.3.9011)
   - Nantes (0.0.9)
   - Protobuf (3.11.2)
-  - RangeSeekSlider (1.8.0)
+  - RangeSeekSlider (1.8.1)
   - Realm (4.3.0):
     - Realm/Headers (= 4.3.0)
   - Realm/Headers (4.3.0)
@@ -109,7 +109,7 @@ DEPENDENCIES:
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
   - Nantes
-  - RangeSeekSlider
+  - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
@@ -137,7 +137,6 @@ SPEC REPOS:
     - nanopb
     - Nantes
     - Protobuf
-    - RangeSeekSlider
     - Realm
     - RealmSwift
     - Swinject
@@ -145,6 +144,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
+  RangeSeekSlider:
+    :git: https://github.com/rinat-enikeev/RangeSeekSlider
   SwinjectPropertyLoader:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
@@ -152,6 +153,9 @@ CHECKOUT OPTIONS:
   LightRoute:
     :commit: fcea1b3808b75be92d983316742bf186e21981ec
     :git: https://github.com/rinat-enikeev/LightRoute.git
+  RangeSeekSlider:
+    :commit: b26deadf00acdd0fd6acaa25760ac8e9e650f287
+    :git: https://github.com/rinat-enikeev/RangeSeekSlider
   SwinjectPropertyLoader:
     :commit: 653f1b149c575921fbc1cb02a447aa2f6da9e94c
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
@@ -179,12 +183,12 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Nantes: c1b4eec0748c01f4c6b83e16a11e52ab2007cd4d
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
-  RangeSeekSlider: 650b11fa1edcb92e1e0ede797669d98622570fb5
+  RangeSeekSlider: 7858866477a81503d812c1527c54943edc092219
   Realm: 9357c3589555793e1860a7104a7412bca4a48d99
   RealmSwift: 402f1e379a8ef82c635313037b043f0f06de880c
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: c448a46de40159adf9323b95da9159e04fbb8af9
+PODFILE CHECKSUM: 2a266c857b2493543f16cbeb9070de7d1887a212
 
 COCOAPODS: 1.8.4

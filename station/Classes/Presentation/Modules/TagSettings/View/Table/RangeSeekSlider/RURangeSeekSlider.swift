@@ -13,7 +13,7 @@ class RURangeSeekSlider: RangeSeekSlider {
                 handleColor = .darkGray
                 colorBetweenHandles = .darkGray
             }
-            minValue = minValue // hack to refresh
+            refresh()
         }
     }
 
