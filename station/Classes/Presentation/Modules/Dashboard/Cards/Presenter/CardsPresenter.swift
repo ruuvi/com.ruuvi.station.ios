@@ -764,9 +764,9 @@ extension CardsPresenter {
                                 sh = 100.0
                             }
                             let h = Humidity(c: c, rh: sh / 100.0)
-                            if let Td = h.Td {
-                                let isLower = Td < lower
-                                let isUpper = Td > upper
+                            if let hTd = h.Td {
+                                let isLower = hTd < lower
+                                let isUpper = hTd > upper
                                 isTriggered = isTriggered || isLower || isUpper
                             }
                         }

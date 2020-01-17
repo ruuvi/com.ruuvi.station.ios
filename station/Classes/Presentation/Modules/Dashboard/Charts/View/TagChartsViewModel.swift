@@ -98,8 +98,8 @@ struct TagChartsViewModel {
                         sh = 100.0
                     }
                     let h = Humidity(c: c, rh: sh / 100.0)
-                    if let Td = h.Td {
-                        return TagChartsPoint(date: $0.date, value: Td)
+                    if let hTd = h.Td {
+                        return TagChartsPoint(date: $0.date, value: hTd)
                     } else {
                         return nil
                     }
@@ -215,8 +215,8 @@ struct TagChartsViewModel {
                 if let c = $0.celsius.value,
                     let rh = $0.humidity.value {
                     let h = Humidity(c: c, rh: rh / 100.0)
-                    if let Td = h.Td {
-                        return TagChartsPoint(date: $0.date, value: Td)
+                    if let hTd = h.Td {
+                        return TagChartsPoint(date: $0.date, value: hTd)
                     } else {
                         return nil
                     }
