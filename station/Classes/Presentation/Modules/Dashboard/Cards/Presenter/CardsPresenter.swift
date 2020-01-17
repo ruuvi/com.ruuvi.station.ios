@@ -404,10 +404,7 @@ extension CardsPresenter {
                             case .failure(let error):
                                 switch error {
                                 case .logic(let logicError):
-                                    switch logicError {
-                                    case .notConnected:
-                                        break // do nothing
-                                    default:
+                                    if logicError != .notConnected {
                                         observer.errorPresenter.present(error: error)
                                     }
                                 default:
