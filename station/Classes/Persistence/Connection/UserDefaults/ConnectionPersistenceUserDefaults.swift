@@ -20,15 +20,14 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
 
     func setKeepConnection(_ value: Bool, for uuid: String) {
         if value {
-            if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
-                if !array.contains(uuid) {
-                    array.append(uuid)
-                    prefs.set(array, forKey: keepConnectionArrayUDKey)
-                    NotificationCenter.default.post(name: .ConnectionPersistenceDidStartToKeepConnection,
-                                                    object: nil,
-                                                    userInfo:
-                        [CPDidStartToKeepConnectionKey.uuid: uuid])
-                }
+            if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String],
+                !array.contains(uuid) {
+                array.append(uuid)
+                prefs.set(array, forKey: keepConnectionArrayUDKey)
+                NotificationCenter.default.post(name: .ConnectionPersistenceDidStartToKeepConnection,
+                                                object: nil,
+                                                userInfo:
+                    [CPDidStartToKeepConnectionKey.uuid: uuid])
             } else {
                 var array = [String]()
                 array.append(uuid)
@@ -39,15 +38,14 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
                     [CPDidStartToKeepConnectionKey.uuid: uuid])
             }
         } else {
-            if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
-                if array.contains(uuid) {
-                    array.removeAll(where: { $0 == uuid })
-                    prefs.set(array, forKey: keepConnectionArrayUDKey)
-                    NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,
-                                                    object: nil,
-                                                    userInfo:
-                        [CPDidStopToKeepConnectionKey.uuid: uuid])
-                }
+            if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String],
+                array.contains(uuid) {
+                array.removeAll(where: { $0 == uuid })
+                prefs.set(array, forKey: keepConnectionArrayUDKey)
+                NotificationCenter.default.post(name: .ConnectionPersistenceDidStopToKeepConnection,
+                                                object: nil,
+                                                userInfo:
+                    [CPDidStopToKeepConnectionKey.uuid: uuid])
             }
         }
     }
