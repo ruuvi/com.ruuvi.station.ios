@@ -238,25 +238,11 @@ extension RuuviTagHeartbeatDaemonBTKit {
          if let ruuviTag = ruuviTags?.first(where: { $0.uuid == pair.device.uuid }) {
              let ruuviTagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: pair.device)
              ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
-                 .on( failure: { error in
-                 DispatchQueue.main.async {
-                     NotificationCenter
-                         .default
-                         .post(name: .RuuviTagHeartbeatDaemonDidFail,
-                               object: nil,
-                               userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: error])
-                 }
+                 .on( failure: { [weak self] error in
+                    self?.post(error: error)
              })
          } else {
-             DispatchQueue.main.async {
-                 NotificationCenter
-                     .default
-                     .post(name: .RuuviTagHeartbeatDaemonDidFail,
-                           object: nil,
-                           userInfo:
-                         [RuuviTagHeartbeatDaemonDidFailKey.error:
-                             RUError.unexpected(.failedToFindRuuviTag)])
-             }
+            post(error: RUError.unexpected(.failedToFindRuuviTag))
          }
      }
 
