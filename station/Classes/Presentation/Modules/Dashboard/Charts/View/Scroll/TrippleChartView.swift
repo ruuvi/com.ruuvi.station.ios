@@ -195,7 +195,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont(name: "Montserrat-Bold", size: 20)
+        label.font = UIFont(name: montserratBoldFontName, size: 20)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Name".localized()
@@ -274,7 +274,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     lazy var syncButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("SYNC".localized(), for: .normal)
-        button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 15)
+        button.titleLabel?.font = UIFont(name: montserratBoldFontName, size: 15)
         button.backgroundColor = UIColor(red: 21.0/255.0, green: 141.0/255.0, blue: 165.0/255.0, alpha: 1.0)
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -290,7 +290,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     lazy var clearButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("CLEAR".localized(), for: .normal)
-        button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 15)
+        button.titleLabel?.font = UIFont(name: montserratBoldFontName, size: 15)
         button.backgroundColor = UIColor(red: 21.0/255.0, green: 141.0/255.0, blue: 165.0/255.0, alpha: 1.0)
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -306,7 +306,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     lazy var exportButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("EXPORT".localized(), for: .normal)
-        button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 15)
+        button.titleLabel?.font = UIFont(name: montserratBoldFontName, size: 15)
         button.backgroundColor = UIColor(red: 21.0/255.0, green: 141.0/255.0, blue: 165.0/255.0, alpha: 1.0)
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -330,6 +330,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
 
     private let dynamicBundle = Bundle(for: TrippleChartView.self)
     private var contentOffset: CGPoint = .zero
+    private let montserratBoldFontName = "Montserrat-Bold"
 
     override init(frame: CGRect) {
         super.init(frame: frame)
