@@ -27,11 +27,12 @@ extension AlertServiceImpl {
             }
         }
 
+        let uuid = ruuviTag.uuid
         if let movementCounter = ruuviTag.movementCounter {
-            setMovement(counter: movementCounter, for: ruuviTag.uuid)
+            setMovement(counter: movementCounter, for: uuid)
         }
 
-        notify(ruuviTag: ruuviTag, isTriggered: isTriggered)
+        notify(uuid: uuid, isTriggered: isTriggered)
     }
 
     private func process(temperature: AlertType, ruuviTag: RuuviTag) -> Bool {
@@ -177,18 +178,18 @@ extension AlertServiceImpl {
         }
     }
 
-    private func notify(ruuviTag: RuuviTag, isTriggered: Bool) {
-        if hasRegistrations(for: ruuviTag.uuid) {
+    private func notify(uuid: String, isTriggered: Bool) {
+        if hasRegistrations(for: uuid) {
             DispatchQueue.main.async { [weak self] in
                 guard let sSelf = self else { return }
-                if let observers = sSelf.observations[ruuviTag.uuid] {
+                if let observers = sSelf.observations[uuid] {
                     for i in 0..<observers.count {
                         if let pointer = observers.pointer(at: i),
                             let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
                                 as? AlertServiceObserver {
                             observer.alert(service: sSelf,
                                            isTriggered: isTriggered,
-                                           for: ruuviTag.uuid)
+                                           for: uuid)
                         }
                     }
                 }
