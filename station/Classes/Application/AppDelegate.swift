@@ -55,10 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         appStateService.applicationDidBecomeActive(application)
     }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-    }
-
 }
 
 // MARK: - Push Notifications
