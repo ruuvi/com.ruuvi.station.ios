@@ -7,7 +7,7 @@ class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
 
     @UserDefault("PullWebDaemonOperations.webTagLastPullDate", defaultValue: Date())
     private var webTagLastPullDate: Date
-    private var timer: Timer?
+    private var pullTimer: Timer?
 
     @objc func wakeUp() {
         if needsToPullWebTagData() {
@@ -25,7 +25,7 @@ class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
                                              userInfo: nil,
                                              repeats: true)
             RunLoop.current.add(timer, forMode: .common)
-            sSelf.timer = timer
+            sSelf.pullTimer = timer
         }
     }
 
@@ -38,7 +38,7 @@ class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
     }
 
     @objc private func stopDaemon() {
-        timer?.invalidate()
+        pullTimer?.invalidate()
         stopWork()
     }
 
