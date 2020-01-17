@@ -93,7 +93,8 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
            })
        }
        if pair.device.mac != nil && pair.device.mac != pair.ruuviTag.mac {
-           ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm).on( failure: { [weak self] error in
+           ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
+            .on( failure: { [weak self] error in
                self?.post(error: error)
            })
        }
