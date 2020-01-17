@@ -6,6 +6,9 @@ class AboutViewController: UIViewController {
     @IBOutlet weak var aboutTextView: UITextView!
     @IBOutlet weak var versionLabel: UILabel!
 
+    private let twoNewlines = "\n\n"
+    private let fourNewlines = "\n\n\n\n"
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
     }
@@ -89,15 +92,15 @@ extension AboutViewController {
 
     private func configureTextView() {
 
-        let text = "About.AboutHelp.header".localized() + "\n\n" +
-            "About.AboutHelp.contents".localized() + "\n\n\n\n" +
-            "About.OperationsManual.header".localized() + "\n\n" +
-            "About.OperationsManual.contents".localized() + "\n\n\n\n" +
-            "About.Troubleshooting.header".localized() + "\n\n" +
-            "About.Troubleshooting.contents".localized() + "\n\n\n\n" +
-            "About.OpenSource.header".localized() + "\n\n" +
-            "About.OpenSource.contents".localized() + "\n\n\n\n" +
-            "About.More.header".localized() + "\n\n" +
+        let text = "About.AboutHelp.header".localized() + twoNewlines +
+            "About.AboutHelp.contents".localized() + fourNewlines +
+            "About.OperationsManual.header".localized() + twoNewlines +
+            "About.OperationsManual.contents".localized() + fourNewlines +
+            "About.Troubleshooting.header".localized() + twoNewlines +
+            "About.Troubleshooting.contents".localized() + fourNewlines +
+            "About.OpenSource.header".localized() + twoNewlines +
+            "About.OpenSource.contents".localized() + fourNewlines +
+            "About.More.header".localized() + twoNewlines +
             "About.More.contents".localized() + "\n"
 
         let attrString = NSMutableAttributedString(string: text)
