@@ -45,7 +45,6 @@ class MigrationManagerToVIPER: MigrationManager {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     private func from1to2(_ migration: Migration) {
         migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, _) in
 
@@ -54,17 +53,7 @@ class MigrationManagerToVIPER: MigrationManager {
                 let version = oldObject?["dataFormat"] as? Int,
                 let mac = oldObject?["mac"] as? String {
 
-                var realName: String
-                if name.isEmpty {
-                    if mac.isEmpty {
-                        realName = uuid
-                    } else {
-                        realName = mac
-                    }
-                } else {
-                    realName = name
-                }
-
+                let realName = real(name, mac, uuid)
                 let ruuviTag = migration.create(RuuviTagRealm.className(),
                                                 value: ["uuid": uuid,
                                                         "name": realName,
@@ -136,4 +125,19 @@ class MigrationManagerToVIPER: MigrationManager {
         migration.deleteData(forType: RuuviTagDataRealm.className())
         migration.deleteData(forType: WebTagDataRealm.className())
     }
+
+    private func real(_ name: String, _ mac: String, _ uuid: String) -> String {
+        let realName: String
+        if name.isEmpty {
+            if mac.isEmpty {
+                realName = uuid
+            } else {
+                realName = mac
+            }
+        } else {
+            realName = name
+        }
+        return realName
+    }
+
 }
