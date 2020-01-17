@@ -191,10 +191,8 @@
 		0E6BAD7B23856A01003A2D4C /* LocationServiceApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */; };
 		0E6BAD7C23856A01003A2D4C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E6BAD7D23856A01003A2D4C /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
-		0E6BAD7E23856A01003A2D4C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
 		0E6BAD8123856A01003A2D4C /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
-		0E6BAD8323856A01003A2D4C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
 		0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
 		0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */; };
 		0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -502,8 +500,6 @@
 		0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
-		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
-		0E70A46822AF9658006CB87C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
 		0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46D22AF9763006CB87C /* DiscoverViewInput.swift */; };
 		0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46F22AF9790006CB87C /* DiscoverViewOutput.swift */; };
@@ -551,10 +547,8 @@
 		0E8BD2B1238566AB008B31EF /* LocationServiceApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */; };
 		0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
-		0E8BD2B4238566AB008B31EF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
 		0E8BD2B7238566AB008B31EF /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
-		0E8BD2B9238566AB008B31EF /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
 		0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
 		0E8BD2BB238566AB008B31EF /* RuuviTagPropertiesDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */; };
 		0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -1250,8 +1244,6 @@
 		0E6BAECE23856A01003A2D4C /* station_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
-		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
-		0E70A46722AF9658006CB87C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
 		0E70A46D22AF9763006CB87C /* DiscoverViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewInput.swift; sourceTree = "<group>"; };
 		0E70A46F22AF9790006CB87C /* DiscoverViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewOutput.swift; sourceTree = "<group>"; };
@@ -1819,7 +1811,6 @@
 				0E09671B22AE76B700E85F48 /* Launch */,
 				0E70A46122AF958E006CB87C /* Localization */,
 				0E1C1DAC22B38F220032F6CA /* Presenters */,
-				0E70A46422AF960B006CB87C /* Theme */,
 				0E046F3722F0585E00BD4E9C /* Transitions */,
 				0E09671C22AE76CC00E85F48 /* Modules */,
 			);
@@ -2516,15 +2507,6 @@
 				0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */,
 			);
 			path = Localization;
-			sourceTree = "<group>";
-		};
-		0E70A46422AF960B006CB87C /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				0E70A46722AF9658006CB87C /* Theme.swift */,
-				0E70A46522AF962A006CB87C /* Themeable.swift */,
-			);
-			path = Theme;
 			sourceTree = "<group>";
 		};
 		0E70A46922AF96B9006CB87C /* View */ = {
@@ -4363,10 +4345,8 @@
 				0E6BAD7B23856A01003A2D4C /* LocationServiceApple.swift in Sources */,
 				0E6BAD7C23856A01003A2D4C /* DiscoverTableViewController.swift in Sources */,
 				0E6BAD7D23856A01003A2D4C /* Optional.swift in Sources */,
-				0E6BAD7E23856A01003A2D4C /* Theme.swift in Sources */,
 				0E6BAD8123856A01003A2D4C /* CalibrationService.swift in Sources */,
 				0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */,
-				0E6BAD8323856A01003A2D4C /* Themeable.swift in Sources */,
 				0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */,
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
@@ -4690,10 +4670,8 @@
 				0E8BD2B1238566AB008B31EF /* LocationServiceApple.swift in Sources */,
 				0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */,
 				0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */,
-				0E8BD2B4238566AB008B31EF /* Theme.swift in Sources */,
 				0E8BD2B7238566AB008B31EF /* CalibrationService.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
-				0E8BD2B9238566AB008B31EF /* Themeable.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
 				0E8BD2BB238566AB008B31EF /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */,
@@ -5017,10 +4995,8 @@
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
-				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
 				0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
-				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,

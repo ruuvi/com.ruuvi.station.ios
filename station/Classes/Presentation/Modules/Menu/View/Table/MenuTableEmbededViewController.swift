@@ -24,10 +24,6 @@ extension MenuTableEmbededViewController {
         getMoreSensorsLabel.text = "Menu.Label.GetMoreSensors.text".localized()
         feedbackLabel.text = "Menu.Label.Feedback.text".localized()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - View lifecycle

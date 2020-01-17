@@ -17,10 +17,6 @@ extension AboutViewController: AboutViewInput {
         configureTextView()
         configureVersionLabel()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - IBActions

@@ -23,10 +23,6 @@ extension ForegroundViewController: ForegroundViewInput {
     func localize() {
         navigationItem.title = "Foreground.navigationItem.title".localized()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - View lifecycle

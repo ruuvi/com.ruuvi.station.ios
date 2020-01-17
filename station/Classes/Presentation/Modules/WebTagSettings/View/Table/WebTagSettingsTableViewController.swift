@@ -75,10 +75,6 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         tableView.reloadData()
     }
 
-    func apply(theme: Theme) {
-
-    }
-
     func showTagRemovalConfirmationDialog() {
         let title = "WebTagSettings.confirmTagRemovalDialog.title".localized()
         let message = "WebTagSettings.confirmTagRemovalDialog.message".localized()

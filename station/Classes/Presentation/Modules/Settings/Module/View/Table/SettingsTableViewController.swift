@@ -54,10 +54,6 @@ extension SettingsTableViewController: SettingsViewInput {
         updateUILanguage()
         tableView.reloadData()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - IBActions

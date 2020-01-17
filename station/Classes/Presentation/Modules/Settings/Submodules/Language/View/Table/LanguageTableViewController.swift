@@ -13,10 +13,6 @@ extension LanguageTableViewController: LanguageViewInput {
     func localize() {
         tableView.reloadData()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - View lifecycle

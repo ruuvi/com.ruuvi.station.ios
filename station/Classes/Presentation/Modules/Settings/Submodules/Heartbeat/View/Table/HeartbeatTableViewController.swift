@@ -22,11 +22,6 @@ class HeartbeatTableViewController: UITableViewController {
 
 // MARK: - HeartbeatViewInput
 extension HeartbeatTableViewController: HeartbeatViewInput {
-
-    func apply(theme: Theme) {
-
-    }
-
     func localize() {
         saveHeartbeatsTitleLabel.text = viewModel.saveHeartbeatsTitle
         saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.Every.string".localized()
