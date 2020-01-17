@@ -349,39 +349,36 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler([.alert, .badge, .sound])
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
             let typeString = userInfo[lowHigh.typeKey] as? String,
-            let type = LowHighNotificationType(rawValue: typeString) {
-            if response.actionIdentifier == lowHigh.disable {
-                switch type {
-                case .temperature:
-                    alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
-                        uuid)
-                case .relativeHumidity:
-                    alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
-                case .absoluteHumidity:
-                    alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
-                case .dewPoint:
-                    alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
-                case .pressure:
-                    alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
-                }
+            let type = LowHighNotificationType(rawValue: typeString),
+            response.actionIdentifier == lowHigh.disable {
+            switch type {
+            case .temperature:
+                alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
+                    uuid)
+            case .relativeHumidity:
+                alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
+            case .absoluteHumidity:
+                alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
+            case .dewPoint:
+                alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
+            case .pressure:
+                alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
             }
         } else if let uuid = userInfo[blast.uuidKey] as? String,
             let typeString = userInfo[blast.typeKey] as? String,
-            let type = BlastNotificationType(rawValue: typeString) {
-            if response.actionIdentifier == blast.disable {
-                switch type {
-                case .connection:
-                    alertService.unregister(type: .connection, for: uuid)
-                case .movement:
-                    alertService.unregister(type: .movement(last: 0), for: uuid)
-                }
+            let type = BlastNotificationType(rawValue: typeString),
+            response.actionIdentifier == blast.disable {
+            switch type {
+            case .connection:
+                alertService.unregister(type: .connection, for: uuid)
+            case .movement:
+                alertService.unregister(type: .movement(last: 0), for: uuid)
             }
         }
 
