@@ -357,8 +357,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
             let typeString = userInfo[lowHigh.typeKey] as? String,
             let type = LowHighNotificationType(rawValue: typeString) {
-            switch response.actionIdentifier {
-            case lowHigh.disable:
+            if response.actionIdentifier == lowHigh.disable {
                 switch type {
                 case .temperature:
                     alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
@@ -372,22 +371,17 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
                 case .pressure:
                     alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
                 }
-            default:
-                break
             }
         } else if let uuid = userInfo[blast.uuidKey] as? String,
             let typeString = userInfo[blast.typeKey] as? String,
             let type = BlastNotificationType(rawValue: typeString) {
-            switch response.actionIdentifier {
-            case blast.disable:
+            if response.actionIdentifier == blast.disable {
                 switch type {
                 case .connection:
                     alertService.unregister(type: .connection, for: uuid)
                 case .movement:
                     alertService.unregister(type: .movement(last: 0), for: uuid)
                 }
-            default:
-                break
             }
         }
 
