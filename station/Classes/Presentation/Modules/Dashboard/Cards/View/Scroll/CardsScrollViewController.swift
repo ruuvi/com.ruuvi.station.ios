@@ -12,7 +12,11 @@ class CardsScrollViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
 
-    var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [CardsViewModel]() {
+        didSet {
+            updateUIViewModels()
+        }
+    }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")

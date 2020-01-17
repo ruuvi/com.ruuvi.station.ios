@@ -70,9 +70,17 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
-    var isBluetoothEnabled: Bool = true { didSet { updateUIISBluetoothEnabled() } }
+    var isBluetoothEnabled: Bool = true {
+        didSet {
+            updateUIISBluetoothEnabled()
+        }
+    }
 
-    var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
+    var isCloseEnabled: Bool = true {
+        didSet {
+            updateUIIsCloseEnabled()
+        }
+    }
 
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?

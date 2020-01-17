@@ -10,7 +10,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var backgroundPersistence: BackgroundPersistence!
     var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
-    var photoPickerPresenter: PhotoPickerPresenter! { didSet { photoPickerPresenter.delegate = self  } }
+    var photoPickerPresenter: PhotoPickerPresenter! {
+        didSet {
+            photoPickerPresenter.delegate = self
+        }
+    }
     var foreground: BTForeground!
     var background: BTBackground!
     var calibrationService: CalibrationService!
@@ -20,9 +24,21 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
 
-    private var ruuviTag: RuuviTagRealm! { didSet { syncViewModel() } }
-    private var humidity: Double? { didSet { viewModel.relativeHumidity.value = humidity } }
-    private var viewModel: TagSettingsViewModel! { didSet { view.viewModel = viewModel } }
+    private var ruuviTag: RuuviTagRealm! {
+        didSet {
+            syncViewModel()
+        }
+    }
+    private var humidity: Double? {
+        didSet {
+            viewModel.relativeHumidity.value = humidity
+        }
+    }
+    private var viewModel: TagSettingsViewModel! {
+        didSet {
+            view.viewModel = viewModel
+        }
+    }
     private var ruuviTagToken: NotificationToken?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?

@@ -3,7 +3,11 @@ import UIKit
 class LanguageTableViewController: UITableViewController {
     var output: LanguageViewOutput!
 
-    var languages: [Language] = [Language]() { didSet { updateUILanguages() } }
+    var languages: [Language] = [Language]() {
+        didSet {
+            updateUILanguages()
+        }
+    }
 
     private let cellReuseIdentifier = "LanguageTableViewCellReuseIdentifier"
 }

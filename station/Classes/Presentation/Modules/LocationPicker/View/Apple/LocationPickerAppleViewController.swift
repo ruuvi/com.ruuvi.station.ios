@@ -8,7 +8,11 @@ class LocationPickerAppleViewController: UIViewController {
     @IBOutlet var doneBarButtonItem: UIBarButtonItem!
     @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
 
-    var selectedLocation: Location? { didSet { updateUISelectedLocation() } }
+    var selectedLocation: Location? {
+        didSet {
+            updateUISelectedLocation()
+        }
+    }
 
     private var searchBar: UISearchBar!
     private let annotationViewReuseIdentifier = "LocationPickerMKAnnotationViewReuseIdentifier"

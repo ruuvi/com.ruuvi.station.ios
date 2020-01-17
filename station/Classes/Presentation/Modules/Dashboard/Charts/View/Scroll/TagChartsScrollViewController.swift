@@ -11,7 +11,11 @@ class TagChartsScrollViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
 
-    var viewModels = [TagChartsViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [TagChartsViewModel]() {
+        didSet {
+            updateUIViewModels()
+        }
+    }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")

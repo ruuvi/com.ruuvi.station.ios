@@ -92,7 +92,11 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
 
-    var viewModel: TagSettingsViewModel? { didSet { bindViewModel() } }
+    var viewModel: TagSettingsViewModel? {
+        didSet {
+            bindViewModel()
+        }
+    }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
