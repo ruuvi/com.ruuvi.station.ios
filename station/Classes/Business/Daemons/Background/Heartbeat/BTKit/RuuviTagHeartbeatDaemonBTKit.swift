@@ -138,7 +138,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         }
     }
 
-    private func heartbeatHandler(for uuid: String) -> ((RuuviTagHeartbeatDaemonBTKit, BTDevice) -> Void)? {
+    private func heartbeatHandler() -> ((RuuviTagHeartbeatDaemonBTKit, BTDevice) -> Void)? {
         return { observer, device in
             observer.pullWebDaemon.wakeUp()
             if let ruuviTag = device.ruuvi?.tag {
@@ -220,7 +220,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                       uuid: uuid,
                       options: [.callbackQueue(.untouch)],
                       connected: connectedHandler(for: uuid),
-                      heartbeat: heartbeatHandler(for: uuid),
+                      heartbeat: heartbeatHandler(),
                       disconnected: disconnectedHandler(for: uuid))
      }
 
