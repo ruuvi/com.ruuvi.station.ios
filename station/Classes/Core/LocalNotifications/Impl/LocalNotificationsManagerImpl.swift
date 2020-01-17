@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UserNotifications
 import UIKit
 
@@ -260,6 +261,7 @@ extension LocalNotificationsManagerImpl {
 // MARK: - Private
 extension LocalNotificationsManagerImpl {
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -404,3 +406,4 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
     }
 
 }
+// swiftlint:enable file_length
