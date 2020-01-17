@@ -91,13 +91,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                         self?.handleRuuviTagsChange()
                     }
                 case .error(let error):
-                    DispatchQueue.main.async {
-                        NotificationCenter
-                            .default
-                            .post(name: .RuuviTagHeartbeatDaemonDidFail,
-                                  object: nil,
-                                  userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: RUError.persistence(error)])
-                    }
+                    self?.post(error: RUError.persistence(error))
                 }
             })
             self?.connectionPersistence.keepConnectionUUIDs
@@ -303,4 +297,14 @@ extension RuuviTagHeartbeatDaemonBTKit {
          disconnectTokens.values.forEach({ $0.invalidate() })
          disconnectTokens.removeAll()
      }
+
+    private func post(error: Error) {
+        DispatchQueue.main.async {
+            NotificationCenter
+                .default
+                .post(name: .RuuviTagHeartbeatDaemonDidFail,
+                      object: nil,
+                      userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: error])
+        }
+    }
 }
