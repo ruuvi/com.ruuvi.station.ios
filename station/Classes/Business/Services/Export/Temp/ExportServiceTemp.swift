@@ -102,18 +102,18 @@ extension ExportServiceTemp {
                 }
                 let h = Humidity(c: c, rh: sh / 100.0)
                 absoluteHumidity = String(format: "%.2f", h.ah)
-                if let Td = h.Td {
-                    dewPointCelsius = String(format: "%.2f", Td)
+                if let hTd = h.Td {
+                    dewPointCelsius = String(format: "%.2f", hTd)
                 } else {
                     dewPointCelsius = "N/A".localized()
                 }
-                if let TdF = h.TdF {
-                    dewPointFahrenheit = String(format: "%.2f", TdF)
+                if let hTdF = h.TdF {
+                    dewPointFahrenheit = String(format: "%.2f", hTdF)
                 } else {
                     dewPointFahrenheit = "N/A".localized()
                 }
-                if let TdK = h.TdK {
-                    dewPointKelvin = String(format: "%.2f", TdK)
+                if let hTdK = h.TdK {
+                    dewPointKelvin = String(format: "%.2f", hTdK)
                 } else {
                     dewPointKelvin = "N/A".localized()
                 }
@@ -268,18 +268,18 @@ extension ExportServiceTemp {
                }
                let h = Humidity(c: c, rh: rh / 100.0)
                absoluteHumidity = String(format: "%.2f", h.ah)
-               if let Td = h.Td {
-                   dewPointCelsius = String(format: "%.2f", Td)
+               if let hTd = h.Td {
+                   dewPointCelsius = String(format: "%.2f", hTd)
                } else {
                    dewPointCelsius = "N/A".localized()
                }
-               if let TdF = h.TdF {
-                   dewPointFahrenheit = String(format: "%.2f", TdF)
+               if let hTdF = h.TdF {
+                   dewPointFahrenheit = String(format: "%.2f", hTdF)
                } else {
                    dewPointFahrenheit = "N/A".localized()
                }
-               if let TdK = h.TdK {
-                   dewPointKelvin = String(format: "%.2f", TdK)
+               if let hTdK = h.TdK {
+                   dewPointKelvin = String(format: "%.2f", hTdK)
                } else {
                    dewPointKelvin = "N/A".localized()
                }
