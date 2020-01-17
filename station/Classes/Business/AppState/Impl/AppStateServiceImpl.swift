@@ -13,9 +13,15 @@ class AppStateServiceImpl: AppStateService {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-        if settings.isAdvertisementDaemonOn { advertisementDaemon.start() }
-        if settings.isConnectionDaemonOn { connectionDaemon.start() }
-        if settings.isWebTagDaemonOn { webTagDaemon.start() }
+        if settings.isAdvertisementDaemonOn {
+            advertisementDaemon.start()
+        }
+        if settings.isConnectionDaemonOn {
+            connectionDaemon.start()
+        }
+        if settings.isWebTagDaemonOn {
+            webTagDaemon.start()
+        }
         heartbeatDaemon.start()
         propertiesDaemon.start()
         pullWebDaemon.start()
@@ -31,18 +37,30 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        if settings.isAdvertisementDaemonOn { advertisementDaemon.stop() }
-        if settings.isConnectionDaemonOn { connectionDaemon.stop() }
-        if settings.isWebTagDaemonOn { webTagDaemon.stop() }
+        if settings.isAdvertisementDaemonOn {
+            advertisementDaemon.stop()
+        }
+        if settings.isConnectionDaemonOn {
+            connectionDaemon.stop()
+        }
+        if settings.isWebTagDaemonOn {
+            webTagDaemon.stop()
+        }
         propertiesDaemon.stop()
         pullWebDaemon.stop()
         backgroundTaskService.schedule()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        if settings.isAdvertisementDaemonOn { advertisementDaemon.start() }
-        if settings.isConnectionDaemonOn { connectionDaemon.start() }
-        if settings.isWebTagDaemonOn { webTagDaemon.start() }
+        if settings.isAdvertisementDaemonOn {
+            advertisementDaemon.start()
+        }
+        if settings.isConnectionDaemonOn {
+            connectionDaemon.start()
+        }
+        if settings.isWebTagDaemonOn {
+            webTagDaemon.start()
+        }
         propertiesDaemon.start()
         pullWebDaemon.start()
     }
