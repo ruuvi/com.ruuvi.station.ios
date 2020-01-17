@@ -14,9 +14,21 @@ class HumidityCalibrationViewController: UIViewController {
     @IBOutlet weak var noteLabel: UILabel!
     @IBOutlet weak var calibrateButton: UIButton!
 
-    var oldHumidity: Double = 0 { didSet { updateUIOldHumidity() } }
-    var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
-    var lastCalibrationDate: Date? { didSet { updateUILastCalibrationDate() } }
+    var oldHumidity: Double = 0 {
+        didSet {
+            updateUIOldHumidity()
+        }
+    }
+    var humidityOffset: Double = 0 {
+        didSet {
+            updateUIHumidityOffset()
+        }
+    }
+    var lastCalibrationDate: Date? {
+        didSet {
+            updateUILastCalibrationDate()
+        }
+    }
 
     // swiftlint:disable line_length
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!

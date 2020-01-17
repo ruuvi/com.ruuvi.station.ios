@@ -29,10 +29,26 @@ class SettingsTableViewController: UITableViewController {
     private let showDefaults = false
     #endif
 
-    var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
-    var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
-    var language: Language = .english { didSet { updateUILanguage() } }
-    var isBackgroundVisible: Bool = false { didSet { updateUIIsBackgroundVisible() } }
+    var temperatureUnit: TemperatureUnit = .celsius {
+        didSet {
+            updateUITemperatureUnit()
+        }
+    }
+    var humidityUnit: HumidityUnit = .percent {
+        didSet {
+            updateUIHumidityUnit()
+        }
+    }
+    var language: Language = .english {
+        didSet {
+            updateUILanguage()
+        }
+    }
+    var isBackgroundVisible: Bool = false {
+        didSet {
+            updateUIIsBackgroundVisible()
+        }
+    }
 }
 
 // MARK: - SettingsViewInput

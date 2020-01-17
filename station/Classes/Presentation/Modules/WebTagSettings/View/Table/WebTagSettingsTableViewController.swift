@@ -36,9 +36,17 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var removeThisWebTagButton: UIButton!
     @IBOutlet weak var locationTitleLabel: UILabel!
 
-    var isNameChangedEnabled: Bool = true { didSet { updateUIIsNamaChangeEnabled() } }
+    var isNameChangedEnabled: Bool = true {
+        didSet {
+            updateUIIsNamaChangeEnabled()
+        }
+    }
 
-    var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
+    var viewModel = WebTagSettingsViewModel() {
+        didSet {
+            bindViewModel()
+        }
+    }
 
     private let alertsSectionHeaderReuseIdentifier = "WebTagSettingsAlertsHeaderFooterView"
 }
