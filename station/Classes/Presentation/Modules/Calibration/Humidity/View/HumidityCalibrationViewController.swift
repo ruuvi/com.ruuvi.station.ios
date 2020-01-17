@@ -35,10 +35,6 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         targetHumidityLabel.text = String.localizedStringWithFormat("%.2f", 75.0)
     }
 
-    func apply(theme: Theme) {
-
-    }
-
     func showClearCalibrationConfirmationDialog() {
         let title = "HumidityCalibration.ClearCalibrationConfirmationAlert.title".localized()
         let message = "HumidityCalibration.ClearCalibrationConfirmationAlert.message".localized()

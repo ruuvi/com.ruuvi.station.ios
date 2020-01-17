@@ -100,10 +100,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
     }
 
-    func apply(theme: Theme) {
-
-    }
-
     func showBluetoothDisabled() {
         let title = "DiscoverTable.BluetoothDisabledAlert.title".localized()
         let message = "DiscoverTable.BluetoothDisabledAlert.message".localized()

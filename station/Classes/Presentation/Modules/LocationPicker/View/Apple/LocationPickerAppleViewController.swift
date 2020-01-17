@@ -20,10 +20,6 @@ extension LocationPickerAppleViewController: LocationPickerViewInput {
         doneBarButtonItem.title = "Done".localized()
         cancelBarButtonItem.title = "Cancel".localized()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - IBActions

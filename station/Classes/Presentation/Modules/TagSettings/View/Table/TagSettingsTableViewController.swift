@@ -156,10 +156,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         tableView.reloadData()
     }
 
-    func apply(theme: Theme) {
-
-    }
-
     func showTagRemovalConfirmationDialog() {
         let title = "TagSettings.confirmTagRemovalDialog.title".localized()
         let message = "TagSettings.confirmTagRemovalDialog.message".localized()

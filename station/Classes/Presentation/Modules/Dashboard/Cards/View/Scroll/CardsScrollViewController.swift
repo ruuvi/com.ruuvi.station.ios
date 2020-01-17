@@ -76,10 +76,6 @@ extension CardsScrollViewController: CardsViewInput {
         }
     }
 
-    func apply(theme: Theme) {
-
-    }
-
     func showWebTagAPILimitExceededError() {
         let title = "Cards.WebTagAPILimitExcededError.Alert.title".localized()
         let message = "Cards.WebTagAPILimitExcededError.Alert.message".localized()

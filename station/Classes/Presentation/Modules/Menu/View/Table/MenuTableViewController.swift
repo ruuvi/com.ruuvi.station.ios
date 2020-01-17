@@ -6,11 +6,7 @@ class MenuTableViewController: UIViewController {
 
 extension MenuTableViewController: MenuViewInput {
     func localize() {
-
-    }
-
-    func apply(theme: Theme) {
-
+        // do nothing
     }
 }
 

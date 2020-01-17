@@ -45,10 +45,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         })
     }
 
-    func apply(theme: Theme) {
-
-    }
-
     func scroll(to index: Int, immediately: Bool = false) {
         if isViewLoaded {
             if immediately {
