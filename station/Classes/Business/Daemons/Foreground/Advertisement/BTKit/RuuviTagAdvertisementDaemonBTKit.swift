@@ -1,6 +1,6 @@
 import BTKit
-import RealmSwift
 import Foundation
+import RealmSwift
 
 class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
 
