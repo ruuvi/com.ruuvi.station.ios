@@ -200,119 +200,137 @@ extension AlertServiceImpl {
 
 // MARK: - Process Virtual Sensors
 extension AlertServiceImpl {
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+
     func process(data: WPSData, for uuid: String) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                if case .temperature(let lower, let upper) = alert(for: uuid, of: type), let celsius = data.celsius {
-                    let isLower = celsius < lower
-                    let isUpper = celsius > upper
-                    if isLower {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.low, .temperature, for: uuid)
-                        }
-                    } else if isUpper {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.high, .temperature, for: uuid)
-                        }
-                    }
-                    isTriggered = isTriggered || isLower || isUpper
-                }
+                isTriggered = isTriggered || process(temperature: type, uuid: uuid, data: data)
             case .relativeHumidity:
-                if case .relativeHumidity(let lower, let upper) = alert(for: uuid, of: type),
-                    let relativeHumidity = data.humidity {
-                    let isLower = relativeHumidity < lower
-                    let isUpper = relativeHumidity > upper
-                    if isLower {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.low, .relativeHumidity, for: uuid)
-                        }
-                    } else if isUpper {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.high, .relativeHumidity, for: uuid)
-                        }
-                    }
-                    isTriggered = isTriggered || isLower || isUpper
-                }
+                isTriggered = isTriggered || process(relativeHumidity: type, uuid: uuid, data: data)
             case .absoluteHumidity:
-                if case .absoluteHumidity(let lower, let upper) = alert(for: uuid, of: type),
-                    let rh = data.humidity,
-                    let c = data.celsius {
-                    let h = Humidity(c: c, rh: rh / 100.0)
-                    let ah = h.ah
-
-                    let isLower = ah < lower
-                    let isUpper = ah > upper
-
-                    if isLower {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: uuid)
-                        }
-                    } else if isUpper {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
-                        }
-                    }
-                    isTriggered = isTriggered || isLower || isUpper
-                }
+                isTriggered = isTriggered || process(absoluteHumidity: type, uuid: uuid, data: data)
             case .dewPoint:
-                if case .dewPoint(let lower, let upper) = alert(for: uuid, of: type),
-                    let rh = data.humidity, let c = data.celsius {
-                    let h = Humidity(c: c, rh: rh / 100.0)
-                    if let Td = h.Td {
-                        let isLower = Td < lower
-                        let isUpper = Td > upper
-
-                        if isLower {
-                            DispatchQueue.main.async { [weak self] in
-                                self?.localNotificationsManager.notify(.low, .dewPoint, for: uuid)
-                            }
-                        } else if isUpper {
-                            DispatchQueue.main.async { [weak self] in
-                                self?.localNotificationsManager.notify(.high, .dewPoint, for: uuid)
-                            }
-                        }
-                        isTriggered = isTriggered || isLower || isUpper
-                    }
-                }
+                isTriggered = isTriggered || process(dewPoint: type, uuid: uuid, data: data)
             case .pressure:
-                if case .pressure(let lower, let upper) = alert(for: uuid, of: type),
-                    let pressure = data.pressure {
-                    let isLower = pressure < lower
-                    let isUpper = pressure > upper
-                    if isLower {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.low, .pressure, for: uuid)
-                        }
-                    } else if isUpper {
-                        DispatchQueue.main.async { [weak self] in
-                            self?.localNotificationsManager.notify(.high, .pressure, for: uuid)
-                        }
-                    }
-                    isTriggered = isTriggered || isLower || isUpper
-                }
+                isTriggered = isTriggered || process(pressure: type, uuid: uuid, data: data)
             default:
                 break
             }
         }
 
-        if hasRegistrations(for: uuid) {
-            DispatchQueue.main.async { [weak self] in
-                guard let sSelf = self else { return }
-                if let observers = sSelf.observations[uuid] {
-                    for i in 0..<observers.count {
-                        if let pointer = observers.pointer(at: i),
-                            let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                                as? AlertServiceObserver {
-                            observer.alert(service: sSelf,
-                                           isTriggered: isTriggered,
-                                           for: uuid)
-                        }
-                    }
+        notify(uuid: uuid, isTriggered: isTriggered)
+    }
+
+    private func process(temperature: AlertType, uuid: String, data: WPSData) -> Bool {
+        if case .temperature(let lower, let upper) = alert(for: uuid, of: temperature),
+            let celsius = data.celsius {
+            let isLower = celsius < lower
+            let isUpper = celsius > upper
+            if isLower {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.low, .temperature, for: uuid)
+                }
+            } else if isUpper {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.high, .temperature, for: uuid)
                 }
             }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(relativeHumidity: AlertType, uuid: String, data: WPSData) -> Bool {
+        if case .relativeHumidity(let lower, let upper) = alert(for: uuid, of: relativeHumidity),
+            let relativeHumidity = data.humidity {
+            let isLower = relativeHumidity < lower
+            let isUpper = relativeHumidity > upper
+            if isLower {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.low, .relativeHumidity, for: uuid)
+                }
+            } else if isUpper {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.high, .relativeHumidity, for: uuid)
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(absoluteHumidity: AlertType, uuid: String, data: WPSData) -> Bool {
+        if case .absoluteHumidity(let lower, let upper) = alert(for: uuid, of: absoluteHumidity),
+            let rh = data.humidity,
+            let c = data.celsius {
+            let h = Humidity(c: c, rh: rh / 100.0)
+            let ah = h.ah
+
+            let isLower = ah < lower
+            let isUpper = ah > upper
+
+            if isLower {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: uuid)
+                }
+            } else if isUpper {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(dewPoint: AlertType, uuid: String, data: WPSData) -> Bool {
+        if case .dewPoint(let lower, let upper) = alert(for: uuid, of: dewPoint),
+            let rh = data.humidity, let c = data.celsius {
+            let h = Humidity(c: c, rh: rh / 100.0)
+            if let Td = h.Td {
+                let isLower = Td < lower
+                let isUpper = Td > upper
+
+                if isLower {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.localNotificationsManager.notify(.low, .dewPoint, for: uuid)
+                    }
+                } else if isUpper {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.localNotificationsManager.notify(.high, .dewPoint, for: uuid)
+                    }
+                }
+                return isLower || isUpper
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
+    private func process(pressure: AlertType, uuid: String, data: WPSData) -> Bool {
+        if case .pressure(let lower, let upper) = alert(for: uuid, of: pressure),
+            let pressure = data.pressure {
+            let isLower = pressure < lower
+            let isUpper = pressure > upper
+            if isLower {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.low, .pressure, for: uuid)
+                }
+            } else if isUpper {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.high, .pressure, for: uuid)
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
         }
     }
 }
