@@ -21,10 +21,9 @@ class CurrentWebTagRefreshDataOperation: AsyncOperation {
     }
 
     override func main() {
-        let uuid = self.uuid
         weatherProviderService.loadCurrentLocationData(from: provider).on(success: { [weak self] response in
             guard let sSelf = self else { return }
-            sSelf.alertService.process(data: response.1, for: uuid)
+            sSelf.alertService.process(data: response.1, for: sSelf.uuid)
             let persist = sSelf.webTagPersistence.persist(currentLocation: response.0, data: response.1)
             persist.on(success: { [weak sSelf] _ in
                 sSelf?.state = .finished
