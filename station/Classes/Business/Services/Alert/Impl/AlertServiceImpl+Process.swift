@@ -32,7 +32,9 @@ extension AlertServiceImpl {
             setMovement(counter: movementCounter, for: uuid)
         }
 
-        notify(uuid: uuid, isTriggered: isTriggered)
+        if hasRegistrations(for: uuid) {
+            notify(uuid: uuid, isTriggered: isTriggered)
+        }
     }
 
     private func process(temperature: AlertType, ruuviTag: RuuviTag) -> Bool {
@@ -119,9 +121,9 @@ extension AlertServiceImpl {
                 sh = 100.0
             }
             let h = Humidity(c: c, rh: sh / 100.0)
-            if let Td = h.Td {
-                let isLower = Td < lower
-                let isUpper = Td > upper
+            if let hTd = h.Td {
+                let isLower = hTd < lower
+                let isUpper = hTd > upper
 
                 if isLower {
                     DispatchQueue.main.async { [weak self] in
@@ -177,25 +179,6 @@ extension AlertServiceImpl {
             return false
         }
     }
-
-    private func notify(uuid: String, isTriggered: Bool) {
-        if hasRegistrations(for: uuid) {
-            DispatchQueue.main.async { [weak self] in
-                guard let sSelf = self else { return }
-                if let observers = sSelf.observations[uuid] {
-                    for i in 0..<observers.count {
-                        if let pointer = observers.pointer(at: i),
-                            let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                                as? AlertServiceObserver {
-                            observer.alert(service: sSelf,
-                                           isTriggered: isTriggered,
-                                           for: uuid)
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 // MARK: - Process Virtual Sensors
@@ -220,7 +203,9 @@ extension AlertServiceImpl {
             }
         }
 
-        notify(uuid: uuid, isTriggered: isTriggered)
+        if hasRegistrations(for: uuid) {
+            notify(uuid: uuid, isTriggered: isTriggered)
+        }
     }
 
     private func process(temperature: AlertType, uuid: String, data: WPSData) -> Bool {
@@ -292,9 +277,9 @@ extension AlertServiceImpl {
         if case .dewPoint(let lower, let upper) = alert(for: uuid, of: dewPoint),
             let rh = data.humidity, let c = data.celsius {
             let h = Humidity(c: c, rh: rh / 100.0)
-            if let Td = h.Td {
-                let isLower = Td < lower
-                let isUpper = Td > upper
+            if let hTd = h.Td {
+                let isLower = hTd < lower
+                let isUpper = hTd > upper
 
                 if isLower {
                     DispatchQueue.main.async { [weak self] in
@@ -331,6 +316,26 @@ extension AlertServiceImpl {
             return isLower || isUpper
         } else {
             return false
+        }
+    }
+}
+
+// MARK: - Notify
+extension AlertServiceImpl {
+    private func notify(uuid: String, isTriggered: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
+            if let observers = sSelf.observations[uuid] {
+                for i in 0..<observers.count {
+                    if let pointer = observers.pointer(at: i),
+                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                            as? AlertServiceObserver {
+                        observer.alert(service: sSelf,
+                                       isTriggered: isTriggered,
+                                       for: uuid)
+                    }
+                }
+            }
         }
     }
 }
