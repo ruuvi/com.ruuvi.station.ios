@@ -710,7 +710,6 @@ extension TagSettingsPresenter {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -722,45 +721,34 @@ extension TagSettingsPresenter {
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 uuid == self?.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                    switch type {
-                    case .temperature:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isTemperatureAlertOn.value {
-                            self?.viewModel.isTemperatureAlertOn.value = isOn
-                        }
-                    case .relativeHumidity:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isRelativeHumidityAlertOn.value {
-                            self?.viewModel.isRelativeHumidityAlertOn.value = isOn
-                        }
-                    case .absoluteHumidity:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isAbsoluteHumidityAlertOn.value {
-                            self?.viewModel.isAbsoluteHumidityAlertOn.value = isOn
-                        }
-                    case .dewPoint:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isDewPointAlertOn.value {
-                            self?.viewModel.isDewPointAlertOn.value = isOn
-                        }
-                    case .pressure:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isPressureAlertOn.value {
-                            self?.viewModel.isPressureAlertOn.value = isOn
-                        }
-                    case .connection:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isConnectionAlertOn.value {
-                            self?.viewModel.isConnectionAlertOn.value = isOn
-                        }
-                    case .movement:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.viewModel.isMovementAlertOn.value {
-                            self?.viewModel.isMovementAlertOn.value = isOn
-                        }
-                    }
+                self?.updateIsOnState(of: type, for: uuid)
             }
         })
+    }
+
+    private func updateIsOnState(of type: AlertType, for uuid: String) {
+        var observable: Observable<Bool?>
+        switch type {
+        case .temperature:
+            observable = viewModel.isTemperatureAlertOn
+        case .relativeHumidity:
+            observable = viewModel.isRelativeHumidityAlertOn
+        case .absoluteHumidity:
+            observable = viewModel.isAbsoluteHumidityAlertOn
+        case .dewPoint:
+            observable = viewModel.isDewPointAlertOn
+        case .pressure:
+            observable = viewModel.isPressureAlertOn
+        case .connection:
+            observable = viewModel.isConnectionAlertOn
+        case .movement:
+            observable = viewModel.isMovementAlertOn
+        }
+
+        let isOn = alertService.isOn(type: type, for: uuid)
+        if isOn != observable.value {
+            observable.value = isOn
+        }
     }
 }
 // swiftlint:enable file_length
