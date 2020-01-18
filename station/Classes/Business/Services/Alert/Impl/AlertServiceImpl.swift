@@ -402,7 +402,7 @@ extension AlertServiceImpl {
     }
 }
 
-// MARK: - Absoulte Humidity
+// MARK: - Absolute Humidity
 extension AlertServiceImpl {
     func lowerAbsoluteHumidity(for uuid: String) -> Double? {
         return alertPersistence.lowerAbsoluteHumidity(for: uuid)
