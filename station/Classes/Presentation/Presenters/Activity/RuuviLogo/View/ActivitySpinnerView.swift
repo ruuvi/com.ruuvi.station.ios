@@ -61,10 +61,10 @@ class ActivitySpinnerView: UIView {
         var rotations = [CGFloat]()
         var strokeEnds = [CGFloat]()
 
-        let poses = type(of: self).poses
-        let totalSeconds = poses.reduce(0) { $0 + $1.secondsSincePriorPose }
+        let positions = type(of: self).poses
+        let totalSeconds = positions.reduce(0) { $0 + $1.secondsSincePriorPose }
 
-        for pose in poses {
+        for pose in positions {
             time += pose.secondsSincePriorPose
             times.append(time / totalSeconds)
             start = pose.start
