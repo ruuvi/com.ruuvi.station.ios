@@ -141,10 +141,9 @@ extension SettingsTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        switch section {
-        case SettingsTableSection.general.rawValue:
+        if section == SettingsTableSection.general.rawValue {
             return "Settings.SectionFooter.General.title".localized()
-        default:
+        } else {
             return nil
         }
     }
