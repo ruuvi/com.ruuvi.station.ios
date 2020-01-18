@@ -217,7 +217,6 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 // MARK: - Private
 extension TagSettingsPresenter {
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -270,6 +269,11 @@ extension TagSettingsPresenter {
             viewModel.txPower.value = nil
         }
 
+        syncAlerts()
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func syncAlerts() {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:

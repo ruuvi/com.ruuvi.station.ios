@@ -73,9 +73,9 @@ extension HeartbeatTableViewController {
             saveHeartbeatsSwitch.bind(viewModel.saveHeartbeats) { (view, isOn) in
                 view.isOn = isOn.bound
             }
-
+            let every = everyString
             saveHeartbeatsIntervalLabel.bind(viewModel.saveHeartbeatsInterval) { (label, interval) in
-                label.text = everyString.localized()
+                label.text = every.localized()
                             + " " + "\(interval.bound)"
                             + " " + "Heartbeat.Interval.Min.string".localized()
             }
@@ -85,7 +85,7 @@ extension HeartbeatTableViewController {
             }
 
             readRSSIIntervalLabel.bind(viewModel.readRSSIInterval) { (label, interval) in
-                label.text = everyString.localized()
+                label.text = every.localized()
                             + " " + "\(interval.bound)"
                             + " " + "Heartbeat.Interval.Sec.string".localized()
             }
