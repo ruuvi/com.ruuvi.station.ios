@@ -69,16 +69,13 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         pressureAlertHeaderCell.titleLabel.text
             = "WebTagSettings.PressureAlert.title".localized()
             + " " + "hPa".localized()
-        temperatureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        relativeHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        absoluteHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        dewPointAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        pressureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+
+        let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
+        relativeHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        absoluteHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
+        pressureAlertControlsCell.textField.placeholder = alertPlaceholder
 
         tableView.reloadData()
     }
