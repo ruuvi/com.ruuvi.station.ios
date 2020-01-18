@@ -435,9 +435,7 @@ extension CardsScrollViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func bind(view: CardView, with viewModel: CardsViewModel) {
-
+    private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
         view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
             view.isHidden = !isConnectable.bound
         }
@@ -451,24 +449,9 @@ extension CardsScrollViewController {
                 view.isHidden = false
             }
         }
+    }
 
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-
-        bindTemperature(view: view, with: viewModel)
-        bindHumidity(view: view, with: viewModel)
-
-        let pressureUpdate = pressureUpdateBlock(for: viewModel)
-        view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
-
-        switch viewModel.type {
-        case .ruuvi:
-            let rssiUpdate = rssiUpdateBlock(for: viewModel)
-            view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
-        case .web:
-            let locationUpdate = locationUpdateBlock(for: viewModel)
-            view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
-        }
-
+    private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
         let isConnected = viewModel.isConnected
         let date = viewModel.date
 
@@ -499,6 +482,28 @@ extension CardsScrollViewController {
             view?.updatedAt = date
             view?.isConnected = isConnected?.value
         }
+    }
+
+    private func bind(view: CardView, with viewModel: CardsViewModel) {
+        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+
+        bindConnectionRelated(view: view, with: viewModel)
+        bindTemperature(view: view, with: viewModel)
+        bindHumidity(view: view, with: viewModel)
+
+        let pressureUpdate = pressureUpdateBlock(for: viewModel)
+        view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
+
+        switch viewModel.type {
+        case .ruuvi:
+            let rssiUpdate = rssiUpdateBlock(for: viewModel)
+            view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+        case .web:
+            let locationUpdate = locationUpdateBlock(for: viewModel)
+            view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
+        }
+
+        bindUpdated(view: view, with: viewModel)
 
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
 
