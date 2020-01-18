@@ -25,7 +25,7 @@ class TagChartsScrollViewController: UIViewController {
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
-    private let noChartDataText = "TagCharts.NoChartData.text".localized()
+    private let noChartDataText = "TagCharts.NoChartData.text"
 
     deinit {
         if let appDidBecomeActiveToken = appDidBecomeActiveToken {
@@ -38,13 +38,13 @@ class TagChartsScrollViewController: UIViewController {
 extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         views.forEach({
-            $0.temperatureChart.noDataText = noChartDataText
+            $0.temperatureChart.noDataText = noChartDataText.localized()
             $0.temperatureChart.noDataTextColor = .white
             $0.temperatureChart.setNeedsDisplay()
-            $0.humidityChart.noDataText = noChartDataText
+            $0.humidityChart.noDataText = noChartDataText.localized()
             $0.humidityChart.noDataTextColor = .white
             $0.humidityChart.setNeedsDisplay()
-            $0.pressureChart.noDataText = noChartDataText
+            $0.pressureChart.noDataText = noChartDataText.localized()
             $0.pressureChart.noDataTextColor = .white
             $0.pressureChart.setNeedsDisplay()
         })
@@ -353,7 +353,7 @@ extension TagChartsScrollViewController {
         chartView.legend.form = .line
 
         chartView.noDataTextColor = UIColor.white
-        chartView.noDataText = noChartDataText
+        chartView.noDataText = noChartDataText.localized()
 
         chartView.scaleXEnabled = true
         chartView.scaleYEnabled = true
