@@ -839,11 +839,10 @@ extension CardsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String {
-                if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-                    self?.view.scroll(to: index)
-                    self?.tagCharts?.configure(uuid: uuid)
-                }
+            if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
+                let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                self?.view.scroll(to: index)
+                self?.tagCharts?.configure(uuid: uuid)
             }
         })
     }
