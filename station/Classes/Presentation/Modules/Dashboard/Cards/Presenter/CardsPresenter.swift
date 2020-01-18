@@ -402,8 +402,8 @@ extension CardsPresenter {
                                     viewModel.update(rssi: rssi, animated: true)
                                 }
                             case .failure(let error):
-                                if case .logic(let logicError) = error, logicError != .notConnected {
-                                    observer.errorPresenter.present(error: error)
+                                if case .logic(let logicError) = error, logicError == .notConnected {
+                                    // do nothing
                                 } else {
                                     observer.errorPresenter.present(error: error)
                                 }
