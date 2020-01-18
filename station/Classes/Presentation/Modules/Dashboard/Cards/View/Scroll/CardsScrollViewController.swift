@@ -245,26 +245,21 @@ extension CardsScrollViewController {
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
             [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
+                var temperature: Double?
                 switch temperatureUnit {
                 case .celsius:
-                    if let celsius = celsius?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", celsius)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = celsius?.value
                 case .fahrenheit:
-                    if let fahrenheit = fahrenheit?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", fahrenheit)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = fahrenheit?.value
                 case .kelvin:
-                    if let kelvin = kelvin?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", kelvin)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = kelvin?.value
                 }
+                if let temperature = temperature {
+                    label.text = String.localizedStringWithFormat("%.2f", temperature)
+                } else {
+                    label.text = "N/A".localized()
+                }
+
             } else {
                 label.text = "N/A".localized()
             }
