@@ -248,8 +248,7 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch section {
-        case .webTag:
+        if section == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
                 .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
@@ -257,7 +256,7 @@ extension DiscoverTableViewController {
             // swiftlint:enable force_cast
             header.delegate = self
             return header
-        default:
+        } else {
             return nil
         }
     }
