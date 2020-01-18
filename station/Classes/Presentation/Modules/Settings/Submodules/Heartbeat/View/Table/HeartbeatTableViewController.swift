@@ -18,17 +18,19 @@ class HeartbeatTableViewController: UITableViewController {
     @IBOutlet weak var readRSSISwitch: UISwitch!
     @IBOutlet weak var readRSSIIntervalLabel: UILabel!
     @IBOutlet weak var readRSSIIntervalStepper: UIStepper!
+
+    private let everyString = "Heartbeat.Interval.Every.string"
 }
 
 // MARK: - HeartbeatViewInput
 extension HeartbeatTableViewController: HeartbeatViewInput {
     func localize() {
         saveHeartbeatsTitleLabel.text = viewModel.saveHeartbeatsTitle
-        saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.Every.string".localized()
+        saveHeartbeatsIntervalLabel.text = everyString.localized()
             + " " + "\(viewModel.saveHeartbeatsInterval.value.bound)"
             + " " + "Heartbeat.Interval.Min.string".localized()
         readRSSITitleLabel.text = viewModel.readRSSITitle
-        readRSSIIntervalLabel.text = "Heartbeat.Interval.Every.string".localized()
+        readRSSIIntervalLabel.text = everyString.localized()
             + " " + "\(viewModel.readRSSIInterval.value.bound)"
             + " " + "Heartbeat.Interval.Sec.string".localized()
     }
@@ -73,7 +75,7 @@ extension HeartbeatTableViewController {
             }
 
             saveHeartbeatsIntervalLabel.bind(viewModel.saveHeartbeatsInterval) { (label, interval) in
-                label.text = "Heartbeat.Interval.Every.string".localized()
+                label.text = everyString.localized()
                             + " " + "\(interval.bound)"
                             + " " + "Heartbeat.Interval.Min.string".localized()
             }
@@ -83,7 +85,7 @@ extension HeartbeatTableViewController {
             }
 
             readRSSIIntervalLabel.bind(viewModel.readRSSIInterval) { (label, interval) in
-                label.text = "Heartbeat.Interval.Every.string".localized()
+                label.text = everyString.localized()
                             + " " + "\(interval.bound)"
                             + " " + "Heartbeat.Interval.Sec.string".localized()
             }
