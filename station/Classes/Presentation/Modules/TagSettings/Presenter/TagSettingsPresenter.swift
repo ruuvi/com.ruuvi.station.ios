@@ -272,93 +272,120 @@ extension TagSettingsPresenter {
         syncAlerts()
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncAlerts() {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                if case .temperature(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isTemperatureAlertOn.value = true
-                    viewModel.celsiusLowerBound.value = lower
-                    viewModel.celsiusUpperBound.value = upper
-                } else {
-                    viewModel.isTemperatureAlertOn.value = false
-                    if let celsiusLower = alertService.lowerCelsius(for: ruuviTag.uuid) {
-                        viewModel.celsiusLowerBound.value = celsiusLower
-                    }
-                    if let celsiusUpper = alertService.upperCelsius(for: ruuviTag.uuid) {
-                        viewModel.celsiusUpperBound.value = celsiusUpper
-                    }
-                }
+                sync(temperature: type)
             case .relativeHumidity:
-                if case .relativeHumidity(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isRelativeHumidityAlertOn.value = true
-                    viewModel.relativeHumidityLowerBound.value = lower
-                    viewModel.relativeHumidityUpperBound.value = upper
-                } else {
-                    viewModel.isRelativeHumidityAlertOn.value = false
-                    if let realtiveHumidityLower = alertService.lowerRelativeHumidity(for: ruuviTag.uuid) {
-                        viewModel.relativeHumidityLowerBound.value = realtiveHumidityLower
-                    }
-                    if let relativeHumidityUpper = alertService.upperRelativeHumidity(for: ruuviTag.uuid) {
-                        viewModel.relativeHumidityUpperBound.value = relativeHumidityUpper
-                    }
-                }
+                sync(relativeHumidity: type)
             case .absoluteHumidity:
-                if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isAbsoluteHumidityAlertOn.value = true
-                    viewModel.absoluteHumidityLowerBound.value = lower
-                    viewModel.absoluteHumidityUpperBound.value = upper
-                } else {
-                    viewModel.isAbsoluteHumidityAlertOn.value = false
-                    if let absoluteHumidityLower = alertService.lowerAbsoluteHumidity(for: ruuviTag.uuid) {
-                        viewModel.absoluteHumidityLowerBound.value = absoluteHumidityLower
-                    }
-                    if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: ruuviTag.uuid) {
-                        viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
-                    }
-                }
+                sync(abosluteHumidity: type)
             case .dewPoint:
-                if case .dewPoint(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isDewPointAlertOn.value = true
-                    viewModel.dewPointCelsiusLowerBound.value = lower
-                    viewModel.dewPointCelsiusUpperBound.value = upper
-                } else {
-                    viewModel.isDewPointAlertOn.value = false
-                    if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: ruuviTag.uuid) {
-                        viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
-                    }
-                    if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: ruuviTag.uuid) {
-                        viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
-                    }
-                }
+                sync(dewPoint: type)
             case .pressure:
-                if case .pressure(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isPressureAlertOn.value = true
-                    viewModel.pressureLowerBound.value = lower
-                    viewModel.pressureUpperBound.value = upper
-                } else {
-                    viewModel.isPressureAlertOn.value = false
-                    if let pressureLowerBound = alertService.lowerPressure(for: ruuviTag.uuid) {
-                        viewModel.pressureLowerBound.value = pressureLowerBound
-                    }
-                    if let pressureUpperBound = alertService.upperPressure(for: ruuviTag.uuid) {
-                        viewModel.pressureUpperBound.value = pressureUpperBound
-                    }
-                }
+                sync(pressure: type)
             case .connection:
-                if case .connection = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isConnectionAlertOn.value = true
-                } else {
-                    viewModel.isConnectionAlertOn.value = false
-                }
+                sync(connection: type)
             case .movement:
-                if case .movement = alertService.alert(for: ruuviTag.uuid, of: type) {
-                    viewModel.isMovementAlertOn.value = true
-                } else {
-                    viewModel.isMovementAlertOn.value = false
-                }
+                sync(movement: type)
             }
+        }
+    }
+
+    private func sync(temperature: AlertType) {
+        if case .temperature(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: temperature) {
+            viewModel.isTemperatureAlertOn.value = true
+            viewModel.celsiusLowerBound.value = lower
+            viewModel.celsiusUpperBound.value = upper
+        } else {
+            viewModel.isTemperatureAlertOn.value = false
+            if let celsiusLower = alertService.lowerCelsius(for: ruuviTag.uuid) {
+                viewModel.celsiusLowerBound.value = celsiusLower
+            }
+            if let celsiusUpper = alertService.upperCelsius(for: ruuviTag.uuid) {
+                viewModel.celsiusUpperBound.value = celsiusUpper
+            }
+        }
+    }
+
+    private func sync(relativeHumidity: AlertType) {
+        if case .relativeHumidity(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: relativeHumidity) {
+            viewModel.isRelativeHumidityAlertOn.value = true
+            viewModel.relativeHumidityLowerBound.value = lower
+            viewModel.relativeHumidityUpperBound.value = upper
+        } else {
+            viewModel.isRelativeHumidityAlertOn.value = false
+            if let realtiveHumidityLower = alertService.lowerRelativeHumidity(for: ruuviTag.uuid) {
+                viewModel.relativeHumidityLowerBound.value = realtiveHumidityLower
+            }
+            if let relativeHumidityUpper = alertService.upperRelativeHumidity(for: ruuviTag.uuid) {
+                viewModel.relativeHumidityUpperBound.value = relativeHumidityUpper
+            }
+        }
+    }
+
+    private func sync(abosluteHumidity: AlertType) {
+        if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: abosluteHumidity) {
+            viewModel.isAbsoluteHumidityAlertOn.value = true
+            viewModel.absoluteHumidityLowerBound.value = lower
+            viewModel.absoluteHumidityUpperBound.value = upper
+        } else {
+            viewModel.isAbsoluteHumidityAlertOn.value = false
+            if let absoluteHumidityLower = alertService.lowerAbsoluteHumidity(for: ruuviTag.uuid) {
+                viewModel.absoluteHumidityLowerBound.value = absoluteHumidityLower
+            }
+            if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: ruuviTag.uuid) {
+                viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
+            }
+        }
+    }
+
+    private func sync(dewPoint: AlertType) {
+        if case .dewPoint(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: dewPoint) {
+            viewModel.isDewPointAlertOn.value = true
+            viewModel.dewPointCelsiusLowerBound.value = lower
+            viewModel.dewPointCelsiusUpperBound.value = upper
+        } else {
+            viewModel.isDewPointAlertOn.value = false
+            if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: ruuviTag.uuid) {
+                viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
+            }
+            if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: ruuviTag.uuid) {
+                viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
+            }
+        }
+    }
+
+    private func sync(pressure: AlertType) {
+        if case .pressure(let lower, let upper) = alertService.alert(for: ruuviTag.uuid, of: pressure) {
+            viewModel.isPressureAlertOn.value = true
+            viewModel.pressureLowerBound.value = lower
+            viewModel.pressureUpperBound.value = upper
+        } else {
+            viewModel.isPressureAlertOn.value = false
+            if let pressureLowerBound = alertService.lowerPressure(for: ruuviTag.uuid) {
+                viewModel.pressureLowerBound.value = pressureLowerBound
+            }
+            if let pressureUpperBound = alertService.upperPressure(for: ruuviTag.uuid) {
+                viewModel.pressureUpperBound.value = pressureUpperBound
+            }
+        }
+    }
+
+    private func sync(connection: AlertType) {
+        if case .connection = alertService.alert(for: ruuviTag.uuid, of: connection) {
+            viewModel.isConnectionAlertOn.value = true
+        } else {
+            viewModel.isConnectionAlertOn.value = false
+        }
+    }
+
+    private func sync(movement: AlertType) {
+        if case .movement = alertService.alert(for: ruuviTag.uuid, of: movement) {
+            viewModel.isMovementAlertOn.value = true
+        } else {
+            viewModel.isMovementAlertOn.value = false
         }
     }
 
