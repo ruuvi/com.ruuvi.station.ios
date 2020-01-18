@@ -503,41 +503,36 @@ extension WebTagSettingsPresenter {
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 uuid == self?.view.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                    switch type {
-                    case .temperature:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isTemperatureAlertOn.value {
-                            self?.view.viewModel.isTemperatureAlertOn.value = isOn
-                        }
-                    case .relativeHumidity:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isRelativeHumidityAlertOn.value {
-                            self?.view.viewModel.isRelativeHumidityAlertOn.value = isOn
-                        }
-                    case .absoluteHumidity:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isAbsoluteHumidityAlertOn.value {
-                            self?.view.viewModel.isAbsoluteHumidityAlertOn.value = isOn
-                        }
-                    case .dewPoint:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isDewPointAlertOn.value {
-                            self?.view.viewModel.isDewPointAlertOn.value = isOn
-                        }
-                    case .pressure:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isPressureAlertOn.value {
-                            self?.view.viewModel.isPressureAlertOn.value = isOn
-                        }
-                    case .connection:
-                        // do nothing, no connection alert here
-                        break
-                    case .movement:
-                        // do nothing, no movement alert here
-                        break
-                    }
+                self?.updateIsOnState(of: type, for: uuid)
             }
         })
+    }
+
+    private func updateIsOnState(of type: AlertType, for uuid: String) {
+        var observable: Observable<Bool?>?
+        switch type {
+        case .temperature:
+            observable = view.viewModel.isTemperatureAlertOn
+        case .relativeHumidity:
+            observable = view.viewModel.isRelativeHumidityAlertOn
+        case .absoluteHumidity:
+            observable = view.viewModel.isAbsoluteHumidityAlertOn
+        case .dewPoint:
+            observable = view.viewModel.isDewPointAlertOn
+        case .pressure:
+            observable = view.viewModel.isPressureAlertOn
+        case .connection:
+            observable = nil
+        case .movement:
+            observable = nil
+        }
+
+        if let observable = observable {
+            let isOn = alertService.isOn(type: type, for: uuid)
+            if isOn != observable.value {
+                observable.value = isOn
+            }
+        }
     }
 }
 // swiftlint:enable file_length
