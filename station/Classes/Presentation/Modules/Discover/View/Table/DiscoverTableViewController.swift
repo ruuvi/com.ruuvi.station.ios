@@ -235,10 +235,9 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch s {
-        case .webTag:
+        if s == .webTag {
             return 60
-        default:
+        } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
