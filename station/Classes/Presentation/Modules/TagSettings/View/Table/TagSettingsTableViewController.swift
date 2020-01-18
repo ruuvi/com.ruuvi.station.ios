@@ -109,7 +109,6 @@ class TagSettingsTableViewController: UITableViewController {
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
 
-    // swiftlint:disable:next function_body_length
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
@@ -454,33 +453,20 @@ extension TagSettingsTableViewController {
             }
         } else {
             switch cell {
-            case temperatureAlertHeaderCell:
-                return 0
-            case temperatureAlertControlsCell:
-                return 0
-            case relativeHumidityAlertHeaderCell:
-                return 0
-            case relativeHumidityAlertControlsCell:
-                return 0
-            case absoluteHumidityAlertHeaderCell:
-                return 0
-            case absoluteHumidityAlertControlsCell:
-                return 0
-            case dewPointAlertHeaderCell:
-                return 0
-            case dewPointAlertControlsCell:
-                return 0
-            case pressureAlertHeaderCell:
-                return 0
-            case pressureAlertControlsCell:
-                return 0
-            case connectionAlertHeaderCell:
-                return 0
-            case connectionAlertDescriptionCell:
-                return 0
-            case movementAlertHeaderCell:
-                return 0
-            case movementAlertDescriptionCell:
+            case temperatureAlertHeaderCell,
+                 temperatureAlertControlsCell,
+                 relativeHumidityAlertHeaderCell,
+                 relativeHumidityAlertControlsCell,
+                 absoluteHumidityAlertHeaderCell,
+                 absoluteHumidityAlertControlsCell,
+                 dewPointAlertHeaderCell,
+                 dewPointAlertControlsCell,
+                 pressureAlertHeaderCell,
+                 pressureAlertControlsCell,
+                 connectionAlertHeaderCell,
+                 connectionAlertDescriptionCell,
+                 movementAlertHeaderCell,
+                 movementAlertDescriptionCell:
                 return 0
             default:
                 return 44
