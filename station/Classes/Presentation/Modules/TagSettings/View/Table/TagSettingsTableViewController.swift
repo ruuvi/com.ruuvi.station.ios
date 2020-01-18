@@ -142,20 +142,14 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         connectionAlertHeaderCell.titleLabel.text = "TagSettings.ConnectionAlert.title".localized()
         movementAlertHeaderCell.titleLabel.text = "TagSettings.MovementAlert.title".localized()
 
-        temperatureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        relativeHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        absoluteHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        dewPointAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        pressureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        connectionAlertDescriptionCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        movementAlertDescriptionCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
+        relativeHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        absoluteHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
+        pressureAlertControlsCell.textField.placeholder = alertPlaceholder
+        connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
+        movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
 
         tableView.reloadData()
     }
