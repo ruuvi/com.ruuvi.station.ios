@@ -877,13 +877,14 @@ extension TagSettingsTableViewController {
 
             temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
+                    let title = "TagSettings.temperatureAlertTitleLabel.text"
                     switch tu {
                     case .celsius:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+                        label.text = title.localized() + " " + "°C".localized()
                     case .fahrenheit:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+                        label.text = title.localized() + " " + "°F".localized()
                     case .kelvin:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " "  + "K".localized()
+                        label.text = title.localized() + " "  + "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
