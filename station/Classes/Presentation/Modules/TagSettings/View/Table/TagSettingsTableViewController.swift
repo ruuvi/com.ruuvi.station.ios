@@ -104,6 +104,7 @@ class TagSettingsTableViewController: UITableViewController {
 
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
+    private let alertOffString = "TagSettings.Alerts.Off"
 }
 
 // MARK: - TagSettingsViewInput
@@ -1449,10 +1450,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.AbsoluteHumidity.description".localized()
                     absoluteHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                absoluteHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1462,7 +1463,7 @@ extension TagSettingsTableViewController {
             if let isMovementAlertOn = viewModel?.isMovementAlertOn.value, isMovementAlertOn {
                 movementAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Movement.description".localized()
             } else {
-                movementAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                movementAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1473,7 +1474,7 @@ extension TagSettingsTableViewController {
                 connectionAlertHeaderCell.descriptionLabel.text
                     = "TagSettings.Alerts.Connection.description".localized()
             } else {
-                connectionAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                connectionAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1487,10 +1488,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.Pressure.description".localized()
                     pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1504,10 +1505,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.RelativeHumidity.description".localized()
                     relativeHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    relativeHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                relativeHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1622,10 +1623,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.DewPoint.description".localized()
                     dewPointAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    dewPointAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                dewPointAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1652,10 +1653,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.Temperature.description".localized()
                     temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    temperatureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                temperatureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
