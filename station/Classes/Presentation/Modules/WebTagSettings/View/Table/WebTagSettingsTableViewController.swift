@@ -49,6 +49,7 @@ class WebTagSettingsTableViewController: UITableViewController {
     }
 
     private let alertsSectionHeaderReuseIdentifier = "WebTagSettingsAlertsHeaderFooterView"
+    private let alertOffString = "WebTagSettings.Alerts.Off"
 }
 
 // MARK: - WebTagSettingsViewInput
@@ -367,7 +368,7 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.Pressure.description".localized()
                     pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    pressureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
                 pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
@@ -441,10 +442,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.DewPoint.description".localized()
                     dewPointAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    dewPointAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                dewPointAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -477,10 +478,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.AbsoluteHumidity.description".localized()
                     absoluteHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                absoluteHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -494,10 +495,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.RelativeHumidity.description".localized()
                     relativeHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    relativeHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                relativeHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -544,10 +545,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.Temperature.description".localized()
                     temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    temperatureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                temperatureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
