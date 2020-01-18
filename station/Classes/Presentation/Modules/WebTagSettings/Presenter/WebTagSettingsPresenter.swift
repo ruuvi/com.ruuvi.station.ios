@@ -184,9 +184,15 @@ extension WebTagSettingsPresenter: LocationPickerModuleOutput {
 // MARK: - Private
 extension WebTagSettingsPresenter {
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel(to webTag: WebTagRealm) {
-        // temperature alert
+        bindTemperatureAlert(webTag)
+        bindRelativeHumidityAlert(webTag)
+        bindAbsoluteHumidityAlert(webTag)
+        bindDewPointAlert(webTag)
+        bindPressureAlert(webTag)
+    }
+
+    private func bindTemperatureAlert(_ webTag: WebTagRealm) {
         let temperatureLower = view.viewModel.celsiusLowerBound
         let temperatureUpper = view.viewModel.celsiusUpperBound
         bind(view.viewModel.isTemperatureAlertOn, fire: false) {
@@ -212,8 +218,9 @@ extension WebTagSettingsPresenter {
         bind(view.viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
             observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // relative humidity alert
+    private func bindRelativeHumidityAlert(_ webTag: WebTagRealm) {
         let relativeHumidityLower = view.viewModel.relativeHumidityLowerBound
         let relativeHumidityUpper = view.viewModel.relativeHumidityUpperBound
         bind(view.viewModel.isRelativeHumidityAlertOn, fire: false) {
@@ -240,8 +247,9 @@ extension WebTagSettingsPresenter {
             observer, relativeHumidityAlertDescription in
             observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // absolute humidity alert
+    fileprivate func bindAbsoluteHumidityAlert(_ webTag: WebTagRealm) {
         let absoluteHumidityLower = view.viewModel.absoluteHumidityLowerBound
         let absoluteHumidityUpper = view.viewModel.absoluteHumidityUpperBound
         bind(view.viewModel.isAbsoluteHumidityAlertOn, fire: false) {
@@ -271,8 +279,9 @@ extension WebTagSettingsPresenter {
             observer, absoluteHumidityAlertDescription in
             observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // dew point alert
+    private func bindDewPointAlert(_ webTag: WebTagRealm) {
         let dewPointLower = view.viewModel.dewPointCelsiusLowerBound
         let dewPointUpper = view.viewModel.dewPointCelsiusUpperBound
         bind(view.viewModel.isDewPointAlertOn, fire: false) {
@@ -298,8 +307,9 @@ extension WebTagSettingsPresenter {
         bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
             observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // pressure
+    private func bindPressureAlert(_ webTag: WebTagRealm) {
         let pressureLower = view.viewModel.pressureLowerBound
         let pressureUpper = view.viewModel.pressureUpperBound
         bind(view.viewModel.isPressureAlertOn, fire: false) {
@@ -329,6 +339,7 @@ extension WebTagSettingsPresenter {
             observer.alertService.setPressure(description: pressureAlertDescription, for: webTag.uuid)
         }
     }
+
     private func startObservingWebTag() {
         webTagToken = webTag.observe({ [weak self] (change) in
             switch change {
