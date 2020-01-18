@@ -708,7 +708,6 @@ extension CardsPresenter {
         })
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func updateAlertState(for viewModel: CardsViewModel) {
         if let uuid = viewModel.uuid.value {
             var newValue: AlertState
@@ -717,63 +716,15 @@ extension CardsPresenter {
                 AlertType.allCases.forEach { type in
                     switch type {
                     case .temperature:
-                        if case .temperature(let lower, let upper) = alertService.alert(for: uuid, of: type),
-                            let celsius = viewModel.celsius.value {
-                            let isLower = celsius < lower
-                            let isUpper = celsius > upper
-                            isTriggered = isTriggered || isLower || isUpper
-                        }
+                        isTriggered = isTriggered || isTriggering(temperature: type, for: viewModel)
                     case .relativeHumidity:
-                        if case .relativeHumidity(let lower, let upper) = alertService.alert(for: uuid, of: type),
-                            let rh = viewModel.relativeHumidity.value {
-                            let ho = calibrationService.humidityOffset(for: uuid).0
-                            var sh = rh + ho
-                            if sh > 100.0 {
-                                sh = 100.0
-                            }
-                            let isLower = sh < lower
-                            let isUpper = sh > upper
-                            isTriggered = isTriggered || isLower || isUpper
-                        }
+                        isTriggered = isTriggered || isTriggering(relativeHumidity: type, for: viewModel)
                     case .absoluteHumidity:
-                        if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: uuid, of: type),
-                            let rh = viewModel.relativeHumidity.value,
-                            let c = viewModel.celsius.value {
-                            let ho = calibrationService.humidityOffset(for: uuid).0
-                            var sh = rh + ho
-                            if sh > 100.0 {
-                                sh = 100.0
-                            }
-                            let h = Humidity(c: c, rh: sh / 100.0)
-                            let ah = h.ah
-
-                            let isLower = ah < lower
-                            let isUpper = ah > upper
-                            isTriggered = isTriggered || isLower || isUpper
-                        }
+                        isTriggered = isTriggered || isTriggering(absoluteHumidity: type, for: viewModel)
                     case .dewPoint:
-                        if case .dewPoint(let lower, let upper) = alertService.alert(for: uuid, of: type),
-                            let rh = viewModel.relativeHumidity.value,
-                            let c = viewModel.celsius.value {
-                            let ho = calibrationService.humidityOffset(for: uuid).0
-                            var sh = rh + ho
-                            if sh > 100.0 {
-                                sh = 100.0
-                            }
-                            let h = Humidity(c: c, rh: sh / 100.0)
-                            if let hTd = h.Td {
-                                let isLower = hTd < lower
-                                let isUpper = hTd > upper
-                                isTriggered = isTriggered || isLower || isUpper
-                            }
-                        }
+                        isTriggered = isTriggered || isTriggering(dewPoint: type, for: viewModel)
                     case .pressure:
-                        if case .pressure(let lower, let upper) = alertService.alert(for: uuid, of: type),
-                            let pressure = viewModel.pressure.value {
-                            let isLower = pressure < lower
-                            let isUpper = pressure > upper
-                            isTriggered = isTriggered || isLower || isUpper
-                        }
+                        isTriggered = isTriggered || isTriggering(pressure: type, for: viewModel)
                     default:
                         break
                     }
@@ -785,6 +736,91 @@ extension CardsPresenter {
             if newValue != viewModel.alertState.value {
                 viewModel.alertState.value = newValue
             }
+        }
+    }
+
+    private func isTriggering(temperature: AlertType, for viewModel: CardsViewModel) -> Bool {
+        if let uuid = viewModel.uuid.value,
+            case .temperature(let lower, let upper) = alertService.alert(for: uuid, of: temperature),
+            let celsius = viewModel.celsius.value {
+            let isLower = celsius < lower
+            let isUpper = celsius > upper
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func isTriggering(relativeHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
+        if let uuid = viewModel.uuid.value,
+            case .relativeHumidity(let lower, let upper) = alertService.alert(for: uuid, of: relativeHumidity),
+            let rh = viewModel.relativeHumidity.value {
+            let ho = calibrationService.humidityOffset(for: uuid).0
+            var sh = rh + ho
+            if sh > 100.0 {
+                sh = 100.0
+            }
+            let isLower = sh < lower
+            let isUpper = sh > upper
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func isTriggering(absoluteHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
+        if let uuid = viewModel.uuid.value,
+            case .absoluteHumidity(let lower, let upper) = alertService.alert(for: uuid, of: absoluteHumidity),
+            let rh = viewModel.relativeHumidity.value,
+            let c = viewModel.celsius.value {
+            let ho = calibrationService.humidityOffset(for: uuid).0
+            var sh = rh + ho
+            if sh > 100.0 {
+                sh = 100.0
+            }
+            let h = Humidity(c: c, rh: sh / 100.0)
+            let ah = h.ah
+
+            let isLower = ah < lower
+            let isUpper = ah > upper
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func isTriggering(dewPoint: AlertType, for viewModel: CardsViewModel) -> Bool {
+        if let uuid = viewModel.uuid.value,
+            case .dewPoint(let lower, let upper) = alertService.alert(for: uuid, of: dewPoint),
+            let rh = viewModel.relativeHumidity.value,
+            let c = viewModel.celsius.value {
+            let ho = calibrationService.humidityOffset(for: uuid).0
+            var sh = rh + ho
+            if sh > 100.0 {
+                sh = 100.0
+            }
+            let h = Humidity(c: c, rh: sh / 100.0)
+            if let hTd = h.Td {
+                let isLower = hTd < lower
+                let isUpper = hTd > upper
+                return isLower || isUpper
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+
+    private func isTriggering(pressure: AlertType, for viewModel: CardsViewModel) -> Bool {
+        if let uuid = viewModel.uuid.value,
+            case .pressure(let lower, let upper) = alertService.alert(for: uuid, of: pressure),
+            let pressure = viewModel.pressure.value {
+            let isLower = pressure < lower
+            let isUpper = pressure > upper
+            return isLower || isUpper
+        } else {
+            return false
         }
     }
 
