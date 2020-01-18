@@ -76,7 +76,9 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidChangeTag(name: String) {
-        let defaultName = webTag.location == nil ? WebTagLocationSource.current.title : WebTagLocationSource.manual.title
+        let defaultName = webTag.location == nil
+            ? WebTagLocationSource.current.title
+            : WebTagLocationSource.manual.title
         let finalName = name.isEmpty ? defaultName : name
         let operation = webTagService.update(name: finalName, of: webTag)
         operation.on(failure: { [weak self] (error) in
@@ -491,7 +493,6 @@ extension WebTagSettingsPresenter {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
