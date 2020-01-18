@@ -23,6 +23,7 @@ extension LanguageTableViewController: LanguageViewInput {
 extension LanguageTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateUI()
         setupLocalization()
         output.viewDidLoad()
     }
