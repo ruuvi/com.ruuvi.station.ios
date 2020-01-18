@@ -76,11 +76,8 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidChangeTag(name: String) {
-        let finalName = name.isEmpty ?
-                        (webTag.location == nil
-                            ? WebTagLocationSource.current.title
-                            : WebTagLocationSource.manual.title)
-                        : name
+        let defaultName = webTag.location == nil ? WebTagLocationSource.current.title : WebTagLocationSource.manual.title
+        let finalName = name.isEmpty ? defaultName : name
         let operation = webTagService.update(name: finalName, of: webTag)
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
