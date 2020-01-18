@@ -690,11 +690,13 @@ extension TagSettingsTableViewController {
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
 
+            let emptyValueString = "TagSettings.EmptyValue.sign"
+
             uuidValueLabel.bind(viewModel.uuid) { label, uuid in
                 if let uuid = uuid {
                     label.text = uuid
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -702,7 +704,7 @@ extension TagSettingsTableViewController {
                 if let mac = mac {
                     label.text = mac
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -710,7 +712,7 @@ extension TagSettingsTableViewController {
                 if let voltage = voltage {
                     label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -718,7 +720,7 @@ extension TagSettingsTableViewController {
                 if let accelerationX = accelerationX {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationX) + " " + "g".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -726,7 +728,7 @@ extension TagSettingsTableViewController {
                 if let accelerationY = accelerationY {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationY) + " " + "g".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -734,7 +736,7 @@ extension TagSettingsTableViewController {
                 if let accelerationZ = accelerationZ {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -742,7 +744,7 @@ extension TagSettingsTableViewController {
                 if let version = version {
                     label.text = "\(version)"
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -750,7 +752,7 @@ extension TagSettingsTableViewController {
                 if let mc = mc {
                     label.text = "\(mc)"
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -758,7 +760,7 @@ extension TagSettingsTableViewController {
                 if let msn = msn {
                     label.text = "\(msn)"
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -766,7 +768,7 @@ extension TagSettingsTableViewController {
                 if let txPower = txPower {
                     label.text = "\(txPower)" + " " + "dBm".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
