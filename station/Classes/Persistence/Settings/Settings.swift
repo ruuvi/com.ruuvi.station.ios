@@ -5,7 +5,6 @@ extension Notification.Name {
     static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
     static let LanguageDidChange = Notification.Name("LanguageDidChange")
     static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
-    static let isConnectionDaemonOnDidChange = Notification.Name("isConnectionDaemonOnDidChange")
     static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
     static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
     static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
@@ -19,8 +18,6 @@ protocol Settings {
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
     var isAdvertisementDaemonOn: Bool { get set }
-    var isConnectionDaemonOn: Bool { get set }
-    var connectionDaemonIntervalMinutes: Int { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
     var isWebTagDaemonOn: Bool { get set }
     var webTagDaemonIntervalMinutes: Int { get set }

@@ -40,7 +40,6 @@ class CardsPresenter: CardsModuleInput {
     private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagPropertiesDaemonFailureToken: NSObjectProtocol?
-    private var ruuviTagConnectionDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
     private var startKeepingConnectionToken: NSObjectProtocol?
@@ -94,9 +93,6 @@ class CardsPresenter: CardsModuleInput {
         }
         if let ruuviTagAdvertisementDaemonFailureToken = ruuviTagAdvertisementDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagAdvertisementDaemonFailureToken)
-        }
-        if let ruuviTagConnectionDaemonFailureToken = ruuviTagConnectionDaemonFailureToken {
-            NotificationCenter.default.removeObserver(ruuviTagConnectionDaemonFailureToken)
         }
         if let ruuviTagHeartbeatDaemonFailureToken = ruuviTagHeartbeatDaemonFailureToken {
             NotificationCenter.default.removeObserver(ruuviTagHeartbeatDaemonFailureToken)
@@ -606,18 +602,6 @@ extension CardsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let error = userInfo[RuuviTagPropertiesDaemonDidFailKey.error] as? RUError {
-                self?.errorPresenter.present(error: error)
-            }
-        })
-
-        ruuviTagConnectionDaemonFailureToken = NotificationCenter
-            .default
-            .addObserver(forName: .RuuviTagConnectionDaemonDidFail,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo,
-                let error = userInfo[RuuviTagConnectionDaemonDidFailKey.error] as? RUError {
                 self?.errorPresenter.present(error: error)
             }
         })
