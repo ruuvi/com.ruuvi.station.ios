@@ -4,7 +4,6 @@ class AppStateServiceImpl: AppStateService {
 
     var settings: Settings!
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
-    var connectionDaemon: RuuviTagConnectionDaemon!
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var webTagDaemon: WebTagDaemon!
     var heartbeatDaemon: RuuviTagHeartbeatDaemon!
@@ -15,9 +14,6 @@ class AppStateServiceImpl: AppStateService {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
-        }
-        if settings.isConnectionDaemonOn {
-            connectionDaemon.start()
         }
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
@@ -40,9 +36,6 @@ class AppStateServiceImpl: AppStateService {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.stop()
         }
-        if settings.isConnectionDaemonOn {
-            connectionDaemon.stop()
-        }
         if settings.isWebTagDaemonOn {
             webTagDaemon.stop()
         }
@@ -54,9 +47,6 @@ class AppStateServiceImpl: AppStateService {
     func applicationWillEnterForeground(_ application: UIApplication) {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
-        }
-        if settings.isConnectionDaemonOn {
-            connectionDaemon.start()
         }
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()

@@ -22,7 +22,6 @@ class BusinessAssembly: Assembly {
             let service = AppStateServiceImpl()
             service.settings = r.resolve(Settings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
-            service.connectionDaemon = r.resolve(RuuviTagConnectionDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
@@ -87,17 +86,6 @@ class BusinessAssembly: Assembly {
             daemon.settings = r.resolve(Settings.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            return daemon
-        }.inObjectScope(.container)
-
-        container.register(RuuviTagConnectionDaemon.self) { r in
-            let daemon = RuuviTagConnectionDaemonBTKit()
-            daemon.settings = r.resolve(Settings.self)
-            daemon.foreground = r.resolve(BTForeground.self)
-            daemon.background = r.resolve(BTBackground.self)
-            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
-            daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            daemon.gattService = r.resolve(GATTService.self)
             return daemon
         }.inObjectScope(.container)
 

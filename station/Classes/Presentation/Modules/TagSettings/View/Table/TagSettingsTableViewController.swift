@@ -1362,6 +1362,14 @@ extension TagSettingsTableViewController {
     }
 }
 
+// MARK: - UITextFieldDelegate
+extension TagSettingsTableViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
+    }
+}
+
 // MARK: - Update UI
 extension TagSettingsTableViewController {
     private func updateUI() {

@@ -114,17 +114,6 @@ class SettingsUserDegaults: Settings {
         }
     }
 
-    @UserDefault("SettingsUserDegaults.isConnectionDaemonOn", defaultValue: false)
-    var isConnectionDaemonOn: Bool {
-        didSet {
-            NotificationCenter
-            .default
-            .post(name: .isConnectionDaemonOnDidChange,
-                  object: self,
-                  userInfo: nil)
-        }
-    }
-
     @UserDefault("SettingsUserDegaults.isWebTagDaemonOn", defaultValue: true)
     var isWebTagDaemonOn: Bool {
         didSet {
@@ -153,9 +142,6 @@ class SettingsUserDegaults: Settings {
 
     @UserDefault("SettingsUserDegaults.serviceTimeout", defaultValue: 60)
     var serviceTimeout: TimeInterval
-
-    @UserDefault("SettingsUserDegaults.connectionDaemonIntervalMinutes", defaultValue: 60)
-    var connectionDaemonIntervalMinutes: Int
 
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
     var advertisementDaemonIntervalMinutes: Int
