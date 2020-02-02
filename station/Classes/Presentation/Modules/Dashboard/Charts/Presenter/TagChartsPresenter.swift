@@ -45,7 +45,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
-
+    private var lastSyncViewModelDate = Date()
+    
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -332,7 +333,14 @@ extension TagChartsPresenter {
             ruuviTagDataTokens.append(ruuviTag.data.observe { [weak self] (change) in
                 switch change {
                 case .update:
-                    self?.syncViewModels()
+                    // sync every 1 second
+                    if let last = self?.lastSyncViewModelDate {
+                        let elapsed = Int(Date().timeIntervalSince(last))
+                        if elapsed > 1 {
+                            self?.syncViewModels()
+                            self?.lastSyncViewModelDate = Date()
+                        }
+                    }
                 case .error(let error):
                     self?.errorPresenter.present(error: error)
                 default:

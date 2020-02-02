@@ -18,7 +18,7 @@ struct HeartbeatList: View {
                     + " " + "\(self.env.viewModel.saveHeartbeatsInterval.value.bound)"
                     + " " + "Heartbeat.Interval.Min.string".localized(),
                         value: self.$env.viewModel.saveHeartbeatsInterval.value.bound,
-                        in: 1...3600)
+                        in: 0...3600)
             }
 
             Toggle(isOn: self.$env.viewModel.readRSSI.value.bound) {
