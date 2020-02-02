@@ -12,9 +12,13 @@ class ForegroundStepperTableViewCell: UITableViewCell {
 
     @IBAction func stepperValueChanged(_ sender: Any) {
         let result = Int(stepper.value)
-        titleLabel.text = "Foreground.Interval.Every.string".localized()
+        if result > 0 {
+            titleLabel.text = "Foreground.Interval.Every.string".localized()
             + " " + "\(result)" + " "
             + "Foreground.Interval.Min.string".localized()
+        } else {
+            titleLabel.text = "Foreground.Interval.All.string".localized()
+        }
         delegate?.foregroundStepper(cell: self, didChange: result)
     }
 }

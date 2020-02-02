@@ -112,6 +112,7 @@
 "Foreground.Interval.Min.string" = "мин";
 "ForegroundRow.webTags.title" = "Загружать из интернета";
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
+"Foreground.Interval.All.string" = "Все";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Фоновый Режим";

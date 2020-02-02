@@ -112,6 +112,7 @@
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
+"Foreground.Interval.All.string" = "All";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Taustaprosessit";
