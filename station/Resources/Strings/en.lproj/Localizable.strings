@@ -112,6 +112,7 @@
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Load and save from web";
 "ForegroundRow.webTags.section" = "VIRTUAL SENSORS";
+"Foreground.Interval.All.string" = "All";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Background";
