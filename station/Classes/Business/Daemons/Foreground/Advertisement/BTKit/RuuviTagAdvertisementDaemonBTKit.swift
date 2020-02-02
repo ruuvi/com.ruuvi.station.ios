@@ -113,13 +113,14 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
 
     @objc private func persist(pair: RuuviTagAdvertisementDaemonPair) {
         let uuid = pair.device.uuid
-        let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
         if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
+                let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
                 persist(ruuviTagData)
                 savedDate[uuid] = Date()
             }
         } else {
+            let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
             persist(ruuviTagData)
             savedDate[uuid] = Date()
         }
