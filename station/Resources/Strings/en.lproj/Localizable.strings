@@ -121,6 +121,7 @@
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Read RSSI";
 "Heartbeat.Interval.Sec.string" = "sec";
+"Heartbeat.Interval.All.string" = "All";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
