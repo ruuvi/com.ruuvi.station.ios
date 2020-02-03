@@ -17,12 +17,8 @@ class ForegroundTableViewController: UITableViewController {
 
 // MARK: - ForegroundViewInput
 extension ForegroundTableViewController: ForegroundViewInput {
-    func apply(theme: Theme) {
-
-    }
-
     func localize() {
-
+        // do nothing
     }
 }
 

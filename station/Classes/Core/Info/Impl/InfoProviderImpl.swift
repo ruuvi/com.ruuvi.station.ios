@@ -37,7 +37,7 @@ class InfoProviderImpl: InfoProvider {
         case .denied:
             result += "denied"
         case .notDetermined:
-            result += "not determined"
+            result += notDetermined
         case .restricted:
             result += "restricted"
         @unknown default:
@@ -55,7 +55,7 @@ class InfoProviderImpl: InfoProvider {
         case .denied:
             result += "denied"
         case .notDetermined:
-            result += "not determined"
+            result += notDetermined
         case .restricted:
             result += "restricted"
         @unknown default:
@@ -73,7 +73,7 @@ class InfoProviderImpl: InfoProvider {
         case .denied:
             result += "denied"
         case .notDetermined:
-            result += "not determined"
+            result += notDetermined
         case .restricted:
             result += "restricted"
         @unknown default:
@@ -82,6 +82,8 @@ class InfoProviderImpl: InfoProvider {
         result += "\n"
         return result
     }
+
+    private let notDetermined = "not determined"
 
     func summary(completion: @escaping (String) -> Void) {
         var result = ""

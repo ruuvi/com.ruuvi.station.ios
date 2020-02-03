@@ -19,7 +19,9 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
 
         switch pan.state {
         case .began:
-            if translation.y > 0 { return } // don't start gesture
+            if translation.y > 0 {
+                return // don't start gesture
+            }
             manager.isInteractive = true
             manager.charts.dismiss(animated: true)
         case .changed:

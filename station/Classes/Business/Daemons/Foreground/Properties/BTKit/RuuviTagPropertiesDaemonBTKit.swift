@@ -1,6 +1,6 @@
 import BTKit
-import RealmSwift
 import Foundation
+import RealmSwift
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
 
@@ -38,13 +38,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                case .update(let ruuviTags, _, _, _):
                    self?.startObserving(ruuviTags: ruuviTags)
                case .error(let error):
-                   DispatchQueue.main.async {
-                       NotificationCenter
-                        .default
-                        .post(name: .RuuviTagPropertiesDaemonDidFail,
-                              object: nil,
-                              userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: RUError.persistence(error)])
-                   }
+                self?.post(error: RUError.persistence(error))
                }
            })
        }
@@ -89,48 +83,36 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
        if pair.device.version != pair.ruuviTag.version {
            let tagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
-           ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm).on( failure: { error in
-               DispatchQueue.main.async {
-                   NotificationCenter
-                    .default
-                    .post(name: .RuuviTagPropertiesDaemonDidFail,
-                          object: nil,
-                          userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
-               }
+           ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm).on( failure: { [weak self] error in
+               self?.post(error: error)
            })
            ruuviTagPersistence.update(version: pair.device.version,
                                       of: pair.ruuviTag, realm: realm)
-            .on( failure: { error in
-               DispatchQueue.main.async {
-                   NotificationCenter
-                    .default
-                    .post(name: .RuuviTagPropertiesDaemonDidFail,
-                          object: nil,
-                          userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
-               }
+            .on( failure: { [weak self] error in
+               self?.post(error: error)
            })
        }
        if pair.device.mac != nil && pair.device.mac != pair.ruuviTag.mac {
-           ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm).on( failure: { error in
-               DispatchQueue.main.async {
-                   NotificationCenter
-                    .default.post(name: .RuuviTagPropertiesDaemonDidFail,
-                                  object: nil,
-                                  userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
-               }
+           ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
+            .on( failure: { [weak self] error in
+               self?.post(error: error)
            })
        }
        if pair.device.isConnectable != pair.ruuviTag.isConnectable {
            ruuviTagPersistence.update(isConnectable: pair.device.isConnectable, of: pair.ruuviTag, realm: realm)
-            .on( failure: { error in
-               DispatchQueue.main.async {
-                   NotificationCenter
-                    .default
-                    .post(name: .RuuviTagPropertiesDaemonDidFail,
-                          object: nil,
-                          userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
-               }
+            .on( failure: { [weak self] error in
+               self?.post(error: error)
            })
        }
+    }
+
+    private func post(error: Error) {
+        DispatchQueue.main.async {
+            NotificationCenter
+             .default
+             .post(name: .RuuviTagPropertiesDaemonDidFail,
+                   object: nil,
+                   userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
+        }
     }
 }

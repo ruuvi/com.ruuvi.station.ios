@@ -1,5 +1,5 @@
 import Foundation
 
-protocol ViewInput: Themeable, Localizable {
+protocol ViewInput: Localizable {
 
 }

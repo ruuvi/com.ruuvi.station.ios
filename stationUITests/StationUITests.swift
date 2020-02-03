@@ -13,7 +13,4 @@ class StationUITests: XCTestCase {
         super.tearDown()
     }
 
-    func testExample() {
-    }
-
 }

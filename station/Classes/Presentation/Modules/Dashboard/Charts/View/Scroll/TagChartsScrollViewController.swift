@@ -11,7 +11,11 @@ class TagChartsScrollViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
 
-    var viewModels = [TagChartsViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [TagChartsViewModel]() {
+        didSet {
+            updateUIViewModels()
+        }
+    }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
@@ -21,6 +25,7 @@ class TagChartsScrollViewController: UIViewController {
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
+    private let noChartDataText = "TagCharts.NoChartData.text"
 
     deinit {
         if let appDidBecomeActiveToken = appDidBecomeActiveToken {
@@ -33,20 +38,16 @@ class TagChartsScrollViewController: UIViewController {
 extension TagChartsScrollViewController: TagChartsViewInput {
     func localize() {
         views.forEach({
-            $0.temperatureChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.temperatureChart.noDataText = noChartDataText.localized()
             $0.temperatureChart.noDataTextColor = .white
             $0.temperatureChart.setNeedsDisplay()
-            $0.humidityChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.humidityChart.noDataText = noChartDataText.localized()
             $0.humidityChart.noDataTextColor = .white
             $0.humidityChart.setNeedsDisplay()
-            $0.pressureChart.noDataText = "TagCharts.NoChartData.text".localized()
+            $0.pressureChart.noDataText = noChartDataText.localized()
             $0.pressureChart.noDataTextColor = .white
             $0.pressureChart.setNeedsDisplay()
         })
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func scroll(to index: Int, immediately: Bool = false) {
@@ -352,7 +353,7 @@ extension TagChartsScrollViewController {
         chartView.legend.form = .line
 
         chartView.noDataTextColor = UIColor.white
-        chartView.noDataText = "TagCharts.NoChartData.text".localized()
+        chartView.noDataText = noChartDataText.localized()
 
         chartView.scaleXEnabled = true
         chartView.scaleYEnabled = true

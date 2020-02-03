@@ -1,6 +1,6 @@
 import BTKit
-import RealmSwift
 import Foundation
+import RealmSwift
 
 class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
 
@@ -63,13 +63,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                 case .update(let ruuviTags, _, _, _):
                     self?.startObserving(ruuviTags: ruuviTags)
                 case .error(let error):
-                    DispatchQueue.main.async {
-                        NotificationCenter
-                            .default
-                            .post(name: .RuuviTagAdvertisementDaemonDidFail,
-                                  object: nil,
-                                  userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: RUError.persistence(error)])
-                    }
+                    self?.post(error: RUError.persistence(error))
                 }
             })
         }
@@ -127,14 +121,18 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     }
 
     private func persist(_ ruuviTagData: RuuviTagDataRealm) {
-        ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { error in
-            DispatchQueue.main.async {
-                NotificationCenter
-                    .default
-                    .post(name: .RuuviTagAdvertisementDaemonDidFail,
-                          object: nil,
-                          userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
-            }
+        ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { [weak self] error in
+            self?.post(error: error)
         })
+    }
+
+    private func post(error: Error) {
+        DispatchQueue.main.async {
+            NotificationCenter
+                .default
+                .post(name: .RuuviTagAdvertisementDaemonDidFail,
+                      object: nil,
+                      userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
+        }
     }
 }

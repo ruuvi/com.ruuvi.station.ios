@@ -12,7 +12,11 @@ class CardsScrollViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
 
-    var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [CardsViewModel]() {
+        didSet {
+            updateUIViewModels()
+        }
+    }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
@@ -74,10 +78,6 @@ extension CardsScrollViewController: CardsViewInput {
                 view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
         }
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showWebTagAPILimitExceededError() {
@@ -245,26 +245,21 @@ extension CardsScrollViewController {
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
             [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
+                var temperature: Double?
                 switch temperatureUnit {
                 case .celsius:
-                    if let celsius = celsius?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", celsius)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = celsius?.value
                 case .fahrenheit:
-                    if let fahrenheit = fahrenheit?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", fahrenheit)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = fahrenheit?.value
                 case .kelvin:
-                    if let kelvin = kelvin?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", kelvin)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = kelvin?.value
                 }
+                if let temperature = temperature {
+                    label.text = String.localizedStringWithFormat("%.2f", temperature)
+                } else {
+                    label.text = "N/A".localized()
+                }
+
             } else {
                 label.text = "N/A".localized()
             }
@@ -440,9 +435,7 @@ extension CardsScrollViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func bind(view: CardView, with viewModel: CardsViewModel) {
-
+    private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
         view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
             view.isHidden = !isConnectable.bound
         }
@@ -456,24 +449,9 @@ extension CardsScrollViewController {
                 view.isHidden = false
             }
         }
+    }
 
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-
-        bindTemperature(view: view, with: viewModel)
-        bindHumidity(view: view, with: viewModel)
-
-        let pressureUpdate = pressureUpdateBlock(for: viewModel)
-        view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
-
-        switch viewModel.type {
-        case .ruuvi:
-            let rssiUpdate = rssiUpdateBlock(for: viewModel)
-            view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
-        case .web:
-            let locationUpdate = locationUpdateBlock(for: viewModel)
-            view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
-        }
-
+    private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
         let isConnected = viewModel.isConnected
         let date = viewModel.date
 
@@ -504,6 +482,28 @@ extension CardsScrollViewController {
             view?.updatedAt = date
             view?.isConnected = isConnected?.value
         }
+    }
+
+    private func bind(view: CardView, with viewModel: CardsViewModel) {
+        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+
+        bindConnectionRelated(view: view, with: viewModel)
+        bindTemperature(view: view, with: viewModel)
+        bindHumidity(view: view, with: viewModel)
+
+        let pressureUpdate = pressureUpdateBlock(for: viewModel)
+        view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
+
+        switch viewModel.type {
+        case .ruuvi:
+            let rssiUpdate = rssiUpdateBlock(for: viewModel)
+            view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+        case .web:
+            let locationUpdate = locationUpdateBlock(for: viewModel)
+            view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
+        }
+
+        bindUpdated(view: view, with: viewModel)
 
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
 

@@ -12,12 +12,12 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
 
     private var usedBackgrounds: [Int] {
-        if let usedBackgrounds = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
-            return usedBackgrounds
+        if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
+            return ub
         } else {
-            let usedBackgrounds = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
-            UserDefaults.standard.set(usedBackgrounds, forKey: usedBackgroundsUDKey)
-            return usedBackgrounds
+            let ub = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
+            UserDefaults.standard.set(ub, forKey: usedBackgroundsUDKey)
+            return ub
         }
     }
 

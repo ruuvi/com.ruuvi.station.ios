@@ -70,9 +70,17 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
-    var isBluetoothEnabled: Bool = true { didSet { updateUIISBluetoothEnabled() } }
+    var isBluetoothEnabled: Bool = true {
+        didSet {
+            updateUIISBluetoothEnabled()
+        }
+    }
 
-    var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
+    var isCloseEnabled: Bool = true {
+        didSet {
+            updateUIIsCloseEnabled()
+        }
+    }
 
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
@@ -98,10 +106,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
         getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
         getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showBluetoothDisabled() {
@@ -231,10 +235,9 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch s {
-        case .webTag:
+        if s == .webTag {
             return 60
-        default:
+        } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
@@ -245,8 +248,7 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch section {
-        case .webTag:
+        if section == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
                 .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
@@ -254,7 +256,7 @@ extension DiscoverTableViewController {
             // swiftlint:enable force_cast
             header.delegate = self
             return header
-        default:
+        } else {
             return nil
         }
     }

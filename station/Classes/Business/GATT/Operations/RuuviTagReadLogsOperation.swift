@@ -51,10 +51,37 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         self.serviceTimeout = serviceTimeout
     }
 
-    // swiftlint:disable:next function_body_length
     override func main() {
         let date = connectionPersistence.logSyncDate(uuid: uuid) ?? Date.distantPast
-        let uuid = self.uuid
+        post(started: date, with: uuid)
+        background.services.ruuvi.nus.log(for: self,
+                                          uuid: uuid,
+                                          from: date,
+                                          options: [.callbackQueue(.untouch),
+                                                    .connectionTimeout(connectionTimeout ?? 0),
+                                                    .serviceTimeout(serviceTimeout ?? 0)],
+                                          progress: progress) { (observer, result) in
+            switch result {
+            case .success(let logs):
+                let opLogs = observer.ruuviTagPersistence.persist(logs: logs, for: observer.uuid)
+                opLogs.on(success: { _ in
+                    observer.connectionPersistence.setLogSyncDate(Date(), uuid: observer.uuid)
+                    observer.post(logs: logs, with: observer.uuid)
+                    observer.state = .finished
+                }, failure: { error in
+                    observer.post(error: error, with: observer.uuid)
+                    observer.error = error
+                    observer.state = .finished
+                })
+            case .failure(let error):
+                observer.post(error: error, with: observer.uuid)
+                observer.error = .btkit(error)
+                observer.state = .finished
+            }
+        }
+    }
+
+    private func post(started date: Date, with uuid: String) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidStart,
                                             object: nil,
@@ -62,49 +89,25 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                 [RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
                  RuuviTagReadLogsOperationDidStartKey.fromDate: date])
         }
+    }
 
-        background.services.ruuvi.nus.log(for: self,
-                                          uuid: uuid,
-                                          from: date,
-                                          options: [.callbackQueue(.untouch),
-                                                    .connectionTimeout(connectionTimeout ?? 0), .
-                                                        serviceTimeout(serviceTimeout ?? 0)],
-                                          progress: progress) { (observer, result) in
-            switch result {
-            case .success(let logs):
-                let opLogs = observer.ruuviTagPersistence.persist(logs: logs, for: observer.uuid)
-                opLogs.on(success: { _ in
-                    observer.connectionPersistence.setLogSyncDate(Date(), uuid: observer.uuid)
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFinish,
-                                                        object: nil,
-                                                        userInfo:
-                            [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
-                             RuuviTagReadLogsOperationDidFinishKey.logs: logs])
-                    }
-                    observer.state = .finished
-                }, failure: { error in
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
-                                                        object: nil,
-                                                        userInfo:
-                            [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
-                             RuuviTagReadLogsOperationDidFailKey.error: error])
-                    }
-                    observer.error = error
-                    observer.state = .finished
-                })
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
-                                                    object: nil,
-                                                    userInfo:
-                        [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
-                         RuuviTagReadLogsOperationDidFailKey.error: error])
-                }
-                observer.error = .btkit(error)
-                observer.state = .finished
-            }
+    private func post(logs: [RuuviTagEnvLogFull], with uuid: String) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFinish,
+                                            object: nil,
+                                            userInfo:
+                [RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
+                 RuuviTagReadLogsOperationDidFinishKey.logs: logs])
+        }
+    }
+
+    private func post(error: Error, with uuid: String) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .RuuviTagReadLogsOperationDidFail,
+                                            object: nil,
+                                            userInfo:
+                [RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
+                 RuuviTagReadLogsOperationDidFailKey.error: error])
         }
     }
 }

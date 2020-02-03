@@ -110,37 +110,18 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
         webTags = nil
     }
 
-    // swiftlint:disable:next function_body_length
     @objc private func restartPulling(fire: Bool) {
-
         wsTokens.forEach({ $0.invalidate() })
         wsTokens.removeAll()
 
         guard let webTags = webTags else { return }
         guard !webTags.isInvalidated else { return }
-        let currentLocationWebTags = webTags.filter({ $0.location == nil })
-        for provider in WeatherProvider.allCases {
-            if currentLocationWebTags.contains(where: { $0.provider == provider }) {
-                wsTokens.append(webTagService.observeCurrentLocationData(self,
-                                                                         provider: provider,
-                                                                         interval: pullInterval,
-                                                                         fire: fire,
-                                                                         closure: { (observer, data, location, error) in
-                    if let data = data, let location = location {
-                        observer.webTagPersistence.persist(currentLocation: location, data: data)
-                    } else if let error = error {
-                        DispatchQueue.main.async {
-                            NotificationCenter
-                                .default
-                                .post(name: .WebTagDaemonDidFail,
-                                      object: nil,
-                                      userInfo: [WebTagDaemonDidFailKey.error: error])
-                        }
-                    }
-                }))
-            }
-        }
 
+        restartPullingCurrentLocation(webTags: webTags, fire: fire)
+        restartPullingFixedLocations(webTags: webTags, fire: fire)
+    }
+
+    private func restartPullingFixedLocations(webTags: Results<WebTagRealm>, fire: Bool) {
         let locationWebTags = webTags.filter({ $0.location != nil })
         for webTag in locationWebTags {
             guard let location = webTag.location else { return }
@@ -155,15 +136,38 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                 if let data = data {
                     observer.webTagPersistence.persist(location: locationLocation, data: data)
                 } else if let error = error {
-                    DispatchQueue.main.async {
-                        NotificationCenter
-                            .default
-                            .post(name: .WebTagDaemonDidFail,
-                                  object: nil,
-                                  userInfo: [WebTagDaemonDidFailKey.error: error])
-                    }
+                    observer.post(error: error)
                 }
             }))
+        }
+    }
+
+    private func restartPullingCurrentLocation(webTags: Results<WebTagRealm>, fire: Bool) {
+        let currentLocationWebTags = webTags.filter({ $0.location == nil })
+        for provider in WeatherProvider.allCases {
+            if currentLocationWebTags.contains(where: { $0.provider == provider }) {
+                wsTokens.append(webTagService.observeCurrentLocationData(self,
+                                                                         provider: provider,
+                                                                         interval: pullInterval,
+                                                                         fire: fire,
+                                                                         closure: { (observer, data, location, error) in
+                    if let data = data, let location = location {
+                        observer.webTagPersistence.persist(currentLocation: location, data: data)
+                    } else if let error = error {
+                        observer.post(error: error)
+                    }
+                }))
+            }
+        }
+    }
+
+    private func post(error: Error) {
+        DispatchQueue.main.async {
+            NotificationCenter
+                .default
+                .post(name: .WebTagDaemonDidFail,
+                      object: nil,
+                      userInfo: [WebTagDaemonDidFailKey.error: error])
         }
     }
 

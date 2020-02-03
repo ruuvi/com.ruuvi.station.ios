@@ -36,11 +36,20 @@ class WebTagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var removeThisWebTagButton: UIButton!
     @IBOutlet weak var locationTitleLabel: UILabel!
 
-    var isNameChangedEnabled: Bool = true { didSet { updateUIIsNamaChangeEnabled() } }
+    var isNameChangedEnabled: Bool = true {
+        didSet {
+            updateUIIsNamaChangeEnabled()
+        }
+    }
 
-    var viewModel = WebTagSettingsViewModel() { didSet { bindViewModel() } }
+    var viewModel = WebTagSettingsViewModel() {
+        didSet {
+            bindViewModel()
+        }
+    }
 
     private let alertsSectionHeaderReuseIdentifier = "WebTagSettingsAlertsHeaderFooterView"
+    private let alertOffString = "WebTagSettings.Alerts.Off"
 }
 
 // MARK: - WebTagSettingsViewInput
@@ -61,22 +70,15 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         pressureAlertHeaderCell.titleLabel.text
             = "WebTagSettings.PressureAlert.title".localized()
             + " " + "hPa".localized()
-        temperatureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        relativeHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        absoluteHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        dewPointAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        pressureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+
+        let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
+        relativeHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        absoluteHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
+        pressureAlertControlsCell.textField.placeholder = alertPlaceholder
 
         tableView.reloadData()
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showTagRemovalConfirmationDialog() {
@@ -366,7 +368,7 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.Pressure.description".localized()
                     pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    pressureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
                 pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
@@ -440,10 +442,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.DewPoint.description".localized()
                     dewPointAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    dewPointAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                dewPointAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -476,10 +478,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.AbsoluteHumidity.description".localized()
                     absoluteHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                absoluteHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -493,10 +495,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.RelativeHumidity.description".localized()
                     relativeHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    relativeHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                relativeHumidityAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -543,10 +545,10 @@ extension WebTagSettingsTableViewController {
                     let format = "WebTagSettings.Alerts.Temperature.description".localized()
                     temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    temperatureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                    temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                temperatureAlertHeaderCell.descriptionLabel.text = "WebTagSettings.Alerts.Off".localized()
+                temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -854,13 +856,14 @@ extension WebTagSettingsTableViewController {
 
             dewPointAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
+                    let title = "WebTagSettings.dewPointAlertTitleLabel.text"
                     switch tu {
                     case .celsius:
-                        label.text = "WebTagSettings.dewPointAlertTitleLabel.text".localized() + " " + "°C".localized()
+                        label.text = title.localized() + " " + "°C".localized()
                     case .fahrenheit:
-                        label.text = "WebTagSettings.dewPointAlertTitleLabel.text".localized() + " " + "°F".localized()
+                        label.text = title.localized() + " " + "°F".localized()
                     case .kelvin:
-                        label.text = "WebTagSettings.dewPointAlertTitleLabel.text".localized() + " "  + "K".localized()
+                        label.text = title.localized() + " "  + "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
@@ -1243,16 +1246,14 @@ extension WebTagSettingsTableViewController {
 
             temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
+                    let title = "WebTagSettings.temperatureAlertTitleLabel.text"
                     switch tu {
                     case .celsius:
-                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized()
-                            + " " + "°C".localized()
+                        label.text = title.localized() + " " + "°C".localized()
                     case .fahrenheit:
-                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized()
-                            + " " + "°F".localized()
+                        label.text = title.localized() + " " + "°F".localized()
                     case .kelvin:
-                        label.text = "WebTagSettings.temperatureAlertTitleLabel.text".localized()
-                            + " "  + "K".localized()
+                        label.text = title.localized() + " "  + "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()

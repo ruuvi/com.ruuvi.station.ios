@@ -8,7 +8,11 @@ class LocationPickerAppleViewController: UIViewController {
     @IBOutlet var doneBarButtonItem: UIBarButtonItem!
     @IBOutlet var cancelBarButtonItem: UIBarButtonItem!
 
-    var selectedLocation: Location? { didSet { updateUISelectedLocation() } }
+    var selectedLocation: Location? {
+        didSet {
+            updateUISelectedLocation()
+        }
+    }
 
     private var searchBar: UISearchBar!
     private let annotationViewReuseIdentifier = "LocationPickerMKAnnotationViewReuseIdentifier"
@@ -19,10 +23,6 @@ extension LocationPickerAppleViewController: LocationPickerViewInput {
     func localize() {
         doneBarButtonItem.title = "Done".localized()
         cancelBarButtonItem.title = "Cancel".localized()
-    }
-
-    func apply(theme: Theme) {
-
     }
 }
 
