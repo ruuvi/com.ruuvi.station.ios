@@ -336,7 +336,7 @@ extension TagChartsPresenter {
                     // sync every 1 second
                     if let last = self?.lastSyncViewModelDate {
                         let elapsed = Int(Date().timeIntervalSince(last))
-                        if elapsed > 1 {
+                        if elapsed > 60 {
                             self?.syncViewModels()
                             self?.lastSyncViewModelDate = Date()
                         }
