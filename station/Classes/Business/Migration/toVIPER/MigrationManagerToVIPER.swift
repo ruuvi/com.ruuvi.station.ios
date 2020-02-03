@@ -6,108 +6,18 @@ class MigrationManagerToVIPER: MigrationManager {
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func migrateIfNeeded() {
         let config = Realm.Configuration(
             schemaVersion: 10,
-            migrationBlock: { migration, oldSchemaVersion in
+            migrationBlock: { [weak self] migration, oldSchemaVersion in
                 if oldSchemaVersion < 2 {
-                    migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, _) in
-
-                        if let uuid = oldObject?["uuid"] as? String,
-                            let name = oldObject?["name"] as? String,
-                            let version = oldObject?["dataFormat"] as? Int,
-                            let mac = oldObject?["mac"] as? String {
-
-                            var realName: String
-                            if name.isEmpty {
-                                if mac.isEmpty {
-                                    realName = uuid
-                                } else {
-                                    realName = mac
-                                }
-                            } else {
-                                realName = name
-                            }
-
-                            let ruuviTag = migration.create(RuuviTagRealm.className(),
-                                                            value: ["uuid": uuid,
-                                                                    "name": realName,
-                                                                    "version": version,
-                                                                    "mac": mac])
-
-                            if let temperature = oldObject?["temperature"] as? Double,
-                                let humidity = oldObject?["humidity"] as? Double,
-                                let pressure = oldObject?["pressure"] as? Double,
-                                let accelerationX = oldObject?["accelerationX"] as? Double,
-                                let accelerationY = oldObject?["accelerationY"] as? Double,
-                                let accelerationZ = oldObject?["accelerationZ"] as? Double,
-                                let rssi = oldObject?["rssi"] as? Int,
-                                let voltage = oldObject?["voltage"] as? Double,
-                                let movementCounter = oldObject?["movementCounter"] as? Int,
-                                let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
-                                let txPower = oldObject?["txPower"] as? Int,
-                                let updatedAt = oldObject?["updatedAt"] as? NSDate {
-                             migration.create(RuuviTagDataRealm.className(),
-                                              value: ["ruuviTag": ruuviTag,
-                                                      "date": updatedAt,
-                                                      "rssi": rssi,
-                                                      "celsius": temperature,
-                                                      "humidity": humidity,
-                                                      "pressure": pressure,
-                                                      "accelerationX": accelerationX,
-                                                      "accelerationY": accelerationY,
-                                                      "accelerationZ": accelerationZ,
-                                                      "voltage": voltage,
-                                                      "movementCounter": movementCounter,
-                                                      "measurementSequenceNumber": measurementSequenceNumber,
-                                                      "txPower": txPower])
-                            }
-                        }
-
-                        if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
-                            self.backgroundPersistence.setBackground(id, for: uuid)
-                        }
-
-                    })
+                    self?.from1to2(migration)
                 } else if oldSchemaVersion < 3 {
-                    migration.enumerateObjects(ofType: RuuviTagDataRealm.className()) { oldObject, newObject in
-                        if let value = oldObject?["celsius"] as? Double {
-                            newObject?["celsius"] = value
-                        }
-                        if let value = oldObject?["humidity"] as? Double {
-                            newObject?["humidity"] = value
-                        }
-                        if let value = oldObject?["pressure"] as? Double {
-                            newObject?["pressure"] = value
-                        }
-                    }
+                    self?.from2to3(migration)
                 } else if oldSchemaVersion < 4 {
-                    migration.enumerateObjects(ofType: WebTagRealm.className(), { (oldObject, newObject) in
-                        if let location = oldObject?["location"] as? WebTagLocationRealm, let city = location.city {
-                            newObject?["name"] = city
-                        } else {
-                            newObject?["name"] = ""
-                        }
-                    })
-                    migration.deleteData(forType: RuuviTagDataRealm.className())
-                    migration.deleteData(forType: WebTagDataRealm.className())
-                } else if oldSchemaVersion < 5 {
-                    migration.deleteData(forType: RuuviTagDataRealm.className())
-                    migration.deleteData(forType: WebTagDataRealm.className())
-                } else if oldSchemaVersion < 6 {
-                    migration.deleteData(forType: RuuviTagDataRealm.className())
-                    migration.deleteData(forType: WebTagDataRealm.className())
-                } else if oldSchemaVersion < 7 {
-                    migration.deleteData(forType: RuuviTagDataRealm.className())
-                    migration.deleteData(forType: WebTagDataRealm.className())
+                    self?.from3to4(migration)
                 } else if oldSchemaVersion < 8 {
-                    migration.deleteData(forType: RuuviTagDataRealm.className())
-                    migration.deleteData(forType: WebTagDataRealm.className())
-                } else if oldSchemaVersion < 9 {
-                    // do nothing
-                } else if oldSchemaVersion < 10 {
-                    // do nothing
+                    self?.deleteRuuviTagAndWebTagData(migration)
                 }
         }, shouldCompactOnLaunch: { totalBytes, usedBytes in
             let fiveHundredMegabytes = 500 * 1024 * 1024
@@ -134,4 +44,100 @@ class MigrationManagerToVIPER: MigrationManager {
             UserDefaults.standard.set(hasShownSwipe, forKey: "DashboardScrollViewController.hasShownSwipeAlert")
         }
     }
+
+    private func from1to2(_ migration: Migration) {
+        migration.enumerateObjects(ofType: "RuuviTag", { (oldObject, _) in
+
+            if let uuid = oldObject?["uuid"] as? String,
+                let name = oldObject?["name"] as? String,
+                let version = oldObject?["dataFormat"] as? Int,
+                let mac = oldObject?["mac"] as? String {
+
+                let realName = real(name, mac, uuid)
+                let ruuviTag = migration.create(RuuviTagRealm.className(),
+                                                value: ["uuid": uuid,
+                                                        "name": realName,
+                                                        "version": version,
+                                                        "mac": mac])
+
+                if let temperature = oldObject?["temperature"] as? Double,
+                    let humidity = oldObject?["humidity"] as? Double,
+                    let pressure = oldObject?["pressure"] as? Double,
+                    let accelerationX = oldObject?["accelerationX"] as? Double,
+                    let accelerationY = oldObject?["accelerationY"] as? Double,
+                    let accelerationZ = oldObject?["accelerationZ"] as? Double,
+                    let rssi = oldObject?["rssi"] as? Int,
+                    let voltage = oldObject?["voltage"] as? Double,
+                    let movementCounter = oldObject?["movementCounter"] as? Int,
+                    let measurementSequenceNumber = oldObject?["measurementSequenceNumber"] as? Int,
+                    let txPower = oldObject?["txPower"] as? Int,
+                    let updatedAt = oldObject?["updatedAt"] as? NSDate {
+                    migration.create(RuuviTagDataRealm.className(),
+                                     value: ["ruuviTag": ruuviTag,
+                                             "date": updatedAt,
+                                             "rssi": rssi,
+                                             "celsius": temperature,
+                                             "humidity": humidity,
+                                             "pressure": pressure,
+                                             "accelerationX": accelerationX,
+                                             "accelerationY": accelerationY,
+                                             "accelerationZ": accelerationZ,
+                                             "voltage": voltage,
+                                             "movementCounter": movementCounter,
+                                             "measurementSequenceNumber": measurementSequenceNumber,
+                                             "txPower": txPower])
+                }
+            }
+
+            if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
+                self.backgroundPersistence.setBackground(id, for: uuid)
+            }
+
+        })
+    }
+
+    private func from2to3(_ migration: Migration) {
+        migration.enumerateObjects(ofType: RuuviTagDataRealm.className()) { oldObject, newObject in
+            if let value = oldObject?["celsius"] as? Double {
+                newObject?["celsius"] = value
+            }
+            if let value = oldObject?["humidity"] as? Double {
+                newObject?["humidity"] = value
+            }
+            if let value = oldObject?["pressure"] as? Double {
+                newObject?["pressure"] = value
+            }
+        }
+    }
+
+    private func from3to4(_ migration: Migration) {
+        migration.enumerateObjects(ofType: WebTagRealm.className(), { (oldObject, newObject) in
+            if let location = oldObject?["location"] as? WebTagLocationRealm, let city = location.city {
+                newObject?["name"] = city
+            } else {
+                newObject?["name"] = ""
+            }
+        })
+        deleteRuuviTagAndWebTagData(migration)
+    }
+
+    private func deleteRuuviTagAndWebTagData(_ migration: Migration) {
+        migration.deleteData(forType: RuuviTagDataRealm.className())
+        migration.deleteData(forType: WebTagDataRealm.className())
+    }
+
+    private func real(_ name: String, _ mac: String, _ uuid: String) -> String {
+        let realName: String
+        if name.isEmpty {
+            if mac.isEmpty {
+                realName = uuid
+            } else {
+                realName = mac
+            }
+        } else {
+            realName = name
+        }
+        return realName
+    }
+
 }

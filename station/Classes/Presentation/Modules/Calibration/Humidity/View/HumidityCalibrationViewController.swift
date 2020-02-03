@@ -14,9 +14,21 @@ class HumidityCalibrationViewController: UIViewController {
     @IBOutlet weak var noteLabel: UILabel!
     @IBOutlet weak var calibrateButton: UIButton!
 
-    var oldHumidity: Double = 0 { didSet { updateUIOldHumidity() } }
-    var humidityOffset: Double = 0 { didSet { updateUIHumidityOffset() } }
-    var lastCalibrationDate: Date? { didSet { updateUILastCalibrationDate() } }
+    var oldHumidity: Double = 0 {
+        didSet {
+            updateUIOldHumidity()
+        }
+    }
+    var humidityOffset: Double = 0 {
+        didSet {
+            updateUIHumidityOffset()
+        }
+    }
+    var lastCalibrationDate: Date? {
+        didSet {
+            updateUILastCalibrationDate()
+        }
+    }
 
     // swiftlint:disable line_length
     private let videoTutorialsUrl = URL(string: "https://www.youtube.com/results?search_query=hygrometer+salt+calibration")!
@@ -33,10 +45,6 @@ extension HumidityCalibrationViewController: HumidityCalibrationViewInput {
         calibrateButton.setTitle("HumidityCalibration.Button.Calibrate.title".localized(), for: .normal)
         closeButton.setTitle("HumidityCalibration.Button.Close.title".localized(), for: .normal)
         targetHumidityLabel.text = String.localizedStringWithFormat("%.2f", 75.0)
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showClearCalibrationConfirmationDialog() {
@@ -148,7 +156,7 @@ extension HumidityCalibrationViewController {
         let link = "HumidityCalibration.VideoTutorials.link".localized()
         if let linkRange = text.range(of: link) {
             descriptionLabel.addLink(to: videoTutorialsUrl, withRange: NSRange(linkRange, in: text))
-            let color = UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+            let color = UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
             descriptionLabel.linkAttributes = [NSAttributedString.Key.foregroundColor: color]
         }
         descriptionLabel.delegate = self

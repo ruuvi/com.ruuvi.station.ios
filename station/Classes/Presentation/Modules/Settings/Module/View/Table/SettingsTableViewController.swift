@@ -29,10 +29,26 @@ class SettingsTableViewController: UITableViewController {
     private let showDefaults = false
     #endif
 
-    var temperatureUnit: TemperatureUnit = .celsius { didSet { updateUITemperatureUnit() } }
-    var humidityUnit: HumidityUnit = .percent { didSet { updateUIHumidityUnit() } }
-    var language: Language = .english { didSet { updateUILanguage() } }
-    var isBackgroundVisible: Bool = false { didSet { updateUIIsBackgroundVisible() } }
+    var temperatureUnit: TemperatureUnit = .celsius {
+        didSet {
+            updateUITemperatureUnit()
+        }
+    }
+    var humidityUnit: HumidityUnit = .percent {
+        didSet {
+            updateUIHumidityUnit()
+        }
+    }
+    var language: Language = .english {
+        didSet {
+            updateUILanguage()
+        }
+    }
+    var isBackgroundVisible: Bool = false {
+        didSet {
+            updateUIIsBackgroundVisible()
+        }
+    }
 }
 
 // MARK: - SettingsViewInput
@@ -53,10 +69,6 @@ extension SettingsTableViewController: SettingsViewInput {
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
         updateUILanguage()
         tableView.reloadData()
-    }
-
-    func apply(theme: Theme) {
-
     }
 }
 
@@ -129,10 +141,9 @@ extension SettingsTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        switch section {
-        case SettingsTableSection.general.rawValue:
+        if section == SettingsTableSection.general.rawValue {
             return "Settings.SectionFooter.General.title".localized()
-        default:
+        } else {
             return nil
         }
     }

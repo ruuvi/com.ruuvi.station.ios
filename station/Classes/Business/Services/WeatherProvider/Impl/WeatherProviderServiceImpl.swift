@@ -88,28 +88,30 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         let coordinate = locationManager.getCurrentLocation()
 
         coordinate.on(success: { [weak self] (coordinate) in
-            guard let location = self?.locationService.reverseGeocode(coordinate: coordinate.coordinate) else {
+            self?.loadCurrentLocationData(for: coordinate, provider: provider, with: promise)
+        }, failure: { (error) in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
+    private func loadCurrentLocationData(for coordinate: CLLocation,
+                                         provider: WeatherProvider,
+                                         with promise: Promise<(Location, WPSData), RUError>) {
+        let location = locationService.reverseGeocode(coordinate: coordinate.coordinate)
+        location.on(success: { [weak self] (locations) in
+            guard let location = locations.last else {
+                promise.fail(error: .unexpected(.failedToReverseGeocodeCoordinate))
+                return
+            }
+
+            guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
                 promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
                 return
             }
 
-            location.on(success: { (locations) in
-                guard let location = locations.last else {
-                    promise.fail(error: .unexpected(.failedToReverseGeocodeCoordinate))
-                    return
-                }
-
-                guard let op = self?.loadData(coordinate: location.coordinate, provider: provider) else {
-                    promise.fail(error: .unexpected(.callerDeinitedDuringOperation))
-                    return
-                }
-
-                op.on(success: { (data) in
-                    promise.succeed(value: (location, data))
-                }, failure: { (error) in
-                    promise.fail(error: error)
-                })
-
+            op.on(success: { (data) in
+                promise.succeed(value: (location, data))
             }, failure: { (error) in
                 promise.fail(error: error)
             })
@@ -117,7 +119,6 @@ class WeatherProviderServiceImpl: WeatherProviderService {
         }, failure: { (error) in
             promise.fail(error: error)
         })
-        return promise.future
     }
 
     func loadData(coordinate: CLLocationCoordinate2D, provider: WeatherProvider) -> Future<WPSData, RUError> {

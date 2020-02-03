@@ -17,11 +17,7 @@ class DefaultsTableViewController: UITableViewController {
 
 extension DefaultsTableViewController: DefaultsViewInput {
     func localize() {
-
-    }
-
-    func apply(theme: Theme) {
-
+        // do nothing
     }
 }
 

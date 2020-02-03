@@ -92,7 +92,11 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
 
-    var viewModel: TagSettingsViewModel? { didSet { bindViewModel() } }
+    var viewModel: TagSettingsViewModel? {
+        didSet {
+            bindViewModel()
+        }
+    }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
@@ -100,12 +104,12 @@ class TagSettingsTableViewController: UITableViewController {
 
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
+    private let alertOffString = "TagSettings.Alerts.Off"
 }
 
 // MARK: - TagSettingsViewInput
 extension TagSettingsTableViewController: TagSettingsViewInput {
 
-    // swiftlint:disable:next function_body_length
     func localize() {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
@@ -138,26 +142,16 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         connectionAlertHeaderCell.titleLabel.text = "TagSettings.ConnectionAlert.title".localized()
         movementAlertHeaderCell.titleLabel.text = "TagSettings.MovementAlert.title".localized()
 
-        temperatureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        relativeHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        absoluteHumidityAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        dewPointAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        pressureAlertControlsCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        connectionAlertDescriptionCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
-        movementAlertDescriptionCell.textField.placeholder
-            = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
+        temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
+        relativeHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        absoluteHumidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
+        pressureAlertControlsCell.textField.placeholder = alertPlaceholder
+        connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
+        movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
 
         tableView.reloadData()
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showTagRemovalConfirmationDialog() {
@@ -460,33 +454,20 @@ extension TagSettingsTableViewController {
             }
         } else {
             switch cell {
-            case temperatureAlertHeaderCell:
-                return 0
-            case temperatureAlertControlsCell:
-                return 0
-            case relativeHumidityAlertHeaderCell:
-                return 0
-            case relativeHumidityAlertControlsCell:
-                return 0
-            case absoluteHumidityAlertHeaderCell:
-                return 0
-            case absoluteHumidityAlertControlsCell:
-                return 0
-            case dewPointAlertHeaderCell:
-                return 0
-            case dewPointAlertControlsCell:
-                return 0
-            case pressureAlertHeaderCell:
-                return 0
-            case pressureAlertControlsCell:
-                return 0
-            case connectionAlertHeaderCell:
-                return 0
-            case connectionAlertDescriptionCell:
-                return 0
-            case movementAlertHeaderCell:
-                return 0
-            case movementAlertDescriptionCell:
+            case temperatureAlertHeaderCell,
+                 temperatureAlertControlsCell,
+                 relativeHumidityAlertHeaderCell,
+                 relativeHumidityAlertControlsCell,
+                 absoluteHumidityAlertHeaderCell,
+                 absoluteHumidityAlertControlsCell,
+                 dewPointAlertHeaderCell,
+                 dewPointAlertControlsCell,
+                 pressureAlertHeaderCell,
+                 pressureAlertControlsCell,
+                 connectionAlertHeaderCell,
+                 connectionAlertDescriptionCell,
+                 movementAlertHeaderCell,
+                 movementAlertDescriptionCell:
                 return 0
             default:
                 return 44
@@ -710,11 +691,13 @@ extension TagSettingsTableViewController {
             backgroundImageView.bind(viewModel.background) { $0.image = $1 }
             tagNameTextField.bind(viewModel.name) { $0.text = $1 }
 
+            let emptyValueString = "TagSettings.EmptyValue.sign"
+
             uuidValueLabel.bind(viewModel.uuid) { label, uuid in
                 if let uuid = uuid {
                     label.text = uuid
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -722,7 +705,7 @@ extension TagSettingsTableViewController {
                 if let mac = mac {
                     label.text = mac
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -730,7 +713,7 @@ extension TagSettingsTableViewController {
                 if let voltage = voltage {
                     label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -738,7 +721,7 @@ extension TagSettingsTableViewController {
                 if let accelerationX = accelerationX {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationX) + " " + "g".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -746,7 +729,7 @@ extension TagSettingsTableViewController {
                 if let accelerationY = accelerationY {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationY) + " " + "g".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -754,7 +737,7 @@ extension TagSettingsTableViewController {
                 if let accelerationZ = accelerationZ {
                     label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -762,7 +745,7 @@ extension TagSettingsTableViewController {
                 if let version = version {
                     label.text = "\(version)"
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -770,7 +753,7 @@ extension TagSettingsTableViewController {
                 if let mc = mc {
                     label.text = "\(mc)"
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -778,7 +761,7 @@ extension TagSettingsTableViewController {
                 if let msn = msn {
                     label.text = "\(msn)"
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -786,7 +769,7 @@ extension TagSettingsTableViewController {
                 if let txPower = txPower {
                     label.text = "\(txPower)" + " " + "dBm".localized()
                 } else {
-                    label.text = "TagSettings.EmptyValue.sign".localized()
+                    label.text = emptyValueString.localized()
                 }
             }
 
@@ -895,13 +878,14 @@ extension TagSettingsTableViewController {
 
             temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
+                    let title = "TagSettings.temperatureAlertTitleLabel.text"
                     switch tu {
                     case .celsius:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°C".localized()
+                        label.text = title.localized() + " " + "°C".localized()
                     case .fahrenheit:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " " + "°F".localized()
+                        label.text = title.localized() + " " + "°F".localized()
                     case .kelvin:
-                        label.text = "TagSettings.temperatureAlertTitleLabel.text".localized() + " "  + "K".localized()
+                        label.text = title.localized() + " "  + "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
@@ -1295,13 +1279,14 @@ extension TagSettingsTableViewController {
 
             dewPointAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
+                    let title = "TagSettings.dewPointAlertTitleLabel.text"
                     switch tu {
                     case .celsius:
-                        label.text = "TagSettings.dewPointAlertTitleLabel.text".localized() + " " + "°C".localized()
+                        label.text = title.localized() + " " + "°C".localized()
                     case .fahrenheit:
-                        label.text = "TagSettings.dewPointAlertTitleLabel.text".localized() + " " + "°F".localized()
+                        label.text = title.localized() + " " + "°F".localized()
                     case .kelvin:
-                        label.text = "TagSettings.dewPointAlertTitleLabel.text".localized() + " "  + "K".localized()
+                        label.text = title.localized() + " "  + "K".localized()
                     }
                 } else {
                     label.text = "N/A".localized()
@@ -1473,10 +1458,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.AbsoluteHumidity.description".localized()
                     absoluteHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                absoluteHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                absoluteHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1486,7 +1471,7 @@ extension TagSettingsTableViewController {
             if let isMovementAlertOn = viewModel?.isMovementAlertOn.value, isMovementAlertOn {
                 movementAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Movement.description".localized()
             } else {
-                movementAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                movementAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1497,7 +1482,7 @@ extension TagSettingsTableViewController {
                 connectionAlertHeaderCell.descriptionLabel.text
                     = "TagSettings.Alerts.Connection.description".localized()
             } else {
-                connectionAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                connectionAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1511,10 +1496,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.Pressure.description".localized()
                     pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                pressureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1528,10 +1513,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.RelativeHumidity.description".localized()
                     relativeHumidityAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
                 } else {
-                    relativeHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                relativeHumidityAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                relativeHumidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1646,10 +1631,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.DewPoint.description".localized()
                     dewPointAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    dewPointAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                dewPointAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }
@@ -1676,10 +1661,10 @@ extension TagSettingsTableViewController {
                     let format = "TagSettings.Alerts.Temperature.description".localized()
                     temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
-                    temperatureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                    temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
                 }
             } else {
-                temperatureAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Off".localized()
+                temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
         }
     }

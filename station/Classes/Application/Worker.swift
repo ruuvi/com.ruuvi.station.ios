@@ -54,7 +54,8 @@ class Worker {
     // synchronously executes the given block in a thread-safe manner
     // returns the same value as the block
     private func locked<T>(do block: () -> T) -> T {
-        lock.lock(); defer { lock.unlock() }
+        lock.lock()
+        defer { lock.unlock() }
         return block()
     }
 }

@@ -152,10 +152,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
 extension DiscoverPresenter: LocationPickerModuleOutput {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location) {
         module.dismiss { [weak self] in
-            guard let webTag = self?.lastSelectedWebTag else { assert(false); return }
+            guard let webTag = self?.lastSelectedWebTag else { return }
             guard let operation = self?.webTagService
                 .add(provider: webTag.provider,
-                     location: location) else { assert(false); return }
+                     location: location) else { return }
             operation.on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.isOpenedFromWelcome {

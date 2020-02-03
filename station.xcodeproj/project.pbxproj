@@ -46,6 +46,9 @@
 		0E09672822AE8D7A00E85F48 /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09672722AE8D7A00E85F48 /* Discover.storyboard */; };
 		0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */; };
 		0E0A381923616AC3003A0364 /* UserDefaults+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */; };
+		0E0C19BE23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
+		0E0C19BF23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
+		0E0C19C023D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
 		0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
@@ -188,10 +191,8 @@
 		0E6BAD7B23856A01003A2D4C /* LocationServiceApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */; };
 		0E6BAD7C23856A01003A2D4C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E6BAD7D23856A01003A2D4C /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
-		0E6BAD7E23856A01003A2D4C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
 		0E6BAD8123856A01003A2D4C /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
-		0E6BAD8323856A01003A2D4C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
 		0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
 		0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */; };
 		0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -495,10 +496,9 @@
 		0E6BAEC623856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */; };
 		0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
+		0E6C471723D305960016B46E /* StationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6C471623D305960016B46E /* StationUITests.swift */; };
 		0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E70A46322AF959E006CB87C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
-		0E70A46622AF962A006CB87C /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
-		0E70A46822AF9658006CB87C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
 		0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46D22AF9763006CB87C /* DiscoverViewInput.swift */; };
 		0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46F22AF9790006CB87C /* DiscoverViewOutput.swift */; };
@@ -546,10 +546,8 @@
 		0E8BD2B1238566AB008B31EF /* LocationServiceApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5F22F18EF900BD4E9C /* LocationServiceApple.swift */; };
 		0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */; };
 		0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC50F5522CCE46D00172EEB /* Optional.swift */; };
-		0E8BD2B4238566AB008B31EF /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46722AF9658006CB87C /* Theme.swift */; };
 		0E8BD2B7238566AB008B31EF /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E09672422AE897000E85F48 /* CALayer+IB.swift */; };
-		0E8BD2B9238566AB008B31EF /* Themeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46522AF962A006CB87C /* Themeable.swift */; };
 		0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0E22B4049E0032F6CA /* MenuTablePresentationController.swift */; };
 		0E8BD2BB238566AB008B31EF /* RuuviTagPropertiesDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC61FD72374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift */; };
 		0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -1074,7 +1072,6 @@
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
 		64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D3120B0C45A00CDF4B6 /* LaunchScreen.storyboard */; };
 		64333D3E20B0C45A00CDF4B6 /* StationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D3D20B0C45A00CDF4B6 /* StationTests.swift */; };
-		64333D4920B0C45B00CDF4B6 /* StationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D4820B0C45B00CDF4B6 /* StationUITests.swift */; };
 		643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */; };
 		643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */; };
 		64678191225D03300072856A /* Muli-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64678190225D02CE0072856A /* Muli-Bold.ttf */; };
@@ -1141,6 +1138,7 @@
 		0E09672722AE8D7A00E85F48 /* Discover.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Discover.storyboard; sourceTree = "<group>"; };
 		0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Optional.swift"; sourceTree = "<group>"; };
+		0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertServiceImpl+Process.swift"; sourceTree = "<group>"; };
 		0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertDescriptionCell.swift; sourceTree = "<group>"; };
 		0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenter.swift; sourceTree = "<group>"; };
 		0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenterMessageUI.swift; sourceTree = "<group>"; };
@@ -1238,10 +1236,9 @@
 		0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsMoreInfoHeaderFooterView.swift; sourceTree = "<group>"; };
 		0E62AECA22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagSettingsMoreInfoHeaderFooterView.xib; sourceTree = "<group>"; };
 		0E6BAECE23856A01003A2D4C /* station_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E6C471623D305960016B46E /* StationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationUITests.swift; sourceTree = "<group>"; };
 		0E70A45F22AF9567006CB87C /* ViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInput.swift; sourceTree = "<group>"; };
 		0E70A46222AF959E006CB87C /* Localizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
-		0E70A46522AF962A006CB87C /* Themeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themeable.swift; sourceTree = "<group>"; };
-		0E70A46722AF9658006CB87C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		0E70A46B22AF9705006CB87C /* DiscoverTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverTableViewController.swift; sourceTree = "<group>"; };
 		0E70A46D22AF9763006CB87C /* DiscoverViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewInput.swift; sourceTree = "<group>"; };
 		0E70A46F22AF9790006CB87C /* DiscoverViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewOutput.swift; sourceTree = "<group>"; };
@@ -1467,7 +1464,6 @@
 		64333D3D20B0C45A00CDF4B6 /* StationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationTests.swift; sourceTree = "<group>"; };
 		64333D3F20B0C45B00CDF4B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		64333D4420B0C45B00CDF4B6 /* stationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = stationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		64333D4820B0C45B00CDF4B6 /* StationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationUITests.swift; sourceTree = "<group>"; };
 		64333D4A20B0C45B00CDF4B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		643C651E21C38F490037BE5B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-ExtraLight.ttf"; sourceTree = "<group>"; };
@@ -1561,6 +1557,7 @@
 			isa = PBXGroup;
 			children = (
 				0E02ABBF2375A5D000ED4629 /* AlertServiceImpl.swift */,
+				0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */,
 			);
 			path = Impl;
 			sourceTree = "<group>";
@@ -1806,7 +1803,6 @@
 				0E09671B22AE76B700E85F48 /* Launch */,
 				0E70A46122AF958E006CB87C /* Localization */,
 				0E1C1DAC22B38F220032F6CA /* Presenters */,
-				0E70A46422AF960B006CB87C /* Theme */,
 				0E046F3722F0585E00BD4E9C /* Transitions */,
 				0E09671C22AE76CC00E85F48 /* Modules */,
 			);
@@ -2503,15 +2499,6 @@
 				0E9D0AB0231EBEFD00C6BDA7 /* LocalizationService.swift */,
 			);
 			path = Localization;
-			sourceTree = "<group>";
-		};
-		0E70A46422AF960B006CB87C /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				0E70A46722AF9658006CB87C /* Theme.swift */,
-				0E70A46522AF962A006CB87C /* Themeable.swift */,
-			);
-			path = Theme;
 			sourceTree = "<group>";
 		};
 		0E70A46922AF96B9006CB87C /* View */ = {
@@ -3830,7 +3817,7 @@
 		64333D4720B0C45B00CDF4B6 /* stationUITests */ = {
 			isa = PBXGroup;
 			children = (
-				64333D4820B0C45B00CDF4B6 /* StationUITests.swift */,
+				0E6C471623D305960016B46E /* StationUITests.swift */,
 				64333D4A20B0C45B00CDF4B6 /* Info.plist */,
 			);
 			path = stationUITests;
@@ -3986,6 +3973,7 @@
 					};
 					64333D4320B0C45B00CDF4B6 = {
 						CreatedOnToolsVersion = 9.3.1;
+						LastSwiftMigration = 1130;
 						TestTargetID = 64333D2420B0C45900CDF4B6;
 					};
 				};
@@ -4332,10 +4320,8 @@
 				0E6BAD7B23856A01003A2D4C /* LocationServiceApple.swift in Sources */,
 				0E6BAD7C23856A01003A2D4C /* DiscoverTableViewController.swift in Sources */,
 				0E6BAD7D23856A01003A2D4C /* Optional.swift in Sources */,
-				0E6BAD7E23856A01003A2D4C /* Theme.swift in Sources */,
 				0E6BAD8123856A01003A2D4C /* CalibrationService.swift in Sources */,
 				0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */,
-				0E6BAD8323856A01003A2D4C /* Themeable.swift in Sources */,
 				0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */,
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
@@ -4357,6 +4343,7 @@
 				0E6BAD9423856A01003A2D4C /* WebTagPersistenceRealm.swift in Sources */,
 				0E6BAD9523856A01003A2D4C /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E6BAD9623856A01003A2D4C /* PermissionPresenter.swift in Sources */,
+				0E0C19C023D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E6BAD9723856A01003A2D4C /* LocationPickerRouterInput.swift in Sources */,
 				0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
@@ -4656,10 +4643,8 @@
 				0E8BD2B1238566AB008B31EF /* LocationServiceApple.swift in Sources */,
 				0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */,
 				0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */,
-				0E8BD2B4238566AB008B31EF /* Theme.swift in Sources */,
 				0E8BD2B7238566AB008B31EF /* CalibrationService.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
-				0E8BD2B9238566AB008B31EF /* Themeable.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
 				0E8BD2BB238566AB008B31EF /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */,
@@ -4681,6 +4666,7 @@
 				0E8BD2CA238566AB008B31EF /* WebTagPersistenceRealm.swift in Sources */,
 				0E8BD2CB238566AB008B31EF /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E8BD2CC238566AB008B31EF /* PermissionPresenter.swift in Sources */,
+				0E0C19BF23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
 				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
@@ -4980,10 +4966,8 @@
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
-				0E70A46822AF9658006CB87C /* Theme.swift in Sources */,
 				0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
-				0E70A46622AF962A006CB87C /* Themeable.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
@@ -5005,6 +4989,7 @@
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
 				0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
+				0E0C19BE23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
@@ -5307,7 +5292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64333D4920B0C45B00CDF4B6 /* StationUITests.swift in Sources */,
+				0E6C471723D305960016B46E /* StationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6011,6 +5996,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = stationUITests/Info.plist;
@@ -6021,6 +6007,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ruuvi.stationUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = station;
@@ -6031,6 +6018,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = stationUITests/Info.plist;
