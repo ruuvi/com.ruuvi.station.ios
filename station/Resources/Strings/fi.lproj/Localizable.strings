@@ -112,7 +112,7 @@
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
-"Foreground.Interval.All.string" = "All";
+"Foreground.Interval.All.string" = "Kaikki";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Taustaprosessit";
@@ -121,7 +121,7 @@
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Lue RSSI";
 "Heartbeat.Interval.Sec.string" = "sek";
-"Heartbeat.Interval.All.string" = "All";
+"Heartbeat.Interval.All.string" = "Kaikki";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Video-ohje.";
