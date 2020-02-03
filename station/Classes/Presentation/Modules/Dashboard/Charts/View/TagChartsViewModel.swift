@@ -38,126 +38,112 @@ struct TagChartsViewModel {
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
         isConnectable.value = ruuviTag.isConnectable
-        let data = ruuviTag.data.sorted(byKeyPath: "date")
+        let ho = ruuviTag.humidityOffset
+        humidityOffset.value = ho
+
+        var date = Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()
+        let data = ruuviTag.data.filter("date > %@", date).sorted(byKeyPath: "date")
         if data.count > 1 {
-            celsius.value = data.compactMap({
-                if let value = $0.celsius.value {
-                    return TagChartsPoint(date: $0.date, value: value)
-                } else {
-                    return nil
-                }
-            })
-            fahrenheit.value = data.compactMap({
-                if let value = $0.fahrenheit {
-                    return TagChartsPoint(date: $0.date, value: value)
-                } else {
-                    return nil
-                }
-            })
-            kelvin.value = data.compactMap({
-                if let value = $0.kelvin {
-                    return TagChartsPoint(date: $0.date, value: value)
-                } else {
-                    return nil
-                }
-            })
-
-            let ho = ruuviTag.humidityOffset
-            humidityOffset.value = ho
-
-            relativeHumidity.value = data.compactMap({
-                if let rh = $0.humidity.value {
-                    var sh = rh + ho
-                    if sh > 100.0 {
-                        sh = 100.0
+            var celsiusPoints = [TagChartsPoint]()
+            var fahrenheitPoints = [TagChartsPoint]()
+            var kelvinPoints = [TagChartsPoint]()
+            var relativeHumidityPoints = [TagChartsPoint]()
+            var absoluteHumidityPoints = [TagChartsPoint]()
+            var dewPointCelsiusPoints = [TagChartsPoint]()
+            var dewPointFahrenheitPoints = [TagChartsPoint]()
+            var dewPointKelvinPoints = [TagChartsPoint]()
+            var pressurePoints = [TagChartsPoint]()
+            for index in 0..<data.count {
+                let dataPoint = data[index]
+                let elapsed = Int(dataPoint.date.timeIntervalSince(date))
+                if elapsed > 60 {
+                    if let value = dataPoint.celsius.value {
+                        let point = TagChartsPoint(date: dataPoint.date, value: value)
+                        celsiusPoints.append(point)
                     }
-                    return TagChartsPoint(date: $0.date, value: sh)
-                } else {
-                    return nil
+                    if let value = dataPoint.fahrenheit {
+                        let point = TagChartsPoint(date: dataPoint.date, value: value)
+                        fahrenheitPoints.append(point)
+                    }
+                    if let value = dataPoint.kelvin {
+                        let point = TagChartsPoint(date: dataPoint.date, value: value)
+                        kelvinPoints.append(point)
+                    }
+                    if let rh = dataPoint.humidity.value {
+                        var sh = rh + ho
+                        if sh > 100.0 {
+                            sh = 100.0
+                        }
+                        let point = TagChartsPoint(date: dataPoint.date, value: sh)
+                        relativeHumidityPoints.append(point)
+                    }
+                    if let c = dataPoint.celsius.value,
+                        let rh = dataPoint.humidity.value {
+                        var sh = rh + ho
+                        if sh > 100.0 {
+                            sh = 100.0
+                        }
+                        let h = Humidity(c: c, rh: sh / 100.0)
+                        let point = TagChartsPoint(date: dataPoint.date, value: h.ah)
+                        absoluteHumidityPoints.append(point)
+                    }
+                    if let c = dataPoint.celsius.value,
+                        let rh = dataPoint.humidity.value {
+                        var sh = rh + ho
+                        if sh > 100.0 {
+                            sh = 100.0
+                        }
+                        let h = Humidity(c: c, rh: sh / 100.0)
+                        if let hTd = h.Td {
+                            let point = TagChartsPoint(date: dataPoint.date, value: hTd)
+                            dewPointCelsiusPoints.append(point)
+                        }
+                    }
+                    if let c = dataPoint.celsius.value,
+                        let rh = dataPoint.humidity.value {
+                        var sh = rh + ho
+                        if sh > 100.0 {
+                            sh = 100.0
+                        }
+                        let h = Humidity(c: c, rh: sh / 100.0)
+                        if let hTdF = h.TdF {
+                            let point = TagChartsPoint(date: dataPoint.date, value: hTdF)
+                            dewPointFahrenheitPoints.append(point)
+                        }
+                    }
+                    if let c = dataPoint.celsius.value,
+                        let rh = dataPoint.humidity.value {
+                        var sh = rh + ho
+                        if sh > 100.0 {
+                            sh = 100.0
+                        }
+                        let h = Humidity(c: c, rh: sh / 100.0)
+                        if let hTdK = h.TdK {
+                            let point = TagChartsPoint(date: dataPoint.date, value: hTdK)
+                            dewPointKelvinPoints.append(point)
+                        }
+                    }
+                    if let pressure = dataPoint.pressure.value {
+                        let point = TagChartsPoint(date: dataPoint.date, value: pressure)
+                        pressurePoints.append(point)
+                    }
+                    date = dataPoint.date
                 }
-            })
-
-            absoluteHumidity.value = data.compactMap({
-                if let c = $0.celsius.value,
-                    let rh = $0.humidity.value {
-                    var sh = rh + ho
-                    if sh > 100.0 {
-                        sh = 100.0
-                    }
-                    let h = Humidity(c: c, rh: sh / 100.0)
-                    return TagChartsPoint(date: $0.date, value: h.ah)
-                } else {
-                     return nil
-                }
-            })
-            dewPointCelsius.value = data.compactMap({
-                if let c = $0.celsius.value,
-                    let rh = $0.humidity.value {
-                    var sh = rh + ho
-                    if sh > 100.0 {
-                        sh = 100.0
-                    }
-                    let h = Humidity(c: c, rh: sh / 100.0)
-                    if let hTd = h.Td {
-                        return TagChartsPoint(date: $0.date, value: hTd)
-                    } else {
-                        return nil
-                    }
-                } else {
-                     return nil
-                }
-            })
-            dewPointFahrenheit.value = data.compactMap({
-                if let c = $0.celsius.value,
-                    let rh = $0.humidity.value {
-                    var sh = rh + ho
-                    if sh > 100.0 {
-                        sh = 100.0
-                    }
-                    let h = Humidity(c: c, rh: sh / 100.0)
-                    if let hTdF = h.TdF {
-                        return TagChartsPoint(date: $0.date, value: hTdF)
-                    } else {
-                        return nil
-                    }
-                } else {
-                     return nil
-                }
-            })
-            dewPointKelvin.value = data.compactMap({
-                if let c = $0.celsius.value,
-                    let rh = $0.humidity.value {
-                    var sh = rh + ho
-                    if sh > 100.0 {
-                        sh = 100.0
-                    }
-                    let h = Humidity(c: c, rh: sh / 100.0)
-                    if let hTdK = h.TdK {
-                        return TagChartsPoint(date: $0.date, value: hTdK)
-                    } else {
-                        return nil
-                    }
-                } else {
-                     return nil
-                }
-            })
-            pressure.value = data.compactMap({
-                if let pressure = $0.pressure.value {
-                    return TagChartsPoint(date: $0.date, value: pressure)
-                } else {
-                    return nil
-                }
-            })
+            }
+            celsius.value = celsiusPoints
+            fahrenheit.value = fahrenheitPoints
+            kelvin.value = kelvinPoints
+            relativeHumidity.value = relativeHumidityPoints
+            absoluteHumidity.value = absoluteHumidityPoints
+            dewPointCelsius.value = dewPointCelsiusPoints
+            dewPointFahrenheit.value = dewPointFahrenheitPoints
+            dewPointKelvin.value = dewPointKelvinPoints
+            pressure.value = pressurePoints
         } else {
             celsius.value = nil
             fahrenheit.value = nil
             kelvin.value = nil
-
-            let ho = ruuviTag.humidityOffset
-            humidityOffset.value = ho
-
             relativeHumidity.value = nil
-
             absoluteHumidity.value = nil
             dewPointCelsius.value = nil
             dewPointFahrenheit.value = nil
