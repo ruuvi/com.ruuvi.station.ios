@@ -9,6 +9,7 @@ class AppStateServiceImpl: AppStateService {
     var heartbeatDaemon: RuuviTagHeartbeatDaemon!
     var pullWebDaemon: PullWebDaemon!
     var backgroundTaskService: BackgroundTaskService!
+    var backgroundProcessService: BackgroundProcessService!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -22,6 +23,7 @@ class AppStateServiceImpl: AppStateService {
         propertiesDaemon.start()
         pullWebDaemon.start()
         backgroundTaskService.register()
+        backgroundProcessService.register()
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -42,6 +44,7 @@ class AppStateServiceImpl: AppStateService {
         propertiesDaemon.stop()
         pullWebDaemon.stop()
         backgroundTaskService.schedule()
+        backgroundProcessService.schedule()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {

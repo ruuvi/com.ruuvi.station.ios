@@ -180,6 +180,9 @@ class SettingsUserDegaults: Settings {
         }
     }
 
+    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 72)
+    var dataPruningOffsetHours: Int
+
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
 

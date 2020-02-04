@@ -27,7 +27,19 @@ class BusinessAssembly: Assembly {
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
+            service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
             return service
+        }.inObjectScope(.container)
+
+        container.register(BackgroundProcessService.self) { r in
+            if #available(iOS 13, *) {
+                let service = BackgroundProcessServiceiOS13()
+                service.dataPruningOperationsManager = r.resolve(DataPruningOperationsManager.self)
+                return service
+            } else {
+                let service = BackgroundProcessServiceiOS12()
+                return service
+            }
         }.inObjectScope(.container)
 
         container.register(BackgroundTaskService.self) { r in
@@ -46,6 +58,13 @@ class BusinessAssembly: Assembly {
             service.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return service
+        }
+
+        container.register(DataPruningOperationsManager.self) { r in
+            let manager = DataPruningOperationsManager()
+            manager.realmContext = r.resolve(RealmContext.self)
+            manager.settings = r.resolve(Settings.self)
+            return manager
         }
 
         container.register(ExportService.self) { r in
