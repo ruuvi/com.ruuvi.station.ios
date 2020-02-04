@@ -12,7 +12,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildServiceTimeout(),
                            buildCardsSwipeHint(),
                            buildAlertsInterval(),
-                           buildWebPullInterval()]
+                           buildWebPullInterval(),
+                           buildPruningOffsetHours()]
     }
 }
 
@@ -104,5 +105,17 @@ extension DefaultsPresenter {
             observer.settings.webPullIntervalMinutes = webPullInterval.bound
         }
         return webPullInterval
+    }
+
+    private func buildPruningOffsetHours() -> DefaultsViewModel {
+        let pruningOffsetHours = DefaultsViewModel()
+        pruningOffsetHours.title = "Defaults.PruningOffsetHours.title".localized()
+        pruningOffsetHours.integer.value = settings.dataPruningOffsetHours
+        pruningOffsetHours.unit = .hours
+
+        bind(pruningOffsetHours.integer, fire: false) { observer, pruningOffsetHours in
+            observer.settings.dataPruningOffsetHours = pruningOffsetHours.bound
+        }
+        return pruningOffsetHours
     }
 }

@@ -17,6 +17,8 @@ class DefaultsStepperTableViewCell: UITableViewCell {
         let result = Int(stepper.value)
         let unitString: String
         switch unit {
+        case .hours:
+            unitString = "Defaults.Interval.Hour.string".localized()
         case .minutes:
             unitString = "Defaults.Interval.Min.string".localized()
         case .seconds:

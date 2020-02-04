@@ -81,6 +81,8 @@
 "Defaults.CardsSwipeHint.title" = "Pyyhkäisyvinkki";
 "Defaults.AlertsRepeatInterval.title" = "Hälytysväli";
 "Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli";
+"Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
+"Defaults.Interval.Hour.string" = "h";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";

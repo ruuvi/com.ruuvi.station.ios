@@ -10,6 +10,7 @@ class DefaultsViewModel: Identifiable {
 }
 
 enum DefaultsIntegerUnit {
+    case hours
     case minutes
     case seconds
 }
