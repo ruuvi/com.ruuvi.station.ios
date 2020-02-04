@@ -81,6 +81,8 @@
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
 "Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
 "Defaults.WebPullInterval.title" = "Web Alerts Interval";
+"Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
+"Defaults.Interval.Hour.string" = "h";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";

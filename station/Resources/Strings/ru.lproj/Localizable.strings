@@ -81,6 +81,8 @@
 "Defaults.CardsSwipeHint.title" = "Свайп Подсказка на Графиках";
 "Defaults.AlertsRepeatInterval.title" = "Интервал Уведомлений";
 "Defaults.WebPullInterval.title" = "Интервал Уведомления для Виртуальных Сенсоров";
+"Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
+"Defaults.Interval.Hour.string" = "ч";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
