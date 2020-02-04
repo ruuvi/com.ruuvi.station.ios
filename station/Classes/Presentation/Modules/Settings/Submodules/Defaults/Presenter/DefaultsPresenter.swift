@@ -13,7 +13,9 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildCardsSwipeHint(),
                            buildAlertsInterval(),
                            buildWebPullInterval(),
-                           buildPruningOffsetHours()]
+                           buildPruningOffsetHours(),
+                           buildChartIntervalSeconds(),
+                           buildChartDurationHours()]
     }
 }
 
@@ -117,5 +119,29 @@ extension DefaultsPresenter {
             observer.settings.dataPruningOffsetHours = pruningOffsetHours.bound
         }
         return pruningOffsetHours
+    }
+
+    private func buildChartIntervalSeconds() -> DefaultsViewModel {
+        let chartIntervalSeconds = DefaultsViewModel()
+        chartIntervalSeconds.title = "Defaults.ChartIntervalSeconds.title".localized()
+        chartIntervalSeconds.integer.value = settings.chartIntervalSeconds
+        chartIntervalSeconds.unit = .seconds
+
+        bind(chartIntervalSeconds.integer, fire: false) { observer, chartIntervalSeconds in
+            observer.settings.chartIntervalSeconds = chartIntervalSeconds.bound
+        }
+        return chartIntervalSeconds
+    }
+
+    private func buildChartDurationHours() -> DefaultsViewModel {
+        let chartDurationHours = DefaultsViewModel()
+        chartDurationHours.title = "Defaults.ChartDurationHours.title".localized()
+        chartDurationHours.integer.value = settings.chartDurationHours
+        chartDurationHours.unit = .hours
+
+        bind(chartDurationHours.integer, fire: false) { observer, chartDurationHours in
+            observer.settings.chartDurationHours = chartDurationHours.bound
+        }
+        return chartDurationHours
     }
 }

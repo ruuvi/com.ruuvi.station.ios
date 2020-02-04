@@ -83,6 +83,8 @@
 "Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli";
 "Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
 "Defaults.Interval.Hour.string" = "h";
+"Defaults.ChartIntervalSeconds.title" = "Chart Interval";
+"Defaults.ChartDurationHours.title" = "Chart Duration";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";

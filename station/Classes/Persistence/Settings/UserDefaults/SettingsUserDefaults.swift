@@ -183,6 +183,12 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 72)
     var dataPruningOffsetHours: Int
 
+    @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 60)
+    var chartIntervalSeconds: Int
+
+    @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 72)
+    var chartDurationHours: Int
+
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
 

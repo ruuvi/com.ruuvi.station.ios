@@ -31,6 +31,8 @@ protocol Settings {
     var readRSSIIntervalSeconds: Int { get set }
     var webPullIntervalMinutes: Int { get set }
     var dataPruningOffsetHours: Int { get set }
+    var chartIntervalSeconds: Int { get set }
+    var chartDurationHours: Int { get set }
 
     func keepConnectionDialogWasShown(for uuid: String) -> Bool
     func setKeepConnectionDialogWasShown(for uuid: String)
