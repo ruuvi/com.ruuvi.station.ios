@@ -38,6 +38,7 @@ class BusinessAssembly: Assembly {
                 return service
             } else {
                 let service = BackgroundProcessServiceiOS12()
+                service.dataPruningOperationsManager = r.resolve(DataPruningOperationsManager.self)
                 return service
             }
         }.inObjectScope(.container)
