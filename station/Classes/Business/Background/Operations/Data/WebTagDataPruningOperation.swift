@@ -1,12 +1,13 @@
 import Foundation
+import RealmSwift
 
 class WebTagDataPruningOperation: AsyncOperation {
 
-    private var webTag: WebTagRealm
+    private var uuid: String
     private var settings: Settings
 
-    init(webTag: WebTagRealm, settings: Settings) {
-        self.webTag = webTag
+    init(uuid: String, settings: Settings) {
+        self.uuid = uuid
         self.settings = settings
     }
 
@@ -15,15 +16,19 @@ class WebTagDataPruningOperation: AsyncOperation {
         let date = Calendar.current.date(byAdding: .hour,
                                          value: -offset,
                                          to: Date()) ?? Date()
-        let points = webTag.data.filter("date < ", date)
-        if let realm = webTag.realm {
-            do {
-                try realm.write {
-                    realm.delete(points)
+        autoreleasepool {
+            let realm = try! Realm()
+            if let webTag = realm.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
+                let points = webTag.data.filter("date < %@", date)
+                do {
+                    try realm.write {
+                        realm.delete(points)
+                    }
+                } catch {
+                    print(error.localizedDescription)
                 }
-            } catch {
-                print(error.localizedDescription)
             }
+            realm.refresh()
         }
         state = .finished
     }
