@@ -28,6 +28,10 @@ class BackgroundProcessServiceiOS13: BackgroundProcessService {
         }
     }
 
+    func launch() {
+        // do nothing, for iOS 13 schedule will work
+    }
+
     private func handleDataPruning(task: BGProcessingTask) {
         schedule()
 
