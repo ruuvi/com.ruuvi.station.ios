@@ -168,10 +168,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
+            isLoading = true
             exportService.csvLog(for: uuid).on(success: { [weak self] url in
                 self?.view.showExportSheet(with: url)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.isLoading = false
             })
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -211,9 +214,12 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
+            isLoading = true
             let op = ruuviTagService.clearHistory(uuid: uuid)
             op.on(failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.isLoading = false
             })
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
