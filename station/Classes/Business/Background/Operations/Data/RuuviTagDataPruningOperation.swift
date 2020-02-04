@@ -1,12 +1,13 @@
 import Foundation
+import RealmSwift
 
 class RuuviTagDataPruningOperation: AsyncOperation {
 
-    private var ruuviTag: RuuviTagRealm
+    private var uuid: String
     private var settings: Settings
 
-    init(ruuviTag: RuuviTagRealm, settings: Settings) {
-        self.ruuviTag = ruuviTag
+    init(uuid: String, settings: Settings) {
+        self.uuid = uuid
         self.settings = settings
     }
 
@@ -15,15 +16,19 @@ class RuuviTagDataPruningOperation: AsyncOperation {
         let date = Calendar.current.date(byAdding: .hour,
                                          value: -offset,
                                          to: Date()) ?? Date()
-        let points = ruuviTag.data.filter("date < ", date)
-        if let realm = ruuviTag.realm {
-            do {
-                try realm.write {
-                    realm.delete(points)
+        autoreleasepool {
+            let realm = try! Realm()
+            if let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+                let points = ruuviTag.data.filter("date < %@", date)
+                do {
+                    try realm.write {
+                        realm.delete(points)
+                    }
+                } catch {
+                    print(error.localizedDescription)
                 }
-            } catch {
-                print(error.localizedDescription)
             }
+            realm.refresh()
         }
         state = .finished
     }

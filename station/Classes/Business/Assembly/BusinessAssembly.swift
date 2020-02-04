@@ -62,7 +62,6 @@ class BusinessAssembly: Assembly {
 
         container.register(DataPruningOperationsManager.self) { r in
             let manager = DataPruningOperationsManager()
-            manager.realmContext = r.resolve(RealmContext.self)
             manager.settings = r.resolve(Settings.self)
             return manager
         }

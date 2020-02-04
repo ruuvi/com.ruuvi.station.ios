@@ -3,14 +3,14 @@ import RealmSwift
 
 class DataPruningOperationsManager {
 
-    var realmContext: RealmContext!
     var settings: Settings!
 
     func webTagPruningOperations() -> [Operation] {
         var operations = [Operation]()
-        let webTags = realmContext.main.objects(WebTagRealm.self)
+        let realm = try! Realm()
+        let webTags = realm.objects(WebTagRealm.self)
         for webTag in webTags {
-            let operation = WebTagDataPruningOperation(webTag: webTag,
+            let operation = WebTagDataPruningOperation(uuid: webTag.uuid,
                                                        settings: settings)
             operations.append(operation)
         }
@@ -19,9 +19,10 @@ class DataPruningOperationsManager {
 
     func ruuviTagPruningOperations() -> [Operation] {
         var operations = [Operation]()
-        let ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+        let realm = try! Realm()
+        let ruuviTags = realm.objects(RuuviTagRealm.self)
         for ruuviTag in ruuviTags {
-            let operation = RuuviTagDataPruningOperation(ruuviTag: ruuviTag,
+            let operation = RuuviTagDataPruningOperation(uuid: ruuviTag.uuid,
                                                          settings: settings)
             operations.append(operation)
         }

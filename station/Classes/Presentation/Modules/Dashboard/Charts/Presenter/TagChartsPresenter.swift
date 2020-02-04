@@ -23,6 +23,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
 
+    private var isSyncing: Bool = false
     private var isLoading: Bool = false {
         didSet {
             if isLoading != oldValue {
@@ -183,6 +184,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
+            isSyncing = true
             let connectionTimeout: TimeInterval = settings.connectionTimeout
             let serviceTimeout: TimeInterval = settings.serviceTimeout
             let op = gattService.syncLogs(with: uuid, progress: { [weak self] progress in
@@ -334,11 +336,13 @@ extension TagChartsPresenter {
                 switch change {
                 case .update:
                     // sync every 1 second
-                    if let last = self?.lastSyncViewModelDate {
+                    if let last = self?.lastSyncViewModelDate,
+                        let isSyncing = self?.isSyncing {
                         let elapsed = Int(Date().timeIntervalSince(last))
-                        if elapsed > 60 {
+                        if elapsed > 60 || isSyncing {
                             self?.syncViewModels()
                             self?.lastSyncViewModelDate = Date()
+                            self?.isSyncing = false
                         }
                     }
                 case .error(let error):
