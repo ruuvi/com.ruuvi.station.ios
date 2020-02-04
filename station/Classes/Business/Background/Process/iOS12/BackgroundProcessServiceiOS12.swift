@@ -7,6 +7,6 @@ class BackgroundProcessServiceiOS12: BackgroundProcessService {
     }
 
     func schedule() {
-        
+
     }
 }

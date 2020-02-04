@@ -46,7 +46,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
-    
+
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
