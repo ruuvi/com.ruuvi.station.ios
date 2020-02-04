@@ -33,7 +33,7 @@ struct TagChartsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    init(_ ruuviTag: RuuviTagRealm) {
+    init(_ ruuviTag: RuuviTagRealm, hours: Int, every seconds: Int) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
@@ -41,7 +41,7 @@ struct TagChartsViewModel {
         let ho = ruuviTag.humidityOffset
         humidityOffset.value = ho
 
-        var date = Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()
+        var date = Calendar.current.date(byAdding: .hour, value: -hours, to: Date()) ?? Date()
         let data = ruuviTag.data.filter("date > %@", date).sorted(byKeyPath: "date")
         if data.count > 1 {
             var celsiusPoints = [TagChartsPoint]()
@@ -56,7 +56,7 @@ struct TagChartsViewModel {
             for index in 0..<data.count {
                 let dataPoint = data[index]
                 let elapsed = Int(dataPoint.date.timeIntervalSince(date))
-                if elapsed > 60 {
+                if elapsed > seconds {
                     if let value = dataPoint.celsius.value {
                         let point = TagChartsPoint(date: dataPoint.date, value: value)
                         celsiusPoints.append(point)

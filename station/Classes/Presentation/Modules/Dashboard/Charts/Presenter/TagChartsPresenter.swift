@@ -310,7 +310,7 @@ extension TagChartsPresenter {
     private func syncViewModels() {
         if ruuviTags != nil {
             viewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
-                let viewModel = TagChartsViewModel(ruuviTag)
+                let viewModel = TagChartsViewModel(ruuviTag, hours: settings.chartDurationHours, every: settings.chartIntervalSeconds)
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.humidityUnit.value = settings.humidityUnit
@@ -337,9 +337,10 @@ extension TagChartsPresenter {
                 case .update:
                     // sync every 1 second
                     if let last = self?.lastSyncViewModelDate,
-                        let isSyncing = self?.isSyncing {
+                        let isSyncing = self?.isSyncing,
+                        let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
                         let elapsed = Int(Date().timeIntervalSince(last))
-                        if elapsed > 60 || isSyncing {
+                        if elapsed > chartIntervalSeconds || isSyncing {
                             self?.syncViewModels()
                             self?.lastSyncViewModelDate = Date()
                             self?.isSyncing = false

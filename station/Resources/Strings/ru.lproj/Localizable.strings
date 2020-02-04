@@ -83,6 +83,8 @@
 "Defaults.WebPullInterval.title" = "Интервал Уведомления для Виртуальных Сенсоров";
 "Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
 "Defaults.Interval.Hour.string" = "ч";
+"Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
+"Defaults.ChartDurationHours.title" = "Размер Графиков";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
