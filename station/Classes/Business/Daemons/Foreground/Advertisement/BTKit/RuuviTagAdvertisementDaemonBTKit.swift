@@ -98,7 +98,8 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
             for ruuviTag in ruuviTags {
                 observeTokens.append(foreground.observe(self,
                                                         uuid: ruuviTag.uuid,
-                                                        options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
+                                                        options: [.callbackQueue(.untouch)]) {
+                                                            [weak self] (_, device) in
                     guard let sSelf = self else { return }
                     if let tag = device.ruuvi?.tag {
                         let pair = RuuviTagAdvertisementDaemonPair(ruuviTag: ruuviTag, device: tag)
