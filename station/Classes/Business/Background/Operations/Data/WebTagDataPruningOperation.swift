@@ -29,6 +29,7 @@ class WebTagDataPruningOperation: AsyncOperation {
                 }
             }
             realm.refresh()
+            realm.invalidate()
         }
         state = .finished
     }

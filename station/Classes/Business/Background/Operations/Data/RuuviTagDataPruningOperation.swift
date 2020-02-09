@@ -29,6 +29,7 @@ class RuuviTagDataPruningOperation: AsyncOperation {
                 }
             }
             realm.refresh()
+            realm.invalidate()
         }
         state = .finished
     }
