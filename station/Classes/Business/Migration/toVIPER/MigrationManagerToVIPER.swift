@@ -27,6 +27,18 @@ class MigrationManagerToVIPER: MigrationManager {
         // Tell Realm to use this new configuration object for the default Realm
         Realm.Configuration.defaultConfiguration = config
 
+        do {
+            _ = try Realm()
+        } catch {
+            if let url = Realm.Configuration.defaultConfiguration.fileURL {
+                do {
+                    try FileManager.default.removeItem(at: url)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+
         if !UserDefaults.standard.bool(forKey: "MigrationManagerToVIPER.useFahrenheit.checked") {
             UserDefaults.standard.set(true, forKey: "MigrationManagerToVIPER.useFahrenheit.checked")
             let useFahrenheit = UserDefaults.standard.bool(forKey: "useFahrenheit")
