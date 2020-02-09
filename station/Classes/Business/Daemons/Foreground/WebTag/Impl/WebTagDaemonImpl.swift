@@ -163,7 +163,8 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
                                                                              provider: provider,
                                                                              interval: pullInterval,
                                                                              fire: fire,
-                                                                             closure: { (observer, data, location, error) in
+                                                                             closure: {
+                                                                                (observer, data, location, error) in
                         if let data = data, let location = location {
                             observer.webTagPersistence.persist(currentLocation: location, data: data)
                         } else if let error = error {

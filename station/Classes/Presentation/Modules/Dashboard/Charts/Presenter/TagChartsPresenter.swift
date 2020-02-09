@@ -316,7 +316,9 @@ extension TagChartsPresenter {
     private func syncViewModels() {
         if ruuviTags != nil {
             viewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
-                let viewModel = TagChartsViewModel(ruuviTag, hours: settings.chartDurationHours, every: settings.chartIntervalSeconds)
+                let viewModel = TagChartsViewModel(ruuviTag,
+                                                   hours: settings.chartDurationHours,
+                                                   every: settings.chartIntervalSeconds)
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.humidityUnit.value = settings.humidityUnit
