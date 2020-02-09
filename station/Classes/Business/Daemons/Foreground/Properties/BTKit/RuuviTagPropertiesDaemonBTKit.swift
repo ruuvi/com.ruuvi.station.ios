@@ -22,25 +22,29 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     deinit {
-       observeTokens.forEach({ $0.invalidate() })
-       observeTokens.removeAll()
-       token?.invalidate()
+        autoreleasepool {
+            observeTokens.forEach({ $0.invalidate() })
+            observeTokens.removeAll()
+            token?.invalidate()
+        }
     }
 
     func start() {
        start { [weak self] in
-           self?.realm = try! Realm()
+            autoreleasepool {
+                self?.realm = try! Realm()
 
-           self?.token = self?.realm.objects(RuuviTagRealm.self).observe({ [weak self] (change) in
-               switch change {
-               case .initial(let ruuviTags):
-                   self?.startObserving(ruuviTags: ruuviTags)
-               case .update(let ruuviTags, _, _, _):
-                   self?.startObserving(ruuviTags: ruuviTags)
-               case .error(let error):
-                self?.post(error: RUError.persistence(error))
-               }
-           })
+                self?.token = self?.realm.objects(RuuviTagRealm.self).observe({ [weak self] (change) in
+                    switch change {
+                    case .initial(let ruuviTags):
+                        self?.startObserving(ruuviTags: ruuviTags)
+                    case .update(let ruuviTags, _, _, _):
+                        self?.startObserving(ruuviTags: ruuviTags)
+                    case .error(let error):
+                     self?.post(error: RUError.persistence(error))
+                    }
+                })
+            }
        }
     }
 
@@ -53,57 +57,63 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     @objc private func stopDaemon() {
-        observeTokens.forEach({ $0.invalidate() })
-        observeTokens.removeAll()
-        token?.invalidate()
-        realm.invalidate()
-        stopWork()
+        autoreleasepool {
+            observeTokens.forEach({ $0.invalidate() })
+            observeTokens.removeAll()
+            token?.invalidate()
+            realm.invalidate()
+            stopWork()
+        }
     }
 
     private func startObserving(ruuviTags: Results<RuuviTagRealm>) {
        observeTokens.forEach({ $0.invalidate() })
        observeTokens.removeAll()
-       for ruuviTag in ruuviTags {
-           observeTokens.append(foreground.observe(self,
-                                                   uuid: ruuviTag.uuid,
-                                                   options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
-               guard let sSelf = self else { return }
-               if let tag = device.ruuvi?.tag {
-                   let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
-                   sSelf.perform(#selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
-                                 on: sSelf.thread,
-                                 with: pair,
-                                 waitUntilDone: false,
-                                 modes: [RunLoop.Mode.default.rawValue])
-               }
-           })
-       }
+        autoreleasepool {
+            for ruuviTag in ruuviTags {
+                observeTokens.append(foreground.observe(self,
+                                                        uuid: ruuviTag.uuid,
+                                                        options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
+                    guard let sSelf = self else { return }
+                    if let tag = device.ruuvi?.tag {
+                        let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
+                        sSelf.perform(#selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
+                                      on: sSelf.thread,
+                                      with: pair,
+                                      waitUntilDone: false,
+                                      modes: [RunLoop.Mode.default.rawValue])
+                    }
+                })
+            }
+        }
     }
 
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
-       if pair.device.version != pair.ruuviTag.version {
-           let tagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
-           ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm).on( failure: { [weak self] error in
-               self?.post(error: error)
-           })
-           ruuviTagPersistence.update(version: pair.device.version,
-                                      of: pair.ruuviTag, realm: realm)
-            .on( failure: { [weak self] error in
-               self?.post(error: error)
-           })
-       }
-       if pair.device.mac != nil && pair.device.mac != pair.ruuviTag.mac {
-           ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
-            .on( failure: { [weak self] error in
-               self?.post(error: error)
-           })
-       }
-       if pair.device.isConnectable != pair.ruuviTag.isConnectable {
-           ruuviTagPersistence.update(isConnectable: pair.device.isConnectable, of: pair.ruuviTag, realm: realm)
-            .on( failure: { [weak self] error in
-               self?.post(error: error)
-           })
-       }
+        autoreleasepool {
+            if pair.device.version != pair.ruuviTag.version {
+                let tagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
+                ruuviTagPersistence.persist(ruuviTagData: tagData, realm: realm).on( failure: { [weak self] error in
+                    self?.post(error: error)
+                })
+                ruuviTagPersistence.update(version: pair.device.version,
+                                           of: pair.ruuviTag, realm: realm)
+                 .on( failure: { [weak self] error in
+                    self?.post(error: error)
+                })
+            }
+            if pair.device.mac != nil && pair.device.mac != pair.ruuviTag.mac {
+                ruuviTagPersistence.update(mac: pair.device.mac, of: pair.ruuviTag, realm: realm)
+                 .on( failure: { [weak self] error in
+                    self?.post(error: error)
+                })
+            }
+            if pair.device.isConnectable != pair.ruuviTag.isConnectable {
+                ruuviTagPersistence.update(isConnectable: pair.device.isConnectable, of: pair.ruuviTag, realm: realm)
+                 .on( failure: { [weak self] error in
+                    self?.post(error: error)
+                })
+            }
+        }
     }
 
     private func post(error: Error) {
