@@ -28,11 +28,13 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     }
 
     deinit {
-        observeTokens.forEach({ $0.invalidate() })
-        observeTokens.removeAll()
-        token?.invalidate()
-        if let isOnToken = isOnToken {
-            NotificationCenter.default.removeObserver(isOnToken)
+        autoreleasepool {
+            observeTokens.forEach({ $0.invalidate() })
+            observeTokens.removeAll()
+            token?.invalidate()
+            if let isOnToken = isOnToken {
+                NotificationCenter.default.removeObserver(isOnToken)
+            }
         }
     }
 
@@ -54,18 +56,20 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
 
     func start() {
         start { [weak self] in
-            self?.realm = try! Realm()
+            autoreleasepool {
+                self?.realm = try! Realm()
 
-            self?.token = self?.realm.objects(RuuviTagRealm.self).observe({ [weak self] (change) in
-                switch change {
-                case .initial(let ruuviTags):
-                    self?.startObserving(ruuviTags: ruuviTags)
-                case .update(let ruuviTags, _, _, _):
-                    self?.startObserving(ruuviTags: ruuviTags)
-                case .error(let error):
-                    self?.post(error: RUError.persistence(error))
-                }
-            })
+                self?.token = self?.realm.objects(RuuviTagRealm.self).observe({ [weak self] (change) in
+                    switch change {
+                    case .initial(let ruuviTags):
+                        self?.startObserving(ruuviTags: ruuviTags)
+                    case .update(let ruuviTags, _, _, _):
+                        self?.startObserving(ruuviTags: ruuviTags)
+                    case .error(let error):
+                        self?.post(error: RUError.persistence(error))
+                    }
+                })
+            }
         }
     }
 
@@ -78,52 +82,60 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     }
 
     @objc private func stopDaemon() {
-        observeTokens.forEach({ $0.invalidate() })
-        observeTokens.removeAll()
-        token?.invalidate()
-        realm.invalidate()
-        stopWork()
+        autoreleasepool {
+            observeTokens.forEach({ $0.invalidate() })
+            observeTokens.removeAll()
+            token?.invalidate()
+            realm.invalidate()
+            stopWork()
+        }
     }
 
     private func startObserving(ruuviTags: Results<RuuviTagRealm>) {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
-        for ruuviTag in ruuviTags {
-            observeTokens.append(foreground.observe(self,
-                                                    uuid: ruuviTag.uuid,
-                                                    options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
-                guard let sSelf = self else { return }
-                if let tag = device.ruuvi?.tag {
-                    let pair = RuuviTagAdvertisementDaemonPair(ruuviTag: ruuviTag, device: tag)
-                    sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.persist(pair:)),
-                            on: sSelf.thread,
-                            with: pair,
-                            waitUntilDone: false,
-                            modes: [RunLoop.Mode.default.rawValue])
-                }
-            })
+        autoreleasepool {
+            for ruuviTag in ruuviTags {
+                observeTokens.append(foreground.observe(self,
+                                                        uuid: ruuviTag.uuid,
+                                                        options: [.callbackQueue(.untouch)]) { [weak self] (_, device) in
+                    guard let sSelf = self else { return }
+                    if let tag = device.ruuvi?.tag {
+                        let pair = RuuviTagAdvertisementDaemonPair(ruuviTag: ruuviTag, device: tag)
+                        sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.persist(pair:)),
+                                on: sSelf.thread,
+                                with: pair,
+                                waitUntilDone: false,
+                                modes: [RunLoop.Mode.default.rawValue])
+                    }
+                })
+            }
         }
     }
 
     @objc private func persist(pair: RuuviTagAdvertisementDaemonPair) {
-        let uuid = pair.device.uuid
-        if let date = savedDate[uuid] {
-            if Date().timeIntervalSince(date) > saveInterval {
+        autoreleasepool {
+            let uuid = pair.device.uuid
+            if let date = savedDate[uuid] {
+                if Date().timeIntervalSince(date) > saveInterval {
+                    let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
+                    persist(ruuviTagData)
+                    savedDate[uuid] = Date()
+                }
+            } else {
                 let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
                 persist(ruuviTagData)
                 savedDate[uuid] = Date()
             }
-        } else {
-            let ruuviTagData = RuuviTagDataRealm(ruuviTag: pair.ruuviTag, data: pair.device)
-            persist(ruuviTagData)
-            savedDate[uuid] = Date()
         }
     }
 
     private func persist(_ ruuviTagData: RuuviTagDataRealm) {
-        ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { [weak self] error in
-            self?.post(error: error)
-        })
+        autoreleasepool {
+            ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm).on( failure: { [weak self] error in
+                self?.post(error: error)
+            })
+        }
     }
 
     private func post(error: Error) {

@@ -19,14 +19,16 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     }
 
     deinit {
-        wsTokens.forEach({ $0.invalidate() })
-        wsTokens.removeAll()
-        token?.invalidate()
-        if let isOnToken = isOnToken {
-            NotificationCenter.default.removeObserver(isOnToken)
-        }
-        if let intervalToken = intervalToken {
-            NotificationCenter.default.removeObserver(intervalToken)
+        autoreleasepool {
+            wsTokens.forEach({ $0.invalidate() })
+            wsTokens.removeAll()
+            token?.invalidate()
+            if let isOnToken = isOnToken {
+                NotificationCenter.default.removeObserver(isOnToken)
+            }
+            if let intervalToken = intervalToken {
+                NotificationCenter.default.removeObserver(intervalToken)
+            }
         }
     }
 
@@ -49,34 +51,36 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
 
     func start() {
         start { [weak self] in
-            self?.stopDaemon()
-            self?.realm = try! Realm()
-            self?.token = self?.realm?.objects(WebTagRealm.self).observe({ [weak self] (change) in
-                switch change {
-                case .initial(let webTags):
-                    self?.webTags = webTags
-                    self?.restartPulling(fire: true)
-                case .update(let webTags, _, _, _):
-                    self?.webTags = webTags
-                    self?.restartPulling(fire: true)
-                case .error(let error):
-                    print(error.localizedDescription)
-                }
-            })
+            autoreleasepool {
+                self?.stopDaemon()
+                self?.realm = try! Realm()
+                self?.token = self?.realm?.objects(WebTagRealm.self).observe({ [weak self] (change) in
+                    switch change {
+                    case .initial(let webTags):
+                        self?.webTags = webTags
+                        self?.restartPulling(fire: true)
+                    case .update(let webTags, _, _, _):
+                        self?.webTags = webTags
+                        self?.restartPulling(fire: true)
+                    case .error(let error):
+                        print(error.localizedDescription)
+                    }
+                })
 
-            self?.intervalToken = NotificationCenter
-                .default
-                .addObserver(forName: .WebTagDaemonIntervalDidChange,
-                             object: nil,
-                             queue: .main,
-                             using: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
-                                on: sSelf.thread,
-                                with: false,
-                                waitUntilDone: false,
-                                modes: [RunLoop.Mode.default.rawValue])
-            })
+                self?.intervalToken = NotificationCenter
+                    .default
+                    .addObserver(forName: .WebTagDaemonIntervalDidChange,
+                                 object: nil,
+                                 queue: .main,
+                                 using: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.perform(#selector(WebTagDaemonImpl.restartPulling(fire:)),
+                                    on: sSelf.thread,
+                                    with: false,
+                                    waitUntilDone: false,
+                                    modes: [RunLoop.Mode.default.rawValue])
+                })
+            }
         }
     }
 
@@ -95,68 +99,78 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
     }
 
     @objc private func invalidateRealm() {
-        realm?.invalidate()
-        realm = nil
+        autoreleasepool {
+            realm?.invalidate()
+            realm = nil
+        }
     }
 
     @objc private func stopDaemon() {
-        wsTokens.forEach({ $0.invalidate() })
-        wsTokens.removeAll()
-        token?.invalidate()
-        token = nil
-        if let intervalToken = intervalToken {
-            NotificationCenter.default.removeObserver(intervalToken)
+        autoreleasepool {
+            wsTokens.forEach({ $0.invalidate() })
+            wsTokens.removeAll()
+            token?.invalidate()
+            token = nil
+            if let intervalToken = intervalToken {
+                NotificationCenter.default.removeObserver(intervalToken)
+            }
+            webTags = nil
         }
-        webTags = nil
     }
 
     @objc private func restartPulling(fire: Bool) {
         wsTokens.forEach({ $0.invalidate() })
         wsTokens.removeAll()
 
-        guard let webTags = webTags else { return }
-        guard !webTags.isInvalidated else { return }
+        autoreleasepool {
+            guard let webTags = webTags else { return }
+            guard !webTags.isInvalidated else { return }
 
-        restartPullingCurrentLocation(webTags: webTags, fire: fire)
-        restartPullingFixedLocations(webTags: webTags, fire: fire)
-    }
-
-    private func restartPullingFixedLocations(webTags: Results<WebTagRealm>, fire: Bool) {
-        let locationWebTags = webTags.filter({ $0.location != nil })
-        for webTag in locationWebTags {
-            guard let location = webTag.location else { return }
-            let locationLocation = location.location
-            let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-            wsTokens.append(webTagService.observeData(self,
-                                                      coordinate: coordinate,
-                                                      provider: webTag.provider,
-                                                      interval: pullInterval,
-                                                      fire: fire,
-                                                      closure: { (observer, data, error) in
-                if let data = data {
-                    observer.webTagPersistence.persist(location: locationLocation, data: data)
-                } else if let error = error {
-                    observer.post(error: error)
-                }
-            }))
+            restartPullingCurrentLocation(webTags: webTags, fire: fire)
+            restartPullingFixedLocations(webTags: webTags, fire: fire)
         }
     }
 
-    private func restartPullingCurrentLocation(webTags: Results<WebTagRealm>, fire: Bool) {
-        let currentLocationWebTags = webTags.filter({ $0.location == nil })
-        for provider in WeatherProvider.allCases {
-            if currentLocationWebTags.contains(where: { $0.provider == provider }) {
-                wsTokens.append(webTagService.observeCurrentLocationData(self,
-                                                                         provider: provider,
-                                                                         interval: pullInterval,
-                                                                         fire: fire,
-                                                                         closure: { (observer, data, location, error) in
-                    if let data = data, let location = location {
-                        observer.webTagPersistence.persist(currentLocation: location, data: data)
+    private func restartPullingFixedLocations(webTags: Results<WebTagRealm>, fire: Bool) {
+        autoreleasepool {
+            let locationWebTags = webTags.filter({ $0.location != nil })
+            for webTag in locationWebTags {
+                guard let location = webTag.location else { return }
+                let locationLocation = location.location
+                let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+                wsTokens.append(webTagService.observeData(self,
+                                                          coordinate: coordinate,
+                                                          provider: webTag.provider,
+                                                          interval: pullInterval,
+                                                          fire: fire,
+                                                          closure: { (observer, data, error) in
+                    if let data = data {
+                        observer.webTagPersistence.persist(location: locationLocation, data: data)
                     } else if let error = error {
                         observer.post(error: error)
                     }
                 }))
+            }
+        }
+    }
+
+    private func restartPullingCurrentLocation(webTags: Results<WebTagRealm>, fire: Bool) {
+        autoreleasepool {
+            let currentLocationWebTags = webTags.filter({ $0.location == nil })
+            for provider in WeatherProvider.allCases {
+                if currentLocationWebTags.contains(where: { $0.provider == provider }) {
+                    wsTokens.append(webTagService.observeCurrentLocationData(self,
+                                                                             provider: provider,
+                                                                             interval: pullInterval,
+                                                                             fire: fire,
+                                                                             closure: { (observer, data, location, error) in
+                        if let data = data, let location = location {
+                            observer.webTagPersistence.persist(currentLocation: location, data: data)
+                        } else if let error = error {
+                            observer.post(error: error)
+                        }
+                    }))
+                }
             }
         }
     }

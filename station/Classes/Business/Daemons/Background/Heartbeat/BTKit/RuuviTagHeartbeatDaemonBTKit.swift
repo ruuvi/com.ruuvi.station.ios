@@ -79,25 +79,27 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     func start() {
         start { [weak self] in
-            self?.invalidateTokens()
-            self?.realm = try! Realm()
-            self?.ruuviTags = self?.realm.objects(RuuviTagRealm.self).filter("isConnectable == true")
-            self?.ruuviTagsToken = self?.ruuviTags?.observe({ [weak self] (change) in
-                switch change {
-                case .initial:
-                    break
-                case .update(_, let deletions, let insertions, _):
-                    if deletions.count > 0 || insertions.count > 0 {
-                        self?.handleRuuviTagsChange()
+            autoreleasepool {
+                self?.invalidateTokens()
+                self?.realm = try! Realm()
+                self?.ruuviTags = self?.realm.objects(RuuviTagRealm.self).filter("isConnectable == true")
+                self?.ruuviTagsToken = self?.ruuviTags?.observe({ [weak self] (change) in
+                    switch change {
+                    case .initial:
+                        break
+                    case .update(_, let deletions, let insertions, _):
+                        if deletions.count > 0 || insertions.count > 0 {
+                            self?.handleRuuviTagsChange()
+                        }
+                    case .error(let error):
+                        self?.post(error: RUError.persistence(error))
                     }
-                case .error(let error):
-                    self?.post(error: RUError.persistence(error))
-                }
-            })
-            self?.connectionPersistence.keepConnectionUUIDs
-                .filter({ (uuid) -> Bool in
-                    self?.ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
-                }).forEach({ self?.connect(uuid: $0)})
+                })
+                self?.connectionPersistence.keepConnectionUUIDs
+                    .filter({ (uuid) -> Bool in
+                        self?.ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
+                    }).forEach({ self?.connect(uuid: $0)})
+            }
         }
     }
 
@@ -110,10 +112,12 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
 
     @objc private func stopDaemon() {
-        invalidateTokens()
-        connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
-        realm.invalidate()
-        stopWork()
+        autoreleasepool {
+            invalidateTokens()
+            connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
+            realm.invalidate()
+            stopWork()
+        }
     }
 }
 
@@ -197,19 +201,21 @@ extension RuuviTagHeartbeatDaemonBTKit {
 // MARK: - Private
 extension RuuviTagHeartbeatDaemonBTKit {
     private func handleRuuviTagsChange() {
-         connectionPersistence.keepConnectionUUIDs
-             .filter { (uuid) -> Bool in
-                 ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
-                     && !connectTokens.keys.contains(uuid)
-             }.forEach({ connect(uuid: $0) })
-         connectionPersistence.keepConnectionUUIDs
-             .filter { (uuid) -> Bool in
-                 if let contains = ruuviTags?.contains(where: { $0.uuid == uuid }) {
-                     return !contains && connectTokens.keys.contains(uuid)
-                 } else {
-                     return connectTokens.keys.contains(uuid)
-                 }
-             }.forEach({ disconnect(uuid: $0) })
+        autoreleasepool {
+            connectionPersistence.keepConnectionUUIDs
+                .filter { (uuid) -> Bool in
+                    ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
+                        && !connectTokens.keys.contains(uuid)
+                }.forEach({ connect(uuid: $0) })
+            connectionPersistence.keepConnectionUUIDs
+                .filter { (uuid) -> Bool in
+                    if let contains = ruuviTags?.contains(where: { $0.uuid == uuid }) {
+                        return !contains && connectTokens.keys.contains(uuid)
+                    } else {
+                        return connectTokens.keys.contains(uuid)
+                    }
+                }.forEach({ disconnect(uuid: $0) })
+        }
      }
 
      @objc private func connect(uuid: String) {
@@ -235,23 +241,27 @@ extension RuuviTagHeartbeatDaemonBTKit {
      }
 
      @objc private func persist(_ pair: RuuviTagHeartbeatDaemonPair) {
-         if let ruuviTag = ruuviTags?.first(where: { $0.uuid == pair.device.uuid }) {
-             let ruuviTagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: pair.device)
-             ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
-                 .on( failure: { [weak self] error in
-                    self?.post(error: error)
-             })
-         } else {
-            post(error: RUError.unexpected(.failedToFindRuuviTag))
-         }
+        autoreleasepool {
+            if let ruuviTag = ruuviTags?.first(where: { $0.uuid == pair.device.uuid }) {
+                let ruuviTagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: pair.device)
+                ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
+                    .on( failure: { [weak self] error in
+                       self?.post(error: error)
+                })
+             } else {
+                post(error: RUError.unexpected(.failedToFindRuuviTag))
+             }
+        }
      }
 
      private func invalidateTokens() {
-         ruuviTagsToken?.invalidate()
-         connectTokens.values.forEach({ $0.invalidate() })
-         connectTokens.removeAll()
-         disconnectTokens.values.forEach({ $0.invalidate() })
-         disconnectTokens.removeAll()
+        autoreleasepool {
+            ruuviTagsToken?.invalidate()
+            connectTokens.values.forEach({ $0.invalidate() })
+            connectTokens.removeAll()
+            disconnectTokens.values.forEach({ $0.invalidate() })
+            disconnectTokens.removeAll()
+        }
      }
 
     private func post(error: Error) {
