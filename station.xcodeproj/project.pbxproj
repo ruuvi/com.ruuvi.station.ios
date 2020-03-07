@@ -3908,7 +3908,8 @@
 				0E6BAD7823856A01003A2D4C /* Sources */,
 				0E6BAEA623856A01003A2D4C /* Frameworks */,
 				0E6BAEA823856A01003A2D4C /* Resources */,
-				0E0C7F9423950A71007470C5 /* ShellScript */,
+				A9AB575D2414446E006FD3D2 /* Fetch secrets */,
+				0E0C7F9423950A71007470C5 /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -3942,8 +3943,9 @@
 				0E8BD2AE238566AB008B31EF /* Sources */,
 				0E8BD3DC238566AB008B31EF /* Frameworks */,
 				0E8BD3DE238566AB008B31EF /* Resources */,
+				A9AB575A2413CCEC006FD3D2 /* Fetch secrets */,
 				B6DADD11162E7B820D8A1709 /* [CP] Embed Pods Frameworks */,
-				0E8301592393FC2B0003F2EF /* ShellScript */,
+				0E8301592393FC2B0003F2EF /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -3961,8 +3963,9 @@
 				971D876D128B4722B3C74751 /* [CP] Check Pods Manifest.lock */,
 				64333D2120B0C45900CDF4B6 /* Sources */,
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
-				64333D2320B0C45900CDF4B6 /* Resources */,
 				2AFA491CA1091241CB93E7B1 /* [CP] Embed Pods Frameworks */,
+				64333D2320B0C45900CDF4B6 /* Resources */,
+				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 			);
 			buildRules = (
 			);
@@ -4225,7 +4228,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0E0C7F9423950A71007470C5 /* ShellScript */ = {
+		0E0C7F9423950A71007470C5 /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4234,6 +4237,7 @@
 			);
 			inputPaths = (
 			);
+			name = Swiftlint;
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -4242,7 +4246,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		0E8301592393FC2B0003F2EF /* ShellScript */ = {
+		0E8301592393FC2B0003F2EF /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4251,6 +4255,7 @@
 			);
 			inputPaths = (
 			);
+			name = Swiftlint;
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -4354,6 +4359,66 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A9AB57592413CCAB006FD3D2 /* Fetch secrets */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/station/Classes/Networking/Assembly/Networking.plist",
+				"$(SRCROOT)/station/Resources/Plists/GoogleService-Info.plist",
+			);
+			name = "Fetch secrets";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\ngit clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Need setup OpenWeather ApiKey in /Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: If you want use GoogleServices need replace file Resources/Plists/GoogleService-Info.plist\"\n    fi\nfi\n";
+		};
+		A9AB575A2413CCEC006FD3D2 /* Fetch secrets */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/station/Classes/Networking/Assembly/Networking.plist",
+				"$(SRCROOT)/station/Resources/Plists/GoogleService-Info.plist",
+			);
+			name = "Fetch secrets";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\ngit clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Need setup OpenWeather ApiKey in /Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: If you want use GoogleServices need replace file Resources/Plists/GoogleService-Info.plist\"\n    fi\nfi\n";
+		};
+		A9AB575D2414446E006FD3D2 /* Fetch secrets */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/station/Classes/Networking/Assembly/Networking.plist",
+				"$(SRCROOT)/station/Resources/Plists/GoogleService-Info.plist",
+			);
+			name = "Fetch secrets";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\ngit clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Need setup OpenWeather ApiKey in /Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: If you want use GoogleServices need replace file Resources/Plists/GoogleService-Info.plist\"\n    fi\nfi\n";
 		};
 		B6DADD11162E7B820D8A1709 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
