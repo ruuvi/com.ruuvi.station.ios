@@ -58,6 +58,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var viewModels = [TagChartsViewModel]() {
         didSet {
             DispatchQueue.main.async {
+                self.isLoading = false
                 self.view.viewModels = self.viewModels
             }
         }
@@ -120,6 +121,7 @@ class TagChartsPresenter: TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
+        isLoading = true
         startObservingRuuviTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
