@@ -654,9 +654,6 @@ extension TagChartsScrollViewController {
 
     private func updateUIViewModels() {
         if isViewLoaded && views.isEmpty {
-            views.forEach({ $0.removeFromSuperview() })
-            views.removeAll()
-
             if viewModels.count > 0 {
                 addChartViews()
             }
