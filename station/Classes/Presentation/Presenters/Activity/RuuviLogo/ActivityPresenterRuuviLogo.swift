@@ -14,7 +14,7 @@ class ActivityPresenterRuuviLogo: ActivityPresenter {
             }
         }
     }
-    let minAnimationLength: CFTimeInterval = 0.75
+    let minAnimationTime: CFTimeInterval = 0.75
     var startTime: CFTimeInterval?
     let window = UIWindow(frame: UIScreen.main.bounds)
     let hudViewController: ActivityRuuviLogoViewController
@@ -52,8 +52,8 @@ class ActivityPresenterRuuviLogo: ActivityPresenter {
 
     private func hide() {
         let executionTime = CFAbsoluteTimeGetCurrent() - (startTime ?? 0)
-        let waitTime = executionTime < minAnimationLength ? (minAnimationLength - executionTime) : executionTime
-        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+        let additionalWaitTime = executionTime < minAnimationTime ? (minAnimationTime - executionTime) : 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + additionalWaitTime) {
             self.appWindow?.makeKeyAndVisible()
             self.appWindow = nil
             self.window.isHidden = true
