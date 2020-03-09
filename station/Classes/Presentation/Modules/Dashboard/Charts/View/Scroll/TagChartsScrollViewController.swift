@@ -645,9 +645,9 @@ extension TagChartsScrollViewController {
     }
 
     private func bindViewModels() {
-        views.enumerated().forEach { (index, view) in
-            if scrollView.bounds.contains(view.frame) {
-                bind(view: view, with: viewModels[index])
+        viewModels.enumerated().forEach { (index, viewModel) in
+            if scrollView.bounds.contains(views[index].frame) {
+                bind(view: views[index], with: viewModel)
             }
         }
     }
@@ -658,7 +658,13 @@ extension TagChartsScrollViewController {
                 addChartViews()
             }
         } else {
-            bindViewModels()
+            if viewModels.count == views.count {
+                bindViewModels()
+            } else if viewModels.count > 0 {
+                views.forEach({ $0.removeFromSuperview() })
+                views.removeAll()
+                addChartViews()
+            }
         }
     }
 
