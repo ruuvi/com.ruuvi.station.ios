@@ -47,7 +47,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
-
+    private var realmQueue = DispatchQueue(label: "com.ruuvi.station.TagChartsPresenter.realm",
+                                           qos: .userInitiated)
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -56,7 +57,10 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     private var viewModels = [TagChartsViewModel]() {
         didSet {
-            view.viewModels = viewModels
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.view.viewModels = self.viewModels
+            }
         }
     }
     private var tagUUID: String? {
@@ -117,6 +121,7 @@ class TagChartsPresenter: TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
+        isLoading = true
         startObservingRuuviTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
@@ -314,24 +319,40 @@ extension TagChartsPresenter {
     }
 
     private func syncViewModels() {
-        if ruuviTags != nil {
-            viewModels = ruuviTags?.compactMap({ (ruuviTag) -> TagChartsViewModel in
-                let viewModel = TagChartsViewModel(ruuviTag,
-                                                   hours: settings.chartDurationHours,
-                                                   every: settings.chartIntervalSeconds)
-                viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
-                viewModel.humidityUnit.value = settings.humidityUnit
-                viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
-                viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.uuid) ? .registered : .empty
-                return viewModel
-            }) ?? []
+        guard let ruuviTags = ruuviTags else {
+            return
+        }
+        let ruuviTagsRef = ThreadSafeReference(to: ruuviTags)
+        realmQueue.async {[weak self] in
+            autoreleasepool {
+                let realmBg = try! Realm()
+                guard let ruuviTagsBg = realmBg.resolve(ruuviTagsRef),
+                    let strongSelf = self else {
+                    return
+                }
+                strongSelf.viewModels = ruuviTagsBg.compactMap({ (ruuviTag) -> TagChartsViewModel in
+                    let viewModel = TagChartsViewModel(ruuviTag,
+                                                       hours: strongSelf.settings.chartDurationHours,
+                                                       every: strongSelf.settings.chartIntervalSeconds)
+                    viewModel.background.value = strongSelf.backgroundPersistence.background(for: ruuviTag.uuid)
+                    viewModel.temperatureUnit.value = strongSelf.settings.temperatureUnit
+                    viewModel.humidityUnit.value = strongSelf.settings.humidityUnit
+                    viewModel.isConnected.value = strongSelf.background.isConnected(uuid: ruuviTag.uuid)
+                    viewModel.alertState.value = strongSelf.alertService.hasRegistrations(for: ruuviTag.uuid)
+                        ? .registered : .empty
+                    return viewModel
+                })
 
-            // if no tags, open discover
-            if viewModels.count == 0 {
-                router.openDiscover(output: self)
-            } else {
-                scrollToCurrentTag()
+                // if no tags, open discover
+                DispatchQueue.main.async {
+                    if strongSelf.viewModels.count == 0 {
+                        strongSelf.router.openDiscover(output: strongSelf)
+                    } else {
+                        strongSelf.scrollToCurrentTag()
+                    }
+                }
+                realmBg.refresh()
+                realmBg.invalidate()
             }
         }
     }
