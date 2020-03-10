@@ -94,7 +94,7 @@ PODS:
   - Nantes (0.0.9)
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.2)
-  - RangeSeekSlider (1.8.1)
+  - RangeSeekSlider (1.8.2)
   - Realm (4.3.1):
     - Realm/Headers (= 4.3.1)
   - Realm/Headers (4.3.1)
@@ -162,7 +162,7 @@ CHECKOUT OPTIONS:
     :commit: fcea1b3808b75be92d983316742bf186e21981ec
     :git: https://github.com/rinat-enikeev/LightRoute.git
   RangeSeekSlider:
-    :commit: b26deadf00acdd0fd6acaa25760ac8e9e650f287
+    :commit: 35712fc13229f527e0a356f3de34deccbcfd6b59
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
   SwinjectPropertyLoader:
     :commit: 653f1b149c575921fbc1cb02a447aa2f6da9e94c
@@ -193,7 +193,7 @@ SPEC CHECKSUMS:
   Nantes: c1b4eec0748c01f4c6b83e16a11e52ab2007cd4d
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
-  RangeSeekSlider: 7858866477a81503d812c1527c54943edc092219
+  RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 31dc40934081ef740f60feedc46d88473cbfeb40
   RealmSwift: b5199e9a41f67b99f51acf6874a6166f5fbe93d1
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
