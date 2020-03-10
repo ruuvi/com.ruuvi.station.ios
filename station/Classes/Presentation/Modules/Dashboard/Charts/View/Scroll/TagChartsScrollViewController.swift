@@ -421,7 +421,11 @@ extension TagChartsScrollViewController {
             configure(chartView)
             let data = LineChartData(dataSets: split(values))
             chartView.data = data
-            zoomAndScrollToLast24h(values, chartView)
+            chartView.data?.notifyDataChanged()
+            chartView.notifyDataSetChanged()
+            if chartView.isFullyZoomedOut {
+                zoomAndScrollToLast24h(values, chartView)
+            }
         }
     }
 
@@ -618,31 +622,48 @@ extension TagChartsScrollViewController {
         updateUIViewModels()
     }
 
-    private func updateUIViewModels() {
-        if isViewLoaded {
-            views.forEach({ $0.removeFromSuperview() })
-            views.removeAll()
+    private func addChartViews() {
+        var leftView: UIView = scrollView
+        for viewModel in viewModels {
+            let view = TrippleChartView()
+            view.delegate = self
+            view.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(view)
+            position(view, leftView)
+            bind(view: view, with: viewModel)
+            views.append(view)
+            leftView = view
+        }
+        scrollView.addConstraint(NSLayoutConstraint(item: leftView,
+                                                    attribute: .trailing,
+                                                    relatedBy: .equal,
+                                                    toItem: scrollView,
+                                                    attribute: .trailing,
+                                                    multiplier: 1.0,
+                                                    constant: 0.0))
+        localize()
+    }
 
+    private func bindViewModels() {
+        viewModels.enumerated().forEach { (index, viewModel) in
+            if scrollView.bounds.contains(views[index].frame) {
+                bind(view: views[index], with: viewModel)
+            }
+        }
+    }
+
+    private func updateUIViewModels() {
+        if isViewLoaded && views.isEmpty {
             if viewModels.count > 0 {
-                var leftView: UIView = scrollView
-                for viewModel in viewModels {
-                    let view = TrippleChartView()
-                    view.delegate = self
-                    view.translatesAutoresizingMaskIntoConstraints = false
-                    scrollView.addSubview(view)
-                    position(view, leftView)
-                    bind(view: view, with: viewModel)
-                    views.append(view)
-                    leftView = view
-                }
-                scrollView.addConstraint(NSLayoutConstraint(item: leftView,
-                                                            attribute: .trailing,
-                                                            relatedBy: .equal,
-                                                            toItem: scrollView,
-                                                            attribute: .trailing,
-                                                            multiplier: 1.0,
-                                                            constant: 0.0))
-                localize()
+                addChartViews()
+            }
+        } else {
+            if viewModels.count == views.count {
+                bindViewModels()
+            } else if viewModels.count > 0 {
+                views.forEach({ $0.removeFromSuperview() })
+                views.removeAll()
+                addChartViews()
             }
         }
     }
