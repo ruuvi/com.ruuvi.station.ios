@@ -24,7 +24,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
 
-    private var ruuviTag: RuuviTagRealm! {
+    private var ruuviTag: RuuviTagRealmImpl! {
         didSet {
             syncViewModel()
         }
@@ -73,7 +73,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
 
-    func configure(ruuviTag: RuuviTagRealm, humidity: Double?) {
+    func configure(ruuviTag: RuuviTagRealmImpl, humidity: Double?) {
         self.viewModel = TagSettingsViewModel()
         self.ruuviTag = ruuviTag
         self.humidity = humidity
@@ -442,7 +442,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindViewModel(to ruuviTag: RuuviTagRealm) {
+    private func bindViewModel(to ruuviTag: RuuviTagRealmImpl) {
         bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
             observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.uuid)
         }
@@ -456,7 +456,7 @@ extension TagSettingsPresenter {
         bindMovementAlert(ruuviTag)
     }
 
-    private func bindAbsoluteHumidityAlert(_ ruuviTag: RuuviTagRealm) {
+    private func bindAbsoluteHumidityAlert(_ ruuviTag: RuuviTagRealmImpl) {
         let absoluteHumidityLower = viewModel.absoluteHumidityLowerBound
         let absoluteHumidityUpper = viewModel.absoluteHumidityUpperBound
         bind(viewModel.isAbsoluteHumidityAlertOn, fire: false) {
@@ -487,7 +487,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindDewPoint(_ ruuviTag: RuuviTagRealm) {
+    private func bindDewPoint(_ ruuviTag: RuuviTagRealmImpl) {
         let dewPointLower = viewModel.dewPointCelsiusLowerBound
         let dewPointUpper = viewModel.dewPointCelsiusUpperBound
         bind(viewModel.isDewPointAlertOn, fire: false) {
@@ -515,7 +515,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindTemperatureAlert(_ ruuviTag: RuuviTagRealm) {
+    private func bindTemperatureAlert(_ ruuviTag: RuuviTagRealmImpl) {
         let temperatureLower = viewModel.celsiusLowerBound
         let temperatureUpper = viewModel.celsiusUpperBound
         bind(viewModel.isTemperatureAlertOn, fire: false) {
@@ -543,7 +543,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindRelativeHumidityAlert(_ ruuviTag: RuuviTagRealm) {
+    private func bindRelativeHumidityAlert(_ ruuviTag: RuuviTagRealmImpl) {
         let relativeHumidityLower = viewModel.relativeHumidityLowerBound
         let relativeHumidityUpper = viewModel.relativeHumidityUpperBound
         bind(viewModel.isRelativeHumidityAlertOn, fire: false) {
@@ -571,7 +571,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindPressureAlert(_ ruuviTag: RuuviTagRealm) {
+    private func bindPressureAlert(_ ruuviTag: RuuviTagRealmImpl) {
         let pressureLower = viewModel.pressureLowerBound
         let pressureUpper = viewModel.pressureUpperBound
         bind(viewModel.isPressureAlertOn, fire: false) {
@@ -602,7 +602,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindConnectionAlert(_ ruuviTag: RuuviTagRealm) {
+    private func bindConnectionAlert(_ ruuviTag: RuuviTagRealmImpl) {
         bind(viewModel.isConnectionAlertOn, fire: false) { observer, isOn in
             let type: AlertType = .connection
             let currentState = observer.alertService.isOn(type: type, for: ruuviTag.uuid)
@@ -620,7 +620,7 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindMovementAlert(_ ruuviTag: RuuviTagRealm) {
+    private func bindMovementAlert(_ ruuviTag: RuuviTagRealmImpl) {
         bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in
             let last = ruuviTag.data.sorted(byKeyPath: "date").last?.movementCounter.value ?? 0
             let type: AlertType = .movement(last: last)

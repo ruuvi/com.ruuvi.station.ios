@@ -74,7 +74,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
 
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealmImpl.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
             content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
         } else {
@@ -93,7 +93,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.categoryIdentifier = blast.id
 
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealmImpl.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
             content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
         } else {
@@ -111,7 +111,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.categoryIdentifier = blast.id
 
         content.title = "LocalNotificationsManager.DidMove.title".localized()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealmImpl.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
             content.body = alertService.movementDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
         } else {
@@ -200,7 +200,7 @@ extension LocalNotificationsManagerImpl {
             content.title = title
             content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
             content.categoryIdentifier = lowHigh.id
-            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealmImpl.self, forPrimaryKey: uuid) {
                 content.subtitle = ruuviTag.name
             } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
                 content.subtitle = webTag.name

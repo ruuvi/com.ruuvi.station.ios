@@ -57,7 +57,7 @@ class CardsPresenter: CardsModuleInput {
             startListeningToWebTagsAlertStatus()
         }
     }
-    private var ruuviTags: Results<RuuviTagRealm>? {
+    private var ruuviTags: Results<RuuviTagRealmImpl>? {
         didSet {
             syncViewModels()
             startListeningToRuuviTagsAlertStatus()
@@ -500,7 +500,7 @@ extension CardsPresenter {
     }
 
     private func startObservingRuuviTags() {
-        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+        ruuviTags = realmContext.main.objects(RuuviTagRealmImpl.self)
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
             switch change {
