@@ -4,7 +4,7 @@ import Foundation
 
 class RuuviTagDataRealm: Object {
 
-    @objc dynamic var ruuviTag: RuuviTagRealm?
+    @objc dynamic var ruuviTag: RuuviTagRealmImpl?
     @objc dynamic var date: Date = Date()
     @objc dynamic var compoundKey: String = UUID().uuidString
 
@@ -38,7 +38,7 @@ class RuuviTagDataRealm: Object {
         return "compoundKey"
     }
 
-    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
+    convenience init(ruuviTag: RuuviTagRealmImpl, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
         self.rssi.value = data.rssi
@@ -55,7 +55,7 @@ class RuuviTagDataRealm: Object {
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
 
-    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
+    convenience init(ruuviTag: RuuviTagRealmImpl, data: RuuviTagEnvLogFull) {
         self.init()
         self.ruuviTag = ruuviTag
         self.date = data.date

@@ -53,7 +53,7 @@ class TagChartsRouter: TagChartsRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
 
-    func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?) {
+    func openTagSettings(ruuviTag: RuuviTagRealmImpl, humidity: Double?) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)

@@ -49,7 +49,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var lastSyncViewModelDate = Date()
     private var realmQueue = DispatchQueue(label: "com.ruuvi.station.TagChartsPresenter.realm",
                                            qos: .userInitiated)
-    private var ruuviTags: Results<RuuviTagRealm>? {
+    private var ruuviTags: Results<RuuviTagRealmImpl>? {
         didSet {
             syncViewModels()
             startListeningToAlertStatus()
@@ -385,7 +385,7 @@ extension TagChartsPresenter {
     }
 
     private func startObservingRuuviTags() {
-        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+        ruuviTags = realmContext.main.objects(RuuviTagRealmImpl.self)
             .filter("isConnectable == true")
         ruuviTagsToken?.invalidate()
         ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
