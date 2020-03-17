@@ -12,10 +12,10 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     private var realm: Realm!
 
     @objc private class RuuviTagPropertiesDaemonPair: NSObject {
-       var ruuviTag: RuuviTagRealmImpl
+       var ruuviTag: RuuviTagRealm
        var device: RuuviTag
 
-       init(ruuviTag: RuuviTagRealmImpl, device: RuuviTag) {
+       init(ruuviTag: RuuviTagRealm, device: RuuviTag) {
            self.ruuviTag = ruuviTag
            self.device = device
        }
@@ -34,7 +34,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             autoreleasepool {
                 self?.realm = try! Realm()
 
-                self?.token = self?.realm.objects(RuuviTagRealmImpl.self).observe({ [weak self] (change) in
+                self?.token = self?.realm.objects(RuuviTagRealm.self).observe({ [weak self] (change) in
                     switch change {
                     case .initial(let ruuviTags):
                         self?.startObserving(ruuviTags: ruuviTags)
@@ -66,7 +66,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
         }
     }
 
-    private func startObserving(ruuviTags: Results<RuuviTagRealmImpl>) {
+    private func startObserving(ruuviTags: Results<RuuviTagRealm>) {
        observeTokens.forEach({ $0.invalidate() })
        observeTokens.removeAll()
         autoreleasepool {

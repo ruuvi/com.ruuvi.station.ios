@@ -18,7 +18,7 @@ class RuuviTagDataPruningOperation: AsyncOperation {
                                          to: Date()) ?? Date()
         autoreleasepool {
             let realm = try! Realm()
-            if let ruuviTag = realm.object(ofType: RuuviTagRealmImpl.self, forPrimaryKey: uuid) {
+            if let ruuviTag = realm.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
                 let points = ruuviTag.data.filter("date < %@", date)
                 do {
                     try realm.write {

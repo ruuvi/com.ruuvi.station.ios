@@ -17,7 +17,7 @@ class ExportServiceTemp: ExportService {
     }()
 
     func csvLog(for uuid: String) -> Future<URL, RUError> {
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealmImpl.self, forPrimaryKey: uuid) {
+        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             return csvLog(for: ruuviTag)
         } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
             return csvLog(for: webTag)
@@ -32,7 +32,7 @@ class ExportServiceTemp: ExportService {
 // MARK: - Ruuvi Tag
 extension ExportServiceTemp {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func csvLog(for ruuviTag: RuuviTagRealmImpl) -> Future<URL, RUError> {
+    private func csvLog(for ruuviTag: RuuviTagRealm) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd-HHmm"

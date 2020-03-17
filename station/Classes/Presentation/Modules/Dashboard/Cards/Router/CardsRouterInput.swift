@@ -6,7 +6,7 @@ protocol CardsRouterInput {
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
-    func openTagSettings(ruuviTag: RuuviTagRealmImpl, humidity: Double?)
+    func openTagSettings(ruuviTag: RuuviTagRealm, humidity: Double?)
     func openWebTagSettings(webTag: WebTagRealm)
     func openTagCharts()
 }

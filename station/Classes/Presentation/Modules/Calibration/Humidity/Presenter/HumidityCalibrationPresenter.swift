@@ -9,7 +9,7 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
     var foreground: BTForeground!
     var background: BTBackground!
 
-    private var ruuviTag: RuuviTagRealmImpl!
+    private var ruuviTag: RuuviTagRealm!
     private var humidity: Double!
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
@@ -19,7 +19,7 @@ class HumidityCalibrationPresenter: HumidityCalibrationModuleInput {
         heartbeatToken?.invalidate()
     }
 
-    func configure(ruuviTag: RuuviTagRealmImpl, humidity: Double) {
+    func configure(ruuviTag: RuuviTagRealm, humidity: Double) {
         self.ruuviTag = ruuviTag
         self.humidity = humidity
         updateView()

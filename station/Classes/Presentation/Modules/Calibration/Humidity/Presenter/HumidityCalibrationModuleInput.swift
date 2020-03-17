@@ -1,5 +1,5 @@
 import Foundation
 
 protocol HumidityCalibrationModuleInput: class {
-    func configure(ruuviTag: RuuviTagRealmImpl, humidity: Double)
+    func configure(ruuviTag: RuuviTagRealm, humidity: Double)
 }
