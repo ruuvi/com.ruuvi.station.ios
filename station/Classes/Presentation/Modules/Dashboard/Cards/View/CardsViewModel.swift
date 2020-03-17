@@ -116,7 +116,7 @@ struct CardsViewModel {
         date.value = Date()
     }
 
-    init(_ ruuviTag: RuuviTagRealmImpl) {
+    init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name

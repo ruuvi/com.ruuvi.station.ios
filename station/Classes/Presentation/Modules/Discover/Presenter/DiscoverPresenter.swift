@@ -15,7 +15,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var permissionPresenter: PermissionPresenter!
 
     private var ruuviTags = Set<RuuviTag>()
-    private var persistedRuuviTags: Results<RuuviTagRealmImpl>! {
+    private var persistedRuuviTags: Results<RuuviTagRealm>! {
         didSet {
             view.savedDevicesUUIDs = persistedRuuviTags.map({ $0.uuid })
             updateCloseButtonVisibilityState()
@@ -203,7 +203,7 @@ extension DiscoverPresenter {
     }
 
     private func startObservingPersistedRuuviTags() {
-        persistedRuuviTags = realmContext.main.objects(RuuviTagRealmImpl.self)
+        persistedRuuviTags = realmContext.main.objects(RuuviTagRealm.self)
         persistedRuuviTagsToken = persistedRuuviTags.observe { [weak self] (change) in
             switch change {
             case .initial(let persistedRuuviTags):

@@ -33,7 +33,7 @@ struct TagChartsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    init(_ ruuviTag: RuuviTagRealmImpl, hours: Int, every seconds: Int) {
+    init(_ ruuviTag: RuuviTagRealm, hours: Int, every seconds: Int) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name

@@ -85,7 +85,7 @@
 		0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */; };
 		0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */; };
 		0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9F22B36C100032F6CA /* RUError.swift */; };
-		0E1C1DA322B36DC80032F6CA /* RuuviTagRealmImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealmImpl.swift */; };
+		0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */; };
 		0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */; };
 		0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA722B387A00032F6CA /* AppAssembly.swift */; };
 		0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */; };
@@ -242,7 +242,7 @@
 		0E6BADA223856A01003A2D4C /* WelcomeRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214B22B8FCC70015F9E0 /* WelcomeRouterInput.swift */; };
 		0E6BADA423856A01003A2D4C /* MenuModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */; };
 		0E6BADA523856A01003A2D4C /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
-		0E6BADA623856A01003A2D4C /* RuuviTagRealmImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealmImpl.swift */; };
+		0E6BADA623856A01003A2D4C /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */; };
 		0E6BADA723856A01003A2D4C /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E6BADA823856A01003A2D4C /* LocationPickerAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5722F182F500BD4E9C /* LocationPickerAppleInitializer.swift */; };
 		0E6BADA923856A01003A2D4C /* TagChartsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */; };
@@ -597,7 +597,7 @@
 		0E8BD2D8238566AB008B31EF /* WelcomeRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214B22B8FCC70015F9E0 /* WelcomeRouterInput.swift */; };
 		0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20CC22B7BD6C0015F9E0 /* MenuModuleOutput.swift */; };
 		0E8BD2DB238566AB008B31EF /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
-		0E8BD2DC238566AB008B31EF /* RuuviTagRealmImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealmImpl.swift */; };
+		0E8BD2DC238566AB008B31EF /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */; };
 		0E8BD2DD238566AB008B31EF /* Localizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A46222AF959E006CB87C /* Localizable.swift */; };
 		0E8BD2DE238566AB008B31EF /* LocationPickerAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5722F182F500BD4E9C /* LocationPickerAppleInitializer.swift */; };
 		0E8BD2DF238566AB008B31EF /* TagChartsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CC2333672F00FFA577 /* TagChartsPresenter.swift */; };
@@ -1098,20 +1098,20 @@
 		A9100D6C241AC741004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
 		A9100D6D241AC751004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
 		A9100D6E241AC752004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
-		A94FFD30241C173D00888017 /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealm.swift */; };
-		A94FFD31241C17E100888017 /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealm.swift */; };
-		A94FFD32241C17E200888017 /* RuuviTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealm.swift */; };
+		A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
+		A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
+		A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD37241C189000888017 /* RuuviTagProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD36241C189000888017 /* RuuviTagProtocol.swift */; };
 		A94FFD38241C1B0900888017 /* RuuviTagProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD36241C189000888017 /* RuuviTagProtocol.swift */; };
 		A94FFD39241C1B0A00888017 /* RuuviTagProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD36241C189000888017 /* RuuviTagProtocol.swift */; };
 		A94FFD3C241C1D0D00888017 /* AlertServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */; };
 		A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
-		A94FFD47241C34EA00888017 /* RuuviTagRealmSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD29241C12B100888017 /* RuuviTagRealmSpec.swift */; };
 		A94FFD48241C34EA00888017 /* MockAlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */; };
 		A94FFD4A241D45C600888017 /* MockRuuviTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD49241D45C600888017 /* MockRuuviTag.swift */; };
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
 		A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4D241D57E700888017 /* MockCalibrationService.swift */; };
 		A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */; };
+		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
 		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
 		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
 		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
@@ -1189,7 +1189,7 @@
 		0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistence.swift; sourceTree = "<group>"; };
 		0E1C1D9D22B366D10032F6CA /* RuuviTagPersistenceRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagPersistenceRealm.swift; sourceTree = "<group>"; usesTabs = 0; };
 		0E1C1D9F22B36C100032F6CA /* RUError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUError.swift; sourceTree = "<group>"; };
-		0E1C1DA222B36DC80032F6CA /* RuuviTagRealmImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmImpl.swift; sourceTree = "<group>"; };
+		0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealm.swift; sourceTree = "<group>"; };
 		0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDataRealm.swift; sourceTree = "<group>"; };
 		0E1C1DA722B387A00032F6CA /* AppAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembly.swift; sourceTree = "<group>"; };
 		0E1C1DAA22B387D30032F6CA /* PersistenceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceAssembly.swift; sourceTree = "<group>"; };
@@ -1515,14 +1515,14 @@
 		9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
-		A94FFD29241C12B100888017 /* RuuviTagRealmSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmSpec.swift; sourceTree = "<group>"; };
-		A94FFD2F241C173D00888017 /* RuuviTagRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealm.swift; sourceTree = "<group>"; };
+		A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmProtocol.swift; sourceTree = "<group>"; };
 		A94FFD36241C189000888017 /* RuuviTagProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagProtocol.swift; sourceTree = "<group>"; };
 		A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertServiceSpec.swift; sourceTree = "<group>"; };
 		A94FFD49241D45C600888017 /* MockRuuviTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRuuviTag.swift; sourceTree = "<group>"; };
 		A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationsManager.swift; sourceTree = "<group>"; };
 		A94FFD4D241D57E700888017 /* MockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalibrationService.swift; sourceTree = "<group>"; };
 		A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertServiceObserver.swift; sourceTree = "<group>"; };
+		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
 		B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -3896,7 +3896,7 @@
 		64333D3C20B0C45A00CDF4B6 /* stationTests */ = {
 			isa = PBXGroup;
 			children = (
-				A94FFD26241C0F9B00888017 /* Models */,
+				A971B0DA2421531C008EF50D /* Extensions */,
 				A94FFD25241C0F8000888017 /* Services */,
 				64333D3D20B0C45A00CDF4B6 /* StationTests.swift */,
 				64333D3F20B0C45B00CDF4B6 /* Info.plist */,
@@ -3947,14 +3947,6 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		A94FFD26241C0F9B00888017 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A94FFD28241C128800888017 /* Realm */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		A94FFD27241C0FA400888017 /* Alert */ = {
 			isa = PBXGroup;
 			children = (
@@ -3964,18 +3956,10 @@
 			path = Alert;
 			sourceTree = "<group>";
 		};
-		A94FFD28241C128800888017 /* Realm */ = {
-			isa = PBXGroup;
-			children = (
-				A94FFD29241C12B100888017 /* RuuviTagRealmSpec.swift */,
-			);
-			path = Realm;
-			sourceTree = "<group>";
-		};
 		A94FFD2D241C16A600888017 /* Impl */ = {
 			isa = PBXGroup;
 			children = (
-				0E1C1DA222B36DC80032F6CA /* RuuviTagRealmImpl.swift */,
+				0E1C1DA222B36DC80032F6CA /* RuuviTagRealm.swift */,
 				0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */,
 				0E9F978F22EAF0790015ADE2 /* WebTagRealm.swift */,
 				0EA31067232B711200BC8CF5 /* WebTagDataRealm.swift */,
@@ -3986,7 +3970,7 @@
 		A94FFD2E241C171A00888017 /* Abstraction */ = {
 			isa = PBXGroup;
 			children = (
-				A94FFD2F241C173D00888017 /* RuuviTagRealm.swift */,
+				A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */,
 			);
 			path = Abstraction;
 			sourceTree = "<group>";
@@ -3997,6 +3981,14 @@
 				A94FFD36241C189000888017 /* RuuviTagProtocol.swift */,
 			);
 			path = Abstractions;
+			sourceTree = "<group>";
+		};
+		A971B0DA2421531C008EF50D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A971B0DB24215334008EF50D /* XCTest+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -4591,7 +4583,7 @@
 				0E6BADA223856A01003A2D4C /* WelcomeRouterInput.swift in Sources */,
 				0E6BADA423856A01003A2D4C /* MenuModuleOutput.swift in Sources */,
 				0E6BADA523856A01003A2D4C /* CalibrationServiceImpl.swift in Sources */,
-				0E6BADA623856A01003A2D4C /* RuuviTagRealmImpl.swift in Sources */,
+				0E6BADA623856A01003A2D4C /* RuuviTagRealm.swift in Sources */,
 				0E6BADA723856A01003A2D4C /* Localizable.swift in Sources */,
 				0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E6BADA823856A01003A2D4C /* LocationPickerAppleInitializer.swift in Sources */,
@@ -4850,7 +4842,7 @@
 				0E6BAE9323856A01003A2D4C /* WebTagSettingsViewOutput.swift in Sources */,
 				0E197C7B23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E6BAE9423856A01003A2D4C /* CardsRouter.swift in Sources */,
-				A94FFD32241C17E200888017 /* RuuviTagRealm.swift in Sources */,
+				A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */,
 				0E6BAE9523856A01003A2D4C /* WelcomeViewController.swift in Sources */,
 				0E6BAE9623856A01003A2D4C /* CardsRouterInput.swift in Sources */,
 				0E6BAE9723856A01003A2D4C /* WelcomeInitializer.swift in Sources */,
@@ -4924,7 +4916,7 @@
 				0E8BD2D8238566AB008B31EF /* WelcomeRouterInput.swift in Sources */,
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
 				0E8BD2DB238566AB008B31EF /* CalibrationServiceImpl.swift in Sources */,
-				0E8BD2DC238566AB008B31EF /* RuuviTagRealmImpl.swift in Sources */,
+				0E8BD2DC238566AB008B31EF /* RuuviTagRealm.swift in Sources */,
 				0E8BD2DD238566AB008B31EF /* Localizable.swift in Sources */,
 				0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E8BD2DE238566AB008B31EF /* LocationPickerAppleInitializer.swift in Sources */,
@@ -5182,7 +5174,7 @@
 				0E8BD3C9238566AB008B31EF /* WebTagSettingsViewOutput.swift in Sources */,
 				0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
-				A94FFD31241C17E100888017 /* RuuviTagRealm.swift in Sources */,
+				A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */,
 				0E8BD3CB238566AB008B31EF /* WelcomeViewController.swift in Sources */,
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
 				0E8BD3CD238566AB008B31EF /* WelcomeInitializer.swift in Sources */,
@@ -5256,7 +5248,7 @@
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
-				0E1C1DA322B36DC80032F6CA /* RuuviTagRealmImpl.swift in Sources */,
+				0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,
 				0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
@@ -5514,7 +5506,7 @@
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
-				A94FFD30241C173D00888017 /* RuuviTagRealm.swift in Sources */,
+				A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */,
 				0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
@@ -5540,10 +5532,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */,
-				A94FFD47241C34EA00888017 /* RuuviTagRealmSpec.swift in Sources */,
 				A94FFD48241C34EA00888017 /* MockAlertPersistence.swift in Sources */,
 				A94FFD4A241D45C600888017 /* MockRuuviTag.swift in Sources */,
 				A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */,
+				A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */,
 				A94FFD3C241C1D0D00888017 /* AlertServiceSpec.swift in Sources */,
 				A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */,
 				64333D3E20B0C45A00CDF4B6 /* StationTests.swift in Sources */,

@@ -11,7 +11,7 @@ class TagSettingsRouter: TagSettingsRouterInput {
         try! transitionHandler.closeCurrentModule().perform()
     }
 
-    func openHumidityCalibration(ruuviTag: RuuviTagRealmImpl, humidity: Double) {
+    func openHumidityCalibration(ruuviTag: RuuviTagRealm, humidity: Double) {
         let factory = StoryboardFactory(storyboardName: "HumidityCalibration")
         try! transitionHandler
             .forStoryboard(factory: factory, to: HumidityCalibrationModuleInput.self)

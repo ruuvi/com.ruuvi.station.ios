@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-protocol RuuviTagRealm: Object {
+protocol RuuviTagRealmProtocol: Object {
     var uuid: String { get set }
     var name: String { get set }
     var mac: String? { get set }

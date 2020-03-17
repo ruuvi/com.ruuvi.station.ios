@@ -35,7 +35,7 @@ extension SettingsPresenter: SettingsViewOutput {
         })
 
         connectableRuuviTagsToken?.invalidate()
-        connectableRuuviTagsToken = realmContext.main.objects(RuuviTagRealmImpl.self)
+        connectableRuuviTagsToken = realmContext.main.objects(RuuviTagRealm.self)
             .filter("isConnectable == true").observe({ [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):

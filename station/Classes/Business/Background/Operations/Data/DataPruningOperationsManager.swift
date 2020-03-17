@@ -20,7 +20,7 @@ class DataPruningOperationsManager {
     func ruuviTagPruningOperations() -> [Operation] {
         var operations = [Operation]()
         let realm = try! Realm()
-        let ruuviTags = realm.objects(RuuviTagRealmImpl.self)
+        let ruuviTags = realm.objects(RuuviTagRealm.self)
         for ruuviTag in ruuviTags {
             let operation = RuuviTagDataPruningOperation(uuid: ruuviTag.uuid,
                                                          settings: settings)

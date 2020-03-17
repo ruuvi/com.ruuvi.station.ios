@@ -13,7 +13,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var pullWebDaemon: PullWebDaemon!
 
     private var realm: Realm!
-    private var ruuviTags: Results<RuuviTagRealmImpl>?
+    private var ruuviTags: Results<RuuviTagRealm>?
     private var connectTokens = [String: ObservationToken]()
     private var disconnectTokens = [String: ObservationToken]()
     private var connectionAddedToken: NSObjectProtocol?
@@ -82,7 +82,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
             autoreleasepool {
                 self?.invalidateTokens()
                 self?.realm = try! Realm()
-                self?.ruuviTags = self?.realm.objects(RuuviTagRealmImpl.self).filter("isConnectable == true")
+                self?.ruuviTags = self?.realm.objects(RuuviTagRealm.self).filter("isConnectable == true")
                 self?.ruuviTagsToken = self?.ruuviTags?.observe({ [weak self] (change) in
                     switch change {
                     case .initial:

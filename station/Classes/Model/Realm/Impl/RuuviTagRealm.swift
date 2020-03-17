@@ -2,7 +2,7 @@ import RealmSwift
 import BTKit
 import Foundation
 
-class RuuviTagRealmImpl: Object, RuuviTagRealm {
+class RuuviTagRealm: Object, RuuviTagRealmProtocol {
     @objc dynamic var uuid: String = ""
     @objc dynamic var name: String = ""
     @objc dynamic var mac: String?
