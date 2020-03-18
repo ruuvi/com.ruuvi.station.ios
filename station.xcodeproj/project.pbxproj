@@ -2060,7 +2060,7 @@
 		0E1C1DA422B36EB50032F6CA /* Realm */ = {
 			isa = PBXGroup;
 			children = (
-				A94FFD2E241C171A00888017 /* Abstraction */,
+				A94FFD2E241C171A00888017 /* Abstractions */,
 				A94FFD2D241C16A600888017 /* Impl */,
 			);
 			path = Realm;
@@ -3967,12 +3967,12 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
-		A94FFD2E241C171A00888017 /* Abstraction */ = {
+		A94FFD2E241C171A00888017 /* Abstractions */ = {
 			isa = PBXGroup;
 			children = (
 				A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */,
 			);
-			path = Abstraction;
+			path = Abstractions;
 			sourceTree = "<group>";
 		};
 		A94FFD34241C180000888017 /* Abstractions */ = {

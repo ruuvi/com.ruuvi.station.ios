@@ -3,7 +3,7 @@
 //  stationTests
 //
 //  Created by Viik.ufa on 13.03.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. All rights reserved.
+//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
 //
 
 import XCTest
@@ -83,7 +83,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(celsius: randomDouble, for: uuid)
                     expect(alertService.lowerCelsius(for: uuid)).to(equal(randomDouble))
                 }
-                it("if upper temp is setted must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
+                it("if set upper temp is set must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(celsius: randomDouble, for: uuid)
                     expect {
                         alertService.setLower(celsius: randomDouble, for: uuid)
@@ -97,7 +97,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(celsius: randomDouble, for: uuid)
                     expect(alertService.upperCelsius(for: uuid)).to(equal(randomDouble))
                 }
-                it("if lower temp is setted must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
+                it("if lower temp is set must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(celsius: randomDouble, for: uuid)
                     expect {
                         alertService.setUpper(celsius: randomDouble, for: uuid)
@@ -111,7 +111,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setTemperature(description: uuid, for: uuid)
                     expect(alertService.temperatureDescription(for: uuid)).to(equal(uuid))
                 }
-                it("if upper and lower temp is setted, must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
+                it("if upper and lower temp is set, must send notification AlertServiceAlertDidChange with type .temperature(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(celsius: randomDouble, for: uuid)
                     alertService.alertPersistence.setLower(celsius: randomDouble, for: uuid)
                     expect {
@@ -129,7 +129,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(relativeHumidity: randomDouble, for: uuid)
                     expect(alertService.lowerRelativeHumidity(for: uuid)).to(equal(randomDouble))
                 }
-                it("if upper is setted must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
+                it("if upper is set must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(relativeHumidity: randomDouble, for: uuid)
                     expect {
                         alertService.setLower(relativeHumidity: randomDouble, for: uuid)
@@ -143,7 +143,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(relativeHumidity: randomDouble, for: uuid)
                     expect(alertService.upperRelativeHumidity(for: uuid)).to(equal(randomDouble))
                 }
-                it("if lower is setted must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
+                it("if lower is set must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(relativeHumidity: randomDouble, for: uuid)
                     expect {
                         alertService.setUpper(relativeHumidity: randomDouble, for: uuid)
@@ -157,7 +157,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setRelativeHumidity(description: uuid, for: uuid)
                     expect(alertService.relativeHumidityDescription(for: uuid)).to(equal(uuid))
                 }
-                it("if upper and lower relative humidity is setted, must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
+                it("if upper and lower relative humidity is set, must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(relativeHumidity: randomDouble, for: uuid)
                     alertService.alertPersistence.setLower(relativeHumidity: randomDouble, for: uuid)
                     expect {
@@ -175,7 +175,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(absoluteHumidity: randomDouble, for: uuid)
                     expect(alertService.lowerAbsoluteHumidity(for: uuid)).to(equal(randomDouble))
                 }
-                it("if upper is setted must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
+                it("if upper is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     expect {
                         alertService.setLower(absoluteHumidity: randomDouble, for: uuid)
@@ -189,7 +189,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     expect(alertService.upperAbsoluteHumidity(for: uuid)).to(equal(randomDouble))
                 }
-                it("if lower is setted must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
+                it("if lower is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(absoluteHumidity: randomDouble, for: uuid)
                     expect {
                         alertService.setUpper(absoluteHumidity: randomDouble, for: uuid)
@@ -203,7 +203,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setAbsoluteHumidity(description: uuid, for: uuid)
                     expect(alertService.absoluteHumidityDescription(for: uuid)).to(equal(uuid))
                 }
-                it("if upper and lower absolute humidity is setted, must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
+                it("if upper and lower absolute humidity is set, must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(absoluteHumidity: randomDouble, for: uuid)
                     alertService.alertPersistence.setLower(absoluteHumidity: randomDouble, for: uuid)
                     expect {
@@ -221,7 +221,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLowerDewPoint(celsius: randomDouble, for: uuid)
                     expect(alertService.lowerDewPointCelsius(for: uuid)).to(equal(randomDouble))
                 }
-                it("if upper is setted must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
+                it("if upper is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     expect {
                         alertService.setLowerDewPoint(celsius: randomDouble, for: uuid)
@@ -235,7 +235,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     expect(alertService.upperDewPointCelsius(for: uuid)).to(equal(randomDouble))
                 }
-                it("if lower is setted must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
+                it("if lower is set must send notification AlertServiceAlertDidChange with type .absoluteHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setLowerDewPoint(celsius: randomDouble, for: uuid)
                     expect {
                         alertService.setUpperDewPoint(celsius: randomDouble, for: uuid)
@@ -249,7 +249,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setDewPoint(description: uuid, for: uuid)
                     expect(alertService.dewPointDescription(for: uuid)).to(equal(uuid))
                 }
-                it("if upper and lower is setted, must send notification AlertServiceAlertDidChange with type .dewPoint(lower: l, upper: u)") {
+                it("if upper and lower is set, must send notification AlertServiceAlertDidChange with type .dewPoint(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpperDewPoint(celsius: randomDouble, for: uuid)
                     alertService.alertPersistence.setLowerDewPoint(celsius: randomDouble, for: uuid)
                     expect {
@@ -267,7 +267,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setLower(pressure: randomDouble, for: uuid)
                     expect(alertService.lowerPressure(for: uuid)).to(equal(randomDouble))
                 }
-                it("if upper is setted must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
+                it("if upper is set must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(pressure: randomDouble, for: uuid)
                     expect {
                         alertService.setLower(pressure: randomDouble, for: uuid)
@@ -281,7 +281,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setUpper(pressure: randomDouble, for: uuid)
                     expect(alertService.upperPressure(for: uuid)).to(equal(randomDouble))
                 }
-                it("if lower is setted must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
+                it("if lower is set must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(pressure: randomDouble, for: uuid)
                     expect {
                         alertService.setUpper(pressure: randomDouble, for: uuid)
@@ -295,7 +295,7 @@ class AlertServiceSpec: QuickSpec {
                     alertService.setPressure(description: uuid, for: uuid)
                     expect(alertService.pressureDescription(for: uuid)).to(equal(uuid))
                 }
-                it("if upper and lower pressure is setted, must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
+                it("if upper and lower pressure is set, must send notification AlertServiceAlertDidChange with type .pressure(lower: l, upper: u)") {
                     alertService.alertPersistence.setLower(pressure: randomDouble, for: uuid)
                     alertService.alertPersistence.setUpper(pressure: randomDouble, for: uuid)
                     expect {
@@ -343,7 +343,7 @@ class AlertServiceSpec: QuickSpec {
                 }
             }
         }
-        // MARK: - HeartBit
+        // MARK: - HeartBeat
         describe("HeartBeat process") {
             context("temperature trigger") {
                 it("if less") {
@@ -499,7 +499,7 @@ class AlertServiceSpec: QuickSpec {
                 }
             }
         }
-        // MARK: - HeartBit
+        // MARK: - WPSData
         describe("WPSData process") {
             context("temperature trigger") {
                 it("if less") {
