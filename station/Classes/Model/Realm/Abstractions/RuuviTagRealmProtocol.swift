@@ -3,7 +3,7 @@
 //  station
 //
 //  Created by Viik.ufa on 14.03.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. All rights reserved.
+//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
 //
 
 import Foundation
