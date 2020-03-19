@@ -364,6 +364,9 @@ extension TagChartsPresenter {
             ruuviTagDataTokens.append(ruuviTag.data.observe { [weak self] (change) in
                 switch change {
                 case .update:
+                    guard self?.view.viewIsVisible == true else {
+                        return
+                    }
                     // sync every 1 second
                     if let last = self?.lastSyncViewModelDate,
                         let isSyncing = self?.isSyncing,
@@ -398,6 +401,9 @@ extension TagChartsPresenter {
                     self?.configure(uuid: uuid)
                 }
             case .update(let ruuviTags, _, let insertions, _):
+                guard self?.view.viewIsVisible == true else {
+                    return
+                }
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
