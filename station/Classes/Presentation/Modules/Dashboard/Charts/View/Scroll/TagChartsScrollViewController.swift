@@ -36,6 +36,10 @@ class TagChartsScrollViewController: UIViewController {
 
 // MARK: - TagChartsViewInput
 extension TagChartsScrollViewController: TagChartsViewInput {
+    var viewIsVisible: Bool {
+        return self.isViewLoaded && self.view.window != nil
+    }
+
     func localize() {
         views.forEach({
             $0.temperatureChart.noDataText = noChartDataText.localized()
