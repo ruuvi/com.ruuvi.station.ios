@@ -31,4 +31,6 @@ end
 
 target 'stationTests' do
   shared_pods
+  pod 'Nimble'
+  pod 'Quick'
 end

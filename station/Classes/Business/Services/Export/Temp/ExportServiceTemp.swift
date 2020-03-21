@@ -4,7 +4,7 @@ import Humidity
 import Future
 
 class ExportServiceTemp: ExportService {
-    
+
     var realmContext: RealmContext!
     var realmQueue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTemp.realm", qos: .userInitiated)
     private let iso8601: DateFormatter = {
@@ -15,7 +15,7 @@ class ExportServiceTemp: ExportService {
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         return formatter
     }()
-    
+
     func csvLog(for uuid: String) -> Future<URL, RUError> {
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             return csvLog(for: ruuviTag)
@@ -250,7 +250,7 @@ extension ExportServiceTemp {
                     + "Pressure (hPa),"
                     + "Location\n"
                 var csvText = "\(webTag.name)\n" + header.localized()
-                
+
                 let sortedData = webTag.data.sorted(byKeyPath: "date")
                 for log in sortedData {
                     let date = dateFormatter.string(from: log.date)
@@ -314,7 +314,7 @@ extension ExportServiceTemp {
                         dewPointFahrenheit = "N/A".localized()
                         dewPointKelvin = "N/A".localized()
                     }
-                    
+
                     var pressure: String
                     if let p = log.pressure.value {
                         pressure = String(format: "%.2f", p)
