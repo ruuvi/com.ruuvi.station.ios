@@ -5,7 +5,7 @@ import Humidity
 // MARK: - Process Physical Sensors
 extension AlertServiceImpl {
 
-    func process(heartbeat ruuviTag: RuuviTag) {
+    func process(heartbeat ruuviTag: RuuviTagProtocol) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
             switch type {
@@ -37,7 +37,7 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(temperature: AlertType, ruuviTag: RuuviTag) -> Bool {
+    private func process(temperature: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .temperature(let lower, let upper) = alert(for: ruuviTag.uuid, of: temperature),
             let celsius = ruuviTag.celsius {
             let isLower = celsius < lower
@@ -57,7 +57,7 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(relativeHumidity: AlertType, ruuviTag: RuuviTag) -> Bool {
+    private func process(relativeHumidity: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .relativeHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: relativeHumidity),
             let rh = ruuviTag.humidity {
             let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
@@ -82,7 +82,7 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(absoluteHumidity: AlertType, ruuviTag: RuuviTag) -> Bool {
+    private func process(absoluteHumidity: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .absoluteHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: absoluteHumidity),
             let rh = ruuviTag.humidity,
             let c = ruuviTag.celsius {
@@ -112,7 +112,7 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(dewPoint: AlertType, ruuviTag: RuuviTag) -> Bool {
+    private func process(dewPoint: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.uuid, of: dewPoint),
             let rh = ruuviTag.humidity, let c = ruuviTag.celsius {
             let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
@@ -144,7 +144,7 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(pressure: AlertType, ruuviTag: RuuviTag) -> Bool {
+    private func process(pressure: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .pressure(let lower, let upper) = alert(for: ruuviTag.uuid, of: pressure),
             let pressure = ruuviTag.pressure {
             let isLower = pressure < lower
@@ -164,7 +164,7 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(movement: AlertType, ruuviTag: RuuviTag) -> Bool {
+    private func process(movement: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .movement(let last) = alert(for: ruuviTag.uuid, of: movement),
             let movementCounter = ruuviTag.movementCounter {
             let isGreater = movementCounter > last
