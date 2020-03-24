@@ -25,6 +25,9 @@ class TagChartsScrollViewController: UIViewController {
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
+    private var currentTrippleView: TrippleChartView {
+        return views[currentPage]
+    }
     private let noChartDataText = "TagCharts.NoChartData.text"
 
     deinit {
@@ -434,37 +437,7 @@ extension TagChartsScrollViewController {
     }
 
     private func bindTemperature(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        let temperatureUnit = viewModel.temperatureUnit
-        let fahrenheit = viewModel.fahrenheit
-        let celsius = viewModel.celsius
-        let kelvin = viewModel.kelvin
-        let temperatureChart = view.temperatureChart
-
-        let temperatureBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = {
-            [weak self,
-            weak temperatureUnit,
-            weak fahrenheit,
-            weak celsius,
-            weak kelvin] chartView, _ in
-           if let temperatureUnit = temperatureUnit?.value {
-               switch temperatureUnit {
-               case .celsius:
-                   self?.configureData(chartView: chartView, values: celsius?.value)
-               case .fahrenheit:
-                   self?.configureData(chartView: chartView, values: fahrenheit?.value)
-               case .kelvin:
-                   self?.configureData(chartView: chartView, values: kelvin?.value)
-               }
-           } else {
-               self?.configureData(chartView: chartView, values: nil)
-           }
-        }
-
-        view.temperatureChart.bind(viewModel.celsius, fire: false, block: temperatureBlock)
-        view.temperatureChart.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
-        view.temperatureChart.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-
-        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [weak temperatureChart] label, temperatureUnit in
+        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { label, temperatureUnit in
             if let temperatureUnit = temperatureUnit {
                 switch temperatureUnit {
                 case .celsius:
@@ -477,70 +450,14 @@ extension TagChartsScrollViewController {
             } else {
                 label.text = "N/A".localized()
             }
-            if let temperatureChart = temperatureChart {
-                temperatureBlock(temperatureChart, nil)
-            }
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindHumidity(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        let hu = viewModel.humidityUnit
-        let rh = viewModel.relativeHumidity
-        let ah = viewModel.absoluteHumidity
-        let tu = viewModel.temperatureUnit
-        let dc = viewModel.dewPointCelsius
-        let df = viewModel.dewPointFahrenheit
-        let dk = viewModel.dewPointKelvin
         let humidityUnit = viewModel.humidityUnit
-        let humidityChart = view.humidityChart
-
-        let humidityBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = {
-            [weak self,
-            weak hu,
-            weak rh,
-            weak ah,
-            weak tu,
-            weak dc,
-            weak df,
-            weak dk] chartView, _ in
-            if let hu = hu?.value {
-                switch hu {
-                case .percent:
-                    self?.configureData(chartView: chartView, values: rh?.value)
-                case .gm3:
-                    self?.configureData(chartView: chartView, values: ah?.value)
-                case .dew:
-                    if let tu = tu?.value {
-                        switch tu {
-                        case .celsius:
-                            self?.configureData(chartView: chartView, values: dc?.value)
-                        case .fahrenheit:
-                            self?.configureData(chartView: chartView, values: df?.value)
-                        case .kelvin:
-                            self?.configureData(chartView: chartView, values: dk?.value)
-                        }
-                    }
-                }
-            }
-        }
-
-        view.humidityChart.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.dewPointKelvin, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.dewPointFahrenheit, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.humidityUnit, fire: false) { chartView, _ in
-            humidityBlock(chartView, nil)
-        }
-        view.humidityChart.bind(viewModel.temperatureUnit, fire: false, block: { chartView, _ in
-            humidityBlock(chartView, nil)
-        })
-
         let temperatureUnit = viewModel.temperatureUnit
         let humidityUnitBlock: ((UILabel, Any) -> Void) = {
-            [weak humidityChart,
-            weak temperatureUnit,
+            [weak temperatureUnit,
             weak humidityUnit] label, _ in
             if let humidityUnit = humidityUnit?.value {
                 switch humidityUnit {
@@ -565,26 +482,28 @@ extension TagChartsScrollViewController {
             } else {
                 label.text = "N/A".localized()
             }
-            if let humidityChart = humidityChart {
-                humidityBlock(humidityChart, nil)
-            }
         }
         view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
         view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
 
     }
-
+    private func configureCharts(view: TrippleChartView, withUUID uuid: String) {
+        guard view == self.currentTrippleView else {
+            return
+        }
+        view.temperatureChart.presenter
+            .configure(for: uuid, with: .temperature)
+        view.humidityChart.presenter
+            .configure(for: uuid, with: .humidity)
+        view.pressureChart.presenter
+            .configure(for: uuid, with: .pressure)
+    }
     private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
 
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImageView.bind(viewModel.background) { $0.image = $1 }
-
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-
-        view.pressureChart.bind(viewModel.pressure) { [weak self] chartView, pressure in
-            self?.configureData(chartView: chartView, values: pressure)
-        }
 
         view.pressureUnitLabel.text = "hPa".localized()
 
@@ -637,6 +556,9 @@ extension TagChartsScrollViewController {
             bind(view: view, with: viewModel)
             views.append(view)
             leftView = view
+            if let uuid = viewModel.uuid.value {
+                self.configureCharts(view: view, withUUID: uuid)
+            }
         }
         scrollView.addConstraint(NSLayoutConstraint(item: leftView,
                                                     attribute: .trailing,

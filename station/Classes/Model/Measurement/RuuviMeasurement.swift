@@ -22,7 +22,7 @@ struct Acceleration {
 
 struct RuuviMeasurement {
     let tagUuid: String
-    let measurementSequenceNumber: Int
+    let measurementSequenceNumber: Int?
     let date: Date
     let rssi: Int?
     let temperature: Temperature?

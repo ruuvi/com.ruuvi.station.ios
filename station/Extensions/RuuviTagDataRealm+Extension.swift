@@ -10,14 +10,14 @@ import Foundation
 import Humidity
 
 extension RuuviTagDataRealm {
-    var temperature: Temperature? {
+    var unitTemperature: Temperature? {
         guard let celsius = self.celsius.value else {
             return nil
         }
         return Temperature(value: celsius,
                            unit: .celsius)
     }
-    var humidity: Humidity? {
+    var unitHumidity: Humidity? {
         guard let celsius = self.celsius.value,
             let relativeHumidity = self.humidity.value else {
             return nil
@@ -25,7 +25,7 @@ extension RuuviTagDataRealm {
         return Humidity(c: celsius,
                         rh: relativeHumidity)
     }
-    var pressure: Pressure? {
+    var unitPressure: Pressure? {
         guard let pressure = self.pressure.value else {
             return nil
         }
@@ -45,24 +45,24 @@ extension RuuviTagDataRealm {
             AccelerationMeasurement(value: accelerationY,
                                     unit: .metersPerSecondSquared),
                             z:
-            AccelerationMeasurement(value: accelerationY,
+            AccelerationMeasurement(value: accelerationZ,
                                     unit: .metersPerSecondSquared)
         )
     }
-    var voltage: Voltage? {
+    var unitVoltage: Voltage? {
         guard let voltage = self.voltage.value else { return nil }
         return Voltage(value: voltage, unit: .volts)
     }
     var measurement: RuuviMeasurement {
         return RuuviMeasurement(tagUuid: ruuviTag!.uuid,
-                                measurementSequenceNumber: measurementSequenceNumber.value!,
+                                measurementSequenceNumber: measurementSequenceNumber.value,
                                 date: date,
                                 rssi: rssi.value,
-                                temperature: temperature,
-                                humidity: humidity,
-                                pressure: pressure,
+                                temperature: unitTemperature,
+                                humidity: unitHumidity,
+                                pressure: unitPressure,
                                 acceleration: acceleration,
-                                voltage: voltage,
+                                voltage: unitVoltage,
                                 movementCounter: movementCounter.value,
                                 txPower: txPower.value)
     }

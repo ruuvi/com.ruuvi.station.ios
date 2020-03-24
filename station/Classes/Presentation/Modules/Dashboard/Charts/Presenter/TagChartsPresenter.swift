@@ -153,7 +153,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value?.last?.value)
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: nil)
         } else {
             assert(false)
         }
@@ -331,12 +331,8 @@ extension TagChartsPresenter {
                     return
                 }
                 strongSelf.viewModels = ruuviTagsBg.compactMap({ (ruuviTag) -> TagChartsViewModel in
-                    let viewModel = TagChartsViewModel(ruuviTag,
-                                                       hours: strongSelf.settings.chartDurationHours,
-                                                       every: strongSelf.settings.chartIntervalSeconds)
+                    let viewModel = TagChartsViewModel(ruuviTag)
                     viewModel.background.value = strongSelf.backgroundPersistence.background(for: ruuviTag.uuid)
-                    viewModel.temperatureUnit.value = strongSelf.settings.temperatureUnit
-                    viewModel.humidityUnit.value = strongSelf.settings.humidityUnit
                     viewModel.isConnected.value = strongSelf.background.isConnected(uuid: ruuviTag.uuid)
                     viewModel.alertState.value = strongSelf.alertService.hasRegistrations(for: ruuviTag.uuid)
                         ? .registered : .empty
