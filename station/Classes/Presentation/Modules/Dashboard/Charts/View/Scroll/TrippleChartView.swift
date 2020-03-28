@@ -217,22 +217,19 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
     }()
 
     lazy var temperatureChart: TagChartView = {
-        let chart = TagChartView(frame: .zero)
-        TagChartConfigurator().configure(view: chart)
+        let chart = TagChartView(frame: .zero, dataType: .temperature)
         chart.translatesAutoresizingMaskIntoConstraints = false
         return chart
     }()
 
     lazy var humidityChart: TagChartView = {
-        let chart = TagChartView(frame: .zero)
-        TagChartConfigurator().configure(view: chart)
+        let chart = TagChartView(frame: .zero, dataType: .humidity)
         chart.translatesAutoresizingMaskIntoConstraints = false
         return chart
     }()
 
     lazy var pressureChart: TagChartView = {
-        let chart = TagChartView(frame: .zero)
-        TagChartConfigurator().configure(view: chart)
+        let chart = TagChartView(frame: .zero, dataType: .pressure)
         chart.translatesAutoresizingMaskIntoConstraints = false
         return chart
     }()

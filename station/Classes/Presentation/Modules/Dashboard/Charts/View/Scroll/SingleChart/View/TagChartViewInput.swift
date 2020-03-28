@@ -9,7 +9,6 @@ import UIKit
 import Charts
 
 protocol TagChartViewInput: class {
-    func setChartData(_ chartData: LineChartData)
     func fitZoomTo(first: TimeInterval, last: TimeInterval)
-    func updataChart()
+    func reloadData()
 }

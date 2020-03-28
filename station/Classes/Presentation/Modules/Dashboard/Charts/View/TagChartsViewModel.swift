@@ -1,5 +1,6 @@
 import UIKit
 import Humidity
+import Charts
 
 enum TagChartsType {
     case ruuvi
@@ -21,6 +22,12 @@ struct TagChartsViewModel {
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var isConnected: Observable<Bool?> = Observable<Bool?>()
+    var temperatureChartData: Observable<LineChartData?> = Observable<LineChartData?>()
+    var humidityChartData: Observable<LineChartData?> = Observable<LineChartData?>()
+    var pressureChartData: Observable<LineChartData?> = Observable<LineChartData?>()
+    var temperatureChart: Observable<TagChartViewInput?> = Observable<TagChartViewInput?>()
+    var humidityChart: Observable<TagChartViewInput?> = Observable<TagChartViewInput?>()
+    var pressureChart: Observable<TagChartViewInput?> = Observable<TagChartViewInput?>()
 
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi

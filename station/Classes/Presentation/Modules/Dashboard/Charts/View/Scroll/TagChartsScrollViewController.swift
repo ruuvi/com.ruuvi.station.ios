@@ -5,7 +5,7 @@ import BTKit
 import GestureInstructions
 
 class TagChartsScrollViewController: UIViewController {
-    var output: TagChartsViewOutput!
+    var output: (TagChartsViewOutput & TagChartViewOutput)!
 
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
 
@@ -324,118 +324,6 @@ extension TagChartsScrollViewController {
                      action: #selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
     }
 
-    private func configure(_ chartView: LineChartView) {
-        chartView.delegate = self
-
-        chartView.chartDescription?.enabled = false
-
-        chartView.dragEnabled = true
-        chartView.setScaleEnabled(true)
-        chartView.pinchZoomEnabled = false
-        chartView.highlightPerDragEnabled = false
-
-        chartView.backgroundColor = .clear
-
-        chartView.legend.enabled = false
-
-        let xAxis = chartView.xAxis
-        xAxis.labelPosition = .bottom
-        xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        xAxis.labelTextColor = UIColor.white
-        xAxis.drawAxisLineEnabled = false
-        xAxis.drawGridLinesEnabled = true
-        xAxis.centerAxisLabelsEnabled = false
-        xAxis.granularity = 300
-        xAxis.valueFormatter = DateValueFormatter()
-        xAxis.granularityEnabled = true
-
-        let leftAxis = chartView.leftAxis
-        leftAxis.labelPosition = .outsideChart
-        leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        leftAxis.drawGridLinesEnabled = true
-
-        leftAxis.labelTextColor = UIColor.white
-
-        chartView.rightAxis.enabled = false
-        chartView.legend.form = .line
-
-        chartView.noDataTextColor = UIColor.white
-        chartView.noDataText = noChartDataText.localized()
-
-        chartView.scaleXEnabled = true
-        chartView.scaleYEnabled = true
-    }
-
-    private func configure(_ set: LineChartDataSet) {
-        set.axisDependency = .left
-        set.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
-        set.lineWidth = 1.5
-        set.drawCirclesEnabled = true
-        if set.entries.count == 1 {
-            set.circleRadius = 6
-        } else {
-            set.circleRadius = 2
-        }
-        set.drawValuesEnabled = false
-        set.fillAlpha = 0.26
-        set.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
-        set.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
-        set.drawCircleHoleEnabled = false
-        set.drawFilledEnabled = true
-        set.highlightEnabled = false
-    }
-
-    private func split(_ values: [TagChartsPoint]) -> [IChartDataSet]? {
-        let interval: TimeInterval = 60 * 60
-        var points = [ChartDataEntry]()
-        var sets = [IChartDataSet]()
-        var previousValue: TimeInterval
-        if values.count > 0 {
-            previousValue = values[0].date.timeIntervalSince1970
-        } else {
-            previousValue = Date.distantPast.timeIntervalSince1970
-        }
-        for value in values {
-            if value.date.timeIntervalSince1970 - previousValue < interval {
-                points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
-            } else {
-                let set = LineChartDataSet(entries: points, label: "Temperature")
-                configure(set)
-                sets.append(set)
-                points = [ChartDataEntry]()
-                points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
-            }
-            previousValue = value.date.timeIntervalSince1970
-        }
-        let set = LineChartDataSet(entries: points, label: "Temperature")
-        configure(set)
-        sets.append(set)
-        return sets
-    }
-
-    private func zoomAndScrollToLast24h(_ values: [TagChartsPoint], _ chartView: LineChartView) {
-        if let firstX = values.first?.date.timeIntervalSince1970,
-            let lastX = values.last?.date.timeIntervalSince1970 {
-            let scaleX = CGFloat((lastX - firstX) / (60 * 60 * 24))
-            chartView.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
-            chartView.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
-            chartView.moveViewToX(lastX - (60 * 60 * 24))
-        }
-    }
-
-    private func configureData(chartView: LineChartView, values: [TagChartsPoint]?) {
-        if let values = values {
-            configure(chartView)
-            let data = LineChartData(dataSets: split(values))
-            chartView.data = data
-            chartView.data?.notifyDataChanged()
-            chartView.notifyDataSetChanged()
-            if chartView.isFullyZoomedOut {
-                zoomAndScrollToLast24h(values, chartView)
-            }
-        }
-    }
-
     private func bindTemperature(view: TrippleChartView, with viewModel: TagChartsViewModel) {
         view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { label, temperatureUnit in
             if let temperatureUnit = temperatureUnit {
@@ -485,18 +373,30 @@ extension TagChartsScrollViewController {
         }
         view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
         view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
-
     }
-    private func configureCharts(view: TrippleChartView, withUUID uuid: String) {
-        guard view == self.currentTrippleView else {
-            return
+
+    private func bindCharts(view: TrippleChartView, with viewModel: TagChartsViewModel) {
+        view.temperatureChart.tagUuid = viewModel.uuid.value
+        viewModel.temperatureChart.value = view.temperatureChart
+        view.temperatureChart.bind(viewModel.temperatureChartData) {
+            [weak self] (view, dataSet) in
+            view.data = dataSet
+            view.output = self?.output
         }
-        view.temperatureChart.presenter
-            .configure(for: uuid, with: .temperature)
-        view.humidityChart.presenter
-            .configure(for: uuid, with: .humidity)
-        view.pressureChart.presenter
-            .configure(for: uuid, with: .pressure)
+        view.humidityChart.tagUuid = viewModel.uuid.value
+        viewModel.humidityChart.value = view.humidityChart
+        view.humidityChart.bind(viewModel.humidityChartData) {
+            [weak self] (view, dataSet) in
+            view.data = dataSet
+            view.output = self?.output
+        }
+        view.pressureChart.tagUuid = viewModel.uuid.value
+        viewModel.pressureChart.value = view.pressureChart
+        view.pressureChart.bind(viewModel.pressureChartData) {
+            [weak self] (view, dataSet) in
+            view.data = dataSet
+            view.output = self?.output
+        }
     }
     private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
 
@@ -554,11 +454,9 @@ extension TagChartsScrollViewController {
             scrollView.addSubview(view)
             position(view, leftView)
             bind(view: view, with: viewModel)
+            bindCharts(view: view, with: viewModel)
             views.append(view)
             leftView = view
-            if let uuid = viewModel.uuid.value {
-                self.configureCharts(view: view, withUUID: uuid)
-            }
         }
         scrollView.addConstraint(NSLayoutConstraint(item: leftView,
                                                     attribute: .trailing,
