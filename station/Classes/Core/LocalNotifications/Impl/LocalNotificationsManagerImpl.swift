@@ -76,9 +76,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
-            content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+            content.body = alertService.connectionDescription(for: uuid) ?? ""
         } else {
-            content.body = alertService.connectionDescription(for: uuid) ?? uuid
+            content.body = alertService.connectionDescription(for: uuid) ?? ""
         }
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
@@ -95,9 +95,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
-            content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+            content.body = alertService.connectionDescription(for: uuid) ?? ""
         } else {
-            content.body = alertService.connectionDescription(for: uuid) ?? uuid
+            content.body = alertService.connectionDescription(for: uuid) ?? ""
         }
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -113,9 +113,9 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.title = "LocalNotificationsManager.DidMove.title".localized()
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             content.subtitle = ruuviTag.name
-            content.body = alertService.movementDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
+            content.body = alertService.movementDescription(for: uuid) ?? ""
         } else {
-            content.body = alertService.movementDescription(for: uuid) ?? uuid
+            content.body = alertService.movementDescription(for: uuid) ?? ""
         }
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -209,15 +209,15 @@ extension LocalNotificationsManagerImpl {
             let body: String
             switch type {
             case .temperature:
-                body = alertService.temperatureDescription(for: uuid) ?? uuid
+                body = alertService.temperatureDescription(for: uuid) ?? ""
             case .relativeHumidity:
-                body = alertService.relativeHumidityDescription(for: uuid) ?? uuid
+                body = alertService.relativeHumidityDescription(for: uuid) ?? ""
             case .absoluteHumidity:
-                body = alertService.absoluteHumidityDescription(for: uuid) ?? uuid
+                body = alertService.absoluteHumidityDescription(for: uuid) ?? ""
             case .dewPoint:
-                body = alertService.dewPointDescription(for: uuid) ?? uuid
+                body = alertService.dewPointDescription(for: uuid) ?? ""
             case .pressure:
-                body = alertService.pressureDescription(for: uuid) ?? uuid
+                body = alertService.pressureDescription(for: uuid) ?? ""
             }
             content.body = body
 
