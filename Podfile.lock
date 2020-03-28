@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.1.8)
+  - BTKit (0.1.9)
   - Charts (3.4.0):
     - Charts/Core (= 3.4.0)
   - Charts/Core (3.4.0)
@@ -175,7 +175,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: e7e5dfc0d124dc867d8ea4293cab5120710f15e7
+  BTKit: f6d4664ce14ea2939d7458466765ed38da47dd3d
   Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
@@ -209,4 +209,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f7e93826b04c9e05b8f0ab57d7be8b084051e4c1
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.9.1
