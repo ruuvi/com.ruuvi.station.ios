@@ -10,12 +10,15 @@ import UIKit
 import Charts
 
 class TagChartView: LineChartView {
-    var presenter: (TagChartPresenterInput & TagChartModuleInput)!
     private let noChartDataText = "TagCharts.NoChartData.text"
-
+    let chartDataType: MeasurementType
+    var tagUuid: String?
+    weak var output: TagChartViewOutput?
     // MARK: - LifeCycle
-    override init(frame: CGRect) {
+    init(frame: CGRect, dataType: MeasurementType) {
+        chartDataType = dataType
         super.init(frame: frame)
+        delegate = self
         configure()
     }
     required init?(coder aDecoder: NSCoder) {
@@ -62,17 +65,22 @@ class TagChartView: LineChartView {
 }
 // MARK: - TagChartViewInput
 extension TagChartView: TagChartViewInput {
-    func setChartData(_ chartData: LineChartData) {
-        self.data = chartData
-    }
     func fitZoomTo(first: TimeInterval, last: TimeInterval) {
         let scaleX = CGFloat((last - first) / (60 * 60 * 24))
         self.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
         self.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
         self.moveViewToX(last - (60 * 60 * 24))
     }
-    func updataChart() {
+    func reloadData() {
         data?.notifyDataChanged()
         notifyDataSetChanged()
+    }
+}
+extension TagChartView: ChartViewDelegate {
+    func chartViewDidEndPanning(_ chartView: ChartViewBase) {
+        output?.didChangeVisibleRange(self)
+    }
+    func chartScaled(_ chartView: ChartViewBase, scaleX: CGFloat, scaleY: CGFloat) {
+        output?.didChangeVisibleRange(self)
     }
 }
