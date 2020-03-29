@@ -5,7 +5,7 @@ import BTKit
 import GestureInstructions
 
 class TagChartsScrollViewController: UIViewController {
-    var output: TagChartsViewOutput!
+    var output: (TagChartsViewOutput & TagChartViewOutput)!
 
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
 
@@ -25,6 +25,9 @@ class TagChartsScrollViewController: UIViewController {
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
+    private var currentTrippleView: TrippleChartView {
+        return views[currentPage]
+    }
     private let noChartDataText = "TagCharts.NoChartData.text"
 
     deinit {
@@ -36,6 +39,10 @@ class TagChartsScrollViewController: UIViewController {
 
 // MARK: - TagChartsViewInput
 extension TagChartsScrollViewController: TagChartsViewInput {
+    var viewIsVisible: Bool {
+        return self.isViewLoaded && self.view.window != nil
+    }
+
     func localize() {
         views.forEach({
             $0.temperatureChart.noDataText = noChartDataText.localized()
@@ -317,150 +324,8 @@ extension TagChartsScrollViewController {
                      action: #selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
     }
 
-    private func configure(_ chartView: LineChartView) {
-        chartView.delegate = self
-
-        chartView.chartDescription?.enabled = false
-
-        chartView.dragEnabled = true
-        chartView.setScaleEnabled(true)
-        chartView.pinchZoomEnabled = false
-        chartView.highlightPerDragEnabled = false
-
-        chartView.backgroundColor = .clear
-
-        chartView.legend.enabled = false
-
-        let xAxis = chartView.xAxis
-        xAxis.labelPosition = .bottom
-        xAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        xAxis.labelTextColor = UIColor.white
-        xAxis.drawAxisLineEnabled = false
-        xAxis.drawGridLinesEnabled = true
-        xAxis.centerAxisLabelsEnabled = false
-        xAxis.granularity = 300
-        xAxis.valueFormatter = DateValueFormatter()
-        xAxis.granularityEnabled = true
-
-        let leftAxis = chartView.leftAxis
-        leftAxis.labelPosition = .outsideChart
-        leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
-        leftAxis.drawGridLinesEnabled = true
-
-        leftAxis.labelTextColor = UIColor.white
-
-        chartView.rightAxis.enabled = false
-        chartView.legend.form = .line
-
-        chartView.noDataTextColor = UIColor.white
-        chartView.noDataText = noChartDataText.localized()
-
-        chartView.scaleXEnabled = true
-        chartView.scaleYEnabled = true
-    }
-
-    private func configure(_ set: LineChartDataSet) {
-        set.axisDependency = .left
-        set.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
-        set.lineWidth = 1.5
-        set.drawCirclesEnabled = true
-        if set.entries.count == 1 {
-            set.circleRadius = 6
-        } else {
-            set.circleRadius = 2
-        }
-        set.drawValuesEnabled = false
-        set.fillAlpha = 0.26
-        set.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
-        set.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
-        set.drawCircleHoleEnabled = false
-        set.drawFilledEnabled = true
-        set.highlightEnabled = false
-    }
-
-    private func split(_ values: [TagChartsPoint]) -> [IChartDataSet]? {
-        let interval: TimeInterval = 60 * 60
-        var points = [ChartDataEntry]()
-        var sets = [IChartDataSet]()
-        var previousValue: TimeInterval
-        if values.count > 0 {
-            previousValue = values[0].date.timeIntervalSince1970
-        } else {
-            previousValue = Date.distantPast.timeIntervalSince1970
-        }
-        for value in values {
-            if value.date.timeIntervalSince1970 - previousValue < interval {
-                points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
-            } else {
-                let set = LineChartDataSet(entries: points, label: "Temperature")
-                configure(set)
-                sets.append(set)
-                points = [ChartDataEntry]()
-                points.append(ChartDataEntry(x: value.date.timeIntervalSince1970, y: value.value))
-            }
-            previousValue = value.date.timeIntervalSince1970
-        }
-        let set = LineChartDataSet(entries: points, label: "Temperature")
-        configure(set)
-        sets.append(set)
-        return sets
-    }
-
-    private func zoomAndScrollToLast24h(_ values: [TagChartsPoint], _ chartView: LineChartView) {
-        if let firstX = values.first?.date.timeIntervalSince1970,
-            let lastX = values.last?.date.timeIntervalSince1970 {
-            let scaleX = CGFloat((lastX - firstX) / (60 * 60 * 24))
-            chartView.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
-            chartView.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
-            chartView.moveViewToX(lastX - (60 * 60 * 24))
-        }
-    }
-
-    private func configureData(chartView: LineChartView, values: [TagChartsPoint]?) {
-        if let values = values {
-            configure(chartView)
-            let data = LineChartData(dataSets: split(values))
-            chartView.data = data
-            chartView.data?.notifyDataChanged()
-            chartView.notifyDataSetChanged()
-            if chartView.isFullyZoomedOut {
-                zoomAndScrollToLast24h(values, chartView)
-            }
-        }
-    }
-
     private func bindTemperature(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        let temperatureUnit = viewModel.temperatureUnit
-        let fahrenheit = viewModel.fahrenheit
-        let celsius = viewModel.celsius
-        let kelvin = viewModel.kelvin
-        let temperatureChart = view.temperatureChart
-
-        let temperatureBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = {
-            [weak self,
-            weak temperatureUnit,
-            weak fahrenheit,
-            weak celsius,
-            weak kelvin] chartView, _ in
-           if let temperatureUnit = temperatureUnit?.value {
-               switch temperatureUnit {
-               case .celsius:
-                   self?.configureData(chartView: chartView, values: celsius?.value)
-               case .fahrenheit:
-                   self?.configureData(chartView: chartView, values: fahrenheit?.value)
-               case .kelvin:
-                   self?.configureData(chartView: chartView, values: kelvin?.value)
-               }
-           } else {
-               self?.configureData(chartView: chartView, values: nil)
-           }
-        }
-
-        view.temperatureChart.bind(viewModel.celsius, fire: false, block: temperatureBlock)
-        view.temperatureChart.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
-        view.temperatureChart.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-
-        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { [weak temperatureChart] label, temperatureUnit in
+        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { label, temperatureUnit in
             if let temperatureUnit = temperatureUnit {
                 switch temperatureUnit {
                 case .celsius:
@@ -473,70 +338,14 @@ extension TagChartsScrollViewController {
             } else {
                 label.text = "N/A".localized()
             }
-            if let temperatureChart = temperatureChart {
-                temperatureBlock(temperatureChart, nil)
-            }
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindHumidity(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        let hu = viewModel.humidityUnit
-        let rh = viewModel.relativeHumidity
-        let ah = viewModel.absoluteHumidity
-        let tu = viewModel.temperatureUnit
-        let dc = viewModel.dewPointCelsius
-        let df = viewModel.dewPointFahrenheit
-        let dk = viewModel.dewPointKelvin
         let humidityUnit = viewModel.humidityUnit
-        let humidityChart = view.humidityChart
-
-        let humidityBlock: ((LineChartView, [TagChartsPoint]?) -> Void) = {
-            [weak self,
-            weak hu,
-            weak rh,
-            weak ah,
-            weak tu,
-            weak dc,
-            weak df,
-            weak dk] chartView, _ in
-            if let hu = hu?.value {
-                switch hu {
-                case .percent:
-                    self?.configureData(chartView: chartView, values: rh?.value)
-                case .gm3:
-                    self?.configureData(chartView: chartView, values: ah?.value)
-                case .dew:
-                    if let tu = tu?.value {
-                        switch tu {
-                        case .celsius:
-                            self?.configureData(chartView: chartView, values: dc?.value)
-                        case .fahrenheit:
-                            self?.configureData(chartView: chartView, values: df?.value)
-                        case .kelvin:
-                            self?.configureData(chartView: chartView, values: dk?.value)
-                        }
-                    }
-                }
-            }
-        }
-
-        view.humidityChart.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.dewPointKelvin, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.dewPointFahrenheit, fire: false, block: humidityBlock)
-        view.humidityChart.bind(viewModel.humidityUnit, fire: false) { chartView, _ in
-            humidityBlock(chartView, nil)
-        }
-        view.humidityChart.bind(viewModel.temperatureUnit, fire: false, block: { chartView, _ in
-            humidityBlock(chartView, nil)
-        })
-
         let temperatureUnit = viewModel.temperatureUnit
         let humidityUnitBlock: ((UILabel, Any) -> Void) = {
-            [weak humidityChart,
-            weak temperatureUnit,
+            [weak temperatureUnit,
             weak humidityUnit] label, _ in
             if let humidityUnit = humidityUnit?.value {
                 switch humidityUnit {
@@ -561,26 +370,41 @@ extension TagChartsScrollViewController {
             } else {
                 label.text = "N/A".localized()
             }
-            if let humidityChart = humidityChart {
-                humidityBlock(humidityChart, nil)
-            }
         }
         view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
         view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
-
     }
 
+    private func bindCharts(view: TrippleChartView, with viewModel: TagChartsViewModel) {
+        view.temperatureChart.tagUuid = viewModel.uuid.value
+        viewModel.temperatureChart.value = view.temperatureChart
+        view.temperatureChart.bind(viewModel.temperatureChartData) {
+            [weak self] (view, dataSet) in
+            view.data = dataSet
+            view.output = self?.output
+        }
+        view.humidityChart.tagUuid = viewModel.uuid.value
+        viewModel.humidityChart.value = view.humidityChart
+        view.humidityChart.bind(viewModel.humidityChartData) {
+            [weak self] (view, dataSet) in
+            view.data = dataSet
+            view.output = self?.output
+        }
+        view.pressureChart.tagUuid = viewModel.uuid.value
+        viewModel.pressureChart.value = view.pressureChart
+        view.pressureChart.bind(viewModel.pressureChartData) {
+            [weak self] (view, dataSet) in
+            view.data = dataSet
+            view.output = self?.output
+        }
+    }
     private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
 
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         view.backgroundImageView.bind(viewModel.background) { $0.image = $1 }
-
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-
-        view.pressureChart.bind(viewModel.pressure) { [weak self] chartView, pressure in
-            self?.configureData(chartView: chartView, values: pressure)
-        }
+        bindCharts(view: view, with: viewModel)
 
         view.pressureUnitLabel.text = "hPa".localized()
 
@@ -631,6 +455,7 @@ extension TagChartsScrollViewController {
             scrollView.addSubview(view)
             position(view, leftView)
             bind(view: view, with: viewModel)
+            bindCharts(view: view, with: viewModel)
             views.append(view)
             leftView = view
         }
