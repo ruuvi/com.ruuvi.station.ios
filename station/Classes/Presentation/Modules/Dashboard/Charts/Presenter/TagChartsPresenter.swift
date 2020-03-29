@@ -581,9 +581,26 @@ extension TagChartsPresenter {
             viewModel.humidityChartData.value?.addEntry(getEntry(for: $0, with: .humidity), dataSetIndex: 0)
             viewModel.pressureChartData.value?.addEntry(getEntry(for: $0, with: .pressure), dataSetIndex: 0)
         })
+        self.drawCirclesIfNeeded(for: viewModel.temperatureChartData.value)
+        self.drawCirclesIfNeeded(for: viewModel.humidityChartData.value)
+        self.drawCirclesIfNeeded(for: viewModel.pressureChartData.value)
         viewModel.temperatureChart.value?.reloadData()
         viewModel.humidityChart.value?.reloadData()
         viewModel.pressureChart.value?.reloadData()
+    }
+    private func drawCirclesIfNeeded(for chartData: LineChartData?) {
+        if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
+            switch dataSet.entries.count {
+            case 1:
+                dataSet.circleRadius = 6
+                dataSet.drawCirclesEnabled = true
+            case 2...threshold:
+                dataSet.circleRadius = 2
+                dataSet.drawCirclesEnabled = true
+            default:ааа
+                dataSet.drawCirclesEnabled = false
+            }
+        }
     }
     private func createChartData(for viewModel: TagChartsViewModel) {
         let sorted = ruuviTagData
@@ -623,6 +640,7 @@ extension TagChartsPresenter {
         }
     }
 }
+// MARK: - TagChartViewOutput
 extension TagChartsPresenter: TagChartViewOutput {
     private func fetchPointsByDates(for viewModel: TagChartsViewModel,
                                     withType type: MeasurementType,
@@ -723,18 +741,11 @@ extension TagChartsPresenter {
         }
         let data_length = dataSet.count
         if threshold >= data_length
-            || threshold == 0,
-            let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
+            || threshold == 0 {
             dataSet.forEach({
                 chartData.addEntry(getEntry(for: $0, with: type), dataSetIndex: 0)
             })
-            if chartDataSet.count == 1 {
-                chartDataSet.circleRadius = 6
-                chartDataSet.drawCirclesEnabled = true
-            } else {
-                chartDataSet.circleRadius = 2
-                chartDataSet.drawCirclesEnabled = true
-            }
+            self.drawCirclesIfNeeded(for: chartData)
             isInUpdate = false
             return // Nothing to do
         }
