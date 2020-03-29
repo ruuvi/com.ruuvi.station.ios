@@ -597,7 +597,7 @@ extension TagChartsPresenter {
             case 2...threshold:
                 dataSet.circleRadius = 2
                 dataSet.drawCirclesEnabled = true
-            default:ааа
+            default:
                 dataSet.drawCirclesEnabled = false
             }
         }
