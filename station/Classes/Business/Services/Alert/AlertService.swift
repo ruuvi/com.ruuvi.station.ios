@@ -2,7 +2,7 @@ import Foundation
 import BTKit
 
 protocol AlertService {
-    func process(heartbeat ruuviTag: RuuviTag)
+    func process(heartbeat ruuviTag: RuuviTagProtocol)
     func process(data: WPSData, for uuid: String)
 
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)

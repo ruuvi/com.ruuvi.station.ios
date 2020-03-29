@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.1.8)
+  - BTKit (0.1.9)
   - Charts (3.4.0):
     - Charts/Core (= 3.4.0)
   - Charts/Core (3.4.0)
@@ -92,8 +92,10 @@ PODS:
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
   - Nantes (0.0.9)
+  - Nimble (8.0.5)
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.2)
+  - Quick (2.2.0)
   - RangeSeekSlider (1.8.2)
   - Realm (4.3.1):
     - Realm/Headers (= 4.3.1)
@@ -115,6 +117,8 @@ DEPENDENCIES:
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
   - Nantes
+  - Nimble
+  - Quick
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
   - Swinject
@@ -143,8 +147,10 @@ SPEC REPOS:
     - Localize-Swift
     - nanopb
     - Nantes
+    - Nimble
     - PromisesObjC
     - Protobuf
+    - Quick
     - Realm
     - RealmSwift
     - Swinject
@@ -169,7 +175,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: e7e5dfc0d124dc867d8ea4293cab5120710f15e7
+  BTKit: f6d4664ce14ea2939d7458466765ed38da47dd3d
   Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
@@ -191,14 +197,16 @@ SPEC CHECKSUMS:
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Nantes: c1b4eec0748c01f4c6b83e16a11e52ab2007cd4d
+  Nimble: 4ab1aeb9b45553c75b9687196b0fa0713170a332
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
+  Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 31dc40934081ef740f60feedc46d88473cbfeb40
   RealmSwift: b5199e9a41f67b99f51acf6874a6166f5fbe93d1
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 2a266c857b2493543f16cbeb9070de7d1887a212
+PODFILE CHECKSUM: f7e93826b04c9e05b8f0ab57d7be8b084051e4c1
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.9.1

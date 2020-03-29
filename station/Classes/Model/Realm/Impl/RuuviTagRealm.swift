@@ -2,7 +2,7 @@ import RealmSwift
 import BTKit
 import Foundation
 
-class RuuviTagRealm: Object {
+class RuuviTagRealm: Object, RuuviTagRealmProtocol {
     @objc dynamic var uuid: String = ""
     @objc dynamic var name: String = ""
     @objc dynamic var mac: String?
@@ -19,7 +19,7 @@ class RuuviTagRealm: Object {
         return "uuid"
     }
 
-    convenience init(ruuviTag: RuuviTag, name: String) {
+    convenience required init(ruuviTag: RuuviTagProtocol, name: String) {
         self.init()
         self.uuid = ruuviTag.uuid
         self.name = name
