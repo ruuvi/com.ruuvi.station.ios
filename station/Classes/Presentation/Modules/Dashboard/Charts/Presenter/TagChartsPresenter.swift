@@ -210,6 +210,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             }, connectionTimeout: connectionTimeout, serviceTimeout: serviceTimeout)
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
+                self?.restartObservingData()
             }, failure: { [weak self] error in
                 self?.view.setSync(progress: nil, for: viewModel)
                 if case .btkit(.logic(.connectionTimedOut)) = error {
@@ -232,6 +233,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             op.on(failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
+                self?.restartObservingData()
                 self?.isLoading = false
             })
         } else {
@@ -450,6 +452,7 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main) { [weak self] _ in
             self?.viewModels.forEach({ $0.temperatureUnit.value = self?.settings.temperatureUnit })
+            self?.restartObservingData()
         }
         humidityUnitToken = NotificationCenter
             .default
@@ -458,6 +461,7 @@ extension TagChartsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
             self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
+            self?.restartObservingData()
         })
     }
 

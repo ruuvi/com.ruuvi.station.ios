@@ -77,7 +77,7 @@ extension TagChartView: TagChartViewInput {
     }
 }
 extension TagChartView: ChartViewDelegate {
-    func chartViewDidEndPanning(_ chartView: ChartViewBase) {
+    func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
         output?.didChangeVisibleRange(self)
     }
     func chartScaled(_ chartView: ChartViewBase, scaleX: CGFloat, scaleY: CGFloat) {
