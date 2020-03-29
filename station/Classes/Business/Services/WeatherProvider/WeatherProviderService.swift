@@ -2,20 +2,6 @@ import Foundation
 import Future
 import CoreLocation
 
-struct WPSData {
-    var celsius: Double?
-    var humidity: Double?
-    var pressure: Double?
-
-    var fahrenheit: Double? {
-        return celsius?.fahrenheit
-    }
-
-    var kelvin: Double? {
-        return celsius?.kelvin
-    }
-}
-
 protocol WeatherProviderService {
 
     func loadData(coordinate: CLLocationCoordinate2D, provider: WeatherProvider) -> Future<WPSData, RUError>
