@@ -404,6 +404,7 @@ extension TagChartsScrollViewController {
         view.backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
+        bindCharts(view: view, with: viewModel)
 
         view.pressureUnitLabel.text = "hPa".localized()
 

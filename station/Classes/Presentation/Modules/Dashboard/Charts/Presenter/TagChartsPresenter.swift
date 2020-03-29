@@ -49,11 +49,9 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
-    private var realmQueue = DispatchQueue(label: "com.ruuvi.station.TagChartsPresenter.realm",
-                                           qos: .userInitiated)
     private let threshold: Int = 100
     private var isInUpdate = false
-    private var ruuviTagData: [RuuviTagDataRealm] = []
+    private var ruuviTagData: [RuuviMeasurement] = []
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -73,11 +71,9 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     private var tagUUID: String? {
         didSet {
-            if let tagUUID = tagUUID,
-                self.view.viewIsVisible {
+            if let tagUUID = tagUUID {
                 output?.tagCharts(module: self, didScrollTo: tagUUID)
                 scrollToCurrentTag()
-                restartObservingData()
             }
         }
     }
@@ -354,11 +350,19 @@ extension TagChartsPresenter {
             restartObservingData()
         }
     }
-
+    // swiftlint:disable:next function_body_length
     private func restartObservingData() {
         ruuviTagDataToken?.invalidate()
         self.isLoading = true
-        ruuviTagDataToken = realmContext.main.objects(RuuviTagDataRealm.self).observe {
+        let date = Calendar.current.date(byAdding: .hour,
+                                         value: -settings.chartDurationHours,
+                                         to: Date()) ?? Date()
+        guard let uuid = tagUUID else {
+            return
+        }
+        let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
+            .filter("date > %@ AND ruuviTag.uuid == %@", date, uuid)
+        ruuviTagDataToken = ruuviTagDataRealm.observe {
             [weak self] (change) in
             switch change {
             case .initial(let results):
@@ -366,20 +370,22 @@ extension TagChartsPresenter {
                 guard let viewModel = self?.viewModels.first(where: {$0.uuid.value == self?.tagUUID}) else {
                     return
                 }
-                let newValues: [RuuviTagDataRealm] = results.compactMap({
+                let newValues: [RuuviMeasurement] = results.compactMap({
+                    guard $0.date > date else {
+                        return nil
+                    }
                     if let last = self?.lastChartSyncDate,
                         let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
                         self?.lastChartSyncDate = $0.measurement.date
                         let elapsed = Int(Date().timeIntervalSince(last))
-                        if elapsed > chartIntervalSeconds,
-                            $0.ruuviTag?.uuid == viewModel.uuid.value {
-                            return $0
+                        if elapsed > chartIntervalSeconds {
+                            return $0.measurement
                         } else {
                             return nil
                         }
                     } else {
                         self?.lastChartSyncDate = $0.measurement.date
-                        return $0
+                        return $0.measurement
                     }
                 }).sorted(by: {$0.date < $1.date})
                 self?.ruuviTagData = newValues
@@ -390,9 +396,10 @@ extension TagChartsPresenter {
                 self?.isSyncing = false
                 self?.lastChartSyncDate = Date()
                 insertions.forEach({ i in
-                    let newValue = results[i]
+                    let newValue = results[i].measurement
                     self?.ruuviTagData.append(newValue)
-                    if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.ruuviTag?.uuid}) {
+                    if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.tagUuid}),
+                        self?.view.viewIsVisible == true {
                         self?.insertMeasurements([newValue], into: viewModel)
                     }
                 })
@@ -561,9 +568,9 @@ extension TagChartsPresenter {
         lineChartDataSet.highlightEnabled = false
         return lineChartDataSet
     }
-    private func insertMeasurements(_ newValues: [RuuviTagDataRealm], into viewModel: TagChartsViewModel) {
+    private func insertMeasurements(_ newValues: [RuuviMeasurement], into viewModel: TagChartsViewModel) {
         newValues.forEach({
-            guard $0.ruuviTag?.uuid == viewModel.uuid.value else {
+            guard $0.tagUuid == viewModel.uuid.value else {
                 return
             }
             viewModel.temperatureChartData.value?.addEntry(getEntry(for: $0, with: .temperature), dataSetIndex: 0)
@@ -576,7 +583,7 @@ extension TagChartsPresenter {
     }
     private func createChartData(for viewModel: TagChartsViewModel) {
         let sorted = ruuviTagData
-            .filter({$0.ruuviTag?.uuid == viewModel.uuid.value})
+            .filter({$0.tagUuid == self.tagUUID})
             .sorted(by: {$0.date < $1.date})
         if let temperatureData = viewModel.temperatureChartData.value {
             setDownSampled(dataSet: sorted,
@@ -635,9 +642,9 @@ extension TagChartsPresenter: TagChartViewOutput {
             fatalError("\(#function):\(#line) Undeclarated chart type")
         }
         let filtered = ruuviTagData
-            .filter({$0.ruuviTag?.uuid == viewModel.uuid.value})
+            .filter({$0.tagUuid == viewModel.uuid.value})
             .sorted(by: {$0.date < $1.date})
-        var sorted: [RuuviTagDataRealm] = []
+        var sorted: [RuuviMeasurement] = []
         if let first = filtered.first {
             sorted.append(first)
         }
@@ -667,30 +674,31 @@ extension TagChartsPresenter: TagChartViewOutput {
     }
 }
 extension TagChartsPresenter {
-    private func getEntry(for tagData: RuuviTagDataRealm,
+    // swiftlint:disable:next cyclomatic_complexity
+    private func getEntry(for tagData: RuuviMeasurement,
                           with type: MeasurementType) -> ChartDataEntry {
         let value: Double?
         switch type {
         case .temperature:
-            value = tagData.unitTemperature?.converted(to: settings.temperatureUnit.unitTemperature).value
+            value = tagData.temperature?.converted(to: settings.temperatureUnit.unitTemperature).value
         case .humidity:
             switch settings.humidityUnit {
             case .dew:
                 switch settings.temperatureUnit {
                 case .celsius:
-                    value = tagData.unitHumidity?.Td
+                    value = tagData.humidity?.Td
                 case .fahrenheit:
-                    value = tagData.unitHumidity?.TdF
+                    value = tagData.humidity?.TdF
                 case .kelvin:
-                    value = tagData.unitHumidity?.TdK
+                    value = tagData.humidity?.TdK
                 }
             case .gm3:
-                value = tagData.unitHumidity?.ah
+                value = tagData.humidity?.ah
             case .percent:
-                value = tagData.unitHumidity?.rh
+                value = tagData.humidity?.rh
             }
         case .pressure:
-            value = tagData.unitPressure?.converted(to: .hectopascals).value
+            value = tagData.pressure?.converted(to: .hectopascals).value
         default:
             fatalError("before need implement chart with current type!")
         }
@@ -700,7 +708,7 @@ extension TagChartsPresenter {
         return ChartDataEntry(x: tagData.date.timeIntervalSince1970, y: y)
     }
     // swiftlint:disable function_body_length
-    private func setDownSampled(dataSet: [RuuviTagDataRealm] = [],
+    private func setDownSampled(dataSet: [RuuviMeasurement] = [],
                                 to chartData: LineChartData,
                                 withType type: MeasurementType) {
         if let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
