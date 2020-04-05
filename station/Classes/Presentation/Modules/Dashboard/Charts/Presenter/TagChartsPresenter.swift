@@ -352,18 +352,15 @@ extension TagChartsPresenter {
             restartObservingData()
         }
     }
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length, cyclomatic_complexity
     private func restartObservingData() {
         ruuviTagDataToken?.invalidate()
         self.isLoading = true
-        let date = Calendar.current.date(byAdding: .hour,
-                                         value: -settings.chartDurationHours,
-                                         to: Date()) ?? Date()
         guard let uuid = tagUUID else {
             return
         }
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
-            .filter("date > %@ AND ruuviTag.uuid == %@", date, uuid)
+            .filter("ruuviTag.uuid == %@", uuid)
         ruuviTagDataToken = ruuviTagDataRealm.observe {
             [weak self] (change) in
             switch change {
@@ -374,19 +371,27 @@ extension TagChartsPresenter {
                 }
                 autoreleasepool {
                     var newValues = [RuuviMeasurement]()
+                    if let first = results.first {
+                        self?.lastChartSyncDate = first.date
+                        newValues.append(first.measurement)
+                    }
                     for result in results {
-                        guard result.date > date else { continue }
                         if let last = self?.lastChartSyncDate,
                             let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
-                            self?.lastChartSyncDate = result.measurement.date
-                            let elapsed = Int(Date().timeIntervalSince(last))
-                            if elapsed > chartIntervalSeconds {
+                            let elapsed = Int(result.measurement.date.timeIntervalSince(last))
+                            if elapsed >= chartIntervalSeconds {
+                                self?.lastChartSyncDate = result.measurement.date
                                 newValues.append(result.measurement)
                             }
                         } else {
                             self?.lastChartSyncDate = result.measurement.date
                             newValues.append(result.measurement)
                         }
+                    }
+                    if let last = results.last,
+                        last.date != newValues.last?.date {
+                        self?.lastChartSyncDate = last.date
+                        newValues.append(last.measurement)
                     }
                     newValues.sort(by: { $0.date < $1.date })
                     self?.ruuviTagData = newValues
@@ -396,13 +401,22 @@ extension TagChartsPresenter {
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
-                self?.lastChartSyncDate = Date()
                 insertions.forEach({ i in
                     let newValue = results[i].measurement
                     self?.ruuviTagData.append(newValue)
                     if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.tagUuid}),
                         self?.view.viewIsVisible == true {
-                        self?.insertMeasurements([newValue], into: viewModel)
+                        if let last = self?.lastChartSyncDate,
+                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
+                            let elapsed = Int(newValue.date.timeIntervalSince(last))
+                            if elapsed >= chartIntervalSeconds {
+                                self?.lastChartSyncDate = newValue.date
+                                self?.insertMeasurements([newValue], into: viewModel)
+                            }
+                        } else {
+                            self?.lastChartSyncDate = newValue.date
+                            self?.insertMeasurements([newValue], into: viewModel)
+                        }
                     }
                 })
             default:
@@ -603,27 +617,23 @@ extension TagChartsPresenter {
         }
     }
     private func createChartData(for viewModel: TagChartsViewModel) {
-        let sorted = ruuviTagData
-            .filter({$0.tagUuid == self.tagUUID})
-            .sorted(by: {$0.date < $1.date})
-        if let temperatureData = viewModel.temperatureChartData.value {
-            setDownSampled(dataSet: sorted,
-                           to: temperatureData,
-                           withType: .temperature)
-            viewModel.temperatureChart.value?.reloadData()
+        guard let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
+                                               value: -settings.chartDurationHours,
+                                               to: Date())?.timeIntervalSince1970 else {
+            return
         }
-        if let humidityData = viewModel.humidityChartData.value {
-            setDownSampled(dataSet: sorted,
-                           to: humidityData,
-                           withType: .humidity)
-            viewModel.humidityChart.value?.reloadData()
-        }
-        if let pressureData = viewModel.pressureChartData.value {
-            setDownSampled(dataSet: sorted,
-                           to: pressureData,
-                           withType: .pressure)
-            viewModel.pressureChart.value?.reloadData()
-        }
+        let currentDate = Date().timeIntervalSince1970
+        fetchPointsByDates(for: viewModel, withType: .temperature, start: chartDurationThreshold, stop: currentDate)
+        viewModel.temperatureChart.value?.reloadData()
+        viewModel.temperatureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+
+        fetchPointsByDates(for: viewModel, withType: .humidity, start: chartDurationThreshold, stop: currentDate)
+        viewModel.humidityChart.value?.reloadData()
+        viewModel.humidityChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+
+        fetchPointsByDates(for: viewModel, withType: .pressure, start: chartDurationThreshold, stop: currentDate)
+        viewModel.pressureChart.value?.reloadData()
+        viewModel.pressureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
     }
     private func bindDataSet(_ dataSet: inout LineChartDataSet, _ entries: [ChartDataEntry]) {
         let firstPoint = dataSet.first
