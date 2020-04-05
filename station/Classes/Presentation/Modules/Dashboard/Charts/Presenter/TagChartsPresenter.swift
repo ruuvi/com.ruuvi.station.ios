@@ -352,7 +352,7 @@ extension TagChartsPresenter {
             restartObservingData()
         }
     }
-    // swiftlint:disable:next function_body_length, cyclomatic_complexity
+    // swiftlint:disable all
     private func restartObservingData() {
         ruuviTagDataToken?.invalidate()
         self.isLoading = true
@@ -424,6 +424,7 @@ extension TagChartsPresenter {
             }
         }
     }
+    // swiftlint:enable all
 
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
@@ -652,6 +653,7 @@ extension TagChartsPresenter {
 }
 // MARK: - TagChartViewOutput
 extension TagChartsPresenter: TagChartViewOutput {
+// swiftlint:disable:next cyclomatic_complexity
     private func fetchPointsByDates(for viewModel: TagChartsViewModel,
                                     withType type: MeasurementType,
                                     start: TimeInterval,
@@ -691,6 +693,16 @@ extension TagChartsPresenter: TagChartViewOutput {
             sorted.append(last)
         }
         self.setDownSampled(dataSet: sorted, to: chartData, withType: type)
+        switch type {
+        case .temperature:
+            viewModel.temperatureChart.value?.reloadData()
+        case .humidity:
+            viewModel.humidityChart.value?.reloadData()
+        case .pressure:
+            viewModel.pressureChart.value?.reloadData()
+        default:
+            return
+        }
     }
     func didChangeVisibleRange(_ chartView: TagChartView) {
         guard !isInUpdate,
@@ -727,7 +739,11 @@ extension TagChartsPresenter {
             case .gm3:
                 value = tagData.humidity?.ah
             case .percent:
-                value = tagData.humidity?.rh
+                if let relativeHumidity = tagData.humidity?.rh {
+                    value = relativeHumidity * 100
+                } else {
+                    value = nil
+                }
             }
         case .pressure:
             value = tagData.pressure?.converted(to: .hectopascals).value
