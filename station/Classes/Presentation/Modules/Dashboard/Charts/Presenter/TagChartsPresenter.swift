@@ -369,35 +369,36 @@ extension TagChartsPresenter {
                 guard let viewModel = self?.viewModels.first(where: {$0.uuid.value == self?.tagUUID}) else {
                     return
                 }
-                autoreleasepool {
-                    var newValues = [RuuviMeasurement]()
-                    if let first = results.first {
-                        self?.lastChartSyncDate = first.date
-                        newValues.append(first.measurement)
-                    }
-                    for result in results {
+                var newValues = [RuuviMeasurement]()
+                if let first = results.first {
+                    self?.lastChartSyncDate = first.date
+                    newValues.append(first.measurement)
+                }
+                for result in results {
+                    autoreleasepool {
+                        let measurement = result.measurement
                         if let last = self?.lastChartSyncDate,
                             let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
-                            let elapsed = Int(result.measurement.date.timeIntervalSince(last))
+                            let elapsed = Int(measurement.date.timeIntervalSince(last))
                             if elapsed >= chartIntervalSeconds {
-                                self?.lastChartSyncDate = result.measurement.date
-                                newValues.append(result.measurement)
+                                self?.lastChartSyncDate = measurement.date
+                                newValues.append(measurement)
                             }
                         } else {
-                            self?.lastChartSyncDate = result.measurement.date
-                            newValues.append(result.measurement)
+                            self?.lastChartSyncDate = measurement.date
+                            newValues.append(measurement)
                         }
                     }
-                    if let last = results.last,
-                        last.date != newValues.last?.date {
-                        self?.lastChartSyncDate = last.date
-                        newValues.append(last.measurement)
-                    }
-                    newValues.sort(by: { $0.date < $1.date })
-                    self?.ruuviTagData = newValues
-                    self?.createChartData(for: viewModel)
-                    self?.isLoading = false
                 }
+                if let last = results.last,
+                    last.date != newValues.last?.date {
+                    self?.lastChartSyncDate = last.date
+                    newValues.append(last.measurement)
+                }
+                newValues.sort(by: { $0.date < $1.date })
+                self?.ruuviTagData = newValues
+                self?.createChartData(for: viewModel)
+                self?.isLoading = false
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
