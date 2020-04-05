@@ -296,7 +296,6 @@ extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
 extension TagChartsScrollViewController {
 
     private func configureViews() {
-        configurePanGestureRecognozer()
         configureGestureInstructor()
         configureRestartAnimationsOnAppDidBecomeActive()
     }
