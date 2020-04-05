@@ -14,14 +14,14 @@ class TagChartsDismissTransitionAnimation: UIPercentDrivenInteractiveTransition,
 
     @objc internal func handleHidePan(_ pan: UIPanGestureRecognizer) {
         let translation = pan.translation(in: pan.view!)
+        guard translation.y > 0 else {
+            return // don't start gesture
+        }
         let direction: CGFloat = manager.presentDirection == .top ? -1 : 1
         let distance = translation.y / TagChartsTransitionManager.appScreenRect.height * direction
 
         switch pan.state {
         case .began:
-            if translation.y > 0 {
-                return // don't start gesture
-            }
             manager.isInteractive = true
             manager.charts.dismiss(animated: true)
         case .changed:
