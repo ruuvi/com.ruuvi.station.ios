@@ -66,10 +66,10 @@ class TagChartView: LineChartView {
 // MARK: - TagChartViewInput
 extension TagChartView: TagChartViewInput {
     func fitZoomTo(first: TimeInterval, last: TimeInterval) {
-        let scaleX = CGFloat((last - first) / (60 * 60 * 24))
+        let scaleX = CGFloat(xAxis.axisMaximum - xAxis.axisMinimum) / CGFloat((last - first))
         self.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
         self.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
-        self.moveViewToX(last - (60 * 60 * 24))
+        self.moveViewToX(first)
     }
     func reloadData() {
         data?.notifyDataChanged()
