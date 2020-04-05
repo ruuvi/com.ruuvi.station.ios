@@ -37,7 +37,7 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 - [x] Acceleration (g)
 - [x] Charts
 - [x] Background logging
-- [x] Localization (English, Finnish, Russian)
+- [x] Localization (English, Finnish, Russian, Swedish)
 - [x] Virtual Sensors 
 
 ## Requirements
