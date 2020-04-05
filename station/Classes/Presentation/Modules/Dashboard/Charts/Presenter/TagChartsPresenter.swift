@@ -372,27 +372,27 @@ extension TagChartsPresenter {
                 guard let viewModel = self?.viewModels.first(where: {$0.uuid.value == self?.tagUUID}) else {
                     return
                 }
-                let newValues: [RuuviMeasurement] = results.compactMap({
-                    guard $0.date > date else {
-                        return nil
-                    }
-                    if let last = self?.lastChartSyncDate,
-                        let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
-                        self?.lastChartSyncDate = $0.measurement.date
-                        let elapsed = Int(Date().timeIntervalSince(last))
-                        if elapsed > chartIntervalSeconds {
-                            return $0.measurement
+                autoreleasepool {
+                    var newValues = [RuuviMeasurement]()
+                    for result in results {
+                        guard result.date > date else { continue }
+                        if let last = self?.lastChartSyncDate,
+                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
+                            self?.lastChartSyncDate = result.measurement.date
+                            let elapsed = Int(Date().timeIntervalSince(last))
+                            if elapsed > chartIntervalSeconds {
+                                newValues.append(result.measurement)
+                            }
                         } else {
-                            return nil
+                            self?.lastChartSyncDate = result.measurement.date
+                            newValues.append(result.measurement)
                         }
-                    } else {
-                        self?.lastChartSyncDate = $0.measurement.date
-                        return $0.measurement
                     }
-                }).sorted(by: {$0.date < $1.date})
-                self?.ruuviTagData = newValues
-                self?.createChartData(for: viewModel)
-                self?.isLoading = false
+                    newValues.sort(by: { $0.date < $1.date })
+                    self?.ruuviTagData = newValues
+                    self?.createChartData(for: viewModel)
+                    self?.isLoading = false
+                }
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
