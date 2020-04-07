@@ -74,7 +74,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
             view.webTags = [manual, current]
         }
         view.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
-        if !view.isBluetoothEnabled && !isOpenedFromWelcome {
+        if !view.isBluetoothEnabled
+            && !isOpenedFromWelcome
+            && foreground.bluetoothState != .unknown {
             view.showBluetoothDisabled()
         }
         startObservingPersistedRuuviTags()
