@@ -4,7 +4,11 @@ class BackgroundWorker: NSObject {
     var thread: Thread!
     private var block: (() -> Void)!
 
-    @objc internal func runBlock() { block() }
+    @objc internal func runBlock() {
+        autoreleasepool {
+            block()
+        }
+    }
 
     internal func start(_ block: @escaping () -> Void) {
         self.block = block
