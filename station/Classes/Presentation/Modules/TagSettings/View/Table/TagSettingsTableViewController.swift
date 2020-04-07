@@ -796,11 +796,30 @@ extension TagSettingsTableViewController {
                     label.text = "TagSettings.ConnectStatus.Disconnected".localized()
                 }
             }
+            keepConnectionSwitch.bind(viewModel.isConnected) {
+                [weak keepConnection] (view, isConnected) in
+                let keep = keepConnection?.value ?? false
+                if isConnected.bound {
+                    view.isEnabled = true
+                } else if keep {
+                    view.isEnabled = false
+                } else {
+                    view.isEnabled = true
+                }
+            }
 
             let isConnected = viewModel.isConnected
-
-            keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
+            keepConnectionSwitch.bind(viewModel.keepConnection) {
+                [weak isConnected] (view, keepConnection) in
                 view.isOn = keepConnection.bound
+                let isConnected = isConnected?.value ?? false
+                if isConnected {
+                    view.isEnabled = true
+                } else if keepConnection.bound {
+                    view.isEnabled = false
+                } else {
+                    view.isEnabled = true
+                }
             }
 
             connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
