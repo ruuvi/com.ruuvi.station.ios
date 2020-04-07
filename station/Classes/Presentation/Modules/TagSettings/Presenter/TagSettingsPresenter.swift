@@ -107,6 +107,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidConfirmTagRemoval() {
+        if let isConnected = viewModel.isConnected.value,
+            let keepConnection = viewModel.keepConnection.value,
+            !isConnected && keepConnection {
+            self.errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
+            return
+        }
         let operation = ruuviTagService.delete(ruuviTag: ruuviTag)
         operation.on(success: { [weak self] _ in
             self?.router.dismiss()

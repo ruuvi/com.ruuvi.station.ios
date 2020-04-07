@@ -105,6 +105,7 @@
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
+"ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";

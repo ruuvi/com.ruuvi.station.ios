@@ -94,6 +94,7 @@ extension CoreError: LocalizedError {
 enum ExpectedError: Error {
     case missingOpenWeatherMapAPIKey
     case isAlreadySyncingLogsWithThisTag
+    case failedToDeleteTag
 }
 
 extension ExpectedError: LocalizedError {
@@ -103,6 +104,8 @@ extension ExpectedError: LocalizedError {
             return "ExpectedError.missingOpenWeatherMapAPIKey".localized()
         case .isAlreadySyncingLogsWithThisTag:
             return "ExpectedError.isAlreadySyncingLogsWithThisTag".localized()
+        case .failedToDeleteTag:
+            return "ExpectedError.failedToDeleteTag".localized()
         }
     }
 }

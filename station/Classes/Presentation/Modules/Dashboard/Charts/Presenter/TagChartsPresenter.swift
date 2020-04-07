@@ -619,23 +619,41 @@ extension TagChartsPresenter {
         }
     }
     private func createChartData(for viewModel: TagChartsViewModel) {
-        guard let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
-                                               value: -settings.chartDurationHours,
-                                               to: Date())?.timeIntervalSince1970 else {
-            return
-        }
         let currentDate = Date().timeIntervalSince1970
-        fetchPointsByDates(for: viewModel, withType: .temperature, start: chartDurationThreshold, stop: currentDate)
-        viewModel.temperatureChart.value?.reloadData()
-        viewModel.temperatureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+        if let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
+                                                              value: -settings.chartDurationHours,
+                                                              to: Date())?.timeIntervalSince1970,
+            let firstDate = ruuviTagData.first?.date.timeIntervalSince1970,
+            let lastDate = ruuviTagData.last?.date.timeIntervalSince1970,
+            (lastDate - firstDate) > (currentDate - chartDurationThreshold) {
+            fetchPointsByDates(for: viewModel, withType: .temperature, start: chartDurationThreshold, stop: currentDate)
+            viewModel.temperatureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
 
-        fetchPointsByDates(for: viewModel, withType: .humidity, start: chartDurationThreshold, stop: currentDate)
-        viewModel.humidityChart.value?.reloadData()
-        viewModel.humidityChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+            fetchPointsByDates(for: viewModel, withType: .humidity, start: chartDurationThreshold, stop: currentDate)
+            viewModel.humidityChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
 
-        fetchPointsByDates(for: viewModel, withType: .pressure, start: chartDurationThreshold, stop: currentDate)
-        viewModel.pressureChart.value?.reloadData()
-        viewModel.pressureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+            fetchPointsByDates(for: viewModel, withType: .pressure, start: chartDurationThreshold, stop: currentDate)
+            viewModel.pressureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+        } else {
+            if let temperatureData = viewModel.temperatureChartData.value {
+                setDownSampled(dataSet: ruuviTagData,
+                               to: temperatureData,
+                               withType: .temperature)
+                viewModel.temperatureChart.value?.reloadData()
+            }
+            if let humidityData = viewModel.humidityChartData.value {
+                setDownSampled(dataSet: ruuviTagData,
+                               to: humidityData,
+                               withType: .humidity)
+                viewModel.humidityChart.value?.reloadData()
+            }
+            if let pressureData = viewModel.pressureChartData.value {
+                setDownSampled(dataSet: ruuviTagData,
+                               to: pressureData,
+                               withType: .pressure)
+                viewModel.pressureChart.value?.reloadData()
+            }
+        }
     }
     private func bindDataSet(_ dataSet: inout LineChartDataSet, _ entries: [ChartDataEntry]) {
         let firstPoint = dataSet.first
