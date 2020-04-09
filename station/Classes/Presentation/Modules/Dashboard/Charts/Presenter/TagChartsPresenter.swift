@@ -407,7 +407,8 @@ extension TagChartsPresenter {
                     if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.tagUuid}),
                         self?.view.viewIsVisible == true {
                         if let last = self?.lastChartSyncDate,
-                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
+                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds,
+                            let count = self?.ruuviTagData.count, count > 0 {
                             let elapsed = Int(newValue.date.timeIntervalSince(last))
                             if elapsed >= chartIntervalSeconds {
                                 self?.lastChartSyncDate = newValue.date
