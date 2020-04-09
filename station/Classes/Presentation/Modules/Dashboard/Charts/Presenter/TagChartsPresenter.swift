@@ -404,18 +404,20 @@ extension TagChartsPresenter {
                 self?.isSyncing = false
                 insertions.forEach({ i in
                     let newValue = results[i].measurement
-                    self?.ruuviTagData.append(newValue)
                     if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.tagUuid}),
                         self?.view.viewIsVisible == true {
                         if let last = self?.lastChartSyncDate,
-                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
+                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds,
+                            let count = self?.ruuviTagData.count, count > 0 {
                             let elapsed = Int(newValue.date.timeIntervalSince(last))
                             if elapsed >= chartIntervalSeconds {
                                 self?.lastChartSyncDate = newValue.date
+                                self?.ruuviTagData.append(newValue)
                                 self?.insertMeasurements([newValue], into: viewModel)
                             }
                         } else {
                             self?.lastChartSyncDate = newValue.date
+                            self?.ruuviTagData.append(newValue)
                             self?.insertMeasurements([newValue], into: viewModel)
                         }
                     }
