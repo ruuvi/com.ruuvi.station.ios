@@ -38,7 +38,7 @@ class RuuviTagDataRealm: Object {
         return "compoundKey"
     }
 
-    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol) {
         self.init()
         self.ruuviTag = ruuviTag
         self.rssi.value = data.rssi
