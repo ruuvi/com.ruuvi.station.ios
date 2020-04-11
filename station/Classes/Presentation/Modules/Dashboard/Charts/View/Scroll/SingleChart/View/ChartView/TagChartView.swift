@@ -64,11 +64,19 @@ class TagChartView: LineChartView {
     }
 
     private func getOffset(dX: CGFloat, dY: CGFloat) -> TimeInterval {
-        var ptMin = CGPoint(
+        var pt = CGPoint(
             x: viewPortHandler.contentLeft + dX,
             y: viewPortHandler.contentBottom + dY)
-        getTransformer(forAxis: .left).pixelToValues(&ptMin)
-        return max(xAxis.axisMinimum, Double(ptMin.x)) - lowestVisibleX
+        getTransformer(forAxis: .left).pixelToValues(&pt)
+        return -(max(xAxis.axisMinimum, Double(pt.x)) - lowestVisibleX)
+    }
+
+    private func getScaleOffset(scaleX: CGFloat, scaleY: CGFloat) -> TimeInterval {
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft / scaleX,
+            y: viewPortHandler.contentBottom / scaleY)
+        getTransformer(forAxis: .left).pixelToValues(&pt)
+        return -(max(xAxis.axisMinimum, Double(pt.x)) - lowestVisibleX)
     }
 }
 // MARK: - TagChartViewInput
@@ -87,9 +95,12 @@ extension TagChartView: TagChartViewInput {
 extension TagChartView: ChartViewDelegate {
     func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
         let offset = getOffset(dX: dX, dY: dY)
-        output?.didChartTranslate(self, to: (min: lowestVisibleX + offset, max: highestVisibleX + offset))
+        let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
+        output?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
     }
     func chartScaled(_ chartView: ChartViewBase, scaleX: CGFloat, scaleY: CGFloat) {
-        output?.didChangeVisibleRange(self)
+        let offset = getScaleOffset(scaleX: scaleX, scaleY: scaleY)
+        let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
+        output?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
     }
 }

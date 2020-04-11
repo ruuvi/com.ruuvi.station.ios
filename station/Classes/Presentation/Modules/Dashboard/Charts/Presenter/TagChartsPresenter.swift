@@ -725,19 +725,7 @@ extension TagChartsPresenter: TagChartViewOutput {
             return
         }
     }
-    func didChangeVisibleRange(_ chartView: TagChartView) {
-        guard !isInUpdate,
-            let uuid = chartView.tagUuid,
-            let viewModel = viewModels.first(where: { $0.uuid.value == uuid }) else {
-            return
-        }
-        isInUpdate = true
-        fetchPointsByDates(for: viewModel,
-                           withType: chartView.chartDataType,
-                           start: chartView.lowestVisibleX,
-                           stop: chartView.highestVisibleX)
-    }
-    func didChartTranslate(_ chartView: TagChartView, to range: (min: TimeInterval, max: TimeInterval)) {
+    func didChartChangeVisibleRange(_ chartView: TagChartView, newRange range: (min: TimeInterval, max: TimeInterval)) {
         guard !isInUpdate,
             let uuid = chartView.tagUuid,
             let viewModel = viewModels.first(where: { $0.uuid.value == uuid }) else {
@@ -809,7 +797,7 @@ extension TagChartsPresenter {
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
-        let every = (data_length - 2) / (threshold - 2)
+        let every = (data_length - 4) / (threshold - 4)
         var a = 0  // Initially a is the first point in the triangle
         var max_area_point: (Double, Double) = (0, 0)
         var max_area: Double = 0
@@ -824,9 +812,9 @@ extension TagChartsPresenter {
         var range_to: Int = 0
         var point_a_x: Double = 0
         var point_a_y: Double = 0
-        let firstPoint = dataSet.first!
-        chartData.addEntry(getEntry(for: firstPoint, with: type), dataSetIndex: 0)
-        for i in 0..<(threshold - 2) {
+        chartData.addEntry(getEntry(for: dataSet[0], with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[1], with: type), dataSetIndex: 0)
+        for i in 0..<(threshold - 4) {
             // Calculate point average for next bucket (containing c)
             avg_x = 0
             avg_y = 0
@@ -866,8 +854,8 @@ extension TagChartsPresenter {
             chartData.addEntry(ChartDataEntry(x: max_area_point.0, y: max_area_point.1), dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
-        let lastItem = dataSet.last!
-        chartData.addEntry(getEntry(for: lastItem, with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[dataSet.count - 2], with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[dataSet.count - 1], with: type), dataSetIndex: 0)
         chartData.notifyDataChanged()
         isInUpdate = false
     }
