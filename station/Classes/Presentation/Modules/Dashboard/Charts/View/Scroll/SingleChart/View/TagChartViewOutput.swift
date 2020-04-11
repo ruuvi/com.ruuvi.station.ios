@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TagChartViewOutput: class {
-    func didChangeVisibleRange(_ chartView: TagChartView)
+    func didChartChangeVisibleRange(_ chartView: TagChartView, newRange range:(min: TimeInterval, max: TimeInterval))
 }
