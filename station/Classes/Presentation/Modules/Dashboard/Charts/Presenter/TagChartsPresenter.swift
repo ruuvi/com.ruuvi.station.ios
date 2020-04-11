@@ -725,7 +725,7 @@ extension TagChartsPresenter: TagChartViewOutput {
             return
         }
     }
-    func didChangeVisibleRange(_ chartView: TagChartView) {
+    func didChartChangeVisibleRange(_ chartView: TagChartView, newRange range: (min: TimeInterval, max: TimeInterval)) {
         guard !isInUpdate,
             let uuid = chartView.tagUuid,
             let viewModel = viewModels.first(where: { $0.uuid.value == uuid }) else {
@@ -734,8 +734,8 @@ extension TagChartsPresenter: TagChartViewOutput {
         isInUpdate = true
         fetchPointsByDates(for: viewModel,
                            withType: chartView.chartDataType,
-                           start: chartView.lowestVisibleX,
-                           stop: chartView.highestVisibleX)
+                           start: range.min,
+                           stop: range.max)
     }
 }
 extension TagChartsPresenter {
@@ -797,8 +797,8 @@ extension TagChartsPresenter {
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
-        let every = (data_length - 2) / (threshold - 2)
-        var a = 0  // Initially a is the first point in the triangle
+        let every = (data_length - 4) / (threshold - 4)
+        var a = 1  // Initially a is the first point in the triangle
         var max_area_point: (Double, Double) = (0, 0)
         var max_area: Double = 0
         var area: Double = 0
@@ -812,28 +812,31 @@ extension TagChartsPresenter {
         var range_to: Int = 0
         var point_a_x: Double = 0
         var point_a_y: Double = 0
-        let firstPoint = dataSet.first!
-        chartData.addEntry(getEntry(for: firstPoint, with: type), dataSetIndex: 0)
-        for i in 0..<(threshold - 2) {
+        chartData.addEntry(getEntry(for: dataSet[0], with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[1], with: type), dataSetIndex: 0)
+        for i in 0..<data_length * every {
             // Calculate point average for next bucket (containing c)
             avg_x = 0
             avg_y = 0
             avg_range_start  = Int( floor( Double( ( i + 1 ) * every) ) + 1)
-            avg_range_end    = Int( floor( Double( ( i + 2 ) * every ) ) + 1)
+            avg_range_end    = Int( floor( Double( ( i + 2 ) * every) ) + 1)
             avg_range_end = avg_range_end < data_length ? avg_range_end : data_length
             avg_range_length = avg_range_end - avg_range_start
-            for avg_range_start in avg_range_start..<avg_range_end {
-                let point_a = getEntry(for: dataSet[avg_range_start], with: type)
+            guard avg_range_length > 0 else {
+                continue
+            }
+            for range_start in avg_range_start..<avg_range_end {
+                let point_a = getEntry(for: dataSet[range_start], with: type)
                 avg_x += point_a.x
                 avg_y += point_a.y
             }
             avg_x /= Double(avg_range_length)
             avg_y /= Double(avg_range_length)
             // Get the range for this bucket
-            range_offs = Int(floor( Double((i + 0) * every) ) + 1)
-            range_to   = Int(floor( Double((i + 1) * every )) + 1)
+            range_offs = Int(floor( Double(i * every) ) + 1)
+            range_to   = Int(floor( Double((i + 1) * every) ) + 1)
             // Point a
-            let point_a = getEntry(for: dataSet[ a ], with: type)
+            let point_a = getEntry(for: dataSet[a], with: type)
             point_a_x = point_a.x
             point_a_y = point_a.y
             max_area = -1
@@ -854,8 +857,8 @@ extension TagChartsPresenter {
             chartData.addEntry(ChartDataEntry(x: max_area_point.0, y: max_area_point.1), dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
-        let lastItem = dataSet.last!
-        chartData.addEntry(getEntry(for: lastItem, with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[dataSet.count - 2], with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[dataSet.count - 1], with: type), dataSetIndex: 0)
         chartData.notifyDataChanged()
         isInUpdate = false
     }
