@@ -2,7 +2,6 @@ import Foundation
 import Future
 
 class RuuviNetworkWhereOSURLSession: RuuviNetworkWhereOS {
-
     func load(mac: String) -> Future<[WhereOSData], RUError> {
         let promise = Promise<[WhereOSData], RUError>()
         if let url = whereOSDataURL(mac: mac) {

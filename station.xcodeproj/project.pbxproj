@@ -534,6 +534,18 @@
 		0E79F2642441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */; };
 		0E79F2652441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */; };
 		0E79F26A2441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2692441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift */; };
+		0E79F279244201540048BF86 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F278244201540048BF86 /* NetworkService.swift */; };
+		0E79F27A244201540048BF86 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F278244201540048BF86 /* NetworkService.swift */; };
+		0E79F27B244201540048BF86 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F278244201540048BF86 /* NetworkService.swift */; };
+		0E79F27F2442020E0048BF86 /* NetworkServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */; };
+		0E79F2802442020E0048BF86 /* NetworkServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */; };
+		0E79F2812442020E0048BF86 /* NetworkServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */; };
+		0E79F283244202940048BF86 /* RuuviNetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */; };
+		0E79F284244202940048BF86 /* RuuviNetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */; };
+		0E79F285244202940048BF86 /* RuuviNetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */; };
+		0E79F2872442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
+		0E79F2882442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
+		0E79F2892442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
 		0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
 		0E84BF552397F29800A37E1A /* Heartbeat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E84BF542397F29800A37E1A /* Heartbeat.storyboard */; };
 		0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF562397F33E00A37E1A /* HeartbeatViewInput.swift */; };
@@ -1319,6 +1331,10 @@
 		0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkWhereOS.swift; sourceTree = "<group>"; };
 		0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkWhereOSURLSession.swift; sourceTree = "<group>"; };
 		0E79F2692441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkWhereOSSpec.swift; sourceTree = "<group>"; };
+		0E79F278244201540048BF86 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceQueue.swift; sourceTree = "<group>"; };
+		0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkProvider.swift; sourceTree = "<group>"; };
+		0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLoadDataOperations.swift; sourceTree = "<group>"; };
 		0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverModuleOutput.swift; sourceTree = "<group>"; };
 		0E84BF542397F29800A37E1A /* Heartbeat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Heartbeat.storyboard; sourceTree = "<group>"; };
 		0E84BF562397F33E00A37E1A /* HeartbeatViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatViewInput.swift; sourceTree = "<group>"; };
@@ -2493,6 +2509,7 @@
 				0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */,
 				0EA1ECF62306D49800E5AEE4 /* WebTagLocationSource.swift */,
 				A92E3C4B24261CF900D981D5 /* MeasurementType.swift */,
+				0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -2736,6 +2753,32 @@
 				0E79F2692441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift */,
 			);
 			path = WhereOS;
+			sourceTree = "<group>";
+		};
+		0E79F277244201370048BF86 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				0E79F27D244201F90048BF86 /* Operations */,
+				0E79F27C244201690048BF86 /* Queue */,
+				0E79F278244201540048BF86 /* NetworkService.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		0E79F27C244201690048BF86 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */,
+			);
+			path = Queue;
+			sourceTree = "<group>";
+		};
+		0E79F27D244201F90048BF86 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */,
+			);
+			path = Operations;
 			sourceTree = "<group>";
 		};
 		0E84BF4F2397F24D00A37E1A /* Heartbeat */ = {
@@ -3598,6 +3641,7 @@
 				0EEB210922B7D8110015F9E0 /* Daemons */,
 				0E75661C2361C18C00FCA977 /* GATT */,
 				0EEB215E22BA610E0015F9E0 /* Migration */,
+				0E79F277244201370048BF86 /* Network */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 			);
 			path = Business;
@@ -4781,6 +4825,7 @@
 				0E6BADDF23856A01003A2D4C /* WebTagDataRealm.swift in Sources */,
 				0E6BADE023856A01003A2D4C /* DefaultsViewModel.swift in Sources */,
 				0E6BADE123856A01003A2D4C /* TagChartsScrollConfigurator.swift in Sources */,
+				0E79F27B244201540048BF86 /* NetworkService.swift in Sources */,
 				0E45580323E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E6BADE223856A01003A2D4C /* TemperatureUnit.swift in Sources */,
 				0E6BADE323856A01003A2D4C /* LanguageViewOutput.swift in Sources */,
@@ -4807,6 +4852,7 @@
 				A9100D6E241AC752004007FD /* WPSData.swift in Sources */,
 				0E45580723E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				0E6BADF523856A01003A2D4C /* AlertType.swift in Sources */,
+				0E79F285244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0EAD33EE2399273E00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
 				0E6BADF623856A01003A2D4C /* GATTService.swift in Sources */,
 				0E6BADF723856A01003A2D4C /* OpenWeatherMapAPI.swift in Sources */,
@@ -4973,6 +5019,7 @@
 				0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */,
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
+				0E79F2812442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E6BAE8F23856A01003A2D4C /* SettingsModuleInput.swift in Sources */,
@@ -4993,6 +5040,7 @@
 				0E45580B23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E6BAE9C23856A01003A2D4C /* CardsRouterDelegate.swift in Sources */,
 				0E6BAE9D23856A01003A2D4C /* OpenWeatherMapAPIURLSession.swift in Sources */,
+				0E79F2892442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */,
 				0E6BAE9E23856A01003A2D4C /* Worker.swift in Sources */,
 				0E6BAE9F23856A01003A2D4C /* ErrorPresenterAlert.swift in Sources */,
 				0E6BAEA023856A01003A2D4C /* ForegroundViewController.swift in Sources */,
@@ -5122,6 +5170,7 @@
 				0E8BD315238566AB008B31EF /* WebTagDataRealm.swift in Sources */,
 				0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */,
 				0E8BD317238566AB008B31EF /* TagChartsScrollConfigurator.swift in Sources */,
+				0E79F27A244201540048BF86 /* NetworkService.swift in Sources */,
 				0E45580223E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8BD318238566AB008B31EF /* TemperatureUnit.swift in Sources */,
 				0E8BD319238566AB008B31EF /* LanguageViewOutput.swift in Sources */,
@@ -5148,6 +5197,7 @@
 				A9100D6D241AC751004007FD /* WPSData.swift in Sources */,
 				0E45580623E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				0E8BD32B238566AB008B31EF /* AlertType.swift in Sources */,
+				0E79F284244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
 				0E8BD32C238566AB008B31EF /* GATTService.swift in Sources */,
 				0E8BD32D238566AB008B31EF /* OpenWeatherMapAPI.swift in Sources */,
@@ -5314,6 +5364,7 @@
 				0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
 				0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */,
+				0E79F2802442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
@@ -5334,6 +5385,7 @@
 				0E45580A23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E8BD3D2238566AB008B31EF /* CardsRouterDelegate.swift in Sources */,
 				0E8BD3D3238566AB008B31EF /* OpenWeatherMapAPIURLSession.swift in Sources */,
+				0E79F2882442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */,
 				0E8BD3D4238566AB008B31EF /* Worker.swift in Sources */,
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
@@ -5463,6 +5515,7 @@
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				0E45580123E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,
+				0E79F279244201540048BF86 /* NetworkService.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
@@ -5489,6 +5542,7 @@
 				0E45580523E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */,
 				0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */,
+				0E79F283244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,
 				A94FFD37241C189000888017 /* RuuviTagProtocol.swift in Sources */,
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
@@ -5655,6 +5709,7 @@
 				0ECFF366235079F50061D11B /* ForegroundPresenter.swift in Sources */,
 				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
+				0E79F27F2442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* CardsScrollConfigurator.swift in Sources */,
 				0E84BF652397F9DC00A37E1A /* HeartbeatTableViewController.swift in Sources */,
 				0E9959B8235EF24D001C37D8 /* RuuviTagHeartbeatDaemon.swift in Sources */,
@@ -5675,6 +5730,7 @@
 				0E45580923E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
+				0E79F2872442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,

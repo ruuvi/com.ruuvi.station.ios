@@ -11,5 +11,15 @@ class NetworkingAssembly: Assembly {
             api.apiKey = r.property("Open Weather Map API Key")!
             return api
         }
+
+        container.register(RuuviNetworkFactory.self) { r in
+            let factory = RuuviNetworkFactory()
+            factory.whereOS = r.resolve(RuuviNetworkWhereOS.self)
+            return factory
+        }.inObjectScope(.container)
+
+        container.register(RuuviNetworkWhereOS.self) { r in
+            return RuuviNetworkWhereOSURLSession()
+        }.inObjectScope(.container)
     }
 }

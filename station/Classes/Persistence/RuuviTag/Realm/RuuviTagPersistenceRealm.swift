@@ -209,6 +209,37 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    @discardableResult
+    func persist(data: [RuuviTagProtocol], for uuid: String) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                try autoreleasepool {
+                    if let existingTag = self.fetch(uuid: uuid) {
+                        try self.context.bg.write {
+                            if !existingTag.isInvalidated,
+                                let existingTag = existingTag as? RuuviTagRealm {
+                                for log in data {
+                                    let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log)
+                                    self.context.bg.add(tagData, update: .modified)
+                                }
+                                promise.succeed(value: true)
+                            } else {
+                                promise.fail(error: .core(.objectInvalidated))
+                            }
+                        }
+                    } else {
+                        promise.fail(error: .core(.objectNotFound))
+                    }
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+
+        return promise.future
+    }
+
     func clearHistory(uuid: String) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         context.bgWorker.enqueue {
