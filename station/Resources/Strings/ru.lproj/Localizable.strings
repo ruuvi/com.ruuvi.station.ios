@@ -291,6 +291,9 @@
 "UnexpectedError.failedToFindRuuviTag" = "Не удалось найти RuuviTag";
 "UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
+"UnexpectedError.failedToConstructURL" = "Failed to construct URL";
+"UnexpectedError.notAHttpResponse" = "Not a HTTP response";
+"UnexpectedError.failedToParseHttpResponse" = "Failed to parse HTTP response";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

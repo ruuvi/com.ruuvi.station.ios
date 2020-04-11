@@ -291,6 +291,9 @@
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
+"UnexpectedError.failedToConstructURL" = "Failed to construct URL";
+"UnexpectedError.notAHttpResponse" = "Not a HTTP response";
+"UnexpectedError.failedToParseHttpResponse" = "Failed to parse HTTP response";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

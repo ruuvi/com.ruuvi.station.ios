@@ -117,6 +117,9 @@ enum UnexpectedError: Error {
     case failedToFindRuuviTag
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
+    case failedToConstructURL
+    case notAHttpResponse
+    case failedToParseHttpResponse
 }
 
 extension UnexpectedError: LocalizedError {
@@ -134,6 +137,12 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.failedToFindLogsForTheTag".localized()
         case .viewModelUUIDIsNil:
             return "UnexpectedError.viewModelUUIDIsNil".localized()
+        case .failedToConstructURL:
+            return "UnexpectedError.failedToConstructURL".localized()
+        case .notAHttpResponse:
+            return "UnexpectedError.notAHttpResponse".localized()
+        case .failedToParseHttpResponse:
+            return "UnexpectedError.failedToParseHttpResponse".localized()
         }
     }
 }

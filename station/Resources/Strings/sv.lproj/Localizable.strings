@@ -291,6 +291,9 @@
 "UnexpectedError.failedToFindRuuviTag" = "Hittade inte sensorn";
 "UnexpectedError.failedToFindLogsForTheTag" = "Ingen sensorlogginformation hittades";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
+"UnexpectedError.failedToConstructURL" = "Failed to construct URL";
+"UnexpectedError.notAHttpResponse" = "Not a HTTP response";
+"UnexpectedError.failedToParseHttpResponse" = "Failed to parse HTTP response";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";
