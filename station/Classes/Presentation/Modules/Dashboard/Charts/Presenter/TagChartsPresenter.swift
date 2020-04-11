@@ -23,6 +23,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
+    var networkService: NetworkService!
 
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
@@ -198,7 +199,21 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view.showClearConfirmationDialog(for: viewModel)
     }
 
-    func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
+    func viewDidConfirmToSyncWithWeb(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            isSyncing = true
+            let op = networkService.loadData(for: uuid, from: .whereOS)
+            op.on(failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }) {
+                self.isSyncing = false
+            }
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             isSyncing = true
             let connectionTimeout: TimeInterval = settings.connectionTimeout

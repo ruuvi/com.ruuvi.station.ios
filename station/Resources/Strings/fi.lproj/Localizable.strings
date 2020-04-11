@@ -222,6 +222,8 @@
 "TagCharts.Status.Error" = "Virhe";
 "TagCharts.FailedToSyncDialog.message" = "Yhteys aikakatkaistiin. Synkronointi peruutettiin.";
 "TagCharts.FailedToServeDialog.message" = "Synkronointi aikakatkaistiin. Synkronointi peruutettiin.";
+"TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
+"TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";

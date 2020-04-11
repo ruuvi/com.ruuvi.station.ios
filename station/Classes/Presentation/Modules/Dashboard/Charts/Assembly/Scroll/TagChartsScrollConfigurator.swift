@@ -26,7 +26,8 @@ class TagChartsScrollConfigurator {
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
-
+        presenter.networkService = r.resolve(NetworkService.self)
+        
         view.output = presenter
     }
 }
