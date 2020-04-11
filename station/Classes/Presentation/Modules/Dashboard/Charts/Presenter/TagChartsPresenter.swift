@@ -737,6 +737,18 @@ extension TagChartsPresenter: TagChartViewOutput {
                            start: chartView.lowestVisibleX,
                            stop: chartView.highestVisibleX)
     }
+    func didChartTranslate(_ chartView: TagChartView, to range: (min: TimeInterval, max: TimeInterval)) {
+        guard !isInUpdate,
+            let uuid = chartView.tagUuid,
+            let viewModel = viewModels.first(where: { $0.uuid.value == uuid }) else {
+            return
+        }
+        isInUpdate = true
+        fetchPointsByDates(for: viewModel,
+                           withType: chartView.chartDataType,
+                           start: range.min,
+                           stop: range.max)
+    }
 }
 extension TagChartsPresenter {
     // swiftlint:disable:next cyclomatic_complexity
