@@ -1,23 +1,32 @@
 import Foundation
 import Future
+import BTKit
 
 protocol RuuviNetworkWhereOS: RuuviNetwork {
-
     func load(mac: String) -> Future<[WhereOSData],RUError>
 }
 
-/**
- {
-     "rssi": -65,
-     "data": "0201041bff99040511203205c919ffb800340408a2f6a1b372c04db14ab635",
-     "coordinates": "Saase",
-     "rssi_max": -63,
-     "time": "2020-04-10T07:00:00.000Z",
-     "id": "c04db14ab635",
-     "gwmac": "30aea4cc1e2f",
-     "rssi_min": -72
- }
- */
+extension RuuviNetworkWhereOS {
+    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[RuuviTagProtocol],RUError> {
+        let promise = Promise<[RuuviTagProtocol],RUError>()
+        let operation: Future<[WhereOSData],RUError> = load(mac: mac)
+        operation.on(success: { records in
+            let decoder = Ruuvi.decoder
+            let result = records.compactMap { record -> RuuviTagProtocol? in
+                if let device = decoder.decodeNetwork(uuid: uuid, rssi: record.rssi, isConnectable: isConnectable, payload: record.data) {
+                    return device.ruuvi?.tag
+                } else {
+                    return nil
+                }
+            }
+            promise.succeed(value: result)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+}
+
 struct WhereOSData: Codable {
     var rssi: Int
     var rssiMax: Int
