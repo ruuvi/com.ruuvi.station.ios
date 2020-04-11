@@ -68,7 +68,7 @@ class TagChartView: LineChartView {
             x: viewPortHandler.contentLeft + dX,
             y: viewPortHandler.contentBottom + dY)
         getTransformer(forAxis: .left).pixelToValues(&pt)
-        return -(max(xAxis.axisMinimum, Double(pt.x)) - lowestVisibleX)
+        return lowestVisibleX - max(xAxis.axisMinimum, Double(pt.x))
     }
 
     private func getScaleOffset(scaleX: CGFloat, scaleY: CGFloat) -> TimeInterval {
@@ -76,7 +76,7 @@ class TagChartView: LineChartView {
             x: viewPortHandler.contentLeft / scaleX,
             y: viewPortHandler.contentBottom / scaleY)
         getTransformer(forAxis: .left).pixelToValues(&pt)
-        return -(max(xAxis.axisMinimum, Double(pt.x)) - lowestVisibleX)
+        return lowestVisibleX - max(xAxis.axisMinimum, Double(pt.x))
     }
 }
 // MARK: - TagChartViewInput
