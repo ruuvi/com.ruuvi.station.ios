@@ -3,17 +3,20 @@ import Future
 import BTKit
 
 protocol RuuviNetworkWhereOS: RuuviNetwork {
-    func load(mac: String) -> Future<[WhereOSData],RUError>
+    func load(mac: String) -> Future<[WhereOSData], RUError>
 }
 
 extension RuuviNetworkWhereOS {
-    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[RuuviTagProtocol],RUError> {
-        let promise = Promise<[RuuviTagProtocol],RUError>()
-        let operation: Future<[WhereOSData],RUError> = load(mac: mac)
+    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[RuuviTagProtocol], RUError> {
+        let promise = Promise<[RuuviTagProtocol], RUError>()
+        let operation: Future<[WhereOSData], RUError> = load(mac: mac)
         operation.on(success: { records in
             let decoder = Ruuvi.decoder
             let result = records.compactMap { record -> RuuviTagProtocol? in
-                if let device = decoder.decodeNetwork(uuid: uuid, rssi: record.rssi, isConnectable: isConnectable, payload: record.data) {
+                if let device = decoder.decodeNetwork(uuid: uuid,
+                                                      rssi: record.rssi,
+                                                      isConnectable: isConnectable,
+                                                      payload: record.data) {
                     return device.ruuvi?.tag
                 } else {
                     return nil
