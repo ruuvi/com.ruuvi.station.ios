@@ -7,7 +7,7 @@ class RuuviNetworkWhereOSURLSession: RuuviNetworkWhereOS {
         if let url = whereOSDataURL(mac: mac) {
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
-            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
                     if let error = error {
                         promise.fail(error: .networking(error))
                     } else {
@@ -22,7 +22,9 @@ class RuuviNetworkWhereOSURLSession: RuuviNetworkWhereOS {
                                 if let date = formatter.date(from: dateStr) {
                                     return date
                                 }
-                                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Expected date string to be ISO8601-formatted.")
+                                let description = "Expected date string to be ISO8601-formatted."
+                                throw DecodingError.dataCorruptedError(in: container,
+                                                                       debugDescription: description)
                             })
                             do {
                                 let result = try decoder.decode([WhereOSData].self, from: data)

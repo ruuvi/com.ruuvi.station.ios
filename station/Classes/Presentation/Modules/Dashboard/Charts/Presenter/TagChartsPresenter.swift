@@ -205,9 +205,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
             let op = networkService.loadData(for: uuid, from: .whereOS)
             op.on(failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
-            }) {
+            }, completion: {
                 self.isSyncing = false
-            }
+            })
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
