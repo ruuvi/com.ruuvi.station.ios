@@ -196,7 +196,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
     }
 
-    private func fetch(mac: String) ->  RuuviTagRealmProtocol? {
+    private func fetch(mac: String) -> RuuviTagRealmProtocol? {
         return context.bg.objects(RuuviTagRealm.self).filter("mac == %@", mac).first
     }
 
