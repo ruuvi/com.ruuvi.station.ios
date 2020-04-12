@@ -12,11 +12,12 @@ class NetworkServiceQueue: NetworkService {
         queue.maxConcurrentOperationCount = 3
         return queue
     }()
-    
+
     @discardableResult
     func loadData(for uuid: String, from provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
-        let promise = Promise<Bool,RUError>()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid), let mac = ruuviTag.mac {
+        let promise = Promise<Bool, RUError>()
+        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid),
+            let mac = ruuviTag.mac {
             let network = ruuviNetworkFactory.network(for: provider)
             let operation = RuuviTagLoadDataOperation(uuid: uuid,
                                                       mac: mac,

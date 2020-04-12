@@ -18,7 +18,7 @@ class NetworkingAssembly: Assembly {
             return factory
         }.inObjectScope(.container)
 
-        container.register(RuuviNetworkWhereOS.self) { r in
+        container.register(RuuviNetworkWhereOS.self) { _ in
             return RuuviNetworkWhereOSURLSession()
         }.inObjectScope(.container)
     }
