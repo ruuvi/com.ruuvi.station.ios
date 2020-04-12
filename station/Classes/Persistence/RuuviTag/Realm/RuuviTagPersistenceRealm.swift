@@ -7,6 +7,23 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     var context: RealmContext!
 
+    func persist(mac: String) -> Future<Bool, RUError> {
+       let promise = Promise<Bool, RUError>()
+       context.bgWorker.enqueue {
+           do {
+                let realmTag = RuuviTagRealm(mac: mac)
+                try self.context.bg.write {
+                    self.context.bg.add(realmTag, update: .all)
+                }
+               promise.succeed(value: true)
+           } catch {
+               promise.fail(error: .persistence(error))
+           }
+       }
+
+       return promise.future
+   }
+
     @discardableResult
     func persist(ruuviTagData: RuuviTagDataRealm, realm: Realm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
@@ -177,6 +194,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     private func fetch(uuid: String) -> RuuviTagRealmProtocol? {
         return context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid)
+    }
+
+    private func fetch(mac: String) ->  RuuviTagRealmProtocol? {
+        return context.bg.objects(RuuviTagRealm.self).filter("mac == %@", mac).first
     }
 
     func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool, RUError> {

@@ -546,6 +546,9 @@
 		0E79F2872442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
 		0E79F2882442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
 		0E79F2892442082A0048BF86 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
+		0E79F28B244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */; };
+		0E79F28C244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */; };
+		0E79F28D244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */; };
 		0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */; };
 		0E84BF552397F29800A37E1A /* Heartbeat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E84BF542397F29800A37E1A /* Heartbeat.storyboard */; };
 		0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF562397F33E00A37E1A /* HeartbeatViewInput.swift */; };
@@ -1335,6 +1338,7 @@
 		0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceQueue.swift; sourceTree = "<group>"; };
 		0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkProvider.swift; sourceTree = "<group>"; };
 		0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLoadDataOperations.swift; sourceTree = "<group>"; };
+		0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverAddWithMACTableViewCell.swift; sourceTree = "<group>"; };
 		0E84BF4C239795AF00A37E1A /* DiscoverModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverModuleOutput.swift; sourceTree = "<group>"; };
 		0E84BF542397F29800A37E1A /* Heartbeat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Heartbeat.storyboard; sourceTree = "<group>"; };
 		0E84BF562397F33E00A37E1A /* HeartbeatViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatViewInput.swift; sourceTree = "<group>"; };
@@ -3824,6 +3828,7 @@
 				0E9F979522EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift */,
 				0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */,
 				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
+				0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -4822,6 +4827,7 @@
 				0E6BADDC23856A01003A2D4C /* TagChartsViewInput.swift in Sources */,
 				0E6BADDD23856A01003A2D4C /* LanguageTableViewController.swift in Sources */,
 				0E6BADDE23856A01003A2D4C /* DefaultsViewController.swift in Sources */,
+				0E79F28D244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
 				0E6BADDF23856A01003A2D4C /* WebTagDataRealm.swift in Sources */,
 				0E6BADE023856A01003A2D4C /* DefaultsViewModel.swift in Sources */,
 				0E6BADE123856A01003A2D4C /* TagChartsScrollConfigurator.swift in Sources */,
@@ -5167,6 +5173,7 @@
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
 				0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */,
 				0E8BD314238566AB008B31EF /* DefaultsViewController.swift in Sources */,
+				0E79F28C244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
 				0E8BD315238566AB008B31EF /* WebTagDataRealm.swift in Sources */,
 				0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */,
 				0E8BD317238566AB008B31EF /* TagChartsScrollConfigurator.swift in Sources */,
@@ -5512,6 +5519,7 @@
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
 				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
+				0E79F28B244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				0E45580123E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,

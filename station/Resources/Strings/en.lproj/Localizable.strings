@@ -97,6 +97,9 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth is disabled)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtual Sensors show public weather data provided by local weather stations.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
+"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
+"DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
+"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";

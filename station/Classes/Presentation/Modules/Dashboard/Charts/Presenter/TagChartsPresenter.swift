@@ -259,6 +259,12 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
+        module.dismiss { [weak self] in
+            self?.router.dismiss()
+        }
+    }
+
     func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
         module.dismiss { [weak self] in
             self?.router.dismiss()

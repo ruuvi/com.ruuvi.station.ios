@@ -16,6 +16,10 @@ class RuuviTagServiceImpl: RuuviTagService {
                                            humidityOffsetDate: offsetData.1)
     }
 
+    func persist(mac: String) -> Future<Bool, RUError> {
+        return ruuviTagPersistence.persist(mac: mac)
+    }
+
     func delete(ruuviTag: RuuviTagRealm) -> Future<Bool, RUError> {
         backgroundPersistence.deleteCustomBackground(for: ruuviTag.uuid)
         connectionPersistence.setKeepConnection(false, for: ruuviTag.uuid)
