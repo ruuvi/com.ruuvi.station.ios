@@ -9,4 +9,6 @@ protocol DiscoverViewOutput {
     func viewDidTapOnGetMoreSensors()
     func viewDidTriggerClose()
     func viewDidTapOnWebTagInfo()
+    func viewDidAskToAddTagWithMACAddress()
+    func viewDidEnterMACAddressToAddTag(mac: String)
 }

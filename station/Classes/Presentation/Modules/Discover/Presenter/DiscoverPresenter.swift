@@ -148,6 +148,24 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidTapOnWebTagInfo() {
         view.showWebTagInfoDialog()
     }
+
+    func viewDidAskToAddTagWithMACAddress() {
+        view.showAddTagWithMACAddressDialog()
+    }
+
+    func viewDidEnterMACAddressToAddTag(mac: String) {
+        let operation = ruuviTagService.persist(mac: mac)
+        operation.on(success: { [weak self] (ruuviTag) in
+            guard let sSelf = self else { return }
+            if sSelf.isOpenedFromWelcome {
+                sSelf.router.openCards()
+            } else {
+                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
+            }
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
+    }
 }
 
 // MARK: - LocationPickerModuleOutput

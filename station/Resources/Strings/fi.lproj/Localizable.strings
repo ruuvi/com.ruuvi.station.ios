@@ -97,6 +97,9 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "Bluetooth ei ole käytössä";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuaalisten antureiden avulla voidaan esittää paikallisilta sääasemilta kerättyjä säätietoja.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
+"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
+"DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
+"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";

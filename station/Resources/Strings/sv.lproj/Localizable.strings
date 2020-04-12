@@ -97,6 +97,9 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth är avaktiverat)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuella Sensorer visar offentlig väder data som upprätthålls av lokala väderstationer.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
+"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
+"DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
+"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Fel";

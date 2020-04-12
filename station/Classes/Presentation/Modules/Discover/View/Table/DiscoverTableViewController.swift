@@ -3,16 +3,20 @@ import BTKit
 
 enum DiscoverTableSection {
     case webTag
+    case network
     case device
     case noDevices
 
-    static var count = 2 // displayed simultaneously
+    static var count = 3 // displayed simultaneously
 
     static func section(for index: Int, deviceCount: Int) -> DiscoverTableSection {
-        if deviceCount > 0 {
-            return index == 0 ? .webTag : .device
-        } else {
-            return index == 0 ? .webTag : .noDevices
+        switch index {
+        case 0:
+            return .webTag
+        case 1:
+            return .network
+        default:
+            return deviceCount > 0 ? .device : .noDevices
         }
     }
 }
@@ -87,6 +91,7 @@ class DiscoverTableViewController: UITableViewController {
     private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
     private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
     private let noDevicesCellReuseIdentifier = "DiscoverNoDevicesTableViewCellReuseIdentifier"
+    private let addWithMACCellReuseIdentifier = "DiscoverAddWithMACTableViewCellReuseIdentifier"
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
     private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() {
         didSet {
@@ -120,6 +125,23 @@ extension DiscoverTableViewController: DiscoverViewInput {
         let message = "DiscoverTable.WebTagsInfoDialog.message".localized()
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
+
+    func showAddTagWithMACAddressDialog() {
+        let title = "DiscoverTable.AddTagWithMACAddressDialog.title".localized()
+        let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alertVC.addTextField()
+
+        let submitAction = UIAlertAction(title: "OK".localized(), style: .default) { [weak self, unowned alertVC] _ in
+            if let answer = alertVC.textFields?[0].text {
+                self?.output.viewDidEnterMACAddressToAddTag(mac: answer)
+            }
+        }
+
+        alertVC.addAction(submitAction)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+
         present(alertVC, animated: true)
     }
 }
@@ -175,6 +197,8 @@ extension DiscoverTableViewController {
             return shownDevices.count
         case .noDevices:
             return 1
+        case .network:
+            return 1
         }
     }
 
@@ -209,6 +233,14 @@ extension DiscoverTableViewController {
                 ? "DiscoverTable.NoDevicesSection.NotFound.text".localized()
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
+        case .network:
+            // swiftlint:disable force_cast
+            let cell = tableView
+                .dequeueReusableCell(withIdentifier: addWithMACCellReuseIdentifier,
+                                     for: indexPath) as! DiscoverAddWithMACTableViewCell
+            // swiftlint:enable force_cast
+            cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
+            return cell
         }
     }
 }
@@ -228,6 +260,8 @@ extension DiscoverTableViewController {
                 let device = shownDevices[indexPath.row]
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
+        case .network:
+            output.viewDidAskToAddTagWithMACAddress()
         default:
             break
         }
@@ -264,6 +298,8 @@ extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch section {
+        case .network:
+            return "DiscoverTable.SectionTitle.Network".localized()
         case .device:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:
