@@ -38,6 +38,11 @@ class RuuviTagDataRealm: Object {
         return "compoundKey"
     }
 
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol, date: Date) {
+        self.init(ruuviTag: ruuviTag, data: data)
+        self.date = date
+    }
+
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol) {
         self.init()
         self.ruuviTag = ruuviTag

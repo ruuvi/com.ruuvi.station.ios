@@ -231,7 +231,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     }
 
     @discardableResult
-    func persist(data: [RuuviTagProtocol], for uuid: String) -> Future<Bool, RUError> {
+    func persist(data: [(RuuviTagProtocol, Date)], for uuid: String) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         context.bgWorker.enqueue {
             do {
@@ -241,7 +241,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                             if !existingTag.isInvalidated,
                                 let existingTag = existingTag as? RuuviTagRealm {
                                 for log in data {
-                                    let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log)
+                                    let tagData = RuuviTagDataRealm(ruuviTag: existingTag, data: log.0, date: log.1)
                                     self.context.bg.add(tagData, update: .modified)
                                 }
                                 promise.succeed(value: true)
