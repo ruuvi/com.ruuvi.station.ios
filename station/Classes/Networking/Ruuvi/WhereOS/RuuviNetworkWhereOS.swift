@@ -7,17 +7,18 @@ protocol RuuviNetworkWhereOS: RuuviNetwork {
 }
 
 extension RuuviNetworkWhereOS {
-    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[RuuviTagProtocol], RUError> {
-        let promise = Promise<[RuuviTagProtocol], RUError>()
+    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[(RuuviTagProtocol, Date)], RUError> {
+        let promise = Promise<[(RuuviTagProtocol, Date)], RUError>()
         let operation: Future<[WhereOSData], RUError> = load(mac: mac)
         operation.on(success: { records in
             let decoder = Ruuvi.decoder
-            let result = records.compactMap { record -> RuuviTagProtocol? in
+            let result = records.compactMap { record -> (RuuviTagProtocol, Date)? in
                 if let device = decoder.decodeNetwork(uuid: uuid,
                                                       rssi: record.rssi,
                                                       isConnectable: isConnectable,
-                                                      payload: record.data) {
-                    return device.ruuvi?.tag
+                                                      payload: record.data),
+                    let tag = device.ruuvi?.tag {
+                    return (tag, record.time)
                 } else {
                     return nil
                 }
