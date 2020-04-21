@@ -801,7 +801,7 @@ extension TagChartsPresenter {
         var point_a_y: Double = 0
         chartData.addEntry(getEntry(for: dataSet[0], with: type), dataSetIndex: 0)
         chartData.addEntry(getEntry(for: dataSet[1], with: type), dataSetIndex: 0)
-        for i in 0..<threshold {
+        for i in 0..<data_length/every {
             // Calculate point average for next bucket (containing c)
             avg_x = 0
             avg_y = 0
@@ -812,7 +812,7 @@ extension TagChartsPresenter {
             guard avg_range_length > 0 else {
                 if a < data_length {
                     chartData.addEntry(getEntry(for: dataSet[a], with: type), dataSetIndex: 0)
-                    a = data_length
+                    a += every
                 }
                 continue
             }
