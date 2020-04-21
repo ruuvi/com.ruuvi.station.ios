@@ -1095,6 +1095,9 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
+		A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
+		A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
+		A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
 		A9100D6C241AC741004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
 		A9100D6D241AC751004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
 		A9100D6E241AC752004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
@@ -1130,6 +1133,9 @@
 		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
+		A9A48A5C244CD9E70004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
+		A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
+		A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
 		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
 		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
@@ -1533,6 +1539,7 @@
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66B644F5882FD18597C94131 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
 		A92E3C4B24261CF900D981D5 /* MeasurementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementType.swift; sourceTree = "<group>"; };
@@ -1549,6 +1556,8 @@
 		A94FFD4D241D57E700888017 /* MockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalibrationService.swift; sourceTree = "<group>"; };
 		A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertServiceObserver.swift; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
+		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
+		A9A48A5F244CEB690004FD50 /* RuuviTagClearNotLinkedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagClearNotLinkedOperation.swift; sourceTree = "<group>"; };
 		B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -1957,6 +1966,7 @@
 				0E9E7759238CCE5F006D7013 /* String+Replace.swift */,
 				0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */,
 				A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */,
+				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2456,6 +2466,7 @@
 				0E45580023E906DF0025AEBF /* DataPruningOperationsManager.swift */,
 				0E45580423E907190025AEBF /* WebTagDataPruningOperation.swift */,
 				0E45580823E907300025AEBF /* RuuviTagDataPruningOperation.swift */,
+				A9A48A5F244CEB690004FD50 /* RuuviTagClearNotLinkedOperation.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -3527,6 +3538,7 @@
 		0EEB210722B7D8020015F9E0 /* Business */ = {
 			isa = PBXGroup;
 			children = (
+				A902003A244E1304001882C3 /* Charts */,
 				0EEB210822B7D80C0015F9E0 /* Assembly */,
 				0EE49BB323B8C89D003012C2 /* Background */,
 				0E5C302322D0B16300B52E39 /* AppState */,
@@ -3954,6 +3966,22 @@
 				643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		A902003A244E1304001882C3 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				A902003B244E130F001882C3 /* Operations */,
+			);
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		A902003B244E130F001882C3 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				A9020041244E14F8001882C3 /* ChartFilterOperation.swift */,
+			);
+			path = Operations;
 			sourceTree = "<group>";
 		};
 		A9100D81241AD1D0004007FD /* Mock */ = {
@@ -4644,6 +4672,7 @@
 				0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
+				A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */,
 				0E6BADA123856A01003A2D4C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				0E6BADA223856A01003A2D4C /* WelcomeRouterInput.swift in Sources */,
@@ -4924,6 +4953,7 @@
 				0E45580B23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E6BAE9C23856A01003A2D4C /* CardsRouterDelegate.swift in Sources */,
 				0E6BAE9D23856A01003A2D4C /* OpenWeatherMapAPIURLSession.swift in Sources */,
+				A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */,
 				0E6BAE9E23856A01003A2D4C /* Worker.swift in Sources */,
 				0E6BAE9F23856A01003A2D4C /* ErrorPresenterAlert.swift in Sources */,
 				0E6BAEA023856A01003A2D4C /* ForegroundViewController.swift in Sources */,
@@ -4982,6 +5012,7 @@
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
+				A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */,
 				0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E8BD2D7238566AB008B31EF /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03E23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
@@ -5262,6 +5293,7 @@
 				0E45580A23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E8BD3D2238566AB008B31EF /* CardsRouterDelegate.swift in Sources */,
 				0E8BD3D3238566AB008B31EF /* OpenWeatherMapAPIURLSession.swift in Sources */,
+				A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */,
 				0E8BD3D4238566AB008B31EF /* Worker.swift in Sources */,
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
@@ -5320,6 +5352,7 @@
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
+				A9A48A5C244CD9E70004FD50 /* UIWindow+Shake.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
@@ -5600,6 +5633,7 @@
 				0E45580923E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
+				A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,

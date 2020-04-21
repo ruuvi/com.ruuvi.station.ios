@@ -42,4 +42,58 @@ struct TagChartsViewModel {
         name.value = webTag.name
         isConnectable.value = false
     }
+
+    func reloadChartData(with type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.reloadData()
+        case .humidity:
+            self.humidityChart.value?.reloadData()
+        case .pressure:
+            self.pressureChart.value?.reloadData()
+        default:
+            return
+        }
+    }
+
+    func fitZoomTo(to range: (start: TimeInterval, end: TimeInterval),
+                   for type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.fitZoomTo(min: range.start, max: range.end)
+        case .humidity:
+            self.humidityChart.value?.fitZoomTo(min: range.start, max: range.end)
+        case .pressure:
+            self.pressureChart.value?.fitZoomTo(min: range.start, max: range.end)
+        default:
+            return
+        }
+    }
+
+    func chartData(for type: MeasurementType) -> LineChartData {
+        var chartData: LineChartData = LineChartData(dataSet: TagChartsPresenter.newDataSet())
+        switch type {
+        case .temperature:
+            if let data = temperatureChartData.value {
+                chartData = data
+            } else {
+                temperatureChartData.value = chartData
+            }
+        case .humidity:
+            if let data = humidityChartData.value {
+                chartData = data
+            } else {
+                humidityChartData.value = chartData
+            }
+        case .pressure:
+            if let data = pressureChartData.value {
+                chartData = data
+            } else {
+                pressureChartData.value = chartData
+            }
+        default:
+            fatalError("\(#function):\(#line) Undeclarated chart type")
+        }
+        return chartData
+    }
 }
