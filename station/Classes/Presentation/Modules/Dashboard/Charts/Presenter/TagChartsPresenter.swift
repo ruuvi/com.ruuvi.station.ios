@@ -706,11 +706,15 @@ extension TagChartsPresenter: TagChartViewOutput {
                                                    type: type,
                                                    start: start,
                                                    end: stop)
-        filterOperation.completionBlock = {
-            DispatchQueue.main.async {
-                self.setDownSampled(dataSet: filterOperation.sorted,
-                                    to: viewModel.chartData(for: filterOperation.type),
-                                    withType: filterOperation.type)
+        filterOperation.completionBlock = { [unowned filterOperation] in
+            if !filterOperation.isCancelled {
+                let sorted = filterOperation.sorted
+                let type = filterOperation.type
+                DispatchQueue.main.async {
+                    self.setDownSampled(dataSet: sorted,
+                                        to: viewModel.chartData(for: type),
+                                        withType: type)
+                }
             }
         }
         queue(for: type).addOperation(filterOperation)
