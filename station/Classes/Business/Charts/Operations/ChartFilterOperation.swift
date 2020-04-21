@@ -37,6 +37,7 @@ class ChartFilterOperation: Operation {
         sorted.append(contentsOf: array.prefix(2))
         for item in array {
             guard !isCancelled else {
+                cancel()
                 return
             }
             if item.tagUuid == uuid,
@@ -47,6 +48,7 @@ class ChartFilterOperation: Operation {
         }
         sorted.append(contentsOf: array.suffix(2))
         guard !isCancelled else {
+            cancel()
             return
         }
         sorted.sort(by: {$0.date < $1.date})
