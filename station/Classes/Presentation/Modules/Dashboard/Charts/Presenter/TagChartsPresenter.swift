@@ -230,6 +230,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             }, connectionTimeout: connectionTimeout, serviceTimeout: serviceTimeout)
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
+                self?.ruuviTagData = []
                 self?.restartObservingData()
             }, failure: { [weak self] error in
                 self?.view.setSync(progress: nil, for: viewModel)
@@ -382,68 +383,70 @@ extension TagChartsPresenter {
             [weak self] (change) in
             switch change {
             case .initial(let results):
-                guard let viewModel = self?.viewModels.first(where: {$0.uuid.value == self?.tagUUID}) else {
-                    return
-                }
-                var newValues = [RuuviMeasurement]()
-                if let first = results.first {
-                    self?.lastChartSyncDate = first.date
-                    newValues.append(first.measurement)
-                }
-                for result in results {
-                    autoreleasepool {
-                        let measurement = result.measurement
-                        if let last = self?.lastChartSyncDate,
-                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
-                            let elapsed = Int(measurement.date.timeIntervalSince(last))
-                            if elapsed >= chartIntervalSeconds {
-                                self?.lastChartSyncDate = measurement.date
-                                newValues.append(measurement)
-                            }
-                        } else {
-                            self?.lastChartSyncDate = measurement.date
-                            newValues.append(measurement)
-                        }
-                    }
-                }
-                if let last = results.last,
-                    last.date != newValues.last?.date {
-                    self?.lastChartSyncDate = last.date
-                    newValues.append(last.measurement)
-                }
-                newValues.sort(by: { $0.date < $1.date })
-                self?.ruuviTagData = newValues
-                self?.createChartData(for: viewModel)
-                self?.isLoading = false
+                self?.handleInitialRuuviTagData(results)
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
-                insertions.forEach({ i in
-                    let newValue = results[i].measurement
-                    if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.tagUuid}),
-                        self?.view.viewIsVisible == true {
-                        if let last = self?.lastChartSyncDate,
-                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds,
-                            let count = self?.ruuviTagData.count, count > 0 {
-                            let elapsed = Int(newValue.date.timeIntervalSince(last))
-                            if elapsed >= chartIntervalSeconds {
-                                self?.lastChartSyncDate = newValue.date
-                                self?.ruuviTagData.append(newValue)
-                                self?.insertMeasurements([newValue], into: viewModel)
-                            }
-                        } else {
-                            self?.lastChartSyncDate = newValue.date
-                            self?.ruuviTagData.append(newValue)
-                            self?.insertMeasurements([newValue], into: viewModel)
-                        }
-                    }
-                })
+                if let data = self?.ruuviTagData,
+                    data.count > 0 {
+                    self?.handleUpdateRuuviTagData(results, insertions: insertions)
+                } else {
+                    self?.handleInitialRuuviTagData(results)
+                }
             default:
                 break
             }
         }
     }
     // swiftlint:enable all
+    private func handleInitialRuuviTagData(_ results: Results<RuuviTagDataRealm>) {
+        guard let viewModel = currentViewModel else {
+            return
+        }
+        var newValues = [RuuviMeasurement]()
+        var syncDate: Date = Date()
+        if let first = results.first {
+            syncDate = first.date
+            newValues.append(first.measurement)
+        }
+        for result in results {
+            autoreleasepool {
+                let measurement = result.measurement
+                let chartIntervalSeconds = settings.chartIntervalSeconds
+                let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
+                if elapsed >= chartIntervalSeconds {
+                    syncDate = measurement.date
+                    newValues.append(measurement)
+                }
+            }
+        }
+        if let last = results.last,
+            last.date != newValues.last?.date {
+            lastChartSyncDate = last.date
+            newValues.append(last.measurement)
+        }
+        newValues.sort(by: { $0.date < $1.date })
+        ruuviTagData = newValues
+        createChartData(for: viewModel)
+        isLoading = false
+    }
+
+    private func handleUpdateRuuviTagData(_ results: Results<RuuviTagDataRealm>, insertions: [Int]) {
+        guard let viewModel = currentViewModel,
+            view.viewIsVisible == true else {
+            return
+        }
+        let chartIntervalSeconds = settings.chartIntervalSeconds
+        insertions.forEach({ i in
+            let newValue = results[i].measurement
+            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
+            if elapsed >= chartIntervalSeconds {
+                lastChartSyncDate = newValue.date
+                ruuviTagData.append(newValue)
+                insertMeasurements([newValue], into: viewModel)
+            }
+        })
+    }
 
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
