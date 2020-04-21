@@ -34,7 +34,9 @@ class ChartFilterOperation: Operation {
             sorted = array
             return
         }
-        sorted.append(contentsOf: array.prefix(2))
+        if let first = array.first {
+            sorted.append(first)
+        }
         for item in array {
             guard !isCancelled else {
                 cancel()
@@ -46,7 +48,9 @@ class ChartFilterOperation: Operation {
                 sorted.append(item)
             }
         }
-        sorted.append(contentsOf: array.suffix(2))
+        if let last = array.last {
+            sorted.append(last)
+        }
         guard !isCancelled else {
             cancel()
             return
