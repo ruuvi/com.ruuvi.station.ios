@@ -854,7 +854,7 @@ extension TagChartsPresenter {
         }
         chartData.addEntry(getEntry(for: dataSet[dataSet.count - 2], with: type), dataSetIndex: 0)
         chartData.addEntry(getEntry(for: dataSet[dataSet.count - 1], with: type), dataSetIndex: 0)
-        chartData.notifyDataChanged()
+        currentViewModel?.reloadChartData(with: type)
     }
     // swiftlint:enable function_body_length
 }
