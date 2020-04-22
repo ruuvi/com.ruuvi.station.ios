@@ -20,6 +20,10 @@ enum DiscoverTableSection {
         }
     }
 }
+enum DiscoverNetworkCell: Int, CaseIterable {
+    case whereOS = 0
+    case kaltiot
+}
 
 class DiscoverTableViewController: UITableViewController {
 
@@ -88,10 +92,6 @@ class DiscoverTableViewController: UITableViewController {
 
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
-    private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
-    private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
-    private let noDevicesCellReuseIdentifier = "DiscoverNoDevicesTableViewCellReuseIdentifier"
-    private let addWithMACCellReuseIdentifier = "DiscoverAddWithMACTableViewCellReuseIdentifier"
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
     private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() {
         didSet {
@@ -198,7 +198,7 @@ extension DiscoverTableViewController {
         case .noDevices:
             return 1
         case .network:
-            return 1
+            return DiscoverNetworkCell.allCases.count
         }
     }
 
@@ -206,41 +206,34 @@ extension DiscoverTableViewController {
         let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
         switch section {
         case .webTag:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverWebTagTableViewCell
-            // swiftlint:enable force_cast
+            let cell = tableView.dequeueReusableCell(with: DiscoverWebTagTableViewCell.self, for: indexPath)
             let tag = shownWebTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .device:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverDeviceTableViewCell
-            // swiftlint:enable force_cast
+            let cell = tableView.dequeueReusableCell(with: DiscoverDeviceTableViewCell.self, for: indexPath)
             let tag = shownDevices[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .noDevices:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverNoDevicesTableViewCell
-            // swiftlint:enable force_cast
+            let cell = tableView.dequeueReusableCell(with: DiscoverNoDevicesTableViewCell.self, for: indexPath)
             cell.descriptionLabel.text = isBluetoothEnabled
                 ? "DiscoverTable.NoDevicesSection.NotFound.text".localized()
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         case .network:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: addWithMACCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverAddWithMACTableViewCell
-            // swiftlint:enable force_cast
-            cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
-            return cell
+            switch DiscoverNetworkCell(rawValue: indexPath.row) {
+            case .whereOS:
+                let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
+                cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
+                return cell
+            case .kaltiot:
+                let cell = tableView.dequeueReusableCell(with: DiscoverKaltiotTableViewCell.self, for: indexPath)
+                cell.descriptionLabel.text = "DiscoverTable.KaltiotCell.text".localized()
+                return cell
+            default:
+                fatalError()
+            }
         }
     }
 }
@@ -261,7 +254,20 @@ extension DiscoverTableViewController {
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
         case .network:
-            output.viewDidAskToAddTagWithMACAddress()
+            switch DiscoverNetworkCell(rawValue: indexPath.row) {
+            case .whereOS:
+                output.viewDidAskToAddTagWithMACAddress()
+            case .kaltiot:
+                #warning("TODO: need implement Kaltiot flow")
+                let cell = tableView.dequeueReusableCell(with: DiscoverKaltiotTableViewCell.self, for: indexPath)
+                let alert = UIAlertController(title: "title", message: "Message", preferredStyle: .actionSheet)
+                alert.addAction(.init(title: "OK", style: .destructive, handler: nil))
+                alert.popoverPresentationController?.sourceView = cell.contentView
+                alert.popoverPresentationController?.sourceRect = cell.contentView.bounds
+                present(alert, animated: true, completion: nil)
+            default:
+                fatalError()
+            }
         default:
             break
         }
