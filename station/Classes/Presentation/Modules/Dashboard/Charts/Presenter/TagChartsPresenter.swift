@@ -666,7 +666,6 @@ extension TagChartsPresenter {
                 setDownSampled(dataSet: ruuviTagData,
                                to: viewModel.chartData(for: $0),
                                withType: $0)
-                viewModel.reloadChartData(with: $0)
             }
         }
     }
