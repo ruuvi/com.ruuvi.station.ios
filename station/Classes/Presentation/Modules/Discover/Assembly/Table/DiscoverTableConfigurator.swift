@@ -18,6 +18,7 @@ class DiscoverTableConfigurator {
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
+        presenter.keychainService = r.resolve(KeychainService.self)
 
         view.output = presenter
     }

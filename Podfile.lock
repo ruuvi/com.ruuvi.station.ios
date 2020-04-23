@@ -84,6 +84,7 @@ PODS:
   - GoogleUtilities/UserDefaults (6.5.0):
     - GoogleUtilities/Logger
   - Humidity (0.0.8)
+  - KeychainAccess (4.1.0)
   - LightRoute (2.2.2)
   - Localize-Swift (3.1.0)
   - nanopb (0.3.9011):
@@ -114,6 +115,7 @@ DEPENDENCIES:
   - FutureX
   - GestureInstructions
   - Humidity
+  - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
   - Nantes
@@ -144,6 +146,7 @@ SPEC REPOS:
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - Humidity
+    - KeychainAccess
     - Localize-Swift
     - nanopb
     - Nantes
@@ -193,6 +196,7 @@ SPEC CHECKSUMS:
   GoogleDataTransportCCTSupport: cad3cd6cdbdbad6b5c2c9206ec413402755faaaa
   GoogleUtilities: f8de7ddf8c706f58e9b405d53e38bbdaa2731e5a
   Humidity: 293c834c017c111d254440f234fcf8d7e6fe4493
+  KeychainAccess: 445e28864fe6d3458b41fa211bcdc39890e8bd5a
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
@@ -207,6 +211,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: f7e93826b04c9e05b8f0ab57d7be8b084051e4c1
+PODFILE CHECKSUM: 13a31763ccd4dbd4909cef06ec7e6b983f7178d3
 
 COCOAPODS: 1.9.1

@@ -258,13 +258,7 @@ extension DiscoverTableViewController {
             case .whereOS:
                 output.viewDidAskToAddTagWithMACAddress()
             case .kaltiot:
-                #warning("TODO: need implement Kaltiot flow")
-                let cell = tableView.dequeueReusableCell(with: DiscoverKaltiotTableViewCell.self, for: indexPath)
-                let alert = UIAlertController(title: "title", message: "Message", preferredStyle: .actionSheet)
-                alert.addAction(.init(title: "OK", style: .destructive, handler: nil))
-                alert.popoverPresentationController?.sourceView = cell.contentView
-                alert.popoverPresentationController?.sourceRect = cell.contentView.bounds
-                present(alert, animated: true, completion: nil)
+                output.viewDidSelectKaltiotTag()
             default:
                 fatalError()
             }
