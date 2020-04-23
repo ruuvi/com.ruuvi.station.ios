@@ -13,6 +13,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
+    var keychainService: KeychainService!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
@@ -165,6 +166,15 @@ extension DiscoverPresenter: DiscoverViewOutput {
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+    }
+
+    func viewDidSelectKaltiotTag() {
+        if let key = keychainService.kaltiotApiKey {
+            print("need implement kaltiotFlow\(key)")
+        } else {
+            print("need implement addingKaltiotKey")
+            keychainService.kaltiotApiKey = "zpIg%2FEzHA3zLgKYQuRQvjmOa0klKr%2FXoB0UIDxLQil7zu62l0DP8b0bIVKmtuApLTPm9mRrd7X72pkso2xs8pLCLYvZzOyRa1qf15ojoTydpmNh%2FD4VDNBG07z49JBQw"
+        }
     }
 }
 
