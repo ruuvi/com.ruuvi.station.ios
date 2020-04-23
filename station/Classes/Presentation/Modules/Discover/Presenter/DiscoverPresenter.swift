@@ -168,12 +168,15 @@ extension DiscoverPresenter: DiscoverViewOutput {
         })
     }
 
-    func viewDidSelectKaltiotTag() {
+    func viewDidEnterKaltiotApiKey(apiKey: String) {
+        keychainService.kaltiotApiKey = apiKey
+        print("need implement kaltiotFlow\(apiKey)")
+    }
+    func viewDidSelectKaltiotProvider() {
         if let key = keychainService.kaltiotApiKey {
             print("need implement kaltiotFlow\(key)")
         } else {
-            print("need implement addingKaltiotKey")
-            keychainService.kaltiotApiKey = "zpIg%2FEzHA3zLgKYQuRQvjmOa0klKr%2FXoB0UIDxLQil7zu62l0DP8b0bIVKmtuApLTPm9mRrd7X72pkso2xs8pLCLYvZzOyRa1qf15ojoTydpmNh%2FD4VDNBG07z49JBQw"
+            view.showAddKaltiotApiKey()
         }
     }
 }

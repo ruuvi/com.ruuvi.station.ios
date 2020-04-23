@@ -100,6 +100,7 @@
 "DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
 "DiscoverTable.KaltiotCell.text" = "Kaltiot";
+"DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
 "DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
 // ErrorPresenterAlert

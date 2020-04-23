@@ -11,4 +11,5 @@ protocol DiscoverViewInput: ViewInput {
     func showBluetoothDisabled()
     func showWebTagInfoDialog()
     func showAddTagWithMACAddressDialog()
+    func showAddKaltiotApiKey()
 }
