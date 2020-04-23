@@ -144,6 +144,22 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         present(alertVC, animated: true)
     }
+
+    func showAddKaltiotApiKey() {
+        let title = "DiscoverTable.AddKaltiotApiKeyDialog.title".localized()
+        let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alertVC.addTextField()
+        let submitAction = UIAlertAction(title: "OK".localized(), style: .default) {
+            [weak self,
+            unowned alertVC] _ in
+            if let apiKey = alertVC.textFields?[0].text {
+                self?.output.viewDidEnterKaltiotApiKey(apiKey: apiKey)
+            }
+        }
+        alertVC.addAction(submitAction)
+        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
 }
 
 // MARK: - IBActions
@@ -258,7 +274,7 @@ extension DiscoverTableViewController {
             case .whereOS:
                 output.viewDidAskToAddTagWithMACAddress()
             case .kaltiot:
-                output.viewDidSelectKaltiotTag()
+                output.viewDidSelectKaltiotProvider()
             default:
                 fatalError()
             }

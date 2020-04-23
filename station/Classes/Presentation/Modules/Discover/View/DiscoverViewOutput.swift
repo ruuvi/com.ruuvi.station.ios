@@ -11,5 +11,6 @@ protocol DiscoverViewOutput {
     func viewDidTapOnWebTagInfo()
     func viewDidAskToAddTagWithMACAddress()
     func viewDidEnterMACAddressToAddTag(mac: String)
-    func viewDidSelectKaltiotTag()
+    func viewDidSelectKaltiotProvider()
+    func viewDidEnterKaltiotApiKey(apiKey: String)
 }

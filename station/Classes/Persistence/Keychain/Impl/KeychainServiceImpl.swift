@@ -20,7 +20,7 @@ class KeychainServiceImpl {
         case kaltiot
     }
 }
-//MARK: - Public
+// MARK: - Public
 extension KeychainServiceImpl: KeychainService {
     var kaltiotApiKey: String? {
         get {
