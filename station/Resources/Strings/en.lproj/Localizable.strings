@@ -99,7 +99,7 @@
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
 "DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
-"DiscoverTable.KaltiotCell.text" = "Kaltiot";
+"DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
 "DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 

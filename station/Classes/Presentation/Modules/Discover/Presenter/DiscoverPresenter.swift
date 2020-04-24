@@ -170,11 +170,13 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidEnterKaltiotApiKey(apiKey: String) {
         keychainService.kaltiotApiKey = apiKey
-        print("need implement kaltiotFlow\(apiKey)")
+        print("need implement check ApiKey\(apiKey)")
+        router.openKaltiotPicker(output: self)
     }
+
     func viewDidSelectKaltiotProvider() {
-        if let key = keychainService.kaltiotApiKey {
-            print("need implement kaltiotFlow\(key)")
+        if keychainService.hasKaltiotApiKey {
+            router.openKaltiotPicker(output: self)
         } else {
             view.showAddKaltiotApiKey()
         }
@@ -204,6 +206,11 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
     }
 }
 
+// MARK: - KaltiotPickerModuleOutput
+extension DiscoverPresenter: KaltiotPickerModuleOutput {
+    func kaltiotPicker(module: KaltiotPickerModuleInput, didPick tagUuid: String) {
+    }
+}
 // MARK: - Private
 extension DiscoverPresenter {
 
