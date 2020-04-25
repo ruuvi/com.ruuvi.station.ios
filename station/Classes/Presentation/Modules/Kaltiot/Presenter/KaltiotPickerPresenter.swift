@@ -21,6 +21,7 @@ extension KaltiotPickerPresenter: KaltiotPickerViewOutput {
 extension KaltiotPickerPresenter: KaltiotPickerModuleInput {
     func configure(output: KaltiotPickerModuleOutput) {
         self.output = output
+        keychainService.kaltiotApiKey = nil
     }
 
     func popViewController(animated: Bool) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HlR-q7-FH1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="0dM-Rr-rch">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -46,7 +46,9 @@
                             <outlet property="delegate" destination="HlR-q7-FH1" id="sLh-yi-6pL"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Add Kaltiot tag" id="LkO-y7-YRg"/>
+                    <navigationItem key="navigationItem" title="Add Kaltiot tag" id="LkO-y7-YRg">
+                        <barButtonItem key="rightBarButtonItem" title="done" id="bg6-wd-api"/>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iaR-Bn-h1b" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <customObject id="w2F-3N-pBH" userLabel="KaltiotTableInitializer" customClass="KaltiotTableInitializer" customModule="station" customModuleProvider="target">
