@@ -70,6 +70,30 @@ struct TagChartsViewModel {
         }
     }
 
+    func clearChartData(for type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.clearChartData()
+        case .humidity:
+            self.humidityChart.value?.clearChartData()
+        case .pressure:
+            self.pressureChart.value?.clearChartData()
+        default:
+            return
+        }
+    }
+
+    func clearChartsData() {
+        temperatureChartData.value = nil
+        humidityChartData.value = nil
+        pressureChartData.value = nil
+        MeasurementType.chartsCases.forEach({
+            chartData(for: $0)
+            clearChartData(for: $0)
+        })
+    }
+
+    @discardableResult
     func chartData(for type: MeasurementType) -> LineChartData {
         var chartData: LineChartData = LineChartData(dataSet: TagChartsPresenter.newDataSet())
         switch type {
