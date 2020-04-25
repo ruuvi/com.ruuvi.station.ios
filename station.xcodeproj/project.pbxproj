@@ -1201,6 +1201,15 @@
 		A9C351B52453672B004696BD /* KaltiotPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C351B42453672B004696BD /* KaltiotPicker.storyboard */; };
 		A9C351B62453672B004696BD /* KaltiotPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C351B42453672B004696BD /* KaltiotPicker.storyboard */; };
 		A9C351B72453672B004696BD /* KaltiotPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C351B42453672B004696BD /* KaltiotPicker.storyboard */; };
+		A9C351BA24538230004696BD /* WhereOSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B924538230004696BD /* WhereOSData.swift */; };
+		A9C351BB24538230004696BD /* WhereOSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B924538230004696BD /* WhereOSData.swift */; };
+		A9C351BC24538230004696BD /* WhereOSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B924538230004696BD /* WhereOSData.swift */; };
+		A9C351C0245382C7004696BD /* KaltiotBeacons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351BF245382C7004696BD /* KaltiotBeacons.swift */; };
+		A9C351C1245382C7004696BD /* KaltiotBeacons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351BF245382C7004696BD /* KaltiotBeacons.swift */; };
+		A9C351C2245382C7004696BD /* KaltiotBeacons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351BF245382C7004696BD /* KaltiotBeacons.swift */; };
+		A9C351C4245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */; };
+		A9C351C5245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */; };
+		A9C351C6245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */; };
 		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
 		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
 		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
@@ -1644,6 +1653,9 @@
 		A9C351AC24535FA5004696BD /* KaltiotPickerViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerViewInput.swift; sourceTree = "<group>"; };
 		A9C351B0245360AA004696BD /* KaltiotPickerViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerViewOutput.swift; sourceTree = "<group>"; };
 		A9C351B42453672B004696BD /* KaltiotPicker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = KaltiotPicker.storyboard; sourceTree = "<group>"; };
+		A9C351B924538230004696BD /* WhereOSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereOSData.swift; sourceTree = "<group>"; };
+		A9C351BF245382C7004696BD /* KaltiotBeacons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotBeacons.swift; sourceTree = "<group>"; };
+		A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotBeaconsRequest.swift; sourceTree = "<group>"; };
 		B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
@@ -2777,6 +2789,7 @@
 		0E79F2572441AC8D0048BF86 /* Ruuvi */ = {
 			isa = PBXGroup;
 			children = (
+				A9C351BD245382A0004696BD /* Kaltiot */,
 				0E79F2582441AC990048BF86 /* WhereOS */,
 				0E79F2592441ACBA0048BF86 /* RuuviNetwork.swift */,
 			);
@@ -2786,6 +2799,7 @@
 		0E79F2582441AC990048BF86 /* WhereOS */ = {
 			isa = PBXGroup;
 			children = (
+				A9C351B824538212004696BD /* Models */,
 				0E79F2612441BA140048BF86 /* URLSession */,
 				0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */,
 			);
@@ -4319,6 +4333,39 @@
 			path = Table;
 			sourceTree = "<group>";
 		};
+		A9C351B824538212004696BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A9C351B924538230004696BD /* WhereOSData.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A9C351BD245382A0004696BD /* Kaltiot */ = {
+			isa = PBXGroup;
+			children = (
+				A9C351BE245382AF004696BD /* Models */,
+				A9C351C724538E8F004696BD /* URLSession */,
+			);
+			path = Kaltiot;
+			sourceTree = "<group>";
+		};
+		A9C351BE245382AF004696BD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A9C351BF245382C7004696BD /* KaltiotBeacons.swift */,
+				A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A9C351C724538E8F004696BD /* URLSession */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = URLSession;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -5043,6 +5090,7 @@
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
 				0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */,
 				0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */,
+				A9C351C2245382C7004696BD /* KaltiotBeacons.swift in Sources */,
 				0E6BAE0923856A01003A2D4C /* RuuviTagDataRealm.swift in Sources */,
 				0E6BAE0A23856A01003A2D4C /* HumidityCalibrationViewController.swift in Sources */,
 				0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
@@ -5100,6 +5148,7 @@
 				0EAD33E92399273E00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E6BAE3923856A01003A2D4C /* LocationPickerAppleViewController.swift in Sources */,
 				0E6BAE3A23856A01003A2D4C /* TagSettingsTableConfigurator.swift in Sources */,
+				A9C351BC24538230004696BD /* WhereOSData.swift in Sources */,
 				0E6BAE3B23856A01003A2D4C /* WebTagServiceImpl.swift in Sources */,
 				0E6BAE3C23856A01003A2D4C /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E6BAE3D23856A01003A2D4C /* MenuViewInput.swift in Sources */,
@@ -5141,6 +5190,7 @@
 				0E6BAE5C23856A01003A2D4C /* HumidityUnit.swift in Sources */,
 				0E6BAE5D23856A01003A2D4C /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0E6BAE5E23856A01003A2D4C /* TagSettingsRouterInput.swift in Sources */,
+				A9C351C6245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */,
 				0E6BAE5F23856A01003A2D4C /* NSObject+Observable.swift in Sources */,
 				0E6BAE6023856A01003A2D4C /* TagSettingsModuleInput.swift in Sources */,
 				0E6BAE6223856A01003A2D4C /* LocationPickerAppleConfigurator.swift in Sources */,
@@ -5403,6 +5453,7 @@
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
+				A9C351C1245382C7004696BD /* KaltiotBeacons.swift in Sources */,
 				0E8BD33F238566AB008B31EF /* RuuviTagDataRealm.swift in Sources */,
 				0E8BD340238566AB008B31EF /* HumidityCalibrationViewController.swift in Sources */,
 				0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
@@ -5460,6 +5511,7 @@
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
 				0E8BD370238566AB008B31EF /* TagSettingsTableConfigurator.swift in Sources */,
+				A9C351BB24538230004696BD /* WhereOSData.swift in Sources */,
 				0E8BD371238566AB008B31EF /* WebTagServiceImpl.swift in Sources */,
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
@@ -5501,6 +5553,7 @@
 				0E8BD392238566AB008B31EF /* HumidityUnit.swift in Sources */,
 				0E8BD393238566AB008B31EF /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0E8BD394238566AB008B31EF /* TagSettingsRouterInput.swift in Sources */,
+				A9C351C5245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */,
 				0E8BD395238566AB008B31EF /* NSObject+Observable.swift in Sources */,
 				0E8BD396238566AB008B31EF /* TagSettingsModuleInput.swift in Sources */,
 				0E8BD398238566AB008B31EF /* LocationPickerAppleConfigurator.swift in Sources */,
@@ -5763,6 +5816,7 @@
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
+				A9C351C0245382C7004696BD /* KaltiotBeacons.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
@@ -5820,6 +5874,7 @@
 				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
 				0E9F979C22EB0A3F0015ADE2 /* WebTagServiceImpl.swift in Sources */,
 				0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
+				A9C351BA24538230004696BD /* WhereOSData.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
@@ -5861,6 +5916,7 @@
 				0EC50F5422CCBBE800172EEB /* NSObject+Observable.swift in Sources */,
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
 				0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */,
+				A9C351C4245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
 				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
