@@ -20,6 +20,7 @@ def shared_pods
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
   pod 'KeychainAccess'
+  pod 'FLEX', :configurations => ['Debug']
 end
 
 target 'station' do

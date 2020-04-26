@@ -10,3 +10,12 @@ enum MeasurementType {
     case movementCounter
     case txPower
 }
+extension MeasurementType {
+    static var chartsCases: [MeasurementType] {
+        return [
+            .temperature,
+            .humidity,
+            .pressure
+        ]
+    }
+}
