@@ -1,11 +1,3 @@
-//
-//  TagChartView.swift
-//  station
-//
-//  Created by Viik.ufa on 21.03.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import UIKit
 import Charts
 
@@ -62,15 +54,48 @@ class TagChartView: LineChartView {
         scaleXEnabled = true
         scaleYEnabled = true
     }
+
+    private func getOffset(dX: CGFloat, dY: CGFloat) -> TimeInterval {
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft + dX,
+            y: viewPortHandler.contentBottom + dY)
+        getTransformer(forAxis: .left).pixelToValues(&pt)
+        return lowestVisibleX - max(xAxis.axisMinimum, Double(pt.x))
+    }
+
+    private func getScaleOffset(scaleX: CGFloat, scaleY: CGFloat) -> TimeInterval {
+        var pt = CGPoint(
+            x: viewPortHandler.contentLeft / scaleX,
+            y: viewPortHandler.contentBottom / scaleY)
+        getTransformer(forAxis: .left).pixelToValues(&pt)
+        return lowestVisibleX - max(xAxis.axisMinimum, Double(pt.x))
+    }
 }
 // MARK: - TagChartViewInput
 extension TagChartView: TagChartViewInput {
-    func fitZoomTo(first: TimeInterval, last: TimeInterval) {
-        let scaleX = CGFloat(xAxis.axisMaximum - xAxis.axisMinimum) / CGFloat((last - first))
-        self.zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
-        self.zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
-        self.moveViewToX(first)
+    func clearChartData() {
+        clearValues()
+        resetCustomAxisMinMax()
+        resetZoom()
     }
+
+    func setXRange(min: TimeInterval, max: TimeInterval) {
+        xAxis.axisMinimum = min
+        xAxis.axisMaximum = max
+    }
+
+    func resetCustomAxisMinMax() {
+        xAxis.resetCustomAxisMin()
+        xAxis.resetCustomAxisMax()
+    }
+
+    func fitZoomTo(min: TimeInterval, max: TimeInterval) {
+        let scaleX = CGFloat(xAxis.axisMaximum - xAxis.axisMinimum) / CGFloat((max - min))
+        zoom(scaleX: 0, scaleY: 0, x: 0, y: 0)
+        zoom(scaleX: scaleX, scaleY: 0, x: 0, y: 0)
+        moveViewToX(min)
+    }
+
     func reloadData() {
         data?.notifyDataChanged()
         notifyDataSetChanged()
@@ -78,9 +103,13 @@ extension TagChartView: TagChartViewInput {
 }
 extension TagChartView: ChartViewDelegate {
     func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
-        output?.didChangeVisibleRange(self)
+        let offset = getOffset(dX: dX, dY: dY)
+        let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
+        output?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
     }
     func chartScaled(_ chartView: ChartViewBase, scaleX: CGFloat, scaleY: CGFloat) {
-        output?.didChangeVisibleRange(self)
+        let offset = getScaleOffset(scaleX: scaleX, scaleY: scaleY)
+        let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
+        output?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
     }
 }

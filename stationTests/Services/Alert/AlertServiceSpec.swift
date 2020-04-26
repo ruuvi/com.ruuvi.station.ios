@@ -1,11 +1,3 @@
-//
-//  AlertServiceSpec.swift
-//  stationTests
-//
-//  Created by Viik.ufa on 13.03.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import XCTest
 import Quick
 import Nimble
