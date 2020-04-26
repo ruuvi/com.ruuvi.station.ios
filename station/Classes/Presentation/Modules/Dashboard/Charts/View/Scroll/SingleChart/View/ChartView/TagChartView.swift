@@ -83,7 +83,18 @@ class TagChartView: LineChartView {
 extension TagChartView: TagChartViewInput {
     func clearChartData() {
         clearValues()
+        resetCustomAxisMinMax()
         resetZoom()
+    }
+
+    func setXRange(min: TimeInterval, max: TimeInterval) {
+        xAxis.axisMinimum = min
+        xAxis.axisMaximum = max
+    }
+
+    func resetCustomAxisMinMax() {
+        xAxis.resetCustomAxisMin()
+        xAxis.resetCustomAxisMax()
     }
 
     func fitZoomTo(min: TimeInterval, max: TimeInterval) {

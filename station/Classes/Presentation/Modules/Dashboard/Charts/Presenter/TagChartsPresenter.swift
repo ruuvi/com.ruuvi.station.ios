@@ -237,6 +237,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
                 self?.ruuviTagData = []
+                viewModel.clearChartsData()
                 self?.restartObservingData()
             }, failure: { [weak self] error in
                 self?.view.setSync(progress: nil, for: viewModel)
@@ -719,14 +720,24 @@ extension TagChartsPresenter {
                                    start: chartDurationThreshold,
                                    stop: currentDate,
                                    completion: {
-                    viewModel.fitZoomTo(to: (chartDurationThreshold, currentDate), for: measurementType)
+                    viewModel.setRange(min: firstDate,
+                                       max: Date().timeIntervalSince1970,
+                                       for: measurementType)
+                    viewModel.reloadChartData(with: measurementType)
+                    viewModel.fitZoomTo(start: chartDurationThreshold,
+                                        end: currentDate,
+                                        for: measurementType)
+                        viewModel.resetCustomAxisMinMax(for: measurementType)
                 })
             }
         } else {
-            MeasurementType.chartsCases.forEach {
+            MeasurementType.chartsCases.forEach { measurementType in
                 setDownSampled(dataSet: ruuviTagData,
-                               to: viewModel.chartData(for: $0),
-                               withType: $0)
+                               to: viewModel.chartData(for: measurementType),
+                               withType: measurementType,
+                               completion: {
+                    viewModel.reloadChartData(with: measurementType)
+                })
             }
         }
     }
@@ -827,7 +838,9 @@ extension TagChartsPresenter {
             chartDataSet.removeAll(keepingCapacity: true)
             chartDataSet.drawCirclesEnabled = false
         } else {
-            chartData.addDataSet(TagChartsPresenter.newDataSet())
+            let chartDataSet = TagChartsPresenter.newDataSet()
+            chartDataSet.drawCirclesEnabled = false
+            chartData.addDataSet(chartDataSet)
         }
         let data_length = dataSet.count
         if data_length <= threshold {
@@ -835,7 +848,6 @@ extension TagChartsPresenter {
                 chartData.addEntry(getEntry(for: $0, with: type), dataSetIndex: 0)
             })
             drawCirclesIfNeeded(for: chartData)
-            currentViewModel?.reloadChartData(with: type)
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
@@ -905,7 +917,6 @@ extension TagChartsPresenter {
         }
         chartData.addEntry(getEntry(for: dataSet[dataSet.count - 2], with: type), dataSetIndex: 0)
         chartData.addEntry(getEntry(for: dataSet[dataSet.count - 1], with: type), dataSetIndex: 0)
-        currentViewModel?.reloadChartData(with: type)
     }
     // swiftlint:enable function_body_length
 }
