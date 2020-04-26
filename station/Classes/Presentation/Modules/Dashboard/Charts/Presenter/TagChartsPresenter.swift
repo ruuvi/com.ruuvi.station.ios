@@ -507,15 +507,15 @@ extension TagChartsPresenter {
                     self?.configure(uuid: uuid)
                 }
             case .update(let ruuviTags, _, let insertions, _):
-                guard self?.view.viewIsVisible == true else {
-                    return
-                }
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
                     }
+                }
+                guard self?.view.viewIsVisible == true else {
+                    return
                 }
                 self?.restartObservingData()
             case .error(let error):
@@ -728,8 +728,7 @@ extension TagChartsPresenter: TagChartViewOutput {
                                     start: TimeInterval,
                                     stop: TimeInterval,
                                     completion: (() -> Void)? = nil) {
-        guard let uuid = viewModel.uuid.value,
-            ruuviTagData.count > threshold else {
+        guard let uuid = viewModel.uuid.value else {
             return
         }
         let operationQueue = queue(for: type)
