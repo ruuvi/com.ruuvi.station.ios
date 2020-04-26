@@ -237,6 +237,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
                 self?.ruuviTagData = []
+                viewModel.clearChartsData()
                 self?.restartObservingData()
             }, failure: { [weak self] error in
                 self?.view.setSync(progress: nil, for: viewModel)
@@ -373,6 +374,7 @@ extension TagChartsPresenter {
         // if no tags, open discover
         if viewModels.count == 0 {
             router.openDiscover(output: self)
+            stopObservingRuuviTagsData()
         } else {
             scrollToCurrentTag()
             restartObservingData()
@@ -384,13 +386,13 @@ extension TagChartsPresenter {
         guard let uuid = tagUUID else {
             return
         }
-        isLoading = true
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
         ruuviTagDataToken = ruuviTagDataRealm.observe {
             [weak self] (change) in
             switch change {
             case .initial(let results):
+                self?.isLoading = true
                 if results.isEmpty {
                     self?.handleEmptyResults()
                 } else {
@@ -506,15 +508,24 @@ extension TagChartsPresenter {
                 } else if let uuid = ruuviTags.first?.uuid {
                     self?.configure(uuid: uuid)
                 }
+                self?.restartObservingData()
             case .update(let ruuviTags, _, let insertions, _):
-                guard self?.view.viewIsVisible == true else {
-                    return
-                }
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
+                    }
+                }
+                if let uuid = self?.tagUUID {
+                    let tagUUIDs = ruuviTags.compactMap({$0.uuid})
+                    if !tagUUIDs.contains(uuid),
+                        let lastTagUUID = tagUUIDs.last {
+                        self?.configure(uuid: lastTagUUID)
+                    }
+                } else {
+                    if let lastTagUUID = ruuviTags.compactMap({$0.uuid}).last {
+                        self?.configure(uuid: lastTagUUID)
                     }
                 }
                 self?.restartObservingData()
@@ -709,14 +720,24 @@ extension TagChartsPresenter {
                                    start: chartDurationThreshold,
                                    stop: currentDate,
                                    completion: {
-                    viewModel.fitZoomTo(to: (chartDurationThreshold, currentDate), for: measurementType)
+                    viewModel.setRange(min: firstDate,
+                                       max: Date().timeIntervalSince1970,
+                                       for: measurementType)
+                    viewModel.reloadChartData(with: measurementType)
+                    viewModel.fitZoomTo(start: chartDurationThreshold,
+                                        end: currentDate,
+                                        for: measurementType)
+                        viewModel.resetCustomAxisMinMax(for: measurementType)
                 })
             }
         } else {
-            MeasurementType.chartsCases.forEach {
+            MeasurementType.chartsCases.forEach { measurementType in
                 setDownSampled(dataSet: ruuviTagData,
-                               to: viewModel.chartData(for: $0),
-                               withType: $0)
+                               to: viewModel.chartData(for: measurementType),
+                               withType: measurementType,
+                               completion: {
+                    viewModel.reloadChartData(with: measurementType)
+                })
             }
         }
     }
@@ -728,8 +749,7 @@ extension TagChartsPresenter: TagChartViewOutput {
                                     start: TimeInterval,
                                     stop: TimeInterval,
                                     completion: (() -> Void)? = nil) {
-        guard let uuid = viewModel.uuid.value,
-            ruuviTagData.count > threshold else {
+        guard let uuid = viewModel.uuid.value else {
             return
         }
         let operationQueue = queue(for: type)
@@ -818,7 +838,9 @@ extension TagChartsPresenter {
             chartDataSet.removeAll(keepingCapacity: true)
             chartDataSet.drawCirclesEnabled = false
         } else {
-            chartData.addDataSet(TagChartsPresenter.newDataSet())
+            let chartDataSet = TagChartsPresenter.newDataSet()
+            chartDataSet.drawCirclesEnabled = false
+            chartData.addDataSet(chartDataSet)
         }
         let data_length = dataSet.count
         if data_length <= threshold {
@@ -826,7 +848,6 @@ extension TagChartsPresenter {
                 chartData.addEntry(getEntry(for: $0, with: type), dataSetIndex: 0)
             })
             drawCirclesIfNeeded(for: chartData)
-            currentViewModel?.reloadChartData(with: type)
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
@@ -896,7 +917,6 @@ extension TagChartsPresenter {
         }
         chartData.addEntry(getEntry(for: dataSet[dataSet.count - 2], with: type), dataSetIndex: 0)
         chartData.addEntry(getEntry(for: dataSet[dataSet.count - 1], with: type), dataSetIndex: 0)
-        currentViewModel?.reloadChartData(with: type)
     }
     // swiftlint:enable function_body_length
 }
