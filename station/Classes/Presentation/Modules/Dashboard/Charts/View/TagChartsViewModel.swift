@@ -84,11 +84,7 @@ struct TagChartsViewModel {
     }
 
     func clearChartsData() {
-        temperatureChartData.value = nil
-        humidityChartData.value = nil
-        pressureChartData.value = nil
         MeasurementType.chartsCases.forEach({
-            chartData(for: $0)
             clearChartData(for: $0)
         })
     }
