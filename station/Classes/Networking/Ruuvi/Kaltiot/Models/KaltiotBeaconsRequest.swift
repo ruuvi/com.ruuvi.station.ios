@@ -26,7 +26,7 @@ class KaltiotBeaconsRequest: Encodable {
     /// Filter results by full ids. Comma-separated.
     private var ids: String?
     /// Return full info (as from GET /beacons/:id) instead of just ids.
-    var complete: Bool
+    var complete: Bool?
     /// Filter results depending on if the device is movable. Accepted values: yes, no, ignore. Defaults to ignore
     var movable: FilterResultsDepending?
     /// Filter results depending on if the device is a phone. Accepted values: yes, no, ignore. Defaults to ignore.
@@ -40,7 +40,7 @@ class KaltiotBeaconsRequest: Encodable {
     /// Match all beacons whose location name contains this string.
     var locationName: String?
 
-    enum CodingKeys: String {
+    enum CodingKeys: String, CodingKey {
         case ids = "ids"
         case complete = "complete"
         case movable = "movable"
@@ -57,9 +57,9 @@ extension KaltiotBeaconsRequest {
             return ids?.components(separatedBy: ",") ?? []
         }
         set {
-            ids = array.reduce(into: String(), { (result, nextItem) in
+            ids = newValue.reduce(into: String(), { (result, nextItem) in
                 result += nextItem
-                if nextItem != array.last {
+                if nextItem != newValue.last {
                     result += ","
                 }
             })
