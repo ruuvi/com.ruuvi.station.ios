@@ -36,7 +36,7 @@ struct Beacon: Codable {
     }
     // MARK: - UpdatedBy
     struct UpdatedBy: Codable {
-        let trackableID: JSONNull?
+        let trackableID: String?
         let id: String?
 
         enum CodingKeys: String, CodingKey {
