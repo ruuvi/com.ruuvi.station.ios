@@ -1,12 +1,5 @@
-//
-//  ChartFilterOperation.swift
-//  station
-//
-//  Created by Viik.ufa on 20.04.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
+
 class ChartFilterOperation: Operation {
     private var uuid: String
     private var array: [RuuviMeasurement]
