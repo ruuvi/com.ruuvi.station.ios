@@ -420,10 +420,15 @@ extension TagChartsPresenter {
         currentViewModel?.clearChartsData()
         if let last = lastMeasurement,
             let viewModel = currentViewModel {
-            MeasurementType.chartsCases.forEach {
-                let chartData = viewModel.chartData(for: $0)
+            MeasurementType.chartsCases.forEach { measurementType in
+                let chartData = viewModel.chartData(for: measurementType)
                 setDownSampled(dataSet: [last],
-                                     to: chartData, withType: $0)
+                               to: chartData,
+                               withType: measurementType,
+                               completion: {
+                    viewModel.reloadChartData(with: measurementType)
+                    viewModel.fitScreen(with: measurementType)
+                })
             }
         }
     }
@@ -434,12 +439,13 @@ extension TagChartsPresenter {
         }
         var newValues = [RuuviMeasurement]()
         var syncDate: Date = Date()
-        if let first = results.first {
-            syncDate = first.date
-            newValues.append(first.measurement)
-        }
         for result in results {
             autoreleasepool {
+                if result == results.first {
+                    syncDate = result.date
+                    newValues.append(result.measurement)
+                    return
+                }
                 let measurement = result.measurement
                 let chartIntervalSeconds = settings.chartIntervalSeconds
                 let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
@@ -685,9 +691,14 @@ extension TagChartsPresenter {
             let firstDate = ruuviTagData.first?.date.timeIntervalSince1970,
             let lastDate = ruuviTagData.last?.date.timeIntervalSince1970,
             (lastDate - firstDate) > (currentDate - chartDurationThreshold) {
-            MeasurementType.chartsCases.forEach {
-                fetchPointsByDates(for: viewModel, withType: $0, start: chartDurationThreshold, stop: currentDate)
-                viewModel.fitZoomTo(to: (chartDurationThreshold, currentDate), for: $0)
+            MeasurementType.chartsCases.forEach { measurementType in
+                fetchPointsByDates(for: viewModel,
+                                   withType: measurementType,
+                                   start: chartDurationThreshold,
+                                   stop: currentDate,
+                                   completion: {
+                    viewModel.fitZoomTo(to: (chartDurationThreshold, currentDate), for: measurementType)
+                })
             }
         } else {
             MeasurementType.chartsCases.forEach {
@@ -703,7 +714,8 @@ extension TagChartsPresenter: TagChartViewOutput {
     private func fetchPointsByDates(for viewModel: TagChartsViewModel,
                                     withType type: MeasurementType,
                                     start: TimeInterval,
-                                    stop: TimeInterval) {
+                                    stop: TimeInterval,
+                                    completion: (() -> Void)? = nil) {
         guard let uuid = viewModel.uuid.value,
             ruuviTagData.count > threshold else {
             return
@@ -726,7 +738,8 @@ extension TagChartsPresenter: TagChartViewOutput {
                 DispatchQueue.main.async {
                     self.setDownSampled(dataSet: sorted,
                                         to: viewModel.chartData(for: type),
-                                        withType: type)
+                                        withType: type,
+                                        completion: completion)
                 }
             }
         }
@@ -784,7 +797,11 @@ extension TagChartsPresenter {
     // swiftlint:disable function_body_length
     private func setDownSampled(dataSet: [RuuviMeasurement],
                                 to chartData: LineChartData,
-                                withType type: MeasurementType) {
+                                withType type: MeasurementType,
+                                completion: (() -> Void)? = nil) {
+        defer {
+            completion?()
+        }
         if let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
             chartDataSet.removeAll(keepingCapacity: true)
             chartDataSet.drawCirclesEnabled = false
