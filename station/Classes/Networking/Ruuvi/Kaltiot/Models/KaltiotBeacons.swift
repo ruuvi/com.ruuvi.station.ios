@@ -1,11 +1,3 @@
-//
-//  KaltiotBeacons.swift
-//  station
-//
-//  Created by Viik.ufa on 25.04.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
 
 // MARK: - KaltiotBeacons
