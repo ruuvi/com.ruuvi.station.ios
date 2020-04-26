@@ -42,6 +42,9 @@ struct TagChartsViewModel {
         name.value = webTag.name
         isConnectable.value = false
     }
+}
+// MARK: - charts methods
+extension TagChartsViewModel {
 
     func reloadChartData(with type: MeasurementType) {
         switch type {
@@ -51,6 +54,19 @@ struct TagChartsViewModel {
             self.humidityChart.value?.reloadData()
         case .pressure:
             self.pressureChart.value?.reloadData()
+        default:
+            return
+        }
+    }
+
+    func fitScreen(with type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.fitScreen()
+        case .humidity:
+            self.humidityChart.value?.fitScreen()
+        case .pressure:
+            self.pressureChart.value?.fitScreen()
         default:
             return
         }
