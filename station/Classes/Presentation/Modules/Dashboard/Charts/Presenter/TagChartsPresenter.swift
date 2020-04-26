@@ -373,6 +373,7 @@ extension TagChartsPresenter {
         // if no tags, open discover
         if viewModels.count == 0 {
             router.openDiscover(output: self)
+            stopObservingRuuviTagsData()
         } else {
             scrollToCurrentTag()
             restartObservingData()
@@ -384,13 +385,13 @@ extension TagChartsPresenter {
         guard let uuid = tagUUID else {
             return
         }
-        isLoading = true
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
         ruuviTagDataToken = ruuviTagDataRealm.observe {
             [weak self] (change) in
             switch change {
             case .initial(let results):
+                self?.isLoading = true
                 if results.isEmpty {
                     self?.handleEmptyResults()
                 } else {
@@ -506,6 +507,7 @@ extension TagChartsPresenter {
                 } else if let uuid = ruuviTags.first?.uuid {
                     self?.configure(uuid: uuid)
                 }
+                self?.restartObservingData()
             case .update(let ruuviTags, _, let insertions, _):
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
@@ -514,8 +516,16 @@ extension TagChartsPresenter {
                         self?.view.scroll(to: index)
                     }
                 }
-                guard self?.view.viewIsVisible == true else {
-                    return
+                if let uuid = self?.tagUUID {
+                    let tagUUIDs = ruuviTags.compactMap({$0.uuid})
+                    if !tagUUIDs.contains(uuid),
+                        let lastTagUUID = tagUUIDs.last {
+                        self?.configure(uuid: lastTagUUID)
+                    }
+                } else {
+                    if let lastTagUUID = ruuviTags.compactMap({$0.uuid}).last {
+                        self?.configure(uuid: lastTagUUID)
+                    }
                 }
                 self?.restartObservingData()
             case .error(let error):
