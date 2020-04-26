@@ -27,12 +27,10 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
         didSet {
-            if isLoading != oldValue {
-                if isLoading {
-                    activityPresenter.increment()
-                } else {
-                    activityPresenter.decrement()
-                }
+            if isLoading {
+                activityPresenter.increment()
+            } else {
+                activityPresenter.decrement()
             }
         }
     }
@@ -95,10 +93,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     private var viewModels = [TagChartsViewModel]() {
         didSet {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.view.viewModels = self.viewModels
-            }
+            self.view.viewModels = self.viewModels
         }
     }
     private var tagUUID: String? {
@@ -159,7 +154,6 @@ class TagChartsPresenter: TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
-        isLoading = true
         startObservingRuuviTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
@@ -387,10 +381,10 @@ extension TagChartsPresenter {
 
     private func restartObservingData() {
         ruuviTagDataToken?.invalidate()
-        self.isLoading = true
         guard let uuid = tagUUID else {
             return
         }
+        isLoading = true
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
         ruuviTagDataToken = ruuviTagDataRealm.observe {
@@ -402,6 +396,7 @@ extension TagChartsPresenter {
                 } else {
                     self?.handleInitialRuuviTagData(results)
                 }
+                self?.isLoading = false
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
@@ -432,31 +427,49 @@ extension TagChartsPresenter {
         guard let viewModel = currentViewModel else {
             return
         }
-        var newValues = [RuuviMeasurement]()
-        var syncDate: Date = Date()
-        if let first = results.first {
-            syncDate = first.date
-            newValues.append(first.measurement)
-        }
-        for result in results {
+        isLoading = true
+        let resultsRef = ThreadSafeReference(to: results)
+        let chartIntervalSeconds = settings.chartIntervalSeconds
+        let label = "com.ruuvi.station.TagChartsPresenter.handleInitialRuuviTagData"
+        DispatchQueue(label: label, qos: .userInitiated).async { [weak self] in
             autoreleasepool {
-                let measurement = result.measurement
-                let chartIntervalSeconds = settings.chartIntervalSeconds
-                let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
-                if elapsed >= chartIntervalSeconds {
-                    syncDate = measurement.date
-                    newValues.append(measurement)
+                let realmBg = try! Realm()
+                guard let results = realmBg.resolve(resultsRef) else {
+                    return
+                }
+                var newValues = [RuuviMeasurement]()
+                var syncDate: Date = Date()
+                for result in results {
+                    autoreleasepool {
+                        if result == results.first {
+                            syncDate = result.date
+                            newValues.append(result.measurement)
+                            return
+                        }
+                        let measurement = result.measurement
+                        let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
+                        if elapsed >= chartIntervalSeconds {
+                            syncDate = measurement.date
+                            newValues.append(measurement)
+                        }
+                    }
+                }
+                var lastChartSyncDate: Date?
+                if let last = results.last,
+                    last.date != newValues.last?.date {
+                    lastChartSyncDate = last.date
+                    newValues.append(last.measurement)
+                }
+                DispatchQueue.main.async { [weak self] in
+                    if let lastChartSyncDate = lastChartSyncDate {
+                        self?.lastChartSyncDate = lastChartSyncDate
+                    }
+                    self?.ruuviTagData = newValues
+                    self?.createChartData(for: viewModel)
+                    self?.isLoading = false
                 }
             }
         }
-        if let last = results.last,
-            last.date != newValues.last?.date {
-            lastChartSyncDate = last.date
-            newValues.append(last.measurement)
-        }
-        ruuviTagData = newValues
-        createChartData(for: viewModel)
-        isLoading = false
     }
 
     private func handleUpdateRuuviTagData(_ results: Results<RuuviTagDataRealm>, insertions: [Int]) {
