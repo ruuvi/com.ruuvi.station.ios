@@ -302,6 +302,10 @@
 "UnexpectedError.notAHttpResponse" = "Not a HTTP response";
 "UnexpectedError.failedToParseHttpResponse" = "Failed to parse HTTP response";
 
+// RuuviNetworkError
+"RuuviNetworkError.NoSavedApiKeyValue" = "No saved ApiKey value";
+"RuuviNetworkError.FailedToLogIn" = "Failed to log in";
+
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";
 "WebTagLocationSource.manual" = "Pick from the map";

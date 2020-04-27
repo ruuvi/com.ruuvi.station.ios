@@ -9,6 +9,7 @@ enum RUError: Error {
     case map(Error)
     case bluetooth(BluetoothError)
     case btkit(BTError)
+    case ruuviNetwork(RuuviNetworkError)
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
@@ -36,6 +37,8 @@ extension RUError: LocalizedError {
         case .bluetooth(let error):
             return error.localizedDescription
         case .writeToDisk(let error):
+            return error.localizedDescription
+        case .ruuviNetwork(let error):
             return error.localizedDescription
         }
     }
@@ -143,6 +146,20 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.notAHttpResponse".localized()
         case .failedToParseHttpResponse:
             return "UnexpectedError.failedToParseHttpResponse".localized()
+        }
+    }
+}
+enum RuuviNetworkError: Error {
+    case noSavedApiKeyValue
+    case failedToLogIn
+}
+extension RuuviNetworkError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .noSavedApiKeyValue:
+            return "RuuviNetworkError.NoSavedApiKeyValue".localized()
+        case .failedToLogIn:
+            return "RuuviNetworkError.FailedToLogIn".localized()
         }
     }
 }
