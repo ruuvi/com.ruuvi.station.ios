@@ -14,6 +14,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     var keychainService: KeychainService!
+    var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
@@ -169,9 +170,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidEnterKaltiotApiKey(apiKey: String) {
-        keychainService.kaltiotApiKey = apiKey
-        print("need implement check ApiKey\(apiKey)")
-        router.openKaltiotPicker(output: self)
+        validateApiKey(apiKey: apiKey)
     }
 
     func viewDidSelectKaltiotProvider() {
@@ -338,5 +337,19 @@ extension DiscoverPresenter {
         if persistedRuuviTags != nil && persistedWebTags != nil {
             view.isCloseEnabled = persistedRuuviTags.count > 0 || persistedWebTags.count > 0
         }
+    }
+
+    private func validateApiKey(apiKey: String) {
+        let op = ruuviNetworkKaltiot.validateApiKey(apiKey: apiKey)
+        op.on(success: {[weak self] in
+            self?.keychainService.kaltiotApiKey = apiKey
+            self?.openKaltiotPicker()
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+
+    private func openKaltiotPicker() {
+        router.openKaltiotPicker(output: self)
     }
 }
