@@ -14,8 +14,15 @@ class NetworkingAssembly: Assembly {
 
         container.register(RuuviNetworkFactory.self) { r in
             let factory = RuuviNetworkFactory()
+            factory.kaltiot = r.resolve(RuuviNetworkKaltiot.self)
             factory.whereOS = r.resolve(RuuviNetworkWhereOS.self)
             return factory
+        }.inObjectScope(.container)
+        
+        container.register(RuuviNetworkKaltiot.self) { r in
+            let network = RuuviNetworkKaltiotURLSession()
+            network.keychainService = r.resolve(KeychainService.self)
+            return network
         }.inObjectScope(.container)
 
         container.register(RuuviNetworkWhereOS.self) { _ in

@@ -30,6 +30,6 @@ extension KeychainServiceImpl: KeychainService {
         }
     }
     var hasKaltiotApiKey: Bool {
-        return keychain[Account.kaltiot.rawValue] != nil
+        return !((keychain[Account.kaltiot.rawValue] ?? "").isEmpty)
     }
 }

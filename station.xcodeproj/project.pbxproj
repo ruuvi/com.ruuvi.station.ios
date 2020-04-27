@@ -1159,6 +1159,8 @@
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
 		A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4D241D57E700888017 /* MockCalibrationService.swift */; };
 		A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */; };
+		A95518AB24573DF5005592FD /* RuuviNetworkKaltiot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */; };
+		A95518AD245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
 		A95BA3E52451ECB000EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
 		A95BA3E72451ED7000EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
 		A95BA3E82451EE3A00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
@@ -1646,6 +1648,8 @@
 		A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationsManager.swift; sourceTree = "<group>"; };
 		A94FFD4D241D57E700888017 /* MockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalibrationService.swift; sourceTree = "<group>"; };
 		A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertServiceObserver.swift; sourceTree = "<group>"; };
+		A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiot.swift; sourceTree = "<group>"; };
+		A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiotURLSession.swift; sourceTree = "<group>"; };
 		A95BA3E42451ECB000EF923D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceImpl.swift; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
@@ -4374,6 +4378,7 @@
 			children = (
 				A9C351BE245382AF004696BD /* Models */,
 				A9C351C724538E8F004696BD /* URLSession */,
+				A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */,
 			);
 			path = Kaltiot;
 			sourceTree = "<group>";
@@ -4390,6 +4395,7 @@
 		A9C351C724538E8F004696BD /* URLSession */ = {
 			isa = PBXGroup;
 			children = (
+				A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */,
 			);
 			path = URLSession;
 			sourceTree = "<group>";
@@ -5703,6 +5709,7 @@
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
+				A95518AB24573DF5005592FD /* RuuviNetworkKaltiot.swift in Sources */,
 				0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E0C19BE23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
@@ -5925,6 +5932,7 @@
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
+				A95518AD245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift in Sources */,
 				0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
 				0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */,

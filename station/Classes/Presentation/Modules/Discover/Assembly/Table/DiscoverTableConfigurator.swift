@@ -19,7 +19,7 @@ class DiscoverTableConfigurator {
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.keychainService = r.resolve(KeychainService.self)
-
+        presenter.ruuviNetworkKaltiot = r.resolve(RuuviNetworkKaltiot.self)
         view.output = presenter
     }
 }
