@@ -1218,6 +1218,8 @@
 		A9C351C4245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */; };
 		A9C351C5245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */; };
 		A9C351C6245384F2004696BD /* KaltiotBeaconsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351C3245384F2004696BD /* KaltiotBeaconsRequest.swift */; };
+		A9F8ED06245772DE004942CE /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
+		A9F8ED07245772DE004942CE /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
 		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
 		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
 		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
@@ -5149,6 +5151,7 @@
 				0E6BAE1823856A01003A2D4C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E6BAE1A23856A01003A2D4C /* RuuviTagService.swift in Sources */,
 				0E6BAE1C23856A01003A2D4C /* WebTagRealm.swift in Sources */,
+				A9F8ED07245772DE004942CE /* RuuviNetworkKaltiotURLSession.swift in Sources */,
 				0E6BAE1D23856A01003A2D4C /* LocalizationService.swift in Sources */,
 				0E6BAE1E23856A01003A2D4C /* RURangeSeekSlider.swift in Sources */,
 				0E6BAE1F23856A01003A2D4C /* CardsModuleInput.swift in Sources */,
@@ -5514,6 +5517,7 @@
 				0E8BD34E238566AB008B31EF /* WebTagSettingsRouterInput.swift in Sources */,
 				0E8BD350238566AB008B31EF /* RuuviTagService.swift in Sources */,
 				0E8BD352238566AB008B31EF /* WebTagRealm.swift in Sources */,
+				A9F8ED06245772DE004942CE /* RuuviNetworkKaltiotURLSession.swift in Sources */,
 				0E8BD353238566AB008B31EF /* LocalizationService.swift in Sources */,
 				0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */,
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,

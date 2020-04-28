@@ -28,6 +28,43 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         return promise.future
     }
 
+    func beacons(page: Int) -> Future<KaltiotBeacons, RUError> {
+        guard let apiKey = keychainService.kaltiotApiKey else {
+            return .init(error: .ruuviNetwork(.noSavedApiKeyValue))
+        }
+        let promise = Promise<KaltiotBeacons, RUError>()
+        let requestModel = KaltiotBeaconsRequest()
+        requestModel.complete = true
+        requestModel.page = page
+        var params: [String: String] = requestModel.asDictionary()
+        params["ApiKey"] = apiKey
+        guard let url = url(for: .appid, params: params) else {
+            return .init(error: .unexpected(.failedToConstructURL))
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                promise.fail(error: .networking(error))
+            } else {
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        let result = try decoder.decode(KaltiotBeacons.self, from: data)
+                        promise.succeed(value: result)
+                    } catch let error {
+                        promise.fail(error: .parse(error))
+                    }
+                } else {
+                    promise.fail(error: .unexpected(.failedToParseHttpResponse))
+                }
+            }
+        }
+        task.resume()
+        return promise.future
+    }
+    
+// MARK: - Private
     private lazy var baseUrlComponents: URLComponents = {
         var components = URLComponents()
         components.scheme = "https"
@@ -36,17 +73,19 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         return components
     }()
 
-    enum Resources {
+    private enum Resources {
         case appid
         case sensorHistory
-
+        case beacons
 
         var endpoint: String {
             switch self {
             case .appid:
-                return "/appid/"
+                return "/appid"
+            case .beacons:
+                return "/beacons"
             case .sensorHistory:
-                return "/history/sensor/hexdump/"
+                return "/history/sensor/hexdump"
             }
         }
     }

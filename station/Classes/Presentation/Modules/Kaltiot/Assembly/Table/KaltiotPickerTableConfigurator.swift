@@ -11,7 +11,8 @@ class KaltiotPickerTableConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.keychainService = r.resolve(KeychainService.self)
-
+        presenter.ruuviNetworkKaltiot = r.resolve(RuuviNetworkKaltiot.self)
+        presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         view.output = presenter
     }
 }
