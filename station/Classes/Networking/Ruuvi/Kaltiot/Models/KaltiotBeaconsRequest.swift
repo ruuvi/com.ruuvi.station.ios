@@ -42,6 +42,18 @@ class KaltiotBeaconsRequest: Encodable {
         case trackableId = "trackable_id"
         case locationName = "location_name"
     }
+    
+    func asDictionary() -> [String: String] {
+        do {
+            let data = try JSONEncoder().encode(self)
+            guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: String] else {
+                return [:]
+            }
+            return dictionary
+        } catch {
+            return [:]
+        }
+    }
 }
 extension KaltiotBeaconsRequest {
     var identifiers: [String] {

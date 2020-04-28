@@ -1,17 +1,17 @@
 import Foundation
 
 // MARK: - KaltiotBeacons
-struct KaltiotBeacons: Codable {
+struct KaltiotBeacons: Decodable {
     let beacons: [Beacon]
     let pages: Int
 }
 
 // MARK: - Beacon
-struct Beacon: Codable {
+struct Beacon: Decodable {
     // MARK: - Meta
-    struct Meta: Codable {
-        struct Capabilities: Codable {
-            enum Sensor: String, Codable {
+    struct Meta: Decodable {
+        struct Capabilities: Decodable {
+            enum Sensor: String, Decodable {
                 case batterylevel = "batterylevel"
                 case collisionX = "collision_x"
                 case collisionY = "collision_y"
@@ -27,7 +27,7 @@ struct Beacon: Codable {
         let capabilities: Capabilities
     }
     // MARK: - UpdatedBy
-    struct UpdatedBy: Codable {
+    struct UpdatedBy: Decodable {
         let trackableID: String?
         let id: String?
 
