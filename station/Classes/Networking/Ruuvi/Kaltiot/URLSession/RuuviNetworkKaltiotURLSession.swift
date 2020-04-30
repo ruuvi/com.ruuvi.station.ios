@@ -29,16 +29,15 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
     }
 
     func beacons(page: Int) -> Future<KaltiotBeacons, RUError> {
-        guard let apiKey = keychainService.kaltiotApiKey else {
+        guard keychainService.hasKaltiotApiKey else {
             return .init(error: .ruuviNetwork(.noSavedApiKeyValue))
         }
         let promise = Promise<KaltiotBeacons, RUError>()
-        let requestModel = KaltiotBeaconsRequest()
-        requestModel.complete = true
-        requestModel.page = page
-        var params: [String: String] = requestModel.asDictionary()
-        params["ApiKey"] = apiKey
-        guard let url = url(for: .appid, params: params) else {
+        let params: [String: String] = [
+            "complete": "true",
+            "page": String(page)
+        ]
+        guard let url = url(for: .beacons, params: params) else {
             return .init(error: .unexpected(.failedToConstructURL))
         }
         var request = URLRequest(url: url)

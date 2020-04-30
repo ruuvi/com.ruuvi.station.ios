@@ -3,7 +3,7 @@ import UIKit
 class KaltiotPickerRouter: KaltiotPickerRouterInput {
     weak var transitionHandler: UIViewController!
 
-    func popViewController(animated: Bool) {
-        transitionHandler.navigationController?.popViewController(animated: animated)
+    func dismiss(completion: (() -> Void)?) {
+        transitionHandler.dismiss(animated: true, completion: completion)
     }
 }

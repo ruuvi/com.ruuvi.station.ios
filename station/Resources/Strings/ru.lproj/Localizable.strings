@@ -305,7 +305,9 @@
 // RuuviNetworkError
 "RuuviNetworkError.NoSavedApiKeyValue" = "Нет сохраненного ApiKey";
 "RuuviNetworkError.FailedToLogIn" = "Не удалось авторизоваться";
+"RuuviNetworkError.DoesNotHaveSensors" = "У метки нет сенсоров";
 
+"RuuviNetworkError.TagIsNotPluggable" = "The tag is not pluggable";
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";

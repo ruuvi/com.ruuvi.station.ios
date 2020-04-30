@@ -1,5 +1,5 @@
 import Foundation
 
 protocol KaltiotPickerRouterInput {
-    func popViewController(animated: Bool)
+    func dismiss(completion: (() -> Void)?)
 }
