@@ -152,6 +152,7 @@ extension UnexpectedError: LocalizedError {
 enum RuuviNetworkError: Error {
     case noSavedApiKeyValue
     case failedToLogIn
+    case doesNotHaveSensors
 }
 extension RuuviNetworkError: LocalizedError {
     public var errorDescription: String? {
@@ -160,6 +161,8 @@ extension RuuviNetworkError: LocalizedError {
             return "RuuviNetworkError.NoSavedApiKeyValue".localized()
         case .failedToLogIn:
             return "RuuviNetworkError.FailedToLogIn".localized()
+        case .doesNotHaveSensors:
+            return "RuuviNetworkError.DoesNotHaveSensors".localized()
         }
     }
 }

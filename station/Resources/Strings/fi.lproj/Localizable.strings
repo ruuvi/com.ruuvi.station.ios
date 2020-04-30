@@ -305,6 +305,7 @@
 // RuuviNetworkError
 "RuuviNetworkError.NoSavedApiKeyValue" = "No saved ApiKey value";
 "RuuviNetworkError.FailedToLogIn" = "Failed to log in";
+"RuuviNetworkError.DoesNotHaveSensors" = "The beacon does not have sensors";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

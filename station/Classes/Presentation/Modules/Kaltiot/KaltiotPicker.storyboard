@@ -10,7 +10,6 @@
         <!--Navigation Controller-->
         <scene sceneID="Gkr-7f-FDZ">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KPK-60-bRm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController id="0dM-Rr-rch" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="CHr-Uu-nNx">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -20,44 +19,80 @@
                         <segue destination="HlR-q7-FH1" kind="relationship" relationship="rootViewController" id="ii0-aT-oQm"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KPK-60-bRm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="32" y="142"/>
         </scene>
         <!--Add Kaltiot tag-->
         <scene sceneID="ycE-bE-PRg">
             <objects>
-                <tableViewController storyboardIdentifier="KaltiotPickerTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="HlR-q7-FH1" userLabel="Add Kaltiot tag" customClass="KaltiotPickerTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="KaltiotPickerTableViewController" id="HlR-q7-FH1" userLabel="Add Kaltiot tag" customClass="KaltiotPickerTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="w15-Xn-bEY">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="yxZ-Wr-5w4">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="KaltiotPickerTableViewCell" id="yxZ-Wr-5w4" customClass="KaltiotPickerTableViewCell" customModule="station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yxZ-Wr-5w4" id="Wza-gi-mq3">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-connectable" translatesAutoresizingMaskIntoConstraints="NO" id="Uxi-Nu-1IG">
+                                            <rect key="frame" x="368" y="9" width="26" height="26"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="26" id="2O5-TN-NDF"/>
+                                                <constraint firstAttribute="height" constant="26" id="tpl-g9-ccC"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Web Tag Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VbC-DI-DLb">
+                                            <rect key="frame" x="20" y="11.5" width="340" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="Uxi-Nu-1IG" secondAttribute="trailing" constant="20" id="0Sv-hA-dgB"/>
+                                        <constraint firstItem="VbC-DI-DLb" firstAttribute="centerY" secondItem="Wza-gi-mq3" secondAttribute="centerY" id="Csa-ih-ck0"/>
+                                        <constraint firstItem="Uxi-Nu-1IG" firstAttribute="centerY" secondItem="Wza-gi-mq3" secondAttribute="centerY" id="k0e-Pk-4d7"/>
+                                        <constraint firstItem="Uxi-Nu-1IG" firstAttribute="leading" secondItem="VbC-DI-DLb" secondAttribute="trailing" constant="8" id="puj-Qr-3wj"/>
+                                        <constraint firstItem="VbC-DI-DLb" firstAttribute="leading" secondItem="Wza-gi-mq3" secondAttribute="leading" constant="20" id="udj-Bn-RTx"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="iconImageView" destination="Uxi-Nu-1IG" id="Fj4-7O-HfU"/>
+                                    <outlet property="nameLabel" destination="VbC-DI-DLb" id="ElW-yS-xqy"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
+                        <sections/>
                         <connections>
-                            <outlet property="dataSource" destination="HlR-q7-FH1" id="fVc-bx-SfE"/>
-                            <outlet property="delegate" destination="HlR-q7-FH1" id="sLh-yi-6pL"/>
+                            <outlet property="dataSource" destination="HlR-q7-FH1" id="NjF-Df-NIH"/>
+                            <outlet property="delegate" destination="HlR-q7-FH1" id="Yso-5L-3Id"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Add Kaltiot tag" id="LkO-y7-YRg">
-                        <barButtonItem key="rightBarButtonItem" title="done" id="bg6-wd-api"/>
+                        <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="eUF-cw-9tf">
+                            <connections>
+                                <action selector="didTapCloseButton:" destination="HlR-q7-FH1" id="zWQ-32-aBd"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iaR-Bn-h1b" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="w2F-3N-pBH" userLabel="KaltiotTableInitializer" customClass="KaltiotTableInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="w2F-3N-pBH" userLabel="KaltiotTableInitializer" customClass="KaltiotPickerTableInitializer" customModule="station" customModuleProvider="target">
                     <connections>
-                        <outlet property="viewController" destination="HlR-q7-FH1" id="B0q-U7-rnF"/>
+                        <outlet property="viewController" destination="HlR-q7-FH1" id="THS-89-xcu"/>
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="946" y="142"/>
+            <point key="canvasLocation" x="944.92753623188412" y="141.96428571428569"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
+        <image name="icon-connectable" width="25" height="25"/>
+    </resources>
 </document>

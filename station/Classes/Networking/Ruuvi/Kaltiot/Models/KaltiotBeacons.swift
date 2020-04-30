@@ -2,12 +2,12 @@ import Foundation
 
 // MARK: - KaltiotBeacons
 struct KaltiotBeacons: Decodable {
-    let beacons: [Beacon]
+    let beacons: [KaltiotBeacon]
     let pages: Int
 }
 
 // MARK: - Beacon
-struct Beacon: Decodable {
+struct KaltiotBeacon: Decodable {
     // MARK: - Meta
     struct Meta: Decodable {
         struct Capabilities: Decodable {
@@ -38,14 +38,14 @@ struct Beacon: Decodable {
     }
     // MARK: - Propeties
     let id: String
-    let timestamp: Int
+    let timestamp: TimeInterval?
     let movable: Bool
     let meta: Meta?
     let trackableID: String?
     let latitude, longitude: Int?
     let accuracy: Double?
     let customerID: String?
-    let updatedBy: UpdatedBy
+    let updatedBy: UpdatedBy?
     let isPhone: Bool?
 
     enum CodingKeys: String, CodingKey {
