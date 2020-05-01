@@ -1,6 +1,6 @@
 import Foundation
 import Future
-
+import BTKit
 class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
 
     var keychainService: KeychainService!
@@ -63,6 +63,74 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         return promise.future
     }
     
+    func history(ids: [String], from: TimeInterval?, to: TimeInterval?) -> Future<[KaltiotBeaconLogs], RUError> {
+        guard keychainService.hasKaltiotApiKey else {
+            return .init(error: .ruuviNetwork(.noSavedApiKeyValue))
+        }
+        let promise = Promise<[KaltiotBeaconLogs], RUError>()
+        let idsString: String = ids.reduce("") { (result, item) -> String in
+            var string = result
+            if item != ids.last {
+                string += ","
+            }
+            string += item
+            return string
+        }
+        var params: [String: String] = [
+            "ids": idsString
+        ]
+        if let from = from {
+            params["from"] = String(from)
+        }
+        if let to = to {
+            params["to"] = String(to)
+        }
+        guard let url = url(for: .sensorHistory, params: params) else {
+            return .init(error: .unexpected(.failedToConstructURL))
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                promise.fail(error: .networking(error))
+            } else {
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        let result = try decoder.decode(Array<KaltiotBeaconLogs>.self, from: data)
+                        promise.succeed(value: result)
+                    } catch let error {
+                        promise.fail(error: .parse(error))
+                    }
+                } else {
+                    promise.fail(error: .unexpected(.failedToParseHttpResponse))
+                }
+            }
+        }
+        task.resume()
+        return promise.future
+    }
+    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[(Ruuvi.Data2, Date)], RUError> {
+        let promise = Promise<[(Ruuvi.Data2, Date)], RUError>()
+        let operation = history(ids: [mac], from: nil, to: nil)
+        operation.on(success: { (records) in
+            let decoder = Ruuvi.decoder
+            guard let log = records.first else {
+                return
+            }
+            let result: [(Ruuvi.Data2, Date)] = log.history.compactMap { (log) -> (Ruuvi.Data2, Date)? in
+                if let dev = log.data?.ruuvi2() {
+                    return (dev, Date(timeIntervalSince1970: log.timestamp))
+                } else {
+                    return nil
+                }
+            }
+            promise.succeed(value: result)
+        }, failure: { (error) in
+            promise.fail(error: error)
+        }, completion: nil)
+        return .init(value: [])
+    }
 // MARK: - Private
     private lazy var baseUrlComponents: URLComponents = {
         var components = URLComponents()
