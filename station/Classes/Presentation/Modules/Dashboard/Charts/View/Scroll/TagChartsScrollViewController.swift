@@ -95,6 +95,10 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         alertVC.addAction(UIAlertAction(title: fromWeb, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToSyncWithWeb(for: viewModel)
         }))
+        let fromKaltiot = "TagCharts.SyncConfirmationDialog.WithWebKaltiot.title".localized()
+        alertVC.addAction(UIAlertAction(title: fromKaltiot, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToSyncWithWebKaltiot(for: viewModel)
+        }))
         present(alertVC, animated: true)
     }
 
