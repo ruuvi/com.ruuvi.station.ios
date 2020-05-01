@@ -7,7 +7,7 @@ class KaltiotPickerTableViewController: UITableViewController {
 // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        localize()
+        setupLocalization()
         output.viewDidLoad()
     }
 // MARK: - Table view data source

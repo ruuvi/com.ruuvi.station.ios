@@ -423,6 +423,7 @@ extension TagChartsPresenter {
         guard let uuid = tagUUID else {
             return
         }
+        lastMeasurement = nil
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
         ruuviTagDataToken = ruuviTagDataRealm.observe {

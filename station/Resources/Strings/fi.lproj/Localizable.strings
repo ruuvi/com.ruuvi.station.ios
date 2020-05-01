@@ -204,6 +204,12 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
+"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
+"Settings.Label.Kaltiot" = "Kaltiot";
+
+// Kaltiot settings
+"KaltiotSettings.title" = "Kaltiot settings";
+"KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";

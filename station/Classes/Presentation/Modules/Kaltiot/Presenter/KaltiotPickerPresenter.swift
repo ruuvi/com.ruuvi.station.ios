@@ -14,6 +14,7 @@ class KaltiotPickerPresenter {
     var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
     var ruuviTagService: RuuviTagService!
     var ruuviTagPersistence: RuuviTagPersistence!
+    var existingBeaconsMac: [String] = []
 
     private var viewModel: KaltiotPickerViewModel! {
         didSet {
@@ -63,6 +64,8 @@ extension KaltiotPickerPresenter: KaltiotPickerViewOutput {
 extension KaltiotPickerPresenter: KaltiotPickerModuleInput {
     func configure(output: KaltiotPickerModuleOutput) {
         self.output = output
+        viewModel = KaltiotPickerViewModel()
+        existingBeaconsMac = realmContext.main.objects(RuuviTagRealm.self).compactMap({$0.mac})
     }
 
     func dismiss() {
@@ -72,7 +75,6 @@ extension KaltiotPickerPresenter: KaltiotPickerModuleInput {
 // MARK: - Private
 extension KaltiotPickerPresenter {
     private func obtainBeacons() {
-        viewModel = KaltiotPickerViewModel()
         isLoading = true
         fetchBeacons()
     }
@@ -86,13 +88,16 @@ extension KaltiotPickerPresenter {
                     self?.page += 1
                 }
                 var beaconsViewModels: [KaltiotBeaconViewModel] = self?.beacons ?? []
-                result.beacons.forEach({
-                    beaconsViewModels.append(KaltiotBeaconViewModel(beacon: $0))
+                result.beacons.forEach({ beacon in
+                    if !(self?.existingBeaconsMac ?? [])
+                        .contains(beacon.id) {
+                        beaconsViewModels.append(KaltiotBeaconViewModel(beacon: beacon))
+                    }
                 })
                 self?.beacons = beaconsViewModels
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
-            }, completion: nil)
+            })
         }
     }
 
@@ -102,13 +107,14 @@ extension KaltiotPickerPresenter {
         op.on(success: {[weak self] (results) in
             if results.count > 0 {
                 self?.saveResults(results, mac: beaconMac)
+                self?.isLoading = false
             } else {
+                self?.isLoading = false
                 self?.errorPresenter.present(error: RUError.ruuviNetwork(.noStoredData))
             }
         }, failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        }, completion: {[weak self] in
             self?.isLoading = false
+            self?.errorPresenter.present(error: error)
         })
     }
 
@@ -134,11 +140,11 @@ extension KaltiotPickerPresenter {
         self.isLoading = true
         let operation: Future<Void, RUError> = ruuviTagPersistence.persist(ruuviTag: firstTag, mac: mac)
         operation.on(success: { [weak self] in
+            self?.isLoading = false
             self?.router.dismiss(completion: nil)
         }, failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
             self?.isLoading = false
+            self?.errorPresenter.present(error: error)
         })
     }
 }

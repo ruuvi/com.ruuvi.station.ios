@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pwK-mi-m51">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Kaltiot Settings Table View Controller-->
+        <scene sceneID="bX8-V8-HbC">
+            <objects>
+                <tableViewController storyboardIdentifier="KaltiotSettingsTableViewController" id="pwK-mi-m51" customClass="KaltiotSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="CVK-dw-nrw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <sections>
+                            <tableViewSection headerTitle="APIKEY" id="pEk-Pq-9IV">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="64" id="g4f-E7-Ggx">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g4f-E7-Ggx" id="aZO-4f-slU">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter ApiKey" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="1x8-yv-4OY">
+                                                    <rect key="frame" x="20" y="11" width="374" height="42"/>
+                                                    <nil key="textColor"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="yes" smartQuotesType="no" textContentType="password"/>
+                                                    <connections>
+                                                        <action selector="apiKeyDidEndEditing:" destination="pwK-mi-m51" eventType="editingDidEndOnExit" id="E4A-0z-HDz"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1x8-yv-4OY" secondAttribute="bottom" id="5fn-k4-b4b"/>
+                                                <constraint firstItem="1x8-yv-4OY" firstAttribute="top" secondItem="aZO-4f-slU" secondAttribute="topMargin" id="gM8-uu-KKB"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1x8-yv-4OY" secondAttribute="trailing" id="mSL-Ew-Sej"/>
+                                                <constraint firstItem="1x8-yv-4OY" firstAttribute="leading" secondItem="aZO-4f-slU" secondAttribute="leadingMargin" id="xcc-dU-aU0"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="pwK-mi-m51" id="GdQ-2B-iGz"/>
+                            <outlet property="delegate" destination="pwK-mi-m51" id="giO-wk-nEM"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="apiKeyTextField" destination="1x8-yv-4OY" id="9iT-LB-3wK"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sj2-HX-gJ5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="tsf-jX-8yG" customClass="KaltiotSettingsTableInitializer" customModule="station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="pwK-mi-m51" id="YVS-mi-tkn"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-332" y="212"/>
+        </scene>
+    </scenes>
+</document>
