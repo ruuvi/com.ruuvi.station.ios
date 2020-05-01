@@ -43,3 +43,121 @@ struct TagChartsViewModel {
         isConnectable.value = false
     }
 }
+// MARK: - charts methods
+extension TagChartsViewModel {
+    @discardableResult
+    func chartData(for type: MeasurementType) -> LineChartData {
+        var chartData: LineChartData = LineChartData(dataSet: TagChartsPresenter.newDataSet())
+        switch type {
+        case .temperature:
+            if let data = temperatureChartData.value {
+                chartData = data
+            } else {
+                temperatureChartData.value = chartData
+            }
+        case .humidity:
+            if let data = humidityChartData.value {
+                chartData = data
+            } else {
+                humidityChartData.value = chartData
+            }
+        case .pressure:
+            if let data = pressureChartData.value {
+                chartData = data
+            } else {
+                pressureChartData.value = chartData
+            }
+        default:
+            fatalError("\(#function):\(#line) Undeclarated chart type")
+        }
+        return chartData
+    }
+
+    func clearChartsData() {
+        MeasurementType.chartsCases.forEach({
+            clearChartData(for: $0)
+        })
+    }
+
+    func clearChartData(for type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.clearChartData()
+        case .humidity:
+            self.humidityChart.value?.clearChartData()
+        case .pressure:
+            self.pressureChart.value?.clearChartData()
+        default:
+            return
+        }
+    }
+
+    func fitScreen(with type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.fitScreen()
+        case .humidity:
+            self.humidityChart.value?.fitScreen()
+        case .pressure:
+            self.pressureChart.value?.fitScreen()
+        default:
+            return
+        }
+    }
+
+    func fitZoomTo(start: TimeInterval,
+                   end: TimeInterval,
+                   for type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.fitZoomTo(min: start, max: end)
+        case .humidity:
+            self.humidityChart.value?.fitZoomTo(min: start, max: end)
+        case .pressure:
+            self.pressureChart.value?.fitZoomTo(min: start, max: end)
+        default:
+            return
+        }
+    }
+
+    func reloadChartData(with type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.reloadData()
+        case .humidity:
+            self.humidityChart.value?.reloadData()
+        case .pressure:
+            self.pressureChart.value?.reloadData()
+        default:
+            return
+        }
+    }
+
+    func resetCustomAxisMinMax(for type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.reloadData()
+        case .humidity:
+            self.humidityChart.value?.reloadData()
+        case .pressure:
+            self.pressureChart.value?.reloadData()
+        default:
+            return
+        }
+    }
+
+    func setRange(min: TimeInterval,
+                  max: TimeInterval,
+                  for type: MeasurementType) {
+        switch type {
+        case .temperature:
+            self.temperatureChart.value?.setXRange(min: min, max: max)
+        case .humidity:
+            self.humidityChart.value?.setXRange(min: min, max: max)
+        case .pressure:
+            self.pressureChart.value?.setXRange(min: min, max: max)
+        default:
+            return
+        }
+    }
+}

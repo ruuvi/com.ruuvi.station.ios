@@ -53,6 +53,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 6.5)
     - GoogleUtilities/UserDefaults (~> 6.5)
     - Protobuf (>= 3.9.2, ~> 3.9)
+  - FLEX (4.1.1)
   - FutureX (1.1.1)
   - GestureInstructions (0.0.2)
   - GoogleAppMeasurement (6.2.1):
@@ -111,6 +112,7 @@ DEPENDENCIES:
   - Charts
   - Firebase/Analytics
   - Firebase/Messaging
+  - FLEX
   - FutureX
   - GestureInstructions
   - Humidity
@@ -137,6 +139,7 @@ SPEC REPOS:
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
+    - FLEX
     - FutureX
     - GestureInstructions
     - GoogleAppMeasurement
@@ -186,6 +189,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 575cd32f2aec0feeb0e44f5d0110a09e5e60b47b
   FirebaseInstanceID: 6668efc1655a4052c083f287a7141f1ead12f9c2
   FirebaseMessaging: 448cf4c727f3c95f4f90816907d67306ba785cfe
+  FLEX: 81096107977a09836eb440173010ceeef01105d6
   FutureX: 85faeccb370f5a4286ae8540849095adb0bd7b2d
   GestureInstructions: acbd12854a5c7658365a11eaae2652dcbe623038
   GoogleAppMeasurement: a08a43b8677b95ed51fcef880e36737334d804fd
@@ -207,6 +211,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: f7e93826b04c9e05b8f0ab57d7be8b084051e4c1
+PODFILE CHECKSUM: fd3236cc54d3ab157d3570e2c51c4ee755ff83b5
 
 COCOAPODS: 1.9.1

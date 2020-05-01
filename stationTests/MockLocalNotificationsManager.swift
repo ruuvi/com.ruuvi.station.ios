@@ -1,11 +1,3 @@
-//
-//  MockLocalNotificationsManager.swift
-//  stationTests
-//
-//  Created by Viik.ufa on 14.03.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import UIKit
 @testable import station
 

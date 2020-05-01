@@ -28,12 +28,10 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
         didSet {
-            if isLoading != oldValue {
-                if isLoading {
-                    activityPresenter.increment()
-                } else {
-                    activityPresenter.decrement()
-                }
+            if isLoading {
+                activityPresenter.increment()
+            } else {
+                activityPresenter.decrement()
             }
         }
     }
@@ -51,8 +49,40 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private let threshold: Int = 100
-    private var isInUpdate = false
-    private var ruuviTagData: [RuuviMeasurement] = []
+    private var ruuviTagData: [RuuviMeasurement] = [] {
+        didSet {
+            if let last = ruuviTagData.last {
+                lastMeasurement = last
+            } else if let last = oldValue.last {
+                lastMeasurement = last
+            } else if let last = lastMeasurement,
+                ruuviTagData.isEmpty {
+                ruuviTagData.append(last)
+            }
+        }
+    }
+    private var lastMeasurement: RuuviMeasurement?
+    private lazy var temperatureQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        queue.name = "com.ruuvi.station.TagChartsPresenter.temperature"
+        queue.qualityOfService = .userInteractive
+        return queue
+    }()
+    private var humidityQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        queue.name = "com.ruuvi.station.TagChartsPresenter.humidity"
+        queue.qualityOfService = .userInteractive
+        return queue
+    }()
+    private var pressureQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        queue.name = "com.ruuvi.station.TagChartsPresenter.pressure"
+        queue.qualityOfService = .userInteractive
+        return queue
+    }()
     private var ruuviTags: Results<RuuviTagRealm>? {
         didSet {
             syncViewModels()
@@ -64,10 +94,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     private var viewModels = [TagChartsViewModel]() {
         didSet {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.view.viewModels = self.viewModels
-            }
+            self.view.viewModels = self.viewModels
         }
     }
     private var tagUUID: String? {
@@ -128,7 +155,6 @@ class TagChartsPresenter: TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
-        isLoading = true
         startObservingRuuviTags()
         startListeningToSettings()
         startObservingBackgroundChanges()
@@ -225,6 +251,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
             }, connectionTimeout: connectionTimeout, serviceTimeout: serviceTimeout)
             op.on(success: { [weak self] _ in
                 self?.view.setSync(progress: nil, for: viewModel)
+                self?.ruuviTagData = []
+                viewModel.clearChartsData()
                 self?.restartObservingData()
             }, failure: { [weak self] error in
                 self?.view.setSync(progress: nil, for: viewModel)
@@ -248,6 +276,8 @@ extension TagChartsPresenter: TagChartsViewOutput {
             op.on(failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
+                self?.stopObservingRuuviTagsData()
+                self?.ruuviTagData = []
                 self?.restartObservingData()
                 self?.isLoading = false
             })
@@ -360,95 +390,132 @@ extension TagChartsPresenter {
                 .hasRegistrations(for: ruuviTag.uuid) ? .registered : .empty
             viewModel.temperatureUnit.value = settings.temperatureUnit
             viewModel.humidityUnit.value = settings.humidityUnit
-            viewModel.temperatureChartData.value = LineChartData(dataSet: TagChartsPresenter.newDataSet())
-            viewModel.humidityChartData.value = LineChartData(dataSet: TagChartsPresenter.newDataSet())
-            viewModel.pressureChartData.value = LineChartData(dataSet: TagChartsPresenter.newDataSet())
             return viewModel
         })
         // if no tags, open discover
         if viewModels.count == 0 {
             router.openDiscover(output: self)
+            stopObservingRuuviTagsData()
         } else {
             scrollToCurrentTag()
             restartObservingData()
         }
     }
-    // swiftlint:disable all
+
     private func restartObservingData() {
         ruuviTagDataToken?.invalidate()
-        self.isLoading = true
         guard let uuid = tagUUID else {
             return
         }
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@", uuid)
+            .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
         ruuviTagDataToken = ruuviTagDataRealm.observe {
             [weak self] (change) in
             switch change {
             case .initial(let results):
-                self?.isInUpdate = true
-                guard let viewModel = self?.viewModels.first(where: {$0.uuid.value == self?.tagUUID}) else {
-                    return
+                self?.isLoading = true
+                if results.isEmpty {
+                    self?.handleEmptyResults()
+                } else {
+                    self?.handleInitialRuuviTagData(results)
                 }
-                var newValues = [RuuviMeasurement]()
-                if let first = results.first {
-                    self?.lastChartSyncDate = first.date
-                    newValues.append(first.measurement)
-                }
-                for result in results {
-                    autoreleasepool {
-                        let measurement = result.measurement
-                        if let last = self?.lastChartSyncDate,
-                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds {
-                            let elapsed = Int(measurement.date.timeIntervalSince(last))
-                            if elapsed >= chartIntervalSeconds {
-                                self?.lastChartSyncDate = measurement.date
-                                newValues.append(measurement)
-                            }
-                        } else {
-                            self?.lastChartSyncDate = measurement.date
-                            newValues.append(measurement)
-                        }
-                    }
-                }
-                if let last = results.last,
-                    last.date != newValues.last?.date {
-                    self?.lastChartSyncDate = last.date
-                    newValues.append(last.measurement)
-                }
-                newValues.sort(by: { $0.date < $1.date })
-                self?.ruuviTagData = newValues
-                self?.createChartData(for: viewModel)
                 self?.isLoading = false
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
-                insertions.forEach({ i in
-                    let newValue = results[i].measurement
-                    if let viewModel = self?.viewModels.first(where: {$0.uuid.value == newValue.tagUuid}),
-                        self?.view.viewIsVisible == true {
-                        if let last = self?.lastChartSyncDate,
-                            let chartIntervalSeconds = self?.settings.chartIntervalSeconds,
-                            let count = self?.ruuviTagData.count, count > 0 {
-                            let elapsed = Int(newValue.date.timeIntervalSince(last))
-                            if elapsed >= chartIntervalSeconds {
-                                self?.lastChartSyncDate = newValue.date
-                                self?.ruuviTagData.append(newValue)
-                                self?.insertMeasurements([newValue], into: viewModel)
-                            }
-                        } else {
-                            self?.lastChartSyncDate = newValue.date
-                            self?.ruuviTagData.append(newValue)
-                            self?.insertMeasurements([newValue], into: viewModel)
-                        }
-                    }
-                })
+                if insertions.isEmpty {
+                    self?.handleEmptyResults()
+                } else {
+                    self?.handleUpdateRuuviTagData(results, insertions: insertions)
+                }
             default:
                 break
             }
         }
     }
-    // swiftlint:enable all
+
+    private func handleEmptyResults() {
+        currentViewModel?.clearChartsData()
+        if let last = lastMeasurement,
+            let viewModel = currentViewModel {
+            MeasurementType.chartsCases.forEach { measurementType in
+                let chartData = viewModel.chartData(for: measurementType)
+                setDownSampled(dataSet: [last],
+                               to: chartData,
+                               withType: measurementType,
+                               completion: {
+                    viewModel.reloadChartData(with: measurementType)
+                    viewModel.fitScreen(with: measurementType)
+                })
+            }
+        }
+    }
+
+    private func handleInitialRuuviTagData(_ results: Results<RuuviTagDataRealm>) {
+        guard let viewModel = currentViewModel else {
+            return
+        }
+        isLoading = true
+        let resultsRef = ThreadSafeReference(to: results)
+        let chartIntervalSeconds = settings.chartIntervalSeconds
+        let label = "com.ruuvi.station.TagChartsPresenter.handleInitialRuuviTagData"
+        DispatchQueue(label: label, qos: .userInitiated).async { [weak self] in
+            autoreleasepool {
+                let realmBg = try! Realm()
+                guard let results = realmBg.resolve(resultsRef) else {
+                    return
+                }
+                var newValues = [RuuviMeasurement]()
+                var syncDate: Date = Date()
+                for result in results {
+                    autoreleasepool {
+                        if result == results.first {
+                            syncDate = result.date
+                            newValues.append(result.measurement)
+                            return
+                        }
+                        let measurement = result.measurement
+                        let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
+                        if elapsed >= chartIntervalSeconds {
+                            syncDate = measurement.date
+                            newValues.append(measurement)
+                        }
+                    }
+                }
+                var lastChartSyncDate: Date?
+                if let last = results.last,
+                    last.date != newValues.last?.date {
+                    lastChartSyncDate = last.date
+                    newValues.append(last.measurement)
+                }
+                DispatchQueue.main.async { [weak self] in
+                    if let lastChartSyncDate = lastChartSyncDate {
+                        self?.lastChartSyncDate = lastChartSyncDate
+                    }
+                    self?.ruuviTagData = newValues
+                    self?.createChartData(for: viewModel)
+                    self?.isLoading = false
+                }
+            }
+        }
+    }
+
+    private func handleUpdateRuuviTagData(_ results: Results<RuuviTagDataRealm>, insertions: [Int]) {
+        guard let viewModel = currentViewModel,
+            view.viewIsVisible == true else {
+            return
+        }
+        let chartIntervalSeconds = settings.chartIntervalSeconds
+        insertions.forEach({ i in
+            let newValue = results[i].measurement
+            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
+            if elapsed >= chartIntervalSeconds {
+                lastChartSyncDate = newValue.date
+                ruuviTagData.append(newValue)
+                insertMeasurements([newValue], into: viewModel)
+            }
+        })
+    }
 
     private func startObservingRuuviTags() {
         ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
@@ -462,15 +529,24 @@ extension TagChartsPresenter {
                 } else if let uuid = ruuviTags.first?.uuid {
                     self?.configure(uuid: uuid)
                 }
+                self?.restartObservingData()
             case .update(let ruuviTags, _, let insertions, _):
-                guard self?.view.viewIsVisible == true else {
-                    return
-                }
                 self?.ruuviTags = ruuviTags
                 if let ii = insertions.last {
                     let uuid = ruuviTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
+                    }
+                }
+                if let uuid = self?.tagUUID {
+                    let tagUUIDs = ruuviTags.compactMap({$0.uuid})
+                    if !tagUUIDs.contains(uuid),
+                        let lastTagUUID = tagUUIDs.last {
+                        self?.configure(uuid: lastTagUUID)
+                    }
+                } else {
+                    if let lastTagUUID = ruuviTags.compactMap({$0.uuid}).last {
+                        self?.configure(uuid: lastTagUUID)
                     }
                 }
                 self?.restartObservingData()
@@ -596,7 +672,19 @@ extension TagChartsPresenter {
             })
     }
     // MARK: - ChartsDataSet
-    private static func newDataSet() -> LineChartDataSet {
+    private func queue(for type: MeasurementType) -> OperationQueue {
+        switch type {
+        case .temperature:
+            return temperatureQueue
+        case .humidity:
+            return humidityQueue
+        case .pressure:
+            return pressureQueue
+        default:
+            fatalError("Before need add chart with current type")
+        }
+    }
+    static func newDataSet() -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet()
         lineChartDataSet.axisDependency = .left
         lineChartDataSet.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
@@ -612,20 +700,18 @@ extension TagChartsPresenter {
         return lineChartDataSet
     }
     private func insertMeasurements(_ newValues: [RuuviMeasurement], into viewModel: TagChartsViewModel) {
-        newValues.forEach({
-            guard $0.tagUuid == viewModel.uuid.value else {
+        newValues.forEach({ value in
+            guard value.tagUuid == viewModel.uuid.value else {
                 return
             }
-            viewModel.temperatureChartData.value?.addEntry(getEntry(for: $0, with: .temperature), dataSetIndex: 0)
-            viewModel.humidityChartData.value?.addEntry(getEntry(for: $0, with: .humidity), dataSetIndex: 0)
-            viewModel.pressureChartData.value?.addEntry(getEntry(for: $0, with: .pressure), dataSetIndex: 0)
+            MeasurementType.chartsCases.forEach { type in
+                viewModel.chartData(for: type).addEntry(getEntry(for: value, with: type), dataSetIndex: 0)
+            }
         })
-        self.drawCirclesIfNeeded(for: viewModel.temperatureChartData.value)
-        self.drawCirclesIfNeeded(for: viewModel.humidityChartData.value)
-        self.drawCirclesIfNeeded(for: viewModel.pressureChartData.value)
-        viewModel.temperatureChart.value?.reloadData()
-        viewModel.humidityChart.value?.reloadData()
-        viewModel.pressureChart.value?.reloadData()
+        MeasurementType.chartsCases.forEach { type in
+            drawCirclesIfNeeded(for: viewModel.chartData(for: type))
+            viewModel.reloadChartData(with: type)
+        }
     }
     private func drawCirclesIfNeeded(for chartData: LineChartData?) {
         if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
@@ -649,114 +735,78 @@ extension TagChartsPresenter {
             let firstDate = ruuviTagData.first?.date.timeIntervalSince1970,
             let lastDate = ruuviTagData.last?.date.timeIntervalSince1970,
             (lastDate - firstDate) > (currentDate - chartDurationThreshold) {
-            fetchPointsByDates(for: viewModel, withType: .temperature, start: chartDurationThreshold, stop: currentDate)
-            viewModel.temperatureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
-
-            fetchPointsByDates(for: viewModel, withType: .humidity, start: chartDurationThreshold, stop: currentDate)
-            viewModel.humidityChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
-
-            fetchPointsByDates(for: viewModel, withType: .pressure, start: chartDurationThreshold, stop: currentDate)
-            viewModel.pressureChart.value?.fitZoomTo(first: chartDurationThreshold, last: currentDate)
+            MeasurementType.chartsCases.forEach { measurementType in
+                fetchPointsByDates(for: viewModel,
+                                   withType: measurementType,
+                                   start: chartDurationThreshold,
+                                   stop: currentDate,
+                                   completion: {
+                    viewModel.setRange(min: firstDate,
+                                       max: Date().timeIntervalSince1970,
+                                       for: measurementType)
+                    viewModel.reloadChartData(with: measurementType)
+                    viewModel.fitZoomTo(start: chartDurationThreshold,
+                                        end: currentDate,
+                                        for: measurementType)
+                        viewModel.resetCustomAxisMinMax(for: measurementType)
+                })
+            }
         } else {
-            if let temperatureData = viewModel.temperatureChartData.value {
+            MeasurementType.chartsCases.forEach { measurementType in
                 setDownSampled(dataSet: ruuviTagData,
-                               to: temperatureData,
-                               withType: .temperature)
-                viewModel.temperatureChart.value?.reloadData()
+                               to: viewModel.chartData(for: measurementType),
+                               withType: measurementType,
+                               completion: {
+                    viewModel.reloadChartData(with: measurementType)
+                })
             }
-            if let humidityData = viewModel.humidityChartData.value {
-                setDownSampled(dataSet: ruuviTagData,
-                               to: humidityData,
-                               withType: .humidity)
-                viewModel.humidityChart.value?.reloadData()
-            }
-            if let pressureData = viewModel.pressureChartData.value {
-                setDownSampled(dataSet: ruuviTagData,
-                               to: pressureData,
-                               withType: .pressure)
-                viewModel.pressureChart.value?.reloadData()
-            }
-        }
-    }
-    private func bindDataSet(_ dataSet: inout LineChartDataSet, _ entries: [ChartDataEntry]) {
-        let firstPoint = dataSet.first
-        let lastPoint = dataSet.last
-        dataSet.removeAll(keepingCapacity: true)
-        if let first = firstPoint {
-            _ = dataSet.addEntryOrdered(first)
-        }
-        entries.forEach({
-            _ = dataSet.addEntryOrdered($0)
-        })
-        if let last = lastPoint {
-            _ = dataSet.addEntryOrdered(last)
         }
     }
 }
 // MARK: - TagChartViewOutput
 extension TagChartsPresenter: TagChartViewOutput {
-// swiftlint:disable:next cyclomatic_complexity
     private func fetchPointsByDates(for viewModel: TagChartsViewModel,
                                     withType type: MeasurementType,
                                     start: TimeInterval,
-                                    stop: TimeInterval) {
-        var chartData: LineChartData = LineChartData()
-        switch type {
-        case .temperature:
-            if let data = viewModel.temperatureChartData.value {
-                chartData = data
-            }
-        case .humidity:
-            if let data = viewModel.humidityChartData.value {
-                chartData = data
-            }
-        case .pressure:
-            if let data = viewModel.pressureChartData.value {
-                chartData = data
-            }
-        default:
-            fatalError("\(#function):\(#line) Undeclarated chart type")
-        }
-        let filtered = ruuviTagData
-            .filter({$0.tagUuid == viewModel.uuid.value})
-            .sorted(by: {$0.date < $1.date})
-        var sorted: [RuuviMeasurement] = []
-        if let first = filtered.first {
-            sorted.append(first)
-        }
-        filtered.forEach({
-            guard $0.date.timeIntervalSince1970 > start,
-                $0.date.timeIntervalSince1970 < stop else {
-                return
-            }
-            sorted.append($0)
-        })
-        if let last = filtered.last {
-            sorted.append(last)
-        }
-        self.setDownSampled(dataSet: sorted, to: chartData, withType: type)
-        switch type {
-        case .temperature:
-            viewModel.temperatureChart.value?.reloadData()
-        case .humidity:
-            viewModel.humidityChart.value?.reloadData()
-        case .pressure:
-            viewModel.pressureChart.value?.reloadData()
-        default:
+                                    stop: TimeInterval,
+                                    completion: (() -> Void)? = nil) {
+        guard let uuid = viewModel.uuid.value else {
             return
         }
+        let operationQueue = queue(for: type)
+        operationQueue.operations.forEach({
+            if !$0.isExecuting {
+                $0.cancel()
+            }
+        })
+        let filterOperation = ChartFilterOperation(uuid: uuid,
+                                                   array: ruuviTagData,
+                                                   type: type,
+                                                   start: start,
+                                                   end: stop)
+        filterOperation.completionBlock = { [unowned filterOperation] in
+            if !filterOperation.isCancelled {
+                let sorted = filterOperation.sorted
+                let type = filterOperation.type
+                DispatchQueue.main.async {
+                    self.setDownSampled(dataSet: sorted,
+                                        to: viewModel.chartData(for: type),
+                                        withType: type,
+                                        completion: completion)
+                }
+            }
+        }
+        queue(for: type).addOperation(filterOperation)
     }
-    func didChangeVisibleRange(_ chartView: TagChartView) {
-        guard !isInUpdate,
-            let uuid = chartView.tagUuid,
+    func didChartChangeVisibleRange(_ chartView: TagChartView, newRange range: (min: TimeInterval, max: TimeInterval)) {
+        guard let uuid = chartView.tagUuid,
             let viewModel = viewModels.first(where: { $0.uuid.value == uuid }) else {
             return
         }
-        isInUpdate = true
         fetchPointsByDates(for: viewModel,
                            withType: chartView.chartDataType,
-                           start: chartView.lowestVisibleX,
-                           stop: chartView.highestVisibleX)
+                           start: range.min,
+                           stop: range.max)
     }
 }
 extension TagChartsPresenter {
@@ -798,28 +848,32 @@ extension TagChartsPresenter {
         return ChartDataEntry(x: tagData.date.timeIntervalSince1970, y: y)
     }
     // swiftlint:disable function_body_length
-    private func setDownSampled(dataSet: [RuuviMeasurement] = [],
+    private func setDownSampled(dataSet: [RuuviMeasurement],
                                 to chartData: LineChartData,
-                                withType type: MeasurementType) {
+                                withType type: MeasurementType,
+                                completion: (() -> Void)? = nil) {
+        defer {
+            completion?()
+        }
         if let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
             chartDataSet.removeAll(keepingCapacity: true)
             chartDataSet.drawCirclesEnabled = false
         } else {
-            chartData.addDataSet(TagChartsPresenter.newDataSet())
+            let chartDataSet = TagChartsPresenter.newDataSet()
+            chartDataSet.drawCirclesEnabled = false
+            chartData.addDataSet(chartDataSet)
         }
         let data_length = dataSet.count
-        if threshold >= data_length
-            || threshold == 0 {
+        if data_length <= threshold {
             dataSet.forEach({
                 chartData.addEntry(getEntry(for: $0, with: type), dataSetIndex: 0)
             })
-            self.drawCirclesIfNeeded(for: chartData)
-            isInUpdate = false
+            drawCirclesIfNeeded(for: chartData)
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
-        let every = (data_length - 2) / (threshold - 2)
-        var a = 0  // Initially a is the first point in the triangle
+        let every = (data_length - 4) / (threshold - 4)
+        var a = 1  // Initially a is the first point in the triangle
         var max_area_point: (Double, Double) = (0, 0)
         var max_area: Double = 0
         var area: Double = 0
@@ -833,28 +887,35 @@ extension TagChartsPresenter {
         var range_to: Int = 0
         var point_a_x: Double = 0
         var point_a_y: Double = 0
-        let firstPoint = dataSet.first!
-        chartData.addEntry(getEntry(for: firstPoint, with: type), dataSetIndex: 0)
-        for i in 0..<(threshold - 2) {
+        chartData.addEntry(getEntry(for: dataSet[0], with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[1], with: type), dataSetIndex: 0)
+        for i in 0..<data_length/every {
             // Calculate point average for next bucket (containing c)
             avg_x = 0
             avg_y = 0
             avg_range_start  = Int( floor( Double( ( i + 1 ) * every) ) + 1)
-            avg_range_end    = Int( floor( Double( ( i + 2 ) * every ) ) + 1)
+            avg_range_end    = Int( floor( Double( ( i + 2 ) * every) ) + 1)
             avg_range_end = avg_range_end < data_length ? avg_range_end : data_length
             avg_range_length = avg_range_end - avg_range_start
-            for avg_range_start in avg_range_start..<avg_range_end {
-                let point_a = getEntry(for: dataSet[avg_range_start], with: type)
+            guard avg_range_length > 0 else {
+                if a < data_length {
+                    chartData.addEntry(getEntry(for: dataSet[a], with: type), dataSetIndex: 0)
+                    a += every
+                }
+                continue
+            }
+            for range_start in avg_range_start..<avg_range_end {
+                let point_a = getEntry(for: dataSet[range_start], with: type)
                 avg_x += point_a.x
                 avg_y += point_a.y
             }
             avg_x /= Double(avg_range_length)
             avg_y /= Double(avg_range_length)
             // Get the range for this bucket
-            range_offs = Int(floor( Double((i + 0) * every) ) + 1)
-            range_to   = Int(floor( Double((i + 1) * every )) + 1)
+            range_offs = Int(floor( Double(i * every) ) + 1)
+            range_to   = Int(floor( Double((i + 1) * every) ) + 1)
             // Point a
-            let point_a = getEntry(for: dataSet[ a ], with: type)
+            let point_a = getEntry(for: dataSet[a], with: type)
             point_a_x = point_a.x
             point_a_y = point_a.y
             max_area = -1
@@ -875,10 +936,8 @@ extension TagChartsPresenter {
             chartData.addEntry(ChartDataEntry(x: max_area_point.0, y: max_area_point.1), dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
-        let lastItem = dataSet.last!
-        chartData.addEntry(getEntry(for: lastItem, with: type), dataSetIndex: 0)
-        chartData.notifyDataChanged()
-        isInUpdate = false
+        chartData.addEntry(getEntry(for: dataSet[dataSet.count - 2], with: type), dataSetIndex: 0)
+        chartData.addEntry(getEntry(for: dataSet[dataSet.count - 1], with: type), dataSetIndex: 0)
     }
     // swiftlint:enable function_body_length
 }

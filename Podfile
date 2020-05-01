@@ -19,6 +19,7 @@ def shared_pods
   pod 'RealmSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
+  pod 'FLEX', :configurations => ['Debug']
 end
 
 target 'station' do
