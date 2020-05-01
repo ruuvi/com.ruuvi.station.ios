@@ -103,6 +103,9 @@
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
 "DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
+// KaltiotPicker
+"KaltiotPicker.Title.text" = "Add Kaltiot tag";
+
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Virhe";
 "ErrorPresenterAlert.OK" = "OK";
