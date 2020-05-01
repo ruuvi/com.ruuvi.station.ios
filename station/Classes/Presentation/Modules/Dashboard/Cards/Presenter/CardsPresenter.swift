@@ -25,7 +25,7 @@ class CardsPresenter: CardsModuleInput {
     var infoProvider: InfoProvider!
     var calibrationService: CalibrationService!
     var ruuviTagReactor: RuuviTagReactor!
-    
+
     weak var tagCharts: TagChartsModuleInput?
 
     private var ruuviTagsToken: NotificationToken?
@@ -514,7 +514,7 @@ extension CardsPresenter {
                 break // TODO: handle all cases
             }
         }
-        
+
 //        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
 //        ruuviTagsToken?.invalidate()
 //        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in

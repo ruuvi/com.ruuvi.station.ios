@@ -39,13 +39,13 @@ class PersistenceAssembly: Assembly {
             persistence.context = r.resolve(RealmContext.self)
             return persistence
         }
-        
+
         container.register(RuuviTagPersistenceSQLite.self) { r in
             let context = r.resolve(SQLiteContext.self)!
             let persistence = RuuviTagPersistenceSQLite(database: context.database)
             return persistence
         }
-        
+
         container.register(RuuviTagPersistenceRealm.self) { r in
             let persistence = RuuviTagPersistenceRealm()
             persistence.context = r.resolve(RealmContext.self)
@@ -56,8 +56,8 @@ class PersistenceAssembly: Assembly {
             let settings = SettingsUserDegaults()
             return settings
         }.inObjectScope(.container)
-        
-        container.register(SQLiteContext.self) { r in
+
+        container.register(SQLiteContext.self) { _ in
             let context = SQLiteContextGRDB()
             return context
         }.inObjectScope(.container)

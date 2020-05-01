@@ -14,7 +14,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
-    
+
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
         didSet {

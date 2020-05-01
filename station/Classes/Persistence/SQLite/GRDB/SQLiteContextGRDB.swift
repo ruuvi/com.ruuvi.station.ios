@@ -48,7 +48,7 @@ class SQLiteGRDBDatabase: GRDBDatabase {
 extension SQLiteGRDBDatabase {
     public static func tryMigrate() {
         let database = SQLiteGRDBDatabase.shared
-        
+
         do {
             try database.migrate(dbPool: database.dbPool)
         } catch {
@@ -56,15 +56,15 @@ extension SQLiteGRDBDatabase {
             try! database.migrate(dbPool: database.dbPool)
         }
     }
-    
+
     private func migrate(dbPool: DatabasePool) throws {
         var migrator = GRDB.DatabaseMigrator()
-        
+
         // v1
         migrator.registerMigration("Create RuuviTagSQLite table") { db in
             try RuuviTagSQLite.createTable(in: db)
         }
-        
+
         try migrator.migrate(dbPool)
     }
 }

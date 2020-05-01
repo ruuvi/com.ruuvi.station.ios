@@ -13,7 +13,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
             return realm.add(ruuviTag)
         }
     }
-    
+
     func remove(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         return promise.future
@@ -23,10 +23,10 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         let promise = Promise<Bool, RUError>()
         return promise.future
     }
-    
+
     func remove(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         return promise.future
     }
-    
+
 }
