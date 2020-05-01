@@ -36,12 +36,15 @@ extension KaltiotPickerPresenter: KaltiotPickerViewOutput {
     func viewDidLoad() {
         obtainBeacons()
     }
+
     func viewDidTriggerLoadNextPage() {
         fetchBeacons()
     }
+
     func viewDidTriggerClose() {
         router.dismiss(completion: nil)
     }
+
     func viewDidSelectTag(at index: Int) {
         if beacons[index].isConnectable {
             fetchHistory(forBeacon: beacons[index].id)
@@ -67,6 +70,7 @@ extension KaltiotPickerPresenter {
         isLoading = true
         fetchBeacons()
     }
+
     private func fetchBeacons() {
         if canLoadNextPage {
             let op = ruuviNetworkKaltiot.beacons(page: page)
@@ -85,24 +89,32 @@ extension KaltiotPickerPresenter {
             }, completion: nil)
         }
     }
+
     private func fetchHistory(forBeacon beaconId: String) {
-        let op = ruuviNetworkKaltiot.load(uuid: UUID().uuidString, mac: beaconId, isConnectable: true)
+        let op = ruuviNetworkKaltiot.load(uuid: beaconId, mac: beaconId, isConnectable: true)
+        isLoading = true
         op.on(success: { (result) in
             print(result)
+            #warning("👉 Implement here adding tag with history into DB and close VC")
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
-        }, completion: nil)
+        }, completion: {[weak self] in
+            self?.isLoading = false
+        })
     }
+
     private func calculateDiff(_ oldValue: [KaltiotBeaconViewModel], newValue: [KaltiotBeaconViewModel]) {
-        let oldData = oldValue.enumerated().map({ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)})
-        let newData = newValue.enumerated().map({ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)})
+        let oldData = oldValue.enumerated().map({
+            ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)
+        })
+        let newData = newValue.enumerated().map({
+            ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)
+        })
         let cellChanges = DiffCalculator.calculate(oldItems: oldData, newItems: newData, in: 0)
         viewModel.beacons = newData
         if oldValue.count == 0 && newData.count > 0 {
-            view.reloadData()
             isLoading = false
-        } else {
-            view.applyChanges(cellChanges)
         }
+        view.applyChanges(cellChanges)
     }
 }

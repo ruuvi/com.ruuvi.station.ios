@@ -25,8 +25,10 @@ class KaltiotPickerTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == viewModel.beacons.count - 1 {
+    override func tableView(_ tableView: UITableView,
+                            willDisplay cell: UITableViewCell,
+                            forRowAt indexPath: IndexPath) {
+        if indexPath.row == viewModel.beacons.count - 2 {
             output.viewDidTriggerLoadNextPage()
         }
     }
@@ -44,9 +46,7 @@ class KaltiotPickerTableViewController: UITableViewController {
 extension KaltiotPickerTableViewController: KaltiotPickerViewInput {
     func localize() {
     }
-    func reloadData() {
-        tableView.reloadData()
-    }
+
     func applyChanges(_ changes: CellChanges) {
         if #available(iOS 11.0, *) {
             tableView.performBatchUpdates({

@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UIKit
 import BTKit
 
@@ -429,3 +430,4 @@ extension DiscoverTableViewController {
         }
     }
 }
+// swiftlint:enable file_length
