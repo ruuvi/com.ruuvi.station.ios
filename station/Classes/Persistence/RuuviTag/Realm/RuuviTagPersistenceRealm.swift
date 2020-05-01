@@ -3,7 +3,7 @@ import RealmSwift
 import Future
 import BTKit
 import Foundation
-
+// swiftlint:disable type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     var context: RealmContext!
@@ -304,6 +304,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 }
+// swiftlint:enable type_body_length
 
 // MARK: - Update
 extension RuuviTagPersistenceRealm {

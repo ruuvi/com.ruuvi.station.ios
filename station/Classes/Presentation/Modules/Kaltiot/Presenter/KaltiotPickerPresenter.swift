@@ -8,6 +8,7 @@ class KaltiotPickerPresenter {
     var router: KaltiotPickerRouterInput!
 
     var activityPresenter: ActivityPresenter!
+    var diffCalculator: DiffCalculator!
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
     var realmContext: RealmContext!
@@ -125,7 +126,7 @@ extension KaltiotPickerPresenter {
         let newData = newValue.enumerated().map({
             ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)
         })
-        let cellChanges = DiffCalculator.calculate(oldItems: oldData, newItems: newData, in: 0)
+        let cellChanges = diffCalculator.calculate(oldItems: oldData, newItems: newData, in: 0)
         viewModel.beacons = newData
         if oldValue.count == 0 && newData.count > 0 {
             isLoading = false
