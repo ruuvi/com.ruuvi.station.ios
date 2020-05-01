@@ -7,22 +7,22 @@ import Combine
 class RuuviTagSubjectCombine {
     var sqlite: SQLiteContext
     var realm: RealmContext
-    
+
     let insertSubject = PassthroughSubject<RuuviTagSQLite, Never>()
     let updateSubject = PassthroughSubject<RuuviTagSQLite, Never>()
     let deleteSubject = PassthroughSubject<RuuviTagSQLite, Never>()
-    
+
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
-    
+
     init(sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm
-        
+
         let request = RuuviTagSQLite.order(RuuviTagSQLite.versionColumn)
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
         try! self.ruuviTagController.performFetch()
-        
-        self.ruuviTagController.trackChanges(onChange: { [weak self] controller, record, event in
+
+        self.ruuviTagController.trackChanges(onChange: { [weak self] _, record, event in
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
