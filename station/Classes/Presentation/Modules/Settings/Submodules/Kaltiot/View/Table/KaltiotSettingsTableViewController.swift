@@ -2,6 +2,8 @@ import UIKit
 
 class KaltiotSettingsTableViewController: UITableViewController {
     @IBOutlet weak var apiKeyTextField: UITextField!
+    @IBOutlet weak var footerTextView: UITextView!
+    @IBOutlet var footerView: UIView!
 
     var output: KaltiotSettingsViewOutput!
     var viewModel: KaltiotSettingsViewModel = KaltiotSettingsViewModel() {
@@ -19,7 +21,8 @@ class KaltiotSettingsTableViewController: UITableViewController {
 extension KaltiotSettingsTableViewController: KaltiotSettingsViewInput {
     func localize() {
         title = "KaltiotSettings.title".localized()
-        apiKeyTextField.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
+        apiKeyTextField?.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
+        footerTextView?.text = "KaltiotSettings.FooterTextView.text".localized()
         tableView.reloadData()
     }
 }
@@ -37,6 +40,9 @@ extension KaltiotSettingsTableViewController {
 extension KaltiotSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return footerView
     }
 }
 
