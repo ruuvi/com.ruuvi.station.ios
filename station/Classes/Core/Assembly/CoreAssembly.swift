@@ -40,5 +40,10 @@ class CoreAssembly: Assembly {
             let manager = PushNotificationsManagerImpl()
             return manager
         }
+
+        container.register(DiffCalculator.self) { _ in
+            let diffCalculator = DiffCalculatorImpl()
+            return diffCalculator
+        }
     }
 }
