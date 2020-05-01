@@ -30,4 +30,3 @@ extension RuuviNetworkWhereOS {
         return promise.future
     }
 }
-

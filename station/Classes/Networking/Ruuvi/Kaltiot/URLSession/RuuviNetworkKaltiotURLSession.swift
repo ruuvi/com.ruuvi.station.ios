@@ -17,7 +17,7 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
                 promise.fail(error: .networking(error))
             } else {
                 if let response = response as? HTTPURLResponse,
-                    response.statusCode == 200 {
+                    200...204 ~= response.statusCode {
                     promise.succeed(value: ())
                 } else {
                     promise.fail(error: .ruuviNetwork(.failedToLogIn))
@@ -42,7 +42,13 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let response = response as? HTTPURLResponse,
+                200...204 ~= response.statusCode else {
+                    self?.keychainService.kaltiotApiKey = nil
+                    promise.fail(error: .ruuviNetwork(.failedToLogIn))
+                    return
+            }
             if let error = error {
                 promise.fail(error: .networking(error))
             } else {
@@ -62,7 +68,7 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         task.resume()
         return promise.future
     }
-    
+
     func history(ids: [String], from: TimeInterval?, to: TimeInterval?) -> Future<[KaltiotBeaconLogs], RUError> {
         guard keychainService.hasKaltiotApiKey else {
             return .init(error: .ruuviNetwork(.noSavedApiKeyValue))
@@ -90,7 +96,13 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let response = response as? HTTPURLResponse,
+                200...204 ~= response.statusCode else {
+                    self?.keychainService.kaltiotApiKey = nil
+                    promise.fail(error: .ruuviNetwork(.failedToLogIn))
+                    return
+            }
             if let error = error {
                 promise.fail(error: .networking(error))
             } else {
@@ -110,27 +122,7 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         task.resume()
         return promise.future
     }
-    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[(Ruuvi.Data2, Date)], RUError> {
-        let promise = Promise<[(Ruuvi.Data2, Date)], RUError>()
-        let operation = history(ids: [mac], from: nil, to: nil)
-        operation.on(success: { (records) in
-            let decoder = Ruuvi.decoder
-            guard let log = records.first else {
-                return
-            }
-            let result: [(Ruuvi.Data2, Date)] = log.history.compactMap { (log) -> (Ruuvi.Data2, Date)? in
-                if let dev = log.data?.ruuvi2() {
-                    return (dev, Date(timeIntervalSince1970: log.timestamp))
-                } else {
-                    return nil
-                }
-            }
-            promise.succeed(value: result)
-        }, failure: { (error) in
-            promise.fail(error: error)
-        }, completion: nil)
-        return .init(value: [])
-    }
+
 // MARK: - Private
     private lazy var baseUrlComponents: URLComponents = {
         var components = URLComponents()

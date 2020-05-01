@@ -157,7 +157,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidEnterMACAddressToAddTag(mac: String) {
         let operation = ruuviTagService.persist(mac: mac)
-        operation.on(success: { [weak self] (ruuviTag) in
+        operation.on(success: { [weak self] (_) in
             guard let sSelf = self else { return }
             if sSelf.isOpenedFromWelcome {
                 sSelf.router.openCards()
