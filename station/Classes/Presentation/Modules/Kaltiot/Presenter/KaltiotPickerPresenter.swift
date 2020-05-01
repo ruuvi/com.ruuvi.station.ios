@@ -44,7 +44,7 @@ extension KaltiotPickerPresenter: KaltiotPickerViewOutput {
     }
     func viewDidSelectTag(at index: Int) {
         if beacons[index].isConnectable {
-            #warning("need implement adding tag")
+            fetchHistory(forBeacon: beacons[index].id)
         } else {
             errorPresenter.present(error: RUError.ruuviNetwork(.doesNotHaveSensors))
         }
@@ -85,7 +85,14 @@ extension KaltiotPickerPresenter {
             }, completion: nil)
         }
     }
-
+    private func fetchHistory(forBeacon beaconId: String) {
+        let op = ruuviNetworkKaltiot.load(uuid: UUID().uuidString, mac: beaconId, isConnectable: true)
+        op.on(success: { (result) in
+            print(result)
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        }, completion: nil)
+    }
     private func calculateDiff(_ oldValue: [KaltiotBeaconViewModel], newValue: [KaltiotBeaconViewModel]) {
         let oldData = oldValue.enumerated().map({ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)})
         let newData = newValue.enumerated().map({ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)})
