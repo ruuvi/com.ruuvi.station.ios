@@ -15,5 +15,6 @@ protocol TagChartsViewOutput {
     func viewDidTriggerClear(for viewModel: TagChartsViewModel)
     func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel)
     func viewDidConfirmToSyncWithWeb(for viewModel: TagChartsViewModel)
+    func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel)
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel)
 }

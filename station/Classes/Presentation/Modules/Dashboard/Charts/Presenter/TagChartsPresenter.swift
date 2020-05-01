@@ -239,6 +239,22 @@ extension TagChartsPresenter: TagChartsViewOutput {
         }
     }
 
+    func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            isSyncing = true
+            let op = networkService.loadData(for: uuid, from: .kaltiot)
+            op.on(success: { [weak self] _ in
+                self?.restartObservingData()
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: {
+                self.isSyncing = false
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
     func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         if let uuid = viewModel.uuid.value {
             isSyncing = true

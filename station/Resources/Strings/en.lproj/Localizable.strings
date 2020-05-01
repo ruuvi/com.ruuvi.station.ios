@@ -229,6 +229,7 @@
 "TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
 "TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
 "TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
+"TagCharts.SyncConfirmationDialog.WithWebKaltiot.title" = "With Web(Kaltiot)";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
@@ -306,6 +307,7 @@
 "RuuviNetworkError.NoSavedApiKeyValue" = "No saved ApiKey value";
 "RuuviNetworkError.FailedToLogIn" = "Failed to log in";
 "RuuviNetworkError.DoesNotHaveSensors" = "The beacon does not have sensors";
+"RuuviNetworkError.NoStoredData" = "No stored data. The tag will not be added";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";

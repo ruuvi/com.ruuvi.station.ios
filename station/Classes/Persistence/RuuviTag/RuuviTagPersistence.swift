@@ -5,6 +5,7 @@ import Foundation
 
 protocol RuuviTagPersistence {
     func persist(mac: String) -> Future<Bool, RUError>
+    func persist(ruuviTag: RuuviTagProtocol, mac: String) -> Future<Void, RUError>
     func persist(ruuviTag: RuuviTag,
                  name: String,
                  humidityOffset: Double,

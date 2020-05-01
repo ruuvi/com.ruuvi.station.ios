@@ -1,13 +1,19 @@
 import Foundation
+import Future
+import BTKit
 
 class KaltiotPickerPresenter {
     weak var view: KaltiotPickerViewInput!
     var output: KaltiotPickerModuleOutput!
     var router: KaltiotPickerRouterInput!
-    var keychainService: KeychainService!
-    var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
-    var errorPresenter: ErrorPresenter!
+
     var activityPresenter: ActivityPresenter!
+    var errorPresenter: ErrorPresenter!
+    var keychainService: KeychainService!
+    var realmContext: RealmContext!
+    var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
+    var ruuviTagService: RuuviTagService!
+    var ruuviTagPersistence: RuuviTagPersistence!
 
     private var viewModel: KaltiotPickerViewModel! {
         didSet {
@@ -90,12 +96,15 @@ extension KaltiotPickerPresenter {
         }
     }
 
-    private func fetchHistory(forBeacon beaconId: String) {
-        let op = ruuviNetworkKaltiot.load(uuid: beaconId, mac: beaconId, isConnectable: true)
+    private func fetchHistory(forBeacon beaconMac: String) {
+        let op = ruuviNetworkKaltiot.load(uuid: UUID().uuidString, mac: beaconMac, isConnectable: true)
         isLoading = true
-        op.on(success: { (result) in
-            print(result)
-            #warning("👉 Implement here adding tag with history into DB and close VC")
+        op.on(success: {[weak self] (results) in
+            if results.count > 0 {
+                self?.saveResults(results, mac: beaconMac)
+            } else {
+                self?.errorPresenter.present(error: RUError.ruuviNetwork(.noStoredData))
+            }
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         }, completion: {[weak self] in
@@ -116,5 +125,20 @@ extension KaltiotPickerPresenter {
             isLoading = false
         }
         view.applyChanges(cellChanges)
+    }
+
+    private func saveResults(_ results: [(RuuviTagProtocol, Date)], mac: String) {
+        guard let firstTag = results.first?.0 else {
+            return
+        }
+        self.isLoading = true
+        let operation: Future<Void, RUError> = ruuviTagPersistence.persist(ruuviTag: firstTag, mac: mac)
+        operation.on(success: { [weak self] in
+            self?.router.dismiss(completion: nil)
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        }, completion: { [weak self] in
+            self?.isLoading = false
+        })
     }
 }

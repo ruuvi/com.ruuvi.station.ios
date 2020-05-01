@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import RealmSwift
 import Future
 import BTKit
@@ -20,9 +21,25 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                promise.fail(error: .persistence(error))
            }
        }
-
        return promise.future
-   }
+    }
+
+    func persist(ruuviTag: RuuviTagProtocol, mac: String) -> Future<Void, RUError> {
+        let promise = Promise<Void, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: mac)
+                realmTag.mac = mac
+                try self.context.bg.write {
+                    self.context.bg.add(realmTag, update: .all)
+                }
+                promise.succeed(value: ())
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
 
     @discardableResult
     func persist(ruuviTagData: RuuviTagDataRealm, realm: Realm) -> Future<Bool, RUError> {
@@ -396,3 +413,4 @@ extension RuuviTagPersistenceRealm {
         return promise.future
     }
 }
+// swiftlint:enable file_length

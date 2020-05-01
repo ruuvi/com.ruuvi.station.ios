@@ -23,7 +23,7 @@ extension RuuviNetworkKaltiot {
                                                       isConnectable: isConnectable,
                                                       payload: logItem.value),
                     let tag = device.ruuvi?.tag {
-                    return (tag, Date(timeIntervalSince1970: logItem.timestamp))
+                    return (tag, logItem.date)
                 } else {
                     return nil
                 }
