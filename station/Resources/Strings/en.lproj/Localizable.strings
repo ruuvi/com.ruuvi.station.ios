@@ -102,6 +102,8 @@
 "DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
 "DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
+// KaltiotPicker
+"KaltiotPicker.Title.text" = "Add Kaltiot tag";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Error";
@@ -201,6 +203,7 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
+"Settings.Label.Network" = "Network";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

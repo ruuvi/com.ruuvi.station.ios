@@ -102,6 +102,8 @@
 "DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
 "DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
+// KaltiotPicker
+"KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
