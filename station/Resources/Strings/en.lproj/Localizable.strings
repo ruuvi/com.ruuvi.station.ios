@@ -203,7 +203,12 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
-"Settings.Label.Network" = "Network";
+"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
+"Settings.Label.Kaltiot" = "Kaltiot";
+
+// Kaltiot settings
+"KaltiotSettings.title" = "Kaltiot settings";
+"KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

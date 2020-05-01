@@ -203,6 +203,12 @@
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
+"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
+"Settings.Label.Kaltiot" = "Kaltiot";
+
+// Kaltiot settings
+"KaltiotSettings.title" = "Kaltiot settings";
+"KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";

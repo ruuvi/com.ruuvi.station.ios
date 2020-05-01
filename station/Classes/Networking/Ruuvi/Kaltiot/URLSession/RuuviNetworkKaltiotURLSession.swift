@@ -159,7 +159,7 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
                 queryItems.append(.init(name: $0.key, value: $0.value))
             }
         })
-        if keychainService.hasKaltiotApiKey {
+        if keychainService.hasKaltiotApiKey && !params.keys.contains("ApiKey") {
             queryItems.append(.init(name: "ApiKey", value: keychainService.kaltiotApiKey))
         }
         components.queryItems = queryItems

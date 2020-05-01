@@ -3,6 +3,7 @@ import UIKit
 private enum SettingsTableSection: Int {
     case general = 0
     case application = 1
+    case network = 2
 }
 
 class SettingsTableViewController: UITableViewController {
@@ -22,6 +23,8 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageCell: UITableViewCell!
     @IBOutlet weak var foregroundCell: UITableViewCell!
     @IBOutlet weak var foregroundTitleLabel: UILabel!
+    @IBOutlet weak var kaltiotTitleLabel: UILabel!
+    @IBOutlet weak var KaltiotCell: UITableViewCell!
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -67,6 +70,7 @@ extension SettingsTableViewController: SettingsViewInput {
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
+        kaltiotTitleLabel.text = "Settings.Label.Kaltiot".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -135,6 +139,8 @@ extension SettingsTableViewController {
             return "Settings.SectionHeader.General.title".localized()
         case SettingsTableSection.application.rawValue:
             return "Settings.SectionHeader.Application.title".localized()
+        case SettingsTableSection.network.rawValue:
+            return "Settings.SectionHeader.Network.title".localized()
         default:
             return nil
         }
@@ -159,6 +165,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
+            case KaltiotCell:
+                output.viewDidTapOnKaltiot()
             default:
                 break
             }

@@ -204,6 +204,12 @@
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
+"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
+"Settings.Label.Kaltiot" = "Kaltiot";
+
+// Kaltiot settings
+"KaltiotSettings.title" = "Kaltiot settings";
+"KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";
