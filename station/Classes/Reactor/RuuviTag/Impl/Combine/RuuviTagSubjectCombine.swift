@@ -1,34 +1,40 @@
+#if canImport(Combine)
 import Foundation
 import GRDB
-import RxSwift
+import Combine
 
-class RuuviTagReactorRxSwift {
-    var sqlite: SQLiteContext!
-    var realm: RealmContext!
+@available(iOS 13, *)
+class RuuviTagSubjectCombine {
+    var sqlite: SQLiteContext
+    var realm: RealmContext
     
-    let insertSubject: PublishSubject<RuuviTagSQLite> = PublishSubject()
-    let updateSubject: PublishSubject<RuuviTagSQLite> = PublishSubject()
-    let deleteSubject: PublishSubject<RuuviTagSQLite> = PublishSubject()
+    let insertSubject = PassthroughSubject<RuuviTagSQLite, Never>()
+    let updateSubject = PassthroughSubject<RuuviTagSQLite, Never>()
+    let deleteSubject = PassthroughSubject<RuuviTagSQLite, Never>()
     
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
     
-    init() {
+    init(sqlite: SQLiteContext, realm: RealmContext) {
+        self.sqlite = sqlite
+        self.realm = realm
+        
         let request = RuuviTagSQLite.order(RuuviTagSQLite.versionColumn)
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
-        
         try! self.ruuviTagController.performFetch()
+        
         self.ruuviTagController.trackChanges(onChange: { [weak self] controller, record, event in
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
-                sSelf.insertSubject.onNext(record)
+                sSelf.insertSubject.send(record)
             case .update:
-                sSelf.updateSubject.onNext(record)
+                sSelf.updateSubject.send(record)
             case .deletion:
-                sSelf.updateSubject.onNext(record)
+                sSelf.updateSubject.send(record)
             case .move:
                 break
             }
         })
     }
 }
+#endif

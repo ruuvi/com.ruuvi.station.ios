@@ -24,10 +24,12 @@ class CardsPresenter: CardsModuleInput {
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
     var calibrationService: CalibrationService!
-
+    var ruuviTagReactor: RuuviTagReactor!
+    
     weak var tagCharts: TagChartsModuleInput?
 
     private var ruuviTagsToken: NotificationToken?
+    private var ruuviTagToken: RUObservationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
     private var advertisementTokens = [ObservationToken]()
@@ -71,6 +73,7 @@ class CardsPresenter: CardsModuleInput {
 
     // swiftlint:disable:next cyclomatic_complexity
     deinit {
+        ruuviTagToken?.invalidate()
         ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         rssiTokens.values.forEach({ $0.invalidate() })
@@ -500,34 +503,46 @@ extension CardsPresenter {
     }
 
     private func startObservingRuuviTags() {
-        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
-        ruuviTagsToken?.invalidate()
-        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
+        ruuviTagToken?.invalidate()
+        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
-                self?.ruuviTags = ruuviTags
-                self?.observeRuuviTags()
-            case .update(let ruuviTags, _, let insertions, _):
-                self?.ruuviTags = ruuviTags
-                if let ii = insertions.last {
-                    let uuid = ruuviTags[ii].uuid
-                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-                        self?.view.scroll(to: index)
-                        self?.tagCharts?.configure(uuid: uuid)
-                    }
-                    if let viewModels = self?.viewModels,
-                        let settings = self?.settings,
-                        !settings.cardsSwipeHintWasShown,
-                        viewModels.count > 1 {
-                        self?.view.showSwipeLeftRightHint()
-                        self?.settings.cardsSwipeHintWasShown = true
-                    }
-                }
-                self?.observeRuuviTags()
-            case .error(let error):
-                self?.errorPresenter.present(error: error)
+                print(ruuviTags)
+            case .insert(let sensor):
+                print(sensor)
+            default:
+                break // TODO: handle all cases
             }
         }
+        
+//        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+//        ruuviTagsToken?.invalidate()
+//        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
+//            switch change {
+//            case .initial(let ruuviTags):
+//                self?.ruuviTags = ruuviTags
+//                self?.observeRuuviTags()
+//            case .update(let ruuviTags, _, let insertions, _):
+//                self?.ruuviTags = ruuviTags
+//                if let ii = insertions.last {
+//                    let uuid = ruuviTags[ii].uuid
+//                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+//                        self?.view.scroll(to: index)
+//                        self?.tagCharts?.configure(uuid: uuid)
+//                    }
+//                    if let viewModels = self?.viewModels,
+//                        let settings = self?.settings,
+//                        !settings.cardsSwipeHintWasShown,
+//                        viewModels.count > 1 {
+//                        self?.view.showSwipeLeftRightHint()
+//                        self?.settings.cardsSwipeHintWasShown = true
+//                    }
+//                }
+//                self?.observeRuuviTags()
+//            case .error(let error):
+//                self?.errorPresenter.present(error: error)
+//            }
+//        }
     }
 
     private func startObservingBackgroundChanges() {

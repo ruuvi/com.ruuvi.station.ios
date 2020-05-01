@@ -100,17 +100,33 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.uuid == device.uuid }) {
-            let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: displayName)
-            operation.on(success: { [weak self] (ruuviTag) in
+            let sensor = RuuviTagSensorStruct(version: ruuviTag.version,
+                                              uuid: ruuviTag.uuid,
+                                              mac: ruuviTag.mac,
+                                              isConnectable: ruuviTag.isConnectable,
+                                              name: displayName)
+            let operation = ruuviTagTank.add(sensor)
+            operation.on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.isOpenedFromWelcome {
                     sSelf.router.openCards()
                 } else {
                     sSelf.output?.discover(module: sSelf, didAdd: ruuviTag)
                 }
-            }, failure: { [weak self] (error) in
+            }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
+//            let operation = ruuviTagService.persist(ruuviTag: ruuviTag, name: displayName)
+//            operation.on(success: { [weak self] (ruuviTag) in
+//                guard let sSelf = self else { return }
+//                if sSelf.isOpenedFromWelcome {
+//                    sSelf.router.openCards()
+//                } else {
+//                    sSelf.output?.discover(module: sSelf, didAdd: ruuviTag)
+//                }
+//            }, failure: { [weak self] (error) in
+//                self?.errorPresenter.present(error: error)
+//            })
         }
     }
 

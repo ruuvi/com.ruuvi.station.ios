@@ -15,3 +15,11 @@ extension RuuviTagSensor {
         }
     }
 }
+
+struct RuuviTagSensorStruct: RuuviTagSensor {
+    var version: Int
+    var uuid: String?
+    var mac: String?
+    var isConnectable: Bool
+    var name: String
+}
