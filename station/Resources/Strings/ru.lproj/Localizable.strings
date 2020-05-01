@@ -207,8 +207,9 @@
 "Settings.Label.Kaltiot" = "Kaltiot";
 
 // Kaltiot settings
-"KaltiotSettings.title" = "Kaltiot settings";
-"KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
+"KaltiotSettings.title" = "Настройки Kaltiot";
+"KaltiotSettings.ApiKeyTextField.placeholder" = "Введите ApiKey";
+"KaltiotSettings.FooterTextView.text" = "Получить ApiKey можно после регистрации на\nhttps://console.torqhub.io/\nв разделе \"Tracker - Credentials\" -> \"HTTP API\"";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";

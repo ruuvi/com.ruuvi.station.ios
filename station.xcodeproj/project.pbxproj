@@ -4350,6 +4350,7 @@
 		A9227BA9245C86FA00466B23 /* Table */ = {
 			isa = PBXGroup;
 			children = (
+				A9DA31A6245CD11400041559 /* SectionFooter */,
 				A9227BAA245C86FA00466B23 /* KaltiotSettingsTableViewController.swift */,
 			);
 			path = Table;
@@ -4599,6 +4600,13 @@
 				A9DA319F245CBEF200041559 /* ReloadableCellData.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A9DA31A6245CD11400041559 /* SectionFooter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SectionFooter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

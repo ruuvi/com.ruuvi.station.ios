@@ -209,6 +209,7 @@
 // Kaltiot settings
 "KaltiotSettings.title" = "Kaltiot settings";
 "KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
+"KaltiotSettings.FooterTextView.text" = "Get ApiKey you can after registration at\nhttps://console.torqhub.io/\nin section \"Tracker - Credentials\" -> \"HTTP API\"";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
