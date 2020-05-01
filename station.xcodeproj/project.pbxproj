@@ -557,6 +557,7 @@
 		0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
+		0E8BAC4A245C393000D380FB /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 0E8BAC49245C393000D380FB /* GRDB */; };
 		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8BD2AF238566AB008B31EF /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
@@ -1576,6 +1577,7 @@
 				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
 				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
 				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
+				0E8BAC4A245C393000D380FB /* GRDB in Frameworks */,
 				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
 				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
 				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
@@ -2071,6 +2073,7 @@
 		0E1C1D9922B364FC0032F6CA /* RuuviTag */ = {
 			isa = PBXGroup;
 			children = (
+				0E8BAC47245C36F200D380FB /* SQLite */,
 				0E1C1D9C22B366BA0032F6CA /* Realm */,
 				0E1C1D9A22B365A60032F6CA /* RuuviTagPersistence.swift */,
 			);
@@ -2831,6 +2834,13 @@
 				0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		0E8BAC47245C36F200D380FB /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SQLite;
 			sourceTree = "<group>";
 		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
@@ -4115,6 +4125,7 @@
 				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
 				0E03B7C523866CDC00949713 /* Nantes */,
 				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
+				0E8BAC49245C393000D380FB /* GRDB */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -4253,6 +4264,7 @@
 				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
 				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
 				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
+				0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -6564,6 +6576,14 @@
 				minimumVersion = 1.8.2;
 			};
 		};
+		0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.14.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -6631,6 +6651,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
 			productName = RangeSeekSlider;
+		};
+		0E8BAC49245C393000D380FB /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
+			productName = GRDB;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
