@@ -27,4 +27,13 @@ class RuuviTagRealm: Object, RuuviTagRealmProtocol {
         self.version = ruuviTag.version
         self.isConnectable = ruuviTag.isConnectable
     }
+
+    convenience required init(ruuviTag: RuuviTagSensor) {
+        self.init()
+        self.uuid = ruuviTag.id
+        self.name = ruuviTag.name
+        self.mac = ruuviTag.mac
+        self.version = ruuviTag.version
+        self.isConnectable = ruuviTag.isConnectable
+    }
 }

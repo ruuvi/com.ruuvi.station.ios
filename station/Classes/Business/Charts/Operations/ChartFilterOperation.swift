@@ -35,7 +35,7 @@ class ChartFilterOperation: Operation {
                 cancel()
                 return
             }
-            if item.tagUuid == uuid,
+            if item.ruuviTagId == uuid,
                 item.date.timeIntervalSince1970 > startDate,
                 item.date.timeIntervalSince1970 < endDate {
                 sorted.append(item)

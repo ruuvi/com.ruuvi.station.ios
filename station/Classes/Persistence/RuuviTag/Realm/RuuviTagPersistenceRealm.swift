@@ -8,6 +8,22 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     var context: RealmContext!
 
     @discardableResult
+    func add(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.uuid != nil)
+        do {
+            let realmTag = RuuviTagRealm(ruuviTag: ruuviTag)
+            try self.context.bg.write {
+                self.context.bg.add(realmTag, update: .all)
+            }
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    @discardableResult
     func persist(ruuviTagData: RuuviTagDataRealm, realm: Realm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         do {
