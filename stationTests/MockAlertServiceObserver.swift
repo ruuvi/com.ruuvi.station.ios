@@ -1,11 +1,3 @@
-//
-//  MockAlertServiceObserver.swift
-//  stationTests
-//
-//  Created by Viik.ufa on 15.03.2020.
-//  Copyright © 2020 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
 @testable import station
 
