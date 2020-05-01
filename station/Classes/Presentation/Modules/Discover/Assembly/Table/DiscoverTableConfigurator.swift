@@ -18,7 +18,8 @@ class DiscoverTableConfigurator {
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
-
+        presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
+        
         view.output = presenter
     }
 }

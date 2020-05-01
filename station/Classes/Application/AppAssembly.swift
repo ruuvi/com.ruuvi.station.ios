@@ -11,7 +11,9 @@ class AppAssembly {
                 CoreAssembly(),
                 NetworkingAssembly(),
                 PersistenceAssembly(),
-                PresentationAssembly()
+                PresentationAssembly(),
+                ReactorAssembly(),
+                TankAssembly()
             ])
     }
 }

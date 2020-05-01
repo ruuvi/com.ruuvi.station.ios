@@ -13,7 +13,8 @@ class DiscoverPresenter: DiscoverModuleInput {
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
-
+    var ruuviTagTank: RuuviTagTank!
+    
     private var ruuviTags = Set<RuuviTag>()
     private var persistedRuuviTags: Results<RuuviTagRealm>! {
         didSet {

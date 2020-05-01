@@ -18,6 +18,7 @@ def shared_pods
   pod 'Nantes'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'RealmSwift'
+  pod 'RxSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
   pod 'FLEX', :configurations => ['Debug']

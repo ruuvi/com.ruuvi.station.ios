@@ -680,7 +680,7 @@ extension TagChartsPresenter {
     }
     private func insertMeasurements(_ newValues: [RuuviMeasurement], into viewModel: TagChartsViewModel) {
         newValues.forEach({ value in
-            guard value.tagUuid == viewModel.uuid.value else {
+            guard value.ruuviTagId == viewModel.uuid.value else {
                 return
             }
             MeasurementType.chartsCases.forEach { type in

@@ -1,29 +1,18 @@
 import Foundation
 import Humidity
 
-typealias Temperature = Measurement<UnitTemperature>
-typealias Pressure = Measurement<UnitPressure>
-typealias Voltage = Measurement<UnitElectricPotentialDifference>
-typealias AccelerationMeasurement = Measurement<UnitAcceleration>
-
-struct Acceleration {
-    let x: AccelerationMeasurement
-    let y: AccelerationMeasurement
-    let z: AccelerationMeasurement
-}
-
-struct RuuviMeasurement {
-    let tagUuid: String
-    let measurementSequenceNumber: Int?
-    let date: Date
-    let rssi: Int?
-    let temperature: Temperature?
-    let humidity: Humidity?
-    let pressure: Pressure?
+struct RuuviMeasurement: RuuviTagSensorRecord {
+    var ruuviTagId: String
+    var measurementSequenceNumber: Int?
+    var date: Date
+    var rssi: Int?
+    var temperature: Temperature?
+    var humidity: Humidity?
+    var pressure: Pressure?
     // v3 & v5
-    let acceleration: Acceleration?
-    let voltage: Voltage?
+    var acceleration: Acceleration?
+    var voltage: Voltage?
     // v5
-    let movementCounter: Int?
-    let txPower: Int?
+    var movementCounter: Int?
+    var txPower: Int?
 }
