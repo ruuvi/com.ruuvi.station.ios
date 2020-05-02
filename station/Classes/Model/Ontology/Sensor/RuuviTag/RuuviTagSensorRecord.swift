@@ -4,6 +4,7 @@ import Humidity
 protocol RuuviTagSensorRecord {
     var ruuviTagId: String { get set }
     var date: Date { get set }
+    var mac: String? { get set }
     var rssi: Int? { get set }
     var temperature: Temperature? { get set }
     var humidity: Humidity? { get set }
