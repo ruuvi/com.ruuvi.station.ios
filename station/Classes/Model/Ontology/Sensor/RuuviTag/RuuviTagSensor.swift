@@ -1,7 +1,7 @@
 import Foundation
 
-protocol RuuviTagSensor: Sensor {
-    var version: Int { get }
+protocol RuuviTagSensor: Sensor, Versionable {
+    
 }
 
 extension RuuviTagSensor {
