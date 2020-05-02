@@ -63,6 +63,7 @@ extension SQLiteGRDBDatabase {
         // v1
         migrator.registerMigration("Create RuuviTagSQLite table") { db in
             try RuuviTagSQLite.createTable(in: db)
+            try RuuviTagDataSQLite.createTable(in: db)
         }
 
         try migrator.migrate(dbPool)
