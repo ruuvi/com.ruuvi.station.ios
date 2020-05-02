@@ -7,18 +7,35 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     var context: RealmContext!
 
-    @discardableResult
-    func add(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.mac == nil)
-        assert(ruuviTag.uuid != nil)
-        do {
-            let realmTag = RuuviTagRealm(ruuviTag: ruuviTag)
-            try self.context.bg.write {
-                self.context.bg.add(realmTag, update: .all)
+        assert(ruuviTag.luid != nil)
+        context.bgWorker.enqueue {
+            do {
+                let realmTag = RuuviTagRealm(ruuviTag: ruuviTag)
+                try self.context.bg.write {
+                    self.context.bg.add(realmTag, update: .all)
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
             }
-        } catch {
-            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    func read() -> Future<[RuuviTagSensor], RUError> {
+        let promise = Promise<[RuuviTagSensor], RUError>()
+        context.bgWorker.enqueue {
+            let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
+            let result: [RuuviTagSensor] = realmEntities.map { ruuviTagRealm in
+                return RuuviTagSensorStruct(version: ruuviTagRealm.version,
+                                            luid: ruuviTagRealm.uuid,
+                                            mac: ruuviTagRealm.mac,
+                                            isConnectable: ruuviTagRealm.isConnectable,
+                                            name: ruuviTagRealm.name)
+            }
+            promise.succeed(value: result)
         }
         return promise.future
     }

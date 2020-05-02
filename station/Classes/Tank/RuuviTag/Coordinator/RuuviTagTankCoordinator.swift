@@ -8,10 +8,15 @@ class RuuviTagTankCoordinator: RuuviTagTank {
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         if ruuviTag.mac != nil {
-            return sqlite.add(ruuviTag)
+            return sqlite.create(ruuviTag)
         } else {
-            return realm.add(ruuviTag)
+            return realm.create(ruuviTag)
         }
+    }
+
+    func read() -> Future<[RuuviTagSensor], RUError> {
+        let promise = Promise<[RuuviTagSensor], RUError>()
+        return promise.future
     }
 
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
