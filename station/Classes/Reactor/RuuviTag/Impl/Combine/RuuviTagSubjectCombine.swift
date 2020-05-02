@@ -15,6 +15,7 @@ class RuuviTagSubjectCombine {
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
     private var ruuviTagsRealmToken: NotificationToken?
+    private var ruuviTagRealmCache = [AnyRuuviTagSensor]()
 
     deinit {
         ruuviTagsRealmToken?.invalidate()
@@ -42,18 +43,26 @@ class RuuviTagSubjectCombine {
             }
         })
 
-        ruuviTagsRealmToken = self.realm.main.objects(RuuviTagRealm.self).observe { [weak self] (change) in
+        let results = self.realm.main.objects(RuuviTagRealm.self)
+        self.ruuviTagRealmCache = results.map({ $0.any })
+        self.ruuviTagsRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
             switch change {
             case .update(let ruuviTags, let deletions, let insertions, let modifications):
                 for del in deletions {
-                    sSelf.deleteSubject.send(ruuviTags[del])
+                    sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
                 }
+                sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
+                    .enumerated()
+                    .filter { !deletions.contains($0.offset) }
+                    .map { $0.element }
                 for ins in insertions {
-                    sSelf.insertSubject.send(ruuviTags[ins])
+                    sSelf.insertSubject.send(ruuviTags[ins].any)
+                    sSelf.ruuviTagRealmCache.insert(ruuviTags[ins].any, at: ins) // TODO: test if ok with multiple
                 }
                 for mod in modifications {
-                    sSelf.updateSubject.send(ruuviTags[mod])
+                    sSelf.updateSubject.send(ruuviTags[mod].any)
+                    sSelf.ruuviTagRealmCache[mod] = ruuviTags[mod].any
                 }
             default:
                 break
