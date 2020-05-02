@@ -12,6 +12,10 @@ protocol Nameable {
     var name: String { get }
 }
 
+protocol Versionable {
+    var version: Int { get }
+}
+
 protocol Sensor: Device, Connectable, Nameable {
     var luid: String? { get }
     var mac: String? { get }
