@@ -58,12 +58,7 @@ class CardsPresenter: CardsModuleInput {
             startListeningToWebTagsAlertStatus()
         }
     }
-    private var ruuviTags: [RuuviTagSensor]? {
-        didSet {
-            syncViewModels()
-            startListeningToRuuviTagsAlertStatus()
-        }
-    }
+    private var ruuviTags = [AnyRuuviTagSensor]()
     private var viewModels = [CardsViewModel]() {
         didSet {
             view.viewModels = viewModels
@@ -159,8 +154,8 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.id == viewModel.uuid.value }) {
-//            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
+        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.luid == viewModel.uuid.value }) {
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
             router.openWebTagSettings(webTag: webTag)
         }
@@ -289,8 +284,8 @@ extension CardsPresenter: AlertServiceObserver {
 extension CardsPresenter {
 
     private func syncViewModels() {
-        if ruuviTags != nil && webTags != nil {
-            let ruuviViewModels = ruuviTags?.compactMap({ (ruuviTag) -> CardsViewModel in
+        if webTags != nil {
+            let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(ruuviTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
@@ -380,7 +375,7 @@ extension CardsPresenter {
         rssiTimers.values.forEach({ $0.invalidate() })
         connectionPersistence.keepConnectionUUIDs
             .filter({ (uuid) -> Bool in
-                ruuviTags?.contains(where: { $0.id == uuid }) ?? false
+                ruuviTags.contains(where: { $0.id == uuid })
             }).forEach { (uuid) in
                 if settings.readRSSI {
                     let interval = settings.readRSSIIntervalSeconds
@@ -417,7 +412,7 @@ extension CardsPresenter {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (uuid) -> Bool in
-            ruuviTags?.contains(where: { $0.id == uuid }) ?? false
+            ruuviTags.contains(where: { $0.id == uuid })
         }.forEach { (uuid) in
             heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
@@ -505,12 +500,16 @@ extension CardsPresenter {
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
-                self?.ruuviTags = ruuviTags
+                self?.ruuviTags = ruuviTags.map({ $0.any })
+                self?.syncViewModels()
+                self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
             case .insert(let sensor):
-                self?.ruuviTags?.append(sensor)
+                self?.ruuviTags.append(sensor.any)
+                self?.syncViewModels()
+                self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
-                if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == sensor.id }) {
+                if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == sensor.luid }) {
                     self?.view.scroll(to: index)
                     self?.tagCharts?.configure(uuid: sensor.id)
                     if let viewModels = self?.viewModels,
@@ -521,6 +520,11 @@ extension CardsPresenter {
                         self?.settings.cardsSwipeHintWasShown = true
                     }
                 }
+            case .delete(let sensor):
+                self?.ruuviTags.removeAll(where: { $0.id == sensor.id })
+                self?.syncViewModels()
+                self?.startListeningToRuuviTagsAlertStatus()
+                self?.observeRuuviTags()
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             default:
@@ -837,7 +841,7 @@ extension CardsPresenter {
     }
 
     private func startListeningToRuuviTagsAlertStatus() {
-        ruuviTags?.forEach({ alertService.subscribe(self, to: $0.id) })
+        ruuviTags.forEach({ alertService.subscribe(self, to: $0.id) })
     }
 
     private func startListeningToWebTagsAlertStatus() {
