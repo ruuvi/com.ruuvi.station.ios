@@ -48,7 +48,7 @@ class RuuviTagSubjectCombine {
         self.ruuviTagsRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
             switch change {
-            case .update(let ruuviTags, let deletions, let insertions, let modifications):
+            case .update(let ruuviSensors, let deletions, let insertions, let modifications):
                 for del in deletions {
                     sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
                 }
@@ -57,12 +57,12 @@ class RuuviTagSubjectCombine {
                     .filter { !deletions.contains($0.offset) }
                     .map { $0.element }
                 for ins in insertions {
-                    sSelf.insertSubject.send(ruuviTags[ins].any)
-                    sSelf.ruuviTagRealmCache.insert(ruuviTags[ins].any, at: ins) // TODO: test if ok with multiple
+                    sSelf.insertSubject.send(ruuviSensors[ins].any)
+                    sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins) // TODO: test if ok with multiple
                 }
                 for mod in modifications {
-                    sSelf.updateSubject.send(ruuviTags[mod].any)
-                    sSelf.ruuviTagRealmCache[mod] = ruuviTags[mod].any
+                    sSelf.updateSubject.send(ruuviSensors[mod].any)
+                    sSelf.ruuviTagRealmCache[mod] = ruuviSensors[mod].any
                 }
             default:
                 break
