@@ -25,8 +25,11 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     }
 
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        return promise.future
+        if record.mac != nil {
+            return sqlite.create(record)
+        } else {
+            return realm.create(record)
+        }
     }
 
     func delete(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
