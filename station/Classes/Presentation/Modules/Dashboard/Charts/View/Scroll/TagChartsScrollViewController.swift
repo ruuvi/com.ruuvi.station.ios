@@ -25,9 +25,6 @@ class TagChartsScrollViewController: UIViewController {
     private var currentPage: Int {
         return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
-    private var currentTrippleView: TrippleChartView {
-        return views[currentPage]
-    }
     private let noChartDataText = "TagCharts.NoChartData.text"
 
     deinit {
@@ -397,6 +394,25 @@ extension TagChartsScrollViewController {
             view.output = self?.output
         }
     }
+
+    private func bindProgress(view: TrippleChartView, progress: Observable<Float?>) {
+        view.temperatureProgressView.bind(progress) { (view, progress) in
+            if let progress = progress {
+                view.setProgress(progress, animated: true)
+            }
+        }
+        view.humidityProgressView.bind(progress) { (view, progress) in
+            if let progress = progress {
+                view.setProgress(progress, animated: true)
+            }
+        }
+        view.pressureProgressView.bind(progress) { (view, progress) in
+            if let progress = progress {
+                view.setProgress(progress, animated: true)
+            }
+        }
+    }
+
     private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
 
         view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
@@ -404,6 +420,7 @@ extension TagChartsScrollViewController {
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
         bindCharts(view: view, with: viewModel)
+        bindProgress(view: view, progress: viewModel.progress)
 
         view.pressureUnitLabel.text = "hPa".localized()
 
@@ -436,7 +453,6 @@ extension TagChartsScrollViewController {
             }
        }
     }
-
 }
 
 // MARK: - Update UI
