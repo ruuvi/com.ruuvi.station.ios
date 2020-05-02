@@ -606,6 +606,9 @@
 		0E8BACAD245C87A300D380FB /* ReactorAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */; };
 		0E8BACAE245C87A300D380FB /* ReactorAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */; };
 		0E8BACAF245C87A300D380FB /* ReactorAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */; };
+		0E8BACB7245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */; };
+		0E8BACB8245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */; };
+		0E8BACB9245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */; };
 		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8BD2AF238566AB008B31EF /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
@@ -1409,6 +1412,7 @@
 		0E8BAC9D245C755400D380FB /* RuuviTagReactorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagReactorImpl.swift; sourceTree = "<group>"; };
 		0E8BACA7245C84BE00D380FB /* TankAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TankAssembly.swift; sourceTree = "<group>"; };
 		0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorAssembly.swift; sourceTree = "<group>"; };
+		0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagRealm+RuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
@@ -2161,6 +2165,7 @@
 			isa = PBXGroup;
 			children = (
 				0E8BAC7E245C4E5000D380FB /* Ontology */,
+				0E8BACB5245D5E2100D380FB /* Mappers */,
 				A94FFD34241C180000888017 /* Abstractions */,
 				A92E3C522426345600D981D5 /* Measurement */,
 				0E1C1DA422B36EB50032F6CA /* Realm */,
@@ -3059,6 +3064,14 @@
 				0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */,
 			);
 			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E8BACB5245D5E2100D380FB /* Mappers */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */,
+			);
+			path = Mappers;
 			sourceTree = "<group>";
 		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
@@ -5181,6 +5194,7 @@
 				0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */,
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
+				0E8BACB9245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E6BAE8F23856A01003A2D4C /* SettingsModuleInput.swift in Sources */,
@@ -5537,6 +5551,7 @@
 				0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
 				0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */,
+				0E8BACB8245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
@@ -5893,6 +5908,7 @@
 				0ECFF366235079F50061D11B /* ForegroundPresenter.swift in Sources */,
 				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
+				0E8BACB7245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* CardsScrollConfigurator.swift in Sources */,
 				0E84BF652397F9DC00A37E1A /* HeartbeatTableViewController.swift in Sources */,
 				0E9959B8235EF24D001C37D8 /* RuuviTagHeartbeatDaemon.swift in Sources */,

@@ -12,6 +12,12 @@ class RuuviTagSubjectRxSwift {
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
 
+    deinit {
+        insertSubject.onCompleted()
+        updateSubject.onCompleted()
+        deleteSubject.onCompleted()
+    }
+
     init(sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm

@@ -13,6 +13,6 @@ protocol Nameable {
 }
 
 protocol Sensor: Device, Connectable, Nameable {
-    var uuid: String? { get }
+    var luid: String? { get }
     var mac: String? { get }
 }

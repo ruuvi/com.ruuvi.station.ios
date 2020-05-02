@@ -8,8 +8,8 @@ extension RuuviTagSensor {
     var id: String {
         if let mac = mac {
             return mac
-        } else if let uuid = uuid {
-            return uuid
+        } else if let luid = luid {
+            return luid
         } else {
             fatalError()
         }
@@ -18,7 +18,7 @@ extension RuuviTagSensor {
 
 struct RuuviTagSensorStruct: RuuviTagSensor {
     var version: Int
-    var uuid: String?
+    var luid: String? // local unqiue id
     var mac: String?
     var isConnectable: Bool
     var name: String
