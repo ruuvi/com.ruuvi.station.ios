@@ -1,18 +1,21 @@
 import Foundation
 import GRDB
 import RxSwift
+import RealmSwift
 
 class RuuviTagSubjectRxSwift {
     var sqlite: SQLiteContext
     var realm: RealmContext
 
-    let insertSubject: PublishSubject<RuuviTagSQLite> = PublishSubject()
-    let updateSubject: PublishSubject<RuuviTagSQLite> = PublishSubject()
-    let deleteSubject: PublishSubject<RuuviTagSQLite> = PublishSubject()
+    let insertSubject: PublishSubject<RuuviTagSensor> = PublishSubject()
+    let updateSubject: PublishSubject<RuuviTagSensor> = PublishSubject()
+    let deleteSubject: PublishSubject<RuuviTagSensor> = PublishSubject()
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
+    private var ruuviTagsRealmToken: NotificationToken?
 
     deinit {
+        ruuviTagsRealmToken?.invalidate()
         insertSubject.onCompleted()
         updateSubject.onCompleted()
         deleteSubject.onCompleted()
@@ -34,10 +37,28 @@ class RuuviTagSubjectRxSwift {
             case .update:
                 sSelf.updateSubject.onNext(record)
             case .deletion:
-                sSelf.updateSubject.onNext(record)
+                sSelf.deleteSubject.onNext(record)
             case .move:
                 break
             }
         })
+
+        ruuviTagsRealmToken = self.realm.main.objects(RuuviTagRealm.self).observe { [weak self] (change) in
+            guard let sSelf = self else { return }
+            switch change {
+            case .update(let ruuviTags, let deletions, let insertions, let modifications):
+                for del in deletions {
+                    sSelf.deleteSubject.onNext(ruuviTags[del])
+                }
+                for ins in insertions {
+                    sSelf.insertSubject.onNext(ruuviTags[ins])
+                }
+                for mod in modifications {
+                    sSelf.updateSubject.onNext(ruuviTags[mod])
+                }
+            default:
+                break 
+            }
+        }
     }
 }
