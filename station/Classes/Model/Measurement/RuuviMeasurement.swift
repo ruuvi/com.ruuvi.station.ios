@@ -1,7 +1,7 @@
 import Foundation
 import Humidity
 
-struct RuuviMeasurement: RuuviTagSensorRecord {
+struct RuuviMeasurement {
     var ruuviTagId: String
     var measurementSequenceNumber: Int?
     var date: Date

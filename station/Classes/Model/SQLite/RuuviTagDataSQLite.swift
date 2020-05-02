@@ -5,6 +5,7 @@ import Humidity
 struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     var ruuviTagId: String
     var date: Date
+    var mac: String?
     var rssi: Int?
     var temperature: Temperature?
     var humidity: Humidity?
@@ -20,6 +21,7 @@ extension RuuviTagDataSQLite {
     static let idColumn = Column("id")
     static let ruuviTagIdColumn = Column("ruuviTagId")
     static let dateColumn = Column("date")
+    static let macColumn = Column("mac")
     static let rssiColumn = Column("rssi")
     static let celsiusColumn = Column("celsius")
     static let relativeHumidityInPercentColumn = Column("relativeHumidityInPercent")
@@ -37,6 +39,7 @@ extension RuuviTagDataSQLite: FetchableRecord {
     init(row: Row) {
         ruuviTagId = row[RuuviTagDataSQLite.ruuviTagIdColumn]
         date = row[RuuviTagDataSQLite.dateColumn]
+        mac = row[RuuviTagDataSQLite.macColumn]
         rssi = row[RuuviTagDataSQLite.rssiColumn]
         if let celsius = Double.fromDatabaseValue(row[RuuviTagDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)
@@ -73,6 +76,7 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.idColumn] = id
         container[RuuviTagDataSQLite.ruuviTagIdColumn] = ruuviTagId
         container[RuuviTagDataSQLite.dateColumn] = date
+        container[RuuviTagDataSQLite.macColumn] = mac
         container[RuuviTagDataSQLite.rssiColumn] = rssi
         container[RuuviTagDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
         container[RuuviTagDataSQLite.relativeHumidityInPercentColumn] = humidity?.rh
@@ -93,6 +97,7 @@ extension RuuviTagDataSQLite {
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(RuuviTagDataSQLite.ruuviTagIdColumn.name, .text).notNull()
             table.column(RuuviTagDataSQLite.dateColumn.name, .datetime).notNull()
+            table.column(RuuviTagDataSQLite.macColumn.name, .text)
             table.column(RuuviTagDataSQLite.rssiColumn.name, .integer)
             table.column(RuuviTagDataSQLite.celsiusColumn.name, .double)
             table.column(RuuviTagDataSQLite.relativeHumidityInPercentColumn.name, .double)
