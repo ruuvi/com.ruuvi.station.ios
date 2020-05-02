@@ -116,6 +116,15 @@ struct CardsViewModel {
         date.value = Date()
     }
 
+    init(_ ruuviTag: RuuviTagSensor) {
+        type = .ruuvi
+        uuid.value = ruuviTag.luid ?? ruuviTag.id
+        name.value = ruuviTag.name
+        mac.value = ruuviTag.mac
+        version.value = ruuviTag.version
+        isConnectable.value = ruuviTag.isConnectable
+    }
+
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
