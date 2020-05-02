@@ -1,8 +1,8 @@
 PODS:
   - BTKit (0.1.9)
-  - Charts (3.4.0):
-    - Charts/Core (= 3.4.0)
-  - Charts/Core (3.4.0)
+  - Charts (3.5.0):
+    - Charts/Core (= 3.5.0)
+  - Charts/Core (3.5.0)
   - Firebase/Analytics (6.15.0):
     - Firebase/Core
   - Firebase/Core (6.15.0):
@@ -98,11 +98,11 @@ PODS:
   - Protobuf (3.11.2)
   - Quick (2.2.0)
   - RangeSeekSlider (1.8.2)
-  - Realm (4.3.1):
-    - Realm/Headers (= 4.3.1)
-  - Realm/Headers (4.3.1)
-  - RealmSwift (4.3.1):
-    - Realm (= 4.3.1)
+  - Realm (4.4.1):
+    - Realm/Headers (= 4.4.1)
+  - Realm/Headers (4.4.1)
+  - RealmSwift (4.4.1):
+    - Realm (= 4.4.1)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
@@ -179,7 +179,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BTKit: f6d4664ce14ea2939d7458466765ed38da47dd3d
-  Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
+  Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
   FirebaseAnalyticsInterop: 3f86269c38ae41f47afeb43ebf32a001f58fcdae
@@ -206,11 +206,11 @@ SPEC CHECKSUMS:
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: 31dc40934081ef740f60feedc46d88473cbfeb40
-  RealmSwift: b5199e9a41f67b99f51acf6874a6166f5fbe93d1
+  Realm: 4eb04d7487bd43c0581256f40b424eafb711deff
+  RealmSwift: 3eb8924ff7100df5928c7602f71d0fec51e7c9c5
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: fd3236cc54d3ab157d3570e2c51c4ee755ff83b5
+PODFILE CHECKSUM: 1155741180b30a50a58f0c89fcd2ed922321548e
 
 COCOAPODS: 1.9.1

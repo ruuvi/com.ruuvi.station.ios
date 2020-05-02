@@ -268,6 +268,27 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
         return label
     }()
 
+    lazy var temperatureProgressView: ProgressBarView = {
+        let progressView = ProgressBarView(frame: .zero)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.layer.cornerRadius = 12
+        return progressView
+    }()
+
+    lazy var humidityProgressView: ProgressBarView = {
+        let progressView = ProgressBarView(frame: .zero)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.layer.cornerRadius = 12
+        return progressView
+    }()
+
+    lazy var pressureProgressView: ProgressBarView = {
+        let progressView = ProgressBarView(frame: .zero)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.layer.cornerRadius = 12
+        return progressView
+    }()
+
     lazy var syncButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setTitle("SYNC".localized(), for: .normal)
@@ -676,6 +697,7 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                                     constant: 0.0))
         setupScrollContainer()
         setupUnitLabels()
+        setupProgressBars()
     }
 
     // swiftlint:disable:next function_body_length
@@ -727,6 +749,46 @@ class TrippleChartView: UIView, Localizable, UIScrollViewDelegate {
                                                        attribute: .top,
                                                        multiplier: 1.0,
                                                        constant: 8))
+    }
+
+    private func setupProgressBars() {
+        temperatureChart.addSubview(temperatureProgressView)
+        addConstraints(for: temperatureChart, progressView: temperatureProgressView)
+        humidityChart.addSubview(humidityProgressView)
+        addConstraints(for: humidityChart, progressView: humidityProgressView)
+        pressureChart.addSubview(pressureProgressView)
+        addConstraints(for: pressureChart, progressView: pressureProgressView)
+    }
+
+    private func addConstraints(for chartView: TagChartView, progressView: ProgressBarView) {
+        chartView.addConstraint(NSLayoutConstraint(item: progressView,
+                                                   attribute: .centerX,
+                                                   relatedBy: .equal,
+                                                   toItem: chartView,
+                                                   attribute: .centerX,
+                                                   multiplier: 1.0,
+                                                   constant: 0.0))
+        chartView.addConstraint(NSLayoutConstraint(item: progressView,
+                                                   attribute: .centerY,
+                                                   relatedBy: .equal,
+                                                   toItem: chartView,
+                                                   attribute: .centerY,
+                                                   multiplier: 1.0,
+                                                   constant: 44.0))
+        chartView.addConstraint(NSLayoutConstraint(item: progressView,
+                                                   attribute: .height,
+                                                   relatedBy: .equal,
+                                                   toItem: nil,
+                                                   attribute: .notAnAttribute,
+                                                   multiplier: 1.0,
+                                                   constant: 24.0))
+        chartView.addConstraint(NSLayoutConstraint(item: progressView,
+                                                   attribute: .width,
+                                                   relatedBy: .equal,
+                                                   toItem: chartView,
+                                                   attribute: .width,
+                                                   multiplier: 0.5,
+                                                   constant: 0.0))
     }
 
     // swiftlint:disable:next function_body_length

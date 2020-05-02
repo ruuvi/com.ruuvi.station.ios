@@ -386,19 +386,18 @@ extension TagChartsPresenter {
         guard let uuid = tagUUID else {
             return
         }
+        lastMeasurement = nil
         let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
         ruuviTagDataToken = ruuviTagDataRealm.observe {
             [weak self] (change) in
             switch change {
             case .initial(let results):
-                self?.isLoading = true
                 if results.isEmpty {
                     self?.handleEmptyResults()
                 } else {
                     self?.handleInitialRuuviTagData(results)
                 }
-                self?.isLoading = false
             case .update(let results, _, let insertions, _):
                 // sync every 1 second
                 self?.isSyncing = false
@@ -430,11 +429,25 @@ extension TagChartsPresenter {
         }
     }
 
+    private func setProgress(_ progress: Float, viewModel: TagChartsViewModel) {
+        if viewModel.chartData(for: .temperature).entryCount < threshold
+            || viewModel.chartData(for: .pressure).entryCount < threshold
+            || viewModel.chartData(for: .humidity).entryCount < threshold {
+            viewModel.progress.value = progress
+        }
+    }
+
+    private func completeProgress(for viewModel: TagChartsViewModel) {
+        viewModel.progress.value = 1.0
+    }
+// swiftlint:disable:next function_body_length
     private func handleInitialRuuviTagData(_ results: Results<RuuviTagDataRealm>) {
-        guard let viewModel = currentViewModel else {
+        guard let viewModel = currentViewModel,
+            viewModel.isHandleInitialResult.value == false else {
             return
         }
-        isLoading = true
+        completeProgress(for: viewModel)
+        viewModel.isHandleInitialResult.value = true
         let resultsRef = ThreadSafeReference(to: results)
         let chartIntervalSeconds = settings.chartIntervalSeconds
         let label = "com.ruuvi.station.TagChartsPresenter.handleInitialRuuviTagData"
@@ -446,8 +459,17 @@ extension TagChartsPresenter {
                 }
                 var newValues = [RuuviMeasurement]()
                 var syncDate: Date = Date()
-                for result in results {
+                var lastIntProgress: Int = 0
+                for item in results.enumerated() {
                     autoreleasepool {
+                        let progress: Float = Float(item.offset)/Float(results.count)
+                        if Int(progress * 100) != lastIntProgress {
+                            lastIntProgress = Int(progress * 100)
+                            DispatchQueue.main.async { [weak self] in
+                                self?.setProgress(progress, viewModel: viewModel)
+                            }
+                        }
+                        let result = item.element
                         if result == results.first {
                             syncDate = result.date
                             newValues.append(result.measurement)
@@ -468,12 +490,13 @@ extension TagChartsPresenter {
                     newValues.append(last.measurement)
                 }
                 DispatchQueue.main.async { [weak self] in
+                    viewModel.isHandleInitialResult.value = false
+                    self?.completeProgress(for: viewModel)
                     if let lastChartSyncDate = lastChartSyncDate {
                         self?.lastChartSyncDate = lastChartSyncDate
                     }
                     self?.ruuviTagData = newValues
                     self?.createChartData(for: viewModel)
-                    self?.isLoading = false
                 }
             }
         }
@@ -481,6 +504,7 @@ extension TagChartsPresenter {
 
     private func handleUpdateRuuviTagData(_ results: Results<RuuviTagDataRealm>, insertions: [Int]) {
         guard let viewModel = currentViewModel,
+            viewModel.isHandleInitialResult.value == false,
             view.viewIsVisible == true else {
             return
         }

@@ -28,6 +28,8 @@ struct TagChartsViewModel {
     var temperatureChart: Observable<TagChartViewInput?> = Observable<TagChartViewInput?>()
     var humidityChart: Observable<TagChartViewInput?> = Observable<TagChartViewInput?>()
     var pressureChart: Observable<TagChartViewInput?> = Observable<TagChartViewInput?>()
+    var progress: Observable<Float?> = Observable<Float?>()
+    var isHandleInitialResult: Observable<Bool?> = Observable<Bool?>(false)
 
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
