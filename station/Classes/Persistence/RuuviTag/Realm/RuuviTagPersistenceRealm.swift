@@ -15,9 +15,48 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             do {
                 let realmTag = RuuviTagRealm(ruuviTag: ruuviTag)
                 try self.context.bg.write {
-                    self.context.bg.add(realmTag, update: .all)
+                    self.context.bg.add(realmTag, update: .error)
                 }
                 promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.luid != nil)
+        context.bgWorker.enqueue {
+            do {
+                let realmTag = RuuviTagRealm(ruuviTag: ruuviTag)
+                try self.context.bg.write {
+                    self.context.bg.add(realmTag, update: .modified)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.luid != nil)
+        context.bgWorker.enqueue {
+            do {
+                if let realmTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTag.id) {
+                    try self.context.bg.write {
+                        self.context.bg.delete(realmTag)
+                    }
+                    promise.succeed(value: true)
+                } else {
+                    promise.fail(error: .unexpected(.failedToFindRuuviTag))
+                }
             } catch {
                 promise.fail(error: .persistence(error))
             }

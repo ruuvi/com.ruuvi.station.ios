@@ -36,7 +36,7 @@ class RuuviTagSubjectCombine {
             case .update:
                 sSelf.updateSubject.send(record)
             case .deletion:
-                sSelf.updateSubject.send(record)
+                sSelf.deleteSubject.send(record)
             case .move:
                 break
             }

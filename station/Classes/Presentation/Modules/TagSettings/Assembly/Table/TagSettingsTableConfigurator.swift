@@ -23,7 +23,9 @@ class TagSettingsTableConfigurator {
         presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
-
+        presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
+        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        
         view.output = presenter
     }
 }

@@ -74,4 +74,47 @@ class RuuviTagPersistenceSQLite: DatabaseService {
         }
         return promise.future
     }
+
+    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.mac != nil)
+        let entity = Entity(id: ruuviTag.id,
+                            mac: ruuviTag.mac,
+                            luid: ruuviTag.luid,
+                            name: ruuviTag.name,
+                            version: ruuviTag.version,
+                            isConnectable: ruuviTag.isConnectable)
+
+        do {
+            try database.dbPool.write { db in
+                try entity.update(db)
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.mac != nil)
+        let entity = Entity(id: ruuviTag.id,
+                            mac: ruuviTag.mac,
+                            luid: ruuviTag.luid,
+                            name: ruuviTag.name,
+                            version: ruuviTag.version,
+                            isConnectable: ruuviTag.isConnectable)
+
+        do {
+            var success = false
+            try database.dbPool.write { db in
+                success = try entity.delete(db)
+            }
+            promise.succeed(value: success)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
 }

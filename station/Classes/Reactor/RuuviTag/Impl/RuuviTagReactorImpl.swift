@@ -30,26 +30,50 @@ class RuuviTagReactorImpl: RuuviTagReactor {
 
         #if canImport(Combine)
         if #available(iOS 13, *) {
-            let cancellable = combine.insertSubject.sink { value in
+            let insert = combine.insertSubject.sink { value in
                 block(.insert(value))
             }
+            let update = combine.updateSubject.sink { value in
+                block(.update(value))
+            }
+            let delete = combine.deleteSubject.sink { value in
+                block(.delete(value))
+            }
             return RUObservationToken {
-                cancellable.cancel()
+                insert.cancel()
+                update.cancel()
+                delete.cancel()
             }
         } else {
-            let cancellable = rxSwift.insertSubject.subscribe(onNext: { value in
+            let insert = rxSwift.insertSubject.subscribe(onNext: { value in
                 block(.insert(value))
             })
+            let update = rxSwift.updateSubject.subscribe(onNext: { value in
+                block(.update(value))
+            })
+            let delete = rxSwift.deleteSubject.subscribe(onNext: { value in
+                block(.delete(value))
+            })
             return RUObservationToken {
-                cancellable.dispose()
+                insert.dispose()
+                update.dispose()
+                delete.dispose()
             }
         }
         #else
-        let cancellable = rxSwift.insertSubject.subscribe(onNext: { value in
+        let insert = rxSwift.insertSubject.subscribe(onNext: { value in
             block(.insert(value))
         })
+        let update = rxSwift.updateSubject.subscribe(onNext: { value in
+            block(.update(value))
+        })
+        let delete = rxSwift.deleteSubject.subscribe(onNext: { value in
+            block(.delete(value))
+        })
         return RUObservationToken {
-            cancellable.dispose()
+            insert.dispose()
+            update.dispose()
+            delete.dispose()
         }
         #endif
     }

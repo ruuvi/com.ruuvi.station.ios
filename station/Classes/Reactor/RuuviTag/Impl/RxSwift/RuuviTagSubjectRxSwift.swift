@@ -57,7 +57,7 @@ class RuuviTagSubjectRxSwift {
                     sSelf.updateSubject.onNext(ruuviTags[mod])
                 }
             default:
-                break 
+                break
             }
         }
     }
