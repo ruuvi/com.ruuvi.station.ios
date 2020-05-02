@@ -2,17 +2,23 @@
 import Foundation
 import GRDB
 import Combine
+import RealmSwift
 
 @available(iOS 13, *)
 class RuuviTagSubjectCombine {
     var sqlite: SQLiteContext
     var realm: RealmContext
 
-    let insertSubject = PassthroughSubject<RuuviTagSQLite, Never>()
-    let updateSubject = PassthroughSubject<RuuviTagSQLite, Never>()
-    let deleteSubject = PassthroughSubject<RuuviTagSQLite, Never>()
+    let insertSubject = PassthroughSubject<RuuviTagSensor, Never>()
+    let updateSubject = PassthroughSubject<RuuviTagSensor, Never>()
+    let deleteSubject = PassthroughSubject<RuuviTagSensor, Never>()
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
+    private var ruuviTagsRealmToken: NotificationToken?
+
+    deinit {
+        ruuviTagsRealmToken?.invalidate()
+    }
 
     init(sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
@@ -35,6 +41,24 @@ class RuuviTagSubjectCombine {
                 break
             }
         })
+
+        ruuviTagsRealmToken = self.realm.main.objects(RuuviTagRealm.self).observe { [weak self] (change) in
+            guard let sSelf = self else { return }
+            switch change {
+            case .update(let ruuviTags, let deletions, let insertions, let modifications):
+                for del in deletions {
+                    sSelf.deleteSubject.send(ruuviTags[del])
+                }
+                for ins in insertions {
+                    sSelf.insertSubject.send(ruuviTags[ins])
+                }
+                for mod in modifications {
+                    sSelf.updateSubject.send(ruuviTags[mod])
+                }
+            default:
+                break
+            }
+        }
     }
 }
 #endif
