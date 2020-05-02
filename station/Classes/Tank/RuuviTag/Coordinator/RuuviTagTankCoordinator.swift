@@ -6,7 +6,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var sqlite: RuuviTagPersistenceSQLite!
     var realm: RuuviTagPersistenceRealm!
 
-    func add(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         if ruuviTag.mac != nil {
             return sqlite.add(ruuviTag)
         } else {
@@ -14,17 +14,17 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         }
     }
 
-    func remove(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         return promise.future
     }
 
-    func add(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
+    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         return promise.future
     }
 
-    func remove(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
+    func delete(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         return promise.future
     }

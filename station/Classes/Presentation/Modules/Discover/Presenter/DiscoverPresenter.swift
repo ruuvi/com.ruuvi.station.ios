@@ -105,7 +105,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
                                               mac: ruuviTag.mac,
                                               isConnectable: ruuviTag.isConnectable,
                                               name: displayName)
-            let operation = ruuviTagTank.add(sensor)
+            let operation = ruuviTagTank.create(sensor)
             operation.on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.isOpenedFromWelcome {
