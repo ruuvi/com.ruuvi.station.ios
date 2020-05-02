@@ -1,6 +1,6 @@
 import Foundation
 
-protocol Device {
+protocol StringIdentifieable {
     var id: String { get }
 }
 
@@ -15,6 +15,8 @@ protocol Nameable {
 protocol Versionable {
     var version: Int { get }
 }
+
+protocol Device: StringIdentifieable {}
 
 protocol Sensor: Device, Connectable, Nameable {
     var luid: String? { get }
