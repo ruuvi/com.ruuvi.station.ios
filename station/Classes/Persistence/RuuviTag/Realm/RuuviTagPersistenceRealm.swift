@@ -24,6 +24,22 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(record.mac == nil)
+        context.bgWorker.enqueue {
+            do {
+                let data = RuuviTagDataRealm(record: record)
+                try self.context.bg.write {
+                    self.context.bg.add(data, update: .all)
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func read() -> Future<[RuuviTagSensor], RUError> {
         let promise = Promise<[RuuviTagSensor], RUError>()
         context.bgWorker.enqueue {

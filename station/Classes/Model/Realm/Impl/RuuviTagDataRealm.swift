@@ -64,4 +64,23 @@ class RuuviTagDataRealm: Object {
         self.pressure.value = data.pressure
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
     }
+
+    convenience init(record: RuuviTagSensorRecord) {
+        self.init()
+        let ruuviTag = self.realm?.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId)
+        assert(ruuviTag != nil)
+        self.ruuviTag = ruuviTag
+        self.rssi.value = record.rssi
+        self.celsius.value = record.temperature?.converted(to: .celsius).value
+        self.humidity.value = record.humidity?.rh
+        self.pressure.value = record.pressure?.converted(to: .hectopascals).value
+        self.accelerationX.value = record.acceleration?.x.value
+        self.accelerationY.value = record.acceleration?.y.value
+        self.accelerationZ.value = record.acceleration?.z.value
+        self.voltage.value = record.voltage?.converted(to: .volts).value
+        self.movementCounter.value = record.movementCounter
+        self.measurementSequenceNumber.value = record.measurementSequenceNumber
+        self.txPower.value = record.txPower
+        self.compoundKey = record.id
+    }
 }
