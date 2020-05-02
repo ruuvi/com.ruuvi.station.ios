@@ -28,7 +28,6 @@ class CardsPresenter: CardsModuleInput {
 
     weak var tagCharts: TagChartsModuleInput?
 
-    private var ruuviTagsToken: NotificationToken?
     private var ruuviTagToken: RUObservationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
@@ -74,7 +73,6 @@ class CardsPresenter: CardsModuleInput {
     // swiftlint:disable:next cyclomatic_complexity
     deinit {
         ruuviTagToken?.invalidate()
-        ruuviTagsToken?.invalidate()
         webTagsToken?.invalidate()
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
