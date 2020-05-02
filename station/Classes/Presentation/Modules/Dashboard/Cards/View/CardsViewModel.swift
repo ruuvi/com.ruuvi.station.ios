@@ -160,8 +160,8 @@ struct CardsViewModel {
         celsius.value = ruuviTag.celsius
         fahrenheit.value = ruuviTag.fahrenheit
         kelvin.value = ruuviTag.kelvin
-        relativeHumidity.value = ruuviTag.humidity
-        if let c = ruuviTag.celsius, let rh = ruuviTag.humidity {
+        relativeHumidity.value = ruuviTag.relativeHumidity
+        if let c = ruuviTag.celsius, let rh = ruuviTag.relativeHumidity {
             if let ho = humidityOffset.value {
                 var sh = rh + ho
                 if sh > 100.0 {
@@ -185,10 +185,10 @@ struct CardsViewModel {
             dewPointFahrenheit.value = nil
             dewPointKelvin.value = nil
         }
-        pressure.value = ruuviTag.pressure
+        pressure.value = ruuviTag.hectopascals
 
         version.value = ruuviTag.version
-        voltage.value = ruuviTag.voltage
+        voltage.value = ruuviTag.volts
 
         mac.value = ruuviTag.mac
         date.value = Date()

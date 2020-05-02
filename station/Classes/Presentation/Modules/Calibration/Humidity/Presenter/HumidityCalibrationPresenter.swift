@@ -72,14 +72,14 @@ extension HumidityCalibrationPresenter {
         advertisementToken?.invalidate()
         advertisementToken = foreground.observe(self, uuid: ruuviTag.uuid) { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.humidity = tag.humidity
+                self?.humidity = tag.relativeHumidity
                 self?.updateView()
             }
         }
         heartbeatToken?.invalidate()
         heartbeatToken = background.observe(self, uuid: ruuviTag.uuid) { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.humidity = tag.humidity
+                self?.humidity = tag.relativeHumidity
                 self?.updateView()
             }
         }

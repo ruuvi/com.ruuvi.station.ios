@@ -17,6 +17,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 try self.context.bg.write {
                     self.context.bg.add(realmTag, update: .all)
                 }
+                promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))
             }
@@ -29,9 +30,14 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         assert(record.mac == nil)
         context.bgWorker.enqueue {
             do {
-                let data = RuuviTagDataRealm(record: record)
-                try self.context.bg.write {
-                    self.context.bg.add(data, update: .all)
+                if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId) {
+                    let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
+                    try self.context.bg.write {
+                        self.context.bg.add(data, update: .all)
+                    }
+                    promise.succeed(value: true)
+                } else {
+                    promise.fail(error: .unexpected(.failedToFindRuuviTag))
                 }
             } catch {
                 promise.fail(error: .persistence(error))
