@@ -12,8 +12,8 @@ protocol RuuviTagProtocol {
     var celsius: Double? { get }
     var fahrenheit: Double? { get }
     var kelvin: Double? { get }
-    var humidity: Double? { get }
-    var pressure: Double? { get }
+    var relativeHumidity: Double? { get }
+    var hectopascals: Double? { get }
     var inHg: Double? { get }
     var mmHg: Double? { get }
     var measurementSequenceNumber: Int? { get }
@@ -21,6 +21,6 @@ protocol RuuviTagProtocol {
     var mac: String? { get }
     var rssi: Int? { get }
     var txPower: Int? { get }
-    var voltage: Double? { get }
+    var volts: Double? { get }
 }
 extension RuuviTag: RuuviTagProtocol {}

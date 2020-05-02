@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RealmSwift
 import UIKit
+import Future
 
 class DiscoverPresenter: DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -105,8 +106,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
                                               mac: ruuviTag.mac,
                                               isConnectable: ruuviTag.isConnectable,
                                               name: displayName)
-            let operation = ruuviTagTank.create(sensor)
-            operation.on(success: { [weak self] _ in
+            let entity = ruuviTagTank.create(sensor)
+            let record = ruuviTagTank.create(ruuviTag)
+            Future.zip(entity, record).on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.isOpenedFromWelcome {
                     sSelf.router.openCards()

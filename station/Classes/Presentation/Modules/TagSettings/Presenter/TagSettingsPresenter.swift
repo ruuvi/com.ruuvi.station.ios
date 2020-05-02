@@ -425,8 +425,8 @@ extension TagSettingsPresenter {
     }
 
     private func sync(device: RuuviTag) {
-        humidity = device.humidity
-        viewModel.voltage.value = device.voltage
+        humidity = device.relativeHumidity
+        viewModel.voltage.value = device.volts
         viewModel.accelerationX.value = device.accelerationX
         viewModel.accelerationY.value = device.accelerationY
         viewModel.accelerationZ.value = device.accelerationZ
