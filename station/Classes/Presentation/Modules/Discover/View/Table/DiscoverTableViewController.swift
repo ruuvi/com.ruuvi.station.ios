@@ -46,7 +46,7 @@ class DiscoverTableViewController: UITableViewController {
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() {
         didSet {
             shownDevices = devices
-                .filter({ !savedDevicesUUIDs.contains($0.uuid) })
+                .filter({ !savedDevicesIds.contains($0.id) })
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -56,17 +56,17 @@ class DiscoverTableViewController: UITableViewController {
                 })
         }
     }
-    var savedDevicesUUIDs: [String] = [String]() {
+    var savedDevicesIds: [String] = [String]() {
         didSet {
             shownDevices = devices
-            .filter({ !savedDevicesUUIDs.contains($0.uuid) })
-            .sorted(by: {
-                if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
-                    return rssi0 > rssi1
-                } else {
-                    return false
-                }
-            })
+                .filter({ !savedDevicesIds.contains($0.id) })
+                .sorted(by: {
+                    if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
+                        return rssi0 > rssi1
+                    } else {
+                        return false
+                    }
+                })
         }
     }
 
@@ -373,7 +373,7 @@ extension DiscoverTableViewController {
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
             return "DiscoverTable.RuuviDevice.prefix".localized()
-                + " " + device.uuid.prefix(4)
+                + " " + device.id.prefix(4)
         }
     }
 }
