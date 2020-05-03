@@ -2,6 +2,7 @@ import BTKit
 import Foundation
 import Future
 import RealmSwift
+import GRDB
 
 class RuuviTagPersistenceSQLite: DatabaseService {
     typealias Entity = RuuviTagSQLite
@@ -69,6 +70,23 @@ class RuuviTagPersistenceSQLite: DatabaseService {
                 sqliteEntities = try request.fetchAll(db)
             }
             promise.succeed(value: sqliteEntities)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
+        assert(ruuviTag.mac != nil)
+        let promise = Promise<RuuviTagSensorRecord?, RUError>()
+        do {
+            var sqliteRecord: Record?
+            try database.dbPool.read { db in
+                let request = Record.order(Record.dateColumn.desc)
+                                    .filter(Record.ruuviTagIdColumn == ruuviTag.id)
+                sqliteRecord = try request.fetchOne(db)
+            }
+            promise.succeed(value: sqliteRecord)
         } catch {
             promise.fail(error: .persistence(error))
         }

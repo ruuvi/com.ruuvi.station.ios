@@ -291,6 +291,7 @@
 "UnexpectedError.failedToFindRuuviTag" = "Hittade inte sensorn";
 "UnexpectedError.failedToFindLogsForTheTag" = "Ingen sensorlogginformation hittades";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";
