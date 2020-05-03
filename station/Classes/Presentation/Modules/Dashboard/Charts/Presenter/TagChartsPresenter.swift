@@ -183,7 +183,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.uuid.value }) {
+        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.luid == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: nil)
         } else {
             assert(false)
@@ -379,12 +379,7 @@ extension TagChartsPresenter {
         ruuviTagDataToken?.invalidate()
         guard let uuid = tagUUID else { return }
         ruuviTagDataToken = ruuviTagReactor.observe(uuid, { [weak self] results in
-            guard let sSelf = self else { return }
-            if sSelf.ruuviTagData.count == 0 {
-                self?.handleInitialRuuviTagData(results)
-            } else {
-                self?.handleUpdateRuuviTagData(results)
-            }
+            self?.handleInitialRuuviTagData(results)
         })
 //        ruuviTagDataToken = ruuviTagDataRealm.observe {
 //            [weak self] (change) in

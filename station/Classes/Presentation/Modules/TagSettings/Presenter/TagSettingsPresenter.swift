@@ -453,7 +453,9 @@ extension TagSettingsPresenter {
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
         bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
-            observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: ruuviTag.id)
+            if let uuid = ruuviTag.luid {
+                observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: uuid)
+            }
         }
 
         bindTemperatureAlert(ruuviTag)
@@ -675,7 +677,7 @@ extension TagSettingsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
-                uuid == self?.ruuviTag.id {
+                uuid == self?.ruuviTag.luid {
                 self?.viewModel.isConnected.value = true
             }
         })
@@ -688,7 +690,7 @@ extension TagSettingsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                uuid == self?.ruuviTag.id {
+                uuid == self?.ruuviTag.luid {
                 self?.viewModel.isConnected.value = false
             }
         })
