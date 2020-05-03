@@ -30,7 +30,6 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     var error: RUError?
 
     private var background: BTBackground
-    private var connectionPersistence: ConnectionPersistence
     private var ruuviTagTank: RuuviTagTank
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
@@ -39,7 +38,6 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     init(uuid: String,
          mac: String?,
          ruuviTagTank: RuuviTagTank,
-         connectionPersistence: ConnectionPersistence,
          background: BTBackground,
          progress: ((BTServiceProgress) -> Void)? = nil,
          connectionTimeout: TimeInterval? = 0,
@@ -47,7 +45,6 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         self.uuid = uuid
         self.mac = mac
         self.ruuviTagTank = ruuviTagTank
-        self.connectionPersistence = connectionPersistence
         self.background = background
         self.progress = progress
         self.connectionTimeout = connectionTimeout
@@ -55,7 +52,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     }
 
     override func main() {
-        let date = connectionPersistence.logSyncDate(uuid: uuid) ?? Date.distantPast
+        let date = Date.distantPast
         post(started: date, with: uuid)
         background.services.ruuvi.nus.log(for: self,
                                           uuid: uuid,
@@ -69,7 +66,6 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                 let records = logs.map({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac )})
                 let opLogs = observer.ruuviTagTank.create(records)
                 opLogs.on(success: { _ in
-                    observer.connectionPersistence.setLogSyncDate(Date(), uuid: observer.uuid)
                     observer.post(logs: logs, with: observer.uuid)
                     observer.state = .finished
                 }, failure: { error in

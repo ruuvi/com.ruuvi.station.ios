@@ -155,4 +155,19 @@ class RuuviTagPersistenceSQLite: DatabaseService {
         }
         return promise.future
     }
+
+    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        do {
+            var deletedCount = 0
+            let request = Record.filter(Record.ruuviTagIdColumn == ruuviTagId)
+            try database.dbPool.write { db in
+                deletedCount = try request.deleteAll(db)
+            }
+            promise.succeed(value: deletedCount > 0)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
 }
