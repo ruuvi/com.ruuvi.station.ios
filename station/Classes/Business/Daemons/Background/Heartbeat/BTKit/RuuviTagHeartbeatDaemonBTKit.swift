@@ -7,7 +7,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
-    var ruuviTagPersistence: RuuviTagPersistence!
+    var ruuviTagTank: RuuviTagTank!
     var alertService: AlertService!
     var settings: Settings!
     var pullWebDaemon: PullWebDaemon!
@@ -152,22 +152,11 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     let interval = observer.settings.saveHeartbeatsIntervalMinutes
                     if let date = observer.savedDate[uuid] {
                         if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
-                            let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
-                            observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.persist(_:)),
-                            on: observer.thread,
-                            with: pair,
-                            waitUntilDone: false,
-                            modes: [RunLoop.Mode.default.rawValue])
+                            observer.ruuviTagTank.create(ruuviTag)
                             observer.savedDate[uuid] = Date()
-
                         }
                     } else {
-                        let pair = RuuviTagHeartbeatDaemonPair(uuid: uuid, device: ruuviTag)
-                        observer.perform(#selector(RuuviTagHeartbeatDaemonBTKit.persist(_:)),
-                        on: observer.thread,
-                        with: pair,
-                        waitUntilDone: false,
-                        modes: [RunLoop.Mode.default.rawValue])
+                        observer.ruuviTagTank.create(ruuviTag)
                         observer.savedDate[uuid] = Date()
                     }
                 }
@@ -238,20 +227,6 @@ extension RuuviTagHeartbeatDaemonBTKit {
                          uuid: uuid,
                          options: [.callbackQueue(.untouch)],
                          result: disconnectedHandler(for: uuid))
-     }
-
-     @objc private func persist(_ pair: RuuviTagHeartbeatDaemonPair) {
-        autoreleasepool {
-            if let ruuviTag = ruuviTags?.first(where: { $0.uuid == pair.device.uuid }) {
-                let ruuviTagData = RuuviTagDataRealm(ruuviTag: ruuviTag, data: pair.device)
-                ruuviTagPersistence.persist(ruuviTagData: ruuviTagData, realm: realm)
-                    .on( failure: { [weak self] error in
-                       self?.post(error: error)
-                })
-             } else {
-                post(error: RUError.unexpected(.failedToFindRuuviTag))
-             }
-        }
      }
 
      private func invalidateTokens() {

@@ -25,6 +25,10 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
+        container.register(IDPersistence.self) { r in
+            return IDPersistenceUserDefaults()
+        }
+
         container.register(ImagePersistence.self) { _ in
             let persistence = ImagePersistenceDocuments()
             return persistence

@@ -15,6 +15,7 @@ struct TagChartsPoint {
 struct TagChartsViewModel {
     var type: TagChartsType = .ruuvi
     var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
+    var mac: Observable<String?> = Observable<String?>()
     var name: Observable<String?> = Observable<String?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
     var temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
@@ -33,6 +34,7 @@ struct TagChartsViewModel {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
+        mac.value = ruuviTag.mac
         isConnectable.value = ruuviTag.isConnectable
     }
 
@@ -41,6 +43,14 @@ struct TagChartsViewModel {
         uuid.value = webTag.uuid
         name.value = webTag.name
         isConnectable.value = false
+    }
+
+    init(_ ruuviTag: RuuviTagSensor) {
+        type = .ruuvi
+        uuid.value = ruuviTag.luid ?? ruuviTag.id
+        mac.value = ruuviTag.mac
+        name.value = ruuviTag.name
+        isConnectable.value = ruuviTag.isConnectable
     }
 }
 // MARK: - charts methods

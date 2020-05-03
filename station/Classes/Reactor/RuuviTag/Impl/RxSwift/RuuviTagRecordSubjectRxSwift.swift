@@ -4,46 +4,39 @@ import RxSwift
 import RealmSwift
 
 class RuuviTagRecordSubjectRxSwift {
-    var sqlite: SQLiteContext
-    var realm: RealmContext
+    let subject: PublishSubject<[AnyRuuviTagSensorRecord]> = PublishSubject()
+    var isServing: Bool = false
 
-    let insertSubject: PublishSubject<RuuviTagSensorRecord> = PublishSubject()
-    let updateSubject: PublishSubject<RuuviTagSensorRecord> = PublishSubject()
-    let deleteSubject: PublishSubject<RuuviTagSensorRecord> = PublishSubject()
+    private var sqlite: SQLiteContext
+    private var realm: RealmContext
+    private var ruuviTagId: String
 
-    private var ruuviTagDataController: FetchedRecordsController<RuuviTagDataSQLite>
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataRealmCache = [AnyRuuviTagSensorRecord]()
-
+    private var ruuviTagDataTransactionObserver: TransactionObserver?
+    
     deinit {
         ruuviTagDataRealmToken?.invalidate()
-        insertSubject.onCompleted()
-        updateSubject.onCompleted()
-        deleteSubject.onCompleted()
+        subject.onCompleted()
     }
 
     init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm
+        self.ruuviTagId = ruuviTagId
+    }
 
+    func start() {
+        self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
                                         .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
-        self.ruuviTagDataController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
-        try! self.ruuviTagDataController.performFetch()
+        let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
+            try! request.fetchAll(db)
+        }.removeDuplicates()
 
-        self.ruuviTagDataController.trackChanges(onChange: { [weak self] _, record, event in
-            guard let sSelf = self else { return }
-            switch event {
-            case .insertion:
-                sSelf.insertSubject.onNext(record)
-            case .update:
-                sSelf.updateSubject.onNext(record)
-            case .deletion:
-                sSelf.deleteSubject.onNext(record)
-            case .move:
-                break
-            }
-        })
+        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) { [weak self] records in
+            self?.subject.onNext(records.map({ $0.any }))
+        }
 
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
                           .filter("ruuviTag.uuid == %@", ruuviTagId)
@@ -52,25 +45,13 @@ class RuuviTagRecordSubjectRxSwift {
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
             switch change {
-            case .update(let records, let deletions, let insertions, let modifications):
-                for del in deletions {
-                    sSelf.deleteSubject.onNext(sSelf.ruuviTagDataRealmCache[del].any)
+            case .initial(let records):
+                if records.count > 0 {
+                    sSelf.subject.onNext(records.compactMap({ $0.any }))
                 }
-                sSelf.ruuviTagDataRealmCache = sSelf.ruuviTagDataRealmCache
-                                                    .enumerated()
-                                                    .filter { !deletions.contains($0.offset) }
-                                                    .map { $0.element }
-                for ins in insertions {
-                    if let record = records[ins].any {
-                        sSelf.insertSubject.onNext(record)
-                        sSelf.ruuviTagDataRealmCache.insert(record, at: ins) // TODO: test if ok with multiple
-                    }
-                }
-                for mod in modifications {
-                    if let record = records[mod].any {
-                        sSelf.updateSubject.onNext(record)
-                        sSelf.ruuviTagDataRealmCache[mod] = record
-                    }
+            case .update(let records, _, _, _):
+                if records.count > 0 {
+                    sSelf.subject.onNext(records.compactMap({ $0.any }))
                 }
             default:
                 break

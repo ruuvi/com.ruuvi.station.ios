@@ -34,11 +34,11 @@ class RuuviTagSubjectRxSwift {
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
-                sSelf.insertSubject.onNext(record)
+                sSelf.insertSubject.onNext(record.any)
             case .update:
-                sSelf.updateSubject.onNext(record)
+                sSelf.updateSubject.onNext(record.any)
             case .deletion:
-                sSelf.deleteSubject.onNext(record)
+                sSelf.deleteSubject.onNext(record.any)
             case .move:
                 break
             }

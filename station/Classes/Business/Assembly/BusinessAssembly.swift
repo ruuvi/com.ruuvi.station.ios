@@ -75,8 +75,7 @@ class BusinessAssembly: Assembly {
 
         container.register(GATTService.self) { r in
             let service = GATTServiceQueue()
-            service.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.background = r.resolve(BTBackground.self)
             return service
         }.inObjectScope(.container)
@@ -113,7 +112,7 @@ class BusinessAssembly: Assembly {
             service.background = r.resolve(BTBackground.self)
             service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.alertService = r.resolve(AlertService.self)
             service.settings = r.resolve(Settings.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
