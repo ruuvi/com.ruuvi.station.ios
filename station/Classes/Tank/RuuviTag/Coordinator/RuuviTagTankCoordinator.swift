@@ -51,4 +51,16 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         })
         return promise.future
     }
+
+    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId)
+        let realmOpearion = realm.deleteAllRecords(ruuviTagId)
+        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
 }

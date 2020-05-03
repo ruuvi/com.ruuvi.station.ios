@@ -24,7 +24,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
     var ruuviTagReactor: RuuviTagReactor!
-    
+    var ruuviTagTank: RuuviTagTank!
+
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
         didSet {
@@ -251,9 +252,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let mac = viewModel.mac.value {
             isLoading = true
-            let op = ruuviTagService.clearHistory(uuid: uuid)
+            let op = ruuviTagTank.deleteAllRecords(mac)
             op.on(failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in

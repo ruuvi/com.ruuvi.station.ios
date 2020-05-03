@@ -3,7 +3,6 @@ import BTKit
 import Future
 
 class GATTServiceQueue: GATTService {
-    var connectionPersistence: ConnectionPersistence!
     var ruuviTagTank: RuuviTagTank!
     var background: BTBackground!
 
@@ -26,7 +25,6 @@ class GATTServiceQueue: GATTService {
             let operation = RuuviTagReadLogsOperation(uuid: uuid,
                                                       mac: mac, 
                                                       ruuviTagTank: ruuviTagTank,
-                                                      connectionPersistence: connectionPersistence,
                                                       background: background,
                                                       progress: progress,
                                                       connectionTimeout: connectionTimeout,
