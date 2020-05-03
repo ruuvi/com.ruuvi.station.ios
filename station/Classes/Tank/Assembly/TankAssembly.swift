@@ -6,6 +6,7 @@ class TankAssembly: Assembly {
             let tank = RuuviTagTankCoordinator()
             tank.realm = r.resolve(RuuviTagPersistenceRealm.self)
             tank.sqlite = r.resolve(RuuviTagPersistenceSQLite.self)
+            tank.idPersistence = r.resolve(IDPersistence.self)
             return tank
         }
     }

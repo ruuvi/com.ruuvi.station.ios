@@ -64,6 +64,23 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                let data = self.context.bg.objects(RuuviTagDataRealm.self)
+                               .filter("ruuviTag.uuid == %@", ruuviTagId)
+                try self.context.bg.write {
+                    self.context.bg.delete(data)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(record.mac == nil)
@@ -77,6 +94,34 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     promise.succeed(value: true)
                 } else {
                     promise.fail(error: .unexpected(.failedToFindRuuviTag))
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                var failed = false
+                for record in records {
+                    assert(record.mac == nil)
+                    if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId) {
+                        let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
+                        try self.context.bg.write {
+                            self.context.bg.add(data, update: .all)
+                        }
+                    } else {
+                        failed = true
+                    }
+                }
+                if failed {
+                    promise.fail(error: .unexpected(.failedToFindRuuviTag))
+                } else {
+                    promise.succeed(value: true)
                 }
             } catch {
                 promise.fail(error: .persistence(error))

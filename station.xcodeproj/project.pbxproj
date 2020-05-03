@@ -633,6 +633,21 @@
 		0E8BACE3245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
 		0E8BACE4245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
 		0E8BACE5245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
+		0E8BACE7245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
+		0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
+		0E8BACE9245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
+		0E8BACEB245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */; };
+		0E8BACEC245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */; };
+		0E8BACED245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */; };
+		0E8BACEF245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
+		0E8BACF0245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
+		0E8BACF1245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
+		0E8BACF4245F62F000D380FB /* IDPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF3245F62F000D380FB /* IDPersistence.swift */; };
+		0E8BACF5245F62F000D380FB /* IDPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF3245F62F000D380FB /* IDPersistence.swift */; };
+		0E8BACF6245F62F000D380FB /* IDPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF3245F62F000D380FB /* IDPersistence.swift */; };
+		0E8BACF9245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */; };
+		0E8BACFA245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */; };
+		0E8BACFB245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */; };
 		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8BD2AF238566AB008B31EF /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
@@ -1445,6 +1460,11 @@
 		0E8BACDA245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRecordSubjectCombine.swift; sourceTree = "<group>"; };
 		0E8BACDE245F015C00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagDataRealm+RuuviTagSensorRecord.swift"; sourceTree = "<group>"; };
 		0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRecordSubjectRxSwift.swift; sourceTree = "<group>"; };
+		0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagSensorRecord+RuuviMeasurement.swift"; sourceTree = "<group>"; };
+		0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagSensorRecord+RuuviTagDataSQLite.swift"; sourceTree = "<group>"; };
+		0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagEnvLogFull+RuuviTagSensorRecord.swift"; sourceTree = "<group>"; };
+		0E8BACF3245F62F000D380FB /* IDPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDPersistence.swift; sourceTree = "<group>"; };
+		0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
@@ -2149,6 +2169,7 @@
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
 				0E390FE623602E0D00D600DB /* Connection */,
+				0E8BACF2245F62CD00D380FB /* ID */,
 				0E5C301D22D0904800B52E39 /* Image */,
 				0E1C1D9322B362420032F6CA /* Realm */,
 				0E1C1D9922B364FC0032F6CA /* RuuviTag */,
@@ -2200,7 +2221,6 @@
 				0E8BAC7E245C4E5000D380FB /* Ontology */,
 				0E8BACB5245D5E2100D380FB /* Mappers */,
 				A94FFD34241C180000888017 /* Abstractions */,
-				A92E3C522426345600D981D5 /* Measurement */,
 				0E1C1DA422B36EB50032F6CA /* Realm */,
 				0E8BAC4F245C3C0600D380FB /* SQLite */,
 			);
@@ -3063,6 +3083,7 @@
 			isa = PBXGroup;
 			children = (
 				0E8BAC8E245C522D00D380FB /* Measurement.swift */,
+				A92E3C532426346B00D981D5 /* RuuviMeasurement.swift */,
 			);
 			path = Measurement;
 			sourceTree = "<group>";
@@ -3108,6 +3129,9 @@
 				0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */,
 				0E8BACDE245F015C00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift */,
 				0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */,
+				0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */,
+				0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */,
+				0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */,
 			);
 			path = Mappers;
 			sourceTree = "<group>";
@@ -3144,6 +3168,23 @@
 				0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */,
 			);
 			path = Assembly;
+			sourceTree = "<group>";
+		};
+		0E8BACF2245F62CD00D380FB /* ID */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACF7245F631B00D380FB /* UserDefaults */,
+				0E8BACF3245F62F000D380FB /* IDPersistence.swift */,
+			);
+			path = ID;
+			sourceTree = "<group>";
+		};
+		0E8BACF7245F631B00D380FB /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */,
+			);
+			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
@@ -4330,14 +4371,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		A92E3C522426345600D981D5 /* Measurement */ = {
-			isa = PBXGroup;
-			children = (
-				A92E3C532426346B00D981D5 /* RuuviMeasurement.swift */,
-			);
-			path = Measurement;
-			sourceTree = "<group>";
-		};
 		A92E3C612426446500D981D5 /* ChartView */ = {
 			isa = PBXGroup;
 			children = (
@@ -4984,6 +5017,7 @@
 				0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E6BAD9823856A01003A2D4C /* Language.swift in Sources */,
+				0E8BACFB245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
 				0E6BAD9923856A01003A2D4C /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E6BAD9A23856A01003A2D4C /* WebTagSettingsRouter.swift in Sources */,
 				0E6BAD9B23856A01003A2D4C /* DefaultsPresenter.swift in Sources */,
@@ -5086,6 +5120,7 @@
 				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0EE49BB823B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
+				0E8BACE9245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */,
 				0E6BADEA23856A01003A2D4C /* DefaultsInitializer.swift in Sources */,
@@ -5202,12 +5237,14 @@
 				0E6BAE4823856A01003A2D4C /* TagChartsRouterInput.swift in Sources */,
 				0E6BAE4923856A01003A2D4C /* CardsViewInput.swift in Sources */,
 				0E6BAE4A23856A01003A2D4C /* DiscoverPresenter.swift in Sources */,
+				0E8BACF6245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E6BAE4B23856A01003A2D4C /* LanguageViewInput.swift in Sources */,
 				0E6BAE4C23856A01003A2D4C /* AboutRouter.swift in Sources */,
 				0E6BAE4D23856A01003A2D4C /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
 				0E6BAE4E23856A01003A2D4C /* TagChartsRouter.swift in Sources */,
 				0E6BAE4F23856A01003A2D4C /* DiscoverTableInitializer.swift in Sources */,
 				0E6BAE5023856A01003A2D4C /* DiscoverViewOutput.swift in Sources */,
+				0E8BACF1245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */,
 				0E6BAE5123856A01003A2D4C /* DiscoverRouter.swift in Sources */,
 				A93052BA242BFCF900FB62B1 /* TagChartViewOutput.swift in Sources */,
 				0E6BAE5223856A01003A2D4C /* WelcomeModuleInput.swift in Sources */,
@@ -5237,6 +5274,7 @@
 				0E6BAE6B23856A01003A2D4C /* LocationPickerModuleOutput.swift in Sources */,
 				0E6BAE6C23856A01003A2D4C /* DiscoverTableConfigurator.swift in Sources */,
 				0E6BAE6D23856A01003A2D4C /* AlertServiceImpl.swift in Sources */,
+				0E8BACED245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E6BAE6E23856A01003A2D4C /* LocationPickerViewInput.swift in Sources */,
 				0E6BAE6F23856A01003A2D4C /* SettingsTableInitializer.swift in Sources */,
 				0E6BAE7023856A01003A2D4C /* TagChartsTransitionManager.swift in Sources */,
@@ -5349,6 +5387,7 @@
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
 				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
+				0E8BACFA245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
 				0E8BD2CE238566AB008B31EF /* Language.swift in Sources */,
 				0E8BD2CF238566AB008B31EF /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */,
@@ -5451,6 +5490,7 @@
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
+				0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
 				0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */,
@@ -5567,12 +5607,14 @@
 				0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */,
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD380238566AB008B31EF /* DiscoverPresenter.swift in Sources */,
+				0E8BACF5245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD383238566AB008B31EF /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
 				0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */,
 				0E8BD385238566AB008B31EF /* DiscoverTableInitializer.swift in Sources */,
 				0E8BD386238566AB008B31EF /* DiscoverViewOutput.swift in Sources */,
+				0E8BACF0245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */,
 				0E8BD387238566AB008B31EF /* DiscoverRouter.swift in Sources */,
 				A93052B9242BFCF800FB62B1 /* TagChartViewOutput.swift in Sources */,
 				0E8BD388238566AB008B31EF /* WelcomeModuleInput.swift in Sources */,
@@ -5602,6 +5644,7 @@
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
 				0E8BD3A3238566AB008B31EF /* AlertServiceImpl.swift in Sources */,
+				0E8BACEC245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
 				0E8BD3A5238566AB008B31EF /* SettingsTableInitializer.swift in Sources */,
 				0E8BD3A6238566AB008B31EF /* TagChartsTransitionManager.swift in Sources */,
@@ -5714,6 +5757,7 @@
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language.swift in Sources */,
+				0E8BACF9245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
 				0E84BF592397F3C600A37E1A /* HeartbeatViewModel.swift in Sources */,
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
@@ -5816,6 +5860,7 @@
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				0E390FEB23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E9F979222EAF1110015ADE2 /* DiscoverWebTagViewModel.swift in Sources */,
+				0E8BACE7245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
@@ -5932,12 +5977,14 @@
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
+				0E8BACF4245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
 				0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */,
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,
 				0E70A47022AF9790006CB87C /* DiscoverViewOutput.swift in Sources */,
 				0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */,
 				0EEB215122B8FD070015F9E0 /* WelcomeModuleInput.swift in Sources */,
+				0E8BACEF245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */,
 				0EC50F5922CF621000172EEB /* PhotoPickerPresenter.swift in Sources */,
 				A93052B8242BFCC000FB62B1 /* TagChartViewOutput.swift in Sources */,
 				0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */,
@@ -5967,6 +6014,7 @@
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
+				0E8BACEB245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,

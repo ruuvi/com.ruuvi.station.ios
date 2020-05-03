@@ -33,11 +33,11 @@ class RuuviTagSubjectCombine {
             guard let sSelf = self else { return }
             switch event {
             case .insertion:
-                sSelf.insertSubject.send(record)
+                sSelf.insertSubject.send(record.any)
             case .update:
-                sSelf.updateSubject.send(record)
+                sSelf.updateSubject.send(record.any)
             case .deletion:
-                sSelf.deleteSubject.send(record)
+                sSelf.deleteSubject.send(record.any)
             case .move:
                 break
             }

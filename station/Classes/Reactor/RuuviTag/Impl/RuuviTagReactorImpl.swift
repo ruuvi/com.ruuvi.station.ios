@@ -22,61 +22,47 @@ class RuuviTagReactorImpl: RuuviTagReactor {
     #endif
 
     func observe(_ ruuviTagId: String,
-                 _ block: @escaping (ReactorChange<RuuviTagSensorRecord>) -> Void) -> RUObservationToken {
-        let sqliteOperation = sqlitePersistence.readAll(ruuviTagId)
-        let realmOperation = realmPersistence.readAll(ruuviTagId)
-        Future.zip(realmOperation, sqliteOperation).on(success: { realmRecords, sqliteRecords in
-            block(.initial(sqliteRecords + realmRecords))
-        }, failure: { error in
-            block(.error(error))
-        })
-
+                 _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RUObservationToken {
         #if canImport(Combine)
         if #available(iOS 13, *) {
             var recordCombine: RuuviTagRecordSubjectCombine
             if let combine = recordCombines[ruuviTagId] {
                 recordCombine = combine
             } else {
-                let combine = RuuviTagRecordSubjectCombine(ruuviTagId: ruuviTagId, sqlite: sqliteContext, realm: realmContext)
+                let combine = RuuviTagRecordSubjectCombine(ruuviTagId: ruuviTagId,
+                                                           sqlite: sqliteContext,
+                                                           realm: realmContext)
                 recordCombines[ruuviTagId] = combine
                 recordCombine = combine
             }
-            let insert = recordCombine.insertSubject.sink { value in
-                block(.insert(value))
+            let cancellable = recordCombine.subject.sink { values in
+                block(values)
             }
-            let update = recordCombine.updateSubject.sink { value in
-                block(.update(value))
+            if !recordCombine.isServing {
+                recordCombine.start()
             }
-            let delete = recordCombine.deleteSubject.sink { value in
-                block(.delete(value))
-            }
-            return RUObservationToken {
-                insert.cancel()
-                update.cancel()
-                delete.cancel()
+            return RUObservationToken { [weak self] in
+                cancellable.cancel()
             }
         } else {
             var recordRxSwift: RuuviTagRecordSubjectRxSwift
             if let rxSwift = recordRxSwifts[ruuviTagId] {
                 recordRxSwift = rxSwift
             } else {
-                let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId, sqlite: sqliteContext, realm: realmContext)
+                let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId,
+                                                           sqlite: sqliteContext,
+                                                           realm: realmContext)
                 recordRxSwifts[ruuviTagId] = rxSwift
                 recordRxSwift = rxSwift
             }
-            let insert = recordRxSwift.insertSubject.subscribe(onNext: { value in
-                block(.insert(value))
+            let cancellable = recordRxSwift.subject.subscribe(onNext: { values in
+                block(values)
             })
-            let update = recordRxSwift.updateSubject.subscribe(onNext: { value in
-                block(.update(value))
-            })
-            let delete = recordRxSwift.deleteSubject.subscribe(onNext: { value in
-                block(.delete(value))
-            })
+            if !recordRxSwift.isServing {
+                recordRxSwift.start()
+            }
             return RUObservationToken {
-                insert.dispose()
-                update.dispose()
-                delete.dispose()
+                cancellable.dispose()
             }
         }
         #else
@@ -84,23 +70,20 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         if let rxSwift = recordRxSwifts[ruuviTagId] {
             recordRxSwift = rxSwift
         } else {
-            let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId, sqlite: sqliteContext, realm: realmContext)
+            let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId,
+                                                       sqlite: sqliteContext,
+                                                       realm: realmContext)
             recordRxSwifts[ruuviTagId] = rxSwift
             recordRxSwift = rxSwift
         }
-        let insert = recordRxSwift.insertSubject.subscribe(onNext: { value in
-            block(.insert(value))
+        let cancellable = recordRxSwift.subject.subscribe(onNext: { values in
+            block(values)
         })
-        let update = recordRxSwift.updateSubject.subscribe(onNext: { value in
-            block(.update(value))
-        })
-        let delete = recordRxSwift.deleteSubject.subscribe(onNext: { value in
-            block(.delete(value))
-        })
+        if !recordRxSwift.isServing {
+            recordRxSwift.start()
+        }
         return RUObservationToken {
-            insert.dispose()
-            update.dispose()
-            delete.dispose()
+            cancellable.dispose()
         }
         #endif
     }
