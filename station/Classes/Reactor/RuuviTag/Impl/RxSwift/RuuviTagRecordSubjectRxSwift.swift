@@ -49,10 +49,9 @@ class RuuviTagRecordSubjectRxSwift {
                 if records.count > 0 {
                     sSelf.subject.onNext(records.compactMap({ $0.any }))
                 }
-            case .update(let records, _, let insertions, _):
-                let newRecords = insertions.map({ records[$0] })
-                if newRecords.count > 0 {
-                    sSelf.subject.onNext(newRecords.compactMap({ $0.any }))
+            case .update(let records, _, _, _):
+                if records.count > 0 {
+                    sSelf.subject.onNext(records.compactMap({ $0.any }))
                 }
             default:
                 break
