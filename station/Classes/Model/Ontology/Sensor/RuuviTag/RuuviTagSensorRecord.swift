@@ -26,6 +26,21 @@ extension RuuviTagSensorRecord {
     var any: AnyRuuviTagSensorRecord {
         return AnyRuuviTagSensorRecord(object: self)
     }
+
+    func with(mac: String) -> RuuviTagSensorRecord {
+        return RuuviTagSensorRecordStruct(ruuviTagId: mac,
+                                          date: date,
+                                          mac: mac,
+                                          rssi: rssi,
+                                          temperature: temperature,
+                                          humidity: humidity,
+                                          pressure: pressure,
+                                          acceleration: acceleration,
+                                          voltage: voltage,
+                                          movementCounter: movementCounter,
+                                          measurementSequenceNumber: measurementSequenceNumber,
+                                          txPower: txPower)
+    }
 }
 
 struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {

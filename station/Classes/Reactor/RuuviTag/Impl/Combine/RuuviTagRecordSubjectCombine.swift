@@ -33,7 +33,7 @@ class RuuviTagRecordSubjectCombine {
                                         .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
-        }.removeDuplicates()
+        }
 
         self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
             [weak self] records in

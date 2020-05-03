@@ -5,8 +5,12 @@ class RuuviTagTankCoordinator: RuuviTagTank {
 
     var sqlite: RuuviTagPersistenceSQLite!
     var realm: RuuviTagPersistenceRealm!
-
+    var idPersistence: IDPersistence!
+    
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        if let mac = ruuviTag.mac, let uuid = ruuviTag.luid {
+            idPersistence.set(mac: mac, for: uuid)
+        }
         if ruuviTag.mac != nil {
             return sqlite.create(ruuviTag)
         } else {
@@ -33,6 +37,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         if record.mac != nil {
             return sqlite.create(record)
+        } else if let mac = idPersistence.mac(for: record.ruuviTagId) {
+            return sqlite.create(record.with(mac: mac))
         } else {
             return realm.create(record)
         }
