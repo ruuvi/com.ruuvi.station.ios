@@ -42,6 +42,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
     private var ruuviTagToken: RUObservationToken?
+    private var ruuviTagSensorRecordToken: RUObservationToken?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
@@ -53,6 +54,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
     deinit {
         ruuviTagToken?.invalidate()
+        ruuviTagSensorRecordToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
         if let temperatureUnitToken = temperatureUnitToken {
@@ -82,6 +84,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
         startScanningRuuviTag()
+        startObservingRuuviTagSensor(ruuviTagId: ruuviTag.id)
         startObservingSettingsChanges()
         startObservingConnectionStatus()
         startObservingApplicationState()
@@ -254,30 +257,6 @@ extension TagSettingsPresenter {
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.luid ?? ruuviTag.id
         viewModel.version.value = ruuviTag.version
-
-        viewModel.relativeHumidity.value = humidity
-//        viewModel.humidityOffset.value = ruuviTag.humidityOffset TODO
-//        viewModel.humidityOffsetDate.value = ruuviTag.humidityOffsetDate TODO
-
-//        viewModel.relativeHumidity.value = ruuviTag.data.last?.humidity.value TODO
-//        viewModel.voltage.value = ruuviTag.data.last?.voltage.value TODO
-//        viewModel.accelerationX.value = ruuviTag.data.last?.accelerationX.value TODO
-//        viewModel.accelerationY.value = ruuviTag.data.last?.accelerationY.value TODO
-//        viewModel.accelerationZ.value = ruuviTag.data.last?.accelerationZ.value TODO
-
-        // version 5 supports mc, msn, txPower
-//        if ruuviTag.version == 5 {
-//            viewModel.movementCounter.value = ruuviTag.data
-//                .last(where: { $0.movementCounter.value != nil })?.movementCounter.value
-//            viewModel.measurementSequenceNumber.value = ruuviTag.data
-//                .last(where: { $0.measurementSequenceNumber.value != nil })?.measurementSequenceNumber.value
-//            viewModel.txPower.value = ruuviTag.data.last(where: { $0.txPower.value != nil })?.txPower.value
-//        } else {
-//            viewModel.movementCounter.value = nil
-//            viewModel.measurementSequenceNumber.value = nil
-//            viewModel.txPower.value = nil
-//        }
-
         syncAlerts()
     }
 
@@ -399,28 +378,40 @@ extension TagSettingsPresenter {
     }
 
     private func startObservingRuuviTag() {
-//        ruuviTagToken?.invalidate() TODO
-//        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
-//            switch change {
-//            case .change:
-//                self?.syncViewModel()
-//            case .deleted:
-//                self?.router.dismiss()
-//            case .error(let error):
-//                self?.errorPresenter.present(error: error)
-//            }
-//        }
+        ruuviTagToken?.invalidate()
+        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
+            switch change {
+            case .delete(let deleted):
+                if deleted.id == self?.ruuviTag.id {
+                    self?.router.dismiss()
+                }
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            default:
+                return
+            }
+        }
     }
 
+    private func startObservingRuuviTagSensor(ruuviTagId: String) {
+        ruuviTagSensorRecordToken = ruuviTagReactor.observe(ruuviTagId, { [weak self] (records) in
+            if let lastRecord = records.last {
+                self?.viewModel.updateRecord(lastRecord)
+            }
+        })
+    }
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
-        advertisementToken = foreground.observe(self, uuid: ruuviTag.id, closure: { [weak self] (_, device) in
+        guard let luid = ruuviTag.luid else {
+            return
+        }
+        advertisementToken = foreground.observe(self, uuid: luid, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
         })
         heartbeatToken?.invalidate()
-        heartbeatToken = background.observe(self, uuid: ruuviTag.id, closure: { [weak self] (_, device) in
+        heartbeatToken = background.observe(self, uuid: luid, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
@@ -429,26 +420,31 @@ extension TagSettingsPresenter {
 
     private func sync(device: RuuviTag) {
         humidity = device.relativeHumidity
-        viewModel.voltage.value = device.volts
-        viewModel.accelerationX.value = device.accelerationX
-        viewModel.accelerationY.value = device.accelerationY
-        viewModel.accelerationZ.value = device.accelerationZ
+        let record = RuuviTagSensorRecordStruct(ruuviTagId: device.ruuviTagId,
+                                                date: device.date,
+                                                mac: device.mac,
+                                                rssi: device.rssi,
+                                                temperature: device.temperature,
+                                                humidity: device.humidity,
+                                                pressure: device.pressure,
+                                                acceleration: device.acceleration,
+                                                voltage: device.voltage,
+                                                movementCounter: device.movementCounter,
+                                                measurementSequenceNumber: device.measurementSequenceNumber,
+                                                txPower: device.txPower)
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
         if viewModel.isConnectable.value != device.isConnectable {
             viewModel.isConnectable.value = device.isConnectable
         }
-        viewModel.movementCounter.value = device.movementCounter
-        viewModel.measurementSequenceNumber.value = device.measurementSequenceNumber
-        viewModel.txPower.value = device.txPower
         if viewModel.isConnected.value != device.isConnected {
             viewModel.isConnected.value = device.isConnected
         }
-
         if let mac = device.mac {
             viewModel.mac.value = mac
         }
+        viewModel.updateRecord(record)
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
