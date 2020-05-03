@@ -17,5 +17,12 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
         })
         return promise.future
     }
-    
+
+    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
+        if ruuviTag.mac != nil {
+            return sqlite.readLast(ruuviTag)
+        } else {
+            return realm.readLast(ruuviTag)
+        }
+    }
 }

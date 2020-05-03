@@ -117,6 +117,7 @@ enum UnexpectedError: Error {
     case failedToFindRuuviTag
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
+    case attemptToReadDataFromRealmWithoutLUID
 }
 
 extension UnexpectedError: LocalizedError {
@@ -134,6 +135,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.failedToFindLogsForTheTag".localized()
         case .viewModelUUIDIsNil:
             return "UnexpectedError.viewModelUUIDIsNil".localized()
+        case .attemptToReadDataFromRealmWithoutLUID:
+            return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
         }
     }
 }

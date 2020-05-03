@@ -291,6 +291,7 @@
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

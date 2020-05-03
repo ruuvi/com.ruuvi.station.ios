@@ -101,6 +101,40 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
+        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.luid != nil)
+        let promise = Promise<RuuviTagSensorRecord?, RUError>()
+        guard let luid = ruuviTag.luid else {
+            promise.fail(error: .unexpected(.attemptToReadDataFromRealmWithoutLUID))
+            return promise.future
+        }
+
+        context.bgWorker.enqueue {
+            let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
+                                   .filter("ruuviTag.uuid == %@", luid)
+                                   .sorted(byKeyPath: "date", ascending: false)
+            if let record = realmRecords.first {
+                let result = RuuviTagSensorRecordStuct(ruuviTagId: luid,
+                                                       date: record.date,
+                                                       mac: nil,
+                                                       rssi: record.rssi.value,
+                                                       temperature: record.unitTemperature,
+                                                       humidity: record.unitHumidity,
+                                                       pressure: record.unitPressure,
+                                                       acceleration: record.acceleration,
+                                                       voltage: record.unitVoltage,
+                                                       movementCounter: record.movementCounter.value,
+                                                       measurementSequenceNumber: record.measurementSequenceNumber.value,
+                                                       txPower: record.txPower.value)
+                promise.succeed(value: result)
+            } else {
+                promise.succeed(value: nil)
+            }
+        }
+        return promise.future
+    }
+
     @discardableResult
     func persist(ruuviTagData: RuuviTagDataRealm, realm: Realm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
