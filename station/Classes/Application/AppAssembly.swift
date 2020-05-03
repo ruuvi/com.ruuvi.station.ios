@@ -13,7 +13,8 @@ class AppAssembly {
                 PersistenceAssembly(),
                 PresentationAssembly(),
                 ReactorAssembly(),
-                TankAssembly()
+                TankAssembly(),
+                TrunkAssembly()
             ])
     }
 }
