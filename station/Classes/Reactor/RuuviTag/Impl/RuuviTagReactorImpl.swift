@@ -22,7 +22,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
     #endif
 
     func observe(_ ruuviTagId: String,
-                 _ block: @escaping ([RuuviTagSensorRecord]) -> Void) -> RUObservationToken {
+                 _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RUObservationToken {
         #if canImport(Combine)
         if #available(iOS 13, *) {
             var recordCombine: RuuviTagRecordSubjectCombine

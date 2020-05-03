@@ -12,7 +12,7 @@ class RuuviTagRecordSubjectCombine {
     private var realm: RealmContext
     private var ruuviTagId: String
 
-    let subject = PassthroughSubject<[RuuviTagSensorRecord], Never>()
+    let subject = PassthroughSubject<[AnyRuuviTagSensorRecord], Never>()
 
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataRealmCache = [AnyRuuviTagSensorRecord]()
