@@ -25,7 +25,8 @@ class CardsPresenter: CardsModuleInput {
     var infoProvider: InfoProvider!
     var calibrationService: CalibrationService!
     var ruuviTagReactor: RuuviTagReactor!
-
+    var ruuviTagTrunk: RuuviTagTrunk!
+    
     weak var tagCharts: TagChartsModuleInput?
 
     private var ruuviTagToken: RUObservationToken?
@@ -292,8 +293,13 @@ extension CardsPresenter {
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
                 viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id) ? .registered : .empty
+                ruuviTagTrunk.readLast(ruuviTag).on { record in
+                    if let record = record {
+                        viewModel.update(record)
+                    }
+                }
                 return viewModel
-            }) ?? []
+            })
             let webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
@@ -531,35 +537,6 @@ extension CardsPresenter {
                 break
             }
         }
-
-//        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
-//        ruuviTagsToken?.invalidate()
-//        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
-//            switch change {
-//            case .initial(let ruuviTags):
-//                self?.ruuviTags = ruuviTags
-//                self?.observeRuuviTags()
-//            case .update(let ruuviTags, _, let insertions, _):
-//                self?.ruuviTags = ruuviTags
-//                if let ii = insertions.last {
-//                    let uuid = ruuviTags[ii].uuid
-//                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-//                        self?.view.scroll(to: index)
-//                        self?.tagCharts?.configure(uuid: uuid)
-//                    }
-//                    if let viewModels = self?.viewModels,
-//                        let settings = self?.settings,
-//                        !settings.cardsSwipeHintWasShown,
-//                        viewModels.count > 1 {
-//                        self?.view.showSwipeLeftRightHint()
-//                        self?.settings.cardsSwipeHintWasShown = true
-//                    }
-//                }
-//                self?.observeRuuviTags()
-//            case .error(let error):
-//                self?.errorPresenter.present(error: error)
-//            }
-//        }
     }
 
     private func startObservingBackgroundChanges() {
