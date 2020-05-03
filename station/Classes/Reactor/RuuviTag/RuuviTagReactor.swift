@@ -2,6 +2,8 @@ import Foundation
 
 protocol RuuviTagReactor {
     func observe(_ block: @escaping (ReactorChange<RuuviTagSensor>) -> Void) -> RUObservationToken
+    func observe(_ ruuviTagId: String,
+                 _ block: @escaping (ReactorChange<RuuviTagSensorRecord>) -> Void) -> RUObservationToken
 }
 
 enum ReactorChange<Type> {

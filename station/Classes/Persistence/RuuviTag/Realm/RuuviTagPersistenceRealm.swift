@@ -101,6 +101,31 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RUError> {
+        let promise = Promise<[RuuviTagSensorRecord], RUError>()
+        context.bgWorker.enqueue {
+            let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
+                                   .filter("ruuviTag.uuid == %@", ruuviTagId)
+                                   .sorted(byKeyPath: "date")
+            let result: [RuuviTagSensorRecord] = realmRecords.map { realmRecord in
+                return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
+                                                  date: realmRecord.date,
+                                                  mac: nil,
+                                                  rssi: realmRecord.rssi.value,
+                                                  temperature: realmRecord.unitTemperature,
+                                                  humidity: realmRecord.unitHumidity,
+                                                  pressure: realmRecord.unitPressure,
+                                                  acceleration: realmRecord.acceleration,
+                                                  voltage: realmRecord.unitVoltage,
+                                                  movementCounter: realmRecord.movementCounter.value,
+                                                  measurementSequenceNumber: realmRecord.measurementSequenceNumber.value,
+                                                  txPower: realmRecord.txPower.value)
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
         assert(ruuviTag.mac == nil)
         assert(ruuviTag.luid != nil)
