@@ -4,7 +4,7 @@ import RxSwift
 import RealmSwift
 
 class RuuviTagRecordSubjectRxSwift {
-    let subject: PublishSubject<[RuuviTagSensorRecord]> = PublishSubject()
+    let subject: PublishSubject<[AnyRuuviTagSensorRecord]> = PublishSubject()
     var isServing: Bool = false
 
     private var sqlite: SQLiteContext
