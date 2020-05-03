@@ -25,7 +25,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagReactor: RuuviTagReactor!
-    
+
     private var ruuviTag: RuuviTagSensor! {
         didSet {
             syncViewModel()

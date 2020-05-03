@@ -26,7 +26,7 @@ class CardsPresenter: CardsModuleInput {
     var calibrationService: CalibrationService!
     var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTrunk: RuuviTagTrunk!
-    
+
     weak var tagCharts: TagChartsModuleInput?
 
     private var ruuviTagToken: RUObservationToken?

@@ -53,9 +53,9 @@ class RuuviTagSubjectCombine {
                     sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
                 }
                 sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
-                    .enumerated()
-                    .filter { !deletions.contains($0.offset) }
-                    .map { $0.element }
+                                                .enumerated()
+                                                .filter { !deletions.contains($0.offset) }
+                                                .map { $0.element }
                 for ins in insertions {
                     sSelf.insertSubject.send(ruuviSensors[ins].any)
                     sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins) // TODO: test if ok with multiple

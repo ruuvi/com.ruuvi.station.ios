@@ -61,7 +61,7 @@ class RuuviTagPersistenceSQLite: DatabaseService {
         return promise.future
     }
 
-    func read() -> Future<[RuuviTagSensor], RUError> {
+    func readAll() -> Future<[RuuviTagSensor], RUError> {
         let promise = Promise<[RuuviTagSensor], RUError>()
         var sqliteEntities = [RuuviTagSensor]()
         do {

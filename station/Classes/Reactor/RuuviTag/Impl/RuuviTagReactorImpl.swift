@@ -12,16 +12,15 @@ class RuuviTagReactorImpl: RuuviTagReactor {
     var sqlitePersistence: RuuviTagPersistenceSQLite!
     var realmPersistence: RuuviTagPersistenceRealm!
 
-    private lazy var rxSwift = RuuviTagSubjectRxSwift(sqlite: sqliteContext, realm: realmContext)
+    private lazy var entityRxSwift = RuuviTagSubjectRxSwift(sqlite: sqliteContext, realm: realmContext)
     #if canImport(Combine)
     @available(iOS 13, *)
-    private lazy var combine = RuuviTagSubjectCombine(sqlite: sqliteContext, realm: realmContext)
+    private lazy var entityCombine = RuuviTagSubjectCombine(sqlite: sqliteContext, realm: realmContext)
     #endif
 
     func observe(_ block: @escaping (ReactorChange<RuuviTagSensor>) -> Void) -> RUObservationToken {
-
-        let sqliteOperation = sqlitePersistence.read()
-        let realmOperation = realmPersistence.read()
+        let sqliteOperation = sqlitePersistence.readAll()
+        let realmOperation = realmPersistence.readAll()
         Future.zip(realmOperation, sqliteOperation).on(success: { realmEntities, sqliteEntities in
             block(.initial(sqliteEntities + realmEntities))
         }, failure: { error in
@@ -30,13 +29,13 @@ class RuuviTagReactorImpl: RuuviTagReactor {
 
         #if canImport(Combine)
         if #available(iOS 13, *) {
-            let insert = combine.insertSubject.sink { value in
+            let insert = entityCombine.insertSubject.sink { value in
                 block(.insert(value))
             }
-            let update = combine.updateSubject.sink { value in
+            let update = entityCombine.updateSubject.sink { value in
                 block(.update(value))
             }
-            let delete = combine.deleteSubject.sink { value in
+            let delete = entityCombine.deleteSubject.sink { value in
                 block(.delete(value))
             }
             return RUObservationToken {
@@ -45,13 +44,13 @@ class RuuviTagReactorImpl: RuuviTagReactor {
                 delete.cancel()
             }
         } else {
-            let insert = rxSwift.insertSubject.subscribe(onNext: { value in
+            let insert = entityRxSwift.insertSubject.subscribe(onNext: { value in
                 block(.insert(value))
             })
-            let update = rxSwift.updateSubject.subscribe(onNext: { value in
+            let update = entityRxSwift.updateSubject.subscribe(onNext: { value in
                 block(.update(value))
             })
-            let delete = rxSwift.deleteSubject.subscribe(onNext: { value in
+            let delete = entityRxSwift.deleteSubject.subscribe(onNext: { value in
                 block(.delete(value))
             })
             return RUObservationToken {
