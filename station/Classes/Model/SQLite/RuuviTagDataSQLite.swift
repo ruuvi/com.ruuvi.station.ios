@@ -35,6 +35,12 @@ extension RuuviTagDataSQLite {
     static let txPowerColumn = Column("txPower")
 }
 
+extension RuuviTagDataSQLite: Equatable {
+    static func == (lhs: RuuviTagDataSQLite, rhs: RuuviTagDataSQLite) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 extension RuuviTagDataSQLite: FetchableRecord {
     init(row: Row) {
         ruuviTagId = row[RuuviTagDataSQLite.ruuviTagIdColumn]

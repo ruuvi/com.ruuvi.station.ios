@@ -38,10 +38,9 @@ class RuuviTagReactorImpl: RuuviTagReactor {
             let cancellable = recordCombine.subject.sink { values in
                 block(values)
             }
-            if recordCombine.clients == 0 {
+            if !recordCombine.isServing {
                 recordCombine.start()
             }
-            recordCombine.clients += 1
             return RUObservationToken { [weak self] in
                 cancellable.cancel()
             }
@@ -59,6 +58,9 @@ class RuuviTagReactorImpl: RuuviTagReactor {
             let cancellable = recordRxSwift.subject.subscribe(onNext: { values in
                 block(values)
             })
+            if !recordRxSwift.isServing {
+                recordRxSwift.start()
+            }
             return RUObservationToken {
                 cancellable.dispose()
             }
@@ -68,13 +70,18 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         if let rxSwift = recordRxSwifts[ruuviTagId] {
             recordRxSwift = rxSwift
         } else {
-            let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId, sqlite: sqliteContext, realm: realmContext)
+            let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId,
+                                                       sqlite: sqliteContext,
+                                                       realm: realmContext)
             recordRxSwifts[ruuviTagId] = rxSwift
             recordRxSwift = rxSwift
         }
         let cancellable = recordRxSwift.subject.subscribe(onNext: { values in
             block(values)
         })
+        if !recordRxSwift.isServing {
+            recordRxSwift.start()
+        }
         return RUObservationToken {
             cancellable.dispose()
         }
