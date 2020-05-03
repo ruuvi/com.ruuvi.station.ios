@@ -14,18 +14,6 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         }
     }
 
-    func readAll() -> Future<[RuuviTagSensor], RUError> {
-        let promise = Promise<[RuuviTagSensor], RUError>()
-        let sqliteOperation = sqlite.read()
-        let realmOperation = realm.read()
-        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
-            promise.succeed(value: sqliteEntities + realmEntities)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
-    }
-
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         if ruuviTag.mac != nil {
             return sqlite.update(ruuviTag)
@@ -49,10 +37,4 @@ class RuuviTagTankCoordinator: RuuviTagTank {
             return realm.create(record)
         }
     }
-
-    func delete(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        return promise.future
-    }
-
 }

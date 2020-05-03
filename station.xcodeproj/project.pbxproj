@@ -615,6 +615,15 @@
 		0E8BACBF245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */; };
 		0E8BACC0245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */; };
 		0E8BACC1245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */; };
+		0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */; };
+		0E8BACCE245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */; };
+		0E8BACCF245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */; };
+		0E8BACD2245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD1245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift */; };
+		0E8BACD3245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD1245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift */; };
+		0E8BACD4245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD1245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift */; };
+		0E8BACD7245EE72500D380FB /* TrunkAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */; };
+		0E8BACD8245EE72500D380FB /* TrunkAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */; };
+		0E8BACD9245EE72500D380FB /* TrunkAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */; };
 		0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8BD2AF238566AB008B31EF /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */; };
 		0E8BD2B0238566AB008B31EF /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
@@ -1142,6 +1151,8 @@
 		0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
 		0EFDD6DC22BBDDD000EADFC6 /* RuuviTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */; };
 		0EFDD6DF22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */; };
+		2D60D08C09DAAD51A3FDCE0F /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CE73C076765FA051931E381 /* Pods_station_dev.framework */; };
+		6194BDE743C23B710FC33784 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B65A9F1FA812D291F14E58F /* Pods_stationTests.framework */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -1194,9 +1205,7 @@
 		A9A48A5C244CD9E70004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
-		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
-		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
-		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
+		DD24BE4925155FE5C6E72CBC /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE0DC322A822B7D68A59A83F /* Pods_station.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1421,6 +1430,9 @@
 		0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagRealm+RuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E8BACBA245D708400D380FB /* RuuviTagDataSQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDataSQLite.swift; sourceTree = "<group>"; };
 		0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTag+RuuviTagSensorRecord.swift"; sourceTree = "<group>"; };
+		0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagTrunk.swift; sourceTree = "<group>"; };
+		0E8BACD1245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagTrunkCoordinator.swift; sourceTree = "<group>"; };
+		0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrunkAssembly.swift; sourceTree = "<group>"; };
 		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E8FD0BE23335D6900FFA577 /* TagCharts.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagCharts.storyboard; sourceTree = "<group>"; };
@@ -1596,7 +1608,8 @@
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
 		0EFDD6DB22BBDDD000EADFC6 /* RuuviTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagService.swift; sourceTree = "<group>"; };
 		0EFDD6DE22BBDDF400EADFC6 /* RuuviTagServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagServiceImpl.swift; sourceTree = "<group>"; };
-		520AA9C689A77F459B6F75DD /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
+		4C26313C874366D7F199EDC4 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		63F75110675BB9FA5F74A310 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2D20B0C45900CDF4B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1616,8 +1629,10 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		66B644F5882FD18597C94131 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CE73C076765FA051931E381 /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A426AFF802C1FC83C0AB2B5 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
+		9B65A9F1FA812D291F14E58F /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1BA07DE2A5B227BF8D688B0 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
@@ -1637,12 +1652,9 @@
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A48A5F244CEB690004FD50 /* RuuviTagClearNotLinkedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagClearNotLinkedOperation.swift; sourceTree = "<group>"; };
-		B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
-		CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
-		DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
-		E0AF644945993BDDC431BB15 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0D1852F3ACF9D6D3C517CAC /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
-		F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
+		AE0DC322A822B7D68A59A83F /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3850DFC59CD3E4368ACBFE0 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E336C10C2ECAF896F12E70C6 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1671,7 +1683,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */,
+				2D60D08C09DAAD51A3FDCE0F /* Pods_station_dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1679,7 +1691,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */,
+				DD24BE4925155FE5C6E72CBC /* Pods_station.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1687,7 +1699,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */,
+				6194BDE743C23B710FC33784 /* Pods_stationTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1936,6 +1948,7 @@
 				0E1C1D9222B360160032F6CA /* Persistence */,
 				0E8BAC65245C4AB900D380FB /* Reactor */,
 				0E8BAC70245C4C6800D380FB /* Tank */,
+				0E8BACCA245EE62E00D380FB /* Trunk */,
 				0E09671922AE764200E85F48 /* Presentation */,
 				0EA31069232B75E700BC8CF5 /* Util */,
 			);
@@ -3084,6 +3097,40 @@
 			path = Mappers;
 			sourceTree = "<group>";
 		};
+		0E8BACCA245EE62E00D380FB /* Trunk */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACD5245EE71400D380FB /* Assembly */,
+				0E8BACCB245EE63D00D380FB /* RuuviTag */,
+			);
+			path = Trunk;
+			sourceTree = "<group>";
+		};
+		0E8BACCB245EE63D00D380FB /* RuuviTag */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACD0245EE68A00D380FB /* Coordinator */,
+				0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */,
+			);
+			path = RuuviTag;
+			sourceTree = "<group>";
+		};
+		0E8BACD0245EE68A00D380FB /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACD1245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		0E8BACD5245EE71400D380FB /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
 		0E8FD0B923335D4300FFA577 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -4132,9 +4179,9 @@
 			children = (
 				0E8BAC97245C716B00D380FB /* Combine.framework */,
 				0E8BAC9A245C718700D380FB /* Combine.framework */,
-				E0AF644945993BDDC431BB15 /* Pods_station.framework */,
-				9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */,
-				66B644F5882FD18597C94131 /* Pods_stationTests.framework */,
+				AE0DC322A822B7D68A59A83F /* Pods_station.framework */,
+				9B65A9F1FA812D291F14E58F /* Pods_stationTests.framework */,
+				8CE73C076765FA051931E381 /* Pods_station_dev.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -4142,12 +4189,12 @@
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */,
-				520AA9C689A77F459B6F75DD /* Pods-station.release.xcconfig */,
-				F0D1852F3ACF9D6D3C517CAC /* Pods-station_dev.debug.xcconfig */,
-				DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */,
-				B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */,
-				F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */,
+				4C26313C874366D7F199EDC4 /* Pods-station.debug.xcconfig */,
+				A1BA07DE2A5B227BF8D688B0 /* Pods-station.release.xcconfig */,
+				D3850DFC59CD3E4368ACBFE0 /* Pods-stationTests.debug.xcconfig */,
+				E336C10C2ECAF896F12E70C6 /* Pods-stationTests.release.xcconfig */,
+				63F75110675BB9FA5F74A310 /* Pods-station_dev.debug.xcconfig */,
+				9A426AFF802C1FC83C0AB2B5 /* Pods-station_dev.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -4378,13 +4425,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0E8BD401238566AB008B31EF /* Build configuration list for PBXNativeTarget "station_dev" */;
 			buildPhases = (
-				3D9639921DA2EAF91C684581 /* [CP] Check Pods Manifest.lock */,
+				714CE46819D71886BB824A48 /* [CP] Check Pods Manifest.lock */,
 				0E8BD2AE238566AB008B31EF /* Sources */,
 				0E8BD3DC238566AB008B31EF /* Frameworks */,
 				0E8BD3DE238566AB008B31EF /* Resources */,
 				A9AB575A2413CCEC006FD3D2 /* Fetch secrets */,
-				B6DADD11162E7B820D8A1709 /* [CP] Embed Pods Frameworks */,
 				0E8301592393FC2B0003F2EF /* Swiftlint */,
+				125D88E4680FD10D4087102A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4399,12 +4446,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D4D20B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "station" */;
 			buildPhases = (
-				971D876D128B4722B3C74751 /* [CP] Check Pods Manifest.lock */,
+				4C39AF2E1B10234CC9C17C83 /* [CP] Check Pods Manifest.lock */,
 				64333D2120B0C45900CDF4B6 /* Sources */,
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
-				2AFA491CA1091241CB93E7B1 /* [CP] Embed Pods Frameworks */,
 				64333D2320B0C45900CDF4B6 /* Resources */,
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
+				630325A5C380FF156D1BA6BF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4419,11 +4466,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64333D5020B0C45B00CDF4B6 /* Build configuration list for PBXNativeTarget "stationTests" */;
 			buildPhases = (
-				30582735056681E097862099 /* [CP] Check Pods Manifest.lock */,
+				5C941A551DA1339273BAFFD3 /* [CP] Check Pods Manifest.lock */,
 				64333D3520B0C45A00CDF4B6 /* Sources */,
 				64333D3620B0C45A00CDF4B6 /* Frameworks */,
 				64333D3720B0C45A00CDF4B6 /* Resources */,
-				81DF8161DB2993FD3B70D2C3 /* [CP] Embed Pods Frameworks */,
+				957EAB95593BFC461B327CB9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4705,7 +4752,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		2AFA491CA1091241CB93E7B1 /* [CP] Embed Pods Frameworks */ = {
+		125D88E4680FD10D4087102A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4717,10 +4764,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station_dev/Pods-station_dev-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		30582735056681E097862099 /* [CP] Check Pods Manifest.lock */ = {
+		4C39AF2E1B10234CC9C17C83 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-station-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5C941A551DA1339273BAFFD3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4742,7 +4811,22 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3D9639921DA2EAF91C684581 /* [CP] Check Pods Manifest.lock */ = {
+		630325A5C380FF156D1BA6BF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		714CE46819D71886BB824A48 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4764,7 +4848,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		81DF8161DB2993FD3B70D2C3 /* [CP] Embed Pods Frameworks */ = {
+		957EAB95593BFC461B327CB9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4777,28 +4861,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		971D876D128B4722B3C74751 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-station-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A9AB57592413CCAB006FD3D2 /* Fetch secrets */ = {
@@ -4861,21 +4923,6 @@
 			shellPath = /bin/sh;
 			shellScript = "BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${FULL_PRODUCT_NAME}\ngit clone git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git\nif [ $? -eq 0 ]; then\n    /bin/cp -rf com.ruuvi.station.ios.keystore/GoogleService-Info.plist \"$BUILD_APP_DIR/Contents/Resources/GoogleService-Info.plist\"\n    /bin/cp -rf com.ruuvi.station.ios.keystore/Networking.plist \"$BUILD_APP_DIR/Contents/Resources/Networking.plist\"\n    rm -rf com.ruuvi.station.ios.keystore\nelse\n    if grep -q \"{ set your API key here }\" $SCRIPT_INPUT_FILE_0; then\n        echo \"warning: Missing OpenWeatherMap API key. In order to make Virtual Sensors work please obtain API key on https://openweathermap.org and put into station/Classes/Networking/Assembly/Networking.plist\"\n    fi\n    if grep -q \"1:925543306936:ios:84f5fda343c52e7671c64d\" $SCRIPT_INPUT_FILE_1; then\n        echo \"warning: Demo GoogleServices credentials. If you want to use your own GoogleServices credentials, please replace the station/Resources/Plists/GoogleService-Info.plist file\"\n    fi\nfi\n";
 		};
-		B6DADD11162E7B820D8A1709 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station_dev/Pods-station_dev-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -4925,6 +4972,7 @@
 				0E6BAD9A23856A01003A2D4C /* WebTagSettingsRouter.swift in Sources */,
 				0E6BAD9B23856A01003A2D4C /* DefaultsPresenter.swift in Sources */,
 				0E6BAD9C23856A01003A2D4C /* WelcomeViewInput.swift in Sources */,
+				0E8BACD9245EE72500D380FB /* TrunkAssembly.swift in Sources */,
 				0E6BAD9D23856A01003A2D4C /* ForegroundList.swift in Sources */,
 				0E6BAD9E23856A01003A2D4C /* SettingsPresenter.swift in Sources */,
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
@@ -4945,6 +4993,7 @@
 				0E6BADA823856A01003A2D4C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E6BADA923856A01003A2D4C /* TagChartsPresenter.swift in Sources */,
 				0E6BADAA23856A01003A2D4C /* DefaultsList.swift in Sources */,
+				0E8BACCF245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
 				0E8BAC5E245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E6BADAC23856A01003A2D4C /* WelcomePresenter.swift in Sources */,
@@ -4972,6 +5021,7 @@
 				0E4557F923E820920025AEBF /* BackgroundProcessService.swift in Sources */,
 				0E6BADBD23856A01003A2D4C /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E6BADBE23856A01003A2D4C /* DefaultsRouterInput.swift in Sources */,
+				0E8BACD4245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E6BADBF23856A01003A2D4C /* AboutPresenter.swift in Sources */,
 				0E6BADC023856A01003A2D4C /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0E6BADC123856A01003A2D4C /* TagSettingsViewModel.swift in Sources */,
@@ -5284,6 +5334,7 @@
 				0E8BD2CF238566AB008B31EF /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
+				0E8BACD8245EE72500D380FB /* TrunkAssembly.swift in Sources */,
 				0E8BD2D2238566AB008B31EF /* WelcomeViewInput.swift in Sources */,
 				0E8BD2D3238566AB008B31EF /* ForegroundList.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
@@ -5304,6 +5355,7 @@
 				0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E8BD2DE238566AB008B31EF /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8BD2DF238566AB008B31EF /* TagChartsPresenter.swift in Sources */,
+				0E8BACCE245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */,
 				0E8BAC5D245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E8BD2E1238566AB008B31EF /* LocalNotificationsManager.swift in Sources */,
@@ -5331,6 +5383,7 @@
 				0E4557F823E820920025AEBF /* BackgroundProcessService.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E8BD2F4238566AB008B31EF /* DefaultsRouterInput.swift in Sources */,
+				0E8BACD3245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E8BD2F5238566AB008B31EF /* AboutPresenter.swift in Sources */,
 				0E8BD2F6238566AB008B31EF /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0E8BD2F7238566AB008B31EF /* TagSettingsViewModel.swift in Sources */,
@@ -5643,6 +5696,7 @@
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
+				0E8BACD7245EE72500D380FB /* TrunkAssembly.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
 				0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
@@ -5663,6 +5717,7 @@
 				0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
+				0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */,
 				0E8BAC5C245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */,
@@ -5690,6 +5745,7 @@
 				0E8A10162384612300A9CBA6 /* DefaultsRouterInput.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
 				0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */,
+				0E8BACD2245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E84BF612397F73100A37E1A /* HeartbeatEnvironmentObject.swift in Sources */,
 				0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */,
 				0E1C1DDF22B3C2330032F6CA /* CardsPresenter.swift in Sources */,
@@ -6126,7 +6182,7 @@
 		};
 		0E8BD402238566AB008B31EF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0D1852F3ACF9D6D3C517CAC /* Pods-station_dev.debug.xcconfig */;
+			baseConfigurationReference = 63F75110675BB9FA5F74A310 /* Pods-station_dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6225,7 +6281,7 @@
 		};
 		0E8BD403238566AB008B31EF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */;
+			baseConfigurationReference = 9A426AFF802C1FC83C0AB2B5 /* Pods-station_dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6440,7 +6496,7 @@
 		};
 		64333D4E20B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */;
+			baseConfigurationReference = 4C26313C874366D7F199EDC4 /* Pods-station.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6571,7 +6627,7 @@
 		};
 		64333D4F20B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 520AA9C689A77F459B6F75DD /* Pods-station.release.xcconfig */;
+			baseConfigurationReference = A1BA07DE2A5B227BF8D688B0 /* Pods-station.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
@@ -6669,7 +6725,7 @@
 		};
 		64333D5120B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */;
+			baseConfigurationReference = D3850DFC59CD3E4368ACBFE0 /* Pods-stationTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -6690,7 +6746,7 @@
 		};
 		64333D5220B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */;
+			baseConfigurationReference = E336C10C2ECAF896F12E70C6 /* Pods-stationTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
