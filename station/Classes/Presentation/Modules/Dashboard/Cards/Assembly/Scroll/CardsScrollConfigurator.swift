@@ -31,7 +31,8 @@ class CardsScrollConfigurator {
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-
+        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        
         router.delegate = presenter
 
         // swiftlint:disable force_cast
