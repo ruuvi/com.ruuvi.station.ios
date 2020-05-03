@@ -38,21 +38,25 @@ class RuuviTagPersistenceSQLite: DatabaseService {
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(record.mac != nil)
-        let data = RuuviTagDataSQLite(ruuviTagId: record.ruuviTagId,
-                                      date: record.date,
-                                      mac: record.mac,
-                                      rssi: record.rssi,
-                                      temperature: record.temperature,
-                                      humidity: record.humidity,
-                                      pressure: record.pressure,
-                                      acceleration: record.acceleration,
-                                      voltage: record.voltage,
-                                      movementCounter: record.movementCounter,
-                                      measurementSequenceNumber: record.measurementSequenceNumber,
-                                      txPower: record.txPower)
         do {
             try database.dbPool.write { db in
-                try data.insert(db)
+                try record.sqlite.insert(db)
+            }
+            promise.succeed(value: true)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        do {
+            try database.dbPool.write { db in
+                for record in records {
+                    assert(record.mac != nil)
+                    try record.sqlite.insert(db)
+                }
             }
             promise.succeed(value: true)
         } catch {
@@ -69,7 +73,7 @@ class RuuviTagPersistenceSQLite: DatabaseService {
                 let request = Entity.order(Entity.versionColumn)
                 sqliteEntities = try request.fetchAll(db)
             }
-            promise.succeed(value: sqliteEntities)
+            promise.succeed(value: sqliteEntities.map({ $0.any }))
         } catch {
             promise.fail(error: .persistence(error))
         }
@@ -85,7 +89,7 @@ class RuuviTagPersistenceSQLite: DatabaseService {
                                     .filter(Record.ruuviTagIdColumn == ruuviTagId)
                 sqliteEntities = try request.fetchAll(db)
             }
-            promise.succeed(value: sqliteEntities)
+            promise.succeed(value: sqliteEntities.map({ $0.any }))
         } catch {
             promise.fail(error: .persistence(error))
         }

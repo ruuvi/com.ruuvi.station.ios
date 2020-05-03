@@ -4,7 +4,7 @@ import Future
 
 class GATTServiceQueue: GATTService {
     var connectionPersistence: ConnectionPersistence!
-    var ruuviTagPersistence: RuuviTagPersistence!
+    var ruuviTagTank: RuuviTagTank!
     var background: BTBackground!
 
     lazy var queue: OperationQueue = {
@@ -14,7 +14,8 @@ class GATTServiceQueue: GATTService {
     }()
 
     @discardableResult
-    func syncLogs(with uuid: String,
+    func syncLogs(uuid: String,
+                  mac: String?,
                   progress: ((BTServiceProgress) -> Void)? = nil,
                   connectionTimeout: TimeInterval? = nil,
                   serviceTimeout: TimeInterval? = nil) -> Future<Bool, RUError> {
@@ -23,7 +24,8 @@ class GATTServiceQueue: GATTService {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
         } else {
             let operation = RuuviTagReadLogsOperation(uuid: uuid,
-                                                      ruuviTagPersistence: ruuviTagPersistence,
+                                                      mac: mac, 
+                                                      ruuviTagTank: ruuviTagTank,
                                                       connectionPersistence: connectionPersistence,
                                                       background: background,
                                                       progress: progress,

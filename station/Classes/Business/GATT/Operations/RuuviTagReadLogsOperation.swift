@@ -26,24 +26,27 @@ enum RuuviTagReadLogsOperationDidFinishKey: String {
 class RuuviTagReadLogsOperation: AsyncOperation {
 
     var uuid: String
+    var mac: String?
     var error: RUError?
 
     private var background: BTBackground
     private var connectionPersistence: ConnectionPersistence
-    private var ruuviTagPersistence: RuuviTagPersistence
+    private var ruuviTagTank: RuuviTagTank
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
 
     init(uuid: String,
-         ruuviTagPersistence: RuuviTagPersistence,
+         mac: String?,
+         ruuviTagTank: RuuviTagTank,
          connectionPersistence: ConnectionPersistence,
          background: BTBackground,
          progress: ((BTServiceProgress) -> Void)? = nil,
          connectionTimeout: TimeInterval? = 0,
          serviceTimeout: TimeInterval? = 0) {
         self.uuid = uuid
-        self.ruuviTagPersistence = ruuviTagPersistence
+        self.mac = mac
+        self.ruuviTagTank = ruuviTagTank
         self.connectionPersistence = connectionPersistence
         self.background = background
         self.progress = progress
@@ -63,7 +66,8 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                                           progress: progress) { (observer, result) in
             switch result {
             case .success(let logs):
-                let opLogs = observer.ruuviTagPersistence.persist(logs: logs, for: observer.uuid)
+                let records = logs.map({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac )})
+                let opLogs = observer.ruuviTagTank.create(records)
                 opLogs.on(success: { _ in
                     observer.connectionPersistence.setLogSyncDate(Date(), uuid: observer.uuid)
                     observer.post(logs: logs, with: observer.uuid)

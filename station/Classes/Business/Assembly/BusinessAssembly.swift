@@ -76,7 +76,7 @@ class BusinessAssembly: Assembly {
         container.register(GATTService.self) { r in
             let service = GATTServiceQueue()
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.background = r.resolve(BTBackground.self)
             return service
         }.inObjectScope(.container)
