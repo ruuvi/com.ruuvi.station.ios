@@ -6,7 +6,7 @@ import RealmSwift
 
 @available(iOS 13, *)
 class RuuviTagRecordSubjectCombine {
-    var clients: Int = 0
+    var isServing: Bool = false
 
     private var sqlite: SQLiteContext
     private var realm: RealmContext
@@ -28,12 +28,15 @@ class RuuviTagRecordSubjectCombine {
     }
 
     func start() {
+        self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
                                         .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
-        }
-        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) { [weak self] records in
+        }.removeDuplicates()
+
+        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
+            [weak self] records in
             self?.subject.send(records.map({ $0.any }))
         }
 

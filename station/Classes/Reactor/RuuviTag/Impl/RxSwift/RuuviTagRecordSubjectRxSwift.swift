@@ -4,10 +4,12 @@ import RxSwift
 import RealmSwift
 
 class RuuviTagRecordSubjectRxSwift {
-    var sqlite: SQLiteContext
-    var realm: RealmContext
-
     let subject: PublishSubject<[RuuviTagSensorRecord]> = PublishSubject()
+    var isServing: Bool = false
+
+    private var sqlite: SQLiteContext
+    private var realm: RealmContext
+    private var ruuviTagId: String
 
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataRealmCache = [AnyRuuviTagSensorRecord]()
@@ -21,12 +23,17 @@ class RuuviTagRecordSubjectRxSwift {
     init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm
+        self.ruuviTagId = ruuviTagId
+    }
 
+    func start() {
+        self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
                                         .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
-        }
+        }.removeDuplicates()
+
         self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) { [weak self] records in
             self?.subject.onNext(records.map({ $0.any }))
         }
