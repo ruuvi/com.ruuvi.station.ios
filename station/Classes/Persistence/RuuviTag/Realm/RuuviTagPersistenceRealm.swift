@@ -85,7 +85,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
-    func read() -> Future<[RuuviTagSensor], RUError> {
+    func readAll() -> Future<[RuuviTagSensor], RUError> {
         let promise = Promise<[RuuviTagSensor], RUError>()
         context.bgWorker.enqueue {
             let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
@@ -115,7 +115,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                    .filter("ruuviTag.uuid == %@", luid)
                                    .sorted(byKeyPath: "date", ascending: false)
             if let record = realmRecords.first {
-                let result = RuuviTagSensorRecordStuct(ruuviTagId: luid,
+                let result = RuuviTagSensorRecordStruct(ruuviTagId: luid,
                                                        date: record.date,
                                                        mac: nil,
                                                        rssi: record.rssi.value,

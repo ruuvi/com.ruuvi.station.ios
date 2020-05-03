@@ -54,5 +54,4 @@ extension RuuviTag: RuuviTagSensorRecord {
         return Voltage(value: voltage, unit: .volts)
     }
 
-    
 }

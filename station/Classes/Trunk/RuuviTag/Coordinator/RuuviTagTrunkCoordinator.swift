@@ -8,8 +8,8 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
 
     func readAll() -> Future<[RuuviTagSensor], RUError> {
         let promise = Promise<[RuuviTagSensor], RUError>()
-        let sqliteOperation = sqlite.read()
-        let realmOperation = realm.read()
+        let sqliteOperation = sqlite.readAll()
+        let realmOperation = realm.readAll()
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
