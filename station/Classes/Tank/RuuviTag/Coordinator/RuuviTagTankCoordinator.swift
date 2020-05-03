@@ -37,4 +37,18 @@ class RuuviTagTankCoordinator: RuuviTagTank {
             return realm.create(record)
         }
     }
+
+    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        let sqliteRecords = records.filter({ $0.mac != nil })
+        let realmRecords = records.filter({ $0.mac == nil })
+        let sqliteOperation = sqlite.create(sqliteRecords)
+        let realmOpearion = realm.create(realmRecords)
+        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
 }

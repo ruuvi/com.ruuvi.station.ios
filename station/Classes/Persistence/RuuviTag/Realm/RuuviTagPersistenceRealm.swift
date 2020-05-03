@@ -85,6 +85,34 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                var failed = false
+                for record in records {
+                    assert(record.mac == nil)
+                    if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId) {
+                        let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
+                        try self.context.bg.write {
+                            self.context.bg.add(data, update: .all)
+                        }
+                    } else {
+                        failed = true
+                    }
+                }
+                if failed {
+                    promise.fail(error: .unexpected(.failedToFindRuuviTag))
+                } else {
+                    promise.succeed(value: true)
+                }
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func readAll() -> Future<[RuuviTagSensor], RUError> {
         let promise = Promise<[RuuviTagSensor], RUError>()
         context.bgWorker.enqueue {

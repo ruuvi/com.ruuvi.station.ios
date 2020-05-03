@@ -23,7 +23,8 @@ class TagChartsPresenter: TagChartsModuleInput {
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
-
+    var ruuviTagReactor: RuuviTagReactor!
+    
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
         didSet {
@@ -35,9 +36,9 @@ class TagChartsPresenter: TagChartsModuleInput {
         }
     }
     private var output: TagChartsModuleOutput?
-    private var ruuviTagsToken: NotificationToken?
+    private var ruuviTagToken: RUObservationToken?
+    private var ruuviTagDataToken: RUObservationToken?
     private var stateToken: ObservationToken?
-    private var ruuviTagDataToken: NotificationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
@@ -82,14 +83,9 @@ class TagChartsPresenter: TagChartsModuleInput {
         queue.qualityOfService = .userInteractive
         return queue
     }()
-    private var ruuviTags: Results<RuuviTagRealm>? {
-        didSet {
-            syncViewModels()
-            startListeningToAlertStatus()
-        }
-    }
+    private var ruuviTags = [AnyRuuviTagSensor]()
     private var currentViewModel: TagChartsViewModel? {
-        return viewModels.first(where: {$0.uuid.value == tagUUID})
+        return viewModels.first(where: {$0.mac.value == tagUUID})
     }
     private var viewModels = [TagChartsViewModel]() {
         didSet {
@@ -105,14 +101,14 @@ class TagChartsPresenter: TagChartsModuleInput {
         }
     }
     private var tagIsConnectable: Bool {
-        if let ruuviTag = ruuviTags?.first(where: {$0.uuid == tagUUID}) {
+        if let ruuviTag = ruuviTags.first(where: {$0.id == tagUUID}) {
             return ruuviTag.isConnectable
         } else {
             return false
         }
     }
     deinit {
-        ruuviTagsToken?.invalidate()
+        ruuviTagToken?.invalidate()
         stateToken?.invalidate()
         ruuviTagDataToken?.invalidate()
         if let settingsToken = temperatureUnitToken {
@@ -186,7 +182,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
+        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.uuid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: nil)
         } else {
             assert(false)
@@ -225,11 +221,11 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let uuid = viewModel.uuid.value, let mac = viewModel.mac.value {
             isSyncing = true
             let connectionTimeout: TimeInterval = settings.connectionTimeout
             let serviceTimeout: TimeInterval = settings.serviceTimeout
-            let op = gattService.syncLogs(with: uuid, progress: { [weak self] progress in
+            let op = gattService.syncLogs(uuid: uuid, mac: mac, progress: { [weak self] progress in
                 DispatchQueue.main.async { [weak self] in
                     self?.view.setSync(progress: progress, for: viewModel)
                 }
@@ -358,15 +354,12 @@ extension TagChartsPresenter {
     }
 
     private func syncViewModels() {
-        guard let ruuviTags = ruuviTags else {
-            return
-        }
         viewModels = ruuviTags.compactMap({ (ruuviTag) -> TagChartsViewModel in
             let viewModel = TagChartsViewModel(ruuviTag)
-            viewModel.background.value = backgroundPersistence.background(for: ruuviTag.uuid)
-            viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.uuid)
+            viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
+            viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
             viewModel.alertState.value = alertService
-                .hasRegistrations(for: ruuviTag.uuid) ? .registered : .empty
+                .hasRegistrations(for: ruuviTag.id) ? .registered : .empty
             viewModel.temperatureUnit.value = settings.temperatureUnit
             viewModel.humidityUnit.value = settings.humidityUnit
             return viewModel
@@ -383,34 +376,38 @@ extension TagChartsPresenter {
 
     private func restartObservingData() {
         ruuviTagDataToken?.invalidate()
-        guard let uuid = tagUUID else {
-            return
-        }
-        let ruuviTagDataRealm = realmContext.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@", uuid).sorted(byKeyPath: "date", ascending: true)
-        ruuviTagDataToken = ruuviTagDataRealm.observe {
-            [weak self] (change) in
-            switch change {
-            case .initial(let results):
-                self?.isLoading = true
-                if results.isEmpty {
-                    self?.handleEmptyResults()
-                } else {
-                    self?.handleInitialRuuviTagData(results)
-                }
-                self?.isLoading = false
-            case .update(let results, _, let insertions, _):
-                // sync every 1 second
-                self?.isSyncing = false
-                if insertions.isEmpty {
-                    self?.handleEmptyResults()
-                } else {
-                    self?.handleUpdateRuuviTagData(results, insertions: insertions)
-                }
-            default:
-                break
+        guard let uuid = tagUUID else { return }
+        ruuviTagDataToken = ruuviTagReactor.observe(uuid, { [weak self] results in
+            guard let sSelf = self else { return }
+            if sSelf.ruuviTagData.count == 0 {
+                self?.handleInitialRuuviTagData(results)
+            } else {
+                self?.handleUpdateRuuviTagData(results)
             }
-        }
+        })
+//        ruuviTagDataToken = ruuviTagDataRealm.observe {
+//            [weak self] (change) in
+//            switch change {
+//            case .initial(let results):
+//                self?.isLoading = true
+//                if results.isEmpty {
+//                    self?.handleEmptyResults()
+//                } else {
+//                    self?.handleInitialRuuviTagData(results)
+//                }
+//                self?.isLoading = false
+//            case .update(let results, _, let insertions, _):
+//                // sync every 1 second
+//                self?.isSyncing = false
+//                if insertions.isEmpty {
+//                    self?.handleEmptyResults()
+//                } else {
+//                    self?.handleUpdateRuuviTagData(results, insertions: insertions)
+//                }
+//            default:
+//                break
+//            }
+//        }
     }
 
     private func handleEmptyResults() {
@@ -430,109 +427,131 @@ extension TagChartsPresenter {
         }
     }
 
-    private func handleInitialRuuviTagData(_ results: Results<RuuviTagDataRealm>) {
+    private func handleInitialRuuviTagData(_ results: [RuuviTagSensorRecord]) {
         guard let viewModel = currentViewModel else {
             return
         }
-        isLoading = true
-        let resultsRef = ThreadSafeReference(to: results)
-        let chartIntervalSeconds = settings.chartIntervalSeconds
-        let label = "com.ruuvi.station.TagChartsPresenter.handleInitialRuuviTagData"
-        DispatchQueue(label: label, qos: .userInitiated).async { [weak self] in
-            autoreleasepool {
-                let realmBg = try! Realm()
-                guard let results = realmBg.resolve(resultsRef) else {
-                    return
-                }
-                var newValues = [RuuviMeasurement]()
-                var syncDate: Date = Date()
-                for result in results {
-                    autoreleasepool {
-                        if result == results.first {
-                            syncDate = result.date
-                            newValues.append(result.measurement)
-                            return
-                        }
-                        let measurement = result.measurement
-                        let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
-                        if elapsed >= chartIntervalSeconds {
-                            syncDate = measurement.date
-                            newValues.append(measurement)
-                        }
-                    }
-                }
-                var lastChartSyncDate: Date?
-                if let last = results.last,
-                    last.date != newValues.last?.date {
-                    lastChartSyncDate = last.date
-                    newValues.append(last.measurement)
-                }
-                DispatchQueue.main.async { [weak self] in
-                    if let lastChartSyncDate = lastChartSyncDate {
-                        self?.lastChartSyncDate = lastChartSyncDate
-                    }
-                    self?.ruuviTagData = newValues
-                    self?.createChartData(for: viewModel)
-                    self?.isLoading = false
-                }
-            }
-        }
+        ruuviTagData = results.map({ $0.measurement })
+        createChartData(for: viewModel)
+
+//        isLoading = true
+//        let resultsRef = ThreadSafeReference(to: results)
+//        let chartIntervalSeconds = settings.chartIntervalSeconds
+//        let label = "com.ruuvi.station.TagChartsPresenter.handleInitialRuuviTagData"
+//        DispatchQueue(label: label, qos: .userInitiated).async { [weak self] in
+//            autoreleasepool {
+//                let realmBg = try! Realm()
+//                guard let results = realmBg.resolve(resultsRef) else {
+//                    return
+//                }
+//                var newValues = [RuuviMeasurement]()
+//                var syncDate: Date = Date()
+//                for result in results {
+//                    autoreleasepool {
+//                        if result == results.first {
+//                            syncDate = result.date
+//                            newValues.append(result.measurement)
+//                            return
+//                        }
+//                        let measurement = result.measurement
+//                        let elapsed = Int(measurement.date.timeIntervalSince(syncDate))
+//                        if elapsed >= chartIntervalSeconds {
+//                            syncDate = measurement.date
+//                            newValues.append(measurement)
+//                        }
+//                    }
+//                }
+//                var lastChartSyncDate: Date?
+//                if let last = results.last,
+//                    last.date != newValues.last?.date {
+//                    lastChartSyncDate = last.date
+//                    newValues.append(last.measurement)
+//                }
+//                DispatchQueue.main.async { [weak self] in
+//                    if let lastChartSyncDate = lastChartSyncDate {
+//                        self?.lastChartSyncDate = lastChartSyncDate
+//                    }
+//                    self?.ruuviTagData = newValues
+//                    self?.createChartData(for: viewModel)
+//                    self?.isLoading = false
+//                }
+//            }
+//        }
     }
 
-    private func handleUpdateRuuviTagData(_ results: Results<RuuviTagDataRealm>, insertions: [Int]) {
+    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
         guard let viewModel = currentViewModel,
             view.viewIsVisible == true else {
             return
         }
-        let chartIntervalSeconds = settings.chartIntervalSeconds
-        insertions.forEach({ i in
-            let newValue = results[i].measurement
-            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
-            if elapsed >= chartIntervalSeconds {
-                lastChartSyncDate = newValue.date
-                ruuviTagData.append(newValue)
-                insertMeasurements([newValue], into: viewModel)
-            }
-        })
+        ruuviTagData.append(contentsOf: results.map({ $0.measurement }))
+        insertMeasurements(results.map({ $0.measurement }), into: viewModel)
+//        let chartIntervalSeconds = settings.chartIntervalSeconds
+//        insertions.forEach({ i in
+//            let newValue = results[i].measurement
+//            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
+//            if elapsed >= chartIntervalSeconds {
+//                lastChartSyncDate = newValue.date
+//                ruuviTagData.append(newValue)
+//                insertMeasurements([newValue], into: viewModel)
+//            }
+//        })
     }
 
     private func startObservingRuuviTags() {
-        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
-            .filter("isConnectable == true")
-        ruuviTagsToken?.invalidate()
-        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
+        ruuviTagToken?.invalidate()
+        ruuviTagToken = ruuviTagReactor.observe({ [weak self] change in
             switch change {
             case .initial(let ruuviTags):
+                self?.ruuviTags = ruuviTags.map({ $0.any })
+                self?.syncViewModels()
+                self?.startListeningToAlertStatus()
                 if let uuid = self?.tagUUID {
                     self?.configure(uuid: uuid)
-                } else if let uuid = ruuviTags.first?.uuid {
+                } else if let uuid = ruuviTags.first?.id {
                     self?.configure(uuid: uuid)
                 }
                 self?.restartObservingData()
-            case .update(let ruuviTags, _, let insertions, _):
-                self?.ruuviTags = ruuviTags
-                if let ii = insertions.last {
-                    let uuid = ruuviTags[ii].uuid
-                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
-                        self?.view.scroll(to: index)
-                    }
-                }
-                if let uuid = self?.tagUUID {
-                    let tagUUIDs = ruuviTags.compactMap({$0.uuid})
-                    if !tagUUIDs.contains(uuid),
-                        let lastTagUUID = tagUUIDs.last {
-                        self?.configure(uuid: lastTagUUID)
-                    }
-                } else {
-                    if let lastTagUUID = ruuviTags.compactMap({$0.uuid}).last {
-                        self?.configure(uuid: lastTagUUID)
-                    }
-                }
-                self?.restartObservingData()
-            case .error(let error):
-                self?.errorPresenter.present(error: error)
+            default:
+                break
             }
-        }
+        })
+//        ruuviTags = realmContext.main.objects(RuuviTagRealm.self)
+//            .filter("isConnectable == true")
+//        ruuviTagsToken?.invalidate()
+//        ruuviTagsToken = ruuviTags?.observe { [weak self] (change) in
+//            switch change {
+//            case .initial(let ruuviTags):
+//                if let uuid = self?.tagUUID {
+//                    self?.configure(uuid: uuid)
+//                } else if let uuid = ruuviTags.first?.uuid {
+//                    self?.configure(uuid: uuid)
+//                }
+//                self?.restartObservingData()
+//            case .update(let ruuviTags, _, let insertions, _):
+//                self?.ruuviTags = ruuviTags
+//                if let ii = insertions.last {
+//                    let uuid = ruuviTags[ii].uuid
+//                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+//                        self?.view.scroll(to: index)
+//                    }
+//                }
+//                if let uuid = self?.tagUUID {
+//                    let tagUUIDs = ruuviTags.compactMap({$0.uuid})
+//                    if !tagUUIDs.contains(uuid),
+//                        let lastTagUUID = tagUUIDs.last {
+//                        self?.configure(uuid: lastTagUUID)
+//                    }
+//                } else {
+//                    if let lastTagUUID = ruuviTags.compactMap({$0.uuid}).last {
+//                        self?.configure(uuid: lastTagUUID)
+//                    }
+//                }
+//                self?.restartObservingData()
+//            case .error(let error):
+//                self?.errorPresenter.present(error: error)
+//            }
+//        }
     }
 
     private func stopObservingRuuviTagsData() {
@@ -603,7 +622,7 @@ extension TagChartsPresenter {
     }
 
     private func startListeningToAlertStatus() {
-        ruuviTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+        ruuviTags.forEach({ alertService.subscribe(self, to: $0.id) })
     }
 
     func startObservingDidConnectDisconnectNotifications() {
