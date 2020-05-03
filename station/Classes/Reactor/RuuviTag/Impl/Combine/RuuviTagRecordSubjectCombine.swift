@@ -51,10 +51,9 @@ class RuuviTagRecordSubjectCombine {
                 if records.count > 0 {
                     sSelf.subject.send(records.compactMap({ $0.any }))
                 }
-            case .update(let records, _, let insertions, _):
-                let newRecords = insertions.map({ records[$0] })
-                if newRecords.count > 0 {
-                    sSelf.subject.send(newRecords.compactMap({ $0.any }))
+            case .update(let records, _, _, _):
+                if records.count > 0 {
+                    sSelf.subject.send(records.compactMap({ $0.any }))
                 }
             default:
                 break
