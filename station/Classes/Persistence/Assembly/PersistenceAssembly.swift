@@ -1,6 +1,7 @@
 import Swinject
 
 class PersistenceAssembly: Assembly {
+//swiftlint:disable:next function_body_length
     func assemble(container: Container) {
 
         container.register(AlertPersistence.self) { _ in

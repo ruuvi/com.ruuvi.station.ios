@@ -472,8 +472,8 @@ extension CardsPresenter {
     }
 
     private func startObservingWebTags() {
-        webTags = realmContext.main.objects(WebTagRealm.self)
-        webTagsToken = webTags?.observe({ [weak self] (change) in
+        let webTags = realmContext.main.objects(WebTagRealm.self)
+        webTagsToken = webTags.observe({ [weak self] (change) in
             switch change {
             case .initial(let webTags):
                 self?.webTags = webTags
