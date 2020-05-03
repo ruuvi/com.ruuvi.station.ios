@@ -6,8 +6,11 @@ import RealmSwift
 
 @available(iOS 13, *)
 class RuuviTagRecordSubjectCombine {
-    var sqlite: SQLiteContext
-    var realm: RealmContext
+    var clients: Int = 0
+
+    private var sqlite: SQLiteContext
+    private var realm: RealmContext
+    private var ruuviTagId: String
 
     let subject = PassthroughSubject<[RuuviTagSensorRecord], Never>()
 
@@ -21,7 +24,10 @@ class RuuviTagRecordSubjectCombine {
     init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm
+        self.ruuviTagId = ruuviTagId
+    }
 
+    func start() {
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
                                         .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
