@@ -38,7 +38,11 @@ class RuuviTagReactorImpl: RuuviTagReactor {
             let cancellable = recordCombine.subject.sink { values in
                 block(values)
             }
-            return RUObservationToken {
+            if recordCombine.clients == 0 {
+                recordCombine.start()
+            }
+            recordCombine.clients += 1
+            return RUObservationToken { [weak self] in
                 cancellable.cancel()
             }
         } else {
