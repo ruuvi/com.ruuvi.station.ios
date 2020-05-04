@@ -214,7 +214,6 @@ extension TagChartsScrollViewController {
 // MARK: - UIScrollViewDelegate
 extension TagChartsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        output.viewDidScroll(to: viewModel)
     }
 }
 
