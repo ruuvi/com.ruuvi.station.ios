@@ -230,7 +230,6 @@ extension TagSettingsPresenter {
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
-        viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
         viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: ruuviTag.id)
         viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: ruuviTag.id)
         viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: ruuviTag.id)
@@ -248,8 +247,13 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable
-        viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
-        viewModel.keepConnection.value = connectionPersistence.keepConnection(to: ruuviTag.id)
+        if let uuid = ruuviTag.luid {
+            viewModel.isConnected.value = background.isConnected(uuid: uuid)
+            viewModel.keepConnection.value = connectionPersistence.keepConnection(to: uuid)
+        } else {
+            viewModel.isConnected.value = false
+            viewModel.keepConnection.value = false
+        }
 
         viewModel.mac.value = ruuviTag.mac
         viewModel.uuid.value = ruuviTag.luid ?? ruuviTag.id
