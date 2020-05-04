@@ -143,6 +143,9 @@
 		0E2864302460697100363DCB /* VirtualTagTankCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28642F2460697100363DCB /* VirtualTagTankCoordinator.swift */; };
 		0E2864312460697100363DCB /* VirtualTagTankCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28642F2460697100363DCB /* VirtualTagTankCoordinator.swift */; };
 		0E2864322460697100363DCB /* VirtualTagTankCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28642F2460697100363DCB /* VirtualTagTankCoordinator.swift */; };
+		0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
+		0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
+		0E2864372460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
 		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
 		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
 		0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
@@ -1365,6 +1368,7 @@
 		0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebTagRealm+VirtualTagSensor.swift"; sourceTree = "<group>"; };
 		0E28642A2460687200363DCB /* VirtualTagTank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagTank.swift; sourceTree = "<group>"; };
 		0E28642F2460697100363DCB /* VirtualTagTankCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagTankCoordinator.swift; sourceTree = "<group>"; };
+		0E2864342460741500363DCB /* ExportServiceTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportServiceTrunk.swift; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
 		0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskServiceiOS12.swift; sourceTree = "<group>"; };
@@ -2541,6 +2545,14 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
+		0E286433246073F900363DCB /* Trunk */ = {
+			isa = PBXGroup;
+			children = (
+				0E2864342460741500363DCB /* ExportServiceTrunk.swift */,
+			);
+			path = Trunk;
+			sourceTree = "<group>";
+		};
 		0E2A2CA32369479C004993C5 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2697,6 +2709,7 @@
 		0E538362236ADC040007956D /* Export */ = {
 			isa = PBXGroup;
 			children = (
+				0E286433246073F900363DCB /* Trunk */,
 				0E538365236AEE1F0007956D /* Temp */,
 				0E538363236AE6BA0007956D /* ExportService.swift */,
 			);
@@ -5083,6 +5096,7 @@
 				0E6BAD9E23856A01003A2D4C /* SettingsPresenter.swift in Sources */,
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
+				0E2864372460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */,
@@ -5458,6 +5472,7 @@
 				0E8BD2D3238566AB008B31EF /* ForegroundList.swift in Sources */,
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
+				0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */,
@@ -5833,6 +5848,7 @@
 				0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
+				0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				A9A48A5C244CD9E70004FD50 /* UIWindow+Shake.swift in Sources */,

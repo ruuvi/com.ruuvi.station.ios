@@ -71,8 +71,8 @@ class BusinessAssembly: Assembly {
         }
 
         container.register(ExportService.self) { r in
-            let service = ExportServiceTemp()
-            service.realmContext = r.resolve(RealmContext.self)
+            let service = ExportServiceTrunk()
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             return service
         }
 

@@ -147,6 +147,23 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
+        let promise = Promise<AnyRuuviTagSensor, RUError>()
+        context.bgWorker.enqueue {
+            if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
+                let result = RuuviTagSensorStruct(version: ruuviTagRealm.version,
+                                                  luid: ruuviTagRealm.uuid,
+                                                  mac: ruuviTagRealm.mac,
+                                                  isConnectable: ruuviTagRealm.isConnectable,
+                                                  name: ruuviTagRealm.name).any
+                promise.succeed(value: result)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindRuuviTag))
+            }
+        }
+        return promise.future
+    }
+
     func readAll() -> Future<[AnyRuuviTagSensor], RUError> {
         let promise = Promise<[AnyRuuviTagSensor], RUError>()
         context.bgWorker.enqueue {
