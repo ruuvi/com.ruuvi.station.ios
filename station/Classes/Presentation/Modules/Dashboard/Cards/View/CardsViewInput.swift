@@ -1,5 +1,4 @@
 import Foundation
-import RealmSwift
 import BTKit
 
 protocol CardsViewInput: ViewInput {

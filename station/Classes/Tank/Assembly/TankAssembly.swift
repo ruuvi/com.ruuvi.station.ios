@@ -11,5 +11,11 @@ class TankAssembly: Assembly {
             tank.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return tank
         }
+
+        container.register(VirtualTagTank.self) { r in
+            let tank = VirtualTagTankCoordinator()
+            tank.realm = r.resolve(WebTagPersistenceRealm.self)
+            return tank
+        }
     }
 }
