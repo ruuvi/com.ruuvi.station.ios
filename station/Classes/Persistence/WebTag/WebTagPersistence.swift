@@ -3,6 +3,9 @@ import Future
 import CoreLocation
 
 protocol WebTagPersistence {
+    func readAll() -> Future<[AnyVirtualTagSensor], RUError>
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError>
+
     func persist(provider: WeatherProvider) -> Future<WeatherProvider, RUError>
     func persist(provider: WeatherProvider, location: Location) -> Future<WeatherProvider, RUError>
     func remove(webTag: WebTagRealm) -> Future<Bool, RUError>

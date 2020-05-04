@@ -1,7 +1,6 @@
 import BTKit
 import Foundation
 import Future
-import RealmSwift
 import GRDB
 
 class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
@@ -74,6 +73,25 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                 sqliteEntities = try request.fetchAll(db)
             }
             promise.succeed(value: sqliteEntities.map({ $0.any }))
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
+        let promise = Promise<AnyRuuviTagSensor, RUError>()
+        var entity: Entity?
+        do {
+            try database.dbPool.read { db in
+                let request = Entity.filter(Entity.idColumn == ruuviTagId)
+                entity = try request.fetchOne(db)
+            }
+            if let entity = entity {
+                promise.succeed(value: entity.any)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindRuuviTag))
+            }
         } catch {
             promise.fail(error: .persistence(error))
         }
@@ -161,6 +179,21 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         do {
             var deletedCount = 0
             let request = Record.filter(Record.ruuviTagIdColumn == ruuviTagId)
+            try database.dbPool.write { db in
+                deletedCount = try request.deleteAll(db)
+            }
+            promise.succeed(value: deletedCount > 0)
+        } catch {
+            promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        do {
+            var deletedCount = 0
+            let request = Record.filter(Record.ruuviTagIdColumn == ruuviTagId).filter(Record.dateColumn < date)
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }

@@ -81,6 +81,23 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                let data = self.context.bg.objects(RuuviTagDataRealm.self)
+                               .filter("ruuviTag.uuid == %@ AND date < %@", ruuviTagId, date)
+                try self.context.bg.write {
+                    self.context.bg.delete(data)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(record.mac == nil)
@@ -125,6 +142,23 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 }
             } catch {
                 promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
+    func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
+        let promise = Promise<AnyRuuviTagSensor, RUError>()
+        context.bgWorker.enqueue {
+            if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
+                let result = RuuviTagSensorStruct(version: ruuviTagRealm.version,
+                                                  luid: ruuviTagRealm.uuid,
+                                                  mac: ruuviTagRealm.mac,
+                                                  isConnectable: ruuviTagRealm.isConnectable,
+                                                  name: ruuviTagRealm.name).any
+                promise.succeed(value: result)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindRuuviTag))
             }
         }
         return promise.future

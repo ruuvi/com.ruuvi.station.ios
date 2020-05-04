@@ -63,12 +63,16 @@ class BusinessAssembly: Assembly {
         container.register(DataPruningOperationsManager.self) { r in
             let manager = DataPruningOperationsManager()
             manager.settings = r.resolve(Settings.self)
+            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
+            manager.virtualTagTank = r.resolve(VirtualTagTank.self)
+            manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
             return manager
         }
 
         container.register(ExportService.self) { r in
-            let service = ExportServiceTemp()
-            service.realmContext = r.resolve(RealmContext.self)
+            let service = ExportServiceTrunk()
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             return service
         }
 

@@ -6,6 +6,35 @@ class WebTagPersistenceRealm: WebTagPersistence {
 
     var context: RealmContext!
 
+    func readAll() -> Future<[AnyVirtualTagSensor], RUError> {
+        let promise = Promise<[AnyVirtualTagSensor], RUError>()
+        context.bgWorker.enqueue {
+            let realmEntities = self.context.bg.objects(WebTagRealm.self)
+            let result: [AnyVirtualTagSensor] = realmEntities.map { webTagRealm in
+                return VirtualTagSensorStruct(id: webTagRealm.uuid, name: webTagRealm.name).any
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                let data = self.context.bg.objects(WebTagDataRealm.self)
+                               .filter("webTag.uuid == %@ AND date < %@", ruuviTagId, date)
+                try self.context.bg.write {
+                    self.context.bg.delete(data)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {

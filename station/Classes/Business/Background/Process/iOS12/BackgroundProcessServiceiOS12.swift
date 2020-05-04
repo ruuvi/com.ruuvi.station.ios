@@ -1,4 +1,5 @@
 import Foundation
+import Future
 
 class BackgroundProcessServiceiOS12: BackgroundProcessService {
 
@@ -13,10 +14,13 @@ class BackgroundProcessServiceiOS12: BackgroundProcessService {
     }
 
     func launch() {
-        let operations = dataPruningOperationsManager.ruuviTagPruningOperations()
-                        + dataPruningOperationsManager.webTagPruningOperations()
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        queue.addOperations(operations, waitUntilFinished: false)
+        let ruuviTags = dataPruningOperationsManager.ruuviTagPruningOperations()
+        let virtualTags = dataPruningOperationsManager.webTagPruningOperations()
+        Future.zip(ruuviTags, virtualTags).on(success: { (ruuviTagOperations, virtualTagsOperations) in
+            let queue = OperationQueue()
+            queue.maxConcurrentOperationCount = 1
+            let operations = ruuviTagOperations + virtualTagsOperations
+            queue.addOperations(operations, waitUntilFinished: false)
+        })
     }
 }
