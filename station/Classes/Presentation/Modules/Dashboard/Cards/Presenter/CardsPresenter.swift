@@ -195,8 +195,9 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidScroll(to viewModel: CardsViewModel) {
-        if let uuid = viewModel.uuid.value {
-            tagCharts?.configure(uuid: uuid)
+        if let uuid = viewModel.uuid.value,
+            let sensor = ruuviTags.first(where: {$0.luid == uuid}) {
+            tagCharts?.configure(ruuviTag: sensor)
         } else {
             assert(false)
         }
@@ -487,7 +488,8 @@ extension CardsPresenter {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
                         self?.view.scroll(to: index)
-                        self?.tagCharts?.configure(uuid: uuid)
+                        #warning("implement if need show charts")
+//                        self?.tagCharts?.configure(uuid: uuid)
                     }
                     if let viewModels = self?.viewModels,
                         let settings = self?.settings,
@@ -510,6 +512,9 @@ extension CardsPresenter {
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags.map({ $0.any })
+                if let firstTag = ruuviTags.first {
+                    self?.tagCharts?.configure(ruuviTag: firstTag)
+                }
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
@@ -520,7 +525,7 @@ extension CardsPresenter {
                 self?.observeRuuviTags()
                 if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == sensor.luid }) {
                     self?.view.scroll(to: index)
-                    self?.tagCharts?.configure(uuid: sensor.id)
+                    self?.tagCharts?.configure(ruuviTag: sensor)
                     if let viewModels = self?.viewModels,
                         let settings = self?.settings,
                         !settings.cardsSwipeHintWasShown,
@@ -836,9 +841,10 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
             if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
-                let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }),
+                let ruuviTag = self?.ruuviTags.first(where: {$0.id == uuid}) {
                 self?.view.scroll(to: index)
-                self?.tagCharts?.configure(uuid: uuid)
+                self?.tagCharts?.configure(ruuviTag: ruuviTag)
             }
         })
     }
