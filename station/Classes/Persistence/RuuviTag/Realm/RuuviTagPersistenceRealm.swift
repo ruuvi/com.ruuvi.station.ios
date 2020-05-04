@@ -260,61 +260,6 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     }
 
-    func persist(ruuviTag: RuuviTag,
-                 name: String,
-                 humidityOffset: Double,
-                 humidityOffsetDate: Date?) -> Future<RuuviTag, RUError> {
-        let promise = Promise<RuuviTag, RUError>()
-        context.bgWorker.enqueue {
-            do {
-                try autoreleasepool {
-                    if let existingTag = self.fetch(uuid: ruuviTag.uuid) {
-                        try self.context.bg.write {
-                            if existingTag.isInvalidated {
-                                let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
-                                realmTag.humidityOffset = humidityOffset
-                                realmTag.humidityOffsetDate = humidityOffsetDate
-                                self.context.bg.add(realmTag, update: .all)
-                                let tagData = RuuviTagDataRealm(ruuviTag: realmTag, data: ruuviTag)
-                                self.context.bg.add(tagData)
-                            } else {
-                                guard let tag = existingTag as? RuuviTagRealm else {
-                                    promise.fail(error: .persistence(RUError.unexpected(.callbackErrorAndResultAreNil)))
-                                    return
-                                }
-                                tag.name = name
-                                tag.humidityOffset = humidityOffset
-                                tag.humidityOffsetDate = humidityOffsetDate
-                                if tag.version != ruuviTag.version {
-                                    tag.version = ruuviTag.version
-                                }
-                                if tag.mac != ruuviTag.mac {
-                                    tag.mac = ruuviTag.mac
-                                }
-                                let tagData = RuuviTagDataRealm(ruuviTag: tag, data: ruuviTag)
-                                self.context.bg.add(tagData)
-                            }
-                        }
-                    } else {
-                        let realmTag = RuuviTagRealm(ruuviTag: ruuviTag, name: name)
-                        realmTag.humidityOffset = humidityOffset
-                        realmTag.humidityOffsetDate = humidityOffsetDate
-                        let tagData = RuuviTagDataRealm(ruuviTag: realmTag, data: ruuviTag)
-                        try self.context.bg.write {
-                            self.context.bg.add(realmTag, update: .all)
-                            self.context.bg.add(tagData)
-                        }
-                    }
-                    promise.succeed(value: ruuviTag)
-                }
-            } catch {
-                promise.fail(error: .persistence(error))
-            }
-        }
-
-        return promise.future
-    }
-
     func delete(ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if ruuviTag.realm == context.bg {
