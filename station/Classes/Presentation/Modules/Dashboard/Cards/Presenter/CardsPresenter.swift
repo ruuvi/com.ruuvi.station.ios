@@ -155,7 +155,7 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.luid == viewModel.luid.value }) {
+        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
         } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.luid.value }) {
             router.openWebTagSettings(webTag: webTag)
@@ -163,9 +163,8 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
-        if let uuid = viewModel.luid.value {
-            if settings.keepConnectionDialogWasShown(for: uuid)
-                || background.isConnected(uuid: uuid) {
+        if let id = viewModel.id.value {
+            if settings.keepConnectionDialogWasShown(for: id) || background.isConnected(uuid: id) {
                 router.openTagCharts()
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
@@ -176,8 +175,8 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
-        if let uuid = viewModel.luid.value {
-            settings.setKeepConnectionDialogWasShown(for: uuid)
+        if let id = viewModel.id.value {
+            settings.setKeepConnectionDialogWasShown(for: id)
             router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -293,7 +292,8 @@ extension CardsPresenter {
                        viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
                        viewModel.temperatureUnit.value = settings.temperatureUnit
                        viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
-                       viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id) ? .registered : .empty
+                       viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id)
+                                                                ? .registered : .empty
                        ruuviTagTrunk.readLast(ruuviTag).on { record in
                            if let record = record {
                                viewModel.update(record)
@@ -421,7 +421,7 @@ extension CardsPresenter {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
         connectionPersistence.keepConnectionUUIDs.filter { (uuid) -> Bool in
-            ruuviTags.contains(where: { $0.id == uuid })
+            ruuviTags.contains(where: { $0.luid == uuid })
         }.forEach { (uuid) in
             heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,

@@ -10,6 +10,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     }
 
     func keepConnection(to uuid: String) -> Bool {
+        assert(uuid.count == 36)
         if let array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
             return array.contains(uuid)
         } else {
@@ -18,6 +19,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     }
 
     func setKeepConnection(_ value: Bool, for uuid: String) {
+        assert(uuid.count == 36)
         if value {
             if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String],
                 !array.contains(uuid) {
