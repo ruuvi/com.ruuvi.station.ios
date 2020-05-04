@@ -289,6 +289,8 @@ extension CardsPresenter {
             let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(ruuviTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
+                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: ruuviTag.id).0
+                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: ruuviTag.id).1
                 viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
                 viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)

@@ -57,7 +57,6 @@ class BusinessAssembly: Assembly {
         container.register(CalibrationService.self) { r in
             let service = CalibrationServiceImpl()
             service.calibrationPersistence = r.resolve(CalibrationPersistence.self)
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             return service
         }
 

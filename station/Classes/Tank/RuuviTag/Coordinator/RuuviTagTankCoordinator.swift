@@ -3,8 +3,8 @@ import Future
 
 class RuuviTagTankCoordinator: RuuviTagTank {
 
-    var sqlite: RuuviTagPersistenceSQLite!
-    var realm: RuuviTagPersistenceRealm!
+    var sqlite: RuuviTagPersistence!
+    var realm: RuuviTagPersistence!
     var idPersistence: IDPersistence!
     var backgroundPersistence: BackgroundPersistence!
     var connectionPersistence: ConnectionPersistence!
