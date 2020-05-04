@@ -114,6 +114,7 @@ class BusinessAssembly: Assembly {
             service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             service.connectionPersistence = r.resolve(ConnectionPersistence.self)
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
             service.alertService = r.resolve(AlertService.self)
             service.settings = r.resolve(Settings.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)

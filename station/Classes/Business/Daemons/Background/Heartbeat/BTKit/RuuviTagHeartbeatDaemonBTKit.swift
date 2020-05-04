@@ -1,6 +1,5 @@
 import Foundation
 import BTKit
-import RealmSwift
 
 class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
@@ -8,18 +7,18 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagTank: RuuviTagTank!
+    var ruuviTagReactor: RuuviTagReactor!
     var alertService: AlertService!
     var settings: Settings!
     var pullWebDaemon: PullWebDaemon!
 
-    private var realm: Realm!
-    private var ruuviTags: Results<RuuviTagRealm>?
+    private var ruuviTags = [AnyRuuviTagSensor]()
     private var connectTokens = [String: ObservationToken]()
     private var disconnectTokens = [String: ObservationToken]()
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
     private var savedDate = [String: Date]() // uuid:date
-    private var ruuviTagsToken: NotificationToken?
+    private var ruuviTagsToken: RUObservationToken?
 
     override init() {
         super.init()
@@ -69,27 +68,28 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     func start() {
         start { [weak self] in
-            autoreleasepool {
-                self?.invalidateTokens()
-                self?.realm = try! Realm()
-                self?.ruuviTags = self?.realm.objects(RuuviTagRealm.self).filter("isConnectable == true")
-                self?.ruuviTagsToken = self?.ruuviTags?.observe({ [weak self] (change) in
-                    switch change {
-                    case .initial:
-                        break
-                    case .update(_, let deletions, let insertions, _):
-                        if deletions.count > 0 || insertions.count > 0 {
-                            self?.handleRuuviTagsChange()
-                        }
-                    case .error(let error):
-                        self?.post(error: RUError.persistence(error))
+            self?.invalidateTokens()
+            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+                guard let sSelf = self else { return }
+                switch change {
+                case .initial(let ruuviTags):
+                    sSelf.ruuviTags = ruuviTags
+                    sSelf.handleRuuviTagsChange()
+                case .update(let ruuviTag):
+                    if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
+                        sSelf.ruuviTags[index] = ruuviTag
                     }
-                })
-                self?.connectionPersistence.keepConnectionUUIDs
-                    .filter({ (uuid) -> Bool in
-                        self?.ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
-                    }).forEach({ self?.connect(uuid: $0)})
-            }
+                    sSelf.handleRuuviTagsChange()
+                case .insert(let ruuviTag):
+                    sSelf.ruuviTags.append(ruuviTag)
+                    sSelf.handleRuuviTagsChange()
+                case .delete(let ruuviTag):
+                    sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
+                    sSelf.handleRuuviTagsChange()
+                case .error(let error):
+                    sSelf.post(error: RUError.persistence(error))
+                }
+            })
         }
     }
 
@@ -102,12 +102,9 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     }
 
     @objc private func stopDaemon() {
-        autoreleasepool {
-            invalidateTokens()
-            connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
-            realm.invalidate()
-            stopWork()
-        }
+        invalidateTokens()
+        connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
+        stopWork()
     }
 }
 
@@ -180,21 +177,15 @@ extension RuuviTagHeartbeatDaemonBTKit {
 // MARK: - Private
 extension RuuviTagHeartbeatDaemonBTKit {
     private func handleRuuviTagsChange() {
-        autoreleasepool {
-            connectionPersistence.keepConnectionUUIDs
-                .filter { (uuid) -> Bool in
-                    ruuviTags?.contains(where: { $0.uuid == uuid }) ?? false
-                        && !connectTokens.keys.contains(uuid)
-                }.forEach({ connect(uuid: $0) })
-            connectionPersistence.keepConnectionUUIDs
-                .filter { (uuid) -> Bool in
-                    if let contains = ruuviTags?.contains(where: { $0.uuid == uuid }) {
-                        return !contains && connectTokens.keys.contains(uuid)
-                    } else {
-                        return connectTokens.keys.contains(uuid)
-                    }
-                }.forEach({ disconnect(uuid: $0) })
-        }
+        connectionPersistence.keepConnectionUUIDs
+            .filter { (uuid) -> Bool in
+                ruuviTags.contains(where: { $0.luid == uuid }) && !connectTokens.keys.contains(uuid)
+            }.forEach({ connect(uuid: $0) })
+
+        connectionPersistence.keepConnectionUUIDs
+            .filter { (uuid) -> Bool in
+                !ruuviTags.contains(where: { $0.luid == uuid }) && connectTokens.keys.contains(uuid)
+            }.forEach({ disconnect(uuid: $0) })
      }
 
      @objc private func connect(uuid: String) {
