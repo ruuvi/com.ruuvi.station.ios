@@ -155,15 +155,15 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.luid == viewModel.uuid.value }) {
+        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.luid == viewModel.luid.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
-        } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.uuid.value }) {
+        } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.luid.value }) {
             router.openWebTagSettings(webTag: webTag)
         }
     }
 
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let uuid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: uuid)
                 || background.isConnected(uuid: uuid) {
                 router.openTagCharts()
@@ -176,7 +176,7 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let uuid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: uuid)
             router.openTagCharts()
         } else {
@@ -185,7 +185,7 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidConfirmToKeepConnection(to viewModel: CardsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let uuid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: uuid)
             settings.setKeepConnectionDialogWasShown(for: uuid)
             router.openTagCharts()
@@ -195,7 +195,7 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidScroll(to viewModel: CardsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let uuid = viewModel.luid.value {
             tagCharts?.configure(uuid: uuid)
         } else {
             assert(false)
@@ -254,7 +254,7 @@ extension CardsPresenter: MenuModuleOutput {
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
-        if let index = viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+        if let index = viewModels.firstIndex(where: { $0.luid.value == uuid }) {
             view.scroll(to: index, immediately: true)
         }
     }
@@ -271,7 +271,7 @@ extension CardsPresenter: CardsRouterDelegate {
 extension CardsPresenter: AlertServiceObserver {
     func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
         viewModels
-            .filter({ $0.uuid.value == uuid })
+            .filter({ $0.luid.value == uuid })
             .forEach({
                 let newValue: AlertState = isTriggered ? .firing : .registered
                 if newValue != $0.alertState.value {
@@ -399,7 +399,7 @@ extension CardsPresenter {
                                       result: { (observer, result) in
                             switch result {
                             case .success(let rssi):
-                                if let viewModel = observer.viewModels.first(where: { $0.uuid.value == uuid }) {
+                                if let viewModel = observer.viewModels.first(where: { $0.luid.value == uuid }) {
                                     viewModel.update(rssi: rssi, animated: true)
                                 }
                             case .failure(let error):
@@ -425,7 +425,7 @@ extension CardsPresenter {
         }.forEach { (uuid) in
             heartbeatTokens.append(background.observe(self, uuid: uuid) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
-                    let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
+                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid }) {
                     viewModel.update(with: ruuviTag)
                 }
             })
@@ -436,10 +436,10 @@ extension CardsPresenter {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
-            if viewModel.type == .ruuvi, let uuid = viewModel.uuid.value {
+            if viewModel.type == .ruuvi, let uuid = viewModel.luid.value {
                 advertisementTokens.append(foreground.observe(self, uuid: uuid) { [weak self] (_, device) in
                     if let ruuviTag = device.ruuvi?.tag,
-                        let viewModel = self?.viewModels.first(where: { $0.uuid.value == ruuviTag.uuid }) {
+                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid }) {
                         viewModel.update(with: ruuviTag)
                         viewModel.update(rssi: ruuviTag.rssi)
                     }
@@ -458,13 +458,13 @@ extension CardsPresenter {
                 case .initial(let data):
                     if let last = data.sorted(byKeyPath: "date").last {
                         self?.viewModels
-                            .filter({ $0.uuid.value == webTag.uuid })
+                            .filter({ $0.luid.value == webTag.uuid })
                             .forEach({ $0.update(last)})
                     }
                 case .update(let data, _, _, _):
                     if let last = data.sorted(byKeyPath: "date").last {
                         self?.viewModels
-                            .filter({ $0.uuid.value == webTag.uuid })
+                            .filter({ $0.luid.value == webTag.uuid })
                             .forEach({ $0.update(last)})
                     }
                 case .error(let error):
@@ -485,7 +485,7 @@ extension CardsPresenter {
                 self?.webTags = webTags
                 if let ii = insertions.last {
                     let uuid = webTags[ii].uuid
-                    if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                    if let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid }) {
                         self?.view.scroll(to: index)
                         self?.tagCharts?.configure(uuid: uuid)
                     }
@@ -518,7 +518,7 @@ extension CardsPresenter {
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
-                if let index = self?.viewModels.firstIndex(where: { $0.uuid.value == sensor.luid }) {
+                if let index = self?.viewModels.firstIndex(where: { $0.luid.value == sensor.luid }) {
                     self?.view.scroll(to: index)
                     self?.tagCharts?.configure(uuid: sensor.id)
                     if let viewModels = self?.viewModels,
@@ -550,7 +550,7 @@ extension CardsPresenter {
                          queue: .main) { [weak self] notification in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BPDidChangeBackgroundKey.uuid] as? String,
-                let viewModel = self?.view.viewModels.first(where: { $0.uuid.value == uuid }) {
+                let viewModel = self?.view.viewModels.first(where: { $0.luid.value == uuid }) {
                     viewModel.background.value = self?.backgroundPersistence.background(for: uuid)
             }
         }
@@ -669,7 +669,7 @@ extension CardsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
-                let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid }) {
                 viewModel.isConnected.value = true
             }
         })
@@ -682,7 +682,7 @@ extension CardsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                let viewModel = self?.viewModels.first(where: { $0.uuid.value == uuid }) {
+                let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid }) {
                 viewModel.isConnected.value = false
             }
         })
@@ -697,7 +697,7 @@ extension CardsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
-                self?.viewModels.filter({ $0.uuid.value == uuid }).forEach({ (viewModel) in
+                self?.viewModels.filter({ $0.luid.value == uuid }).forEach({ (viewModel) in
                     self?.updateAlertState(for: viewModel)
                 })
             }
@@ -705,7 +705,7 @@ extension CardsPresenter {
     }
 
     private func updateAlertState(for viewModel: CardsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let uuid = viewModel.luid.value {
             var newValue: AlertState
             if alertService.hasRegistrations(for: uuid) {
                 var isTriggered = false
@@ -736,7 +736,7 @@ extension CardsPresenter {
     }
 
     private func isTriggering(temperature: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let uuid = viewModel.uuid.value,
+        if let uuid = viewModel.luid.value,
             case .temperature(let lower, let upper) = alertService.alert(for: uuid, of: temperature),
             let celsius = viewModel.celsius.value {
             let isLower = celsius < lower
@@ -748,7 +748,7 @@ extension CardsPresenter {
     }
 
     private func isTriggering(relativeHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let uuid = viewModel.uuid.value,
+        if let uuid = viewModel.luid.value,
             case .relativeHumidity(let lower, let upper) = alertService.alert(for: uuid, of: relativeHumidity),
             let rh = viewModel.relativeHumidity.value {
             let ho = calibrationService.humidityOffset(for: uuid).0
@@ -765,7 +765,7 @@ extension CardsPresenter {
     }
 
     private func isTriggering(absoluteHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let uuid = viewModel.uuid.value,
+        if let uuid = viewModel.luid.value,
             case .absoluteHumidity(let lower, let upper) = alertService.alert(for: uuid, of: absoluteHumidity),
             let rh = viewModel.relativeHumidity.value,
             let c = viewModel.celsius.value {
@@ -786,7 +786,7 @@ extension CardsPresenter {
     }
 
     private func isTriggering(dewPoint: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let uuid = viewModel.uuid.value,
+        if let uuid = viewModel.luid.value,
             case .dewPoint(let lower, let upper) = alertService.alert(for: uuid, of: dewPoint),
             let rh = viewModel.relativeHumidity.value,
             let c = viewModel.celsius.value {
@@ -809,7 +809,7 @@ extension CardsPresenter {
     }
 
     private func isTriggering(pressure: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let uuid = viewModel.uuid.value,
+        if let uuid = viewModel.luid.value,
             case .pressure(let lower, let upper) = alertService.alert(for: uuid, of: pressure),
             let pressure = viewModel.pressure.value {
             let isLower = pressure < lower
@@ -836,7 +836,7 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
             if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
-                let index = self?.viewModels.firstIndex(where: { $0.uuid.value == uuid }) {
+                let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid }) {
                 self?.view.scroll(to: index)
                 self?.tagCharts?.configure(uuid: uuid)
             }
