@@ -17,7 +17,7 @@ class WebTagDataPruningOperation: AsyncOperation {
         let date = Calendar.current.date(byAdding: .hour,
                                          value: -offset,
                                          to: Date()) ?? Date()
-        virtualTagTank.deleteAll(id: id, before: date).on(failure: { error in
+        virtualTagTank.deleteAllRecords(id, before: date).on(failure: { error in
             print(error.localizedDescription)
         }, completion: {
             self.state = .finished

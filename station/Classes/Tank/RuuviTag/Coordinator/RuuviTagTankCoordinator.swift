@@ -87,9 +87,15 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         return promise.future
     }
 
-    func deleteAll(id: String, before: Date) -> Future<Bool, RUError> {
+     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        // FIXME: implement
+        let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId, before: date)
+        let realmOpearion = realm.deleteAllRecords(ruuviTagId, before: date)
+        Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
         return promise.future
     }
 }

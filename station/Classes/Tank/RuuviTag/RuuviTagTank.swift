@@ -9,8 +9,6 @@ protocol RuuviTagTank {
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
     @discardableResult
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
-    @discardableResult
-    func deleteAll(id: String, before: Date) -> Future<Bool, RUError>
     
     // records
     @discardableResult
@@ -19,4 +17,6 @@ protocol RuuviTagTank {
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError>
     @discardableResult
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError>
+    @discardableResult
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError>
 }
