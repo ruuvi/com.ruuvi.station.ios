@@ -109,22 +109,24 @@ class BusinessAssembly: Assembly {
         }.inObjectScope(.container)
 
         container.register(RuuviTagHeartbeatDaemon.self) { r in
-            let service = RuuviTagHeartbeatDaemonBTKit()
-            service.background = r.resolve(BTBackground.self)
-            service.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
-            service.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
-            service.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-            service.alertService = r.resolve(AlertService.self)
-            service.settings = r.resolve(Settings.self)
-            service.pullWebDaemon = r.resolve(PullWebDaemon.self)
-            return service
+            let daemon = RuuviTagHeartbeatDaemonBTKit()
+            daemon.background = r.resolve(BTBackground.self)
+            daemon.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
+            daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.alertService = r.resolve(AlertService.self)
+            daemon.settings = r.resolve(Settings.self)
+            daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
+            return daemon
         }.inObjectScope(.container)
 
         container.register(RuuviTagPropertiesDaemon.self) { r in
             let daemon = RuuviTagPropertiesDaemonBTKit()
-            daemon.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.foreground = r.resolve(BTForeground.self)
+            daemon.idPersistence = r.resolve(IDPersistence.self)
             return daemon
         }.inObjectScope(.container)
 

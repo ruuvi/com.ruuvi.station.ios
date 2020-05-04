@@ -8,7 +8,6 @@ class RuuviTagServiceImpl: RuuviTagService {
     var backgroundPersistence: BackgroundPersistence!
     var connectionPersistence: ConnectionPersistence!
 
-    
     func delete(ruuviTag: RuuviTagRealm) -> Future<Bool, RUError> {
         backgroundPersistence.deleteCustomBackground(for: ruuviTag.uuid)
         connectionPersistence.setKeepConnection(false, for: ruuviTag.uuid)

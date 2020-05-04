@@ -6,7 +6,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var sqlite: RuuviTagPersistenceSQLite!
     var realm: RuuviTagPersistenceRealm!
     var idPersistence: IDPersistence!
-    
+
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         if let mac = ruuviTag.mac, let uuid = ruuviTag.luid {
             idPersistence.set(mac: mac, for: uuid)
