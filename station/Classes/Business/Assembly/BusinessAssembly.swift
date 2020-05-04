@@ -84,13 +84,6 @@ class BusinessAssembly: Assembly {
             return service
         }
 
-        container.register(MigrationManager.self) { r in
-            let manager = MigrationManagerCoordinator()
-            manager.toVIPER = r.resolve(MigrationManagerToVIPER.self)
-            manager.toSQLite = r.resolve(MigrationManagerToSQLite.self)
-            return manager
-        }
-
         container.register(MigrationManagerToVIPER.self) { r in
             let manager = MigrationManagerToVIPER()
             manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
@@ -100,6 +93,16 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerToSQLite.self) { r in
             let manager = MigrationManagerToSQLite()
+            manager.alertPersistence = r.resolve(AlertPersistence.self)
+            manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
+            manager.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            manager.idPersistence = r.resolve(IDPersistence.self)
+            manager.settingsPersistence = r.resolve(Settings.self)
+            manager.realmContext = r.resolve(RealmContext.self)
+            manager.sqliteContext = r.resolve(SQLiteContext.self)
+            manager.errorPresenter = r.resolve(ErrorPresenter.self)
+            manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
             return manager
         }
 
