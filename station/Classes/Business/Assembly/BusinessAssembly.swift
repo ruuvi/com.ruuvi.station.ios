@@ -85,9 +85,21 @@ class BusinessAssembly: Assembly {
         }
 
         container.register(MigrationManager.self) { r in
+            let manager = MigrationManagerCoordinator()
+            manager.toVIPER = r.resolve(MigrationManagerToVIPER.self)
+            manager.toSQLite = r.resolve(MigrationManagerToSQLite.self)
+            return manager
+        }
+
+        container.register(MigrationManagerToVIPER.self) { r in
             let manager = MigrationManagerToVIPER()
             manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             manager.settings = r.resolve(Settings.self)
+            return manager
+        }
+
+        container.register(MigrationManagerToSQLite.self) { r in
+            let manager = MigrationManagerToSQLite()
             return manager
         }
 
