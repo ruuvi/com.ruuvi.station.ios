@@ -17,7 +17,7 @@ class RuuviTagDataPruningOperation: AsyncOperation {
         let date = Calendar.current.date(byAdding: .hour,
                                          value: -offset,
                                          to: Date()) ?? Date()
-        ruuviTagTank.deleteAll(id: id, before: date).on(failure: { error in
+        ruuviTagTank.deleteAllRecords(id, before: date).on(failure: { error in
             print(error.localizedDescription)
         }, completion: {
             self.state = .finished

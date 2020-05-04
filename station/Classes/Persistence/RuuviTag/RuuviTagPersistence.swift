@@ -6,6 +6,7 @@ protocol RuuviTagPersistence {
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError>
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError>
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError>
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError>
     func readAll() -> Future<[AnyRuuviTagSensor], RUError>

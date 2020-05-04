@@ -5,9 +5,7 @@ class VirtualTagTankCoordinator: VirtualTagTank {
 
     var realm: WebTagPersistenceRealm!
 
-    func deleteAll(id: String, before: Date) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        // FIXME: implement
-        return promise.future
+    func deleteAllRecords(_ id: String, before date: Date) -> Future<Bool, RUError> {
+        return realm.deleteAllRecords(id, before: date)
     }
 }
