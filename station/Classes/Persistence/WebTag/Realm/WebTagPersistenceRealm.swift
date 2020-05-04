@@ -6,6 +6,18 @@ class WebTagPersistenceRealm: WebTagPersistence {
 
     var context: RealmContext!
 
+    func readAll() -> Future<[AnyVirtualTagSensor], RUError> {
+        let promise = Promise<[AnyVirtualTagSensor], RUError>()
+        context.bgWorker.enqueue {
+            let realmEntities = self.context.bg.objects(WebTagRealm.self)
+            let result: [AnyVirtualTagSensor] = realmEntities.map { webTagRealm in
+                return VirtualTagSensorStruct(id: webTagRealm.uuid, name: webTagRealm.name).any
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {

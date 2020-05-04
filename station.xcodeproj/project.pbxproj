@@ -125,6 +125,18 @@
 		0E1C1E1122B756B40032F6CA /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1022B756B40032F6CA /* CardView.swift */; };
 		0E1C1E1322B756D30032F6CA /* CardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1E1222B756D30032F6CA /* CardView.xib */; };
 		0E211C2A234C5FE900FC37B0 /* CardsRouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */; };
+		0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286417246062F000363DCB /* VirtualTagTrunk.swift */; };
+		0E286419246062F000363DCB /* VirtualTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286417246062F000363DCB /* VirtualTagTrunk.swift */; };
+		0E28641A246062F000363DCB /* VirtualTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286417246062F000363DCB /* VirtualTagTrunk.swift */; };
+		0E28641D2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28641C2460631600363DCB /* VirtualTagTrunkCoordinator.swift */; };
+		0E28641E2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28641C2460631600363DCB /* VirtualTagTrunkCoordinator.swift */; };
+		0E28641F2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E28641C2460631600363DCB /* VirtualTagTrunkCoordinator.swift */; };
+		0E286422246063EA00363DCB /* VirtualTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286421246063EA00363DCB /* VirtualTagSensor.swift */; };
+		0E286423246063EA00363DCB /* VirtualTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286421246063EA00363DCB /* VirtualTagSensor.swift */; };
+		0E286424246063EA00363DCB /* VirtualTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286421246063EA00363DCB /* VirtualTagSensor.swift */; };
+		0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */; };
+		0E2864272460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */; };
+		0E2864282460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */; };
 		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
 		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
 		0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
@@ -1341,6 +1353,10 @@
 		0E1C1E1022B756B40032F6CA /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		0E1C1E1222B756D30032F6CA /* CardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CardView.xib; sourceTree = "<group>"; };
 		0E211C29234C5FE900FC37B0 /* CardsRouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsRouterDelegate.swift; sourceTree = "<group>"; };
+		0E286417246062F000363DCB /* VirtualTagTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagTrunk.swift; sourceTree = "<group>"; };
+		0E28641C2460631600363DCB /* VirtualTagTrunkCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagTrunkCoordinator.swift; sourceTree = "<group>"; };
+		0E286421246063EA00363DCB /* VirtualTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagSensor.swift; sourceTree = "<group>"; };
+		0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebTagRealm+VirtualTagSensor.swift"; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
 		0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskServiceiOS12.swift; sourceTree = "<group>"; };
@@ -2476,6 +2492,31 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		0E286416246062D500363DCB /* VirtualTag */ = {
+			isa = PBXGroup;
+			children = (
+				0E28641B2460630400363DCB /* Coordinator */,
+				0E286417246062F000363DCB /* VirtualTagTrunk.swift */,
+			);
+			path = VirtualTag;
+			sourceTree = "<group>";
+		};
+		0E28641B2460630400363DCB /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				0E28641C2460631600363DCB /* VirtualTagTrunkCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		0E286420246063D600363DCB /* VirtualTag */ = {
+			isa = PBXGroup;
+			children = (
+				0E286421246063EA00363DCB /* VirtualTagSensor.swift */,
+			);
+			path = VirtualTag;
+			sourceTree = "<group>";
+		};
 		0E2A2CA32369479C004993C5 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -3068,6 +3109,7 @@
 		0E8BAC8C245C520200D380FB /* Sensor */ = {
 			isa = PBXGroup;
 			children = (
+				0E286420246063D600363DCB /* VirtualTag */,
 				0E8BAC87245C515E00D380FB /* RuuviTag */,
 				0E8BAC83245C4F0900D380FB /* Sensor.swift */,
 			);
@@ -3127,6 +3169,7 @@
 				0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */,
 				0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */,
 				0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */,
+				0E2864252460644100363DCB /* WebTagRealm+VirtualTagSensor.swift */,
 			);
 			path = Mappers;
 			sourceTree = "<group>";
@@ -3136,6 +3179,7 @@
 			children = (
 				0E8BACD5245EE71400D380FB /* Assembly */,
 				0E8BACCB245EE63D00D380FB /* RuuviTag */,
+				0E286416246062D500363DCB /* VirtualTag */,
 			);
 			path = Trunk;
 			sourceTree = "<group>";
@@ -4991,6 +5035,7 @@
 				0E8BAC82245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */,
+				0E2864282460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0E6BAD9223856A01003A2D4C /* AsyncOperation.swift in Sources */,
 				0E6BAD9323856A01003A2D4C /* TagChartsViewModel.swift in Sources */,
 				0E6BAD9423856A01003A2D4C /* WebTagPersistenceRealm.swift in Sources */,
@@ -5069,6 +5114,7 @@
 				0E6BADC423856A01003A2D4C /* CoreAssembly.swift in Sources */,
 				0E6BADC623856A01003A2D4C /* Observable.swift in Sources */,
 				0E6BADC723856A01003A2D4C /* ForegroundTableViewController.swift in Sources */,
+				0E28641F2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0E6BADC923856A01003A2D4C /* CalibrationPersistence.swift in Sources */,
 				0E86AD1023AA3A8400E70EAD /* TrippleChartView.swift in Sources */,
 				0E6BADCA23856A01003A2D4C /* TagSettingsViewOutput.swift in Sources */,
@@ -5144,6 +5190,7 @@
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				0E6BAE0423856A01003A2D4C /* LanguagePresenter.swift in Sources */,
 				A94FFD39241C1B0A00888017 /* RuuviTagProtocol.swift in Sources */,
+				0E28641A246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E6BAE0523856A01003A2D4C /* ConnectionPersistence.swift in Sources */,
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
 				0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */,
@@ -5248,6 +5295,7 @@
 				0E6BAE5E23856A01003A2D4C /* TagSettingsRouterInput.swift in Sources */,
 				0E6BAE5F23856A01003A2D4C /* NSObject+Observable.swift in Sources */,
 				0E6BAE6023856A01003A2D4C /* TagSettingsModuleInput.swift in Sources */,
+				0E286424246063EA00363DCB /* VirtualTagSensor.swift in Sources */,
 				0E6BAE6223856A01003A2D4C /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E6BAE6323856A01003A2D4C /* AppAssembly.swift in Sources */,
 				0E6BAE6423856A01003A2D4C /* AppStateService.swift in Sources */,
@@ -5360,6 +5408,7 @@
 				0E8BAC81245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0E8BD2C6238566AB008B31EF /* AboutViewOutput.swift in Sources */,
 				0E31B03A23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
+				0E2864272460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0E8BD2C7238566AB008B31EF /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E8BD2C8238566AB008B31EF /* AsyncOperation.swift in Sources */,
 				0E8BD2C9238566AB008B31EF /* TagChartsViewModel.swift in Sources */,
@@ -5438,6 +5487,7 @@
 				0E8BD2FA238566AB008B31EF /* CoreAssembly.swift in Sources */,
 				0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */,
 				0E8BD2FD238566AB008B31EF /* ForegroundTableViewController.swift in Sources */,
+				0E28641E2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0E8BD2FF238566AB008B31EF /* CalibrationPersistence.swift in Sources */,
 				0E86AD0F23AA3A8400E70EAD /* TrippleChartView.swift in Sources */,
 				0E8BD300238566AB008B31EF /* TagSettingsViewOutput.swift in Sources */,
@@ -5513,6 +5563,7 @@
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
 				0E8BD33A238566AB008B31EF /* LanguagePresenter.swift in Sources */,
 				A94FFD38241C1B0900888017 /* RuuviTagProtocol.swift in Sources */,
+				0E286419246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E8BD33B238566AB008B31EF /* ConnectionPersistence.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
@@ -5617,6 +5668,7 @@
 				0E8BD394238566AB008B31EF /* TagSettingsRouterInput.swift in Sources */,
 				0E8BD395238566AB008B31EF /* NSObject+Observable.swift in Sources */,
 				0E8BD396238566AB008B31EF /* TagSettingsModuleInput.swift in Sources */,
+				0E286423246063EA00363DCB /* VirtualTagSensor.swift in Sources */,
 				0E8BD398238566AB008B31EF /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E8BD399238566AB008B31EF /* AppAssembly.swift in Sources */,
 				0E8BD39A238566AB008B31EF /* AppStateService.swift in Sources */,
@@ -5729,6 +5781,7 @@
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				A92E3C63242644B800D981D5 /* TagChartViewInput.swift in Sources */,
+				0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
@@ -5807,6 +5860,7 @@
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
+				0E28641D2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0E86AD0E23AA3A8400E70EAD /* TrippleChartView.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
@@ -5882,6 +5936,7 @@
 				0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
+				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
@@ -5986,6 +6041,7 @@
 				0EF2863922CBB06C0026C7A5 /* TagSettingsModuleInput.swift in Sources */,
 				0E046F5A22F1832600BD4E9C /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E1C1DA822B387A00032F6CA /* AppAssembly.swift in Sources */,
+				0E286422246063EA00363DCB /* VirtualTagSensor.swift in Sources */,
 				0E5C302522D0B19600B52E39 /* AppStateService.swift in Sources */,
 				0E1C1E0D22B4043C0032F6CA /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E70A47322AF9953006CB87C /* DiscoverModuleInput.swift in Sources */,
