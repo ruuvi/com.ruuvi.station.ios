@@ -8,7 +8,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     var router: TagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
-    var ruuviTagService: RuuviTagService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
