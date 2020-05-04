@@ -106,6 +106,7 @@ extension ExportServiceTrunk {
                         var dewPointCelsius: String
                         var dewPointFahrenheit: String
                         var dewPointKelvin: String
+                        // FIXME: use humidity
                         if let c = log.temperature?.converted(to: .celsius).value, let rh = log.humidity?.rh {
 //                            var sh = rh + ruuviTag.humidityOffset TODO: calibration srvice
 //                            if sh > 100.0 {
