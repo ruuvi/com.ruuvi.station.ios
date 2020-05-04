@@ -9,9 +9,9 @@ class RuuviTagSubjectCombine {
     var sqlite: SQLiteContext
     var realm: RealmContext
 
-    let insertSubject = PassthroughSubject<RuuviTagSensor, Never>()
-    let updateSubject = PassthroughSubject<RuuviTagSensor, Never>()
-    let deleteSubject = PassthroughSubject<RuuviTagSensor, Never>()
+    let insertSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
+    let updateSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
+    let deleteSubject = PassthroughSubject<AnyRuuviTagSensor, Never>()
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
     private var ruuviTagsRealmToken: NotificationToken?
@@ -43,29 +43,32 @@ class RuuviTagSubjectCombine {
             }
         })
 
-        let results = self.realm.main.objects(RuuviTagRealm.self)
-        self.ruuviTagRealmCache = results.map({ $0.any })
-        self.ruuviTagsRealmToken = results.observe { [weak self] (change) in
+        DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
-            switch change {
-            case .update(let ruuviSensors, let deletions, let insertions, let modifications):
-                for del in deletions {
-                    sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
+            let results = sSelf.realm.main.objects(RuuviTagRealm.self)
+            sSelf.ruuviTagRealmCache = results.map({ $0.any })
+            sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
+                guard let sSelf = self else { return }
+                switch change {
+                case .update(let ruuviSensors, let deletions, let insertions, let modifications):
+                    for del in deletions {
+                        sSelf.deleteSubject.send(sSelf.ruuviTagRealmCache[del].any)
+                    }
+                    sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
+                                                    .enumerated()
+                                                    .filter { !deletions.contains($0.offset) }
+                                                    .map { $0.element }
+                    for ins in insertions {
+                        sSelf.insertSubject.send(ruuviSensors[ins].any)
+                        sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins) // TODO: test if ok with multiple
+                    }
+                    for mod in modifications {
+                        sSelf.updateSubject.send(ruuviSensors[mod].any)
+                        sSelf.ruuviTagRealmCache[mod] = ruuviSensors[mod].any
+                    }
+                default:
+                    break
                 }
-                sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
-                                                .enumerated()
-                                                .filter { !deletions.contains($0.offset) }
-                                                .map { $0.element }
-                for ins in insertions {
-                    sSelf.insertSubject.send(ruuviSensors[ins].any)
-                    sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins) // TODO: test if ok with multiple
-                }
-                for mod in modifications {
-                    sSelf.updateSubject.send(ruuviSensors[mod].any)
-                    sSelf.ruuviTagRealmCache[mod] = ruuviSensors[mod].any
-                }
-            default:
-                break
             }
         }
     }
