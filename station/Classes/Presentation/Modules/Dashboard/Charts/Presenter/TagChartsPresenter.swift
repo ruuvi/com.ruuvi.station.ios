@@ -202,9 +202,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let mac = viewModel.mac.value {
             isLoading = true
-            exportService.csvLog(for: uuid).on(success: { [weak self] url in
+            exportService.csvLog(for: mac).on(success: { [weak self] url in
                 self?.view.showExportSheet(with: url)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
