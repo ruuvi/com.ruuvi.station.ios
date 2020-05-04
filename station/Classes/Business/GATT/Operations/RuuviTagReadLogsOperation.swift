@@ -1,6 +1,5 @@
 import Foundation
 import BTKit
-import RealmSwift
 
 extension Notification.Name {
     static let RuuviTagReadLogsOperationDidStart = Notification.Name("RuuviTagReadLogsOperationDidStart")
