@@ -24,7 +24,7 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
-        container.register(IDPersistence.self) { r in
+        container.register(IDPersistence.self) { _ in
             return IDPersistenceUserDefaults()
         }
 

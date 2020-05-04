@@ -23,7 +23,7 @@ class GATTServiceQueue: GATTService {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
         } else {
             let operation = RuuviTagReadLogsOperation(uuid: uuid,
-                                                      mac: mac, 
+                                                      mac: mac,
                                                       ruuviTagTank: ruuviTagTank,
                                                       background: background,
                                                       progress: progress,

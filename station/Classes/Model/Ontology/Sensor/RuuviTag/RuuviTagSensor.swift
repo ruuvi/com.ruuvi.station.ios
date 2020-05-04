@@ -24,6 +24,30 @@ extension RuuviTagSensor {
                                     isConnectable: isConnectable,
                                     name: name)
     }
+
+    func with(version: Int) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    mac: mac,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
+
+    func with(mac: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    mac: mac,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
+
+    func with(isConnectable: Bool) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    mac: mac,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
 }
 
 struct RuuviTagSensorStruct: RuuviTagSensor {

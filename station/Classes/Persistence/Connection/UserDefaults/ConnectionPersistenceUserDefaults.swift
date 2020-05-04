@@ -4,7 +4,7 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
 
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
-    
+
     var keepConnectionUUIDs: [String] {
         return prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
     }
