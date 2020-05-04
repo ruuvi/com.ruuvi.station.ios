@@ -86,4 +86,10 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         })
         return promise.future
     }
+
+    func deleteAll(id: String, before: Date) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        // FIXME: implement
+        return promise.future
+    }
 }
