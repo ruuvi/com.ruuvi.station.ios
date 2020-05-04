@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RealmSwift
 import Future
 
 class RuuviTagReactorImpl: RuuviTagReactor {

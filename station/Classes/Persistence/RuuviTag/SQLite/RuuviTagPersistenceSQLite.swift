@@ -1,7 +1,6 @@
 import BTKit
 import Foundation
 import Future
-import RealmSwift
 import GRDB
 
 class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
