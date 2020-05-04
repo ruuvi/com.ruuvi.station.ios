@@ -7,6 +7,8 @@ class TankAssembly: Assembly {
             tank.realm = r.resolve(RuuviTagPersistenceRealm.self)
             tank.sqlite = r.resolve(RuuviTagPersistenceSQLite.self)
             tank.idPersistence = r.resolve(IDPersistence.self)
+            tank.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            tank.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return tank
         }
     }

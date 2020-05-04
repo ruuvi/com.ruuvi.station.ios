@@ -1,4 +1,3 @@
-import RealmSwift
 import Foundation
 import Humidity
 

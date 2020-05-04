@@ -104,11 +104,11 @@ extension ExportServiceTemp {
                         var dewPointFahrenheit: String
                         var dewPointKelvin: String
                         if let c = log.celsius.value, let rh = log.humidity.value {
-                            var sh = rh + ruuviTag.humidityOffset
-                            if sh > 100.0 {
-                                sh = 100.0
-                            }
-                            let h = Humidity(c: c, rh: sh / 100.0)
+//                            var sh = rh + ruuviTag.humidityOffset TODO: calibration srvice
+//                            if sh > 100.0 {
+//                                sh = 100.0
+//                            }
+                            let h = Humidity(c: c, rh: rh / 100.0)
                             absoluteHumidity = String(format: "%.2f", h.ah)
                             if let hTd = h.Td {
                                 dewPointCelsius = String(format: "%.2f", hTd)

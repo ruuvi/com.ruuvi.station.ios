@@ -14,7 +14,7 @@ class RuuviTagRecordSubjectRxSwift {
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataRealmCache = [AnyRuuviTagSensorRecord]()
     private var ruuviTagDataTransactionObserver: TransactionObserver?
-    
+
     deinit {
         ruuviTagDataRealmToken?.invalidate()
         subject.onCompleted()

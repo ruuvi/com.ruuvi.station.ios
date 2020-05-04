@@ -4,7 +4,6 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
 
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
-    private let logSyncDateUDKeyPrefix = "ConnectionPersistenceUserDefaults.logSyncDateUDKeyPrefix."
 
     var keepConnectionUUIDs: [String] {
         return prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
@@ -48,13 +47,5 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
                     [CPDidStopToKeepConnectionKey.uuid: uuid])
             }
         }
-    }
-
-    func logSyncDate(uuid: String) -> Date? {
-        return prefs.value(forKey: logSyncDateUDKeyPrefix + uuid) as? Date
-    }
-
-    func setLogSyncDate(_ value: Date?, uuid: String) {
-        prefs.set(value, forKey: logSyncDateUDKeyPrefix + uuid)
     }
 }

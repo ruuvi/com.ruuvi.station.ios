@@ -3,9 +3,11 @@ import Future
 
 class RuuviTagTankCoordinator: RuuviTagTank {
 
-    var sqlite: RuuviTagPersistenceSQLite!
-    var realm: RuuviTagPersistenceRealm!
+    var sqlite: RuuviTagPersistence!
+    var realm: RuuviTagPersistence!
     var idPersistence: IDPersistence!
+    var backgroundPersistence: BackgroundPersistence!
+    var connectionPersistence: ConnectionPersistence!
     
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         if let mac = ruuviTag.mac, let uuid = ruuviTag.luid {
@@ -27,11 +29,26 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     }
 
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
         if ruuviTag.mac != nil {
-            return sqlite.delete(ruuviTag)
+            sqlite.delete(ruuviTag).on(success: { [weak self] success in
+                self?.backgroundPersistence.deleteCustomBackground(for: ruuviTag.id)
+                self?.connectionPersistence.setKeepConnection(false, for: ruuviTag.id)
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
         } else {
-            return realm.delete(ruuviTag)
+            realm.delete(ruuviTag).on(success: { [weak self] success in
+                self?.backgroundPersistence.deleteCustomBackground(for: ruuviTag.id)
+                self?.connectionPersistence.setKeepConnection(false, for: ruuviTag.id)
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
         }
+        return promise.future
+
     }
 
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
