@@ -4,7 +4,7 @@ import Future
 import RealmSwift
 import GRDB
 
-class RuuviTagPersistenceSQLite: DatabaseService {
+class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     typealias Entity = RuuviTagSQLite
     typealias Record = RuuviTagDataSQLite
 
@@ -65,8 +65,8 @@ class RuuviTagPersistenceSQLite: DatabaseService {
         return promise.future
     }
 
-    func readAll() -> Future<[RuuviTagSensor], RUError> {
-        let promise = Promise<[RuuviTagSensor], RUError>()
+    func readAll() -> Future<[AnyRuuviTagSensor], RUError> {
+        let promise = Promise<[AnyRuuviTagSensor], RUError>()
         var sqliteEntities = [RuuviTagSensor]()
         do {
             try database.dbPool.read { db in

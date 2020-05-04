@@ -9,8 +9,8 @@ class RuuviTagReactorImpl: RuuviTagReactor {
 
     var sqliteContext: SQLiteContext!
     var realmContext: RealmContext!
-    var sqlitePersistence: RuuviTagPersistenceSQLite!
-    var realmPersistence: RuuviTagPersistenceRealm!
+    var sqlitePersistence: RuuviTagPersistence!
+    var realmPersistence: RuuviTagPersistence!
 
     private lazy var entityRxSwift = RuuviTagSubjectRxSwift(sqlite: sqliteContext, realm: realmContext)
     private lazy var recordRxSwifts = [String: RuuviTagRecordSubjectRxSwift]()
@@ -41,7 +41,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
             if !recordCombine.isServing {
                 recordCombine.start()
             }
-            return RUObservationToken { [weak self] in
+            return RUObservationToken {
                 cancellable.cancel()
             }
         } else {
@@ -88,7 +88,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         #endif
     }
 
-    func observe(_ block: @escaping (ReactorChange<RuuviTagSensor>) -> Void) -> RUObservationToken {
+    func observe(_ block: @escaping (ReactorChange<AnyRuuviTagSensor>) -> Void) -> RUObservationToken {
         let sqliteOperation = sqlitePersistence.readAll()
         let realmOperation = realmPersistence.readAll()
         Future.zip(realmOperation, sqliteOperation).on(success: { realmEntities, sqliteEntities in

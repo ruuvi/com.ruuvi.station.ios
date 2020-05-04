@@ -131,8 +131,6 @@ struct CardsViewModel {
         name.value = ruuviTag.name
         mac.value = ruuviTag.mac
         version.value = ruuviTag.version
-        humidityOffset.value = ruuviTag.humidityOffset
-        humidityOffsetDate.value = ruuviTag.humidityOffsetDate
         isConnectable.value = ruuviTag.isConnectable
 
         celsius.value = ruuviTag.data.last?.celsius.value
@@ -140,11 +138,11 @@ struct CardsViewModel {
         kelvin.value = ruuviTag.data.last?.kelvin
         relativeHumidity.value = ruuviTag.data.last?.humidity.value
         if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
-            var sh = rh + ruuviTag.humidityOffset
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let h = Humidity(c: c, rh: sh / 100.0)
+//            var sh = rh + ruuviTag.humidityOffset TODO: respect calibration
+//            if sh > 100.0 {
+//                sh = 100.0
+//            }
+            let h = Humidity(c: c, rh: rh / 100.0)
             absoluteHumidity.value = h.ah
             dewPointCelsius.value = h.Td
             dewPointFahrenheit.value = h.TdF

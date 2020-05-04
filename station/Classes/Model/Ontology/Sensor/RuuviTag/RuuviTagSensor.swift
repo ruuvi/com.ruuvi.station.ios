@@ -1,6 +1,6 @@
 import Foundation
 
-protocol RuuviTagSensor: Sensor, Versionable { }
+protocol RuuviTagSensor: PhysicalSensor, Versionable { }
 
 extension RuuviTagSensor {
     var id: String {
@@ -18,6 +18,30 @@ extension RuuviTagSensor {
     }
 
     var `struct`: RuuviTagSensorStruct {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    mac: mac,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
+
+    func with(version: Int) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    mac: mac,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
+
+    func with(mac: String) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    mac: mac,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
+
+    func with(isConnectable: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
                                     mac: mac,

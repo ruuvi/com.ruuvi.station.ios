@@ -3,8 +3,8 @@ import Future
 
 class RuuviTagTrunkCoordinator: RuuviTagTrunk {
 
-    var sqlite: RuuviTagPersistenceSQLite!
-    var realm: RuuviTagPersistenceRealm!
+    var sqlite: RuuviTagPersistence!
+    var realm: RuuviTagPersistence!
 
     func readAll() -> Future<[RuuviTagSensor], RUError> {
         let promise = Promise<[RuuviTagSensor], RUError>()
