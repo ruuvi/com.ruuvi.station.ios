@@ -97,7 +97,7 @@ extension ExportServiceTrunk {
                             if rh > 100 {
                                 relativeHumidity = "100"
                             } else {
-                                relativeHumidity = String(format: "%.2f", rh)
+                                relativeHumidity = String(format: "%.2f", rh * 100)
                             }
                         } else {
                             relativeHumidity = "N/A".localized()
@@ -111,7 +111,7 @@ extension ExportServiceTrunk {
 //                            if sh > 100.0 {
 //                                sh = 100.0
 //                            }
-                            let h = Humidity(c: c, rh: rh / 100.0)
+                            let h = Humidity(c: c, rh: rh)
                             absoluteHumidity = String(format: "%.2f", h.ah)
                             if let hTd = h.Td {
                                 dewPointCelsius = String(format: "%.2f", hTd)
