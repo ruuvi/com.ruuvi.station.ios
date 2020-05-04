@@ -13,6 +13,8 @@ protocol DatabaseService {
 
 protocol GRDBDatabase {
     var dbPool: DatabasePool { get }
+
+    func migrateIfNeeded()
 }
 
 class SQLiteGRDBDatabase: GRDBDatabase {
@@ -46,14 +48,12 @@ class SQLiteGRDBDatabase: GRDBDatabase {
 }
 
 extension SQLiteGRDBDatabase {
-    public static func tryMigrate() {
-        let database = SQLiteGRDBDatabase.shared
-
+    func migrateIfNeeded() {
         do {
-            try database.migrate(dbPool: database.dbPool)
+            try migrate(dbPool: dbPool)
         } catch {
-            database.recreate()
-            try! database.migrate(dbPool: database.dbPool)
+            recreate()
+            try! migrate(dbPool: dbPool)
         }
     }
 

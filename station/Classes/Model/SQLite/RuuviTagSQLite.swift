@@ -32,7 +32,7 @@ extension RuuviTagSQLite: FetchableRecord {
 
 extension RuuviTagSQLite: PersistableRecord {
     static var databaseTableName: String {
-        return "ruuviTags"
+        return "ruuvi_tag_sensors"
     }
 
     func encode(to container: inout PersistenceContainer) {
