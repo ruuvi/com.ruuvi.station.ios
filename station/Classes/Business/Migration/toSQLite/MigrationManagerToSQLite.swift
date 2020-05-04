@@ -21,14 +21,15 @@ class MigrationManagerToSQLite: MigrationManager {
     // car
     var ruuviTagTank: RuuviTagTank!
 
-    @UserDefault("MigrationManagerToSQLite.didMigrate", defaultValue: false)
-    private var didMigrate: Bool
+    @UserDefault("MigrationManagerToSQLite.didMigrateRuuviTagRealmWithMAC", defaultValue: false)
+    private var didMigrateRuuviTagRealmWithMAC: Bool
 
     func migrateIfNeeded() {
-        guard !didMigrate else { return }
-        let realmTags = realmContext.main.objects(RuuviTagRealm.self)
-        realmTags.forEach({ migrate(realmTag: $0) })
-        didMigrate = true
+        if !didMigrateRuuviTagRealmWithMAC {
+            let realmTags = realmContext.main.objects(RuuviTagRealm.self)
+            realmTags.forEach({ migrate(realmTag: $0) })
+            didMigrateRuuviTagRealmWithMAC = true
+        }
     }
 
     private func migrate(realmTag: RuuviTagRealm) {
