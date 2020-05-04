@@ -16,9 +16,17 @@ protocol Versionable {
     var version: Int { get }
 }
 
-protocol Device: StringIdentifieable {}
+protocol Locateable {
+    var location: Location { get }
+}
 
-protocol Sensor: Device, Connectable, Nameable {
+protocol Sensor: StringIdentifieable {}
+
+protocol PhysicalSensor: Sensor, Connectable, Nameable {
     var luid: String? { get }
     var mac: String? { get }
 }
+
+protocol VirtualSensor: Sensor, Nameable {}
+
+protocol LocationVirtualSensor: VirtualSensor, Locateable {}
