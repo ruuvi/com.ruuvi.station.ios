@@ -1,5 +1,4 @@
 import Foundation
-import RealmSwift
 
 class RuuviTagDataPruningOperation: AsyncOperation {
 
