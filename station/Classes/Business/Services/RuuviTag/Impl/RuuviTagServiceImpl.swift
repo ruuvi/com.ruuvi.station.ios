@@ -19,16 +19,10 @@ class RuuviTagServiceImpl: RuuviTagService {
     func delete(ruuviTag: RuuviTagRealm) -> Future<Bool, RUError> {
         backgroundPersistence.deleteCustomBackground(for: ruuviTag.uuid)
         connectionPersistence.setKeepConnection(false, for: ruuviTag.uuid)
-        connectionPersistence.setLogSyncDate(nil, uuid: ruuviTag.uuid)
         return ruuviTagPersistence.delete(ruuviTag: ruuviTag)
     }
 
     func update(name: String, of ruuviTag: RuuviTagRealm) -> Future<Bool, RUError> {
         return ruuviTagPersistence.update(name: name, of: ruuviTag)
-    }
-
-    func clearHistory(uuid: String) -> Future<Bool, RUError> {
-        connectionPersistence.setLogSyncDate(nil, uuid: uuid)
-        return ruuviTagPersistence.clearHistory(uuid: uuid)
     }
 }

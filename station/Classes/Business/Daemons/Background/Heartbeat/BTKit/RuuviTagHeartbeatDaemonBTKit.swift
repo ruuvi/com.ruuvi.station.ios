@@ -21,16 +21,6 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var savedDate = [String: Date]() // uuid:date
     private var ruuviTagsToken: NotificationToken?
 
-    @objc private class RuuviTagHeartbeatDaemonPair: NSObject {
-        var uuid: String
-        var device: RuuviTag
-
-        init(uuid: String, device: RuuviTag) {
-            self.uuid = uuid
-            self.device = device
-        }
-    }
-
     override init() {
         super.init()
         connectionAddedToken = NotificationCenter
