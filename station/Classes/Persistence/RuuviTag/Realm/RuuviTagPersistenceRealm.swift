@@ -130,16 +130,16 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
 
-    func readAll() -> Future<[RuuviTagSensor], RUError> {
-        let promise = Promise<[RuuviTagSensor], RUError>()
+    func readAll() -> Future<[AnyRuuviTagSensor], RUError> {
+        let promise = Promise<[AnyRuuviTagSensor], RUError>()
         context.bgWorker.enqueue {
             let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
-            let result: [RuuviTagSensor] = realmEntities.map { ruuviTagRealm in
+            let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
                 return RuuviTagSensorStruct(version: ruuviTagRealm.version,
                                             luid: ruuviTagRealm.uuid,
                                             mac: ruuviTagRealm.mac,
                                             isConnectable: ruuviTagRealm.isConnectable,
-                                            name: ruuviTagRealm.name)
+                                            name: ruuviTagRealm.name).any
             }
             promise.succeed(value: result)
         }

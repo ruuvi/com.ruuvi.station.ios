@@ -7,9 +7,9 @@ class RuuviTagSubjectRxSwift {
     var sqlite: SQLiteContext
     var realm: RealmContext
 
-    let insertSubject: PublishSubject<RuuviTagSensor> = PublishSubject()
-    let updateSubject: PublishSubject<RuuviTagSensor> = PublishSubject()
-    let deleteSubject: PublishSubject<RuuviTagSensor> = PublishSubject()
+    let insertSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
+    let updateSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
+    let deleteSubject: PublishSubject<AnyRuuviTagSensor> = PublishSubject()
 
     private var ruuviTagController: FetchedRecordsController<RuuviTagSQLite>
     private var ruuviTagsRealmToken: NotificationToken?
@@ -44,29 +44,32 @@ class RuuviTagSubjectRxSwift {
             }
         })
 
-        let results = self.realm.main.objects(RuuviTagRealm.self)
-        self.ruuviTagRealmCache = results.map({ $0.any })
-        self.ruuviTagsRealmToken = results.observe { [weak self] (change) in
+        DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
-            switch change {
-            case .update(let ruuviTags, let deletions, let insertions, let modifications):
-                for del in deletions {
-                    sSelf.deleteSubject.onNext(sSelf.ruuviTagRealmCache[del].any)
+            let results = sSelf.realm.main.objects(RuuviTagRealm.self)
+            sSelf.ruuviTagRealmCache = results.map({ $0.any })
+            sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
+                guard let sSelf = self else { return }
+                switch change {
+                case .update(let ruuviTags, let deletions, let insertions, let modifications):
+                    for del in deletions {
+                        sSelf.deleteSubject.onNext(sSelf.ruuviTagRealmCache[del].any)
+                    }
+                    sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
+                        .enumerated()
+                        .filter { !deletions.contains($0.offset) }
+                        .map { $0.element }
+                    for ins in insertions {
+                        sSelf.insertSubject.onNext(ruuviTags[ins].any)
+                        sSelf.ruuviTagRealmCache.insert(ruuviTags[ins].any, at: ins) // TODO: test if ok with multiple
+                    }
+                    for mod in modifications {
+                        sSelf.updateSubject.onNext(ruuviTags[mod].any)
+                        sSelf.ruuviTagRealmCache[mod] = ruuviTags[mod].any
+                    }
+                default:
+                    break
                 }
-                sSelf.ruuviTagRealmCache = sSelf.ruuviTagRealmCache
-                    .enumerated()
-                    .filter { !deletions.contains($0.offset) }
-                    .map { $0.element }
-                for ins in insertions {
-                    sSelf.insertSubject.onNext(ruuviTags[ins].any)
-                    sSelf.ruuviTagRealmCache.insert(ruuviTags[ins].any, at: ins) // TODO: test if ok with multiple
-                }
-                for mod in modifications {
-                    sSelf.updateSubject.onNext(ruuviTags[mod].any)
-                    sSelf.ruuviTagRealmCache[mod] = ruuviTags[mod].any
-                }
-            default:
-                break
             }
         }
     }
