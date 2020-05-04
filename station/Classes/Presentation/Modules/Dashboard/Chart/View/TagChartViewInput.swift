@@ -1,7 +1,7 @@
 import UIKit
 import Charts
 
-protocol TagChartViewInput: class {
+protocol TagChartViewInput: ViewInput {
     func clearChartData()
     func fitZoomTo(min: TimeInterval, max: TimeInterval)
     func fitScreen()
