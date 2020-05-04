@@ -8,7 +8,6 @@ import Charts
 class TagChartsPresenter: TagChartsModuleInput {
     weak var view: TagChartsViewInput!
     var router: TagChartsRouterInput!
-    var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
@@ -63,27 +62,7 @@ class TagChartsPresenter: TagChartsModuleInput {
         }
     }
     private var lastMeasurement: RuuviMeasurement?
-    private lazy var temperatureQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        queue.name = "com.ruuvi.station.TagChartsPresenter.temperature"
-        queue.qualityOfService = .userInteractive
-        return queue
-    }()
-    private var humidityQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        queue.name = "com.ruuvi.station.TagChartsPresenter.humidity"
-        queue.qualityOfService = .userInteractive
-        return queue
-    }()
-    private var pressureQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        queue.name = "com.ruuvi.station.TagChartsPresenter.pressure"
-        queue.qualityOfService = .userInteractive
-        return queue
-    }()
+
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
@@ -560,19 +539,7 @@ extension TagChartsPresenter {
                             }
             })
     }
-    // MARK: - ChartsDataSet
-    private func queue(for type: MeasurementType) -> OperationQueue {
-        switch type {
-        case .temperature:
-            return temperatureQueue
-        case .humidity:
-            return humidityQueue
-        case .pressure:
-            return pressureQueue
-        default:
-            fatalError("Before need add chart with current type")
-        }
-    }
+
     static func newDataSet() -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet()
         lineChartDataSet.axisDependency = .left
