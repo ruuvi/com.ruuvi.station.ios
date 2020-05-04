@@ -285,24 +285,25 @@ extension CardsPresenter: AlertServiceObserver {
 extension CardsPresenter {
 
     private func syncViewModels() {
+        let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
+                       let viewModel = CardsViewModel(ruuviTag)
+                       viewModel.humidityUnit.value = settings.humidityUnit
+                       viewModel.humidityOffset.value = calibrationService.humidityOffset(for: ruuviTag.id).0
+                       viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: ruuviTag.id).1
+                       viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
+                       viewModel.temperatureUnit.value = settings.temperatureUnit
+                       viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
+                       viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id) ? .registered : .empty
+                       ruuviTagTrunk.readLast(ruuviTag).on { record in
+                           if let record = record {
+                               viewModel.update(record)
+                           }
+                       }
+                       return viewModel
+                   })
+        var webViewModels = [CardsViewModel]()
         if webTags != nil {
-            let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
-                let viewModel = CardsViewModel(ruuviTag)
-                viewModel.humidityUnit.value = settings.humidityUnit
-                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: ruuviTag.id).0
-                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: ruuviTag.id).1
-                viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
-                viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
-                viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id) ? .registered : .empty
-                ruuviTagTrunk.readLast(ruuviTag).on { record in
-                    if let record = record {
-                        viewModel.update(record)
-                    }
-                }
-                return viewModel
-            })
-            let webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
+            webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
@@ -311,12 +312,12 @@ extension CardsPresenter {
                 viewModel.isConnected.value = false
                 return viewModel
             }) ?? []
-            viewModels = ruuviViewModels + webViewModels
+        }
+        viewModels = ruuviViewModels + webViewModels
 
-            // if no tags, open discover
-            if viewModels.count == 0 {
-                router.openDiscover(output: self)
-            }
+        // if no tags, open discover
+        if viewModels.count == 0 {
+            router.openDiscover(output: self)
         }
     }
 
@@ -474,7 +475,7 @@ extension CardsPresenter {
     }
 
     private func startObservingWebTags() {
-        webTags = realmContext.main.objects(WebTagRealm.self)
+//        webTags = realmContext.main.objects(WebTagRealm.self)
         webTagsToken = webTags?.observe({ [weak self] (change) in
             switch change {
             case .initial(let webTags):
