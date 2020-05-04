@@ -8,5 +8,11 @@ class TrunkAssembly: Assembly {
             trunk.sqlite = r.resolve(RuuviTagPersistenceSQLite.self)
             return trunk
         }
+
+        container.register(VirtualTagTrunk.self) { r in
+            let trunk = VirtualTagTrunkCoordinator()
+            trunk.realm = r.resolve(WebTagPersistenceRealm.self)
+            return trunk
+        }
     }
 }

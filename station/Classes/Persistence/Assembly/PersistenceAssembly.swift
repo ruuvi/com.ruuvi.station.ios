@@ -71,5 +71,11 @@ class PersistenceAssembly: Assembly {
             persistence.context = r.resolve(RealmContext.self)
             return persistence
         }
+        
+        container.register(WebTagPersistenceRealm.self) { r in
+            let persistence = WebTagPersistenceRealm()
+            persistence.context = r.resolve(RealmContext.self)
+            return persistence
+        }
     }
 }
