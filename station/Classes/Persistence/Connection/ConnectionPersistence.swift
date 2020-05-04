@@ -6,9 +6,6 @@ protocol ConnectionPersistence {
 
     func keepConnection(to uuid: String) -> Bool
     func setKeepConnection(_ value: Bool, for uuid: String)
-
-    func logSyncDate(uuid: String) -> Date?
-    func setLogSyncDate(_ value: Date?, uuid: String)
 }
 
 extension Notification.Name {
