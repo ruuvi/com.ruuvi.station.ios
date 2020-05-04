@@ -4,6 +4,7 @@ import Charts
 protocol TagChartsViewInput: ViewInput {
     var viewModel: TagChartsViewModel { get set }
     var viewIsVisible: Bool { get }
+    func setupChartViews(chartViews: [TagChartView])
     func showBluetoothDisabled()
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)

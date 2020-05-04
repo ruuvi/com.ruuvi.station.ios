@@ -22,7 +22,13 @@ class TagChartsScrollViewController: UIViewController {
             updateUIViewModel()
         }
     }
-
+    private var chartViews: [TagChartView] = [] {
+        didSet {
+            oldValue.forEach({
+                $0.removeFromSuperview()
+            })
+        }
+    }
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
@@ -59,6 +65,11 @@ class TagChartsScrollViewController: UIViewController {
 extension TagChartsScrollViewController: TagChartsViewInput {
     var viewIsVisible: Bool {
         return self.isViewLoaded && self.view.window != nil
+    }
+
+    func setupChartViews(chartViews: [TagChartView]) {
+        self.chartViews = chartViews
+        addChartViews()
     }
 
     func localize() {
@@ -279,27 +290,27 @@ extension TagChartsScrollViewController {
     }
 
     private func addChartViews() {
-        #warning("TODO: make adding views")
-//        var leftView: UIView = scrollView
-//        for viewModel in viewModel {
-//            let view = TrippleChartView()
-//            view.delegate = self
-//            view.translatesAutoresizingMaskIntoConstraints = false
-//            scrollView.addSubview(view)
-//            position(view, leftView)
-//            bind(view: view, with: viewModel)
-//            bindCharts(view: view, with: viewModel)
-//            views.append(view)
-//            leftView = view
-//        }
-//        scrollView.addConstraint(NSLayoutConstraint(item: leftView,
-//                                                    attribute: .trailing,
-//                                                    relatedBy: .equal,
-//                                                    toItem: scrollView,
-//                                                    attribute: .trailing,
-//                                                    multiplier: 1.0,
-//                                                    constant: 0.0))
-//        localize()
+        chartViews.forEach({ chartView in
+            scrollView.addSubview(chartView)
+        })
+        localize()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        var maxY: CGFloat = 0
+        let height: CGFloat
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            height = scrollView.frame.height
+        } else {
+            height = scrollView.frame.height / 3
+        }
+        chartViews.forEach({ chartView in
+            chartView.frame = CGRect(x: 0, y: maxY, width: scrollView.frame.width, height: height)
+            maxY += height
+        })
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: height * CGFloat(chartViews.count))
+        scrollView.layoutSubviews()
     }
 
     private func bindviewModel() {
@@ -337,7 +348,6 @@ extension TagChartsScrollViewController {
     private func updateUIViewModel() {
         if isViewLoaded {
             bindviewModel()
-            addChartViews()
         }
     }
 

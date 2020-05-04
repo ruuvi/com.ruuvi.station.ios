@@ -95,6 +95,7 @@ class TagChartsPresenter: TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
+        createChartViews()
         startListeningToSettings()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
@@ -112,7 +113,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
         stopObservingBluetoothState()
         interactor?.stopObservingRuuviTagsData()
     }
-
+    func createChartViews() {
+        view?.setupChartViews(chartViews: interactor.chartViews)
+    }
     func viewDidTransition() {
         tryToShowSwipeUpHint()
     }
@@ -127,7 +130,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi,
-            ruuviTag.id == viewModel.uuid.value {
+            ruuviTag.luid == viewModel.uuid.value {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: nil)
         } else {
             assert(false)

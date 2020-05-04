@@ -1230,6 +1230,9 @@
 		A90E16A424606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E16A324606B2000631E6C /* TagChartsInteractorOutput.swift */; };
 		A90E16A524606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E16A324606B2000631E6C /* TagChartsInteractorOutput.swift */; };
 		A90E16A624606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E16A324606B2000631E6C /* TagChartsInteractorOutput.swift */; };
+		A90E16A92460975600631E6C /* TagChartAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E16A82460975600631E6C /* TagChartAssembler.swift */; };
+		A90E16AA24609B9B00631E6C /* TagChartAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E16A82460975600631E6C /* TagChartAssembler.swift */; };
+		A90E16AB24609B9B00631E6C /* TagChartAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E16A82460975600631E6C /* TagChartAssembler.swift */; };
 		A9100D6C241AC741004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
 		A9100D6D241AC751004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
 		A9100D6E241AC752004007FD /* WPSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D6B241AC741004007FD /* WPSData.swift */; };
@@ -1718,6 +1721,7 @@
 		A90E169B24606ABF00631E6C /* TagChartsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsInteractor.swift; sourceTree = "<group>"; };
 		A90E169F24606B0500631E6C /* TagChartsInteractorInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsInteractorInput.swift; sourceTree = "<group>"; };
 		A90E16A324606B2000631E6C /* TagChartsInteractorOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartsInteractorOutput.swift; sourceTree = "<group>"; };
+		A90E16A82460975600631E6C /* TagChartAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartAssembler.swift; sourceTree = "<group>"; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
 		A92E3C4B24261CF900D981D5 /* MeasurementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementType.swift; sourceTree = "<group>"; };
@@ -4447,6 +4451,7 @@
 		A90E168C24604F0E00631E6C /* Chart */ = {
 			isa = PBXGroup;
 			children = (
+				A90E16A72460974100631E6C /* Assembly */,
 				A90E168D24604F4600631E6C /* Presenter */,
 				A92E3C4724261BD000D981D5 /* View */,
 			);
@@ -4471,6 +4476,14 @@
 				A90E16A324606B2000631E6C /* TagChartsInteractorOutput.swift */,
 			);
 			path = Interactor;
+			sourceTree = "<group>";
+		};
+		A90E16A72460974100631E6C /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				A90E16A82460975600631E6C /* TagChartAssembler.swift */,
+			);
+			path = Assembly;
 			sourceTree = "<group>";
 		};
 		A9100D81241AD1D0004007FD /* Mock */ = {
@@ -5430,6 +5443,7 @@
 				0E6BAE7A23856A01003A2D4C /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E6BAE7B23856A01003A2D4C /* WebTagSettingsViewModel.swift in Sources */,
 				0E6BAE7C23856A01003A2D4C /* MainConfigurator.swift in Sources */,
+				A90E16AB24609B9B00631E6C /* TagChartAssembler.swift in Sources */,
 				0E6BAE7D23856A01003A2D4C /* WebTagSettingsPresenter.swift in Sources */,
 				0E6BAE7E23856A01003A2D4C /* MenuModuleInput.swift in Sources */,
 				0E6BAE7F23856A01003A2D4C /* BackgroundPersistence.swift in Sources */,
@@ -5813,6 +5827,7 @@
 				0E8BD3B0238566AB008B31EF /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E8BD3B1238566AB008B31EF /* WebTagSettingsViewModel.swift in Sources */,
 				0E8BD3B2238566AB008B31EF /* MainConfigurator.swift in Sources */,
+				A90E16AA24609B9B00631E6C /* TagChartAssembler.swift in Sources */,
 				0E8BD3B3238566AB008B31EF /* WebTagSettingsPresenter.swift in Sources */,
 				0E8BD3B4238566AB008B31EF /* MenuModuleInput.swift in Sources */,
 				0E8BD3B5238566AB008B31EF /* BackgroundPersistence.swift in Sources */,
@@ -6095,6 +6110,7 @@
 				0EE49BC023B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
+				A90E16A92460975600631E6C /* TagChartAssembler.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
 				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,

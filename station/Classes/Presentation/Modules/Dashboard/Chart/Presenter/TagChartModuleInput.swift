@@ -1,5 +1,8 @@
 import Foundation
 
 protocol TagChartModuleInput: class {
-    func configure(type: MeasurementType, output: TagChartModuleOutput)
+    var chartView: TagChartView { get }
+    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput)
+    func insertMeasurements(_ newValues: [RuuviMeasurement])
+    func reloadChart()
 }

@@ -6,6 +6,7 @@ class TagChartView: LineChartView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
+        label.text = "[sdf"
         label.font = UIFont.systemFont(ofSize: 11)
         return label
     }()
@@ -14,19 +15,17 @@ class TagChartView: LineChartView {
         let progressView = ProgressBarView(frame: .zero)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.layer.cornerRadius = 12
+        progressView.isHidden = false
         return progressView
     }()
-
-    let chartDataType: MeasurementType
-    var viewModel: TagChartViewModel = TagChartViewModel() {
+    var viewModel: TagChartViewModel! {
         didSet {
-            
+            updateUIViewModel()
         }
     }
-    weak var output: TagChartViewOutput?
+    weak var presenter: TagChartViewOutput?
 // MARK: - LifeCycle
-    init(frame: CGRect, dataType: MeasurementType) {
-        chartDataType = dataType
+    override init(frame: CGRect) {
         super.init(frame: frame)
         delegate = self
         addSubviews()
@@ -47,14 +46,14 @@ class TagChartView: LineChartView {
     }
 
     private func setUnitLabelConstraints() {
-        addConstraint(NSLayoutConstraint(item: unitLabel,
+        unitLabel.addConstraint(NSLayoutConstraint(item: unitLabel,
                                          attribute: .trailing,
                                          relatedBy: .equal,
                                          toItem: self,
                                          attribute: .trailing,
                                          multiplier: 1.0,
                                          constant: -8))
-        addConstraint(NSLayoutConstraint(item: unitLabel,
+        unitLabel.addConstraint(NSLayoutConstraint(item: unitLabel,
                                          attribute: .top,
                                          relatedBy: .equal,
                                          toItem: self,
@@ -157,6 +156,12 @@ class TagChartView: LineChartView {
 }
 // MARK: - TagChartViewInput
 extension TagChartView: TagChartViewInput {
+    var chartView: TagChartView {
+        return self
+    }
+    func configure(with viewModel: TagChartViewModel) {
+        self.viewModel = viewModel
+    }
     func localize() {
         noDataText = "TagCharts.NoChartData.text".localized()
     }
@@ -193,11 +198,11 @@ extension TagChartView: ChartViewDelegate {
     func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
         let offset = getOffset(dX: dX, dY: dY)
         let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
-        output?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
+        presenter?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
     }
     func chartScaled(_ chartView: ChartViewBase, scaleX: CGFloat, scaleY: CGFloat) {
         let offset = getScaleOffset(scaleX: scaleX, scaleY: scaleY)
         let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
-        output?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
+        presenter?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
     }
 }
