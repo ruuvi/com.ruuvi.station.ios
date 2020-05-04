@@ -9,7 +9,11 @@ enum CardType {
 
 struct CardsViewModel {
     var type: CardType = .ruuvi
+
+    var id: Observable<String?> = Observable<String?>()
     var luid: Observable<String?> = Observable<String?>(UUID().uuidString)
+    var mac: Observable<String?> = Observable<String?>()
+
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
     var fahrenheit: Observable<Double?> = Observable<Double?>()
@@ -24,7 +28,6 @@ struct CardsViewModel {
     var version: Observable<Int?> = Observable<Int?>()
     var voltage: Observable<Double?> = Observable<Double?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
-    var mac: Observable<String?> = Observable<String?>()
     var humidityOffset: Observable<Double?> = Observable<Double?>(0)
     var humidityOffsetDate: Observable<Date?> = Observable<Date?>()
     var date: Observable<Date?> = Observable<Date?>()
@@ -40,6 +43,7 @@ struct CardsViewModel {
 
     init(_ webTag: WebTagRealm) {
         type = .web
+        id.value = webTag.uuid
         luid.value = webTag.uuid
         name.value = webTag.name
         celsius.value = webTag.data.last?.celsius.value
@@ -118,18 +122,20 @@ struct CardsViewModel {
 
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
+        id.value = ruuviTag.id
         luid.value = ruuviTag.luid ?? ruuviTag.id
-        name.value = ruuviTag.name
         mac.value = ruuviTag.mac
+        name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
     }
 
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
+        id.value = ruuviTag.id
         luid.value = ruuviTag.uuid
-        name.value = ruuviTag.name
         mac.value = ruuviTag.mac
+        name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
 
@@ -198,7 +204,6 @@ struct CardsViewModel {
     }
 
     func update(with ruuviTag: RuuviTag) {
-        luid.value = ruuviTag.uuid
         isConnectable.value = ruuviTag.isConnectable
 
         celsius.value = ruuviTag.celsius
