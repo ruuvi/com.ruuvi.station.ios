@@ -9,7 +9,6 @@ class DiscoverPresenter: DiscoverModuleInput {
     var router: DiscoverRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
-    var ruuviTagService: RuuviTagService!
     var webTagService: WebTagService!
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!

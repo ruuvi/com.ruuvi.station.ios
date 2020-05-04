@@ -14,7 +14,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     var settings: Settings!
     var foreground: BTForeground!
     var activityPresenter: ActivityPresenter!
-    var ruuviTagService: RuuviTagService!
     var gattService: GATTService!
     var exportService: ExportService!
     var alertService: AlertService!
