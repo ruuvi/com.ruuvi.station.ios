@@ -9,7 +9,7 @@ enum CardType {
 
 struct CardsViewModel {
     var type: CardType = .ruuvi
-    var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
+    var luid: Observable<String?> = Observable<String?>(UUID().uuidString)
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
     var fahrenheit: Observable<Double?> = Observable<Double?>()
@@ -40,7 +40,7 @@ struct CardsViewModel {
 
     init(_ webTag: WebTagRealm) {
         type = .web
-        uuid.value = webTag.uuid
+        luid.value = webTag.uuid
         name.value = webTag.name
         celsius.value = webTag.data.last?.celsius.value
         fahrenheit.value = webTag.data.last?.fahrenheit
@@ -118,7 +118,7 @@ struct CardsViewModel {
 
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
-        uuid.value = ruuviTag.luid ?? ruuviTag.id
+        luid.value = ruuviTag.luid ?? ruuviTag.id
         name.value = ruuviTag.name
         mac.value = ruuviTag.mac
         version.value = ruuviTag.version
@@ -127,7 +127,7 @@ struct CardsViewModel {
 
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
-        uuid.value = ruuviTag.uuid
+        luid.value = ruuviTag.uuid
         name.value = ruuviTag.name
         mac.value = ruuviTag.mac
         version.value = ruuviTag.version
@@ -198,7 +198,7 @@ struct CardsViewModel {
     }
 
     func update(with ruuviTag: RuuviTag) {
-        uuid.value = ruuviTag.uuid
+        luid.value = ruuviTag.uuid
         isConnectable.value = ruuviTag.isConnectable
 
         celsius.value = ruuviTag.celsius
@@ -246,12 +246,12 @@ struct CardsViewModel {
 
 extension CardsViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(uuid.value)
+        hasher.combine(luid.value)
     }
 }
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        return lhs.uuid.value == rhs.uuid.value
+        return lhs.luid.value == rhs.luid.value
     }
 }
