@@ -16,7 +16,6 @@ struct TagChartsViewModel {
     var isConnectable: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var isConnected: Observable<Bool?> = Observable<Bool?>()
-    var chartViewModels: Observable<[TagChartViewModel]?> = Observable<[TagChartViewModel]?>()
     var isHandleInitialResult: Observable<Bool?> = Observable<Bool?>(false)
 
     init(type: TagChartsType) {

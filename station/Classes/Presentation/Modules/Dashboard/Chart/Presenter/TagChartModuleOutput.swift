@@ -1,5 +1,5 @@
 import Foundation
 
 protocol TagChartModuleOutput: class {
-    var dataSource: Observable<[RuuviMeasurement]?> { get }
+    var dataSource: [RuuviMeasurement] { get }
 }

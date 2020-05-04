@@ -12,7 +12,7 @@ class TagChartsInteractor {
     var exportService: ExportService!
     private var ruuviTagToken: RUObservationToken?
     private var ruuviTagDataToken: RUObservationToken?
-
+    private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
         didSet {
             if let last = ruuviTagData.last {
@@ -27,6 +27,20 @@ class TagChartsInteractor {
     }
     private var lastMeasurement: RuuviMeasurement?
 
+    func createChartModules() {
+        chartModules = []
+        MeasurementType.chartsCases.forEach({
+            let viewModel = TagChartViewModel(type: $0)
+            let module = TagChartAssembler.createModule()
+            module.configure(viewModel, output: self)
+            chartModules.append(module)
+        })
+    }
+    func reloadCharts() {
+        chartModules.forEach({
+            $0.reloadChart()
+        })
+    }
     deinit {
         ruuviTagToken?.invalidate()
         ruuviTagDataToken?.invalidate()
@@ -34,12 +48,17 @@ class TagChartsInteractor {
 }
 extension TagChartsInteractor: TagChartsInteractorInput {
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
-        self.ruuviTagSensor = ruuviTag
+        ruuviTagSensor = ruuviTag
+        createChartModules()
+    }
+    var chartViews: [TagChartView] {
+         return chartModules.map({$0.chartView})
     }
     func restartObservingData() {
         ruuviTagDataToken?.invalidate()
         ruuviTagDataToken = ruuviTagReactor.observe( ruuviTagSensor.id, { [weak self] results in
             self?.ruuviTagData = results.map({ $0.measurement })
+            self?.reloadCharts()
 //                self?.handleInitialRuuviTagData(results)
         })
         //        ruuviTagDataToken = ruuviTagDataRealm.observe {
@@ -113,5 +132,28 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             promise.succeed(value: ())
         })
         return promise.future
+    }
+    // MARK: - Charts
+    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
+            let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
+        ruuviTagData.append(contentsOf: newValues)
+        chartModules.forEach({
+            $0.insertMeasurements(newValues)
+        })
+    //        let chartIntervalSeconds = settings.chartIntervalSeconds
+    //        insertions.forEach({ i in
+    //            let newValue = results[i].measurement
+    //            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
+    //            if elapsed >= chartIntervalSeconds {
+    //                lastChartSyncDate = newValue.date
+    //                ruuviTagData.append(newValue)
+    //                insertMeasurements([newValue], into: viewModel)
+    //            }
+    //        })
+        }
+}
+extension TagChartsInteractor: TagChartModuleOutput {
+    var dataSource: [RuuviMeasurement] {
+        return ruuviTagData
     }
 }

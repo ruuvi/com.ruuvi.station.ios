@@ -4,26 +4,19 @@ import Charts
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
     var settings: Settings!
-    var viewModel = TagChartViewModel()
-    weak var ouptut: TagChartModuleOutput!
-    var dataSource: [RuuviMeasurement] = [] {
+    var viewModel: TagChartViewModel! {
         didSet {
-            if oldValue.count == 0,
-                dataSource.count > 0 {
-                createChartData()
-            } else {
-                handleEmptyResults()
-            }
+            self.view.configure(with: viewModel)
         }
     }
+    weak var ouptut: TagChartModuleOutput!
 
     private let threshold: Int = 100
-    private var type: MeasurementType!
     private var lastMeasurement: RuuviMeasurement?
     private lazy var queue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 3
-        queue.name = "com.ruuvi.station.TagChartsPresenter.\(self.type.rawValue)"
+        queue.name = "com.ruuvi.station.TagChartsPresenter.\(self.viewModel.type.rawValue)"
         queue.qualityOfService = .userInteractive
         return queue
     }()
@@ -33,13 +26,18 @@ class TagChartPresenter: NSObject {
 }
 // MARK: - TagChartModuleInput
 extension TagChartPresenter: TagChartModuleInput {
-    func configure(type: MeasurementType, output: TagChartModuleOutput) {
-        self.type = type
-        self.bind(output.dataSource) { (presenter, dataSource) in
-            if let dataSource = dataSource {
-                presenter.dataSource = dataSource
-            }
-        }
+    var chartView: TagChartView {
+        return view.chartView
+    }
+
+    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput) {
+        self.viewModel = viewModel
+        self.ouptut = output
+    }
+
+    func reloadChart() {
+        createChartData()
+        view.reloadData()
     }
 }
 
@@ -63,12 +61,13 @@ extension TagChartPresenter {
     }
 
     private func createChartData() {
+        viewModel.chartData.value = LineChartData(dataSet: TagChartsPresenter.newDataSet())
         let currentDate = Date().timeIntervalSince1970
         if let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
                                                               value: -settings.chartDurationHours,
                                                               to: Date())?.timeIntervalSince1970,
-            let firstDate = dataSource.first?.date.timeIntervalSince1970,
-            let lastDate = dataSource.last?.date.timeIntervalSince1970,
+            let firstDate = ouptut.dataSource.first?.date.timeIntervalSince1970,
+            let lastDate = ouptut.dataSource.last?.date.timeIntervalSince1970,
             (lastDate - firstDate) > (currentDate - chartDurationThreshold) {
             fetchPointsByDates(start: chartDurationThreshold,
                                stop: currentDate,
@@ -79,29 +78,14 @@ extension TagChartPresenter {
                 self?.view.resetCustomAxisMinMax()
             })
         } else {
-            setDownSampled(dataSet: dataSource,
+            setDownSampled(dataSet: ouptut.dataSource,
                            completion: { [weak self] in
                 self?.view.reloadData()
             })
         }
     }
 
-    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
-        let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
-        dataSource.append(contentsOf: newValues)
-        insertMeasurements(newValues)
-//        let chartIntervalSeconds = settings.chartIntervalSeconds
-//        insertions.forEach({ i in
-//            let newValue = results[i].measurement
-//            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
-//            if elapsed >= chartIntervalSeconds {
-//                lastChartSyncDate = newValue.date
-//                ruuviTagData.append(newValue)
-//                insertMeasurements([newValue], into: viewModel)
-//            }
-//        })
-    }
-    private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
+    internal func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         newValues.forEach {
             viewModel.chartData.value?.addEntry(chartEntry(for: $0), dataSetIndex: 0)
             viewModel.chartData.value?.notifyDataChanged()
@@ -129,9 +113,9 @@ extension TagChartPresenter {
                 $0.cancel()
             }
         })
-        let filterOperation = ChartFilterOperation(array: dataSource,
+        let filterOperation = ChartFilterOperation(array: ouptut.dataSource,
                                                    threshold: threshold,
-                                                   type: type,
+                                                   type: viewModel.type,
                                                    start: start,
                                                    end: stop)
         filterOperation.completionBlock = { [unowned filterOperation] in
@@ -147,7 +131,7 @@ extension TagChartPresenter {
     }
     private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry {
         let value: Double?
-        switch type {
+        switch viewModel.type {
         case .temperature:
             value = data.temperature?.converted(to: settings.temperatureUnit.unitTemperature).value
         case .humidity:

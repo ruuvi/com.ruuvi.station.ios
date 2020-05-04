@@ -51,7 +51,7 @@
                                     <action selector="menuButtonTouchUpInside:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="JnD-Lf-kbH"/>
                                 </connections>
                             </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbe-Ju-Xdg">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbe-Ju-Xdg">
                                 <rect key="frame" x="0.0" y="135.5" width="414" height="666.5"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
@@ -66,18 +66,17 @@
                                     <constraint firstAttribute="height" constant="36" id="lEg-uW-m5X"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
                                 <state key="normal" image="baseline_settings_white_48pt"/>
                                 <connections>
                                     <action selector="didTriggerSettings:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="nnF-6B-9QT"/>
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-cards-button" translatesAutoresizingMaskIntoConstraints="NO" id="wUs-Ho-ico" userLabel="CardsImageView">
-                                <rect key="frame" x="337" y="59" width="22" height="22"/>
+                                <rect key="frame" x="338" y="56" width="28" height="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="3IA-AB-w9L"/>
-                                    <constraint firstAttribute="height" constant="22" id="YrP-fA-Xeg"/>
+                                    <constraint firstAttribute="width" constant="28" id="3IA-AB-w9L"/>
+                                    <constraint firstAttribute="height" constant="28" id="YrP-fA-Xeg"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jBR-5N-L14" userLabel="CardsButton">
@@ -87,7 +86,6 @@
                                     <constraint firstAttribute="width" constant="44" id="ve6-sj-CzT"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="imageEdgeInsets" minX="4" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <action selector="didTriggerCards:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="V69-AF-AMD"/>
                                 </connections>
@@ -218,7 +216,7 @@
                             <constraint firstItem="cpa-Qi-Dhz" firstAttribute="bottom" secondItem="ceB-eX-jxA" secondAttribute="bottom" id="mzo-xl-a4z"/>
                             <constraint firstItem="YoH-aD-scc" firstAttribute="top" secondItem="7JW-Bt-vav" secondAttribute="top" constant="13" id="n7M-d3-rM9"/>
                             <constraint firstItem="jBR-5N-L14" firstAttribute="centerY" secondItem="NM1-63-FjZ" secondAttribute="centerY" id="nfs-HV-KxQ"/>
-                            <constraint firstItem="wUs-Ho-ico" firstAttribute="centerX" secondItem="jBR-5N-L14" secondAttribute="centerX" id="onG-3O-3oU"/>
+                            <constraint firstItem="wUs-Ho-ico" firstAttribute="centerX" secondItem="jBR-5N-L14" secondAttribute="centerX" constant="4" id="onG-3O-3oU"/>
                             <constraint firstItem="jBR-5N-L14" firstAttribute="leading" secondItem="xLk-w7-fy6" secondAttribute="trailing" id="pEz-B0-7u9"/>
                             <constraint firstItem="NM1-63-FjZ" firstAttribute="trailing" secondItem="APW-oc-hoK" secondAttribute="trailing" constant="-8" id="px6-Cd-fEX"/>
                             <constraint firstItem="NM1-63-FjZ" firstAttribute="centerY" secondItem="yVc-EN-JgQ" secondAttribute="centerY" id="rsx-fK-QCn"/>
