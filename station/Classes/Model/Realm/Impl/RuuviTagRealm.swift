@@ -10,8 +10,8 @@ class RuuviTagRealm: Object, RuuviTagRealmProtocol {
     @objc dynamic var isConnectable: Bool = false
 
     // calibration
-    @objc dynamic var humidityOffset: Double = 0
-    @objc dynamic var humidityOffsetDate: Date?
+//    @objc dynamic var humidityOffset: Double = 0
+//    @objc dynamic var humidityOffsetDate: Date?
 
     let data = LinkingObjects(fromType: RuuviTagDataRealm.self, property: "ruuviTag")
 

@@ -4,7 +4,7 @@ import Future
 import RealmSwift
 import GRDB
 
-class RuuviTagPersistenceSQLite: DatabaseService {
+class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     typealias Entity = RuuviTagSQLite
     typealias Record = RuuviTagDataSQLite
 

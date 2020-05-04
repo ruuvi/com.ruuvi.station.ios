@@ -134,7 +134,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToCalibrateHumidity() {
         if let humidity = humidity {
-//            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity) TODO
+            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity)
         }
     }
 

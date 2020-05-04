@@ -9,8 +9,8 @@ class RuuviTagReactorImpl: RuuviTagReactor {
 
     var sqliteContext: SQLiteContext!
     var realmContext: RealmContext!
-    var sqlitePersistence: RuuviTagPersistenceSQLite!
-    var realmPersistence: RuuviTagPersistenceRealm!
+    var sqlitePersistence: RuuviTagPersistence!
+    var realmPersistence: RuuviTagPersistence!
 
     private lazy var entityRxSwift = RuuviTagSubjectRxSwift(sqlite: sqliteContext, realm: realmContext)
     private lazy var recordRxSwifts = [String: RuuviTagRecordSubjectRxSwift]()

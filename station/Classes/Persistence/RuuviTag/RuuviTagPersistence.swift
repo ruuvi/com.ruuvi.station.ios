@@ -1,29 +1,14 @@
-import BTKit
 import Future
-import RealmSwift
 import Foundation
 
 protocol RuuviTagPersistence {
-    func delete(ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError>
-    func update(name: String, of ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError>
-    func update(humidityOffset: Double, date: Date, of ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError>
-    func clearHumidityCalibration(of ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError>
-
-    @discardableResult
-    func update(isConnectable: Bool, of ruuviTag: RuuviTagRealmProtocol, realm: Realm) -> Future<Bool, RUError>
-
-    @discardableResult
-    func persist(ruuviTag: RuuviTagRealmProtocol, data: RuuviTag) -> Future<RuuviTag, RUError>
-
-    @discardableResult
-    func persist(ruuviTagData: RuuviTagDataRealm, realm: Realm) -> Future<Bool, RUError>
-
-    @discardableResult
-    func update(mac: String?, of ruuviTag: RuuviTagRealmProtocol, realm: Realm) -> Future<Bool, RUError>
-
-    @discardableResult
-    func update(version: Int, of ruuviTag: RuuviTagRealmProtocol, realm: Realm) -> Future<Bool, RUError>
-
-    @discardableResult
-    func persist(logs: [RuuviTagEnvLogFull], for uuid: String) -> Future<Bool, RUError>
+    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
+    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
+    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
+    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError>
+    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError>
+    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError>
+    func readAll() -> Future<[AnyRuuviTagSensor], RUError>
+    func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RUError>
+    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError>
 }
