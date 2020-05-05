@@ -98,9 +98,9 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                     self?.post(error: error)
                 })
         }
-        if let mac = pair.device.mac, mac != pair.ruuviTag.mac {
-            idPersistence.set(mac: mac, for: pair.device.uuid.luid)
-            ruuviTagTank.update(pair.ruuviTag.with(mac: mac))
+        if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
+            idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
+            ruuviTagTank.update(pair.ruuviTag.with(macId: mac.mac))
                 .on(failure: { [weak self] error in
                     self?.post(error: error)
                 })

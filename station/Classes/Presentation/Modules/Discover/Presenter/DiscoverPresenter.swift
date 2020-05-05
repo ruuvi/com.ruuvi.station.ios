@@ -102,7 +102,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         if let ruuviTag = ruuviTags.first(where: { $0.ruuviTagId == device.id }) {
             let sensor = RuuviTagSensorStruct(version: ruuviTag.version,
                                               luid: ruuviTag.uuid.luid,
-                                              mac: ruuviTag.mac,
+                                              macId: ruuviTag.mac?.mac,
                                               isConnectable: ruuviTag.isConnectable,
                                               name: displayName)
             let entity = ruuviTagTank.create(sensor)

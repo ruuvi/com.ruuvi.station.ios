@@ -6,7 +6,7 @@ extension RuuviTagDataRealm {
         guard let ruuviTagId = ruuviTag?.uuid else { return nil }
         let inner = RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
                                                date: date,
-                                               mac: ruuviTag?.mac,
+                                               macId: ruuviTag?.mac?.mac,
                                                rssi: rssi.value,
                                                temperature: unitTemperature,
                                                humidity: unitHumidity,

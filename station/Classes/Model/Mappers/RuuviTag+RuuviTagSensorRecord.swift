@@ -7,6 +7,10 @@ extension RuuviTag: RuuviTagSensorRecord {
         return mac ?? uuid
     }
 
+    var macId: MACIdentifier? {
+        return mac?.mac
+    }
+
     var date: Date {
         return Date()
     }

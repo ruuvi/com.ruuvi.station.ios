@@ -86,10 +86,10 @@ extension HumidityCalibrationPresenter {
         if let luid = ruuviTag.luid {
             view.humidityOffset = calibrationService.humidityOffset(for: luid).0
             view.lastCalibrationDate = calibrationService.humidityOffset(for: luid).1
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME:
-//            view.humidityOffset = calibrationService.humidityOffset(for: mac).0
-//            view.lastCalibrationDate = calibrationService.humidityOffset(for: mac).1
+//            view.humidityOffset = calibrationService.humidityOffset(for: macId).0
+//            view.lastCalibrationDate = calibrationService.humidityOffset(for: macId).1
         } else {
             assertionFailure()
         }

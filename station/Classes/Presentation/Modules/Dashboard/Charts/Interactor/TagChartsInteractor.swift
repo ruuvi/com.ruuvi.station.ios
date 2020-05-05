@@ -107,7 +107,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = gattService.syncLogs(uuid: luid.value,
-                                      mac: ruuviTagSensor.mac,
+                                      mac: ruuviTagSensor.macId?.value,
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)

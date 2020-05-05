@@ -146,6 +146,9 @@
 		0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
 		0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
 		0E2864372460741500363DCB /* ExportServiceTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2864342460741500363DCB /* ExportServiceTrunk.swift */; };
+		0E28643A246198BB00363DCB /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286439246198BB00363DCB /* Identifier.swift */; };
+		0E28643B246198BB00363DCB /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286439246198BB00363DCB /* Identifier.swift */; };
+		0E28643C246198BB00363DCB /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E286439246198BB00363DCB /* Identifier.swift */; };
 		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
 		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
 		0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
@@ -1393,6 +1396,7 @@
 		0E28642A2460687200363DCB /* VirtualTagTank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagTank.swift; sourceTree = "<group>"; };
 		0E28642F2460697100363DCB /* VirtualTagTankCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagTankCoordinator.swift; sourceTree = "<group>"; };
 		0E2864342460741500363DCB /* ExportServiceTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportServiceTrunk.swift; sourceTree = "<group>"; };
+		0E286439246198BB00363DCB /* Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifier.swift; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
 		0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskServiceiOS12.swift; sourceTree = "<group>"; };
@@ -2586,6 +2590,14 @@
 			path = Trunk;
 			sourceTree = "<group>";
 		};
+		0E2864382461989A00363DCB /* Identifier */ = {
+			isa = PBXGroup;
+			children = (
+				0E286439246198BB00363DCB /* Identifier.swift */,
+			);
+			path = Identifier;
+			sourceTree = "<group>";
+		};
 		0E2A2CA32369479C004993C5 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -3161,6 +3173,7 @@
 		0E8BAC7E245C4E5000D380FB /* Ontology */ = {
 			isa = PBXGroup;
 			children = (
+				0E2864382461989A00363DCB /* Identifier */,
 				0E8BAC8D245C520D00D380FB /* Measurement */,
 				0E8BAC8C245C520200D380FB /* Sensor */,
 			);
@@ -5128,6 +5141,7 @@
 				0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */,
 				0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */,
 				0E8BAC4E245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */,
+				0E28643C246198BB00363DCB /* Identifier.swift in Sources */,
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
 				0EAD33EC2399273E00EC5BAA /* HeartbeatList.swift in Sources */,
@@ -5512,6 +5526,7 @@
 				0E8BD2B7238566AB008B31EF /* CalibrationService.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
 				0E8BAC4D245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */,
+				0E28643B246198BB00363DCB /* Identifier.swift in Sources */,
 				0E8BD2BA238566AB008B31EF /* MenuTablePresentationController.swift in Sources */,
 				0E8BD2BB238566AB008B31EF /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0E8BD2BD238566AB008B31EF /* TagSettingsViewInput.swift in Sources */,
@@ -5896,6 +5911,7 @@
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
 				0E8BAC4C245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */,
+				0E28643A246198BB00363DCB /* Identifier.swift in Sources */,
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,

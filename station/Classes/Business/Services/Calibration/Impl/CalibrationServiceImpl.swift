@@ -9,9 +9,9 @@ class CalibrationServiceImpl: CalibrationService {
         let offset = 75.0 - currentValue
         if let luid = ruuviTag.luid {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME
-//            calibrationPersistence.setHumidity(date: date, offset: offset, for: mac)
+//            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
         } else {
             assertionFailure()
         }
@@ -22,9 +22,9 @@ class CalibrationServiceImpl: CalibrationService {
         let offset = 100.0 - currentValue
         if let luid = ruuviTag.luid {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME
-            // calibrationPersistence.setHumidity(date: date, offset: offset, for: mac)
+            // calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
         } else {
             assertionFailure()
         }
@@ -34,9 +34,9 @@ class CalibrationServiceImpl: CalibrationService {
     func cleanHumidityCalibration(for ruuviTag: RuuviTagSensor) {
         if let luid = ruuviTag.luid {
             calibrationPersistence.setHumidity(date: nil, offset: 0, for: luid)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME
-            // calibrationPersistence.setHumidity(date: nil, offset: 0, for: mac)
+            // calibrationPersistence.setHumidity(date: nil, offset: 0, for: macId)
         } else {
             assertionFailure()
         }

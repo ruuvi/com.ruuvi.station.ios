@@ -1,11 +1,11 @@
 import Foundation
 
 class IDPersistenceUserDefaults: IDPersistence {
-    func mac(for luid: LocalIdentifier) -> String? {
-        return UserDefaults.standard.string(forKey: luid.value)
+    func mac(for luid: LocalIdentifier) -> MACIdentifier? {
+        return UserDefaults.standard.string(forKey: luid.value)?.mac
     }
 
-    func set(mac: String, for luid: LocalIdentifier) {
-        UserDefaults.standard.set(mac, forKey: luid.value)
+    func set(mac: MACIdentifier, for luid: LocalIdentifier) {
+        UserDefaults.standard.set(mac.value, forKey: luid.value)
     }
 }

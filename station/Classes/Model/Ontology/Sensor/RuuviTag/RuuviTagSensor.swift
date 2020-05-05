@@ -4,8 +4,8 @@ protocol RuuviTagSensor: PhysicalSensor, Versionable { }
 
 extension RuuviTagSensor {
     var id: String {
-        if let mac = mac {
-            return mac
+        if let macId = macId {
+            return macId.value
         } else if let luid = luid {
             return luid.value
         } else {
@@ -20,7 +20,7 @@ extension RuuviTagSensor {
     var `struct`: RuuviTagSensorStruct {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
-                                    mac: mac,
+                                    macId: macId,
                                     isConnectable: isConnectable,
                                     name: name)
     }
@@ -28,15 +28,15 @@ extension RuuviTagSensor {
     func with(version: Int) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
-                                    mac: mac,
+                                    macId: macId,
                                     isConnectable: isConnectable,
                                     name: name)
     }
 
-    func with(mac: String) -> RuuviTagSensor {
+    func with(macId: MACIdentifier) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
-                                    mac: mac,
+                                    macId: macId,
                                     isConnectable: isConnectable,
                                     name: name)
     }
@@ -44,7 +44,7 @@ extension RuuviTagSensor {
     func with(isConnectable: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
-                                    mac: mac,
+                                    macId: macId,
                                     isConnectable: isConnectable,
                                     name: name)
     }
@@ -53,7 +53,7 @@ extension RuuviTagSensor {
 struct RuuviTagSensorStruct: RuuviTagSensor {
     var version: Int
     var luid: LocalIdentifier? // local unqiue id
-    var mac: String?
+    var macId: MACIdentifier?
     var isConnectable: Bool
     var name: String
 }
@@ -70,8 +70,8 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
     var luid: LocalIdentifier? {
         return object.luid
     }
-    var mac: String? {
-        return object.mac
+    var macId: MACIdentifier? {
+        return object.macId
     }
     var isConnectable: Bool {
         return object.isConnectable

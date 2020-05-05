@@ -105,9 +105,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidAskToRandomizeBackground() {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
 //            FIXME
-//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: mac)
+//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
         } else {
             assertionFailure()
         }
@@ -133,7 +133,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidChangeTag(name: String) {
-        let finalName = name.isEmpty ? (ruuviTag.mac ?? ruuviTag.id) : name
+        let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
         var sensor = ruuviTag.struct
         sensor.name = finalName
         let operation = ruuviTagTank.update(sensor)
@@ -228,7 +228,7 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
         let set: Future<URL, RUError>?
         if let luid = ruuviTag.luid {
             set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME
             // set = backgroundPersistence.setCustomBackground(image: photo, for: mac)
             set = nil
@@ -260,7 +260,7 @@ extension TagSettingsPresenter {
 
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.background(for: luid)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME
             // viewModel.background.value = backgroundPersistence.background(for: mac)
         } else {
@@ -268,7 +268,7 @@ extension TagSettingsPresenter {
         }
 
 
-        if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.mac {
+        if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.macId?.value {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
@@ -283,7 +283,7 @@ extension TagSettingsPresenter {
             viewModel.keepConnection.value = false
         }
 
-        viewModel.mac.value = ruuviTag.mac
+        viewModel.mac.value = ruuviTag.macId?.value
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         syncAlerts()
@@ -451,7 +451,7 @@ extension TagSettingsPresenter {
         humidity = device.relativeHumidity
         let record = RuuviTagSensorRecordStruct(ruuviTagId: device.ruuviTagId,
                                                 date: device.date,
-                                                mac: device.mac,
+                                                macId: device.mac?.mac,
                                                 rssi: device.rssi,
                                                 temperature: device.temperature,
                                                 humidity: device.humidity,

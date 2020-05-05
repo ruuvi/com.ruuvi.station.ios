@@ -271,9 +271,9 @@ extension TagChartsPresenter {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-        } else if let mac = ruuviTag.mac {
+        } else if let macId = ruuviTag.macId {
             // FIXME
-            // viewModel.background.value = backgroundPersistence.background(for: mac)
+            // viewModel.background.value = backgroundPersistence.background(for: macId)
              viewModel.isConnected.value = false
         } else {
             assertionFailure()

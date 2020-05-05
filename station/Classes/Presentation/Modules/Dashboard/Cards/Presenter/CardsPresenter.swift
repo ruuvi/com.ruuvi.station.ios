@@ -293,10 +293,10 @@ extension CardsPresenter {
                 viewModel.background.value = backgroundPersistence.background(for: luid)
                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
-            } else if let mac = ruuviTag.mac {
-                // FIXME viewModel.background.value = backgroundPersistence.background(for: mac)
-                // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: mac).0
-                // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: mac).1
+            } else if let macId = ruuviTag.macId {
+                // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
+                // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
+                // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
             } else {
                 assertionFailure()
             }
