@@ -94,7 +94,6 @@ class TagChartsPresenter: TagChartsModuleInput {
 extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidLoad() {
-        createChartViews()
         startListeningToSettings()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
@@ -103,6 +102,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewWillAppear() {
+        syncChartViews()
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
         interactor?.restartObservingData()
@@ -112,7 +112,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         stopObservingBluetoothState()
         interactor?.stopObservingRuuviTagsData()
     }
-    func createChartViews() {
+    func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
     }
     func viewDidTransition() {
