@@ -28,6 +28,7 @@ class TagChartsScrollViewController: UIViewController {
             oldValue.forEach({
                 $0.removeFromSuperview()
             })
+            addChartViews()
         }
     }
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -70,7 +71,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
 
     func setupChartViews(chartViews: [TagChartView]) {
         self.chartViews = chartViews
-        addChartViews()
     }
 
     func localize() {
