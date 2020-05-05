@@ -7,3 +7,11 @@ protocol CalibrationService {
     func humidityOffset(for luid: LocalIdentifier) -> (Double, Date?)
     func calibrateHumidityTo100Percent(currentValue: Double, for ruuviTag: RuuviTagSensor)
 }
+
+extension Notification.Name {
+    static let CalibrationServiceHumidityDidChange = Notification.Name("CalibrationServiceDidChange")
+}
+
+enum CalibrationServiceHumidityDidChangeKey: String {
+    case luid // LocalIdentifier
+}

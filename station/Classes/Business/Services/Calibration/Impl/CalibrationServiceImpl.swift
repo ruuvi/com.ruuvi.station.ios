@@ -9,6 +9,7 @@ class CalibrationServiceImpl: CalibrationService {
         let offset = 75.0 - currentValue
         if let luid = ruuviTag.luid {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
+            postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
             // FIXME
 //            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
@@ -22,6 +23,7 @@ class CalibrationServiceImpl: CalibrationService {
         let offset = 100.0 - currentValue
         if let luid = ruuviTag.luid {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
+            postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
             // FIXME
             // calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
@@ -34,6 +36,7 @@ class CalibrationServiceImpl: CalibrationService {
     func cleanHumidityCalibration(for ruuviTag: RuuviTagSensor) {
         if let luid = ruuviTag.luid {
             calibrationPersistence.setHumidity(date: nil, offset: 0, for: luid)
+            postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
             // FIXME
             // calibrationPersistence.setHumidity(date: nil, offset: 0, for: macId)
@@ -45,5 +48,13 @@ class CalibrationServiceImpl: CalibrationService {
 
     func humidityOffset(for luid: LocalIdentifier) -> (Double, Date?) {
         return calibrationPersistence.humidityOffset(for: luid)
+    }
+
+    private func postHumidityOffsetDidChange(with luid: LocalIdentifier) {
+        NotificationCenter
+            .default
+            .post(name: .CalibrationServiceHumidityDidChange,
+                  object: nil,
+                  userInfo: [CalibrationServiceHumidityDidChangeKey.luid: luid])
     }
 }
