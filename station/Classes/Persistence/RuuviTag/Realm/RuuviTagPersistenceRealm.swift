@@ -126,7 +126,8 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 var failed = false
                 for record in records {
                     assert(record.mac == nil)
-                    if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId) {
+                    let extractedExpr: RuuviTagRealm? = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId)
+                    if let ruuviTag = extractedExpr {
                         let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
                         try self.context.bg.write {
                             self.context.bg.add(data, update: .all)

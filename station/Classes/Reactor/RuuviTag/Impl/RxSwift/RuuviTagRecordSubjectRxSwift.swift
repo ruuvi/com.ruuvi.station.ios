@@ -34,7 +34,8 @@ class RuuviTagRecordSubjectRxSwift {
             try! request.fetchAll(db)
         }.removeDuplicates()
 
-        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) { [weak self] records in
+        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
+            [weak self] records in
             self?.subject.onNext(records.map({ $0.any }))
         }
 

@@ -59,7 +59,7 @@ class BackgroundProcessServiceiOS13: BackgroundProcessService {
             } else {
                 task.setTaskCompleted(success: true)
             }
-        }, failure: { error in
+        }, failure: { _ in
             task.setTaskCompleted(success: false)
         })
     }

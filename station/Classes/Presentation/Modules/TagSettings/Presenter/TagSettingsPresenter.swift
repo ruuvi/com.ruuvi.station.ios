@@ -188,7 +188,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToFixHumidityAdjustment() {
         if let humidity = humidity {
-//            let operation = calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag) TODO
+//            TODO
+//            let operation = calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag)
 //            operation.on(failure: { [weak self] (error) in
 //                self?.errorPresenter.present(error: error)
 //            })

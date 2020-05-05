@@ -334,7 +334,11 @@ extension TagChartsPresenter {
                 let userInfo = notification.userInfo,
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 self?.viewModel.uuid.value == uuid {
-                    self?.viewModel.alertState.value = sSelf.alertService.hasRegistrations(for: uuid) ? .registered : .empty
+                if sSelf.alertService.hasRegistrations(for: uuid) {
+                    self?.viewModel.alertState.value = .registered
+                } else {
+                    self?.viewModel.alertState.value = .empty
+                }
             }
         })
     }

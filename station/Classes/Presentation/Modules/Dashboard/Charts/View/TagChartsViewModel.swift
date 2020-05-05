@@ -21,7 +21,7 @@ struct TagChartsViewModel {
     init(type: TagChartsType) {
         self.type = type
     }
-    
+
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
