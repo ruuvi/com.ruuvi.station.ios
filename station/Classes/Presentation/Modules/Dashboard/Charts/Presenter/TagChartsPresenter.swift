@@ -190,6 +190,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
 }
 // MARK: - TagChartsInteractorOutput
 extension TagChartsPresenter: TagChartsInteractorOutput {
+    func interactorDidError(_ error: RUError) {
+        errorPresenter.present(error: error)
+    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
@@ -289,7 +292,7 @@ extension TagChartsPresenter {
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
-            self?.interactor.restartObservingData()
+                            self?.interactor.restartObservingData()
             self?.interactor.notifySettingsChanged()
         }
         humidityUnitToken = NotificationCenter
@@ -298,7 +301,7 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.interactor.restartObservingData()
+                            self?.interactor.restartObservingData()
             self?.interactor.notifySettingsChanged()
         })
     }
