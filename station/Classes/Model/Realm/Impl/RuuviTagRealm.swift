@@ -32,7 +32,7 @@ class RuuviTagRealm: Object, RuuviTagRealmProtocol {
         self.init()
         self.uuid = ruuviTag.id
         self.name = ruuviTag.name
-        self.mac = ruuviTag.mac
+        self.mac = ruuviTag.macId?.value
         self.version = ruuviTag.version
         self.isConnectable = ruuviTag.isConnectable
     }

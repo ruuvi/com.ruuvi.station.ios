@@ -9,7 +9,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
         context.bgWorker.enqueue {
             do {
@@ -27,7 +27,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
         context.bgWorker.enqueue {
             do {
@@ -45,7 +45,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
         context.bgWorker.enqueue {
             do {
@@ -100,7 +100,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(record.mac == nil)
+        assert(record.macId == nil)
         context.bgWorker.enqueue {
             do {
                 if let ruuviTag = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId) {
@@ -125,7 +125,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             do {
                 var failed = false
                 for record in records {
-                    assert(record.mac == nil)
+                    assert(record.macId == nil)
                     let extractedExpr: RuuviTagRealm? = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId)
                     if let ruuviTag = extractedExpr {
                         let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
@@ -154,7 +154,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
                 let result = RuuviTagSensorStruct(version: ruuviTagRealm.version,
                                                   luid: ruuviTagRealm.uuid.luid,
-                                                  mac: ruuviTagRealm.mac,
+                                                  macId: ruuviTagRealm.mac?.mac,
                                                   isConnectable: ruuviTagRealm.isConnectable,
                                                   name: ruuviTagRealm.name).any
                 promise.succeed(value: result)
@@ -172,7 +172,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
                 return RuuviTagSensorStruct(version: ruuviTagRealm.version,
                                             luid: ruuviTagRealm.uuid.luid,
-                                            mac: ruuviTagRealm.mac,
+                                            macId: ruuviTagRealm.mac?.mac,
                                             isConnectable: ruuviTagRealm.isConnectable,
                                             name: ruuviTagRealm.name).any
             }
@@ -190,7 +190,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             let result: [RuuviTagSensorRecord] = realmRecords.map { record in
                 return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
                                                   date: record.date,
-                                                  mac: nil,
+                                                  macId: nil,
                                                   rssi: record.rssi.value,
                                                   temperature: record.unitTemperature,
                                                   humidity: record.unitHumidity,
@@ -207,7 +207,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     }
 
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
-        assert(ruuviTag.mac == nil)
+        assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
         let promise = Promise<RuuviTagSensorRecord?, RUError>()
         guard let luid = ruuviTag.luid else {
@@ -222,7 +222,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             if let record = realmRecords.first {
                 let result = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
                                                        date: record.date,
-                                                       mac: nil,
+                                                       macId: nil,
                                                        rssi: record.rssi.value,
                                                        temperature: record.unitTemperature,
                                                        humidity: record.unitHumidity,

@@ -5,10 +5,14 @@ extension RuuviTagRealm: RuuviTagSensor {
         return uuid.luid
     }
 
+    var macId: MACIdentifier? {
+        return mac?.mac
+    }
+
     var any: AnyRuuviTagSensor {
         return AnyRuuviTagSensor(object: RuuviTagSensorStruct(version: version,
                                                               luid: luid,
-                                                              mac: mac,
+                                                              macId: macId,
                                                               isConnectable: isConnectable,
                                                               name: name))
     }

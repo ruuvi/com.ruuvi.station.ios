@@ -36,7 +36,7 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
     }
 
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
-        if ruuviTag.mac != nil {
+        if ruuviTag.macId != nil {
             return sqlite.readLast(ruuviTag)
         } else {
             return realm.readLast(ruuviTag)

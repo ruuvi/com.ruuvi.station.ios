@@ -51,7 +51,7 @@ class MigrationManagerToSQLite: MigrationManager {
 //            let keepConnection = connectionPersistence.keepConnection(to: realmTag.uuid.luid)
 //            connectionPersistence.setKeepConnection(keepConnection, for: mac)
 
-            idPersistence.set(mac: mac, for: realmTag.uuid.luid)
+            idPersistence.set(mac: mac.mac, for: realmTag.uuid.luid)
 
 //            if settingsPersistence.keepConnectionDialogWasShown(for: realmTag.uuid.luid) {
 //                settingsPersistence.setKeepConnectionDialogWasShown(for: realmTag.uuid.luid)
@@ -61,7 +61,7 @@ class MigrationManagerToSQLite: MigrationManager {
                 .on(failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
-            let records: [RuuviTagSensorRecord] = realmTag.data.compactMap({ $0.any?.with(mac: mac) })
+            let records: [RuuviTagSensorRecord] = realmTag.data.compactMap({ $0.any?.with(macId: mac.mac) })
             ruuviTagTank.create(records)
                 .on(failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)

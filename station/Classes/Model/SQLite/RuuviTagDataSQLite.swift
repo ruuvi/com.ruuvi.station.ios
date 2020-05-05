@@ -5,7 +5,7 @@ import Humidity
 struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     var ruuviTagId: String
     var date: Date
-    var mac: String?
+    var macId: MACIdentifier?
     var rssi: Int?
     var temperature: Temperature?
     var humidity: Humidity?
@@ -45,7 +45,7 @@ extension RuuviTagDataSQLite: FetchableRecord {
     init(row: Row) {
         ruuviTagId = row[RuuviTagDataSQLite.ruuviTagIdColumn]
         date = row[RuuviTagDataSQLite.dateColumn]
-        mac = row[RuuviTagDataSQLite.macColumn]
+        macId = MACIdentifierStruct(value: row[RuuviTagDataSQLite.macColumn])
         rssi = row[RuuviTagDataSQLite.rssiColumn]
         if let celsius = Double.fromDatabaseValue(row[RuuviTagDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)
@@ -82,7 +82,7 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.idColumn] = id
         container[RuuviTagDataSQLite.ruuviTagIdColumn] = ruuviTagId
         container[RuuviTagDataSQLite.dateColumn] = date
-        container[RuuviTagDataSQLite.macColumn] = mac
+        container[RuuviTagDataSQLite.macColumn] = macId?.value
         container[RuuviTagDataSQLite.rssiColumn] = rssi
         container[RuuviTagDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
         container[RuuviTagDataSQLite.relativeHumidityInPercentColumn] = humidity?.rh

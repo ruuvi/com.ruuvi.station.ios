@@ -3,7 +3,7 @@ import GRDB
 
 struct RuuviTagSQLite: RuuviTagSensor {
     var id: String
-    var mac: String?
+    var macId: MACIdentifier?
     var luid: LocalIdentifier?
     var name: String
     var version: Int
@@ -22,7 +22,7 @@ extension RuuviTagSQLite {
 extension RuuviTagSQLite: FetchableRecord {
     init(row: Row) {
         id = row[RuuviTagSQLite.idColumn]
-        mac = row[RuuviTagSQLite.macColumn]
+        macId = MACIdentifierStruct(value: row[RuuviTagSQLite.macColumn])
         luid = LocalIdentifierStruct(value: row[RuuviTagSQLite.luidColumn])
         name = row[RuuviTagSQLite.nameColumn]
         version = row[RuuviTagSQLite.versionColumn]
@@ -37,7 +37,7 @@ extension RuuviTagSQLite: PersistableRecord {
 
     func encode(to container: inout PersistenceContainer) {
         container[RuuviTagSQLite.idColumn] = id
-        container[RuuviTagSQLite.macColumn] = mac
+        container[RuuviTagSQLite.macColumn] = macId?.value
         container[RuuviTagSQLite.luidColumn] = luid?.value
         container[RuuviTagSQLite.nameColumn] = name
         container[RuuviTagSQLite.versionColumn] = version

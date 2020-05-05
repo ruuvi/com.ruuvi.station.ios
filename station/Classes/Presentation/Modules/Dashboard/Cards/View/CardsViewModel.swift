@@ -12,7 +12,7 @@ struct CardsViewModel {
 
     var id: Observable<String?> = Observable<String?>()
     var luid: Observable<AnyLocalIdentifier?> = Observable<AnyLocalIdentifier?>()
-    var mac: Observable<String?> = Observable<String?>()
+    var mac: Observable<AnyMACIdentifier?> = Observable<AnyMACIdentifier?>()
 
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
@@ -124,7 +124,7 @@ struct CardsViewModel {
         type = .ruuvi
         id.value = ruuviTag.id
         luid.value = ruuviTag.luid?.any
-        mac.value = ruuviTag.mac
+        mac.value = ruuviTag.macId?.any
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
@@ -134,7 +134,7 @@ struct CardsViewModel {
         type = .ruuvi
         id.value = ruuviTag.id
         luid.value = ruuviTag.uuid.luid.any
-        mac.value = ruuviTag.mac
+        mac.value = ruuviTag.mac?.mac.any
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
@@ -199,7 +199,7 @@ struct CardsViewModel {
         pressure.value = record.pressure?.converted(to: .hectopascals).value
         voltage.value = record.voltage?.converted(to: .volts).value
 
-        mac.value = record.mac
+        mac.value = record.macId?.any
         date.value = record.date
     }
 
@@ -239,7 +239,7 @@ struct CardsViewModel {
         version.value = ruuviTag.version
         voltage.value = ruuviTag.volts
 
-        mac.value = ruuviTag.mac
+        mac.value = ruuviTag.mac?.mac.any
         date.value = Date()
     }
 

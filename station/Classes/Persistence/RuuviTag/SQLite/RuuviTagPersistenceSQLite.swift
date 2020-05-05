@@ -15,9 +15,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(ruuviTag.mac != nil)
+        assert(ruuviTag.macId != nil)
         let entity = Entity(id: ruuviTag.id,
-                            mac: ruuviTag.mac,
+                            macId: ruuviTag.macId,
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
@@ -36,7 +36,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
 
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(record.mac != nil)
+        assert(record.macId != nil)
         do {
             try database.dbPool.write { db in
                 try record.sqlite.insert(db)
@@ -53,7 +53,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         do {
             try database.dbPool.write { db in
                 for record in records {
-                    assert(record.mac != nil)
+                    assert(record.macId != nil)
                     try record.sqlite.insert(db)
                 }
             }
@@ -115,7 +115,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     }
 
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
-        assert(ruuviTag.mac != nil)
+        assert(ruuviTag.macId != nil)
         let promise = Promise<RuuviTagSensorRecord?, RUError>()
         do {
             var sqliteRecord: Record?
@@ -133,9 +133,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
 
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(ruuviTag.mac != nil)
+        assert(ruuviTag.macId != nil)
         let entity = Entity(id: ruuviTag.id,
-                            mac: ruuviTag.mac,
+                            macId: ruuviTag.macId,
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
@@ -154,9 +154,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
 
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        assert(ruuviTag.mac != nil)
+        assert(ruuviTag.macId != nil)
         let entity = Entity(id: ruuviTag.id,
-                            mac: ruuviTag.mac,
+                            macId: ruuviTag.macId,
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,

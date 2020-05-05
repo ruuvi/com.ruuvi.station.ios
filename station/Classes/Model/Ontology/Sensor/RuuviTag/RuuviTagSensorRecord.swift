@@ -4,7 +4,7 @@ import Humidity
 protocol RuuviTagSensorRecord {
     var ruuviTagId: String { get }
     var date: Date { get }
-    var mac: String? { get }
+    var macId: MACIdentifier? { get }
     var rssi: Int? { get }
     var temperature: Temperature? { get }
     var humidity: Humidity? { get }
@@ -27,10 +27,10 @@ extension RuuviTagSensorRecord {
         return AnyRuuviTagSensorRecord(object: self)
     }
 
-    func with(mac: String) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(ruuviTagId: mac,
+    func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
+        return RuuviTagSensorRecordStruct(ruuviTagId: macId.value,
                                           date: date,
-                                          mac: mac,
+                                          macId: macId,
                                           rssi: rssi,
                                           temperature: temperature,
                                           humidity: humidity,
@@ -46,7 +46,7 @@ extension RuuviTagSensorRecord {
 struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     var ruuviTagId: String
     var date: Date
-    var mac: String?
+    var macId: MACIdentifier?
     var rssi: Int?
     var temperature: Temperature?
     var humidity: Humidity?
@@ -71,8 +71,8 @@ struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
         return object.date
     }
 
-    var mac: String? {
-        return object.mac
+    var macId: MACIdentifier? {
+        return object.macId
     }
 
     var rssi: Int? {

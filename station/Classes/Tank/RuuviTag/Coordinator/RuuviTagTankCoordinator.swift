@@ -10,10 +10,10 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var connectionPersistence: ConnectionPersistence!
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
-        if let mac = ruuviTag.mac, let uuid = ruuviTag.luid {
-            idPersistence.set(mac: mac, for: uuid)
+        if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
+            idPersistence.set(mac: macId, for: luid)
         }
-        if ruuviTag.mac != nil {
+        if ruuviTag.macId != nil {
             return sqlite.create(ruuviTag)
         } else {
             return realm.create(ruuviTag)
@@ -21,7 +21,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     }
 
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
-        if ruuviTag.mac != nil {
+        if ruuviTag.macId != nil {
             return sqlite.update(ruuviTag)
         } else {
             return realm.update(ruuviTag)
@@ -30,15 +30,15 @@ class RuuviTagTankCoordinator: RuuviTagTank {
 
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        if ruuviTag.mac != nil {
+        if ruuviTag.macId != nil {
             sqlite.delete(ruuviTag).on(success: { [weak self] success in
                 if let luid = ruuviTag.luid {
                     self?.backgroundPersistence.deleteCustomBackground(for: luid)
                     self?.connectionPersistence.setKeepConnection(false, for: luid)
-                } else if let mac = ruuviTag.mac {
+                } else if let macId = ruuviTag.macId {
                     // FIXME:
-//                    self?.backgroundPersistence.deleteCustomBackground(for: mac)
-//                    self?.connectionPersistence.setKeepConnection(false, for: mac)
+//                    self?.backgroundPersistence.deleteCustomBackground(for: macId)
+//                    self?.connectionPersistence.setKeepConnection(false, for: macId)
                 } else {
                     assertionFailure()
                 }
@@ -51,10 +51,10 @@ class RuuviTagTankCoordinator: RuuviTagTank {
                 if let luid = ruuviTag.luid {
                     self?.backgroundPersistence.deleteCustomBackground(for: luid)
                     self?.connectionPersistence.setKeepConnection(false, for: luid)
-                } else if let mac = ruuviTag.mac {
+                } else if let macId = ruuviTag.macId {
                     // FIXME:
-//                    self?.backgroundPersistence.deleteCustomBackground(for: mac)
-//                    self?.connectionPersistence.setKeepConnection(false, for: mac)
+//                    self?.backgroundPersistence.deleteCustomBackground(for: macId)
+//                    self?.connectionPersistence.setKeepConnection(false, for: macId)
                 } else {
                     assertionFailure()
                 }
@@ -68,11 +68,11 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     }
 
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
-        if record.mac != nil {
+        if record.macId != nil {
             return sqlite.create(record)
             // FIXME check if luid for ruuviTagId is ok
-        } else if let mac = idPersistence.mac(for: record.ruuviTagId.luid) {
-            return sqlite.create(record.with(mac: mac))
+        } else if let macId = idPersistence.mac(for: record.ruuviTagId.luid) {
+            return sqlite.create(record.with(macId: macId))
         } else {
             return realm.create(record)
         }
@@ -80,8 +80,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
 
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        let sqliteRecords = records.filter({ $0.mac != nil })
-        let realmRecords = records.filter({ $0.mac == nil })
+        let sqliteRecords = records.filter({ $0.macId != nil })
+        let realmRecords = records.filter({ $0.macId == nil })
         let sqliteOperation = sqlite.create(sqliteRecords)
         let realmOpearion = realm.create(realmRecords)
         Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
