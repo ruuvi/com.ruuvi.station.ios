@@ -287,29 +287,32 @@ extension CardsPresenter {
 
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
-           let viewModel = CardsViewModel(ruuviTag)
-           viewModel.humidityUnit.value = settings.humidityUnit
+            let viewModel = CardsViewModel(ruuviTag)
             if let luid = ruuviTag.luid {
                 viewModel.background.value = backgroundPersistence.background(for: luid)
                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
+                viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+                viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
                 // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
                 // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
                 // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
+                // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+                // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
+                viewModel.isConnected.value = false
+                viewModel.alertState.value = .empty
             } else {
                 assertionFailure()
             }
-           viewModel.temperatureUnit.value = settings.temperatureUnit
-           viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
-           viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id)
-                                                    ? .registered : .empty
-           ruuviTagTrunk.readLast(ruuviTag).on { record in
-               if let record = record {
-                   viewModel.update(record)
-               }
-           }
-           return viewModel
+            viewModel.humidityUnit.value = settings.humidityUnit
+            viewModel.temperatureUnit.value = settings.temperatureUnit
+            ruuviTagTrunk.readLast(ruuviTag).on { record in
+                if let record = record {
+                    viewModel.update(record)
+                }
+            }
+            return viewModel
         })
 
         var webViewModels = [CardsViewModel]()
