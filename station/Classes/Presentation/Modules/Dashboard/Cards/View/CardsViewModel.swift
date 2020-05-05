@@ -9,7 +9,11 @@ enum CardType {
 
 struct CardsViewModel {
     var type: CardType = .ruuvi
-    var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
+
+    var id: Observable<String?> = Observable<String?>()
+    var luid: Observable<AnyLocalIdentifier?> = Observable<AnyLocalIdentifier?>()
+    var mac: Observable<String?> = Observable<String?>()
+
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
     var fahrenheit: Observable<Double?> = Observable<Double?>()
@@ -24,7 +28,6 @@ struct CardsViewModel {
     var version: Observable<Int?> = Observable<Int?>()
     var voltage: Observable<Double?> = Observable<Double?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
-    var mac: Observable<String?> = Observable<String?>()
     var humidityOffset: Observable<Double?> = Observable<Double?>(0)
     var humidityOffsetDate: Observable<Date?> = Observable<Date?>()
     var date: Observable<Date?> = Observable<Date?>()
@@ -40,7 +43,8 @@ struct CardsViewModel {
 
     init(_ webTag: WebTagRealm) {
         type = .web
-        uuid.value = webTag.uuid
+        id.value = webTag.uuid
+        luid.value = webTag.uuid.luid.any
         name.value = webTag.name
         celsius.value = webTag.data.last?.celsius.value
         fahrenheit.value = webTag.data.last?.fahrenheit
@@ -118,18 +122,20 @@ struct CardsViewModel {
 
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
-        uuid.value = ruuviTag.luid ?? ruuviTag.id
-        name.value = ruuviTag.name
+        id.value = ruuviTag.id
+        luid.value = ruuviTag.luid?.any
         mac.value = ruuviTag.mac
+        name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
     }
 
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
-        uuid.value = ruuviTag.uuid
-        name.value = ruuviTag.name
+        id.value = ruuviTag.id
+        luid.value = ruuviTag.uuid.luid.any
         mac.value = ruuviTag.mac
+        name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
 
@@ -198,7 +204,6 @@ struct CardsViewModel {
     }
 
     func update(with ruuviTag: RuuviTag) {
-        uuid.value = ruuviTag.uuid
         isConnectable.value = ruuviTag.isConnectable
 
         celsius.value = ruuviTag.celsius
@@ -246,12 +251,12 @@ struct CardsViewModel {
 
 extension CardsViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(uuid.value)
+        hasher.combine(luid.value?.value)
     }
 }
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        return lhs.uuid.value == rhs.uuid.value
+        return lhs.luid.value?.value == rhs.luid.value?.value
     }
 }

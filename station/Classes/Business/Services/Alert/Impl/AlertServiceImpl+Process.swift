@@ -60,7 +60,7 @@ extension AlertServiceImpl {
     private func process(relativeHumidity: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .relativeHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: relativeHumidity),
             let rh = ruuviTag.relativeHumidity {
-            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
+            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
             var sh = rh + ho
             if sh > 100.0 {
                 sh = 100.0
@@ -86,7 +86,7 @@ extension AlertServiceImpl {
         if case .absoluteHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: absoluteHumidity),
             let rh = ruuviTag.relativeHumidity,
             let c = ruuviTag.celsius {
-            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
+            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
             var sh = rh + ho
             if sh > 100.0 {
                 sh = 100.0
@@ -115,7 +115,7 @@ extension AlertServiceImpl {
     private func process(dewPoint: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.uuid, of: dewPoint),
             let rh = ruuviTag.relativeHumidity, let c = ruuviTag.celsius {
-            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid).0
+            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
             var sh = rh + ho
             if sh > 100.0 {
                 sh = 100.0

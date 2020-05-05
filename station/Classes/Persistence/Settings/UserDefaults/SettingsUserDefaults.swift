@@ -4,12 +4,12 @@ class SettingsUserDegaults: Settings {
 
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
 
-    func keepConnectionDialogWasShown(for uuid: String) -> Bool {
-        return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + uuid)
+    func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool {
+        return UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
-    func setKeepConnectionDialogWasShown(for uuid: String) {
-        UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + uuid)
+    func setKeepConnectionDialogWasShown(for luid: LocalIdentifier) {
+        UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
     var language: Language {

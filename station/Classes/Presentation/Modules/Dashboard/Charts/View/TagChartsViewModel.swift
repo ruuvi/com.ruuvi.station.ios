@@ -39,7 +39,7 @@ struct TagChartsViewModel {
 
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
-        uuid.value = ruuviTag.luid ?? ruuviTag.id
+        uuid.value = ruuviTag.luid?.value
         mac.value = ruuviTag.mac
         name.value = ruuviTag.name
         isConnectable.value = ruuviTag.isConnectable
