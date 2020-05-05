@@ -102,9 +102,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewWillAppear() {
-        syncChartViews()
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
+        syncChartViews()
         interactor?.restartObservingData()
     }
 
