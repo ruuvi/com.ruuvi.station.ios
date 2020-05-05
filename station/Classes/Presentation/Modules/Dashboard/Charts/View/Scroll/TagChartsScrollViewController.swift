@@ -313,7 +313,7 @@ extension TagChartsScrollViewController {
         scrollView.layoutSubviews()
     }
 
-    private func bindviewModel() {
+    private func bindViewModel() {
         nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
         alertImageView.bind(viewModel.isConnected) { (view, isConnected) in
@@ -347,7 +347,7 @@ extension TagChartsScrollViewController {
 
     private func updateUIViewModel() {
         if isViewLoaded {
-            bindviewModel()
+            bindViewModel()
         }
     }
 

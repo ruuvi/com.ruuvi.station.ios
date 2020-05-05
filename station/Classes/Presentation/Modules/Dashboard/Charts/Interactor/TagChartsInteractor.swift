@@ -49,6 +49,7 @@ class TagChartsInteractor {
 extension TagChartsInteractor: TagChartsInteractorInput {
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
         ruuviTagSensor = ruuviTag
+        lastMeasurement = nil
         createChartModules()
     }
     var chartViews: [TagChartView] {
@@ -112,7 +113,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
-            self?.ruuviTagData = []
             self?.restartObservingData()
             promise.succeed(value: ())
         }, failure: {error in
@@ -128,6 +128,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         }, completion: { [weak self] in
             self?.stopObservingRuuviTagsData()
             self?.ruuviTagData = []
+            self?.reloadCharts()
             self?.restartObservingData()
             promise.succeed(value: ())
         })
