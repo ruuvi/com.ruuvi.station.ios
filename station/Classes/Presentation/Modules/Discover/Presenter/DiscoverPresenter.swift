@@ -101,7 +101,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.ruuviTagId == device.id }) {
             let sensor = RuuviTagSensorStruct(version: ruuviTag.version,
-                                              luid: ruuviTag.uuid,
+                                              luid: ruuviTag.uuid.luid,
                                               mac: ruuviTag.mac,
                                               isConnectable: ruuviTag.isConnectable,
                                               name: displayName)

@@ -129,7 +129,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi,
-            ruuviTag.luid == viewModel.uuid.value {
+            ruuviTag.luid?.value == viewModel.uuid.value {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: nil)
         } else {
             assert(false)
@@ -268,8 +268,17 @@ extension TagChartsPresenter {
 
     private func syncViewModel() {
         viewModel = TagChartsViewModel(ruuviTag)
-        viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
-        viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            viewModel.background.value = backgroundPersistence.background(for: luid)
+            viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+        } else if let mac = ruuviTag.mac {
+            // FIXME
+            // viewModel.background.value = backgroundPersistence.background(for: mac)
+             viewModel.isConnected.value = false
+        } else {
+            assertionFailure()
+        }
+
         viewModel.alertState.value = alertService
             .hasRegistrations(for: ruuviTag.id) ? .registered : .empty
     }
@@ -301,9 +310,9 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main) { [weak self] notification in
             if let userInfo = notification.userInfo,
-                let uuid = userInfo[BPDidChangeBackgroundKey.uuid] as? String,
-                self?.viewModel.uuid.value == uuid {
-                self?.viewModel.background.value = self?.backgroundPersistence.background(for: uuid)
+                let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+                            self?.viewModel.uuid.value == luid.value {
+                self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
             }
         }
     }

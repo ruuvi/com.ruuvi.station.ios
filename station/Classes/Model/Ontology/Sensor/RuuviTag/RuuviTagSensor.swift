@@ -7,7 +7,7 @@ extension RuuviTagSensor {
         if let mac = mac {
             return mac
         } else if let luid = luid {
-            return luid
+            return luid.value
         } else {
             fatalError()
         }
@@ -52,7 +52,7 @@ extension RuuviTagSensor {
 
 struct RuuviTagSensorStruct: RuuviTagSensor {
     var version: Int
-    var luid: String? // local unqiue id
+    var luid: LocalIdentifier? // local unqiue id
     var mac: String?
     var isConnectable: Bool
     var name: String
@@ -67,7 +67,7 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
     var version: Int {
         return object.version
     }
-    var luid: String? {
+    var luid: LocalIdentifier? {
         return object.luid
     }
     var mac: String? {

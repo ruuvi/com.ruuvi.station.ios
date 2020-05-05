@@ -7,17 +7,20 @@ class ImagePersistenceDocuments: ImagePersistence {
     private let bgDir = "bg"
     private var isBgDirCreated = false
 
-    func fetchBg(for uuid: String) -> UIImage? {
+    func fetchBg(for luid: LocalIdentifier) -> UIImage? {
+        let uuid = luid.value
         guard let url = try? getBgDirectory().appendingPathComponent(uuid + ext) else { return nil }
         return UIImage(contentsOfFile: url.path)
     }
 
-    func deleteBgIfExists(for uuid: String) {
+    func deleteBgIfExists(for luid: LocalIdentifier) {
+        let uuid = luid.value
         guard let url = try? getBgDirectory().appendingPathComponent(uuid + ext) else { return }
         try? FileManager.default.removeItem(at: url)
     }
 
-    func persistBg(image: UIImage, for uuid: String) -> Future<URL, RUError> {
+    func persistBg(image: UIImage, for luid: LocalIdentifier) -> Future<URL, RUError> {
+        let uuid = luid.value
         let promise = Promise<URL, RUError>()
         DispatchQueue.global().async {
             if let data = image.jpegData(compressionQuality: 1.0) {

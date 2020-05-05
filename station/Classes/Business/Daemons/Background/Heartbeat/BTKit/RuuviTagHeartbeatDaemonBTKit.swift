@@ -17,7 +17,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var disconnectTokens = [String: ObservationToken]()
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
-    private var savedDate = [String: Date]() // uuid:date
+    private var savedDate = [String: Date]() // [luid: date]
     private var ruuviTagsToken: RUObservationToken?
 
     override init() {
@@ -103,7 +103,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     @objc private func stopDaemon() {
         invalidateTokens()
-        connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0) })
+        connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0.value ) })
         stopWork()
     }
 }
@@ -178,14 +178,14 @@ extension RuuviTagHeartbeatDaemonBTKit {
 extension RuuviTagHeartbeatDaemonBTKit {
     private func handleRuuviTagsChange() {
         connectionPersistence.keepConnectionUUIDs
-            .filter { (uuid) -> Bool in
-                ruuviTags.contains(where: { $0.luid == uuid }) && !connectTokens.keys.contains(uuid)
-            }.forEach({ connect(uuid: $0) })
+            .filter { (luid) -> Bool in
+                ruuviTags.contains(where: { $0.luid?.any == luid }) && !connectTokens.keys.contains(luid.value)
+        }.forEach({ connect(uuid: $0.value ) })
 
         connectionPersistence.keepConnectionUUIDs
-            .filter { (uuid) -> Bool in
-                !ruuviTags.contains(where: { $0.luid == uuid }) && connectTokens.keys.contains(uuid)
-            }.forEach({ disconnect(uuid: $0) })
+            .filter { (luid) -> Bool in
+                !ruuviTags.contains(where: { $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
+        }.forEach({ disconnect(uuid: $0.value) })
      }
 
      @objc private func connect(uuid: String) {

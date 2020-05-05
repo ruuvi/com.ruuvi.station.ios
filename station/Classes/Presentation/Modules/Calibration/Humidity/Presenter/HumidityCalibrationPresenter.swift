@@ -62,15 +62,15 @@ extension HumidityCalibrationPresenter: HumidityCalibrationViewOutput {
 extension HumidityCalibrationPresenter {
     private func startScanningHumidity() {
         advertisementToken?.invalidate()
-        guard let uuid = ruuviTag.luid else { return }
-        advertisementToken = foreground.observe(self, uuid: uuid) { [weak self] (_, device) in
+        guard let luid = ruuviTag.luid else { return }
+        advertisementToken = foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.humidity = tag.relativeHumidity
                 self?.updateView()
             }
         }
         heartbeatToken?.invalidate()
-        heartbeatToken = background.observe(self, uuid: uuid) { [weak self] (_, device) in
+        heartbeatToken = background.observe(self, uuid: luid.value) { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.humidity = tag.relativeHumidity
                 self?.updateView()
@@ -83,7 +83,15 @@ extension HumidityCalibrationPresenter {
 extension HumidityCalibrationPresenter {
     func updateView() {
         view.oldHumidity = humidity
-        view.humidityOffset = calibrationService.humidityOffset(for: ruuviTag.id).0
-        view.lastCalibrationDate = calibrationService.humidityOffset(for: ruuviTag.id).1
+        if let luid = ruuviTag.luid {
+            view.humidityOffset = calibrationService.humidityOffset(for: luid).0
+            view.lastCalibrationDate = calibrationService.humidityOffset(for: luid).1
+        } else if let mac = ruuviTag.mac {
+            // FIXME:
+//            view.humidityOffset = calibrationService.humidityOffset(for: mac).0
+//            view.lastCalibrationDate = calibrationService.humidityOffset(for: mac).1
+        } else {
+            assertionFailure()
+        }
     }
 }

@@ -101,13 +101,13 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     }
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        guard let uuid = ruuviTagSensor.luid else {
+        guard let luid = ruuviTagSensor.luid else {
             promise.fail(error: .unexpected(.viewModelUUIDIsNil))
             return promise.future
         }
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
-        let op = gattService.syncLogs(uuid: uuid,
+        let op = gattService.syncLogs(uuid: luid.value,
                                       mac: ruuviTagSensor.mac,
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,

@@ -2,10 +2,10 @@ import Foundation
 
 protocol ConnectionPersistence {
 
-    var keepConnectionUUIDs: [String] { get }
+    var keepConnectionUUIDs: [AnyLocalIdentifier] { get }
 
-    func keepConnection(to uuid: String) -> Bool
-    func setKeepConnection(_ value: Bool, for uuid: String)
+    func keepConnection(to luid: LocalIdentifier) -> Bool
+    func setKeepConnection(_ value: Bool, for luid: LocalIdentifier)
 }
 
 extension Notification.Name {

@@ -2,6 +2,7 @@
 import Foundation
 import BTKit
 import UIKit
+import Future
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -102,7 +103,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
+        } else if let mac = ruuviTag.mac {
+//            FIXME
+//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: mac)
+        } else {
+            assertionFailure()
+        }
     }
 
     func viewDidAskToRemoveRuuviTag() {
@@ -217,8 +225,18 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        let set = backgroundPersistence.setCustomBackground(image: photo, for: ruuviTag.id)
-        set.on(success: { [weak self] _ in
+        let set: Future<URL, RUError>?
+        if let luid = ruuviTag.luid {
+            set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
+        } else if let mac = ruuviTag.mac {
+            // FIXME
+            // set = backgroundPersistence.setCustomBackground(image: photo, for: mac)
+            set = nil
+        } else {
+            set = nil
+            assertionFailure()
+        }
+        set?.on(success: { [weak self] _ in
             self?.viewModel.background.value = photo
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
@@ -240,25 +258,33 @@ extension TagSettingsPresenter {
         viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: ruuviTag.id)
         viewModel.movementAlertDescription.value = alertService.movementDescription(for: ruuviTag.id)
 
-        viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            viewModel.background.value = backgroundPersistence.background(for: luid)
+        } else if let mac = ruuviTag.mac {
+            // FIXME
+            // viewModel.background.value = backgroundPersistence.background(for: mac)
+        } else {
+            assertionFailure()
+        }
 
-        if ruuviTag.name == ruuviTag.luid || ruuviTag.name == ruuviTag.mac {
+
+        if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.mac {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable
-        if let uuid = ruuviTag.luid {
-            viewModel.isConnected.value = background.isConnected(uuid: uuid)
-            viewModel.keepConnection.value = connectionPersistence.keepConnection(to: uuid)
+        if let luid = ruuviTag.luid {
+            viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+            viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
         } else {
             viewModel.isConnected.value = false
             viewModel.keepConnection.value = false
         }
 
         viewModel.mac.value = ruuviTag.mac
-        viewModel.uuid.value = ruuviTag.luid ?? ruuviTag.id
+        viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         syncAlerts()
     }
@@ -408,13 +434,13 @@ extension TagSettingsPresenter {
         guard let luid = ruuviTag.luid else {
             return
         }
-        advertisementToken = foreground.observe(self, uuid: luid, closure: { [weak self] (_, device) in
+        advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
         })
         heartbeatToken?.invalidate()
-        heartbeatToken = background.observe(self, uuid: luid, closure: { [weak self] (_, device) in
+        heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
                 self?.sync(device: tag)
             }
@@ -676,7 +702,7 @@ extension TagSettingsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
-                uuid == self?.ruuviTag.luid {
+                            uuid == self?.ruuviTag.luid?.value {
                 self?.viewModel.isConnected.value = true
             }
         })
@@ -689,7 +715,7 @@ extension TagSettingsPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                uuid == self?.ruuviTag.luid {
+                            uuid == self?.ruuviTag.luid?.value {
                 self?.viewModel.isConnected.value = false
             }
         })

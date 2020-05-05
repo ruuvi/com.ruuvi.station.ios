@@ -94,9 +94,9 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         for ruuviTag in ruuviTags {
-            guard let uuid = ruuviTag.luid else { continue }
+            guard let luid = ruuviTag.luid else { continue }
             observeTokens.append(foreground.observe(self,
-                                                    uuid: uuid,
+                                                    uuid: luid.value,
                                                     options: [.callbackQueue(.untouch)]) {
                                                         [weak self] (_, device) in
                 guard let sSelf = self else { return }

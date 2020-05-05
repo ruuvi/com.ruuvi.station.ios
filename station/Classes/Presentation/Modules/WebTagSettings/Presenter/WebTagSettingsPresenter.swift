@@ -68,7 +68,7 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid)
+        view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid.luid)
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {
@@ -163,7 +163,7 @@ extension WebTagSettingsPresenter {
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        let set = backgroundPersistence.setCustomBackground(image: photo, for: webTag.uuid)
+        let set = backgroundPersistence.setCustomBackground(image: photo, for: webTag.uuid.luid)
         set.on(success: { [weak self] _ in
             self?.view.viewModel.background.value = photo
         }, failure: { [weak self] (error) in
@@ -374,7 +374,7 @@ extension WebTagSettingsPresenter {
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.humidityUnit.value = settings.humidityUnit
-        view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
+        view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
 
         if webTag.name == WebTagLocationSource.manual.title {
             view.viewModel.name.value = nil
