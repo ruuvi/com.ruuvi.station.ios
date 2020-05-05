@@ -133,10 +133,15 @@ extension TagChartPresenter {
     }
 
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
-        newValues.forEach {
-            viewModel.chartData.value?.addEntry(chartEntry(for: $0), dataSetIndex: 0)
-            viewModel.chartData.value?.notifyDataChanged()
+        guard let chartData = viewModel.chartData.value else {
+            return
         }
+        newValues.forEach {
+            chartData.addEntry(chartEntry(for: $0), dataSetIndex: 0)
+            chartData.notifyDataChanged()
+        }
+        drawCirclesIfNeeded(for: chartData)
+        view.reloadData()
     }
 
     private func drawCirclesIfNeeded(for chartData: LineChartData?) {

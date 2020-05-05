@@ -5,15 +5,13 @@ import BTKit
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
     var gattService: GATTService!
-    var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrank: RuuviTagTrunk!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
     var lastMeasurement: RuuviMeasurement?
-    private var ruuviTagToken: RUObservationToken?
-    private var ruuviTagDataToken: RUObservationToken?
+    private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
         didSet {
@@ -29,7 +27,6 @@ class TagChartsInteractor {
     }
 
     func createChartModules() {
-        chartModules = []
         MeasurementType.chartsCases.forEach({
             let viewModel = TagChartViewModel(type: $0)
             let module = TagChartAssembler.createModule()
@@ -42,11 +39,8 @@ class TagChartsInteractor {
             $0.reloadChart()
         })
     }
-    deinit {
-        ruuviTagToken?.invalidate()
-        ruuviTagDataToken?.invalidate()
-    }
 }
+// MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
         ruuviTagSensor = ruuviTag
@@ -57,16 +51,15 @@ extension TagChartsInteractor: TagChartsInteractorInput {
          return chartModules.map({$0.chartView})
     }
     func restartObservingData() {
-        let op = ruuviTagTrank.readAll(ruuviTagSensor.id)
-        op.on(success: { [weak self] (results) in
-            self?.ruuviTagData = results.map({ $0.measurement })
+        fetchAll { [weak self] in
+            self?.startSheduler()
             self?.reloadCharts()
-        }, failure: {[weak self] (error) in
-            self?.presenter.interactorDidError(error)
-        })
+        }
     }
     func stopObservingRuuviTagsData() {
-        ruuviTagDataToken?.invalidate()
+        chartModules = []
+        timer?.invalidate()
+        timer = nil
     }
     func export() -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
@@ -105,7 +98,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(failure: {(error) in
             promise.fail(error: error)
         }, completion: { [weak self] in
-            self?.stopObservingRuuviTagsData()
             self?.ruuviTagData = []
             self?.reloadCharts()
             self?.restartObservingData()
@@ -137,8 +129,44 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
     }
 }
+// MARK: - TagChartModuleOutput
 extension TagChartsInteractor: TagChartModuleOutput {
     var dataSource: [RuuviMeasurement] {
         return ruuviTagData
+    }
+}
+// MARK: - Private
+extension TagChartsInteractor {
+    private func startSheduler() {
+        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(settings.chartIntervalSeconds),
+                                     repeats: true,
+                                     block: { [weak self] (_) in
+            self?.fetchLast()
+        })
+    }
+    private func fetchLast() {
+        guard let lastDate = lastMeasurement?.date.timeIntervalSince1970 else {
+            return
+        }
+        let op = ruuviTagTrank.readLast(ruuviTagSensor.id, from: lastDate)
+        op.on(success: { [weak self] (results) in
+            guard results.count > 0 else { return }
+            let lastResults = results.map({ $0.measurement })
+            self?.lastMeasurement = lastResults.last
+            self?.ruuviTagData.append(contentsOf: lastResults)
+            self?.chartModules.forEach({
+                $0.insertMeasurements(lastResults)
+            })
+        }, failure: {[weak self] (error) in
+            self?.presenter.interactorDidError(error)
+        })
+    }
+    private func fetchAll(_ competion: (() -> Void)? = nil) {
+        let op = ruuviTagTrank.readAll(ruuviTagSensor.id)
+        op.on(success: { [weak self] (results) in
+            self?.ruuviTagData = results.map({ $0.measurement })
+        }, failure: {[weak self] (error) in
+            self?.presenter.interactorDidError(error)
+        }, completion: competion)
     }
 }
