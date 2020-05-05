@@ -217,7 +217,7 @@ extension TagChartPresenter {
         guard let y = value else {
             fatalError("before need implement chart with current type!")
         }
-        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: Double(Int(y)))
+        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: Double(round(100*y)/100))
     }
     // swiftlint:disable function_body_length
     private func setDownSampled(dataSet: [RuuviMeasurement], completion: (() -> Void)? = nil) {
@@ -305,7 +305,7 @@ extension TagChartPresenter {
                     next_a = range_offs // Next a is this b
                 }
             }
-            chartData.addEntry(ChartDataEntry(x: max_area_point.0, y: Double(Int(max_area_point.1))), dataSetIndex: 0)
+            chartData.addEntry(ChartDataEntry(x: max_area_point.0, y: Double(round(100 * max_area_point.1)/100)), dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
         chartData.addEntry(chartEntry(for: dataSet[dataSet.count - 2]), dataSetIndex: 0)
