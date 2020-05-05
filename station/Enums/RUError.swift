@@ -115,6 +115,7 @@ enum UnexpectedError: Error {
     case callerDeinitedDuringOperation
     case failedToReverseGeocodeCoordinate
     case failedToFindRuuviTag
+    case failedToFindVirtualTag
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
     case attemptToReadDataFromRealmWithoutLUID
@@ -137,6 +138,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.viewModelUUIDIsNil".localized()
         case .attemptToReadDataFromRealmWithoutLUID:
             return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
+        case .failedToFindVirtualTag:
+            return "UnexpectedError.failedToFindVirtualTag".localized()
         }
     }
 }

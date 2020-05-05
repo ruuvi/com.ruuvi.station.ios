@@ -9,4 +9,8 @@ class VirtualTagTrunkCoordinator: VirtualTagTrunk {
         return realm.readAll()
     }
 
+    func readOne(_ id: String) -> Future<AnyVirtualTagSensor, RUError> {
+        return realm.readOne(id)
+    }
+
 }

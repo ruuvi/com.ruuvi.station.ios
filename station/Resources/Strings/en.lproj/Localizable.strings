@@ -292,6 +292,7 @@
 "UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the sensor";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";

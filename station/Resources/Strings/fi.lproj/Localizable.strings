@@ -292,6 +292,7 @@
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
