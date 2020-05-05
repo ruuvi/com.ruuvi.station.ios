@@ -217,7 +217,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
         context.bgWorker.enqueue {
             let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
-                                   .filter("ruuviTag.uuid == %@", luid)
+                                   .filter("ruuviTag.uuid == %@", luid.value)
                                    .sorted(byKeyPath: "date", ascending: false)
             if let record = realmRecords.first {
                 let result = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
