@@ -185,7 +185,7 @@ extension TagChartPresenter {
     }
 //swiftlint:disable:next cyclomatic_complexity
     private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry {
-        let value: Double?
+        var value: Double?
         switch viewModel.type {
         case .temperature:
             value = data.temperature?.converted(to: settings.temperatureUnit.unitTemperature).value
@@ -217,7 +217,7 @@ extension TagChartPresenter {
         guard let y = value else {
             fatalError("before need implement chart with current type!")
         }
-        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: y)
+        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: Double(Int(y)))
     }
     // swiftlint:disable function_body_length
     private func setDownSampled(dataSet: [RuuviMeasurement], completion: (() -> Void)? = nil) {
