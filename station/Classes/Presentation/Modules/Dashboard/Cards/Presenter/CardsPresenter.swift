@@ -287,21 +287,21 @@ extension CardsPresenter {
 
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
-                       let viewModel = CardsViewModel(ruuviTag)
-                       viewModel.humidityUnit.value = settings.humidityUnit
-                       viewModel.humidityOffset.value = calibrationService.humidityOffset(for: ruuviTag.id).0
-                       viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: ruuviTag.id).1
-                       viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
-                       viewModel.temperatureUnit.value = settings.temperatureUnit
-                       viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
-                       viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id) ? .registered : .empty
-                       ruuviTagTrunk.readLast(ruuviTag).on { record in
-                           if let record = record {
-                               viewModel.update(record)
-                           }
-                       }
-                       return viewModel
-                   })
+            let viewModel = CardsViewModel(ruuviTag)
+            viewModel.humidityUnit.value = settings.humidityUnit
+            viewModel.humidityOffset.value = calibrationService.humidityOffset(for: ruuviTag.id).0
+            viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: ruuviTag.id).1
+            viewModel.background.value = backgroundPersistence.background(for: ruuviTag.id)
+            viewModel.temperatureUnit.value = settings.temperatureUnit
+            viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
+            viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id) ? .registered : .empty
+            ruuviTagTrunk.readLast(ruuviTag).on { record in
+                if let record = record {
+                    viewModel.update(record)
+                }
+            }
+            return viewModel
+        })
         var webViewModels = [CardsViewModel]()
         if webTags != nil {
             webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in

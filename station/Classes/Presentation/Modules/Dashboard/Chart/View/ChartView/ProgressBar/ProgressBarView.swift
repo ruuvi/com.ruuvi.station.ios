@@ -12,7 +12,7 @@ class ProgressBarView: UIProgressView {
     }()
 
     public var hideOnComplete: Bool = true
-    
+
     private var inProgress: Bool {
         return !(progress == 0.0 || progress == 1.0)
     }
