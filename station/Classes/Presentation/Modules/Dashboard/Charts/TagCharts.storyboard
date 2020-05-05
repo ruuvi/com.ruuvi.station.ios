@@ -24,12 +24,15 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg9" translatesAutoresizingMaskIntoConstraints="NO" id="cpa-Qi-Dhz">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HDU-IT-z0E">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                            </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient_layer" translatesAutoresizingMaskIntoConstraints="NO" id="APW-oc-hoK">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HDU-IT-z0E">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag_bg_layer" translatesAutoresizingMaskIntoConstraints="NO" id="BaO-7f-YjR">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-nega" translatesAutoresizingMaskIntoConstraints="NO" id="YoH-aD-scc">
                                 <rect key="frame" x="64" y="57" width="124" height="24"/>
@@ -189,7 +192,9 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="BaO-7f-YjR" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="08g-Zc-g8k"/>
                             <constraint firstItem="Acs-0n-bAk" firstAttribute="bottom" secondItem="7JW-Bt-vav" secondAttribute="bottom" id="5L9-uN-Ylf"/>
+                            <constraint firstItem="BaO-7f-YjR" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="6fA-hV-6DD"/>
                             <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="top" secondItem="Hho-MY-BeM" secondAttribute="bottom" constant="8" id="6wG-3v-tvU"/>
                             <constraint firstItem="yVc-EN-JgQ" firstAttribute="leading" secondItem="7JW-Bt-vav" secondAttribute="leading" constant="8" id="9LS-ky-gzT"/>
                             <constraint firstItem="yVc-EN-JgQ" firstAttribute="top" secondItem="7JW-Bt-vav" secondAttribute="top" constant="8" id="9SC-IC-hIu"/>
@@ -205,6 +210,7 @@
                             <constraint firstItem="Hho-MY-BeM" firstAttribute="top" secondItem="YoH-aD-scc" secondAttribute="bottom" constant="23" id="aQ9-qc-E00"/>
                             <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="boM-YJ-rfA"/>
                             <constraint firstItem="APW-oc-hoK" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="c3E-vy-tTt"/>
+                            <constraint firstAttribute="bottom" secondItem="BaO-7f-YjR" secondAttribute="bottom" id="cNP-9q-Elm"/>
                             <constraint firstItem="APW-oc-hoK" firstAttribute="trailing" secondItem="ceB-eX-jxA" secondAttribute="trailing" id="cVG-EZ-38Z"/>
                             <constraint firstItem="cpa-Qi-Dhz" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="djY-tR-lv7"/>
                             <constraint firstItem="Hbe-Ju-Xdg" firstAttribute="top" secondItem="Hho-MY-BeM" secondAttribute="bottom" constant="8" id="fQr-aC-8bV"/>
@@ -223,6 +229,7 @@
                             <constraint firstItem="HDU-IT-z0E" firstAttribute="leading" secondItem="ceB-eX-jxA" secondAttribute="leading" id="sqg-bC-7Ip"/>
                             <constraint firstItem="fr6-UZ-XyS" firstAttribute="centerX" secondItem="xLk-w7-fy6" secondAttribute="centerX" id="tnN-Wf-Fdw"/>
                             <constraint firstItem="Hho-MY-BeM" firstAttribute="centerX" secondItem="APW-oc-hoK" secondAttribute="centerX" id="upk-pm-zkK"/>
+                            <constraint firstItem="BaO-7f-YjR" firstAttribute="trailing" secondItem="ceB-eX-jxA" secondAttribute="trailing" id="x1P-9J-TrA"/>
                             <constraint firstItem="HDU-IT-z0E" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="xht-Av-Kdt"/>
                             <constraint firstItem="cpa-Qi-Dhz" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="yXK-px-bhV"/>
                         </constraints>
@@ -238,6 +245,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="alertImageView" destination="fr6-UZ-XyS" id="JAg-Ns-pLI"/>
+                        <outlet property="bacgroundImageViewOverlay" destination="BaO-7f-YjR" id="xg8-P5-0i4"/>
                         <outlet property="backgroundImageView" destination="HDU-IT-z0E" id="x8n-1M-Nhd"/>
                         <outlet property="clearButton" destination="yLP-G9-4YF" id="bKW-qG-xxo"/>
                         <outlet property="exportButton" destination="Thd-OX-VMR" id="9cc-ah-Qv9"/>
@@ -265,5 +273,6 @@
         <image name="icon-alert-off" width="17" height="20"/>
         <image name="icon-cards-button" width="18" height="18"/>
         <image name="logo-nega" width="501" height="101"/>
+        <image name="tag_bg_layer" width="960" height="1440"/>
     </resources>
 </document>
