@@ -29,7 +29,7 @@ end
 
 target 'station_dev' do
   shared_pods
-  pod 'FLEX'
+  pod 'FLEX', :configurations => ['Debug']
 end
 
 target 'stationTests' do
