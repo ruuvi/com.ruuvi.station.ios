@@ -316,9 +316,9 @@ extension CardsPresenter {
             return viewModel
         })
 
-        var webViewModels = [CardsViewModel]()
+        var virtualViewModels = [CardsViewModel]()
         if virtualTags != nil {
-            webViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
+            virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
@@ -328,7 +328,7 @@ extension CardsPresenter {
                 return viewModel
             }) ?? []
         }
-        viewModels = ruuviViewModels + webViewModels
+        viewModels = ruuviViewModels + virtualViewModels
 
         // if no tags, open discover
         if viewModels.count == 0 {
