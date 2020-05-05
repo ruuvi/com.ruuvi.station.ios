@@ -1283,9 +1283,7 @@
 		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
-		A9A48A5C244CD9E70004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
-		A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		DD24BE4925155FE5C6E72CBC /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE0DC322A822B7D68A59A83F /* Pods_station.framework */; };
 /* End PBXBuildFile section */
 
@@ -5238,7 +5236,6 @@
 				0E2864372460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
-				A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */,
 				0E8BACC1245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
 				0E6BADA123856A01003A2D4C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
@@ -6016,7 +6013,6 @@
 				0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
-				A9A48A5C244CD9E70004FD50 /* UIWindow+Shake.swift in Sources */,
 				0E8BACBF245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */,
