@@ -1,3 +1,4 @@
+//swiftlint:disable:next file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -42,9 +43,11 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
+    private var needSyncCharts: Bool = false
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             interactor.configure(withTag: ruuviTag)
+            needSyncCharts = oldValue != ruuviTag
             syncViewModel()
         }
     }
@@ -104,7 +107,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewWillAppear() {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
-        syncChartViews()
+        syncChartViewsIfNeeded()
         interactor?.restartObservingData()
     }
 
@@ -260,6 +263,12 @@ extension TagChartsPresenter: AlertServiceObserver {
 
 // MARK: - Private
 extension TagChartsPresenter {
+    private func syncChartViewsIfNeeded() {
+        if needSyncCharts {
+            syncChartViews()
+            needSyncCharts = false
+        }
+    }
 
     private func tryToShowSwipeUpHint() {
         if UIApplication.shared.statusBarOrientation.isLandscape
