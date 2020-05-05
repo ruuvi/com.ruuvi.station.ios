@@ -73,9 +73,9 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
        observeTokens.forEach({ $0.invalidate() })
        observeTokens.removeAll()
         for ruuviTag in ruuviTags {
-            guard let uuid = ruuviTag.luid else { return }
+            guard let luid = ruuviTag.luid else { return }
             observeTokens.append(foreground.observe(self,
-                                                    uuid: uuid,
+                                                    uuid: luid.value,
                                                     options: [.callbackQueue(.untouch)]) {
                                                         [weak self] (_, device) in
                 guard let sSelf = self else { return }
@@ -99,7 +99,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 })
         }
         if let mac = pair.device.mac, mac != pair.ruuviTag.mac {
-            idPersistence.set(mac: mac, for: pair.device.uuid)
+            idPersistence.set(mac: mac, for: pair.device.uuid.luid)
             ruuviTagTank.update(pair.ruuviTag.with(mac: mac))
                 .on(failure: { [weak self] error in
                     self?.post(error: error)

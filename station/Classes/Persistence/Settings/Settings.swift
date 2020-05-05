@@ -34,6 +34,6 @@ protocol Settings {
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
 
-    func keepConnectionDialogWasShown(for uuid: String) -> Bool
-    func setKeepConnectionDialogWasShown(for uuid: String)
+    func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
+    func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
 }

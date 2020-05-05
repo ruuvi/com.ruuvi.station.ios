@@ -32,16 +32,32 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         let promise = Promise<Bool, RUError>()
         if ruuviTag.mac != nil {
             sqlite.delete(ruuviTag).on(success: { [weak self] success in
-                self?.backgroundPersistence.deleteCustomBackground(for: ruuviTag.id)
-                self?.connectionPersistence.setKeepConnection(false, for: ruuviTag.id)
+                if let luid = ruuviTag.luid {
+                    self?.backgroundPersistence.deleteCustomBackground(for: luid)
+                    self?.connectionPersistence.setKeepConnection(false, for: luid)
+                } else if let mac = ruuviTag.mac {
+                    // FIXME:
+//                    self?.backgroundPersistence.deleteCustomBackground(for: mac)
+//                    self?.connectionPersistence.setKeepConnection(false, for: mac)
+                } else {
+                    assertionFailure()
+                }
                 promise.succeed(value: success)
             }, failure: { error in
                 promise.fail(error: error)
             })
         } else {
             realm.delete(ruuviTag).on(success: { [weak self] success in
-                self?.backgroundPersistence.deleteCustomBackground(for: ruuviTag.id)
-                self?.connectionPersistence.setKeepConnection(false, for: ruuviTag.id)
+                if let luid = ruuviTag.luid {
+                    self?.backgroundPersistence.deleteCustomBackground(for: luid)
+                    self?.connectionPersistence.setKeepConnection(false, for: luid)
+                } else if let mac = ruuviTag.mac {
+                    // FIXME:
+//                    self?.backgroundPersistence.deleteCustomBackground(for: mac)
+//                    self?.connectionPersistence.setKeepConnection(false, for: mac)
+                } else {
+                    assertionFailure()
+                }
                 promise.succeed(value: success)
             }, failure: { error in
                 promise.fail(error: error)
@@ -54,7 +70,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         if record.mac != nil {
             return sqlite.create(record)
-        } else if let mac = idPersistence.mac(for: record.ruuviTagId) {
+            // FIXME check if luid for ruuviTagId is ok
+        } else if let mac = idPersistence.mac(for: record.ruuviTagId.luid) {
             return sqlite.create(record.with(mac: mac))
         } else {
             return realm.create(record)

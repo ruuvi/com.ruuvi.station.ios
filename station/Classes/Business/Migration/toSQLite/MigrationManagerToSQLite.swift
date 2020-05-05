@@ -34,28 +34,28 @@ class MigrationManagerToSQLite: MigrationManager {
 
     private func migrate(realmTag: RuuviTagRealm) {
         if let mac = realmTag.mac {
-            AlertType.allCases.forEach({ type in
-                if let alert = alertPersistence.alert(for: realmTag.uuid, of: type) {
-                    alertPersistence.register(type: alert, for: mac)
-                }
-            })
-            if let image = backgroundPersistence.background(for: realmTag.uuid) {
-                backgroundPersistence.setCustomBackground(image: image, for: mac)
-                    .on(failure: { [weak self] error in
-                        self?.errorPresenter.present(error: error)
-                    })
-            }
-            let humidityOffset = calibrationPersistence.humidityOffset(for: realmTag.uuid)
-            calibrationPersistence.setHumidity(date: humidityOffset.1, offset: humidityOffset.0, for: mac)
+//            AlertType.allCases.forEach({ type in
+//                if let alert = alertPersistence.alert(for: realmTag.uuid, of: type) {
+//                    alertPersistence.register(type: alert, for: mac)
+//                }
+//            })
+//            if let image = backgroundPersistence.background(for: realmTag.uuid.luid) {
+//                backgroundPersistence.setCustomBackground(image: image, for: mac)
+//                    .on(failure: { [weak self] error in
+//                        self?.errorPresenter.present(error: error)
+//                    })
+//            }
+//            let humidityOffset = calibrationPersistence.humidityOffset(for: realmTag.uuid.luid)
+//            calibrationPersistence.setHumidity(date: humidityOffset.1, offset: humidityOffset.0, for: mac)
 
-            let keepConnection = connectionPersistence.keepConnection(to: realmTag.uuid)
-            connectionPersistence.setKeepConnection(keepConnection, for: mac)
+//            let keepConnection = connectionPersistence.keepConnection(to: realmTag.uuid.luid)
+//            connectionPersistence.setKeepConnection(keepConnection, for: mac)
 
-            idPersistence.set(mac: mac, for: realmTag.uuid)
+            idPersistence.set(mac: mac, for: realmTag.uuid.luid)
 
-            if settingsPersistence.keepConnectionDialogWasShown(for: realmTag.uuid) {
-                settingsPersistence.setKeepConnectionDialogWasShown(for: mac)
-            }
+//            if settingsPersistence.keepConnectionDialogWasShown(for: realmTag.uuid.luid) {
+//                settingsPersistence.setKeepConnectionDialogWasShown(for: realmTag.uuid.luid)
+//            }
 
             ruuviTagTank.create(realmTag)
                 .on(failure: { [weak self] error in
