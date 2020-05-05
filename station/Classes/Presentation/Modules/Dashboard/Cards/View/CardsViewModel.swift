@@ -130,42 +130,6 @@ struct CardsViewModel {
         isConnectable.value = ruuviTag.isConnectable
     }
 
-    init(_ ruuviTag: RuuviTagRealm) {
-        type = .ruuvi
-        id.value = ruuviTag.id
-        luid.value = ruuviTag.uuid.luid.any
-        mac.value = ruuviTag.mac?.mac.any
-        name.value = ruuviTag.name
-        version.value = ruuviTag.version
-        isConnectable.value = ruuviTag.isConnectable
-
-        celsius.value = ruuviTag.data.last?.celsius.value
-        fahrenheit.value = ruuviTag.data.last?.fahrenheit
-        kelvin.value = ruuviTag.data.last?.kelvin
-        relativeHumidity.value = ruuviTag.data.last?.humidity.value
-        if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
-//            var sh = rh + ruuviTag.humidityOffset TODO: respect calibration
-//            if sh > 100.0 {
-//                sh = 100.0
-//            }
-            let h = Humidity(c: c, rh: rh / 100.0)
-            absoluteHumidity.value = h.ah
-            dewPointCelsius.value = h.Td
-            dewPointFahrenheit.value = h.TdF
-            dewPointKelvin.value = h.TdK
-        } else {
-            absoluteHumidity.value = nil
-            dewPointCelsius.value = nil
-            dewPointFahrenheit.value = nil
-            dewPointKelvin.value = nil
-        }
-        pressure.value = ruuviTag.data.last?.pressure.value
-
-        voltage.value = ruuviTag.data.last?.voltage.value
-
-        date.value = ruuviTag.data.last?.date
-    }
-
     func update(_ record: RuuviTagSensorRecord) {
         celsius.value = record.temperature?.converted(to: .celsius).value
         fahrenheit.value = record.temperature?.converted(to: .fahrenheit).value
