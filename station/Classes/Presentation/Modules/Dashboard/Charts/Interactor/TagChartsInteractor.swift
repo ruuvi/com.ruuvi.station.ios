@@ -7,6 +7,7 @@ class TagChartsInteractor {
     var gattService: GATTService!
     var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTank: RuuviTagTank!
+    var ruuviTagTrank: RuuviTagTrunk!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
@@ -56,35 +57,13 @@ extension TagChartsInteractor: TagChartsInteractorInput {
          return chartModules.map({$0.chartView})
     }
     func restartObservingData() {
-        ruuviTagDataToken?.invalidate()
-        ruuviTagDataToken = ruuviTagReactor.observe( ruuviTagSensor.id, { [weak self] results in
+        let op = ruuviTagTrank.readAll(ruuviTagSensor.id)
+        op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
             self?.reloadCharts()
-//                self?.handleInitialRuuviTagData(results)
+        }, failure: {[weak self] (error) in
+            self?.presenter.interactorDidError(error)
         })
-        //        ruuviTagDataToken = ruuviTagDataRealm.observe {
-        //            [weak self] (change) in
-        //            switch change {
-        //            case .initial(let results):
-        //                self?.isLoading = true
-        //                if results.isEmpty {
-        //                    self?.handleEmptyResults()
-        //                } else {
-        //                    self?.handleInitialRuuviTagData(results)
-        //                }
-        //                self?.isLoading = false
-        //            case .update(let results, _, let insertions, _):
-        //                // sync every 1 second
-        //                self?.isSyncing = false
-        //                if insertions.isEmpty {
-        //                    self?.handleEmptyResults()
-        //                } else {
-        //                    self?.handleUpdateRuuviTagData(results, insertions: insertions)
-        //                }
-        //            default:
-        //                break
-        //            }
-        //        }
     }
     func stopObservingRuuviTagsData() {
         ruuviTagDataToken?.invalidate()
