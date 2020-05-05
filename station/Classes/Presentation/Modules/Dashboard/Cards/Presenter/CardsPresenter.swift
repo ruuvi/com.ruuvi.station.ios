@@ -52,6 +52,7 @@ class CardsPresenter: CardsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
+    private var calibrationHumidityDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var virtualTags: Results<WebTagRealm>? {
@@ -127,6 +128,9 @@ class CardsPresenter: CardsModuleInput {
         if let lnmDidReceiveToken = lnmDidReceiveToken {
             NotificationCenter.default.removeObserver(lnmDidReceiveToken)
         }
+        if let calibrationHumidityDidChangeToken = calibrationHumidityDidChangeToken {
+            NotificationCenter.default.removeObserver(calibrationHumidityDidChangeToken)
+        }
     }
 }
 
@@ -141,6 +145,7 @@ extension CardsPresenter: CardsViewOutput {
         startObservingConnectionPersistenceNotifications()
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
+        startObservingCalibrationHumidityChanges()
         startObservingLocalNotificationsManager()
         pushNotificationsManager.registerForRemoteNotifications()
     }
@@ -722,6 +727,23 @@ extension CardsPresenter {
                 })
             }
         })
+    }
+
+    private func startObservingCalibrationHumidityChanges() {
+        calibrationHumidityDidChangeToken = NotificationCenter
+                   .default
+                   .addObserver(forName: .CalibrationServiceHumidityDidChange,
+                                object: nil,
+                                queue: .main,
+                                using: { [weak self] (notification) in
+                   if let userInfo = notification.userInfo,
+                       let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier {
+                       self?.viewModels.filter({ $0.luid.value == luid.any }).forEach({ (viewModel) in
+                        viewModel.humidityOffset.value = self?.calibrationService.humidityOffset(for: luid).0
+                        viewModel.humidityOffsetDate.value = self?.calibrationService.humidityOffset(for: luid).1
+                       })
+                   }
+               })
     }
 
     private func updateAlertState(for viewModel: CardsViewModel) {
