@@ -28,10 +28,13 @@ enum BlastNotificationType: String {
 
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
-    var realmContext: RealmContext!
+    var ruuviTagTrunk: RuuviTagTrunk!
+    var virtualTagTrunk: VirtualTagTrunk!
+    var idPersistence: IDPersistence!
     var alertService: AlertService!
     var settings: Settings!
-
+    var errorPresenter: ErrorPresenter!
+    
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
     var lowRelativeHumidityAlerts = [String: Date]()
@@ -66,24 +69,33 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         }
     }
 
-    func showDidConnect(uuid: String) {
+    private func id(for uuid: String) -> String {
+        var id: String
+        if let macId = idPersistence.mac(for: uuid.luid) {
+            id = macId.value
+        } else {
+            id = uuid
+        }
+        return id
+    }
 
+    func showDidConnect(uuid: String) {
         let content = UNMutableNotificationContent()
         content.title = "LocalNotificationsManager.DidConnect.title".localized()
         content.sound = .default
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
 
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = alertService.connectionDescription(for: uuid) ?? ""
-        } else {
-            content.body = alertService.connectionDescription(for: uuid) ?? ""
-        }
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
     func showDidDisconnect(uuid: String) {
@@ -91,17 +103,18 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.sound = .default
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
-
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+
+        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = alertService.connectionDescription(for: uuid) ?? ""
-        } else {
-            content.body = alertService.connectionDescription(for: uuid) ?? ""
-        }
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
     func notifyDidMove(for uuid: String, counter: Int) {
@@ -111,15 +124,17 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.categoryIdentifier = blast.id
 
         content.title = "LocalNotificationsManager.DidMove.title".localized()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+
+        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = alertService.movementDescription(for: uuid) ?? ""
-        } else {
-            content.body = alertService.movementDescription(for: uuid) ?? ""
-        }
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            content.body = sSelf.alertService.movementDescription(for: uuid) ?? ""
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
@@ -200,11 +215,6 @@ extension LocalNotificationsManagerImpl {
             content.title = title
             content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
             content.categoryIdentifier = lowHigh.id
-            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
-                content.subtitle = ruuviTag.name
-            } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
-                content.subtitle = webTag.name
-            }
 
             let body: String
             switch type {
@@ -221,9 +231,20 @@ extension LocalNotificationsManagerImpl {
             }
             content.body = body
 
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: uuid + type.rawValue, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            ruuviTagTrunk.readOne(id(for: uuid)).on(success: { ruuviTag in
+                content.subtitle = ruuviTag.name
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: uuid + type.rawValue,
+                                                    content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
+            virtualTagTrunk.readOne(id(for: uuid)).on(success: { virtualTag in
+                content.subtitle = virtualTag.name
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: uuid + type.rawValue,
+                                                    content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
 
             switch reason {
             case .low:

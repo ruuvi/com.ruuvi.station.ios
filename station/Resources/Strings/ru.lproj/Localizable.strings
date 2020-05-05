@@ -292,6 +292,7 @@
 "UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

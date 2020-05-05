@@ -18,6 +18,19 @@ class WebTagPersistenceRealm: WebTagPersistence {
         return promise.future
     }
 
+    func readOne(_ id: String) -> Future<AnyVirtualTagSensor, RUError> {
+        let promise = Promise<AnyVirtualTagSensor, RUError>()
+        context.bgWorker.enqueue {
+            if let webTagRealm = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: id) {
+                let result = VirtualTagSensorStruct(id: webTagRealm.id, name: webTagRealm.name).any
+                promise.succeed(value: result)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindVirtualTag))
+            }
+        }
+        return promise.future
+    }
+
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         context.bgWorker.enqueue {
