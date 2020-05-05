@@ -195,8 +195,9 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidScroll(to viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value {
-            tagCharts?.configure(uuid: luid.value)
+        if let luid = viewModel.luid.value,
+            let sensor = ruuviTags.first(where: {$0.luid?.any == luid}) {
+            tagCharts?.configure(ruuviTag: sensor)
         } else {
             assert(false)
         }
@@ -286,30 +287,31 @@ extension CardsPresenter {
 
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
-                       let viewModel = CardsViewModel(ruuviTag)
-                       viewModel.humidityUnit.value = settings.humidityUnit
-                        if let luid = ruuviTag.luid {
-                            viewModel.background.value = backgroundPersistence.background(for: luid)
-                            viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
-                            viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
-                        } else if let mac = ruuviTag.mac {
-                            // FIXME viewModel.background.value = backgroundPersistence.background(for: mac)
-                            // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: mac).0
-                            // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: mac).1
-                        } else {
-                            assertionFailure()
-                        }
-                       viewModel.temperatureUnit.value = settings.temperatureUnit
-                       viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
-                       viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id)
-                                                                ? .registered : .empty
-                       ruuviTagTrunk.readLast(ruuviTag).on { record in
-                           if let record = record {
-                               viewModel.update(record)
-                           }
-                       }
-                       return viewModel
-                   })
+           let viewModel = CardsViewModel(ruuviTag)
+           viewModel.humidityUnit.value = settings.humidityUnit
+            if let luid = ruuviTag.luid {
+                viewModel.background.value = backgroundPersistence.background(for: luid)
+                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
+                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
+            } else if let mac = ruuviTag.mac {
+                // FIXME viewModel.background.value = backgroundPersistence.background(for: mac)
+                // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: mac).0
+                // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: mac).1
+            } else {
+                assertionFailure()
+            }
+           viewModel.temperatureUnit.value = settings.temperatureUnit
+           viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
+           viewModel.alertState.value = alertService.hasRegistrations(for: ruuviTag.id)
+                                                    ? .registered : .empty
+           ruuviTagTrunk.readLast(ruuviTag).on { record in
+               if let record = record {
+                   viewModel.update(record)
+               }
+           }
+           return viewModel
+        })
+
         var webViewModels = [CardsViewModel]()
         if webTags != nil {
             webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
@@ -495,7 +497,8 @@ extension CardsPresenter {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid.luid.any }) {
                         self?.view.scroll(to: index)
-                        self?.tagCharts?.configure(uuid: uuid)
+                        #warning("implement if need show charts")
+//                        self?.tagCharts?.configure(uuid: uuid)
                     }
                     if let viewModels = self?.viewModels,
                         let settings = self?.settings,
@@ -518,6 +521,9 @@ extension CardsPresenter {
             switch change {
             case .initial(let ruuviTags):
                 self?.ruuviTags = ruuviTags.map({ $0.any })
+                if let firstTag = ruuviTags.first {
+                    self?.tagCharts?.configure(ruuviTag: firstTag)
+                }
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
@@ -528,7 +534,7 @@ extension CardsPresenter {
                 self?.observeRuuviTags()
                 if let index = self?.viewModels.firstIndex(where: { $0.luid.value == sensor.luid?.any }) {
                     self?.view.scroll(to: index)
-                    self?.tagCharts?.configure(uuid: sensor.id)
+                    self?.tagCharts?.configure(ruuviTag: sensor)
                     if let viewModels = self?.viewModels,
                         let settings = self?.settings,
                         !settings.cardsSwipeHintWasShown,
@@ -844,9 +850,10 @@ extension CardsPresenter {
                          queue: .main,
                          using: { [weak self] (notification) in
             if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
-                let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid.luid.any }) {
+                let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid.luid.any }),
+                let ruuviTag = self?.ruuviTags.first(where: {$0.luid?.value == uuid}) {
                 self?.view.scroll(to: index)
-                self?.tagCharts?.configure(uuid: uuid)
+                self?.tagCharts?.configure(ruuviTag: ruuviTag)
             }
         })
     }

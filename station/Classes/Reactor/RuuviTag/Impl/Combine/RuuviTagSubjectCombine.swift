@@ -21,6 +21,7 @@ class RuuviTagSubjectCombine {
         ruuviTagsRealmToken?.invalidate()
     }
 
+    //swiftlint:disable:next cyclomatic_complexity
     init(sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm
@@ -60,7 +61,8 @@ class RuuviTagSubjectCombine {
                                                     .map { $0.element }
                     for ins in insertions {
                         sSelf.insertSubject.send(ruuviSensors[ins].any)
-                        sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins) // TODO: test if ok with multiple
+                        // TODO: test if ok with multiple
+                        sSelf.ruuviTagRealmCache.insert(ruuviSensors[ins].any, at: ins)
                     }
                     for mod in modifications {
                         sSelf.updateSubject.send(ruuviSensors[mod].any)
