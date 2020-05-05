@@ -102,7 +102,7 @@ class MigrationManagerToVIPER: MigrationManager {
             }
 
             if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
-                self.backgroundPersistence.setBackground(id, for: uuid)
+                self.backgroundPersistence.setBackground(id, for: uuid.luid)
             }
 
         })

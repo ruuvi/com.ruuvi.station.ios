@@ -1,13 +1,13 @@
 import Foundation
 
 extension RuuviTagRealm: RuuviTagSensor {
-    var luid: String? {
-        return uuid
+    var luid: LocalIdentifier? {
+        return uuid.luid
     }
 
     var any: AnyRuuviTagSensor {
         return AnyRuuviTagSensor(object: RuuviTagSensorStruct(version: version,
-                                                              luid: uuid,
+                                                              luid: luid,
                                                               mac: mac,
                                                               isConnectable: isConnectable,
                                                               name: name))

@@ -7,20 +7,43 @@ class CalibrationServiceImpl: CalibrationService {
     func calibrateHumiditySaltTest(currentValue: Double, for ruuviTag: RuuviTagSensor) {
         let date = Date()
         let offset = 75.0 - currentValue
-        calibrationPersistence.setHumidity(date: date, offset: offset, for: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
+        } else if let mac = ruuviTag.mac {
+            // FIXME
+//            calibrationPersistence.setHumidity(date: date, offset: offset, for: mac)
+        } else {
+            assertionFailure()
+        }
     }
 
     func calibrateHumidityTo100Percent(currentValue: Double, for ruuviTag: RuuviTagSensor) {
         let date = Date()
         let offset = 100.0 - currentValue
-        calibrationPersistence.setHumidity(date: date, offset: offset, for: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
+        } else if let mac = ruuviTag.mac {
+            // FIXME
+            // calibrationPersistence.setHumidity(date: date, offset: offset, for: mac)
+        } else {
+            assertionFailure()
+        }
+
     }
 
     func cleanHumidityCalibration(for ruuviTag: RuuviTagSensor) {
-        calibrationPersistence.setHumidity(date: nil, offset: 0, for: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            calibrationPersistence.setHumidity(date: nil, offset: 0, for: luid)
+        } else if let mac = ruuviTag.mac {
+            // FIXME
+            // calibrationPersistence.setHumidity(date: nil, offset: 0, for: mac)
+        } else {
+            assertionFailure()
+        }
+
     }
 
-    func humidityOffset(for id: String) -> (Double, Date?) {
-        return calibrationPersistence.humidityOffset(for: id)
+    func humidityOffset(for luid: LocalIdentifier) -> (Double, Date?) {
+        return calibrationPersistence.humidityOffset(for: luid)
     }
 }

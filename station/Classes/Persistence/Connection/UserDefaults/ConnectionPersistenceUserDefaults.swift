@@ -5,11 +5,13 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
 
-    var keepConnectionUUIDs: [String] {
-        return prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
+    var keepConnectionUUIDs: [AnyLocalIdentifier] {
+        let strings = prefs.array(forKey: keepConnectionArrayUDKey) as? [String]
+        return strings?.map({ $0.luid.any }) ?? []
     }
 
-    func keepConnection(to uuid: String) -> Bool {
+    func keepConnection(to luid: LocalIdentifier) -> Bool {
+        let uuid = luid.value
         assert(uuid.count == 36)
         if let array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String] {
             return array.contains(uuid)
@@ -18,7 +20,8 @@ class ConnectionPersistenceUserDefaults: ConnectionPersistence {
         }
     }
 
-    func setKeepConnection(_ value: Bool, for uuid: String) {
+    func setKeepConnection(_ value: Bool, for luid: LocalIdentifier) {
+        let uuid = luid.value
         assert(uuid.count == 36)
         if value {
             if var array = prefs.array(forKey: keepConnectionArrayUDKey) as? [String],

@@ -11,7 +11,7 @@ struct CardsViewModel {
     var type: CardType = .ruuvi
 
     var id: Observable<String?> = Observable<String?>()
-    var luid: Observable<String?> = Observable<String?>(UUID().uuidString)
+    var luid: Observable<AnyLocalIdentifier?> = Observable<AnyLocalIdentifier?>()
     var mac: Observable<String?> = Observable<String?>()
 
     var name: Observable<String?> = Observable<String?>()
@@ -44,7 +44,7 @@ struct CardsViewModel {
     init(_ webTag: WebTagRealm) {
         type = .web
         id.value = webTag.uuid
-        luid.value = webTag.uuid
+        luid.value = webTag.uuid.luid.any
         name.value = webTag.name
         celsius.value = webTag.data.last?.celsius.value
         fahrenheit.value = webTag.data.last?.fahrenheit
@@ -123,7 +123,7 @@ struct CardsViewModel {
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
         id.value = ruuviTag.id
-        luid.value = ruuviTag.luid ?? ruuviTag.id
+        luid.value = ruuviTag.luid?.any
         mac.value = ruuviTag.mac
         name.value = ruuviTag.name
         version.value = ruuviTag.version
@@ -133,7 +133,7 @@ struct CardsViewModel {
     init(_ ruuviTag: RuuviTagRealm) {
         type = .ruuvi
         id.value = ruuviTag.id
-        luid.value = ruuviTag.uuid
+        luid.value = ruuviTag.uuid.luid.any
         mac.value = ruuviTag.mac
         name.value = ruuviTag.name
         version.value = ruuviTag.version
@@ -251,12 +251,12 @@ struct CardsViewModel {
 
 extension CardsViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(luid.value)
+        hasher.combine(luid.value?.value)
     }
 }
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        return lhs.luid.value == rhs.luid.value
+        return lhs.luid.value?.value == rhs.luid.value?.value
     }
 }

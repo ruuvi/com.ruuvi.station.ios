@@ -152,7 +152,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         context.bgWorker.enqueue {
             if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
                 let result = RuuviTagSensorStruct(version: ruuviTagRealm.version,
-                                                  luid: ruuviTagRealm.uuid,
+                                                  luid: ruuviTagRealm.uuid.luid,
                                                   mac: ruuviTagRealm.mac,
                                                   isConnectable: ruuviTagRealm.isConnectable,
                                                   name: ruuviTagRealm.name).any
@@ -170,7 +170,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
             let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
                 return RuuviTagSensorStruct(version: ruuviTagRealm.version,
-                                            luid: ruuviTagRealm.uuid,
+                                            luid: ruuviTagRealm.uuid.luid,
                                             mac: ruuviTagRealm.mac,
                                             isConnectable: ruuviTagRealm.isConnectable,
                                             name: ruuviTagRealm.name).any
@@ -219,7 +219,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                    .filter("ruuviTag.uuid == %@", luid)
                                    .sorted(byKeyPath: "date", ascending: false)
             if let record = realmRecords.first {
-                let result = RuuviTagSensorRecordStruct(ruuviTagId: luid,
+                let result = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
                                                        date: record.date,
                                                        mac: nil,
                                                        rssi: record.rssi.value,
