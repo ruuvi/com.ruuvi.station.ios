@@ -271,7 +271,6 @@ extension TagSettingsPresenter {
             assertionFailure()
         }
 
-
         if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.macId?.value {
             viewModel.name.value = nil
         } else {
