@@ -27,6 +27,7 @@ class TagChartsInteractor {
     }
 
     func createChartModules() {
+        chartModules = []
         MeasurementType.chartsCases.forEach({
             let viewModel = TagChartViewModel(type: $0)
             let module = TagChartAssembler.createModule()
