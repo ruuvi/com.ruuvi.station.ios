@@ -49,6 +49,7 @@ class TagChartsInteractor {
 extension TagChartsInteractor: TagChartsInteractorInput {
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
         ruuviTagSensor = ruuviTag
+        lastMeasurement = nil
         createChartModules()
     }
     var chartViews: [TagChartView] {
