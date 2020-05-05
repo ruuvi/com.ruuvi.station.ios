@@ -1,5 +1,4 @@
 import UIKit
-#if DEVELOPMENT
 import FLEX
 
 extension UIWindow {
@@ -10,4 +9,3 @@ extension UIWindow {
         }
     }
 }
-#endif
