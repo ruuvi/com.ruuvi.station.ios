@@ -23,6 +23,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
+    var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
 
     private var ruuviTag: RuuviTagSensor! {
@@ -196,11 +197,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToFixHumidityAdjustment() {
         if let humidity = humidity {
-//            TODO
-//            let operation = calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag)
-//            operation.on(failure: { [weak self] (error) in
-//                self?.errorPresenter.present(error: error)
-//            })
+            calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag)
         }
     }
 
@@ -657,22 +654,25 @@ extension TagSettingsPresenter {
     }
 
     private func bindMovementAlert(_ ruuviTag: RuuviTagSensor) {
-//        bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in TODO
-//            let last = ruuviTag.data.sorted(byKeyPath: "date").last?.movementCounter.value ?? 0
-//            let type: AlertType = .movement(last: last)
-//            let currentState = observer.alertService.isOn(type: type, for: ruuviTag.id)
-//            if currentState != isOn.bound {
-//                if isOn.bound {
-//                    observer.alertService.register(type: type, for: ruuviTag.id)
-//                } else {
-//                    observer.alertService.unregister(type: type, for: ruuviTag.id)
-//                }
-//            }
-//        }
-//
-//        bind(viewModel.movementAlertDescription, fire: false) { observer, movementAlertDescription in
-//            observer.alertService.setMovement(description: movementAlertDescription, for: ruuviTag.id)
-//        }
+        bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in
+            observer.ruuviTagTrunk.readLast(self.ruuviTag).on(success: { record in
+                let last = record?.movementCounter ?? 0
+                let type: AlertType = .movement(last: last)
+                let currentState = observer.alertService.isOn(type: type, for: ruuviTag.id)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: ruuviTag.id)
+                    } else {
+                        observer.alertService.unregister(type: type, for: ruuviTag.id)
+                    }
+                }
+            }, failure: { error in
+                observer.errorPresenter.present(error: error)
+            })
+        }
+        bind(viewModel.movementAlertDescription, fire: false) { observer, movementAlertDescription in
+            observer.alertService.setMovement(description: movementAlertDescription, for: ruuviTag.id)
+        }
     }
 
     private func startObservingSettingsChanges() {
