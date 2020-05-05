@@ -15,6 +15,7 @@ class TagChartsScrollViewController: UIViewController {
     @IBOutlet weak var exportButton: UIButton!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var bacgroundImageViewOverlay: UIImageView!
     @IBOutlet weak var alertImageView: UIImageView!
 
     var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi) {
@@ -316,6 +317,9 @@ extension TagChartsScrollViewController {
     private func bindViewModel() {
         nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
+        bacgroundImageViewOverlay.bind(viewModel.background, block: {
+            $0.isHidden = $1 == nil
+        })
         alertImageView.bind(viewModel.isConnected) { (view, isConnected) in
             view.isHidden = !isConnected.bound
         }
