@@ -507,8 +507,6 @@ extension CardsPresenter {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid.luid.any }) {
                         self?.view.scroll(to: index)
-                        #warning("implement if need show charts")
-//                        self?.tagCharts?.configure(uuid: uuid)
                     }
                     if let viewModels = self?.viewModels,
                         let settings = self?.settings,
