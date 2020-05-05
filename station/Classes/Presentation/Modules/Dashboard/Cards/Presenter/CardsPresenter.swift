@@ -201,8 +201,6 @@ extension CardsPresenter: CardsViewOutput {
         if let luid = viewModel.luid.value,
             let sensor = ruuviTags.first(where: {$0.luid?.any == luid}) {
             tagCharts?.configure(ruuviTag: sensor)
-        } else {
-            assert(false)
         }
     }
 }
