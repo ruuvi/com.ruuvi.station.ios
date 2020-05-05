@@ -37,4 +37,3 @@ struct AnyVirtualTagSensor: VirtualTagSensor, Equatable, Hashable {
         hasher.combine(id)
     }
 }
-

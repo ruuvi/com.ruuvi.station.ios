@@ -1,6 +1,7 @@
 import Swinject
 
 class PersistenceAssembly: Assembly {
+//swiftlint:disable:next function_body_length
     func assemble(container: Container) {
 
         container.register(AlertPersistence.self) { _ in
@@ -71,7 +72,7 @@ class PersistenceAssembly: Assembly {
             persistence.context = r.resolve(RealmContext.self)
             return persistence
         }
-        
+
         container.register(WebTagPersistenceRealm.self) { r in
             let persistence = WebTagPersistenceRealm()
             persistence.context = r.resolve(RealmContext.self)

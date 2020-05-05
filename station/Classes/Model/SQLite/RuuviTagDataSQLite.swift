@@ -51,7 +51,7 @@ extension RuuviTagDataSQLite: FetchableRecord {
             temperature = Temperature(value: celsius, unit: .celsius)
             if let relativeHumidity
                 = Double.fromDatabaseValue(row[RuuviTagDataSQLite.relativeHumidityInPercentColumn]) {
-                humidity = Humidity(c: celsius, rh: relativeHumidity / 100.0)
+                humidity = Humidity(c: celsius, rh: relativeHumidity)
             }
         }
         if let hectopascals = Double.fromDatabaseValue(row[RuuviTagDataSQLite.hectopascalsColumn]) {

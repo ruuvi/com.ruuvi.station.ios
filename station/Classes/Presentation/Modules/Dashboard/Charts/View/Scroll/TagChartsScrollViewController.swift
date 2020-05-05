@@ -1,39 +1,63 @@
-// swiftlint:disable file_length
 import UIKit
 import Charts
 import BTKit
 import GestureInstructions
 
 class TagChartsScrollViewController: UIViewController {
-    var output: (TagChartsViewOutput & TagChartViewOutput)!
+    var output: TagChartsViewOutput!
 
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
 
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var clearButton: UIButton!
+    @IBOutlet weak var syncButton: UIButton!
+    @IBOutlet weak var exportButton: UIButton!
+    @IBOutlet weak var syncStatusLabel: UILabel!
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var alertImageView: UIImageView!
 
-    var viewModels = [TagChartsViewModel]() {
+    var viewModel: TagChartsViewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
-            updateUIViewModels()
+            updateUIViewModel()
         }
     }
-
+    private var chartViews: [TagChartView] = [] {
+        didSet {
+            oldValue.forEach({
+                $0.removeFromSuperview()
+            })
+        }
+    }
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
-    private var views = [TrippleChartView]()
-    private var currentPage: Int {
-        return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
-    }
-    private var currentTrippleView: TrippleChartView {
-        return views[currentPage]
-    }
-    private let noChartDataText = "TagCharts.NoChartData.text"
 
     deinit {
         if let appDidBecomeActiveToken = appDidBecomeActiveToken {
             NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
         }
+    }
+// MARK: - Actions
+    @IBAction func didTriggerCards(_ sender: Any) {
+        output.viewDidTriggerCards(for: viewModel)
+    }
+
+    @IBAction func didTriggerSettings(_ sender: Any) {
+        output.viewDidTriggerSettings(for: viewModel)
+    }
+
+    @IBAction func didTriggerClear(_ sender: Any) {
+        output.viewDidTriggerClear(for: viewModel)
+    }
+
+    @IBAction func didTriggerSync(_ sender: Any) {
+        output.viewDidTriggerSync(for: viewModel)
+    }
+
+    @IBAction func didTriggerExport(_ sender: Any) {
+        output.viewDidTriggerExport(for: viewModel)
     }
 }
 
@@ -43,35 +67,16 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         return self.isViewLoaded && self.view.window != nil
     }
 
-    func localize() {
-        views.forEach({
-            $0.temperatureChart.noDataText = noChartDataText.localized()
-            $0.temperatureChart.noDataTextColor = .white
-            $0.temperatureChart.setNeedsDisplay()
-            $0.humidityChart.noDataText = noChartDataText.localized()
-            $0.humidityChart.noDataTextColor = .white
-            $0.humidityChart.setNeedsDisplay()
-            $0.pressureChart.noDataText = noChartDataText.localized()
-            $0.pressureChart.noDataTextColor = .white
-            $0.pressureChart.setNeedsDisplay()
-        })
+    func setupChartViews(chartViews: [TagChartView]) {
+        self.chartViews = chartViews
+        addChartViews()
     }
 
-    func scroll(to index: Int, immediately: Bool = false) {
-        if isViewLoaded {
-            if immediately {
-                view.layoutIfNeeded()
-                scrollView.layoutIfNeeded()
-                let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
-                scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
-            } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                    guard let sSelf = self else { return }
-                    let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
-                    sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
-                }
-            }
-        }
+    func localize() {
+        clearButton.setTitle("TagCharts.Clear.title".localized(), for: .normal)
+        syncButton.setTitle("TagCharts.Sync.title".localized(), for: .normal)
+        exportButton.setTitle("TagCharts.Export.title".localized(), for: .normal)
+
     }
 
     func showBluetoothDisabled() {
@@ -126,37 +131,34 @@ extension TagChartsScrollViewController: TagChartsViewInput {
             UIActivity.ActivityType.postToFacebook,
             UIActivity.ActivityType.openInIBooks
         ]
-        vc.popoverPresentationController?.sourceView = views[currentPage].exportButton
-        vc.popoverPresentationController?.sourceRect = views[currentPage].exportButton.bounds
+        vc.popoverPresentationController?.sourceView = exportButton
+        vc.popoverPresentationController?.sourceRect = exportButton.bounds
         present(vc, animated: true)
     }
 
     func setSync(progress: BTServiceProgress?, for viewModel: TagChartsViewModel) {
-        if let index = viewModels.firstIndex(where: { $0.uuid.value == viewModel.uuid.value }), index < views.count {
-            let view = views[index]
-            if let progress = progress {
-                view.syncStatusLabel.isHidden = false
-                view.syncButton.isHidden = true
-                view.clearButton.isHidden = true
-                view.exportButton.isHidden = true
-                switch progress {
-                case .connecting:
-                    view.syncStatusLabel.text = "TagCharts.Status.Connecting".localized()
-                case .serving:
-                    view.syncStatusLabel.text = "TagCharts.Status.Serving".localized()
-                case .disconnecting:
-                    view.syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
-                case .success:
-                    view.syncStatusLabel.text = "TagCharts.Status.Success".localized()
-                case .failure:
-                    view.syncStatusLabel.text = "TagCharts.Status.Error".localized()
-                }
-            } else {
-                view.syncStatusLabel.isHidden = true
-                view.syncButton.isHidden = false
-                view.clearButton.isHidden = false
-                view.exportButton.isHidden = false
+        if let progress = progress {
+            syncStatusLabel.isHidden = false
+            syncButton.isHidden = true
+            clearButton.isHidden = true
+            exportButton.isHidden = true
+            switch progress {
+            case .connecting:
+                syncStatusLabel.text = "TagCharts.Status.Connecting".localized()
+            case .serving:
+                syncStatusLabel.text = "TagCharts.Status.Serving".localized()
+            case .disconnecting:
+                syncStatusLabel.text = "TagCharts.Status.Disconnecting".localized()
+            case .success:
+                syncStatusLabel.text = "TagCharts.Status.Success".localized()
+            case .failure:
+                syncStatusLabel.text = "TagCharts.Status.Error".localized()
             }
+        } else {
+            syncStatusLabel.isHidden = true
+            syncButton.isHidden = false
+            clearButton.isHidden = false
+            exportButton.isHidden = false
         }
     }
 
@@ -211,13 +213,8 @@ extension TagChartsScrollViewController {
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        let page = CGFloat(currentPage)
-        coordinator.animate(alongsideTransition: { [weak self] _ in
-            let width = coordinator.containerView.bounds.width
-            self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
+        coordinator.animate(alongsideTransition: { _ in
         }, completion: { [weak self] (_) in
-            let width = coordinator.containerView.bounds.width
-            self?.scrollView.contentOffset = CGPoint(x: page * width, y: 0)
             self?.output.viewDidTransition()
         })
         super.viewWillTransition(to: size, with: coordinator)
@@ -228,51 +225,12 @@ extension TagChartsScrollViewController {
 // MARK: - UIScrollViewDelegate
 extension TagChartsScrollViewController: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        output.viewDidScroll(to: viewModels[currentPage])
     }
 }
 
 // MARK: - ChartViewDelegate
 extension TagChartsScrollViewController: ChartViewDelegate {
 
-}
-
-// MARK: - TrippleChartViewDelegate
-extension TagChartsScrollViewController: TrippleChartViewDelegate {
-    func trippleChart(view: TrippleChartView, didTriggerCards sender: Any) {
-        if let index = views.firstIndex(of: view),
-            index < viewModels.count {
-            output.viewDidTriggerCards(for: viewModels[index])
-        }
-    }
-
-    func trippleChart(view: TrippleChartView, didTriggerSettings sender: Any) {
-        if let index = views.firstIndex(of: view),
-            index < viewModels.count {
-            output.viewDidTriggerSettings(for: viewModels[index])
-        }
-    }
-
-    func trippleChart(view: TrippleChartView, didTriggerClear sender: Any) {
-        if let index = views.firstIndex(of: view),
-            index < viewModels.count {
-            output.viewDidTriggerClear(for: viewModels[index])
-        }
-    }
-
-    func trippleChart(view: TrippleChartView, didTriggerSync sender: Any) {
-        if let index = views.firstIndex(of: view),
-            index < viewModels.count {
-            output.viewDidTriggerSync(for: viewModels[index])
-        }
-    }
-
-    func trippleChart(view: TrippleChartView, didTriggerExport sender: Any) {
-        if let index = views.firstIndex(of: view),
-            index < viewModels.count {
-            output.viewDidTriggerExport(for: viewModels[index])
-        }
-    }
 }
 
 // MARK: - UIGestureRecognizerDelegate
@@ -323,95 +281,45 @@ extension TagChartsScrollViewController {
                      action: #selector(TagChartsDismissTransitionAnimation.handleHidePan(_:)))
     }
 
-    private func bindTemperature(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        view.temperatureUnitLabel.bind(viewModel.temperatureUnit) { label, temperatureUnit in
-            if let temperatureUnit = temperatureUnit {
-                switch temperatureUnit {
-                case .celsius:
-                    label.text = "°C".localized()
-                case .fahrenheit:
-                    label.text = "°F".localized()
-                case .kelvin:
-                    label.text = "K".localized()
-                }
-            } else {
-                label.text = "N/A".localized()
-            }
-        }
+}
+
+// MARK: - Update UI
+extension TagChartsScrollViewController {
+    private func updateUI() {
+        updateUIViewModel()
     }
 
-    private func bindHumidity(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        let humidityUnit = viewModel.humidityUnit
-        let temperatureUnit = viewModel.temperatureUnit
-        let humidityUnitBlock: ((UILabel, Any) -> Void) = {
-            [weak temperatureUnit,
-            weak humidityUnit] label, _ in
-            if let humidityUnit = humidityUnit?.value {
-                switch humidityUnit {
-                case .percent:
-                    label.text = "%".localized()
-                case .dew:
-                    if let temperatureUnit = temperatureUnit?.value {
-                        switch temperatureUnit {
-                        case .celsius:
-                            label.text = "°C".localized()
-                        case .fahrenheit:
-                            label.text = "°F".localized()
-                        case .kelvin:
-                            label.text = "K".localized()
-                        }
-                    } else {
-                        label.text = "N/A".localized()
-                    }
-                case .gm3:
-                    label.text = "g/m³".localized()
-                }
-            } else {
-                label.text = "N/A".localized()
-            }
-        }
-        view.humidityUnitLabel.bind(viewModel.humidityUnit, fire: false, block: humidityUnitBlock)
-        view.humidityUnitLabel.bind(viewModel.temperatureUnit, block: humidityUnitBlock)
+    private func addChartViews() {
+        chartViews.forEach({ chartView in
+            scrollView.addSubview(chartView)
+        })
+        localize()
     }
 
-    private func bindCharts(view: TrippleChartView, with viewModel: TagChartsViewModel) {
-        view.temperatureChart.tagUuid = viewModel.uuid.value
-        viewModel.temperatureChart.value = view.temperatureChart
-        view.temperatureChart.bind(viewModel.temperatureChartData) {
-            [weak self] (view, dataSet) in
-            view.data = dataSet
-            view.output = self?.output
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        var maxY: CGFloat = 0
+        let height: CGFloat
+        if UIApplication.shared.statusBarOrientation.isLandscape {
+            height = scrollView.frame.height
+        } else {
+            height = scrollView.frame.height / 3
         }
-        view.humidityChart.tagUuid = viewModel.uuid.value
-        viewModel.humidityChart.value = view.humidityChart
-        view.humidityChart.bind(viewModel.humidityChartData) {
-            [weak self] (view, dataSet) in
-            view.data = dataSet
-            view.output = self?.output
-        }
-        view.pressureChart.tagUuid = viewModel.uuid.value
-        viewModel.pressureChart.value = view.pressureChart
-        view.pressureChart.bind(viewModel.pressureChartData) {
-            [weak self] (view, dataSet) in
-            view.data = dataSet
-            view.output = self?.output
-        }
+        chartViews.forEach({ chartView in
+            chartView.frame = CGRect(x: 0, y: maxY, width: scrollView.frame.width, height: height)
+            maxY += height
+        })
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: height * CGFloat(chartViews.count))
+        scrollView.layoutSubviews()
     }
-    private func bind(view: TrippleChartView, with viewModel: TagChartsViewModel) {
 
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        view.backgroundImageView.bind(viewModel.background) { $0.image = $1 }
-        bindTemperature(view: view, with: viewModel)
-        bindHumidity(view: view, with: viewModel)
-        bindCharts(view: view, with: viewModel)
-
-        view.pressureUnitLabel.text = "hPa".localized()
-
-        view.alertView.bind(viewModel.isConnected) { (view, isConnected) in
+    private func bindviewModel() {
+        nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+        backgroundImageView.bind(viewModel.background) { $0.image = $1 }
+        alertImageView.bind(viewModel.isConnected) { (view, isConnected) in
             view.isHidden = !isConnected.bound
         }
-
-        view.alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
+        alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
                 switch state {
                 case .empty:
@@ -434,129 +342,36 @@ extension TagChartsScrollViewController {
             } else {
                 imageView.image = nil
             }
-       }
-    }
-
-}
-
-// MARK: - Update UI
-extension TagChartsScrollViewController {
-    private func updateUI() {
-        updateUIViewModels()
-    }
-
-    private func addChartViews() {
-        var leftView: UIView = scrollView
-        for viewModel in viewModels {
-            let view = TrippleChartView()
-            view.delegate = self
-            view.translatesAutoresizingMaskIntoConstraints = false
-            scrollView.addSubview(view)
-            position(view, leftView)
-            bind(view: view, with: viewModel)
-            bindCharts(view: view, with: viewModel)
-            views.append(view)
-            leftView = view
-        }
-        scrollView.addConstraint(NSLayoutConstraint(item: leftView,
-                                                    attribute: .trailing,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .trailing,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        localize()
-    }
-
-    private func bindViewModels() {
-        viewModels.enumerated().forEach { (index, viewModel) in
-            if scrollView.bounds.contains(views[index].frame) {
-                bind(view: views[index], with: viewModel)
-            }
         }
     }
 
-    private func updateUIViewModels() {
-        if isViewLoaded && views.isEmpty {
-            if viewModels.count > 0 {
-                addChartViews()
-            }
-        } else {
-            if viewModels.count == views.count {
-                bindViewModels()
-            } else if viewModels.count > 0 {
-                views.forEach({ $0.removeFromSuperview() })
-                views.removeAll()
-                addChartViews()
-            }
+    private func updateUIViewModel() {
+        if isViewLoaded {
+            bindviewModel()
         }
-    }
-
-    private func position(_ view: UIView, _ leftView: UIView) {
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .leading,
-                                                    relatedBy: .equal,
-                                                    toItem: leftView,
-                                                    attribute: leftView == scrollView ? .leading : .trailing,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .top,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .top,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .bottom,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .bottom,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .width,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .width,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
-        scrollView.addConstraint(NSLayoutConstraint(item: view,
-                                                    attribute: .height,
-                                                    relatedBy: .equal,
-                                                    toItem: scrollView,
-                                                    attribute: .height,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0))
     }
 
     private func restartAnimations() {
         // restart blinking animation if needed
-        for i in 0..<viewModels.count where i < views.count {
-            let viewModel = viewModels[i]
-            let view = views[i]
-            let imageView = view.alertImageView
-            if let state = viewModel.alertState.value {
-                imageView.alpha = 1.0
-                switch state {
-                case .empty:
-                    imageView.image = alertOffImage
-                case .registered:
-                    imageView.image = alertOnImage
-                case .firing:
-                    imageView.image = alertActiveImage
-                    imageView.layer.removeAllAnimations()
-                    UIView.animate(withDuration: 0.5,
-                                   delay: 0,
-                                   options: [.repeat, .autoreverse],
-                                   animations: { [weak imageView] in
-                                    imageView?.alpha = 0.0
-                                })
-                }
-            } else {
-                imageView.image = nil
+        if let state = viewModel.alertState.value {
+            alertImageView.alpha = 1.0
+            switch state {
+            case .empty:
+                alertImageView.image = alertOffImage
+            case .registered:
+                alertImageView.image = alertOnImage
+            case .firing:
+                alertImageView.image = alertActiveImage
+                alertImageView.layer.removeAllAnimations()
+                UIView.animate(withDuration: 0.5,
+                               delay: 0,
+                               options: [.repeat, .autoreverse],
+                               animations: { [weak alertImageView] in
+                                alertImageView?.alpha = 0.0
+                            })
             }
+        } else {
+            alertImageView.image = nil
         }
     }
 }
-// swiftlint:enable file_length
