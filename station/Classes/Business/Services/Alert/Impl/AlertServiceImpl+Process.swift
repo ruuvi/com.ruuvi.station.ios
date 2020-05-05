@@ -189,15 +189,15 @@ extension AlertServiceImpl {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                isTriggered = isTriggered || process(temperature: type, uuid: uuid, data: data)
+                isTriggered = process(temperature: type, uuid: uuid, data: data) || isTriggered
             case .relativeHumidity:
-                isTriggered = isTriggered || process(relativeHumidity: type, uuid: uuid, data: data)
+                isTriggered = process(relativeHumidity: type, uuid: uuid, data: data) || isTriggered
             case .absoluteHumidity:
-                isTriggered = isTriggered || process(absoluteHumidity: type, uuid: uuid, data: data)
+                isTriggered = process(absoluteHumidity: type, uuid: uuid, data: data) || isTriggered
             case .dewPoint:
-                isTriggered = isTriggered || process(dewPoint: type, uuid: uuid, data: data)
+                isTriggered = process(dewPoint: type, uuid: uuid, data: data) || isTriggered
             case .pressure:
-                isTriggered = isTriggered || process(pressure: type, uuid: uuid, data: data)
+                isTriggered = process(pressure: type, uuid: uuid, data: data) || isTriggered
             default:
                 break
             }
