@@ -34,7 +34,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var alertService: AlertService!
     var settings: Settings!
     var errorPresenter: ErrorPresenter!
-    
+
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
     var lowRelativeHumidityAlerts = [String: Date]()
