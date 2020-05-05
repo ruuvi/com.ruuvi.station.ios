@@ -24,7 +24,8 @@ class TagSettingsTableConfigurator {
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-
+        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        
         view.output = presenter
     }
 }
