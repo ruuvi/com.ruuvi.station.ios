@@ -26,6 +26,7 @@ class CardsPresenter: CardsModuleInput {
     var calibrationService: CalibrationService!
     var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTrunk: RuuviTagTrunk!
+    var virtualTagReactor: VirtualTagReactor!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -53,7 +54,7 @@ class CardsPresenter: CardsModuleInput {
     private var alertDidChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
-    private var webTags: Results<WebTagRealm>? {
+    private var virtualTags: Results<WebTagRealm>? {
         didSet {
             syncViewModels()
             startListeningToWebTagsAlertStatus()
@@ -65,6 +66,8 @@ class CardsPresenter: CardsModuleInput {
             view.viewModels = viewModels
         }
     }
+    private var didLoadInitialRuuviTags = false
+    private var didLoadInitialWebTags = false
 
     // swiftlint:disable:next cyclomatic_complexity
     deinit {
@@ -157,7 +160,7 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
-        } else if viewModel.type == .web, let webTag = webTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
+        } else if viewModel.type == .web, let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag)
         }
     }
@@ -315,9 +318,9 @@ extension CardsPresenter {
             return viewModel
         })
 
-        var webViewModels = [CardsViewModel]()
-        if webTags != nil {
-            webViewModels = webTags?.compactMap({ (webTag) -> CardsViewModel in
+        var virtualViewModels = [CardsViewModel]()
+        if virtualTags != nil {
+            virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
                 viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
@@ -327,10 +330,10 @@ extension CardsPresenter {
                 return viewModel
             }) ?? []
         }
-        viewModels = ruuviViewModels + webViewModels
+        viewModels = ruuviViewModels + virtualViewModels
 
         // if no tags, open discover
-        if viewModels.count == 0 {
+        if didLoadInitialRuuviTags && didLoadInitialWebTags && viewModels.count == 0 {
             router.openDiscover(output: self)
         }
     }
@@ -466,7 +469,7 @@ extension CardsPresenter {
         webTagsDataTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.removeAll()
 
-        webTags?.forEach({ webTag in
+        virtualTags?.forEach({ webTag in
             webTagsDataTokens.append(webTag.data.observe { [weak self] (change) in
                 switch change {
                 case .initial(let data):
@@ -492,10 +495,11 @@ extension CardsPresenter {
         webTagsToken = realmContext.main.objects(WebTagRealm.self).observe({ [weak self] (change) in
             switch change {
             case .initial(let webTags):
-                self?.webTags = webTags
+                self?.didLoadInitialWebTags = true
+                self?.virtualTags = webTags
                 self?.startObservingWebTagsData()
             case .update(let webTags, _, let insertions, _):
-                self?.webTags = webTags
+                self?.virtualTags = webTags
                 if let ii = insertions.last {
                     let uuid = webTags[ii].uuid
                     if let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid.luid.any }) {
@@ -523,6 +527,7 @@ extension CardsPresenter {
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
+                self?.didLoadInitialRuuviTags = true
                 self?.ruuviTags = ruuviTags.map({ $0.any })
                 if let firstTag = ruuviTags.first {
                     self?.tagCharts?.configure(ruuviTag: firstTag)
@@ -842,7 +847,7 @@ extension CardsPresenter {
     }
 
     private func startListeningToWebTagsAlertStatus() {
-        webTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+        virtualTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
 
     private func startObservingLocalNotificationsManager() {
