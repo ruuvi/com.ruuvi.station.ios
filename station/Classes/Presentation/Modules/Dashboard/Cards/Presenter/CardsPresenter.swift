@@ -66,6 +66,8 @@ class CardsPresenter: CardsModuleInput {
             view.viewModels = viewModels
         }
     }
+    private var didLoadInitialRuuviTags = false
+    private var didLoadInitialWebTags = false
 
     // swiftlint:disable:next cyclomatic_complexity
     deinit {
@@ -331,7 +333,7 @@ extension CardsPresenter {
         viewModels = ruuviViewModels + virtualViewModels
 
         // if no tags, open discover
-        if viewModels.count == 0 {
+        if didLoadInitialRuuviTags && didLoadInitialWebTags && viewModels.count == 0 {
             router.openDiscover(output: self)
         }
     }
@@ -493,6 +495,7 @@ extension CardsPresenter {
         webTagsToken = realmContext.main.objects(WebTagRealm.self).observe({ [weak self] (change) in
             switch change {
             case .initial(let webTags):
+                self?.didLoadInitialWebTags = true
                 self?.virtualTags = webTags
                 self?.startObservingWebTagsData()
             case .update(let webTags, _, let insertions, _):
@@ -524,6 +527,7 @@ extension CardsPresenter {
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
+                self?.didLoadInitialRuuviTags = true
                 self?.ruuviTags = ruuviTags.map({ $0.any })
                 if let firstTag = ruuviTags.first {
                     self?.tagCharts?.configure(ruuviTag: firstTag)
