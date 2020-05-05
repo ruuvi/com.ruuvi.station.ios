@@ -274,16 +274,16 @@ extension TagChartsPresenter {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+            viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
+                                                                ? .registered : .empty
         } else if let macId = ruuviTag.macId {
             // FIXME
             // viewModel.background.value = backgroundPersistence.background(for: macId)
+            // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
              viewModel.isConnected.value = false
         } else {
             assertionFailure()
         }
-
-        viewModel.alertState.value = alertService
-            .hasRegistrations(for: ruuviTag.id) ? .registered : .empty
     }
 
     private func startListeningToSettings() {
@@ -353,7 +353,13 @@ extension TagChartsPresenter {
     }
 
     private func startListeningToAlertStatus() {
-        alertService.subscribe(self, to: ruuviTag.id)
+        if let luid = ruuviTag.luid {
+            alertService.subscribe(self, to: luid.value)
+        } else if let macId = ruuviTag.macId {
+            // FIXME
+        } else {
+            assertionFailure()
+        }
     }
 
     func startObservingDidConnectDisconnectNotifications() {
