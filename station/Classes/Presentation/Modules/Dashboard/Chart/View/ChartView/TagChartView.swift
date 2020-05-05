@@ -6,7 +6,6 @@ class TagChartView: LineChartView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "[sdf"
         label.font = UIFont.systemFont(ofSize: 11)
         return label
     }()
@@ -15,7 +14,7 @@ class TagChartView: LineChartView {
         let progressView = ProgressBarView(frame: .zero)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.layer.cornerRadius = 12
-        progressView.isHidden = false
+        progressView.isHidden = true
         return progressView
     }()
     var viewModel: TagChartViewModel! {
@@ -29,6 +28,7 @@ class TagChartView: LineChartView {
         super.init(frame: frame)
         delegate = self
         addSubviews()
+        makeConstraints()
         configure()
     }
     required init?(coder aDecoder: NSCoder) {
@@ -46,20 +46,20 @@ class TagChartView: LineChartView {
     }
 
     private func setUnitLabelConstraints() {
-        unitLabel.addConstraint(NSLayoutConstraint(item: unitLabel,
+        addConstraint(NSLayoutConstraint(item: unitLabel,
                                          attribute: .trailing,
                                          relatedBy: .equal,
                                          toItem: self,
                                          attribute: .trailing,
                                          multiplier: 1.0,
-                                         constant: -8))
-        unitLabel.addConstraint(NSLayoutConstraint(item: unitLabel,
+                                         constant: -16))
+        addConstraint(NSLayoutConstraint(item: unitLabel,
                                          attribute: .top,
                                          relatedBy: .equal,
                                          toItem: self,
                                          attribute: .top,
                                          multiplier: 1.0,
-                                         constant: 8))
+                                         constant: 10))
     }
 
     private func setProgressViewConstraints() {
@@ -96,6 +96,7 @@ class TagChartView: LineChartView {
     private func updateUIViewModel() {
         bind(viewModel.chartData) { (view, data) in
             view.data = data
+            view.data?.notifyDataChanged()
         }
         progressView.bind(viewModel.progress) { (view, progress) in
             if let progress = progress {
