@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -273,8 +272,6 @@ extension TagChartsPresenter {
         viewModel.isConnected.value = background.isConnected(uuid: ruuviTag.id)
         viewModel.alertState.value = alertService
             .hasRegistrations(for: ruuviTag.id) ? .registered : .empty
-//        viewModel.temperatureUnit.value = settings.temperatureUnit
-//        viewModel.humidityUnit.value = settings.humidityUnit
     }
 
     private func startListeningToSettings() {
@@ -283,8 +280,8 @@ extension TagChartsPresenter {
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
-//            self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
             self?.interactor.restartObservingData()
+            self?.interactor.notifySettingsChanged()
         }
         humidityUnitToken = NotificationCenter
             .default
@@ -292,8 +289,8 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-//            self?.viewModel.humidityUnit.value = self?.settings.humidityUnit
             self?.interactor.restartObservingData()
+            self?.interactor.notifySettingsChanged()
         })
     }
 
@@ -388,21 +385,4 @@ extension TagChartsPresenter {
                             }
             })
     }
-
-    static func newDataSet() -> LineChartDataSet {
-        let lineChartDataSet = LineChartDataSet()
-        lineChartDataSet.axisDependency = .left
-        lineChartDataSet.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
-        lineChartDataSet.lineWidth = 1.5
-        lineChartDataSet.drawCirclesEnabled = true
-        lineChartDataSet.drawValuesEnabled = false
-        lineChartDataSet.fillAlpha = 0.26
-        lineChartDataSet.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
-        lineChartDataSet.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
-        lineChartDataSet.drawCircleHoleEnabled = false
-        lineChartDataSet.drawFilledEnabled = true
-        lineChartDataSet.highlightEnabled = false
-        return lineChartDataSet
-    }
 }
-// swiftlint:enable file_length

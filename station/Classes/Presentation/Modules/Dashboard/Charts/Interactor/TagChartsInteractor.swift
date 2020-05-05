@@ -10,6 +10,7 @@ class TagChartsInteractor {
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
+    var lastMeasurement: RuuviMeasurement?
     private var ruuviTagToken: RUObservationToken?
     private var ruuviTagDataToken: RUObservationToken?
     private var chartModules: [TagChartModuleInput] = []
@@ -25,7 +26,6 @@ class TagChartsInteractor {
             }
         }
     }
-    private var lastMeasurement: RuuviMeasurement?
 
     func createChartModules() {
         chartModules = []
@@ -150,7 +150,12 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     //                insertMeasurements([newValue], into: viewModel)
     //            }
     //        })
-        }
+    }
+    func notifySettingsChanged() {
+        chartModules.forEach({
+            $0.notifySettingsChanged()
+        })
+    }
 }
 extension TagChartsInteractor: TagChartModuleOutput {
     var dataSource: [RuuviMeasurement] {

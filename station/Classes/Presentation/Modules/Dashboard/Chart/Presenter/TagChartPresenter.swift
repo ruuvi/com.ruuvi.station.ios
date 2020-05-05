@@ -12,7 +12,6 @@ class TagChartPresenter: NSObject {
     weak var ouptut: TagChartModuleOutput!
 
     private let threshold: Int = 100
-    private var lastMeasurement: RuuviMeasurement?
     private lazy var queue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 3
@@ -30,14 +29,47 @@ extension TagChartPresenter: TagChartModuleInput {
         return view.chartView
     }
 
-    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput) {
+    fileprivate func configureViewModel(_ viewModel: TagChartViewModel) {
+        switch viewModel.type {
+        case .temperature:
+            viewModel.unit.value = settings.temperatureUnit.unitTemperature
+        case .humidity:
+            switch settings.humidityUnit {
+            case .dew:
+                viewModel.unit.value = settings.temperatureUnit.unitTemperature
+            case .percent:
+                viewModel.unit.value = Unit(symbol: "%".localized())
+            case .gm3:
+                viewModel.unit.value = Unit(symbol: "g/m³".localized())
+            }
+        case .pressure:
+            viewModel.unit.value =  Unit(symbol: "hPa".localized())
+        default:
+            viewModel.unit.value = Unit(symbol: "N/A".localized())
+        }
         self.viewModel = viewModel
+    }
+
+    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput) {
+        configureViewModel(viewModel)
         self.ouptut = output
     }
 
     func reloadChart() {
+        if ouptut.dataSource.count == 0 {
+            handleEmptyResults()
+        } else {
+            createChartData()
+        }
+    }
+
+    func setProgress(_ value: Float) {
+        viewModel.progress.value = value
+    }
+
+    func notifySettingsChanged() {
+        configureViewModel(viewModel)
         createChartData()
-        view.reloadData()
     }
 }
 
@@ -49,9 +81,24 @@ extension TagChartPresenter: TagChartViewOutput {
 }
 
 extension TagChartPresenter {
+    private func newDataSet() -> LineChartDataSet {
+        let lineChartDataSet = LineChartDataSet()
+        lineChartDataSet.axisDependency = .left
+        lineChartDataSet.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
+        lineChartDataSet.lineWidth = 1.5
+        lineChartDataSet.drawCirclesEnabled = true
+        lineChartDataSet.drawValuesEnabled = false
+        lineChartDataSet.fillAlpha = 0.26
+        lineChartDataSet.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
+        lineChartDataSet.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
+        lineChartDataSet.drawCircleHoleEnabled = false
+        lineChartDataSet.drawFilledEnabled = true
+        lineChartDataSet.highlightEnabled = false
+        return lineChartDataSet
+    }
     private func handleEmptyResults() {
         view.clearChartData()
-        if let last = lastMeasurement {
+        if let last = ouptut.lastMeasurement {
             setDownSampled(dataSet: [last],
                            completion: { [weak self] in
                 self?.view.reloadData()
@@ -61,7 +108,7 @@ extension TagChartPresenter {
     }
 
     private func createChartData() {
-        viewModel.chartData.value = LineChartData(dataSet: TagChartsPresenter.newDataSet())
+        viewModel.chartData.value = LineChartData(dataSet: newDataSet())
         let currentDate = Date().timeIntervalSince1970
         if let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
                                                               value: -settings.chartDurationHours,
@@ -85,12 +132,13 @@ extension TagChartPresenter {
         }
     }
 
-    internal func insertMeasurements(_ newValues: [RuuviMeasurement]) {
+    func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         newValues.forEach {
             viewModel.chartData.value?.addEntry(chartEntry(for: $0), dataSetIndex: 0)
             viewModel.chartData.value?.notifyDataChanged()
         }
     }
+
     private func drawCirclesIfNeeded(for chartData: LineChartData?) {
         if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
             switch dataSet.entries.count {
@@ -105,6 +153,7 @@ extension TagChartPresenter {
             }
         }
     }
+
     private func fetchPointsByDates(start: TimeInterval,
                                     stop: TimeInterval,
                                     completion: (() -> Void)? = nil) {
@@ -129,6 +178,7 @@ extension TagChartPresenter {
         }
         queue.addOperation(filterOperation)
     }
+//swiftlint:disable:next cyclomatic_complexity
     private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry {
         let value: Double?
         switch viewModel.type {
@@ -176,7 +226,7 @@ extension TagChartPresenter {
             chartDataSet.removeAll(keepingCapacity: true)
             chartDataSet.drawCirclesEnabled = false
         } else {
-            let chartDataSet = TagChartsPresenter.newDataSet()
+            let chartDataSet = newDataSet()
             chartDataSet.drawCirclesEnabled = false
             chartData.addDataSet(chartDataSet)
         }
