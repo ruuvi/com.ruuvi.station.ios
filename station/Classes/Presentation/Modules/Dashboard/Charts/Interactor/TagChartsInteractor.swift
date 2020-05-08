@@ -81,7 +81,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
-            self?.restartObservingData()
+            self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)
@@ -94,9 +94,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(failure: {(error) in
             promise.fail(error: error)
         }, completion: { [weak self] in
-            self?.ruuviTagData = []
-            self?.reloadCharts()
-            self?.restartObservingData()
+            self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
         })
         return promise.future
@@ -157,6 +155,11 @@ extension TagChartsInteractor {
         }, completion: competion)
     }
 
+    private func clearChartsAndRestartObserving() {
+        ruuviTagData = []
+        reloadCharts()
+        restartObservingData()
+    }
     private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         chartModules.forEach({
             $0.insertMeasurements(newValues)
