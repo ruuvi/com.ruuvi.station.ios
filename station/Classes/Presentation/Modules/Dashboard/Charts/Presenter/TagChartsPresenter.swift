@@ -178,6 +178,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
             } else {
                 self?.errorPresenter.present(error: error)
             }
+        }, completion: {
+            DispatchQueue.main.async { [weak self] in
+                self?.view.setSync(progress: nil, for: viewModel)
+            }
         })
     }
 
