@@ -163,17 +163,23 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidEnterMACAddressToAddTag(mac: String) {
-//        let operation = ruuviTagService.persist(mac: mac)
-//        operation.on(success: { [weak self] (_) in
-//            guard let sSelf = self else { return }
-//            if sSelf.isOpenedFromWelcome {
-//                sSelf.router.openCards()
-//            } else {
-//                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
-//            }
-//        }, failure: { [weak self] (error) in
-//            self?.errorPresenter.present(error: error)
-//        })
+        // TODO fix version of sensor
+        let sensor = RuuviTagSensorStruct(version: 5,
+                                          luid: LocalIdentifierStruct(value: mac),
+                                          macId: MACIdentifierStruct(value: mac),
+                                          isConnectable: true,
+                                          name: mac)
+        let operation = ruuviTagTank.create(sensor)
+        operation.on(success: { [weak self] (_) in
+            guard let sSelf = self else { return }
+            if sSelf.isOpenedFromWelcome {
+                sSelf.router.openCards()
+            } else {
+                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
+            }
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
     func viewDidEnterKaltiotApiKey(apiKey: String) {

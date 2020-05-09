@@ -2,7 +2,7 @@ import Foundation
 import Future
 
 protocol RuuviNetwork {
-    func load(uuid: String, mac: String, isConnectable: Bool) -> Future<[(RuuviTagProtocol, Date)], RUError>
+    func load(ruuviTagId: String, mac: String, isConnectable: Bool) -> Future<[RuuviTagSensorRecord], RUError>
 }
 
 class RuuviNetworkFactory {

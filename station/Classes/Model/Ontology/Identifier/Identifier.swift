@@ -8,11 +8,14 @@ protocol LocalIdentifier: Identifier {
 }
 
 protocol MACIdentifier: Identifier {
-
+    var mac: String { get }
 }
 
 struct MACIdentifierStruct: MACIdentifier {
     var value: String
+    var mac: String {
+        return String(value.prefix(12))
+    }
 }
 
 struct AnyMACIdentifier: MACIdentifier, Equatable, Hashable {
@@ -20,6 +23,9 @@ struct AnyMACIdentifier: MACIdentifier, Equatable, Hashable {
 
     var value: String {
         return object.value
+    }
+    var mac: String {
+        return String(object.value.prefix(12))
     }
 
     static func == (lhs: AnyMACIdentifier, rhs: AnyMACIdentifier) -> Bool {

@@ -112,9 +112,9 @@ class BusinessAssembly: Assembly {
 
         container.register(NetworkService.self) { r in
             let service = NetworkServiceQueue()
-            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
             service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
-            service.realmContext = r.resolve(RealmContext.self)
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             return service
         }
 

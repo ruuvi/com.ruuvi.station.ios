@@ -5,7 +5,7 @@ class KaltiotPickerTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
 
     func configure(with model: KaltiotBeaconViewModel) {
-        nameLabel.text = model.id
+        nameLabel.text = model.beacon.id
         nameLabel.isEnabled = model.isConnectable
         iconImageView.isHidden = !model.isConnectable
     }

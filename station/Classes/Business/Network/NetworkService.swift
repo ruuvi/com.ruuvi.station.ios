@@ -3,5 +3,5 @@ import Future
 
 protocol NetworkService {
     @discardableResult
-    func loadData(for uuid: String, from provider: RuuviNetworkProvider) -> Future<Bool, RUError>
+    func loadData(for ruuviTagId: String, mac: String, from provider: RuuviNetworkProvider) -> Future<Bool, RUError>
 }

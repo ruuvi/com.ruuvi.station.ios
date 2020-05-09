@@ -2,40 +2,40 @@ import Foundation
 
 class RuuviTagLoadDataOperation: AsyncOperation {
 
-    var uuid: String
+    var ruuviTagId: String
+    var mac: String
     var error: RUError?
-    private var mac: String
     private var isConnectable: Bool
     private var network: RuuviNetwork
-    private var persistence: RuuviTagPersistence
+    private var ruuviTagTank: RuuviTagTank
 
-    init(uuid: String,
+    init(ruuviTagId: String,
          mac: String,
          isConnectable: Bool,
          network: RuuviNetwork,
-         persistence: RuuviTagPersistence) {
-        self.uuid = uuid
+         ruuviTagTank: RuuviTagTank) {
+        self.ruuviTagId = ruuviTagId
         self.mac = mac
         self.isConnectable = isConnectable
         self.network = network
-        self.persistence = persistence
+        self.ruuviTagTank = ruuviTagTank
     }
 
     override func main() {
-//        let uuid = self.uuid
-//        let op = network.load(uuid: uuid, mac: mac, isConnectable: isConnectable)
-//        op.on(success: { [weak self] data in
-//            let persist = self?.persistence.persist(data: data, for: uuid)
-//            persist?.on(success: { _ in
-//                self?.state = .finished
-//            }, failure: { error in
-//                self?.error = error
-//                self?.state = .finished
-//            })
-//        }, failure: { [weak self] error in
-//            self?.error = error
-//            self?.state = .finished
-//        })
+        let op = network.load(ruuviTagId: ruuviTagId,
+        mac: mac, isConnectable: isConnectable)
+        op.on(success: { [weak self] records in
+            let persist = self?.ruuviTagTank.create(records)
+            persist?.on(success: { _ in
+                self?.state = .finished
+            }, failure: { error in
+                self?.error = error
+                self?.state = .finished
+            })
+        }, failure: { [weak self] error in
+            self?.error = error
+            self?.state = .finished
+        })
     }
 
 }
