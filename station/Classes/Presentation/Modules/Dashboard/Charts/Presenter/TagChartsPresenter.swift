@@ -171,7 +171,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-
+// TODO remove viewModel and move method into interactor
     func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel) {
         if let mac = ruuviTag.macId?.mac {
             isSyncing = true
@@ -187,7 +187,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-
+// TODO remove viewModel and move method into interactor
     func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
