@@ -14,8 +14,8 @@
 		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
 		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
 		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E03B7C623866CDC00949713 /* Nantes in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* Nantes */; };
-		0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwinjectPropertyLoader */; };
+		0E03B7C623866CDC00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */; };
+		0E03B8052386741B00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwiftPackageProductDependency */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -206,17 +206,17 @@
 		0E45580E23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
 		0E45580F23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
 		0E45581023E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
-		0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* Realm */; };
-		0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* RealmSwift */; };
-		0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* Localize_Swift */; };
-		0E4EAE4823863D4100BBDFBD /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* Future */; };
-		0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* BTKit */; };
-		0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* LightRoute */; };
-		0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* Humidity */; };
-		0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* Swinject */; };
-		0E4EAECA238656B100BBDFBD /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* Charts */; };
-		0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* GestureInstructions */; };
-		0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* RangeSeekSlider */; };
+		0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -610,7 +610,7 @@
 		0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
-		0E8BAC4A245C393000D380FB /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 0E8BAC49245C393000D380FB /* GRDB */; };
+		0E8BAC4A245C393000D380FB /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E8BAC49245C393000D380FB /* SwiftPackageProductDependency */; };
 		0E8BAC4C245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BAC4B245C396B00D380FB /* RuuviTagPersistenceSQLite.swift */; };
 		0E8BAC4D245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BAC4B245C396B00D380FB /* RuuviTagPersistenceSQLite.swift */; };
 		0E8BAC4E245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BAC4B245C396B00D380FB /* RuuviTagPersistenceSQLite.swift */; };
@@ -1240,6 +1240,7 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
+		6638516A82858AF8B343508E /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59B6960703D7F97328D4E36F /* Pods_station.framework */; };
 		A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
 		A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
 		A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
@@ -1349,14 +1350,13 @@
 		A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
 		A95BA3EA2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
 		A95BA3EB2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
-		A95BA3EE2452006F00EF923D /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A95BA3ED2452006F00EF923D /* KeychainAccess */; };
+		A95BA3EE2452006F00EF923D /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = A95BA3ED2452006F00EF923D /* SwiftPackageProductDependency */; };
 		A95BA3EF245200FA00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
 		A95BA3F0245200FC00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
 		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
-		A9A48A5E244CD9EC0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		A9C3518D245356D9004696BD /* KaltiotPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */; };
 		A9C3518E245357D5004696BD /* KaltiotPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */; };
 		A9C3518F245357D6004696BD /* KaltiotPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */; };
@@ -1437,9 +1437,6 @@
 		A9E58D02245A0140000C38DA /* KaltiotPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */; };
 		A9F8ED06245772DE004942CE /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
 		A9F8ED07245772DE004942CE /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
-		D52879D0F3C99C40BAEF25DE /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AF644945993BDDC431BB15 /* Pods_station.framework */; };
-		DAF976B5AF2F7A5C9E8A3B16 /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9244E24D969A2DD3A3BF501A /* Pods_station_dev.framework */; };
-		E2BABE415BD9F440E9FFADB2 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B644F5882FD18597C94131 /* Pods_stationTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1869,7 +1866,9 @@
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
+		3A015F91C7FE3BC88884648F /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4C26313C874366D7F199EDC4 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		59B6960703D7F97328D4E36F /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63F75110675BB9FA5F74A310 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1938,7 +1937,6 @@
 		A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceImpl.swift; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
-		A9A48A5F244CEB690004FD50 /* RuuviTagClearNotLinkedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagClearNotLinkedOperation.swift; sourceTree = "<group>"; };
 		A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewController.swift; sourceTree = "<group>"; };
 		A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleOutput.swift; sourceTree = "<group>"; };
 		A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleInput.swift; sourceTree = "<group>"; };
@@ -1964,12 +1962,7 @@
 		A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculatorImpl.swift; sourceTree = "<group>"; };
 		A9E58CF72459F7A7000C38DA /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewCell.swift; sourceTree = "<group>"; };
-		B78215DA5A0BAFD8C120BC98 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
-		CDA0853207BDC36A9877D0B2 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
-		DEFAF1F0491DEDC29A059C08 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
-		E0AF644945993BDDC431BB15 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0D1852F3ACF9D6D3C517CAC /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
-		F73CCF9F96C0B242540425E9 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
+		EA25BD3C7510110289808C83 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1977,21 +1970,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E03B7C623866CDC00949713 /* Nantes in Frameworks */,
-				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
-				A95BA3EE2452006F00EF923D /* KeychainAccess in Frameworks */,
-				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
-				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
-				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
-				0E8BAC4A245C393000D380FB /* GRDB in Frameworks */,
-				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
-				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
-				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
-				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
-				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
-				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
-				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
-				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
+				0E03B7C623866CDC00949713 /* BuildFile in Frameworks */,
+				0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */,
+				A95BA3EE2452006F00EF923D /* BuildFile in Frameworks */,
+				0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */,
+				0E8BAC4A245C393000D380FB /* BuildFile in Frameworks */,
+				0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */,
+				0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */,
+				0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */,
+				0E03B8052386741B00949713 /* BuildFile in Frameworks */,
+				0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2007,7 +2000,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD24BE4925155FE5C6E72CBC /* Pods_station.framework in Frameworks */,
+				6638516A82858AF8B343508E /* Pods_station.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4698,9 +4691,9 @@
 			children = (
 				0E8BAC97245C716B00D380FB /* Combine.framework */,
 				0E8BAC9A245C718700D380FB /* Combine.framework */,
-				AE0DC322A822B7D68A59A83F /* Pods_station.framework */,
 				9B65A9F1FA812D291F14E58F /* Pods_stationTests.framework */,
 				8CE73C076765FA051931E381 /* Pods_station_dev.framework */,
+				59B6960703D7F97328D4E36F /* Pods_station.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -4710,10 +4703,10 @@
 			children = (
 				4C26313C874366D7F199EDC4 /* Pods-station.debug.xcconfig */,
 				A1BA07DE2A5B227BF8D688B0 /* Pods-station.release.xcconfig */,
-				D3850DFC59CD3E4368ACBFE0 /* Pods-stationTests.debug.xcconfig */,
-				E336C10C2ECAF896F12E70C6 /* Pods-stationTests.release.xcconfig */,
 				63F75110675BB9FA5F74A310 /* Pods-station_dev.debug.xcconfig */,
 				9A426AFF802C1FC83C0AB2B5 /* Pods-station_dev.release.xcconfig */,
+				3A015F91C7FE3BC88884648F /* Pods-stationTests.debug.xcconfig */,
+				EA25BD3C7510110289808C83 /* Pods-stationTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -4936,14 +4929,6 @@
 				A9227BB0245C86FA00466B23 /* KaltiotSettingsRouterInput.swift */,
 			);
 			path = Router;
-			sourceTree = "<group>";
-		};
-		A92E3C4324261AD700D981D5 /* SingleChart */ = {
-			isa = PBXGroup;
-			children = (
-				A92E3C4724261BD000D981D5 /* View */,
-			);
-			path = SingleChart;
 			sourceTree = "<group>";
 		};
 		A92E3C4724261BD000D981D5 /* View */ = {
@@ -5195,21 +5180,21 @@
 			);
 			name = station_mac;
 			packageProductDependencies = (
-				0E4EAE3F23863BA600BBDFBD /* Realm */,
-				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
-				0E4EAE4423863CBC00BBDFBD /* Localize_Swift */,
-				0E4EAE4723863D4100BBDFBD /* Future */,
-				0E4EAE98238646FF00BBDFBD /* BTKit */,
-				0E4EAEB82386534B00BBDFBD /* LightRoute */,
-				0E4EAEC3238654AE00BBDFBD /* Humidity */,
-				0E4EAEC6238655FA00BBDFBD /* Swinject */,
-				0E4EAEC9238656B100BBDFBD /* Charts */,
-				0E4EAECC2386586C00BBDFBD /* GestureInstructions */,
-				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
-				0E03B7C523866CDC00949713 /* Nantes */,
-				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
-				0E8BAC49245C393000D380FB /* GRDB */,
-				A95BA3ED2452006F00EF923D /* KeychainAccess */,
+				0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */,
+				0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */,
+				0E03B8042386741B00949713 /* SwiftPackageProductDependency */,
+				0E8BAC49245C393000D380FB /* SwiftPackageProductDependency */,
+				A95BA3ED2452006F00EF923D /* SwiftPackageProductDependency */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -5336,20 +5321,20 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */,
-				0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */,
-				0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */,
-				0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */,
-				0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */,
-				0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */,
-				0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */,
-				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
-				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
-				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
-				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
-				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
-				0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */,
-				A95BA3EC2452006E00EF923D /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */,
+				0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */,
+				0E03B8032386741B00949713 /* RemoteSwiftPackageReference */,
+				0E8BAC48245C393000D380FB /* RemoteSwiftPackageReference */,
+				A95BA3EC2452006E00EF923D /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -7750,7 +7735,7 @@
 		};
 		64333D5120B0C45B00CDF4B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D3850DFC59CD3E4368ACBFE0 /* Pods-stationTests.debug.xcconfig */;
+			baseConfigurationReference = 3A015F91C7FE3BC88884648F /* Pods-stationTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -7771,7 +7756,7 @@
 		};
 		64333D5220B0C45B00CDF4B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E336C10C2ECAF896F12E70C6 /* Pods-stationTests.release.xcconfig */;
+			baseConfigurationReference = EA25BD3C7510110289808C83 /* Pods-stationTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -7893,7 +7878,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */ = {
+		0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Nantes";
 			requirement = {
@@ -7901,7 +7886,7 @@
 				minimumVersion = 0.0.10;
 			};
 		};
-		0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
+		0E03B8032386741B00949713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
 			requirement = {
@@ -7909,7 +7894,7 @@
 				minimumVersion = 1.0.2;
 			};
 		};
-		0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa";
 			requirement = {
@@ -7917,7 +7902,7 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
+		0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
 			requirement = {
@@ -7925,7 +7910,7 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */ = {
+		0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Future";
 			requirement = {
@@ -7933,7 +7918,7 @@
 				minimumVersion = 1.3.0;
 			};
 		};
-		0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */ = {
+		0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
@@ -7941,7 +7926,7 @@
 				minimumVersion = 0.1.7;
 			};
 		};
-		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
+		0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
 			requirement = {
@@ -7949,7 +7934,7 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */ = {
+		0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
 			requirement = {
@@ -7957,7 +7942,7 @@
 				minimumVersion = 0.0.8;
 			};
 		};
-		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
+		0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
 			requirement = {
@@ -7965,7 +7950,7 @@
 				minimumVersion = 2.7.1;
 			};
 		};
-		0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */ = {
+		0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
@@ -7973,7 +7958,7 @@
 				minimumVersion = 3.4.0;
 			};
 		};
-		0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
+		0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
 			requirement = {
@@ -7981,7 +7966,7 @@
 				minimumVersion = 0.0.2;
 			};
 		};
-		0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
+		0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
 			requirement = {
@@ -7989,7 +7974,7 @@
 				minimumVersion = 1.8.2;
 			};
 		};
-		0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */ = {
+		0E8BAC48245C393000D380FB /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/groue/GRDB.swift";
 			requirement = {
@@ -7997,7 +7982,7 @@
 				minimumVersion = 4.14.0;
 			};
 		};
-		A95BA3EC2452006E00EF923D /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+		A95BA3EC2452006E00EF923D /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
 			requirement = {
@@ -8008,79 +7993,79 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E03B7C523866CDC00949713 /* Nantes */ = {
+		0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */;
+			package = 0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */;
 			productName = Nantes;
 		};
-		0E03B8042386741B00949713 /* SwinjectPropertyLoader */ = {
+		0E03B8042386741B00949713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
+			package = 0E03B8032386741B00949713 /* RemoteSwiftPackageReference */;
 			productName = SwinjectPropertyLoader;
 		};
-		0E4EAE3F23863BA600BBDFBD /* Realm */ = {
+		0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Realm;
 		};
-		0E4EAE4123863BA600BBDFBD /* RealmSwift */ = {
+		0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
 			productName = RealmSwift;
 		};
-		0E4EAE4423863CBC00BBDFBD /* Localize_Swift */ = {
+		0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */;
+			package = 0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Localize_Swift;
 		};
-		0E4EAE4723863D4100BBDFBD /* Future */ = {
+		0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */;
+			package = 0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Future;
 		};
-		0E4EAE98238646FF00BBDFBD /* BTKit */ = {
+		0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */;
+			package = 0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = BTKit;
 		};
-		0E4EAEB82386534B00BBDFBD /* LightRoute */ = {
+		0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */;
+			package = 0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = LightRoute;
 		};
-		0E4EAEC3238654AE00BBDFBD /* Humidity */ = {
+		0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */;
+			package = 0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Humidity;
 		};
-		0E4EAEC6238655FA00BBDFBD /* Swinject */ = {
+		0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */;
+			package = 0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Swinject;
 		};
-		0E4EAEC9238656B100BBDFBD /* Charts */ = {
+		0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */;
+			package = 0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Charts;
 		};
-		0E4EAECC2386586C00BBDFBD /* GestureInstructions */ = {
+		0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */;
+			package = 0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = GestureInstructions;
 		};
-		0E4EAED623865CB500BBDFBD /* RangeSeekSlider */ = {
+		0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
+			package = 0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */;
 			productName = RangeSeekSlider;
 		};
-		0E8BAC49245C393000D380FB /* GRDB */ = {
+		0E8BAC49245C393000D380FB /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
+			package = 0E8BAC48245C393000D380FB /* RemoteSwiftPackageReference */;
 			productName = GRDB;
 		};
-		A95BA3ED2452006F00EF923D /* KeychainAccess */ = {
+		A95BA3ED2452006F00EF923D /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A95BA3EC2452006E00EF923D /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			package = A95BA3EC2452006E00EF923D /* RemoteSwiftPackageReference */;
 			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */

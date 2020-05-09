@@ -22,20 +22,20 @@ class RuuviTagLoadDataOperation: AsyncOperation {
     }
 
     override func main() {
-        let uuid = self.uuid
-        let op = network.load(uuid: uuid, mac: mac, isConnectable: isConnectable)
-        op.on(success: { [weak self] data in
-            let persist = self?.persistence.persist(data: data, for: uuid)
-            persist?.on(success: { _ in
-                self?.state = .finished
-            }, failure: { error in
-                self?.error = error
-                self?.state = .finished
-            })
-        }, failure: { [weak self] error in
-            self?.error = error
-            self?.state = .finished
-        })
+//        let uuid = self.uuid
+//        let op = network.load(uuid: uuid, mac: mac, isConnectable: isConnectable)
+//        op.on(success: { [weak self] data in
+//            let persist = self?.persistence.persist(data: data, for: uuid)
+//            persist?.on(success: { _ in
+//                self?.state = .finished
+//            }, failure: { error in
+//                self?.error = error
+//                self?.state = .finished
+//            })
+//        }, failure: { [weak self] error in
+//            self?.error = error
+//            self?.state = .finished
+//        })
     }
 
 }
