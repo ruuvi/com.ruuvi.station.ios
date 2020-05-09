@@ -13,10 +13,13 @@ class DiscoverTableConfigurator {
         presenter.router = router
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
+        presenter.keychainService = r.resolve(KeychainService.self)
+        presenter.ruuviNetworkKaltiot = r.resolve(RuuviNetworkKaltiot.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
 

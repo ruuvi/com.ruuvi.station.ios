@@ -212,6 +212,10 @@ extension CardsPresenter: CardsViewOutput {
 
 // MARK: - DiscoverModuleOutput
 extension CardsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
+        module.dismiss()
+    }
+
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
         module.dismiss()
     }

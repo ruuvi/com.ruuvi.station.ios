@@ -5,6 +5,7 @@ protocol DiscoverRouterInput {
     func openCards()
     func openRuuviWebsite()
     func openLocationPicker(output: LocationPickerModuleOutput)
+    func openKaltiotPicker(output: KaltiotPickerModuleOutput)
     func dismiss(completion: (() -> Void)?)
 }
 

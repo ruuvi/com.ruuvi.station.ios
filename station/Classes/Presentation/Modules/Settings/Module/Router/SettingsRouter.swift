@@ -43,4 +43,14 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
+
+    func openKaltiot() {
+        let factory = StoryboardFactory(storyboardName: "KaltiotSettings")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: KaltiotSettingsModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
 }

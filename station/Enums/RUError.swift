@@ -9,6 +9,7 @@ enum RUError: Error {
     case map(Error)
     case bluetooth(BluetoothError)
     case btkit(BTError)
+    case ruuviNetwork(RuuviNetworkError)
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
@@ -36,6 +37,8 @@ extension RUError: LocalizedError {
         case .bluetooth(let error):
             return error.localizedDescription
         case .writeToDisk(let error):
+            return error.localizedDescription
+        case .ruuviNetwork(let error):
             return error.localizedDescription
         }
     }
@@ -119,6 +122,9 @@ enum UnexpectedError: Error {
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
     case attemptToReadDataFromRealmWithoutLUID
+    case failedToConstructURL
+    case notAHttpResponse
+    case failedToParseHttpResponse
 }
 
 extension UnexpectedError: LocalizedError {
@@ -140,6 +146,32 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
         case .failedToFindVirtualTag:
             return "UnexpectedError.failedToFindVirtualTag".localized()
+        case .failedToConstructURL:
+            return "UnexpectedError.failedToConstructURL".localized()
+        case .notAHttpResponse:
+            return "UnexpectedError.notAHttpResponse".localized()
+        case .failedToParseHttpResponse:
+            return "UnexpectedError.failedToParseHttpResponse".localized()
+        }
+    }
+}
+enum RuuviNetworkError: Error {
+    case noSavedApiKeyValue
+    case failedToLogIn
+    case doesNotHaveSensors
+    case noStoredData
+}
+extension RuuviNetworkError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .noSavedApiKeyValue:
+            return "RuuviNetworkError.NoSavedApiKeyValue".localized()
+        case .failedToLogIn:
+            return "RuuviNetworkError.FailedToLogIn".localized()
+        case .doesNotHaveSensors:
+            return "RuuviNetworkError.DoesNotHaveSensors".localized()
+        case .noStoredData:
+            return "RuuviNetworkError.NoStoredData".localized()
         }
     }
 }

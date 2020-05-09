@@ -34,6 +34,11 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
+        container.register(KeychainService.self) { _ in
+            let persistence = KeychainServiceImpl()
+            return persistence
+        }.inObjectScope(.container)
+
         container.register(RealmContext.self) { _ in
             let context = RealmContextImpl()
             return context

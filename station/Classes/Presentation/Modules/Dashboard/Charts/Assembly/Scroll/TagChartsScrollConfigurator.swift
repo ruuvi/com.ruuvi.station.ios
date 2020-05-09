@@ -25,6 +25,7 @@ class TagChartsScrollConfigurator {
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.settings = r.resolve(Settings.self)
         presenter.infoProvider = r.resolve(InfoProvider.self)
+        presenter.networkService = r.resolve(NetworkService.self)
         presenter.interactor = interactor
 
         interactor.gattService = r.resolve(GATTService.self)

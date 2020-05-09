@@ -110,6 +110,14 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(NetworkService.self) { r in
+            let service = NetworkServiceQueue()
+            service.ruuviTagPersistence = r.resolve(RuuviTagPersistence.self)
+            service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
+            service.realmContext = r.resolve(RealmContext.self)
+            return service
+        }
+
         container.register(PullWebDaemon.self) { r in
             let daemon = PullWebDaemonOperations()
             daemon.settings = r.resolve(Settings.self)

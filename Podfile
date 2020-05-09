@@ -21,6 +21,7 @@ def shared_pods
   pod 'RxSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
+  pod 'KeychainAccess'
 end
 
 target 'station' do
