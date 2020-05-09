@@ -104,6 +104,7 @@
 "DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 // KaltiotPicker
 "KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
+"RuuviNetworkKaltiot.Name.prefix" = "Kaltiot";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";

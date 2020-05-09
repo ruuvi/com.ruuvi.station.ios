@@ -160,9 +160,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidConfirmToSyncWithWeb(for viewModel: TagChartsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let mac = ruuviTag.macId?.mac {
             isSyncing = true
-            let op = networkService.loadData(for: uuid, from: .whereOS)
+            let op = networkService.loadData(for: ruuviTag.id, mac: mac, from: .whereOS)
             op.on(failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: {
@@ -174,9 +174,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel) {
-        if let uuid = viewModel.uuid.value {
+        if let mac = ruuviTag.macId?.mac {
             isSyncing = true
-            let op = networkService.loadData(for: uuid, from: .kaltiot)
+            let op = networkService.loadData(for: ruuviTag.id, mac: mac, from: .kaltiot)
             op.on(success: { [weak self] _ in
                 self?.interactor.restartObservingData()
             }, failure: { [weak self] error in

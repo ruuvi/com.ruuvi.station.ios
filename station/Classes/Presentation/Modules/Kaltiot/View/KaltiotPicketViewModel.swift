@@ -5,11 +5,11 @@ struct KaltiotPickerViewModel {
 }
 
 struct KaltiotBeaconViewModel: Equatable {
-    let id: String
+    let beacon: KaltiotBeacon
     let isConnectable: Bool
 
     init(beacon: KaltiotBeacon) {
-        id = beacon.id
+        self.beacon = beacon
         if let sensors = beacon.meta?.capabilities.sensors {
             isConnectable = sensors.contains(.temperature)
                 && sensors.contains(.pressure)
@@ -20,6 +20,6 @@ struct KaltiotBeaconViewModel: Equatable {
     }
 
     static func == (lhs: KaltiotBeaconViewModel, rhs: KaltiotBeaconViewModel) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.beacon.id == rhs.beacon.id
     }
 }

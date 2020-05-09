@@ -13,7 +13,7 @@ class KaltiotPickerPresenter {
     var keychainService: KeychainService!
     var realmContext: RealmContext!
     var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
-    var ruuviTagPersistence: RuuviTagPersistence!
+    var ruuviTagTank: RuuviTagTank!
     var existingBeaconsMac: [String] = []
 
     private var viewModel: KaltiotPickerViewModel! {
@@ -54,7 +54,7 @@ extension KaltiotPickerPresenter: KaltiotPickerViewOutput {
 
     func viewDidSelectTag(at index: Int) {
         if beacons[index].isConnectable {
-            fetchHistory(forBeacon: beacons[index].id)
+            fetchSensor(for: beacons[index].beacon)
         } else {
             errorPresenter.present(error: RUError.ruuviNetwork(.doesNotHaveSensors))
         }
@@ -101,17 +101,11 @@ extension KaltiotPickerPresenter {
         }
     }
 
-    private func fetchHistory(forBeacon beaconMac: String) {
-        let op = ruuviNetworkKaltiot.load(uuid: UUID().uuidString, mac: beaconMac, isConnectable: true)
+    private func fetchSensor(for beacon: KaltiotBeacon) {
+        let op = ruuviNetworkKaltiot.getSensor(for: beacon)
         isLoading = true
-        op.on(success: {[weak self] (results) in
-            if results.count > 0 {
-                self?.saveResults(results, mac: beaconMac)
-                self?.isLoading = false
-            } else {
-                self?.isLoading = false
-                self?.errorPresenter.present(error: RUError.ruuviNetwork(.noStoredData))
-            }
+        op.on(success: {[weak self] (sensor) in
+            self?.persistSensor(sensor)
         }, failure: { [weak self] (error) in
             self?.isLoading = false
             self?.errorPresenter.present(error: error)
@@ -120,10 +114,10 @@ extension KaltiotPickerPresenter {
 
     private func calculateDiff(_ oldValue: [KaltiotBeaconViewModel], newValue: [KaltiotBeaconViewModel]) {
         let oldData = oldValue.enumerated().map({
-            ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)
+            ReloadableCell(key: $0.element.beacon.id, value: $0.element, index: $0.offset)
         })
         let newData = newValue.enumerated().map({
-            ReloadableCell(key: $0.element.id, value: $0.element, index: $0.offset)
+            ReloadableCell(key: $0.element.beacon.id, value: $0.element, index: $0.offset)
         })
         let cellChanges = diffCalculator.calculate(oldItems: oldData, newItems: newData, in: 0)
         viewModel.beacons = newData
@@ -133,18 +127,15 @@ extension KaltiotPickerPresenter {
         view.applyChanges(cellChanges)
     }
 
-    private func saveResults(_ results: [(RuuviTagProtocol, Date)], mac: String) {
-//        guard let firstTag = results.first?.0 else {
-//            return
-//        }
-//        self.isLoading = true
-//        let operation: Future<Void, RUError> = ruuviTagPersistence.persist(ruuviTag: firstTag, mac: mac)
-//        operation.on(success: { [weak self] in
-//            self?.isLoading = false
-//            self?.router.dismiss(completion: nil)
-//        }, failure: { [weak self] (error) in
-//            self?.isLoading = false
-//            self?.errorPresenter.present(error: error)
-//        })
+    private func persistSensor(_ sensor: AnyRuuviTagSensor) {
+        self.isLoading = true
+        let operation = ruuviTagTank.create(sensor)
+        operation.on(success: { [weak self] _ in
+            self?.isLoading = false
+            self?.router.dismiss(completion: nil)
+        }, failure: { [weak self] (error) in
+            self?.isLoading = false
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
