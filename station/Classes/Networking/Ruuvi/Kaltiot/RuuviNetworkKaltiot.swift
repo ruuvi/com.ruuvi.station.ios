@@ -27,7 +27,7 @@ extension RuuviNetworkKaltiot {
                     let tag = device.ruuvi?.tag {
                     let macId = tag.macId ?? MACIdentifierStruct(value: mac)
                     let record = RuuviTagSensorRecordStruct(ruuviTagId: tag.ruuviTagId,
-                                                            date: tag.date,
+                                                            date: logItem.date,
                                                             macId: macId,
                                                             rssi: tag.rssi,
                                                             temperature: tag.temperature,
