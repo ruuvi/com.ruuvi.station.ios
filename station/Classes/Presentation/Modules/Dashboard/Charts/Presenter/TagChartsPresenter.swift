@@ -178,7 +178,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             isSyncing = true
             let op = networkService.loadData(for: uuid, from: .kaltiot)
             op.on(success: { [weak self] _ in
-                self?.restartObservingData()
+                self?.interactor.restartObservingData()
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: {

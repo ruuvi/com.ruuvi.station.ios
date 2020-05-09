@@ -13,7 +13,6 @@ class KaltiotPickerPresenter {
     var keychainService: KeychainService!
     var realmContext: RealmContext!
     var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
-    var ruuviTagService: RuuviTagService!
     var ruuviTagPersistence: RuuviTagPersistence!
     var existingBeaconsMac: [String] = []
 
@@ -135,17 +134,17 @@ extension KaltiotPickerPresenter {
     }
 
     private func saveResults(_ results: [(RuuviTagProtocol, Date)], mac: String) {
-        guard let firstTag = results.first?.0 else {
-            return
-        }
-        self.isLoading = true
-        let operation: Future<Void, RUError> = ruuviTagPersistence.persist(ruuviTag: firstTag, mac: mac)
-        operation.on(success: { [weak self] in
-            self?.isLoading = false
-            self?.router.dismiss(completion: nil)
-        }, failure: { [weak self] (error) in
-            self?.isLoading = false
-            self?.errorPresenter.present(error: error)
-        })
+//        guard let firstTag = results.first?.0 else {
+//            return
+//        }
+//        self.isLoading = true
+//        let operation: Future<Void, RUError> = ruuviTagPersistence.persist(ruuviTag: firstTag, mac: mac)
+//        operation.on(success: { [weak self] in
+//            self?.isLoading = false
+//            self?.router.dismiss(completion: nil)
+//        }, failure: { [weak self] (error) in
+//            self?.isLoading = false
+//            self?.errorPresenter.present(error: error)
+//        })
     }
 }
