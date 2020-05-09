@@ -1,8 +1,8 @@
 PODS:
   - BTKit (0.1.13)
-  - Charts (3.4.0):
-    - Charts/Core (= 3.4.0)
-  - Charts/Core (3.4.0)
+  - Charts (3.5.0):
+    - Charts/Core (= 3.5.0)
+  - Charts/Core (3.5.0)
   - Firebase/Analytics (6.15.0):
     - Firebase/Core
   - Firebase/Core (6.15.0):
@@ -190,7 +190,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BTKit: ea4207739e19fdcfbcbb75ed243fb7800d5a9c16
-  Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
+  Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
   FirebaseAnalyticsInterop: 3f86269c38ae41f47afeb43ebf32a001f58fcdae

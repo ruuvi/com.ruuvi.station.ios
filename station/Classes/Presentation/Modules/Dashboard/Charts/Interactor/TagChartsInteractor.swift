@@ -35,11 +35,6 @@ class TagChartsInteractor {
             chartModules.append(module)
         })
     }
-    func reloadCharts() {
-        chartModules.forEach({
-            $0.reloadChart()
-        })
-    }
 }
 // MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
@@ -86,7 +81,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
-            self?.restartObservingData()
+            self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)
@@ -99,9 +94,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         op.on(failure: {(error) in
             promise.fail(error: error)
         }, completion: { [weak self] in
-            self?.ruuviTagData = []
-            self?.reloadCharts()
-            self?.restartObservingData()
+            self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
         })
         return promise.future
@@ -110,9 +103,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
             let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
         ruuviTagData.append(contentsOf: newValues)
-        chartModules.forEach({
-            $0.insertMeasurements(newValues)
-        })
+        insertMeasurements(newValues)
     //        let chartIntervalSeconds = settings.chartIntervalSeconds
     //        insertions.forEach({ i in
     //            let newValue = results[i].measurement
@@ -123,11 +114,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     //                insertMeasurements([newValue], into: viewModel)
     //            }
     //        })
-    }
-    func notifySettingsChanged() {
-        chartModules.forEach({
-            $0.notifySettingsChanged()
-        })
     }
 }
 // MARK: - TagChartModuleOutput
@@ -155,9 +141,7 @@ extension TagChartsInteractor {
             let lastResults = results.map({ $0.measurement })
             self?.lastMeasurement = lastResults.last
             self?.ruuviTagData.append(contentsOf: lastResults)
-            self?.chartModules.forEach({
-                $0.insertMeasurements(lastResults)
-            })
+            self?.insertMeasurements(lastResults)
         }, failure: {[weak self] (error) in
             self?.presenter.interactorDidError(error)
         })
@@ -169,5 +153,31 @@ extension TagChartsInteractor {
         }, failure: {[weak self] (error) in
             self?.presenter.interactorDidError(error)
         }, completion: competion)
+    }
+
+    private func clearChartsAndRestartObserving() {
+        ruuviTagData = []
+        reloadCharts()
+        restartObservingData()
+    }
+    private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
+        chartModules.forEach({
+            $0.insertMeasurements(newValues)
+        })
+    }
+    private func clearChartData() {
+        chartModules.forEach({
+            $0.clearChartData()
+        })
+    }
+    private func reloadCharts() {
+        chartModules.forEach({
+            $0.reloadChart()
+        })
+    }
+    func notifySettingsChanged() {
+        chartModules.forEach({
+            $0.notifySettingsChanged()
+        })
     }
 }
