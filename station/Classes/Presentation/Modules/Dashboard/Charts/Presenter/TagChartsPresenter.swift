@@ -47,8 +47,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var needSyncCharts: Bool = false
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
-            interactor.configure(withTag: ruuviTag)
-            needSyncCharts = oldValue != ruuviTag
             syncViewModel()
         }
     }
@@ -108,8 +106,9 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewWillAppear() {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
-        syncChartViewsIfNeeded()
+        interactor.configure(withTag: ruuviTag)
         interactor?.restartObservingData()
+        syncChartViews()
     }
 
     func viewWillDisappear() {
@@ -209,6 +208,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
             } else {
                 self?.errorPresenter.present(error: error)
             }
+        }, completion: {
+            DispatchQueue.main.async { [weak self] in
+                self?.view.setSync(progress: nil, for: viewModel)
+            }
         })
     }
 
@@ -300,12 +303,6 @@ extension TagChartsPresenter: AlertServiceObserver {
 
 // MARK: - Private
 extension TagChartsPresenter {
-    private func syncChartViewsIfNeeded() {
-        if needSyncCharts {
-            syncChartViews()
-            needSyncCharts = false
-        }
-    }
 
     private func tryToShowSwipeUpHint() {
         if UIApplication.shared.statusBarOrientation.isLandscape
