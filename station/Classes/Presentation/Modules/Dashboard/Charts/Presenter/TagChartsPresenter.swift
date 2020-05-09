@@ -21,6 +21,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
+    var networkService: NetworkService!
 
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
@@ -158,7 +159,37 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view.showClearConfirmationDialog(for: viewModel)
     }
 
-    func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
+    func viewDidConfirmToSyncWithWeb(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            isSyncing = true
+            let op = networkService.loadData(for: uuid, from: .whereOS)
+            op.on(failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: {
+                self.isSyncing = false
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel) {
+        if let uuid = viewModel.uuid.value {
+            isSyncing = true
+            let op = networkService.loadData(for: uuid, from: .kaltiot)
+            op.on(success: { [weak self] _ in
+                self?.restartObservingData()
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: {
+                self.isSyncing = false
+            })
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
@@ -168,13 +199,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
             }
         }
         op.on(success: { [weak self] _ in
-            self?.view.setSync(progress: nil, for: viewModel)
-        }, failure: { [weak self] error in
-            self?.view.setSync(progress: nil, for: viewModel)
-            if case .btkit(.logic(.connectionTimedOut)) = error {
-                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-            } else if case .btkit(.logic(.serviceTimedOut)) = error {
-                self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
+                self?.view.setSync(progress: nil, for: viewModel)
+            }, failure: { [weak self] error in
+                self?.view.setSync(progress: nil, for: viewModel)
+                if case .btkit(.logic(.connectionTimedOut)) = error {
+                    self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+                } else if case .btkit(.logic(.serviceTimedOut)) = error {
+                    self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
             }
@@ -199,6 +230,12 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
+        module.dismiss { [weak self] in
+            self?.router.dismiss()
+        }
+    }
+
     func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
         module.dismiss { [weak self] in
             self?.router.dismiss()

@@ -15,6 +15,8 @@ class DiscoverPresenter: DiscoverModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagReactor: RuuviTagReactor!
+    var keychainService: KeychainService!
+    var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedWebTags: Results<WebTagRealm>! {
@@ -155,6 +157,36 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidTapOnWebTagInfo() {
         view.showWebTagInfoDialog()
     }
+
+    func viewDidAskToAddTagWithMACAddress() {
+        view.showAddTagWithMACAddressDialog()
+    }
+
+    func viewDidEnterMACAddressToAddTag(mac: String) {
+        let operation = ruuviTagService.persist(mac: mac)
+        operation.on(success: { [weak self] (_) in
+            guard let sSelf = self else { return }
+            if sSelf.isOpenedFromWelcome {
+                sSelf.router.openCards()
+            } else {
+                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
+            }
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+
+    func viewDidEnterKaltiotApiKey(apiKey: String) {
+        validateApiKey(apiKey: apiKey)
+    }
+
+    func viewDidSelectKaltiotProvider() {
+        if keychainService.hasKaltiotApiKey {
+            router.openKaltiotPicker(output: self)
+        } else {
+            view.showAddKaltiotApiKey()
+        }
+    }
 }
 
 // MARK: - LocationPickerModuleOutput
@@ -180,6 +212,11 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
     }
 }
 
+// MARK: - KaltiotPickerModuleOutput
+extension DiscoverPresenter: KaltiotPickerModuleOutput {
+    func kaltiotPicker(module: KaltiotPickerModuleInput, didPick tagUuid: String) {
+    }
+}
 // MARK: - Private
 extension DiscoverPresenter {
 
@@ -305,5 +342,19 @@ extension DiscoverPresenter {
         if persistedSensors != nil && persistedWebTags != nil {
             view.isCloseEnabled = persistedSensors.count > 0 || persistedWebTags.count > 0
         }
+    }
+
+    private func validateApiKey(apiKey: String) {
+        let op = ruuviNetworkKaltiot.validateApiKey(apiKey: apiKey)
+        op.on(success: {[weak self] in
+            self?.keychainService.kaltiotApiKey = apiKey
+            self?.openKaltiotPicker()
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+
+    private func openKaltiotPicker() {
+        router.openKaltiotPicker(output: self)
     }
 }

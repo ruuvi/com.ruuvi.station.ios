@@ -97,6 +97,13 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
+"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
+"DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
+"DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
+"DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
+"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
+// KaltiotPicker
+"KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
@@ -196,6 +203,13 @@
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
+"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
+"Settings.Label.Kaltiot" = "Kaltiot";
+
+// Kaltiot settings
+"KaltiotSettings.title" = "Настройки Kaltiot";
+"KaltiotSettings.ApiKeyTextField.placeholder" = "Введите ApiKey";
+"KaltiotSettings.FooterTextView.text" = "Получить ApiKey можно после регистрации на\nhttps://console.torqhub.io/\nв разделе \"Tracker - Credentials\" -> \"HTTP API\"";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
@@ -222,6 +236,9 @@
 "TagCharts.Status.Error" = "Ошибка";
 "TagCharts.FailedToSyncDialog.message" = "Не удалось установить соединение за %.0f сек. Синхронизация отменена.";
 "TagCharts.FailedToServeDialog.message" = "Не удалось обменяться данными за %.0f сек. Обмен данными отменен.";
+"TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
+"TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
+"TagCharts.SyncConfirmationDialog.WithWebKaltiot.title" = "With Web(Kaltiot)";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
@@ -293,7 +310,17 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+"UnexpectedError.failedToConstructURL" = "Failed to construct URL";
+"UnexpectedError.notAHttpResponse" = "Not a HTTP response";
+"UnexpectedError.failedToParseHttpResponse" = "Failed to parse HTTP response";
 
+// RuuviNetworkError
+"RuuviNetworkError.NoSavedApiKeyValue" = "Нет сохраненного ApiKey";
+"RuuviNetworkError.FailedToLogIn" = "Не удалось авторизоваться";
+"RuuviNetworkError.DoesNotHaveSensors" = "У метки нет сенсоров";
+"RuuviNetworkError.NoStoredData" = "Нет сохраненных данных. Метка не будет добавлена";
+
+"RuuviNetworkError.TagIsNotPluggable" = "The tag is not pluggable";
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";

@@ -26,6 +26,15 @@ class DiscoverRouter: DiscoverRouterInput {
             })
     }
 
+    func openKaltiotPicker(output: KaltiotPickerModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "KaltiotPicker")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: KaltiotPickerModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(output: output)
+            })
+    }
+
     func dismiss(completion: (() -> Void)?) {
         transitionHandler.dismiss(animated: true, completion: completion)
     }
