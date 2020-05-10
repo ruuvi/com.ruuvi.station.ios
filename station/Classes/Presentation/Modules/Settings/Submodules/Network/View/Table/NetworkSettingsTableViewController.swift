@@ -13,11 +13,6 @@ enum NetworkSettingsSection: Int, CaseIterable {
         self = section
     }
 }
-enum NetworkSettinsCell {
-    case apiKey
-    case switcher
-    case text
-}
 
 class NetworkSettingsTableViewController: UITableViewController {
     var output: NetworkSettingsViewOutput!
@@ -57,8 +52,10 @@ extension NetworkSettingsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let section = NetworkSettingsSection(rawValue: section)
         switch section {
-        case .common, .kaltiot, .whereOS:
+        case .common, .whereOS:
             return 1
+        case .kaltiot:
+            return viewModel.kaltiotNetworkEnabled.value == true ? 2 : 1
         default:
             return 0
         }
@@ -82,11 +79,26 @@ extension NetworkSettingsTableViewController {
             cell.settingsTitleLabel.text = "NetworkSettings.WhereOS".localized()
             return cell
         case .kaltiot:
-            let cell = tableView.dequeueReusableCell(with: KaltiotApiKeyTableViewCell.self, for: indexPath)
-            cell.apiKeyTextField.text = viewModel.kaltiotApiKey.value
-            cell.apiKeyTextField.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
-            cell.apiKeyTextField.addTarget(self, action: #selector(didEndEditingApiKey(_:)), for: .editingDidEndOnExit)
-            return cell
+            switch indexPath.row {
+            case 0:
+                let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
+                cell.settingsSwitch.isOn = viewModel.kaltiotNetworkEnabled.value ?? false
+                cell.settingsSwitch.addTarget(self,
+                                              action: #selector(didChangeKaltiotNetworkEnabled(_:)),
+                                              for: .valueChanged)
+                cell.settingsTitleLabel.text = "NetworkSettings.Kaltiot".localized()
+                return cell
+            case 1:
+                let cell = tableView.dequeueReusableCell(with: KaltiotApiKeyTableViewCell.self, for: indexPath)
+                cell.apiKeyTextField.text = viewModel.kaltiotApiKey.value
+                cell.apiKeyTextField.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
+                cell.apiKeyTextField.addTarget(self,
+                                               action: #selector(didEndEditingApiKey(_:)),
+                                               for: .editingDidEndOnExit)
+                return cell
+            default:
+                fatalError()
+            }
         }
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -104,7 +116,8 @@ extension NetworkSettingsTableViewController {
     }
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
          if let section = NetworkSettingsSection(rawValue: section),
-            section == .kaltiot {
+            section == .kaltiot,
+            viewModel.kaltiotNetworkEnabled.value == true {
             return "KaltiotSettings.FooterTextView.text".localized()
         } else {
             return nil
@@ -124,6 +137,12 @@ extension NetworkSettingsTableViewController {
     @objc func didChangeWhereOSNetworkEnabled(_ sender: UISwitch) {
         output.viewDidTriggerWhereOsSwitch(sender.isOn)
         updateUI()
+    }
+    @objc func didChangeKaltiotNetworkEnabled(_ sender: UISwitch) {
+        output.viewDidTriggerKaltiotSwitch(sender.isOn)
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(arrayLiteral: NetworkSettingsSection.kaltiot.rawValue), with: .automatic)
+        tableView.endUpdates()
     }
     @objc func didEndEditingApiKey(_ sender: UITextField) {
         output.viewDidEnterApiKey(sender.text)
