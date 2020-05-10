@@ -14,6 +14,7 @@ class KaltiotPickerPresenter {
     var realmContext: RealmContext!
     var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
     var ruuviTagTank: RuuviTagTank!
+    var ruuviTagTrunk: RuuviTagTrunk!
     var existingBeaconsMac: [String] = []
 
     private var viewModel: KaltiotPickerViewModel! {
@@ -74,9 +75,18 @@ extension KaltiotPickerPresenter: KaltiotPickerModuleInput {
 }
 // MARK: - Private
 extension KaltiotPickerPresenter {
+    private func fetchExisting(completion: (() -> Void)?) {
+        let op = ruuviTagTrunk.readAll()
+        op.on(success: { [weak self] results in
+            self?.existingBeaconsMac = results.compactMap({$0.macId?.mac})
+        }, completion: completion)
+    }
+
     private func obtainBeacons() {
         isLoading = true
-        fetchBeacons()
+        fetchExisting(completion: { [weak self] in
+            self?.fetchBeacons()
+        })
     }
 
     private func fetchBeacons() {

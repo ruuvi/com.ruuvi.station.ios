@@ -17,6 +17,7 @@ class KaltiotPickerTableConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.ruuviNetworkKaltiot = r.resolve(RuuviNetworkKaltiot.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
+        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
 
         view.output = presenter
     }
