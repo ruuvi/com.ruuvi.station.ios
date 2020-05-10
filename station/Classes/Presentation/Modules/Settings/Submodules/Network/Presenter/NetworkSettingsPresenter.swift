@@ -39,10 +39,18 @@ extension NetworkSettingsPresenter: NetworkSettingsViewOutput {
     func viewDidTriggerNetworkFeatureSwitch(_ state: Bool) {
         settings.networkFeatureEnabled = state
         viewModel.networkFeatureEnabled.value = state
+        if !state {
+            viewDidTriggerKaltiotSwitch(state)
+            viewDidTriggerWhereOsSwitch(state)
+        }
     }
     func viewDidTriggerWhereOsSwitch(_ state: Bool) {
         settings.whereOSNetworkEnabled = state
         viewModel.whereOSNetworkEnabled.value = state
+    }
+    func viewDidTriggerKaltiotSwitch(_ state: Bool) {
+        settings.kaltiotNetworkEnabled = state
+        viewModel.kaltiotNetworkEnabled.value = state
     }
 }
 // MARK: - Private
@@ -50,6 +58,7 @@ extension NetworkSettingsPresenter {
     private func syncViewModel() {
         viewModel = NetworkSettingsViewModel()
         viewModel.networkFeatureEnabled.value = settings.networkFeatureEnabled
+        viewModel.kaltiotNetworkEnabled.value = settings.kaltiotNetworkEnabled
         viewModel.whereOSNetworkEnabled.value = settings.whereOSNetworkEnabled
         viewModel.kaltiotApiKey.value = keychainService.kaltiotApiKey
     }
@@ -59,12 +68,12 @@ extension NetworkSettingsPresenter {
         }
         isLoading = true
         let op = ruuviNetworkKaltiot.validateApiKey(apiKey: apiKey)
-        op.on(success: { [weak self] in            self?.isLoading = false
+        op.on(success: { [weak self] in
+            self?.isLoading = false
             self?.keychainService.kaltiotApiKey = apiKey
             let feedback = UINotificationFeedbackGenerator()
             feedback.notificationOccurred(.success)
             feedback.prepare()
-            self?.router.dismiss()
         }, failure: { [weak self] (error) in
             self?.isLoading = false
             self?.keychainService.kaltiotApiKey = nil

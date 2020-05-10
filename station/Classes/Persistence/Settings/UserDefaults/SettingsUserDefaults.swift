@@ -189,10 +189,13 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 72)
     var chartDurationHours: Int
 
-    @UserDefault("SettingsUserDegaults.networkFeatureEnabled", defaultValue: false)
+    @UserDefault("SettingsUserDefaults.networkFeatureEnabled", defaultValue: false)
     var networkFeatureEnabled: Bool
 
-    @UserDefault("SettingsUserDegaults.whereOSNetworkEnabled", defaultValue: false)
+    @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
+    var kaltiotNetworkEnabled: Bool
+
+    @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
     var whereOSNetworkEnabled: Bool
 
 // MARK: - Private
