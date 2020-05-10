@@ -10,6 +10,8 @@ class TagChartsInteractor {
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
+    var networkService: NetworkService!
+
     var lastMeasurement: RuuviMeasurement?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
@@ -86,6 +88,21 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         }, failure: {error in
             promise.fail(error: error)
         })
+        return promise.future
+    }
+    func syncNetworkRecords(with provider: RuuviNetworkProvider) -> Future<Void, RUError> {
+        let promise = Promise<Void, RUError>()
+        if let mac = ruuviTagSensor.macId?.mac {
+            let op = networkService.loadData(for: ruuviTagSensor.id, mac: mac, from: provider)
+            op.on(success: { [weak self] _ in
+                self?.clearChartsAndRestartObserving()
+                promise.succeed(value: ())
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        } else {
+            promise.fail(error: RUError.unexpected(.viewModelUUIDIsNil))
+        }
         return promise.future
     }
     func deleteAllRecords() -> Future<Void, RUError> {
