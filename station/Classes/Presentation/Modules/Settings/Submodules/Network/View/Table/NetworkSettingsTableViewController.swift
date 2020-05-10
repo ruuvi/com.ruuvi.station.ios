@@ -102,6 +102,14 @@ extension NetworkSettingsTableViewController {
             return nil
         }
     }
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+         if let section = NetworkSettingsSection(rawValue: section),
+            section == .kaltiot {
+            return "KaltiotSettings.FooterTextView.text".localized()
+        } else {
+            return nil
+        }
+    }
 }
 
 // MARK: - Private
