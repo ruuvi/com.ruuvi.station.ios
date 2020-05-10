@@ -1,4 +1,4 @@
-//swiftlint:disable:next file_length
+//swiftlint:disable file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -21,7 +21,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
-    var networkService: NetworkService!
 
     private var isSyncing: Bool = false
     private var isLoading: Bool = false {
@@ -159,35 +158,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidConfirmToSyncWithWeb(for viewModel: TagChartsViewModel) {
-        if let mac = ruuviTag.macId?.mac {
-            isSyncing = true
-            let op = networkService.loadData(for: ruuviTag.id, mac: mac, from: .whereOS)
-            op.on(failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: {
-                self.isSyncing = false
-            })
-        } else {
-            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
-        }
+        syncRecords(with: .whereOS)
     }
-// TODO remove viewModel and move method into interactor
+    
     func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel) {
-        if let mac = ruuviTag.macId?.mac {
-            isSyncing = true
-            let op = networkService.loadData(for: ruuviTag.id, mac: mac, from: .kaltiot)
-            op.on(success: { [weak self] _ in
-                self?.interactor.restartObservingData()
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: {
-                self.isSyncing = false
-            })
-        } else {
-            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
-        }
+        syncRecords(with: .kaltiot)
     }
-// TODO remove viewModel and move method into interactor
+
     func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
@@ -446,4 +423,14 @@ extension TagChartsPresenter {
                             }
             })
     }
+    private func syncRecords(with networkProvider: RuuviNetworkProvider) {
+        isSyncing = true
+        let op = interactor.syncNetworkRecords(with: networkProvider)
+        op.on(failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+            }, completion: {
+                self.isSyncing = false
+        })
+    }
 }
+//swiftlint:enable file_length
