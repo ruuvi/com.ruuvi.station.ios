@@ -219,7 +219,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="KaltiotCell" destination="GAZ-Te-CtF" id="Mhb-8v-Usv"/>
                         <outlet property="closeBarButtonItem" destination="lsn-T2-IDJ" id="ejV-rY-SgV"/>
                         <outlet property="defaultsCell" destination="zPg-YI-U3o" id="qvw-Bo-WKb"/>
                         <outlet property="defaultsTitleLabel" destination="xAA-Ek-iEf" id="00Z-4t-FuC"/>
@@ -229,10 +228,11 @@
                         <outlet property="heartbeatTitleLabel" destination="dMV-BV-f9G" id="3Zt-CF-3ze"/>
                         <outlet property="humidityUnitLabel" destination="bGS-es-4BZ" id="3Ok-bN-3Le"/>
                         <outlet property="humidityUnitSegmentedControl" destination="xSh-qv-HGb" id="GNo-7u-4WM"/>
-                        <outlet property="kaltiotTitleLabel" destination="Rko-7w-JTk" id="SiN-hD-wBE"/>
                         <outlet property="languageCell" destination="7Hf-la-egS" id="RhN-Ls-L2H"/>
                         <outlet property="languageTitleLabel" destination="B4i-sU-siT" id="3li-U5-kZZ"/>
                         <outlet property="languageValueLabel" destination="mhK-Ub-ply" id="xdk-hx-RX7"/>
+                        <outlet property="networkSettingsCell" destination="GAZ-Te-CtF" id="Mhb-8v-Usv"/>
+                        <outlet property="networkSettingsTitleLabel" destination="Rko-7w-JTk" id="SiN-hD-wBE"/>
                         <outlet property="temperatureUnitLabel" destination="vN3-8D-6Uc" id="BFX-XU-8Na"/>
                         <outlet property="temperatureUnitSegmentedControl" destination="xCo-14-Jo8" id="bFj-VL-KLy"/>
                     </connections>

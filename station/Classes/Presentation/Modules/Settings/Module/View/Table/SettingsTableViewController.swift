@@ -23,8 +23,8 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageCell: UITableViewCell!
     @IBOutlet weak var foregroundCell: UITableViewCell!
     @IBOutlet weak var foregroundTitleLabel: UILabel!
-    @IBOutlet weak var kaltiotTitleLabel: UILabel!
-    @IBOutlet weak var KaltiotCell: UITableViewCell!
+    @IBOutlet weak var networkSettingsTitleLabel: UILabel!
+    @IBOutlet weak var networkSettingsCell: UITableViewCell!
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -70,7 +70,7 @@ extension SettingsTableViewController: SettingsViewInput {
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
-        kaltiotTitleLabel.text = "Settings.Label.Kaltiot".localized()
+        networkSettingsTitleLabel.text = "Settings.Label.NetworkSettings".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -165,7 +165,7 @@ extension SettingsTableViewController {
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
-            case KaltiotCell:
+            case networkSettingsCell:
                 output.viewDidTapOnKaltiot()
             default:
                 break

@@ -205,10 +205,15 @@
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
 "Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
-"Settings.Label.Kaltiot" = "Kaltiot";
+"Settings.Label.NetworkSettings" = "Network settings";
+
+// Network settings
+"NetworkSettings.title" = "Network settings";
+"NetworkSettings.NetworkFeature" = "Network feature";
+"NetworkSettings.WhereOS" = "WhereOS";
+"NetworkSettings.Kaltiot" = "Kaltiot";
 
 // Kaltiot settings
-"KaltiotSettings.title" = "Настройки Kaltiot";
 "KaltiotSettings.ApiKeyTextField.placeholder" = "Введите ApiKey";
 "KaltiotSettings.FooterTextView.text" = "Получить ApiKey можно после регистрации на\nhttps://console.torqhub.io/\nв разделе \"Tracker - Credentials\" -> \"HTTP API\"";
 

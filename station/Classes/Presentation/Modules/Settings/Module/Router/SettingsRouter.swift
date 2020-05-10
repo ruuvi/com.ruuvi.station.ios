@@ -44,10 +44,10 @@ class SettingsRouter: SettingsRouterInput {
             })
     }
 
-    func openKaltiot() {
-        let factory = StoryboardFactory(storyboardName: "KaltiotSettings")
+    func openNetworkSettings() {
+        let factory = StoryboardFactory(storyboardName: "NetworkSettings")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: KaltiotSettingsModuleInput.self)
+            .forStoryboard(factory: factory, to: NetworkSettingsModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
                 module.configure()
