@@ -79,6 +79,6 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTapOnKaltiot() {
-        router.openKaltiot()
+        router.openNetworkSettings()
     }
 }

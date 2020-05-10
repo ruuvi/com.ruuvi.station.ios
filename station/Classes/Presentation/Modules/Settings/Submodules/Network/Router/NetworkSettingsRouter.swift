@@ -1,6 +1,6 @@
 import LightRoute
 
-class KaltiotSettingsRouter: KaltiotSettingsRouterInput {
+class NetworkSettingsRouter: NetworkSettingsRouterInput {
     weak var transitionHandler: TransitionHandler!
 
     func dismiss() {

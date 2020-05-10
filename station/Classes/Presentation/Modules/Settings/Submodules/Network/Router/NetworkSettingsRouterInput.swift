@@ -1,5 +1,5 @@
 import Foundation
 
-protocol KaltiotSettingsRouterInput {
+protocol NetworkSettingsRouterInput {
     func dismiss()
 }
