@@ -43,7 +43,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
-    private var needSyncCharts: Bool = false
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -106,12 +105,14 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
         restartObservingData()
+        interactor.startObservingTags()
         syncChartViews()
     }
 
     func viewWillDisappear() {
         stopObservingBluetoothState()
-        interactor?.stopObservingRuuviTagsData()
+        interactor.stopObservingTags()
+        interactor.stopObservingRuuviTagsData()
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
@@ -198,6 +199,9 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
+    func interactorDidDeleteTag() {
+        router.dismiss()
+    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
@@ -277,6 +281,7 @@ extension TagChartsPresenter {
     private func syncViewModel() {
         viewModel = TagChartsViewModel(ruuviTag)
         if let luid = ruuviTag.luid {
+            viewModel.name.value = ruuviTag.name
             viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
