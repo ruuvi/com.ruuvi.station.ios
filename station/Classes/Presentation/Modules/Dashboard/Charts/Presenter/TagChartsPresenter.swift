@@ -105,8 +105,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewWillAppear() {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
-        interactor.configure(withTag: ruuviTag)
-        interactor?.restartObservingData()
+        restartObservingData()
         syncChartViews()
     }
 
@@ -291,7 +290,10 @@ extension TagChartsPresenter {
             assertionFailure()
         }
     }
-
+    private func restartObservingData() {
+        interactor.configure(withTag: ruuviTag)
+        interactor.restartObservingData()
+    }
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default

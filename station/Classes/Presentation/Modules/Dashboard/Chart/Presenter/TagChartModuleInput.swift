@@ -5,7 +5,6 @@ protocol TagChartModuleInput: class {
     func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput)
     func insertMeasurements(_ newValues: [RuuviMeasurement])
     func setProgress(_ value: Float)
-    func clearChartData()
     func reloadChart()
     func notifySettingsChanged()
 }

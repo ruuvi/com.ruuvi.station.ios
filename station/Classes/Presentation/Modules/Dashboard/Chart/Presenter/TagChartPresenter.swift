@@ -55,10 +55,6 @@ extension TagChartPresenter: TagChartModuleInput {
         self.ouptut = output
     }
 
-    func clearChartData() {
-        view.clearChartData()
-    }
-
     func reloadChart() {
         if ouptut.dataSource.count == 0 {
             handleEmptyResults()
