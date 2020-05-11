@@ -315,15 +315,15 @@ extension TagChartsScrollViewController {
     }
 
     private func bindViewModel() {
-        nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
-        backgroundImageView.bind(viewModel.background) { $0.image = $1 }
-        bacgroundImageViewOverlay.bind(viewModel.background, block: {
+        nameLabel?.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+        backgroundImageView?.bind(viewModel.background) { $0.image = $1 }
+        bacgroundImageViewOverlay?.bind(viewModel.background, block: {
             $0.isHidden = $1 == nil
         })
-        alertImageView.bind(viewModel.isConnected) { (view, isConnected) in
+        alertImageView?.bind(viewModel.isConnected) { (view, isConnected) in
             view.isHidden = !isConnected.bound
         }
-        alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
+        alertImageView?.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
                 switch state {
                 case .empty:
@@ -350,9 +350,7 @@ extension TagChartsScrollViewController {
     }
 
     private func updateUIViewModel() {
-        if isViewLoaded {
-            bindViewModel()
-        }
+        bindViewModel()
     }
 
     private func restartAnimations() {
