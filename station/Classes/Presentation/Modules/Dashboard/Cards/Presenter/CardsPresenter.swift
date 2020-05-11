@@ -554,6 +554,9 @@ extension CardsPresenter {
                 }
             case .delete(let sensor):
                 self?.ruuviTags.removeAll(where: { $0.id == sensor.id })
+                if let last = self?.ruuviTags.last {
+                    self?.tagCharts?.configure(ruuviTag: last)
+                }
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()

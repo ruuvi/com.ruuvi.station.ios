@@ -417,10 +417,6 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
-            case .delete(let deleted):
-                if deleted.id == self?.ruuviTag.id {
-                    self?.router.dismiss()
-                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             default:
