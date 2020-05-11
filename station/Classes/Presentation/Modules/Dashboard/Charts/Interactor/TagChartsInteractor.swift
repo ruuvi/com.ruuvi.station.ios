@@ -7,10 +7,12 @@ class TagChartsInteractor {
     var gattService: GATTService!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrank: RuuviTagTrunk!
+    var ruuviTagReactor: RuuviTagReactor!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
     var lastMeasurement: RuuviMeasurement?
+    private var ruuviTagSensorObservationToken: RUObservationToken!
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
@@ -38,6 +40,22 @@ class TagChartsInteractor {
 }
 // MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
+    func startObservingTags() {
+        ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
+            switch change {
+            case .delete(let sensor):
+                if sensor.id == self?.ruuviTagSensor.id {
+                    self?.presenter.interactorDidDeleteTag()
+                }
+            default:
+                return
+            }
+        })
+    }
+    func stopObservingTags() {
+        ruuviTagSensorObservationToken.invalidate()
+        ruuviTagSensorObservationToken = nil
+    }
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
         ruuviTagSensor = ruuviTag
         lastMeasurement = nil
@@ -82,6 +100,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
             self?.clearChartsAndRestartObserving()
+            self?.restartObservingData()
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)

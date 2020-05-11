@@ -30,6 +30,7 @@ class TagChartsScrollConfigurator {
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(Settings.self)
         interactor.exportService = r.resolve(ExportService.self)
+        interactor.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
         interactor.ruuviTagTank = r.resolve(RuuviTagTank.self)
         interactor.ruuviTagTrank = r.resolve(RuuviTagTrunk.self)
         interactor.presenter = presenter
