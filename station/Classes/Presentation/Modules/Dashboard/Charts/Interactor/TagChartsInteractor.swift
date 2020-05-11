@@ -104,16 +104,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
         ruuviTagData.append(contentsOf: newValues)
         insertMeasurements(newValues)
-    //        let chartIntervalSeconds = settings.chartIntervalSeconds
-    //        insertions.forEach({ i in
-    //            let newValue = results[i].measurement
-    //            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
-    //            if elapsed >= chartIntervalSeconds {
-    //                lastChartSyncDate = newValue.date
-    //                ruuviTagData.append(newValue)
-    //                insertMeasurements([newValue], into: viewModel)
-    //            }
-    //        })
     }
 }
 // MARK: - TagChartModuleOutput
@@ -163,11 +153,6 @@ extension TagChartsInteractor {
     private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         chartModules.forEach({
             $0.insertMeasurements(newValues)
-        })
-    }
-    private func clearChartData() {
-        chartModules.forEach({
-            $0.clearChartData()
         })
     }
     private func reloadCharts() {

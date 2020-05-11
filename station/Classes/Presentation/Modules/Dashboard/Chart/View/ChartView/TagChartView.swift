@@ -167,12 +167,6 @@ extension TagChartView: TagChartViewInput {
         noDataText = "TagCharts.NoChartData.text".localized()
     }
 
-    func clearChartData() {
-        clearValues()
-        resetCustomAxisMinMax()
-        resetZoom()
-    }
-
     func setXRange(min: TimeInterval, max: TimeInterval) {
         xAxis.axisMinimum = min
         xAxis.axisMaximum = max
