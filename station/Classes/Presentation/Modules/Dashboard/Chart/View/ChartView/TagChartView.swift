@@ -160,11 +160,19 @@ extension TagChartView: TagChartViewInput {
     var chartView: TagChartView {
         return self
     }
+
     func configure(with viewModel: TagChartViewModel) {
         self.viewModel = viewModel
     }
+
     func localize() {
         noDataText = "TagCharts.NoChartData.text".localized()
+    }
+
+    func clearChartData() {
+        clearValues()
+        resetCustomAxisMinMax()
+        resetZoom()
     }
 
     func setXRange(min: TimeInterval, max: TimeInterval) {
