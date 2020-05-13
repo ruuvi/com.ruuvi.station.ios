@@ -100,7 +100,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
             self?.clearChartsAndRestartObserving()
-            self?.restartObservingData()
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)
