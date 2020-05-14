@@ -65,9 +65,11 @@ extension TagChartsInteractor: TagChartsInteractorInput {
          return chartModules.map({$0.chartView})
     }
     func restartObservingData() {
+        presenter.isLoading = true
         fetchAll { [weak self] in
             self?.startSheduler()
             self?.reloadCharts()
+            self?.presenter.isLoading = false
         }
     }
     func stopObservingRuuviTagsData() {
