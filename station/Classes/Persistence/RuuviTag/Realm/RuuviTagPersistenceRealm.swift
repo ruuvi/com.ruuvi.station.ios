@@ -126,7 +126,9 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 var failed = false
                 for record in records {
                     assert(record.macId == nil)
-                    let extractedExpr: RuuviTagRealm? = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: record.ruuviTagId)
+                    let extractedExpr: RuuviTagRealm? = self.context.bg
+                        .object(ofType: RuuviTagRealm.self,
+                                forPrimaryKey: record.ruuviTagId)
                     if let ruuviTag = extractedExpr {
                         let data = RuuviTagDataRealm(ruuviTag: ruuviTag, record: record)
                         try self.context.bg.write {
@@ -205,12 +207,49 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
+
+    func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         context.bgWorker.enqueue {
             let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
-                                   .filter("ruuviTag.uuid == %@ AND date > %@", ruuviTagId, Date(timeIntervalSince1970: from))
+                                   .filter("ruuviTag.uuid == %@", ruuviTagId)
                                    .sorted(byKeyPath: "date")
+            var result: [RuuviTagSensorRecord] = []
+            var previousDate = realmRecords.first?.date ?? Date()
+            for record in realmRecords {
+                autoreleasepool {
+                    guard record.date >= previousDate.addingTimeInterval(interval) else {
+                        return
+                    }
+                    previousDate = record.date
+                    result.append(
+                        RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
+                                                   date: record.date,
+                                                   macId: nil,
+                                                   rssi: record.rssi.value,
+                                                   temperature: record.unitTemperature,
+                                                   humidity: record.unitHumidity,
+                                                   pressure: record.unitPressure,
+                                                   acceleration: record.acceleration,
+                                                   voltage: record.unitVoltage,
+                                                   movementCounter: record.movementCounter.value,
+                                                   measurementSequenceNumber: record.measurementSequenceNumber.value,
+                                                   txPower: record.txPower.value))
+                }
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+    func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
+        let promise = Promise<[RuuviTagSensorRecord], RUError>()
+        context.bgWorker.enqueue {
+            let realmRecords = self.context.bg
+                .objects(RuuviTagDataRealm.self)
+                .filter("ruuviTag.uuid == %@ AND date > %@",
+                        ruuviTagId,
+                        Date(timeIntervalSince1970: from))
+                .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { record in
                 return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
                                                   date: record.date,
