@@ -119,6 +119,31 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
+
+    func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
+        let promise = Promise<[RuuviTagSensorRecord], RUError>()
+        readQueue.async {
+            var sqliteEntities = [RuuviTagSensorRecord]()
+            do {
+                try self.database.dbPool.read { db in
+                    let request = """
+                    SELECT
+                        *
+                    FROM  ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.ruuviTagId = '\(ruuviTagId)'
+                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
+                    ORDER BY date
+                    """
+                    sqliteEntities = try Record.fetchAll(db, sql: request)
+                }
+                promise.succeed(value: sqliteEntities.map({ $0.any }))
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         readQueue.async {
