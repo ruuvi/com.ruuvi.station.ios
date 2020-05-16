@@ -420,6 +420,7 @@ extension CardsPresenter {
                             switch result {
                             case .success(let rssi):
                                 if let viewModel = observer.viewModels.first(where: { $0.luid.value == luid }) {
+                                    print(CFAbsoluteTimeGetCurrent())
                                     viewModel.update(rssi: rssi, animated: true)
                                 }
                             case .failure(let error):

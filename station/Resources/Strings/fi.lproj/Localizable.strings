@@ -5,13 +5,9 @@
 "Confirm" = "Vahvista";
 "Remove" = "Poista";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
-"%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Päivitetty"; // time ago string
