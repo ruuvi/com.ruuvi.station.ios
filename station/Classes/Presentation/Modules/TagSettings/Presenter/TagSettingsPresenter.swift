@@ -661,8 +661,11 @@ extension TagSettingsPresenter {
     }
 
     private func bindMovementAlert(uuid: String) {
-        bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in
-            observer.ruuviTagTrunk.readLast(self.ruuviTag).on(success: { record in
+        bind(viewModel.isMovementAlertOn, fire: false) {[weak self] observer, isOn in
+            guard let strongSelf = self else {
+                return
+            }
+            observer.ruuviTagTrunk.readLast(strongSelf.ruuviTag).on(success: { record in
                 let last = record?.movementCounter ?? 0
                 let type: AlertType = .movement(last: last)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)
