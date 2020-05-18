@@ -84,7 +84,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
         startScanningRuuviTag()
-        startObservingRuuviTagSensor(ruuviTagId: ruuviTag.id)
+        startObservingRuuviTagSensor(ruuviTag: ruuviTag)
         startObservingSettingsChanges()
         startObservingConnectionStatus()
         startObservingApplicationState()
@@ -122,7 +122,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let isConnected = viewModel.isConnected.value,
             let keepConnection = viewModel.keepConnection.value,
             !isConnected && keepConnection {
-            self.errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
+            errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
         let operation = ruuviTagTank.delete(ruuviTag)
@@ -425,10 +425,18 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func startObservingRuuviTagSensor(ruuviTagId: String) {
-        ruuviTagSensorRecordToken = ruuviTagReactor.observe(ruuviTagId, { [weak self] (records) in
-            if let lastRecord = records.last {
-                self?.viewModel.updateRecord(lastRecord)
+    private func startObservingRuuviTagSensor(ruuviTag: RuuviTagSensor) {
+        ruuviTagSensorRecordToken?.invalidate()
+        ruuviTagSensorRecordToken = ruuviTagReactor.observeLast(ruuviTag, { [weak self] (changes) in
+            switch changes {
+            case .update(let record):
+                if let lastRecord = record {
+                    self?.viewModel.updateRecord(lastRecord)
+                }
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            default:
+                break
             }
         })
     }

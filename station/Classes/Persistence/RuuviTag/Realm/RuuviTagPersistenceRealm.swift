@@ -269,19 +269,17 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         return promise.future
     }
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
-        assert(ruuviTag.macId == nil)
-        assert(ruuviTag.luid != nil)
         let promise = Promise<RuuviTagSensorRecord?, RUError>()
-        guard let luid = ruuviTag.luid else {
+        guard ruuviTag.macId == nil,
+            let luid = ruuviTag.luid else {
             promise.fail(error: .unexpected(.attemptToReadDataFromRealmWithoutLUID))
             return promise.future
         }
-
         context.bgWorker.enqueue {
-            let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
-                                   .filter("ruuviTag.uuid == %@", luid.value)
-                                   .sorted(byKeyPath: "date", ascending: false)
-            if let record = realmRecords.first {
+            if let record = self.context.bg.objects(RuuviTagDataRealm.self)
+                .filter("ruuviTag.uuid == %@", luid.value)
+                .sorted(byKeyPath: "date", ascending: false)
+                .first {
                 let result = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
                                                        date: record.date,
                                                        macId: nil,
