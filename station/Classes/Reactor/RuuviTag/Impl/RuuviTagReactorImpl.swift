@@ -13,11 +13,14 @@ class RuuviTagReactorImpl: RuuviTagReactor {
 
     private lazy var entityRxSwift = RuuviTagSubjectRxSwift(sqlite: sqliteContext, realm: realmContext)
     private lazy var recordRxSwifts = [String: RuuviTagRecordSubjectRxSwift]()
+    private lazy var lastRecordRxSwifts = [String: RuuviTagLastRecordSubjectRxSwift]()
     #if canImport(Combine)
     @available(iOS 13, *)
     private lazy var entityCombine = RuuviTagSubjectCombine(sqlite: sqliteContext, realm: realmContext)
     @available(iOS 13, *)
     private lazy var recordCombines = [String: RuuviTagRecordSubjectCombine]()
+    @available(iOS 13, *)
+    private lazy var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
     #endif
 
     func observe(_ ruuviTagId: String,
@@ -146,4 +149,79 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         #endif
     }
 
+    func observeLast(_ ruuviTag: RuuviTagSensor, _ block: @escaping (ReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RUObservationToken {
+        let sqliteOperation = sqlitePersistence.readLast(ruuviTag)
+        let realmOperation = realmPersistence.readLast(ruuviTag)
+        Future.zip(realmOperation, sqliteOperation).on(success: { (realmRecord, sqliteRecord) in
+            let result = [realmRecord, sqliteRecord].compactMap({$0?.any}).last
+            block(.update(result))
+        })
+        #if canImport(Combine)
+        if #available(iOS 13, *) {
+            var recordCombine: RuuviTagLastRecordSubjectCombine
+            if let combine = lastRecordCombines[ruuviTag.id] {
+                recordCombine = combine
+            } else {
+                let combine = RuuviTagLastRecordSubjectCombine(ruuviTagId: ruuviTag.id,
+                                                           sqlite: sqliteContext,
+                                                           realm: realmContext)
+                lastRecordCombines[ruuviTag.id] = combine
+                recordCombine = combine
+            }
+            let cancellable = recordCombine.subject.sink { (record) in
+                block(.update(record))
+            }
+            if !recordCombine.isServing {
+                recordCombine.start()
+            }
+            return RUObservationToken {
+                cancellable.cancel()
+            }
+        } else {
+            var recordRxSwift: RuuviTagLastRecordSubjectRxSwift
+            if let rxSwift = lastRecordRxSwifts[ruuviTag.id] {
+                recordRxSwift = rxSwift
+            } else {
+                let rxSwift = RuuviTagLastRecordSubjectRxSwift(ruuviTagId: ruuviTag.id,
+                                                               sqlite: sqliteContext,
+                                                               realm: realmContext)
+                lastRecordRxSwifts[ruuviTag.id] = rxSwift
+                recordRxSwift = rxSwift
+            }
+            let cancellable = recordRxSwift.subject.subscribe { (record) in
+                if let lastRecord = record.element {
+                    block(.update(lastRecord))
+                }
+            }
+            if !recordRxSwift.isServing {
+                recordRxSwift.start()
+            }
+            return RUObservationToken {
+                cancellable.dispose()
+            }
+        }
+        #else
+        var recordRxSwift: RuuviTagLastRecordSubjectRxSwift
+        if let rxSwift = lastRecordRxSwifts[ruuviTag.id] {
+            recordRxSwift = rxSwift
+        } else {
+            let rxSwift = RuuviTagLastRecordSubjectRxSwift(ruuviTagId: ruuviTag.id,
+                                                           sqlite: sqliteContext,
+                                                           realm: realmContext)
+            lastRecordRxSwifts[ruuviTag.id] = rxSwift
+            recordRxSwift = rxSwift
+        }
+        let cancellable = recordRxSwift.subject.subscribe { (record) in
+            if let lastRecord = record.element {
+                block(.update(lastRecord))
+            }
+        }
+        if !recordRxSwift.isServing {
+            recordRxSwift.start()
+        }
+        return RUObservationToken {
+            cancellable.dispose()
+        }
+        #endif
+    }
 }
