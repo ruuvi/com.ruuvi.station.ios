@@ -65,9 +65,11 @@ extension TagChartsInteractor: TagChartsInteractorInput {
          return chartModules.map({$0.chartView})
     }
     func restartObservingData() {
+        presenter.isLoading = true
         fetchAll { [weak self] in
             self?.startSheduler()
             self?.reloadCharts()
+            self?.presenter.isLoading = false
         }
     }
     func stopObservingRuuviTagsData() {
@@ -155,7 +157,7 @@ extension TagChartsInteractor {
         })
     }
     private func fetchAll(_ competion: (() -> Void)? = nil) {
-        let op = ruuviTagTrank.readAll(ruuviTagSensor.id)
+        let op = ruuviTagTrank.readAll(ruuviTagSensor.id, with: TimeInterval(settings.chartIntervalSeconds))
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
