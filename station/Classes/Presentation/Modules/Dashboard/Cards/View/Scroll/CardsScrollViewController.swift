@@ -239,9 +239,6 @@ extension CardsScrollViewController {
 
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
             [weak self, weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
-            guard self?.pageIsVisible(for: viewModel) == true else {
-                return
-            }
             if let temperatureUnit = temperatureUnit?.value {
                 var temperature: Double?
                 switch temperatureUnit {
@@ -294,9 +291,6 @@ extension CardsScrollViewController {
             weak df,
             weak dk,
             weak humidityWarning] label, _ in
-            guard self?.pageIsVisible(for: viewModel) == true else {
-                return
-            }
             if let hu = hu?.value {
                 switch hu {
                 case .percent:
@@ -364,12 +358,11 @@ extension CardsScrollViewController {
         return {
             [weak self,
             weak animated] label, rssi in
-            guard self?.pageIsVisible(for: viewModel) == true else {
-                return
-            }
             if let rssi = rssi {
                 label.text = "\(rssi)" + " " + CardsScrollViewController.localizedCache.dBm
-                if let animated = animated?.value, animated {
+                if let animated = animated?.value,
+                    animated,
+                    self?.pageIsVisible(for: viewModel) == true {
                     label.layer.removeAllAnimations()
                     label.alpha = 0.0
                     UIView.animate(withDuration: 1.0, animations: {
@@ -438,9 +431,6 @@ extension CardsScrollViewController {
 
     private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
         view.chartsButtonContainerView.bind(viewModel.isConnectable) { [weak self] (view, isConnectable) in
-            guard self?.pageIsVisible(for: viewModel) == true else {
-                return
-            }
             view.isHidden = !isConnectable.bound
         }
 
