@@ -40,6 +40,7 @@ struct CardsViewModel {
     var provider: WeatherProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
+    private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
     init(_ webTag: WebTagRealm) {
         type = .web
@@ -208,6 +209,11 @@ struct CardsViewModel {
     }
 
     func update(rssi: Int?, animated: Bool = false) {
+        guard let lastUpdateRssiTime = lastUpdateRssi.value,
+            CFAbsoluteTimeGetCurrent() - lastUpdateRssiTime > 1 else {
+            return
+        }
+        self.lastUpdateRssi.value = CFAbsoluteTimeGetCurrent()
         self.animateRSSI.value = animated
         self.rssi.value = rssi
     }

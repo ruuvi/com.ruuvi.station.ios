@@ -15,4 +15,8 @@ enum TemperatureUnit {
             return .kelvin
         }
     }
+
+    var symbol: String {
+        return unitTemperature.symbol
+    }
 }

@@ -23,7 +23,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var infoProvider: InfoProvider!
 
     private var isSyncing: Bool = false
-    private var isLoading: Bool = false {
+    var isLoading: Bool = false {
         didSet {
             if isLoading {
                 activityPresenter.increment()
