@@ -108,7 +108,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                         self.context.main.delete(oldLocation)
                     }
                     let newLocation = WebTagLocationRealm(location: location)
-                    self.context.main.add(newLocation)
+                    self.context.main.add(newLocation, update: .all)
                     webTag.location = newLocation
                     webTag.name = location.city ?? location.country ?? WebTagLocationSource.manual.title
                 }
