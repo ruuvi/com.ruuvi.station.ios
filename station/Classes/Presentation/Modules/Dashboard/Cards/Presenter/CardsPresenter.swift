@@ -697,6 +697,9 @@ extension CardsPresenter {
                 let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                 let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                 viewModel.isConnected.value = true
+                if let settings = self?.settings, !settings.readRSSI {
+                    viewModel.update(rssi: nil)
+                }
             }
         })
 

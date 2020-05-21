@@ -209,6 +209,9 @@ struct CardsViewModel {
     }
 
     func update(rssi: Int?, animated: Bool = false) {
+        if rssi == nil {
+            self.rssi.value = rssi
+        }
         guard let lastUpdateRssiTime = lastUpdateRssi.value,
             CFAbsoluteTimeGetCurrent() - lastUpdateRssiTime > 1 else {
             return
