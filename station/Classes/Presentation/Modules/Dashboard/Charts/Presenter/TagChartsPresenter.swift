@@ -97,6 +97,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startListeningToSettings()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
+        startListeningToAlertStatus()
         startObservingDidConnectDisconnectNotifications()
         startObservingLocalNotificationsManager()
     }
