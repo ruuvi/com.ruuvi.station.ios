@@ -142,13 +142,21 @@ extension TagChartsInteractor {
         })
     }
     private func fetchLast() {
-        guard let lastDate = lastMeasurement?.date.timeIntervalSince1970 else {
+        guard let lastDate = lastMeasurement?.date else {
             return
         }
-        let op = ruuviTagTrank.readLast(ruuviTagSensor.id, from: lastDate)
+        let interval = TimeInterval(settings.chartIntervalSeconds)
+        let op = ruuviTagTrank.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
         op.on(success: { [weak self] (results) in
             guard results.count > 0 else { return }
-            let lastResults = results.map({ $0.measurement })
+            var lastResults: [RuuviMeasurement] = []
+            var lastMeasurementDate: Date = lastDate
+            results.forEach({
+                if $0.date >= lastMeasurementDate.addingTimeInterval(interval) {
+                    lastMeasurementDate = $0.date
+                    lastResults.append($0.measurement)
+                }
+            })
             self?.lastMeasurement = lastResults.last
             self?.ruuviTagData.append(contentsOf: lastResults)
             self?.insertMeasurements(lastResults)
