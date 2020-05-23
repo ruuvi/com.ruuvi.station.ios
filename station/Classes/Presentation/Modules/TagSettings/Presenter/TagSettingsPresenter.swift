@@ -84,7 +84,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
         startScanningRuuviTag()
-        startObservingRuuviTagSensor(ruuviTagId: ruuviTag.id)
+        startObservingRuuviTagSensor(ruuviTag: ruuviTag)
         startObservingSettingsChanges()
         startObservingConnectionStatus()
         startObservingApplicationState()
@@ -122,7 +122,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let isConnected = viewModel.isConnected.value,
             let keepConnection = viewModel.keepConnection.value,
             !isConnected && keepConnection {
-            self.errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
+            errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
         let operation = ruuviTagTank.delete(ruuviTag)
@@ -417,10 +417,6 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
-            case .delete(let deleted):
-                if deleted.id == self?.ruuviTag.id {
-                    self?.router.dismiss()
-                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             default:
@@ -429,10 +425,18 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func startObservingRuuviTagSensor(ruuviTagId: String) {
-        ruuviTagSensorRecordToken = ruuviTagReactor.observe(ruuviTagId, { [weak self] (records) in
-            if let lastRecord = records.last {
-                self?.viewModel.updateRecord(lastRecord)
+    private func startObservingRuuviTagSensor(ruuviTag: RuuviTagSensor) {
+        ruuviTagSensorRecordToken?.invalidate()
+        ruuviTagSensorRecordToken = ruuviTagReactor.observeLast(ruuviTag, { [weak self] (changes) in
+            switch changes {
+            case .update(let record):
+                if let lastRecord = record {
+                    self?.viewModel.updateRecord(lastRecord)
+                }
+            case .error(let error):
+                self?.errorPresenter.present(error: error)
+            default:
+                break
             }
         })
     }
@@ -665,8 +669,11 @@ extension TagSettingsPresenter {
     }
 
     private func bindMovementAlert(uuid: String) {
-        bind(viewModel.isMovementAlertOn, fire: false) { observer, isOn in
-            observer.ruuviTagTrunk.readLast(self.ruuviTag).on(success: { record in
+        bind(viewModel.isMovementAlertOn, fire: false) {[weak self] observer, isOn in
+            guard let strongSelf = self else {
+                return
+            }
+            observer.ruuviTagTrunk.readLast(strongSelf.ruuviTag).on(success: { record in
                 let last = record?.movementCounter ?? 0
                 let type: AlertType = .movement(last: last)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)

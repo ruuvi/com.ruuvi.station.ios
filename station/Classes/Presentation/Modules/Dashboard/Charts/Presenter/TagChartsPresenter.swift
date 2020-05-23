@@ -23,7 +23,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     var infoProvider: InfoProvider!
 
     private var isSyncing: Bool = false
-    private var isLoading: Bool = false {
+    var isLoading: Bool = false {
         didSet {
             if isLoading {
                 activityPresenter.increment()
@@ -43,7 +43,6 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
-    private var needSyncCharts: Bool = false
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -98,6 +97,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startListeningToSettings()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
+        startListeningToAlertStatus()
         startObservingDidConnectDisconnectNotifications()
         startObservingLocalNotificationsManager()
     }
@@ -105,14 +105,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewWillAppear() {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
-        interactor.configure(withTag: ruuviTag)
-        interactor?.restartObservingData()
+        restartObservingData()
+        interactor.startObservingTags()
         syncChartViews()
     }
 
     func viewWillDisappear() {
         stopObservingBluetoothState()
-        interactor?.stopObservingRuuviTagsData()
+        interactor.stopObservingTags()
+        interactor.stopObservingRuuviTagsData()
     }
     func syncChartViews() {
         view?.setupChartViews(chartViews: interactor.chartViews)
@@ -207,6 +208,9 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
+    func interactorDidDeleteTag() {
+        router.dismiss()
+    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
@@ -292,6 +296,7 @@ extension TagChartsPresenter {
     private func syncViewModel() {
         viewModel = TagChartsViewModel(ruuviTag)
         if let luid = ruuviTag.luid {
+            viewModel.name.value = ruuviTag.name
             viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
@@ -305,7 +310,10 @@ extension TagChartsPresenter {
             assertionFailure()
         }
     }
-
+    private func restartObservingData() {
+        interactor.configure(withTag: ruuviTag)
+        interactor.restartObservingData()
+    }
     private func startListeningToSettings() {
         temperatureUnitToken = NotificationCenter
             .default

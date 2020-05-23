@@ -5,13 +5,9 @@
 "Confirm" = "Подтвердить";
 "Remove" = "Удалить";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "гПа";
 "dBm" = "дБм";
 "V" = "В"; // voltage
-"%" = "%";
 "g/m³" = "г/м³";
 "g" = "g"; // acceleration
 "Updated" = "Обновлено"; // time ago string

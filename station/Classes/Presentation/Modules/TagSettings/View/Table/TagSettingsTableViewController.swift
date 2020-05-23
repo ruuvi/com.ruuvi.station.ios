@@ -105,6 +105,7 @@ class TagSettingsTableViewController: UITableViewController {
     private let moreInfoSectionHeaderReuseIdentifier = "TagSettingsMoreInfoHeaderFooterView"
     private let alertsSectionHeaderReuseIdentifier = "TagSettingsAlertsHeaderFooterView"
     private let alertOffString = "TagSettings.Alerts.Off"
+    private static var localizedCache: LocalizedCache = LocalizedCache()
 }
 
 // MARK: - TagSettingsViewInput
@@ -132,7 +133,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
         relativeHumidityAlertHeaderCell.titleLabel.text
             = "TagSettings.RelativeAirHumidityAlert.title".localized()
-            + " " + "%".localized()
+            + " " + "%"
         absoluteHumidityAlertHeaderCell.titleLabel.text
             = "TagSettings.AbsoluteAirHumidityAlert.title".localized()
             + " " + "g/m³".localized()
@@ -879,14 +880,7 @@ extension TagSettingsTableViewController {
             temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
                     let title = "TagSettings.temperatureAlertTitleLabel.text"
-                    switch tu {
-                    case .celsius:
-                        label.text = title.localized() + " " + "°C".localized()
-                    case .fahrenheit:
-                        label.text = title.localized() + " " + "°F".localized()
-                    case .kelvin:
-                        label.text = title.localized() + " "  + "K".localized()
-                    }
+                    label.text = title.localized() + " " + tu.symbol
                 } else {
                     label.text = "N/A".localized()
                 }
@@ -1280,14 +1274,7 @@ extension TagSettingsTableViewController {
             dewPointAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
                     let title = "TagSettings.dewPointAlertTitleLabel.text"
-                    switch tu {
-                    case .celsius:
-                        label.text = title.localized() + " " + "°C".localized()
-                    case .fahrenheit:
-                        label.text = title.localized() + " " + "°F".localized()
-                    case .kelvin:
-                        label.text = title.localized() + " "  + "K".localized()
-                    }
+                    label.text = title.localized() + " " + tu.symbol
                 } else {
                     label.text = "N/A".localized()
                 }
