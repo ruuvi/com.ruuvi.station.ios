@@ -7,12 +7,14 @@ class TagChartsInteractor {
     var gattService: GATTService!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrank: RuuviTagTrunk!
+    var ruuviTagReactor: RuuviTagReactor!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
     var networkService: NetworkService!
 
     var lastMeasurement: RuuviMeasurement?
+    private var ruuviTagSensorObservationToken: RUObservationToken!
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
@@ -40,6 +42,22 @@ class TagChartsInteractor {
 }
 // MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
+    func startObservingTags() {
+        ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
+            switch change {
+            case .delete(let sensor):
+                if sensor.id == self?.ruuviTagSensor.id {
+                    self?.presenter.interactorDidDeleteTag()
+                }
+            default:
+                return
+            }
+        })
+    }
+    func stopObservingTags() {
+        ruuviTagSensorObservationToken.invalidate()
+        ruuviTagSensorObservationToken = nil
+    }
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
         ruuviTagSensor = ruuviTag
         lastMeasurement = nil
@@ -49,9 +67,11 @@ extension TagChartsInteractor: TagChartsInteractorInput {
          return chartModules.map({$0.chartView})
     }
     func restartObservingData() {
+        presenter.isLoading = true
         fetchAll { [weak self] in
             self?.startSheduler()
             self?.reloadCharts()
+            self?.presenter.isLoading = false
         }
     }
     func stopObservingRuuviTagsData() {
@@ -121,16 +141,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
         ruuviTagData.append(contentsOf: newValues)
         insertMeasurements(newValues)
-    //        let chartIntervalSeconds = settings.chartIntervalSeconds
-    //        insertions.forEach({ i in
-    //            let newValue = results[i].measurement
-    //            let elapsed = Int(newValue.date.timeIntervalSince(lastChartSyncDate))
-    //            if elapsed >= chartIntervalSeconds {
-    //                lastChartSyncDate = newValue.date
-    //                ruuviTagData.append(newValue)
-    //                insertMeasurements([newValue], into: viewModel)
-    //            }
-    //        })
     }
 }
 // MARK: - TagChartModuleOutput
@@ -149,13 +159,21 @@ extension TagChartsInteractor {
         })
     }
     private func fetchLast() {
-        guard let lastDate = lastMeasurement?.date.timeIntervalSince1970 else {
+        guard let lastDate = lastMeasurement?.date else {
             return
         }
-        let op = ruuviTagTrank.readLast(ruuviTagSensor.id, from: lastDate)
+        let interval = TimeInterval(settings.chartIntervalSeconds)
+        let op = ruuviTagTrank.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
         op.on(success: { [weak self] (results) in
             guard results.count > 0 else { return }
-            let lastResults = results.map({ $0.measurement })
+            var lastResults: [RuuviMeasurement] = []
+            var lastMeasurementDate: Date = lastDate
+            results.forEach({
+                if $0.date >= lastMeasurementDate.addingTimeInterval(interval) {
+                    lastMeasurementDate = $0.date
+                    lastResults.append($0.measurement)
+                }
+            })
             self?.lastMeasurement = lastResults.last
             self?.ruuviTagData.append(contentsOf: lastResults)
             self?.insertMeasurements(lastResults)
@@ -164,7 +182,7 @@ extension TagChartsInteractor {
         })
     }
     private func fetchAll(_ competion: (() -> Void)? = nil) {
-        let op = ruuviTagTrank.readAll(ruuviTagSensor.id)
+        let op = ruuviTagTrank.readAll(ruuviTagSensor.id, with: TimeInterval(settings.chartIntervalSeconds))
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
@@ -180,11 +198,6 @@ extension TagChartsInteractor {
     private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         chartModules.forEach({
             $0.insertMeasurements(newValues)
-        })
-    }
-    private func clearChartData() {
-        chartModules.forEach({
-            $0.clearChartData()
         })
     }
     private func reloadCharts() {

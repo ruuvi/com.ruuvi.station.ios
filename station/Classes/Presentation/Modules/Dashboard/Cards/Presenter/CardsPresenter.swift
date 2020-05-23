@@ -558,6 +558,9 @@ extension CardsPresenter {
                 }
             case .delete(let sensor):
                 self?.ruuviTags.removeAll(where: { $0.id == sensor.id })
+                if let last = self?.ruuviTags.last {
+                    self?.tagCharts?.configure(ruuviTag: last)
+                }
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
@@ -698,6 +701,9 @@ extension CardsPresenter {
                 let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                 let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
                 viewModel.isConnected.value = true
+                if let settings = self?.settings, !settings.readRSSI {
+                    viewModel.update(rssi: nil)
+                }
             }
         })
 

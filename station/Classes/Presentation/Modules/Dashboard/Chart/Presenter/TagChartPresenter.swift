@@ -38,7 +38,7 @@ extension TagChartPresenter: TagChartModuleInput {
             case .dew:
                 viewModel.unit.value = settings.temperatureUnit.unitTemperature
             case .percent:
-                viewModel.unit.value = Unit(symbol: "%".localized())
+                viewModel.unit.value = Unit(symbol: "%")
             case .gm3:
                 viewModel.unit.value = Unit(symbol: "g/m³".localized())
             }
@@ -53,10 +53,6 @@ extension TagChartPresenter: TagChartModuleInput {
     func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput) {
         configureViewModel(viewModel)
         self.ouptut = output
-    }
-
-    func clearChartData() {
-        view.clearChartData()
     }
 
     func reloadChart() {

@@ -35,6 +35,18 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
         return promise.future
     }
 
+    func readAll(_ id: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
+        let promise = Promise<[RuuviTagSensorRecord], RUError>()
+        let sqliteOperation = sqlite.readAll(id, with: interval)
+        let realmOperation = realm.readAll(id, with: interval)
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
     func readLast(_ id: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         let sqliteOperation = sqlite.readLast(id, from: from)
