@@ -200,6 +200,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
+
     func interactorDidDeleteTag() {
         router.dismiss()
     }

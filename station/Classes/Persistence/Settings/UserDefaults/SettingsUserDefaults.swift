@@ -192,7 +192,7 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.networkFeatureEnabled", defaultValue: false)
     var networkFeatureEnabled: Bool
 
-    @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
+    @UserDefault("SettingsUserDefaults.kaltiotNetworkEnabled", defaultValue: false)
     var kaltiotNetworkEnabled: Bool
 
     @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
