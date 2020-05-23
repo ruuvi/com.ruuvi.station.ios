@@ -12,7 +12,7 @@ class TagChartsInteractor {
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
     var networkService: NetworkService!
-
+    var keychainService: KeychainService!
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RUObservationToken!
     private var timer: Timer?
@@ -42,6 +42,7 @@ class TagChartsInteractor {
 }
 // MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
+// MARK: - RuuviTags
     func startObservingTags() {
         ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
             switch change {
@@ -54,18 +55,22 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             }
         })
     }
+
     func stopObservingTags() {
         ruuviTagSensorObservationToken.invalidate()
         ruuviTagSensorObservationToken = nil
     }
+
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
         ruuviTagSensor = ruuviTag
         lastMeasurement = nil
         createChartModules()
     }
+
     var chartViews: [TagChartView] {
          return chartModules.map({$0.chartView})
     }
+
     func restartObservingData() {
         presenter.isLoading = true
         fetchAll { [weak self] in
@@ -74,11 +79,13 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             self?.presenter.isLoading = false
         }
     }
+
     func stopObservingRuuviTagsData() {
         chartModules = []
         timer?.invalidate()
         timer = nil
     }
+
     func export() -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
         let op = exportService.csvLog(for: ruuviTagSensor.id)
@@ -89,42 +96,28 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
         return promise.future
     }
+
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        guard let luid = ruuviTagSensor.luid else {
-            promise.fail(error: .unexpected(.viewModelUUIDIsNil))
-            return promise.future
+        var operations = [Future<Void, RUError>]()
+        if let luid = ruuviTagSensor.luid {
+            operations.append(syncLocalTag(luid: luid.value, progress: progress))
         }
-        let connectionTimeout: TimeInterval = settings.connectionTimeout
-        let serviceTimeout: TimeInterval = settings.serviceTimeout
-        let op = gattService.syncLogs(uuid: luid.value,
-                                      mac: ruuviTagSensor.macId?.value,
-                                      progress: progress,
-                                      connectionTimeout: connectionTimeout,
-                                      serviceTimeout: serviceTimeout)
-        op.on(success: { [weak self] _ in
+        if settings.kaltiotNetworkEnabled && keychainService.hasKaltiotApiKey {
+            operations.append(syncNetworkRecords(with: .kaltiot))
+        }
+        if settings.whereOSNetworkEnabled {
+            operations.append(syncNetworkRecords(with: .whereOS))
+        }
+        Future.zip(operations).on(success: { [weak self] (_) in
             self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
-        }, failure: {error in
+        }, failure: { error in
             promise.fail(error: error)
         })
         return promise.future
     }
-    func syncNetworkRecords(with provider: RuuviNetworkProvider) -> Future<Void, RUError> {
-        let promise = Promise<Void, RUError>()
-        if let mac = ruuviTagSensor.macId?.mac {
-            let op = networkService.loadData(for: ruuviTagSensor.id, mac: mac, from: provider)
-            op.on(success: { [weak self] _ in
-                self?.clearChartsAndRestartObserving()
-                promise.succeed(value: ())
-            }, failure: { error in
-                promise.fail(error: error)
-            })
-        } else {
-            promise.fail(error: RUError.unexpected(.viewModelUUIDIsNil))
-        }
-        return promise.future
-    }
+
     func deleteAllRecords() -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         let op = ruuviTagTank.deleteAllRecords(ruuviTagSensor.id)
@@ -135,12 +128,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             promise.succeed(value: ())
         })
         return promise.future
-    }
-    // MARK: - Charts
-    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
-            let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
-        ruuviTagData.append(contentsOf: newValues)
-        insertMeasurements(newValues)
     }
 }
 // MARK: - TagChartModuleOutput
@@ -158,6 +145,13 @@ extension TagChartsInteractor {
             self?.fetchLast()
         })
     }
+
+    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
+            let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
+        ruuviTagData.append(contentsOf: newValues)
+        insertMeasurements(newValues)
+    }
+
     private func fetchLast() {
         guard let lastDate = lastMeasurement?.date else {
             return
@@ -181,6 +175,7 @@ extension TagChartsInteractor {
             self?.presenter.interactorDidError(error)
         })
     }
+
     private func fetchAll(_ competion: (() -> Void)? = nil) {
         let op = ruuviTagTrank.readAll(ruuviTagSensor.id, with: TimeInterval(settings.chartIntervalSeconds))
         op.on(success: { [weak self] (results) in
@@ -195,19 +190,56 @@ extension TagChartsInteractor {
         reloadCharts()
         restartObservingData()
     }
+
     private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         chartModules.forEach({
             $0.insertMeasurements(newValues)
         })
     }
+
     private func reloadCharts() {
         chartModules.forEach({
             $0.reloadChart()
         })
     }
+
     func notifySettingsChanged() {
         chartModules.forEach({
             $0.notifySettingsChanged()
         })
+    }
+
+    private func syncLocalTag(luid: String, progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
+        let promise = Promise<Void, RUError>()
+        let connectionTimeout: TimeInterval = settings.connectionTimeout
+        let serviceTimeout: TimeInterval = settings.serviceTimeout
+        let op = gattService.syncLogs(uuid: luid,
+                                      mac: ruuviTagSensor.macId?.value,
+                                      progress: progress,
+                                      connectionTimeout: connectionTimeout,
+                                      serviceTimeout: serviceTimeout)
+        op.on(success: { [weak self] _ in
+            self?.clearChartsAndRestartObserving()
+            promise.succeed(value: ())
+        }, failure: {error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
+    private func syncNetworkRecords(with provider: RuuviNetworkProvider) -> Future<Void, RUError> {
+        let promise = Promise<Void, RUError>()
+        if let mac = ruuviTagSensor.macId?.mac {
+            let op = networkService.loadData(for: ruuviTagSensor.id, mac: mac, from: provider)
+            op.on(success: { [weak self] _ in
+                self?.clearChartsAndRestartObserving()
+                promise.succeed(value: ())
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        } else {
+            promise.fail(error: RUError.unexpected(.viewModelUUIDIsNil))
+        }
+        return promise.future
     }
 }

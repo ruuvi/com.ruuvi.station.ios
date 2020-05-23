@@ -230,6 +230,7 @@
 "TagCharts.Clear.title" = "PYYHI";
 "TagCharts.SyncConfirmationDialog.title" = "Oletko varma?";
 "TagCharts.SyncConfirmationDialog.message" = "Ladataanko historiatiedot anturista?";
+"TagCharts.SyncConfirmationDialog.Ok" = "Ok";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Poista";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Tyhjennetäänkö sovellukseen tallennetut historiatiedot?";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Oletko varma?";
@@ -240,9 +241,6 @@
 "TagCharts.Status.Error" = "Virhe";
 "TagCharts.FailedToSyncDialog.message" = "Yhteys aikakatkaistiin. Synkronointi peruutettiin.";
 "TagCharts.FailedToServeDialog.message" = "Synkronointi aikakatkaistiin. Synkronointi peruutettiin.";
-"TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
-"TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
-"TagCharts.SyncConfirmationDialog.WithWebKaltiot.title" = "With Web(Kaltiot)";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";

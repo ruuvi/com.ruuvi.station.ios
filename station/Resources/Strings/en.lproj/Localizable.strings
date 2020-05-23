@@ -230,6 +230,7 @@
 "TagCharts.Clear.title" = "CLEAR";
 "TagCharts.SyncConfirmationDialog.title" = "Are you sure?";
 "TagCharts.SyncConfirmationDialog.message" = "Download history data from the sensor?";
+"TagCharts.SyncConfirmationDialog.Ok" = "Ok";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Delete";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Clear the historical data from the app?";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Are you sure?";
@@ -240,9 +241,6 @@
 "TagCharts.Status.Error" = "Error";
 "TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 "TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
-"TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
-"TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
-"TagCharts.SyncConfirmationDialog.WithWebKaltiot.title" = "With Web(Kaltiot)";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
