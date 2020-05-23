@@ -219,7 +219,6 @@ extension TagChartsInteractor {
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
         op.on(success: { [weak self] _ in
-            self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)
@@ -232,7 +231,6 @@ extension TagChartsInteractor {
         if let mac = ruuviTagSensor.macId?.mac {
             let op = networkService.loadData(for: ruuviTagSensor.id, mac: mac, from: provider)
             op.on(success: { [weak self] _ in
-                self?.clearChartsAndRestartObserving()
                 promise.succeed(value: ())
             }, failure: { error in
                 promise.fail(error: error)
