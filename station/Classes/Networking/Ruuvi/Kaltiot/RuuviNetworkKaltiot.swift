@@ -74,7 +74,7 @@ extension RuuviNetworkKaltiot {
                 let name = "RuuviNetworkKaltiot.Name.prefix".localized()
                     + " " + macId.value.replacingOccurrences(of: ":", with: "").suffix(4)
                 let sensorStuct = RuuviTagSensorStruct(version: tag.version,
-                                                       luid: LocalIdentifierStruct(value: macId.value),
+                                                       luid: nil,
                                                        macId: macId,
                                                        isConnectable: tag.isConnectable,
                                                        name: name)

@@ -22,8 +22,12 @@ extension RuuviTagSQLite {
 extension RuuviTagSQLite: FetchableRecord {
     init(row: Row) {
         id = row[RuuviTagSQLite.idColumn]
-        macId = MACIdentifierStruct(value: row[RuuviTagSQLite.macColumn])
-        luid = LocalIdentifierStruct(value: row[RuuviTagSQLite.luidColumn])
+        if let macIdColumn = row[RuuviTagSQLite.macColumn] as? String {
+            macId = MACIdentifierStruct(value: macIdColumn)
+        }
+        if let luidColumn = row[RuuviTagSQLite.luidColumn] as? String {
+            luid = LocalIdentifierStruct(value: luidColumn)
+        }
         name = row[RuuviTagSQLite.nameColumn]
         version = row[RuuviTagSQLite.versionColumn]
         isConnectable = row[RuuviTagSQLite.isConnectableColumn]
