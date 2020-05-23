@@ -286,7 +286,7 @@ extension TagSettingsPresenter {
             viewModel.keepConnection.value = false
         }
 
-        viewModel.mac.value = ruuviTag.macId?.value
+        viewModel.mac.value = ruuviTag.macId?.mac
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         syncAlerts()
