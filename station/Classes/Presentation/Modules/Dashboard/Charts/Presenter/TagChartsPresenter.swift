@@ -158,14 +158,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view.showClearConfirmationDialog(for: viewModel)
     }
 
-    func viewDidConfirmToSyncWithWeb(for viewModel: TagChartsViewModel) {
-        syncRecords(with: .whereOS)
-    }
-    
-    func viewDidConfirmToSyncWithWebKaltiot(for viewModel: TagChartsViewModel) {
-        syncRecords(with: .kaltiot)
-    }
-
     func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
@@ -430,15 +422,6 @@ extension TagChartsPresenter {
                                 self?.dismiss()
                             }
             })
-    }
-    private func syncRecords(with networkProvider: RuuviNetworkProvider) {
-        isSyncing = true
-        let op = interactor.syncNetworkRecords(with: networkProvider)
-        op.on(failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-            }, completion: {
-                self.isSyncing = false
-        })
     }
 }
 //swiftlint:enable file_length

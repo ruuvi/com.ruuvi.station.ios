@@ -93,17 +93,9 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         let message = "TagCharts.SyncConfirmationDialog.message".localized()
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        let fromTag = "TagCharts.SyncConfirmationDialog.WithTag.title".localized()
+        let fromTag = "TagCharts.SyncConfirmationDialog.Ok".localized()
         alertVC.addAction(UIAlertAction(title: fromTag, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToSyncWithTag(for: viewModel)
-        }))
-        let fromWeb = "TagCharts.SyncConfirmationDialog.WithWeb.title".localized()
-        alertVC.addAction(UIAlertAction(title: fromWeb, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSyncWithWeb(for: viewModel)
-        }))
-        let fromKaltiot = "TagCharts.SyncConfirmationDialog.WithWebKaltiot.title".localized()
-        alertVC.addAction(UIAlertAction(title: fromKaltiot, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSyncWithWebKaltiot(for: viewModel)
         }))
         present(alertVC, animated: true)
     }

@@ -230,6 +230,7 @@
 "TagCharts.Clear.title" = "RENSA";
 "TagCharts.SyncConfirmationDialog.title" = "Är du säker?";
 "TagCharts.SyncConfirmationDialog.message" = "Ladda ner historik-data från sensorn?";
+"TagCharts.SyncConfirmationDialog.Ok" = "Ok";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Radera";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Radera historisk data från appen?";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Är du säker?";
@@ -240,9 +241,6 @@
 "TagCharts.Status.Error" = "Fel";
 "TagCharts.FailedToSyncDialog.message" = "Det gick inte att upprätta anslutning efter %.0f sekunder. Synkronisering avbröts.";
 "TagCharts.FailedToServeDialog.message" = "Synkroniseringen avbröts efter %.0f sekunder. Synkronisering avbruten";
-"TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
-"TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
-"TagCharts.SyncConfirmationDialog.WithWebKaltiot.title" = "With Web(Kaltiot)";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";

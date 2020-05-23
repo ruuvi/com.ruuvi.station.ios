@@ -228,6 +228,7 @@
 "TagCharts.Clear.title" = "ОЧИСТИТЬ";
 "TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
 "TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
+"TagCharts.SyncConfirmationDialog.Ok" = "Ok";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
@@ -238,9 +239,6 @@
 "TagCharts.Status.Error" = "Ошибка";
 "TagCharts.FailedToSyncDialog.message" = "Не удалось установить соединение за %.0f сек. Синхронизация отменена.";
 "TagCharts.FailedToServeDialog.message" = "Не удалось обменяться данными за %.0f сек. Обмен данными отменен.";
-"TagCharts.SyncConfirmationDialog.WithTag.title" = "With Tag";
-"TagCharts.SyncConfirmationDialog.WithWeb.title" = "With Web";
-"TagCharts.SyncConfirmationDialog.WithWebKaltiot.title" = "With Web(Kaltiot)";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
