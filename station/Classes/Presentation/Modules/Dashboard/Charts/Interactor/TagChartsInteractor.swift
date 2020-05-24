@@ -27,6 +27,7 @@ class TagChartsInteractor {
             }
         }
     }
+    private var sensors: [AnyRuuviTagSensor] = []
 
     func createChartModules() {
         chartModules = []
@@ -43,9 +44,19 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     func startObservingTags() {
         ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
             switch change {
+            case .initial(let sensors):
+                self?.sensors = sensors
+            case .insert(let sensor):
+                self?.sensors.append(sensor)
             case .delete(let sensor):
-                if sensor.id == self?.ruuviTagSensor.id {
-                    self?.presenter.interactorDidDeleteTag()
+                self?.sensors.removeAll(where: {$0 == sensor})
+                if sensor.id == self?.ruuviTagSensor.id,
+                self?.sensors.isEmpty == false {
+                    self?.deleteAllRecords().on(completion: {
+                        self?.presenter.interactorDidDeleteTag()
+                    })
+                } else {
+                    self?.presenter.interactorDidDeleteLast()
                 }
             default:
                 return
