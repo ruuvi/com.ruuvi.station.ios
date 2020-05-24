@@ -201,7 +201,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
         errorPresenter.present(error: error)
     }
     func interactorDidDeleteTag() {
-        router.dismiss()
+        router.openDiscover(output: self)
     }
 }
 // MARK: - DiscoverModuleOutput
