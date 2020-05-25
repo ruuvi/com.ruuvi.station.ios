@@ -183,7 +183,7 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 72)
     var dataPruningOffsetHours: Int
 
-    @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 60)
+    @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 300)
     var chartIntervalSeconds: Int
 
     @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 72)
@@ -222,4 +222,7 @@ class SettingsUserDegaults: Settings {
         }
     }
     private let humidityUnitIntUDKey = "SettingsUserDegaults.humidityUnitInt"
+
+    @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: false)
+    var chartDownsamplingOn: Bool
 }

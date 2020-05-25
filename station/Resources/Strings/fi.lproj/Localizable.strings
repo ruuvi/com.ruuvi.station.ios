@@ -82,6 +82,12 @@
 "Defaults.ChartIntervalSeconds.title" = "Chart Interval";
 "Defaults.ChartDurationHours.title" = "Chart Duration";
 
+// Advanced settings
+"Advanced.title" = "Advanced settings";
+"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "min";
+
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
 "DiscoverTable.SectionTitle.WebTags" = "Paikkaan perustuvat virtuaaliset anturit";
@@ -192,6 +198,7 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
+"Settings.Label.Advanced" = "Advanced";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
