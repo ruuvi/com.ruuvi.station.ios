@@ -13,4 +13,5 @@ protocol TagChartsInteractorInput: class {
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError>
     func deleteAllRecords() -> Future<Void, RUError>
     func notifySettingsChanged()
+    func notifyDownsamleOnDidChange()
 }

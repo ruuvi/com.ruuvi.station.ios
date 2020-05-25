@@ -130,6 +130,9 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
         return promise.future
     }
+    func notifyDownsamleOnDidChange() {
+        self.clearChartsAndRestartObserving()
+    }
     // MARK: - Charts
     private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
             let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
