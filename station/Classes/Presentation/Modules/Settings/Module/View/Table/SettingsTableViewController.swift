@@ -24,7 +24,6 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var foregroundTitleLabel: UILabel!
     @IBOutlet weak var advancedCell: UITableViewCell!
     @IBOutlet weak var advancedTitleLabel: UILabel!
-    
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -49,7 +48,12 @@ class SettingsTableViewController: UITableViewController {
     }
     var isBackgroundVisible: Bool = false {
         didSet {
-            updateUIIsBackgroundVisible()
+            updateTableIfLoaded()
+        }
+    }
+    var isAdvancedVisible: Bool = false {
+        didSet {
+            updateTableIfLoaded()
         }
     }
 }
@@ -124,9 +128,9 @@ extension SettingsTableViewController {
 extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if !isBackgroundVisible && cell == heartbeatCell {
-            return 0
-        } else if !showDefaults && cell == defaultsCell {
+        if !isBackgroundVisible && cell == heartbeatCell ||
+            !showDefaults && cell == defaultsCell ||
+            !isAdvancedVisible && cell == advancedCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -178,10 +182,10 @@ extension SettingsTableViewController {
         updateUITemperatureUnit()
         updateUIHumidityUnit()
         updateUILanguage()
-        updateUIIsBackgroundVisible()
+        updateTableIfLoaded()
     }
 
-    private func updateUIIsBackgroundVisible() {
+    private func updateTableIfLoaded() {
         if isViewLoaded {
             tableView.reloadData()
         }
