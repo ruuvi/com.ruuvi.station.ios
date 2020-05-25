@@ -33,6 +33,7 @@ protocol Settings {
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
+    var chartDownsamplingOn: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

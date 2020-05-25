@@ -1289,6 +1289,45 @@
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
 		A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4D241D57E700888017 /* MockCalibrationService.swift */; };
 		A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */; };
+		A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
+		A9646467247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
+		A9646468247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
+		A964646C247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */; };
+		A964646D247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */; };
+		A964646E247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */; };
+		A964646F247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */; };
+		A9646470247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */; };
+		A9646471247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */; };
+		A9646472247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645A247BAE6A0001D55D /* AdvancedTableViewController.swift */; };
+		A9646473247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645A247BAE6A0001D55D /* AdvancedTableViewController.swift */; };
+		A9646474247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645A247BAE6A0001D55D /* AdvancedTableViewController.swift */; };
+		A9646475247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645B247BAE6A0001D55D /* AdvancedViewOutput.swift */; };
+		A9646476247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645B247BAE6A0001D55D /* AdvancedViewOutput.swift */; };
+		A9646477247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645B247BAE6A0001D55D /* AdvancedViewOutput.swift */; };
+		A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645C247BAE6A0001D55D /* AdvancedViewModel.swift */; };
+		A9646479247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645C247BAE6A0001D55D /* AdvancedViewModel.swift */; };
+		A964647A247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645C247BAE6A0001D55D /* AdvancedViewModel.swift */; };
+		A964647B247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645E247BAE6A0001D55D /* AdvancedConfigurator.swift */; };
+		A964647C247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645E247BAE6A0001D55D /* AdvancedConfigurator.swift */; };
+		A964647D247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645E247BAE6A0001D55D /* AdvancedConfigurator.swift */; };
+		A964647E247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645F247BAE6A0001D55D /* AdvancedInitializer.swift */; };
+		A964647F247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645F247BAE6A0001D55D /* AdvancedInitializer.swift */; };
+		A9646480247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A964645F247BAE6A0001D55D /* AdvancedInitializer.swift */; };
+		A9646481247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646461247BAE6A0001D55D /* AdvancedModuleInput.swift */; };
+		A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646461247BAE6A0001D55D /* AdvancedModuleInput.swift */; };
+		A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646461247BAE6A0001D55D /* AdvancedModuleInput.swift */; };
+		A9646484247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646462247BAE6A0001D55D /* AdvancedPresenter.swift */; };
+		A9646485247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646462247BAE6A0001D55D /* AdvancedPresenter.swift */; };
+		A9646486247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646462247BAE6A0001D55D /* AdvancedPresenter.swift */; };
+		A9646487247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */; };
+		A9646488247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */; };
+		A9646489247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */; };
+		A964648A247BAE6B0001D55D /* AdvancedRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646465247BAE6A0001D55D /* AdvancedRouter.swift */; };
+		A964648B247BAE6B0001D55D /* AdvancedRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646465247BAE6A0001D55D /* AdvancedRouter.swift */; };
+		A964648C247BAE6B0001D55D /* AdvancedRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646465247BAE6A0001D55D /* AdvancedRouter.swift */; };
+		A964648E247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
+		A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
+		A9646490247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
 		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
@@ -1768,6 +1807,19 @@
 		A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationsManager.swift; sourceTree = "<group>"; };
 		A94FFD4D241D57E700888017 /* MockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalibrationService.swift; sourceTree = "<group>"; };
 		A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertServiceObserver.swift; sourceTree = "<group>"; };
+		A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedViewInput.swift; sourceTree = "<group>"; };
+		A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedStepperTableViewCell.swift; sourceTree = "<group>"; };
+		A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		A964645A247BAE6A0001D55D /* AdvancedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedTableViewController.swift; sourceTree = "<group>"; };
+		A964645B247BAE6A0001D55D /* AdvancedViewOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedViewOutput.swift; sourceTree = "<group>"; };
+		A964645C247BAE6A0001D55D /* AdvancedViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedViewModel.swift; sourceTree = "<group>"; };
+		A964645E247BAE6A0001D55D /* AdvancedConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedConfigurator.swift; sourceTree = "<group>"; };
+		A964645F247BAE6A0001D55D /* AdvancedInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedInitializer.swift; sourceTree = "<group>"; };
+		A9646461247BAE6A0001D55D /* AdvancedModuleInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedModuleInput.swift; sourceTree = "<group>"; };
+		A9646462247BAE6A0001D55D /* AdvancedPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedPresenter.swift; sourceTree = "<group>"; };
+		A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouterInput.swift; sourceTree = "<group>"; };
+		A9646465247BAE6A0001D55D /* AdvancedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouter.swift; sourceTree = "<group>"; };
+		A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AdvancedSettings.storyboard; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		B02A96F4FE9661D2E122F527 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3649,6 +3701,7 @@
 		0EBAF063232001080025A191 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				A9828E54247BAC0700E7E9D4 /* Adavanced */,
 				0E8A100023845E1200A9CBA6 /* Defaults */,
 				0ECFF34F235056770061D11B /* Foreground */,
 				0E84BF4F2397F24D00A37E1A /* Heartbeat */,
@@ -4641,12 +4694,80 @@
 			path = Abstractions;
 			sourceTree = "<group>";
 		};
+		A9646453247BAE6A0001D55D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */,
+				A9646456247BAE6A0001D55D /* Table */,
+				A964645B247BAE6A0001D55D /* AdvancedViewOutput.swift */,
+				A964645C247BAE6A0001D55D /* AdvancedViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A9646456247BAE6A0001D55D /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				A9646457247BAE6A0001D55D /* Cells */,
+				A964645A247BAE6A0001D55D /* AdvancedTableViewController.swift */,
+			);
+			path = Table;
+			sourceTree = "<group>";
+		};
+		A9646457247BAE6A0001D55D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */,
+				A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		A964645D247BAE6A0001D55D /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				A964645E247BAE6A0001D55D /* AdvancedConfigurator.swift */,
+				A964645F247BAE6A0001D55D /* AdvancedInitializer.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		A9646460247BAE6A0001D55D /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				A9646461247BAE6A0001D55D /* AdvancedModuleInput.swift */,
+				A9646462247BAE6A0001D55D /* AdvancedPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		A9646463247BAE6A0001D55D /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */,
+				A9646465247BAE6A0001D55D /* AdvancedRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		A971B0DA2421531C008EF50D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				A971B0DB24215334008EF50D /* XCTest+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
+			isa = PBXGroup;
+			children = (
+				A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */,
+				A964645D247BAE6A0001D55D /* Assembly */,
+				A9646460247BAE6A0001D55D /* Presenter */,
+				A9646463247BAE6A0001D55D /* Router */,
+				A9646453247BAE6A0001D55D /* View */,
+			);
+			path = Adavanced;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -4869,6 +4990,7 @@
 				0E6BAEBF23856A01003A2D4C /* Assets.xcassets in Resources */,
 				0E6BAEC123856A01003A2D4C /* CardView.xib in Resources */,
 				0E6BAEC223856A01003A2D4C /* Menu.storyboard in Resources */,
+				A9646490247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				0E6BAEC323856A01003A2D4C /* Main.storyboard in Resources */,
 				0E6BAEC423856A01003A2D4C /* Settings.storyboard in Resources */,
 				0E6BAEC523856A01003A2D4C /* Muli-Bold.ttf in Resources */,
@@ -4912,6 +5034,7 @@
 				0E8BD3F5238566AB008B31EF /* Assets.xcassets in Resources */,
 				0E8BD3F7238566AB008B31EF /* CardView.xib in Resources */,
 				0E8BD3F8238566AB008B31EF /* Menu.storyboard in Resources */,
+				A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				0E8BD3F9238566AB008B31EF /* Main.storyboard in Resources */,
 				0E8BD3FA238566AB008B31EF /* Settings.storyboard in Resources */,
 				0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */,
@@ -4955,6 +5078,7 @@
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				0E1C1E1322B756D30032F6CA /* CardView.xib in Resources */,
 				0E1C1DF122B3FDE30032F6CA /* Menu.storyboard in Resources */,
+				A964648E247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
@@ -5208,6 +5332,7 @@
 				0E8BAC4E245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */,
 				0E28643C246198BB00363DCB /* Identifier.swift in Sources */,
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
+				A9646474247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
 				0EAD33EC2399273E00EC5BAA /* HeartbeatList.swift in Sources */,
 				0E6BAD8823856A01003A2D4C /* DefaultsViewOutput.swift in Sources */,
@@ -5228,6 +5353,7 @@
 				0E6BAD9323856A01003A2D4C /* TagChartsViewModel.swift in Sources */,
 				0E6BAD9423856A01003A2D4C /* WebTagPersistenceRealm.swift in Sources */,
 				0E6BAD9523856A01003A2D4C /* LocalNotificationsManagerImpl.swift in Sources */,
+				A9646480247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
 				0E6BAD9623856A01003A2D4C /* PermissionPresenter.swift in Sources */,
 				0E0C19C023D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0E8BACAA245C84BE00D380FB /* TankAssembly.swift in Sources */,
@@ -5298,6 +5424,7 @@
 				0E6BADBE23856A01003A2D4C /* DefaultsRouterInput.swift in Sources */,
 				0E8BACD4245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E6BADBF23856A01003A2D4C /* AboutPresenter.swift in Sources */,
+				A964648C247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
 				0E6BADC023856A01003A2D4C /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0E6BADC123856A01003A2D4C /* TagSettingsViewModel.swift in Sources */,
 				0E6BADC223856A01003A2D4C /* CardsPresenter.swift in Sources */,
@@ -5326,6 +5453,7 @@
 				0E6BADD923856A01003A2D4C /* PhotoPickerPresenterSheet.swift in Sources */,
 				0E6BADDA23856A01003A2D4C /* AboutConfigurator.swift in Sources */,
 				0E6BADDB23856A01003A2D4C /* AboutViewInput.swift in Sources */,
+				A964646E247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0E6BADDC23856A01003A2D4C /* TagChartsViewInput.swift in Sources */,
 				0E8BACBD245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E6BADDD23856A01003A2D4C /* LanguageTableViewController.swift in Sources */,
@@ -5360,6 +5488,7 @@
 				0E6BADF323856A01003A2D4C /* WelcomeRouter.swift in Sources */,
 				A93DB9E724731C66007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */,
 				0E6BADF423856A01003A2D4C /* BackgroundPersistenceUserDefaults.swift in Sources */,
+				A9646489247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				A9100D6E241AC752004007FD /* WPSData.swift in Sources */,
 				0E45580723E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				0E6BADF523856A01003A2D4C /* AlertType.swift in Sources */,
@@ -5385,6 +5514,8 @@
 				A94FFD39241C1B0A00888017 /* RuuviTagProtocol.swift in Sources */,
 				0E28641A246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E6BAE0523856A01003A2D4C /* ConnectionPersistence.swift in Sources */,
+				A964647A247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
+				A9646486247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
 				0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */,
 				0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */,
@@ -5398,6 +5529,7 @@
 				0EAD33EA2399273E00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E6BAE0E23856A01003A2D4C /* RuuviTagPersistenceRealm.swift in Sources */,
 				0EE49BBD23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
+				A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
@@ -5503,6 +5635,7 @@
 				0E31B04D23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E6BAE6A23856A01003A2D4C /* LanguageTableInitializer.swift in Sources */,
 				0E2864482461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */,
+				A964647D247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				0E6BAE6B23856A01003A2D4C /* LocationPickerModuleOutput.swift in Sources */,
 				0E6BAE6C23856A01003A2D4C /* DiscoverTableConfigurator.swift in Sources */,
 				0E6BAE6D23856A01003A2D4C /* AlertServiceImpl.swift in Sources */,
@@ -5559,6 +5692,7 @@
 				A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */,
 				0E8BAD002460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */,
 				0E6BAE9523856A01003A2D4C /* WelcomeViewController.swift in Sources */,
+				A9646468247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				0E6BAE9623856A01003A2D4C /* CardsRouterInput.swift in Sources */,
 				0E6BAE9723856A01003A2D4C /* WelcomeInitializer.swift in Sources */,
 				A92E3C65242644B800D981D5 /* TagChartViewInput.swift in Sources */,
@@ -5573,11 +5707,13 @@
 				A90E169524604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				0E6BAE9D23856A01003A2D4C /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */,
+				A9646477247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
 				0E6BAE9E23856A01003A2D4C /* Worker.swift in Sources */,
 				0E6BAE9F23856A01003A2D4C /* ErrorPresenterAlert.swift in Sources */,
 				0E6BAEA023856A01003A2D4C /* ForegroundViewController.swift in Sources */,
 				0E6BAEA123856A01003A2D4C /* Settings.swift in Sources */,
 				0E6BAEA223856A01003A2D4C /* ForegroundInitializer.swift in Sources */,
+				A9646471247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				0E6BAEA423856A01003A2D4C /* WebTagPersistence.swift in Sources */,
 				0E6BAEA523856A01003A2D4C /* AlertPersistenceUserDefaults.swift in Sources */,
 			);
@@ -5608,6 +5744,7 @@
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
 				0E8BD2C3238566AB008B31EF /* MigrationManager.swift in Sources */,
+				A9646473247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */,
 				0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */,
 				0E31B05123BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
@@ -5618,6 +5755,7 @@
 				0E8BD2C7238566AB008B31EF /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E8BD2C8238566AB008B31EF /* AsyncOperation.swift in Sources */,
 				0E8BD2C9238566AB008B31EF /* TagChartsViewModel.swift in Sources */,
+				A9646485247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0E8BD2CA238566AB008B31EF /* WebTagPersistenceRealm.swift in Sources */,
 				0E8BD2CB238566AB008B31EF /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E8BD2CC238566AB008B31EF /* PermissionPresenter.swift in Sources */,
@@ -5722,6 +5860,7 @@
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
 				0E8BACBC245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */,
+				A9646470247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				0E8BD314238566AB008B31EF /* DefaultsViewController.swift in Sources */,
 				0E8BD315238566AB008B31EF /* WebTagDataRealm.swift in Sources */,
 				0E8BD316238566AB008B31EF /* DefaultsViewModel.swift in Sources */,
@@ -5739,6 +5878,7 @@
 				0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
+				A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */,
 				0E8BD321238566AB008B31EF /* HumidityCalibrationInitializer.swift in Sources */,
 				0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */,
@@ -5866,11 +6006,13 @@
 				0E8BACF0245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */,
 				0E8BD387238566AB008B31EF /* DiscoverRouter.swift in Sources */,
 				A93052B9242BFCF800FB62B1 /* TagChartViewOutput.swift in Sources */,
+				A964647F247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
 				0E28644B2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */,
 				0E8BD388238566AB008B31EF /* WelcomeModuleInput.swift in Sources */,
 				0E8BD389238566AB008B31EF /* PhotoPickerPresenter.swift in Sources */,
 				0E8BD38A238566AB008B31EF /* LocationPickerPresenter.swift in Sources */,
 				0E8BD38C238566AB008B31EF /* BusinessAssembly.swift in Sources */,
+				A964646D247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0EE49BC523B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
 				0E8BD38D238566AB008B31EF /* DefaultsModuleInput.swift in Sources */,
 				0E8BD38E238566AB008B31EF /* SettingsUserDefaults.swift in Sources */,
@@ -5886,6 +6028,7 @@
 				0E8BD398238566AB008B31EF /* LocationPickerAppleConfigurator.swift in Sources */,
 				0E8BD399238566AB008B31EF /* AppAssembly.swift in Sources */,
 				0E8BD39A238566AB008B31EF /* AppStateService.swift in Sources */,
+				A9646467247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				A93DB9EA24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E8BD39C238566AB008B31EF /* DiscoverModuleInput.swift in Sources */,
@@ -5913,6 +6056,7 @@
 				0E8BD3AD238566AB008B31EF /* RUError.swift in Sources */,
 				0E45580F23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */,
 				0E8BD3AE238566AB008B31EF /* LocationService.swift in Sources */,
+				A964647C247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				0E8BD3AF238566AB008B31EF /* WeatherProvider.swift in Sources */,
 				0E8BD3B0238566AB008B31EF /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E8BD3B1238566AB008B31EF /* WebTagSettingsViewModel.swift in Sources */,
@@ -5942,6 +6086,7 @@
 				0E8BACB8245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
+				A9646476247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
 				0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */,
 				0E8BD3C8238566AB008B31EF /* RuuviTagHeartbeatDaemon.swift in Sources */,
@@ -5951,8 +6096,10 @@
 				A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */,
 				0E8BACFF2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */,
 				0E8BD3CB238566AB008B31EF /* WelcomeViewController.swift in Sources */,
+				A9646488247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
 				0E8BD3CD238566AB008B31EF /* WelcomeInitializer.swift in Sources */,
+				A9646479247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A92E3C64242644B800D981D5 /* TagChartViewInput.swift in Sources */,
 				0E1B2F33239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */,
 				A90E169024604F7400631E6C /* TagChartPresenter.swift in Sources */,
@@ -5965,6 +6112,7 @@
 				A90E169424604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				0E8BD3D3238566AB008B31EF /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */,
+				A964648B247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
 				0E8BD3D4238566AB008B31EF /* Worker.swift in Sources */,
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
@@ -5991,6 +6139,7 @@
 				0E8BAC4C245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */,
 				0E28643A246198BB00363DCB /* Identifier.swift in Sources */,
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
+				A9646472247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
@@ -6011,6 +6160,7 @@
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
+				A964647E247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
 				0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E8BACA8245C84BE00D380FB /* TankAssembly.swift in Sources */,
@@ -6081,6 +6231,7 @@
 				0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0E8BACD2245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E84BF612397F73100A37E1A /* HeartbeatEnvironmentObject.swift in Sources */,
+				A964648A247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
 				0EC50F5222CCB9DE00172EEB /* TagSettingsViewModel.swift in Sources */,
 				0E1C1DDF22B3C2330032F6CA /* CardsPresenter.swift in Sources */,
 				0E3FF7372381591800EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
@@ -6109,6 +6260,7 @@
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
 				0E8FD0C323335DA700FFA577 /* TagChartsViewInput.swift in Sources */,
 				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
+				A964646C247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
 				0E8BACBB245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
@@ -6143,6 +6295,7 @@
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */,
 				A9100D6C241AC741004007FD /* WPSData.swift in Sources */,
+				A9646487247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				0E45580523E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */,
 				0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */,
@@ -6168,6 +6321,8 @@
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
 				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
+				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
+				A9646484247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
@@ -6181,6 +6336,7 @@
 				0E1C1D9E22B366D10032F6CA /* RuuviTagPersistenceRealm.swift in Sources */,
 				0EE49BBB23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0E53DA6222CC93EB00BC6D64 /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
+				A9646481247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
@@ -6286,6 +6442,7 @@
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E2864462461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */,
+				A964647B247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				0E31B04B23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */,
@@ -6342,6 +6499,7 @@
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
 				0E8BACFE2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */,
 				A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */,
+				A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				0E84BF5B2397F3DF00A37E1A /* HeartbeatViewOutput.swift in Sources */,
 				0EEB20D622B7C7E70015F9E0 /* SettingsViewInput.swift in Sources */,
 				0E1B2F32239DEF120060C469 /* TagSettingsAlertHeaderCell.swift in Sources */,
@@ -6356,11 +6514,13 @@
 				A90E169324604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
 				A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */,
+				A9646475247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
 				0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
+				A964646F247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
 			);
