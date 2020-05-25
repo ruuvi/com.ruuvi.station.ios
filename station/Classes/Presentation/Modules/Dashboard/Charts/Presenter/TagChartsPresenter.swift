@@ -42,6 +42,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
+    private var chartIntervalDidChangeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var ruuviTag: AnyRuuviTagSensor! {
@@ -79,6 +80,9 @@ class TagChartsPresenter: TagChartsModuleInput {
         }
         if let downsampleDidChangeToken = downsampleDidChangeToken {
             NotificationCenter.default.removeObserver(downsampleDidChangeToken)
+        }
+        if let chartIntervalDidChangeToken = chartIntervalDidChangeToken {
+            NotificationCenter.default.removeObserver(chartIntervalDidChangeToken)
         }
     }
 
@@ -331,8 +335,16 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                self?.interactor.notifySettingsChanged()
-            })
+            self?.interactor.notifyDownsamleOnDidChange()
+        })
+        chartIntervalDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .ChartIntervalDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.interactor.notifyDownsamleOnDidChange()
+        })
     }
 
     private func startObservingBackgroundChanges() {

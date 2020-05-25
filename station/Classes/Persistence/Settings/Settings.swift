@@ -10,6 +10,7 @@ extension Notification.Name {
     static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
     static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
     static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
+    static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
 }
 
 protocol Settings {
