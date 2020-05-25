@@ -9,6 +9,7 @@ extension Notification.Name {
     static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
     static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
     static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
+    static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
 }
 
 protocol Settings {

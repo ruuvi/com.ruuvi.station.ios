@@ -224,5 +224,13 @@ class SettingsUserDegaults: Settings {
     private let humidityUnitIntUDKey = "SettingsUserDegaults.humidityUnitInt"
 
     @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: false)
-    var chartDownsamplingOn: Bool
+    var chartDownsamplingOn: Bool {
+        didSet {
+            NotificationCenter
+            .default
+            .post(name: .DownsampleOnDidChange,
+             object: self,
+             userInfo: nil)
+        }
+    }
 }

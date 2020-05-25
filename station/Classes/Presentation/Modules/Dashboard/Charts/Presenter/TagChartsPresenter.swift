@@ -41,6 +41,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
+    private var downsampleDidChangeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var ruuviTag: AnyRuuviTagSensor! {
@@ -75,6 +76,9 @@ class TagChartsPresenter: TagChartsModuleInput {
         }
         if let lnmDidReceiveToken = lnmDidReceiveToken {
             NotificationCenter.default.removeObserver(lnmDidReceiveToken)
+        }
+        if let downsampleDidChangeToken = downsampleDidChangeToken {
+            NotificationCenter.default.removeObserver(downsampleDidChangeToken)
         }
     }
 
@@ -309,7 +313,7 @@ extension TagChartsPresenter {
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
-                            self?.interactor.restartObservingData()
+            self?.interactor.restartObservingData()
             self?.interactor.notifySettingsChanged()
         }
         humidityUnitToken = NotificationCenter
@@ -318,9 +322,17 @@ extension TagChartsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-                            self?.interactor.restartObservingData()
+            self?.interactor.restartObservingData()
             self?.interactor.notifySettingsChanged()
         })
+        downsampleDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .DownsampleOnDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.interactor.notifySettingsChanged()
+            })
     }
 
     private func startObservingBackgroundChanges() {
