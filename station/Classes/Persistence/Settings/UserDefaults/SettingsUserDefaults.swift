@@ -227,10 +227,10 @@ class SettingsUserDegaults: Settings {
     var chartDownsamplingOn: Bool {
         didSet {
             NotificationCenter
-            .default
-            .post(name: .DownsampleOnDidChange,
-             object: self,
-             userInfo: nil)
+                .default
+                .post(name: .DownsampleOnDidChange,
+                      object: self,
+                      userInfo: nil)
         }
     }
 }

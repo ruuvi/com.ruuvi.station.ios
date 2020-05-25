@@ -18,6 +18,11 @@ class AdvancedTableViewController: UITableViewController {
         super.viewDidLoad()
         localize()
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        output.viewWillDisappear()
+    }
 }
 
 extension AdvancedTableViewController: AdvancedViewInput {
