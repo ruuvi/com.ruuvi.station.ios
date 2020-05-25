@@ -83,6 +83,12 @@
 "Defaults.ChartIntervalSeconds.title" = "Chart Interval";
 "Defaults.ChartDurationHours.title" = "Chart Duration";
 
+// Advanced settings
+"Advanced.title" = "Advanced settings";
+"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "min";
+
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
 "DiscoverTable.SectionTitle.WebTags" = "Virtual sensors";
@@ -193,6 +199,7 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
+"Settings.Label.Advanced" = "Advanced";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";

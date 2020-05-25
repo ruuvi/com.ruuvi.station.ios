@@ -22,6 +22,9 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageCell: UITableViewCell!
     @IBOutlet weak var foregroundCell: UITableViewCell!
     @IBOutlet weak var foregroundTitleLabel: UILabel!
+    @IBOutlet weak var advancedCell: UITableViewCell!
+    @IBOutlet weak var advancedTitleLabel: UILabel!
+    
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -67,6 +70,7 @@ extension SettingsTableViewController: SettingsViewInput {
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
+        advancedTitleLabel.text = "Settings.Label.Advanced".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -159,6 +163,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
+            case advancedCell:
+                output.viewDidTapOnAdvanced()
             default:
                 break
             }
