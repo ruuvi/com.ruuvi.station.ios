@@ -9,6 +9,8 @@ extension Notification.Name {
     static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
     static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
     static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
+    static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
+    static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
 }
 
 protocol Settings {
@@ -33,6 +35,7 @@ protocol Settings {
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
+    var chartDownsamplingOn: Bool { get set }
     var networkFeatureEnabled: Bool { get set }
     var kaltiotNetworkEnabled: Bool { get set }
     var whereOSNetworkEnabled: Bool { get set }
