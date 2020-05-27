@@ -30,6 +30,7 @@ extension TagChartPresenter: TagChartModuleInput {
     }
 
     fileprivate func configureViewModel(_ viewModel: TagChartViewModel) {
+        viewModel.isDownsamplingOn.value = settings.chartDownsamplingOn
         switch viewModel.type {
         case .temperature:
             viewModel.unit.value = settings.temperatureUnit.unitTemperature
@@ -108,6 +109,14 @@ extension TagChartPresenter {
     }
 
     private func createChartData() {
+        if settings.chartDownsamplingOn {
+            createChartDataWithDownsampling()
+        } else {
+            createChartDataWithoutDownsampling()
+        }
+    }
+
+    private func createChartDataWithDownsampling() {
         viewModel.chartData.value = LineChartData(dataSet: newDataSet())
         let currentDate = Date().timeIntervalSince1970
         if let chartDurationThreshold = Calendar.current.date(byAdding: .hour,
@@ -119,10 +128,10 @@ extension TagChartPresenter {
             fetchPointsByDates(start: chartDurationThreshold,
                                stop: currentDate,
                                completion: { [weak self] in
-                self?.view.setXRange(min: firstDate, max: currentDate)
-                self?.view.reloadData()
-                self?.view.fitZoomTo(min: chartDurationThreshold, max: currentDate)
-                self?.view.resetCustomAxisMinMax()
+                                self?.view.setXRange(min: firstDate, max: currentDate)
+                                self?.view.reloadData()
+                                self?.view.fitZoomTo(min: chartDurationThreshold, max: currentDate)
+                                self?.view.resetCustomAxisMinMax()
             })
         } else {
             setDownSampled(dataSet: ouptut.dataSource,
@@ -130,6 +139,15 @@ extension TagChartPresenter {
                 self?.view.reloadData()
             })
         }
+    }
+
+    private func createChartDataWithoutDownsampling() {
+        viewModel.chartData.value = LineChartData(dataSet: newDataSet())
+        ouptut.dataSource.forEach({
+            viewModel.chartData.value?.addEntry(chartEntry(for: $0), dataSetIndex: 0)
+        })
+        drawCirclesIfNeeded(for: chartData)
+        view.reloadData()
     }
 
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
@@ -144,9 +162,15 @@ extension TagChartPresenter {
         view.reloadData()
     }
 
-    private func drawCirclesIfNeeded(for chartData: LineChartData?) {
+    private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
         if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
-            switch dataSet.entries.count {
+            let count: Int
+            if let entriesCount = entriesCount {
+                count = entriesCount
+            } else {
+                count = dataSet.entries.count
+            }
+            switch count {
             case 1:
                 dataSet.circleRadius = 6
                 dataSet.drawCirclesEnabled = true
@@ -176,8 +200,12 @@ extension TagChartPresenter {
             if !filterOperation.isCancelled {
                 let sorted = filterOperation.sorted
                 DispatchQueue.main.async {
-                    self.setDownSampled(dataSet: sorted,
-                                        completion: completion)
+                    if self.settings.chartDownsamplingOn {
+                        self.setDownSampled(dataSet: sorted,
+                                            completion: completion)
+                    } else {
+                        self.drawCirclesIfNeeded(for: self.chartData, entriesCount: sorted.count)
+                    }
                 }
             }
         }

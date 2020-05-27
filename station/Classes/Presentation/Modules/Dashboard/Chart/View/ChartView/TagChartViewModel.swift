@@ -6,4 +6,5 @@ struct TagChartViewModel {
     var unit: Observable<Unit?> = Observable<Unit?>()
     var chartData: Observable<LineChartData?> = Observable<LineChartData?>()
     var progress: Observable<Float?> = Observable<Float?>()
+    var isDownsamplingOn: Observable<Bool?> = Observable<Bool?>()
 }
