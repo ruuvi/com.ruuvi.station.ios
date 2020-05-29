@@ -686,7 +686,6 @@
 		0E8BACE1245F015D00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACDE245F015C00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift */; };
 		0E8BACE3245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
 		0E8BACE4245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
-		0E8BACE5245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
 		0E8BACE7245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
 		0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
 		0E8BACE9245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */; };
@@ -1350,6 +1349,18 @@
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
 		A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4D241D57E700888017 /* MockCalibrationService.swift */; };
 		A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */; };
+		A95518AB24573DF5005592FD /* RuuviNetworkKaltiot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */; };
+		A95518AD245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
+		A95BA3E52451ECB000EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
+		A95BA3E72451ED7000EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
+		A95BA3E82451EE3A00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
+		A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
+		A95BA3EA2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
+		A95BA3EB2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
+		A95BA3EE2452006F00EF923D /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A95BA3ED2452006F00EF923D /* KeychainAccess */; };
+		A95BA3EF245200FA00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
+		A95BA3F0245200FC00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
+		A9627BF424802FA5004BBF22 /* ReloadableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3197245CBEB800041559 /* ReloadableCell.swift */; };
 		A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
 		A9646467247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
 		A9646468247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
@@ -1389,17 +1400,6 @@
 		A964648E247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
 		A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
 		A9646490247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
-		A95518AB24573DF5005592FD /* RuuviNetworkKaltiot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */; };
-		A95518AD245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
-		A95BA3E52451ECB000EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
-		A95BA3E72451ED7000EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
-		A95BA3E82451EE3A00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
-		A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
-		A95BA3EA2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
-		A95BA3EB2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
-		A95BA3EE2452006F00EF923D /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A95BA3ED2452006F00EF923D /* KeychainAccess */; };
-		A95BA3EF245200FA00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
-		A95BA3F0245200FC00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
 		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
@@ -1471,7 +1471,6 @@
 		A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318B245CBE3F00041559 /* SectionChanges.swift */; };
 		A9828E3D24792D6B00E7E9D4 /* CellChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318F245CBE6500041559 /* CellChanges.swift */; };
 		A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3193245CBEA200041559 /* ReloadableSection.swift */; };
-		A9828E3F24792D6B00E7E9D4 /* ReloadableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3197245CBEB800041559 /* ReloadableCell.swift */; };
 		A9828E4024792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA319B245CBEDA00041559 /* ReloadableSectionData.swift */; };
 		A9828E4124792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA319F245CBEF200041559 /* ReloadableCellData.swift */; };
 		A9828E4224792D6B00E7E9D4 /* SectionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318B245CBE3F00041559 /* SectionChanges.swift */; };
@@ -1990,6 +1989,10 @@
 		A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationsManager.swift; sourceTree = "<group>"; };
 		A94FFD4D241D57E700888017 /* MockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalibrationService.swift; sourceTree = "<group>"; };
 		A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertServiceObserver.swift; sourceTree = "<group>"; };
+		A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiot.swift; sourceTree = "<group>"; };
+		A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiotURLSession.swift; sourceTree = "<group>"; };
+		A95BA3E42451ECB000EF923D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceImpl.swift; sourceTree = "<group>"; };
 		A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedViewInput.swift; sourceTree = "<group>"; };
 		A9646458247BAE6A0001D55D /* AdvancedStepperTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedStepperTableViewCell.swift; sourceTree = "<group>"; };
 		A9646459247BAE6A0001D55D /* AdvancedSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedSwitchTableViewCell.swift; sourceTree = "<group>"; };
@@ -2003,10 +2006,6 @@
 		A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouterInput.swift; sourceTree = "<group>"; };
 		A9646465247BAE6A0001D55D /* AdvancedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouter.swift; sourceTree = "<group>"; };
 		A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AdvancedSettings.storyboard; sourceTree = "<group>"; };
-		A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiot.swift; sourceTree = "<group>"; };
-		A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiotURLSession.swift; sourceTree = "<group>"; };
-		A95BA3E42451ECB000EF923D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
-		A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceImpl.swift; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
 		A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotApiKeyTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
@@ -5075,6 +5074,23 @@
 			path = Abstractions;
 			sourceTree = "<group>";
 		};
+		A95BA3E22451EC3E00EF923D /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				A95BA3E32451EC8900EF923D /* Impl */,
+				A95BA3E42451ECB000EF923D /* KeychainService.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		A95BA3E32451EC8900EF923D /* Impl */ = {
+			isa = PBXGroup;
+			children = (
+				A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */,
+			);
+			path = Impl;
+			sourceTree = "<group>";
+		};
 		A9646453247BAE6A0001D55D /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -5131,41 +5147,12 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
-		A95BA3E22451EC3E00EF923D /* Keychain */ = {
-			isa = PBXGroup;
-			children = (
-				A95BA3E32451EC8900EF923D /* Impl */,
-				A95BA3E42451ECB000EF923D /* KeychainService.swift */,
-			);
-			path = Keychain;
-			sourceTree = "<group>";
-		};
-		A95BA3E32451EC8900EF923D /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */,
-			);
-			path = Impl;
-			sourceTree = "<group>";
-		};
 		A971B0DA2421531C008EF50D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				A971B0DB24215334008EF50D /* XCTest+Extension.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
-			isa = PBXGroup;
-			children = (
-				A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */,
-				A964645D247BAE6A0001D55D /* Assembly */,
-				A9646460247BAE6A0001D55D /* Presenter */,
-				A9646463247BAE6A0001D55D /* Router */,
-				A9646453247BAE6A0001D55D /* View */,
-			);
-			path = Adavanced;
 			sourceTree = "<group>";
 		};
 		A980CC6A2468123A00C9A14C /* ReusableViews */ = {
@@ -5184,6 +5171,18 @@
 				A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
+			isa = PBXGroup;
+			children = (
+				A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */,
+				A964645D247BAE6A0001D55D /* Assembly */,
+				A9646460247BAE6A0001D55D /* Presenter */,
+				A9646463247BAE6A0001D55D /* Router */,
+				A9646453247BAE6A0001D55D /* View */,
+			);
+			path = Adavanced;
 			sourceTree = "<group>";
 		};
 		A9C35185245355A5004696BD /* Kaltiot */ = {
@@ -5981,7 +5980,6 @@
 				A9227BD1245C86FB00466B23 /* NetworkSettingsRouterInput.swift in Sources */,
 				0E6BADB223856A01003A2D4C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E6BADB323856A01003A2D4C /* MenuTableConfigurator.swift in Sources */,
-				0E8BACE5245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
 				0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */,
 				0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */,
 				0E6BADB623856A01003A2D4C /* HumidityCalibrationPresenter.swift in Sources */,
@@ -7149,6 +7147,7 @@
 				0E31B04B23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E70A47D22AF9BFE006CB87C /* DiscoverTableConfigurator.swift in Sources */,
 				0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */,
+				A9627BF424802FA5004BBF22 /* ReloadableCell.swift in Sources */,
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0E8BACEB245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,

@@ -238,7 +238,7 @@ extension CardsScrollViewController {
         let kelvin = viewModel.kelvin
 
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
-            [weak self, weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
+            [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
                 var temperature: Double?
                 switch temperatureUnit {
@@ -281,8 +281,7 @@ extension CardsScrollViewController {
             rhFormat = "%.0f"
         }
         let humidityBlock: ((UILabel, Double?) -> Void) = {
-            [weak self,
-            weak hu,
+            [weak hu,
             weak rh,
             weak ah,
             weak ho,
@@ -430,7 +429,7 @@ extension CardsScrollViewController {
     }
 
     private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
-        view.chartsButtonContainerView.bind(viewModel.isConnectable) { [weak self] (view, isConnectable) in
+        view.chartsButtonContainerView.bind(viewModel.isConnectable) {(view, isConnectable) in
             view.isHidden = !isConnectable.bound
         }
 

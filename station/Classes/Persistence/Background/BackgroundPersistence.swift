@@ -7,12 +7,13 @@ extension Notification.Name {
 
 enum BPDidChangeBackgroundKey: String {
     case luid // LocalIdenfitier
+    case macId
 }
 
 protocol BackgroundPersistence {
-    func background(for luid: LocalIdentifier) -> UIImage?
-    func setBackground(_ id: Int, for luid: LocalIdentifier)
-    func setNextDefaultBackground(for luid: LocalIdentifier) -> UIImage?
-    func setCustomBackground(image: UIImage, for luid: LocalIdentifier) -> Future<URL, RUError>
-    func deleteCustomBackground(for uuid: LocalIdentifier)
+    func background(for identifier: Identifier) -> UIImage?
+    func setBackground(_ id: Int, for identifier: Identifier)
+    func setNextDefaultBackground(for identifier: Identifier) -> UIImage?
+    func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RUError>
+    func deleteCustomBackground(for uuid: Identifier)
 }
