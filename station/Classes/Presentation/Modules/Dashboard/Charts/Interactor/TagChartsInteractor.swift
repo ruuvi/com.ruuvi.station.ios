@@ -143,12 +143,6 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     func notifyDownsamleOnDidChange() {
         self.clearChartsAndRestartObserving()
     }
-    // MARK: - Charts
-    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
-            let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
-        ruuviTagData.append(contentsOf: newValues)
-        insertMeasurements(newValues)
-    }
 }
 // MARK: - TagChartModuleOutput
 extension TagChartsInteractor: TagChartModuleOutput {
@@ -238,7 +232,7 @@ extension TagChartsInteractor {
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
-        op.on(success: { [weak self] _ in
+        op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)
@@ -250,7 +244,7 @@ extension TagChartsInteractor {
         let promise = Promise<Void, RUError>()
         if let mac = ruuviTagSensor.macId?.mac {
             let op = networkService.loadData(for: ruuviTagSensor.id, mac: mac, from: provider)
-            op.on(success: { [weak self] _ in
+            op.on(success: { _ in
                 promise.succeed(value: ())
             }, failure: { error in
                 promise.fail(error: error)

@@ -212,6 +212,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidDeleteTag() {
         self.router.dismiss()
     }
+
     func interactorDidDeleteLast() {
         self.router.openDiscover(output: self)
     }
@@ -307,9 +308,9 @@ extension TagChartsPresenter {
                                                                 ? .registered : .empty
         } else if let macId = ruuviTag.macId {
             // FIXME
-            // viewModel.background.value = backgroundPersistence.background(for: macId)
+            viewModel.background.value = backgroundPersistence.background(for: macId)
             // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
-             viewModel.isConnected.value = false
+            viewModel.isConnected.value = false
         } else {
             assertionFailure()
         }
@@ -364,6 +365,16 @@ extension TagChartsPresenter {
                 let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
                             self?.viewModel.uuid.value == luid.value {
                 self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+            }
+
+            if let userInfo = notification.userInfo {
+                if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+                self?.viewModel.uuid.value == luid.value {
+                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
+                    self?.viewModel.mac.value == macId.value {
+                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                }
             }
         }
     }

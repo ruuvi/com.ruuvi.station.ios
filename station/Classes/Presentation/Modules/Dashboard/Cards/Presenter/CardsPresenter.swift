@@ -305,7 +305,7 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
+                // viewModel.background.value = backgroundPersistence.background(for: macId)
                 // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
                 // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -578,10 +578,14 @@ extension CardsPresenter {
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
                          object: nil,
                          queue: .main) { [weak self] notification in
-            if let userInfo = notification.userInfo,
-                let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+            if let userInfo = notification.userInfo {
+                if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
                 let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid.any }) {
                     viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
+                    let viewModel = self?.view.viewModels.first(where: {$0.mac.value == macId.any }) {
+                    viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                }
             }
         }
     }
