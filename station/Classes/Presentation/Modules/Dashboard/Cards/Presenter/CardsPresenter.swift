@@ -178,6 +178,9 @@ extension CardsPresenter: CardsViewOutput {
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
+        } else if let macId = viewModel.mac.value {
+            #warning("Need show keep connection?")
+            router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
@@ -305,9 +308,9 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                // viewModel.background.value = backgroundPersistence.background(for: macId)
-                // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
-                // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
+                 viewModel.background.value = backgroundPersistence.background(for: macId)
+                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
+                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
                 viewModel.isConnected.value = false

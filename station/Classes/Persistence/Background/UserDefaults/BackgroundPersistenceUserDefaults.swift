@@ -61,12 +61,20 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         let persist = imagePersistence.persistBg(image: image, for: identifier)
         persist.on(success: { url in
             self.setBackground(0, for: identifier)
-            let userInfo = identifier is LocalIdentifier ? [BPDidChangeBackgroundKey.luid: identifier] : [BPDidChangeBackgroundKey.macId: identifier]
+            let userInfoKey: BPDidChangeBackgroundKey
+            if identifier is LocalIdentifier {
+                userInfoKey = .luid
+            } else if identifier is MACIdentifier {
+                userInfoKey = .macId
+            } else {
+                userInfoKey = .luid
+                assertionFailure()
+            }
             NotificationCenter
                 .default
                 .post(name: .BackgroundPersistenceDidChangeBackground,
                       object: nil,
-                      userInfo: userInfo)
+                      userInfo: [userInfoKey: identifier])
             promise.succeed(value: url)
         }, failure: { (error) in
             promise.fail(error: error)
@@ -79,12 +87,20 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
         UserDefaults.standard.synchronize()
-        let userInfo = identifier is LocalIdentifier ? [BPDidChangeBackgroundKey.luid: identifier] : [BPDidChangeBackgroundKey.macId: identifier]
+        let userInfoKey: BPDidChangeBackgroundKey
+        if identifier is LocalIdentifier {
+            userInfoKey = .luid
+        } else if identifier is MACIdentifier {
+            userInfoKey = .macId
+        } else {
+            userInfoKey = .luid
+            assertionFailure()
+        }
         NotificationCenter
             .default
             .post(name: .BackgroundPersistenceDidChangeBackground,
                   object: nil,
-                  userInfo: userInfo)
+                  userInfo: [userInfoKey: identifier])
         if id >= bgMinIndex && id <= bgMaxIndex {
             var array = usedBackgrounds
             array[id - bgMinIndex] += 1
