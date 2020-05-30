@@ -24,11 +24,3 @@ protocol RuuviTagProtocol {
     var volts: Double? { get }
 }
 extension RuuviTag: RuuviTagProtocol {}
-//extension RuuviTagProtocol {
-//    var sensor: RuuviTagSensor {
-//        let id = mac ?? uuid
-//        let name = "DiscoverTable.RuuviDevice.prefix".localized()
-//            + " " + id.prefix(4)
-//        return RuuviTagSensorStruct(version: version, luid: uuid.luid, macId: mac?.mac, isConnectable: isConnectable, name: name)
-//    }
-//}
