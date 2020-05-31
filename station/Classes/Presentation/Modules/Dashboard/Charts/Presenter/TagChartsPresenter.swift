@@ -195,7 +195,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewDidConfirmToClear(for viewModel: TagChartsViewModel) {
         isLoading = true
-        let op = interactor.deleteAllRecords()
+        let op = interactor.deleteAllRecords(ruuviTagId: ruuviTag.id)
         op.on(failure: {[weak self] (error) in
             self?.errorPresenter.present(error: error)
         }, completion: { [weak self] in
