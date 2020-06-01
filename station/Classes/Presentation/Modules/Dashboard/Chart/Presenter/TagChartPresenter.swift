@@ -48,7 +48,6 @@ extension TagChartPresenter: TagChartModuleInput {
         default:
             viewModel.unit.value = Unit(symbol: "N/A".localized())
         }
-        viewModel.granularity.value = Double(settings.chartIntervalSeconds)
         self.viewModel = viewModel
     }
 
