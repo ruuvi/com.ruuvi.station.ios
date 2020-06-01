@@ -108,11 +108,6 @@ class TagChartView: LineChartView {
                 label.text = unit.symbol.localized()
             }
         }
-        bind(viewModel.granularity) { (view, granularity) in
-            if let granularity = granularity {
-                view.xAxis.granularity = granularity
-            }
-        }
     }
 // MARK: - Private
     private func configure() {
@@ -129,7 +124,7 @@ class TagChartView: LineChartView {
         xAxis.drawAxisLineEnabled = false
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
-        xAxis.granularity = 60
+        xAxis.granularity = 59.9
         xAxis.valueFormatter = DateValueFormatter()
         xAxis.granularityEnabled = true
         leftAxis.labelPosition = .outsideChart
