@@ -24,6 +24,27 @@ enum DiscoverTableSection {
 enum DiscoverNetworkCell: Int, CaseIterable {
     case whereOS = 0
     case kaltiot
+
+    func cell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        switch self {
+        case .whereOS:
+            return getWhereOSCell(tableView, indexPath: indexPath)
+        case .kaltiot:
+            return getKaltiotCell(tableView, indexPath: indexPath)
+        }
+    }
+
+    private func getWhereOSCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
+        cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
+        return cell
+    }
+
+    private func getKaltiotCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: DiscoverKaltiotTableViewCell.self, for: indexPath)
+        cell.descriptionLabel.text = "DiscoverTable.KaltiotCell.text".localized()
+        return cell
+    }
 }
 
 class DiscoverTableViewController: UITableViewController {
@@ -91,17 +112,35 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
+    var networkFeatureEnabled: Bool = false {
+        didSet {
+            updateTableView()
+        }
+    }
+
+    var networkKaltiotEnabled: Bool = false {
+        didSet {
+            updateTableView()
+        }
+    }
+
+    var networkWhereOsEnabled: Bool = false {
+        didSet {
+            updateTableView()
+        }
+    }
+
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
     private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() {
         didSet {
-            updateUIShownDevices()
+            updateTableView()
         }
     }
     private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() {
         didSet {
-            updateUIShownWebTags()
+            updateTableView()
         }
     }
 }
@@ -202,7 +241,7 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return DiscoverTableSection.count
+        return networkFeatureEnabled ? DiscoverTableSection.count : DiscoverTableSection.count - 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -215,7 +254,14 @@ extension DiscoverTableViewController {
         case .noDevices:
             return 1
         case .network:
-            return DiscoverNetworkCell.allCases.count
+            var rows = 0
+            if networkKaltiotEnabled {
+                rows += 1
+            }
+            if networkWhereOsEnabled {
+                rows += 1
+            }
+            return rows
         }
     }
 
@@ -239,17 +285,17 @@ extension DiscoverTableViewController {
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         case .network:
-            switch DiscoverNetworkCell(rawValue: indexPath.row) {
-            case .whereOS:
-                let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
-                cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
-                return cell
-            case .kaltiot:
-                let cell = tableView.dequeueReusableCell(with: DiscoverKaltiotTableViewCell.self, for: indexPath)
-                cell.descriptionLabel.text = "DiscoverTable.KaltiotCell.text".localized()
-                return cell
-            default:
-                fatalError()
+            if networkWhereOsEnabled && networkKaltiotEnabled,
+                let networkCellType = DiscoverNetworkCell(rawValue: indexPath.row) {
+                return networkCellType.cell(tableView, indexPath: indexPath)
+            } else {
+                if networkWhereOsEnabled {
+                    return DiscoverNetworkCell.whereOS.cell(tableView, indexPath: indexPath)
+                } else if networkKaltiotEnabled {
+                    return DiscoverNetworkCell.kaltiot.cell(tableView, indexPath: indexPath)
+                } else {
+                    fatalError()
+                }
             }
         }
     }
@@ -259,8 +305,11 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
-        switch section {
+        var sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
+        if !networkFeatureEnabled && sectionType == .network {
+            sectionType = DiscoverTableSection.section(for: indexPath.section + 1, deviceCount: shownDevices.count)
+        }
+        switch sectionType {
         case .webTag:
             if indexPath.row < shownWebTags.count {
                 output.viewDidChoose(webTag: shownWebTags[indexPath.row])
@@ -285,9 +334,14 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if s == .webTag {
+        var sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if !networkFeatureEnabled && sectionType == .network {
+            sectionType = DiscoverTableSection.section(for: section + 1, deviceCount: shownDevices.count)
+        }
+        if sectionType == .webTag {
             return 60
+        } else if !networkFeatureEnabled && sectionType == .network {
+            return 0
         } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -298,8 +352,11 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if section == .webTag {
+        var sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if !networkFeatureEnabled && sectionType == .network {
+            sectionType = DiscoverTableSection.section(for: section + 1, deviceCount: shownDevices.count)
+        }
+        if sectionType == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
                 .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
@@ -313,8 +370,11 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch section {
+        var sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if !networkFeatureEnabled && sectionType == .network {
+            sectionType = DiscoverTableSection.section(for: section + 1, deviceCount: shownDevices.count)
+        }
+        switch sectionType {
         case .network:
             return "DiscoverTable.SectionTitle.Network".localized()
         case .device:
@@ -385,8 +445,7 @@ extension DiscoverTableViewController {
 // MARK: - Update UI
 extension DiscoverTableViewController {
     private func updateUI() {
-        updateUIShownDevices()
-        updateUIShownWebTags()
+        updateTableView()
         updateUIISBluetoothEnabled()
         updateUIIsCloseEnabled()
     }
@@ -407,13 +466,7 @@ extension DiscoverTableViewController {
         }
     }
 
-    private func updateUIShownDevices() {
-        if isViewLoaded {
-            tableView.reloadData()
-        }
-    }
-
-    private func updateUIShownWebTags() {
+    private func updateTableView() {
         if isViewLoaded {
             tableView.reloadData()
         }

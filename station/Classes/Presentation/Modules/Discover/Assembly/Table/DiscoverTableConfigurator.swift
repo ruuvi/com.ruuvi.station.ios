@@ -21,6 +21,7 @@ class DiscoverTableConfigurator {
         presenter.ruuviNetworkKaltiot = r.resolve(RuuviNetworkKaltiot.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.settings = r.resolve(Settings.self)
 
         view.output = presenter
     }
