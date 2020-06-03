@@ -158,7 +158,7 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.webPullIntervalMinutes", defaultValue: 15)
     var webPullIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: false)
+    @UserDefault("SettingsUserDegaults.readRSSI", defaultValue: true)
     var readRSSI: Bool {
         didSet {
             NotificationCenter

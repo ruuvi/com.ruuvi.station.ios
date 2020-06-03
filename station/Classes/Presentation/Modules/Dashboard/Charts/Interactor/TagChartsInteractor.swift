@@ -55,11 +55,12 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                 self?.sensors.removeAll(where: {$0 == sensor})
                 if sensor.id == self?.ruuviTagSensor.id,
                 self?.sensors.isEmpty == false {
-                    self?.deleteAllRecords().on(completion: {
-                        self?.presenter.interactorDidDeleteTag()
-                    })
+                    self?.presenter.interactorDidDeleteTag()
                 } else {
-                    self?.presenter.interactorDidDeleteLast()
+                    self?.clearChartsAndRestartObserving()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                        self?.presenter.interactorDidDeleteLast()
+                    })
                 }
             default:
                 return
@@ -128,10 +129,9 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
         return promise.future
     }
-
-    func deleteAllRecords() -> Future<Void, RUError> {
+    func deleteAllRecords(ruuviTagId: String) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        let op = ruuviTagTank.deleteAllRecords(ruuviTagSensor.id)
+        let op = ruuviTagTank.deleteAllRecords(ruuviTagId)
         op.on(failure: {(error) in
             promise.fail(error: error)
         }, completion: { [weak self] in
