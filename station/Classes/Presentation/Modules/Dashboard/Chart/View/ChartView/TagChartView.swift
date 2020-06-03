@@ -124,7 +124,7 @@ class TagChartView: LineChartView {
         xAxis.drawAxisLineEnabled = false
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
-        xAxis.granularity = 300
+        xAxis.granularity = 59.9
         xAxis.valueFormatter = DateValueFormatter()
         xAxis.granularityEnabled = true
         leftAxis.labelPosition = .outsideChart

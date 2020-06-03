@@ -113,7 +113,7 @@ PODS:
     - Swinject (~> 2.6.0)
 
 DEPENDENCIES:
-  - BTKit
+  - BTKit (= 0.1.13)
   - Charts
   - Firebase/Analytics
   - Firebase/Messaging
