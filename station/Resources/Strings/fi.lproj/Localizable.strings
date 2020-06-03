@@ -5,13 +5,9 @@
 "Confirm" = "Vahvista";
 "Remove" = "Poista";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
-"%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Päivitetty"; // time ago string
@@ -85,6 +81,12 @@
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartIntervalSeconds.title" = "Chart Interval";
 "Defaults.ChartDurationHours.title" = "Chart Duration";
+
+// Advanced settings
+"Advanced.title" = "Advanced settings";
+"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
@@ -196,6 +198,7 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
+"Settings.Label.Advanced" = "Advanced";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
@@ -291,6 +294,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

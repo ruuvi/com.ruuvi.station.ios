@@ -9,7 +9,11 @@ enum CardType {
 
 struct CardsViewModel {
     var type: CardType = .ruuvi
-    var uuid: Observable<String?> = Observable<String?>(UUID().uuidString)
+
+    var id: Observable<String?> = Observable<String?>()
+    var luid: Observable<AnyLocalIdentifier?> = Observable<AnyLocalIdentifier?>()
+    var mac: Observable<AnyMACIdentifier?> = Observable<AnyMACIdentifier?>()
+
     var name: Observable<String?> = Observable<String?>()
     var celsius: Observable<Double?> = Observable<Double?>()
     var fahrenheit: Observable<Double?> = Observable<Double?>()
@@ -24,7 +28,6 @@ struct CardsViewModel {
     var version: Observable<Int?> = Observable<Int?>()
     var voltage: Observable<Double?> = Observable<Double?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
-    var mac: Observable<String?> = Observable<String?>()
     var humidityOffset: Observable<Double?> = Observable<Double?>(0)
     var humidityOffsetDate: Observable<Date?> = Observable<Date?>()
     var date: Observable<Date?> = Observable<Date?>()
@@ -37,10 +40,12 @@ struct CardsViewModel {
     var provider: WeatherProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
+    private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
     init(_ webTag: WebTagRealm) {
         type = .web
-        uuid.value = webTag.uuid
+        id.value = webTag.uuid
+        luid.value = webTag.uuid.luid.any
         name.value = webTag.name
         celsius.value = webTag.data.last?.celsius.value
         fahrenheit.value = webTag.data.last?.fahrenheit
@@ -116,52 +121,23 @@ struct CardsViewModel {
         date.value = Date()
     }
 
-    init(_ ruuviTag: RuuviTagRealm) {
+    init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
-        uuid.value = ruuviTag.uuid
+        id.value = ruuviTag.id
+        luid.value = ruuviTag.luid?.any
+        mac.value = ruuviTag.macId?.any
         name.value = ruuviTag.name
-        mac.value = ruuviTag.mac
         version.value = ruuviTag.version
-        humidityOffset.value = ruuviTag.humidityOffset
-        humidityOffsetDate.value = ruuviTag.humidityOffsetDate
         isConnectable.value = ruuviTag.isConnectable
-
-        celsius.value = ruuviTag.data.last?.celsius.value
-        fahrenheit.value = ruuviTag.data.last?.fahrenheit
-        kelvin.value = ruuviTag.data.last?.kelvin
-        relativeHumidity.value = ruuviTag.data.last?.humidity.value
-        if let c = ruuviTag.data.last?.celsius.value, let rh = ruuviTag.data.last?.humidity.value {
-            var sh = rh + ruuviTag.humidityOffset
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let h = Humidity(c: c, rh: sh / 100.0)
-            absoluteHumidity.value = h.ah
-            dewPointCelsius.value = h.Td
-            dewPointFahrenheit.value = h.TdF
-            dewPointKelvin.value = h.TdK
-        } else {
-            absoluteHumidity.value = nil
-            dewPointCelsius.value = nil
-            dewPointFahrenheit.value = nil
-            dewPointKelvin.value = nil
-        }
-        pressure.value = ruuviTag.data.last?.pressure.value
-
-        voltage.value = ruuviTag.data.last?.voltage.value
-
-        date.value = ruuviTag.data.last?.date
     }
 
-    func update(with ruuviTag: RuuviTag) {
-        uuid.value = ruuviTag.uuid
-        isConnectable.value = ruuviTag.isConnectable
+    func update(_ record: RuuviTagSensorRecord) {
+        celsius.value = record.temperature?.converted(to: .celsius).value
+        fahrenheit.value = record.temperature?.converted(to: .fahrenheit).value
+        kelvin.value = record.temperature?.converted(to: .kelvin).value
+        relativeHumidity.value = record.humidity?.rh
 
-        celsius.value = ruuviTag.celsius
-        fahrenheit.value = ruuviTag.fahrenheit
-        kelvin.value = ruuviTag.kelvin
-        relativeHumidity.value = ruuviTag.humidity
-        if let c = ruuviTag.celsius, let rh = ruuviTag.humidity {
+        if let c = celsius.value, let rh = record.humidity?.rh {
             if let ho = humidityOffset.value {
                 var sh = rh + ho
                 if sh > 100.0 {
@@ -185,16 +161,62 @@ struct CardsViewModel {
             dewPointFahrenheit.value = nil
             dewPointKelvin.value = nil
         }
-        pressure.value = ruuviTag.pressure
+        pressure.value = record.pressure?.converted(to: .hectopascals).value
+        voltage.value = record.voltage?.converted(to: .volts).value
+
+        mac.value = record.macId?.any
+        date.value = record.date
+    }
+
+    func update(with ruuviTag: RuuviTag) {
+        isConnectable.value = ruuviTag.isConnectable
+
+        celsius.value = ruuviTag.celsius
+        fahrenheit.value = ruuviTag.fahrenheit
+        kelvin.value = ruuviTag.kelvin
+        relativeHumidity.value = ruuviTag.relativeHumidity
+        if let c = ruuviTag.celsius, let rh = ruuviTag.relativeHumidity {
+            if let ho = humidityOffset.value {
+                var sh = rh + ho
+                if sh > 100.0 {
+                    sh = 100.0
+                }
+                let h = Humidity(c: c, rh: sh / 100.0)
+                absoluteHumidity.value = h.ah
+                dewPointCelsius.value = h.Td
+                dewPointFahrenheit.value = h.TdF
+                dewPointKelvin.value = h.TdK
+            } else {
+                let h = Humidity(c: c, rh: rh / 100.0)
+                absoluteHumidity.value = h.ah
+                dewPointCelsius.value = h.Td
+                dewPointFahrenheit.value = h.TdF
+                dewPointKelvin.value = h.TdK
+            }
+        } else {
+            absoluteHumidity.value = nil
+            dewPointCelsius.value = nil
+            dewPointFahrenheit.value = nil
+            dewPointKelvin.value = nil
+        }
+        pressure.value = ruuviTag.hectopascals
 
         version.value = ruuviTag.version
-        voltage.value = ruuviTag.voltage
+        voltage.value = ruuviTag.volts
 
-        mac.value = ruuviTag.mac
+        mac.value = ruuviTag.mac?.mac.any
         date.value = Date()
     }
 
     func update(rssi: Int?, animated: Bool = false) {
+        if rssi == nil {
+            self.rssi.value = rssi
+        }
+        guard let lastUpdateRssiTime = lastUpdateRssi.value,
+            CFAbsoluteTimeGetCurrent() - lastUpdateRssiTime > 1 else {
+            return
+        }
+        self.lastUpdateRssi.value = CFAbsoluteTimeGetCurrent()
         self.animateRSSI.value = animated
         self.rssi.value = rssi
     }
@@ -202,12 +224,12 @@ struct CardsViewModel {
 
 extension CardsViewModel: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(uuid.value)
+        hasher.combine(luid.value?.value)
     }
 }
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        return lhs.uuid.value == rhs.uuid.value
+        return lhs.luid.value?.value == rhs.luid.value?.value
     }
 }

@@ -43,12 +43,12 @@ class RuuviTagDataRealm: Object {
         self.ruuviTag = ruuviTag
         self.rssi.value = data.rssi
         self.celsius.value = data.celsius
-        self.humidity.value = data.humidity
-        self.pressure.value = data.pressure
+        self.humidity.value = data.relativeHumidity
+        self.pressure.value = data.hectopascals
         self.accelerationX.value = data.accelerationX
         self.accelerationY.value = data.accelerationY
         self.accelerationZ.value = data.accelerationZ
-        self.voltage.value = data.voltage
+        self.voltage.value = data.volts
         self.movementCounter.value = data.movementCounter
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
@@ -63,5 +63,22 @@ class RuuviTagDataRealm: Object {
         self.humidity.value = data.humidity
         self.pressure.value = data.pressure
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
+    }
+
+    convenience init(ruuviTag: RuuviTagRealm, record: RuuviTagSensorRecord) {
+        self.init()
+        self.ruuviTag = ruuviTag
+        self.rssi.value = record.rssi
+        self.celsius.value = record.temperature?.converted(to: .celsius).value
+        self.humidity.value = record.humidity?.rh
+        self.pressure.value = record.pressure?.converted(to: .hectopascals).value
+        self.accelerationX.value = record.acceleration?.x.value
+        self.accelerationY.value = record.acceleration?.y.value
+        self.accelerationZ.value = record.acceleration?.z.value
+        self.voltage.value = record.voltage?.converted(to: .volts).value
+        self.movementCounter.value = record.movementCounter
+        self.measurementSequenceNumber.value = record.measurementSequenceNumber
+        self.txPower.value = record.txPower
+        self.compoundKey = record.id
     }
 }

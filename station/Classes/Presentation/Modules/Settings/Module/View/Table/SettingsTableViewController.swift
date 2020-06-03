@@ -22,6 +22,8 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var languageCell: UITableViewCell!
     @IBOutlet weak var foregroundCell: UITableViewCell!
     @IBOutlet weak var foregroundTitleLabel: UILabel!
+    @IBOutlet weak var advancedCell: UITableViewCell!
+    @IBOutlet weak var advancedTitleLabel: UILabel!
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -46,7 +48,12 @@ class SettingsTableViewController: UITableViewController {
     }
     var isBackgroundVisible: Bool = false {
         didSet {
-            updateUIIsBackgroundVisible()
+            updateTableIfLoaded()
+        }
+    }
+    var isAdvancedVisible: Bool = false {
+        didSet {
+            updateTableIfLoaded()
         }
     }
 }
@@ -67,6 +74,7 @@ extension SettingsTableViewController: SettingsViewInput {
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
+        advancedTitleLabel.text = "Settings.Label.Advanced".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -120,9 +128,9 @@ extension SettingsTableViewController {
 extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if !isBackgroundVisible && cell == heartbeatCell {
-            return 0
-        } else if !showDefaults && cell == defaultsCell {
+        if !isBackgroundVisible && cell == heartbeatCell ||
+            !showDefaults && cell == defaultsCell ||
+            !isAdvancedVisible && cell == advancedCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -159,6 +167,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnDefaults()
             case heartbeatCell:
                 output.viewDidTapOnHeartbeat()
+            case advancedCell:
+                output.viewDidTapOnAdvanced()
             default:
                 break
             }
@@ -172,10 +182,10 @@ extension SettingsTableViewController {
         updateUITemperatureUnit()
         updateUIHumidityUnit()
         updateUILanguage()
-        updateUIIsBackgroundVisible()
+        updateTableIfLoaded()
     }
 
-    private func updateUIIsBackgroundVisible() {
+    private func updateTableIfLoaded() {
         if isViewLoaded {
             tableView.reloadData()
         }

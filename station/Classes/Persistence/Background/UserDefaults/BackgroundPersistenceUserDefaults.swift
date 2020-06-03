@@ -21,51 +21,51 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
 
-    func deleteCustomBackground(for uuid: String) {
-        imagePersistence.deleteBgIfExists(for: uuid)
+    func deleteCustomBackground(for luid: LocalIdentifier) {
+        imagePersistence.deleteBgIfExists(for: luid)
     }
 
-    func setNextDefaultBackground(for uuid: String) -> UIImage? {
-        var id = backgroundId(for: uuid)
+    func setNextDefaultBackground(for luid: LocalIdentifier) -> UIImage? {
+        var id = backgroundId(for: luid)
         if id >= bgMinIndex && id < bgMaxIndex {
             id += 1
-            setBackground(id, for: uuid)
+            setBackground(id, for: luid)
         } else if id >= bgMaxIndex {
             id = bgMinIndex
-            setBackground(id, for: uuid)
+            setBackground(id, for: luid)
         } else {
             id = biasedToNotUsedRandom()
-            setBackground(id, for: uuid)
+            setBackground(id, for: luid)
         }
-        imagePersistence.deleteBgIfExists(for: uuid)
+        imagePersistence.deleteBgIfExists(for: luid)
         return UIImage(named: "bg\(id)")
     }
 
-    func background(for uuid: String) -> UIImage? {
-        var id = backgroundId(for: uuid)
+    func background(for luid: LocalIdentifier) -> UIImage? {
+        var id = backgroundId(for: luid)
         if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
-            if let custom = imagePersistence.fetchBg(for: uuid) {
+            if let custom = imagePersistence.fetchBg(for: luid) {
                 return custom
             } else {
                 id = biasedToNotUsedRandom()
-                setBackground(id, for: uuid)
+                setBackground(id, for: luid)
                 return UIImage(named: "bg\(id)")
             }
         }
     }
 
-    func setCustomBackground(image: UIImage, for uuid: String) -> Future<URL, RUError> {
+    func setCustomBackground(image: UIImage, for luid: LocalIdentifier) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
-        let persist = imagePersistence.persistBg(image: image, for: uuid)
+        let persist = imagePersistence.persistBg(image: image, for: luid)
         persist.on(success: { url in
-            self.setBackground(0, for: uuid)
+            self.setBackground(0, for: luid)
             NotificationCenter
                 .default
                 .post(name: .BackgroundPersistenceDidChangeBackground,
                       object: nil,
-                      userInfo: [BPDidChangeBackgroundKey.uuid: uuid ])
+                      userInfo: [BPDidChangeBackgroundKey.luid: luid ])
             promise.succeed(value: url)
         }, failure: { (error) in
             promise.fail(error: error)
@@ -73,7 +73,8 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         return promise.future
     }
 
-    func setBackground(_ id: Int, for uuid: String) {
+    func setBackground(_ id: Int, for luid: LocalIdentifier) {
+        let uuid = luid.value
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
         UserDefaults.standard.synchronize()
@@ -81,7 +82,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
             .default
             .post(name: .BackgroundPersistenceDidChangeBackground,
                   object: nil,
-                  userInfo: [BPDidChangeBackgroundKey.uuid: uuid ])
+                  userInfo: [BPDidChangeBackgroundKey.luid: luid ])
         if id >= bgMinIndex && id <= bgMaxIndex {
             var array = usedBackgrounds
             array[id - bgMinIndex] += 1
@@ -89,7 +90,8 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
 
-    private func backgroundId(for uuid: String) -> Int {
+    private func backgroundId(for luid: LocalIdentifier) -> Int {
+        let uuid = luid.value
         let key = bgUDKeyPrefix + uuid
         let id = UserDefaults.standard.integer(forKey: key)
         return id

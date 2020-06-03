@@ -12,7 +12,6 @@ class TagSettingsTableConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
-        presenter.ruuviTagService = r.resolve(RuuviTagService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
@@ -23,6 +22,9 @@ class TagSettingsTableConfigurator {
         presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
+        presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
+        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
 
         view.output = presenter
     }

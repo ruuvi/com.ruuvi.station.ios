@@ -1,5 +1,5 @@
 PODS:
-  - BTKit (0.1.9)
+  - BTKit (0.1.13)
   - Charts (3.5.0):
     - Charts/Core (= 3.5.0)
   - Charts/Core (3.5.0)
@@ -84,6 +84,9 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.5.0):
     - GoogleUtilities/Logger
+  - GRDB.swift (4.14.0):
+    - GRDB.swift/standard (= 4.14.0)
+  - GRDB.swift/standard (4.14.0)
   - Humidity (0.0.8)
   - LightRoute (2.2.2)
   - Localize-Swift (3.1.0)
@@ -98,23 +101,25 @@ PODS:
   - Protobuf (3.11.2)
   - Quick (2.2.0)
   - RangeSeekSlider (1.8.2)
-  - Realm (4.4.1):
-    - Realm/Headers (= 4.4.1)
-  - Realm/Headers (4.4.1)
-  - RealmSwift (4.4.1):
-    - Realm (= 4.4.1)
+  - Realm (4.3.1):
+    - Realm/Headers (= 4.3.1)
+  - Realm/Headers (4.3.1)
+  - RealmSwift (4.3.1):
+    - Realm (= 4.3.1)
+  - RxSwift (5.1.1)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
 
 DEPENDENCIES:
-  - BTKit (= 0.1.9)
+  - BTKit (= 0.1.13)
   - Charts
   - Firebase/Analytics
   - Firebase/Messaging
   - FLEX
   - FutureX
   - GestureInstructions
+  - GRDB.swift
   - Humidity
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -123,6 +128,7 @@ DEPENDENCIES:
   - Quick
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
+  - RxSwift
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
 
@@ -146,6 +152,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
+    - GRDB.swift
     - Humidity
     - Localize-Swift
     - nanopb
@@ -156,6 +163,7 @@ SPEC REPOS:
     - Quick
     - Realm
     - RealmSwift
+    - RxSwift
     - Swinject
 
 EXTERNAL SOURCES:
@@ -178,7 +186,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: f6d4664ce14ea2939d7458466765ed38da47dd3d
+  BTKit: ea4207739e19fdcfbcbb75ed243fb7800d5a9c16
   Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
@@ -196,6 +204,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 574a983e829327d7c18f2627f65d9e80164ea8a4
   GoogleDataTransportCCTSupport: cad3cd6cdbdbad6b5c2c9206ec413402755faaaa
   GoogleUtilities: f8de7ddf8c706f58e9b405d53e38bbdaa2731e5a
+  GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
   Humidity: 293c834c017c111d254440f234fcf8d7e6fe4493
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
@@ -206,11 +215,12 @@ SPEC CHECKSUMS:
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
   Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: 4eb04d7487bd43c0581256f40b424eafb711deff
-  RealmSwift: 3eb8924ff7100df5928c7602f71d0fec51e7c9c5
+  Realm: 31dc40934081ef740f60feedc46d88473cbfeb40
+  RealmSwift: b5199e9a41f67b99f51acf6874a6166f5fbe93d1
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 1155741180b30a50a58f0c89fcd2ed922321548e
+PODFILE CHECKSUM: dffe944fa14c1b5bda428d90fe1d5c572e2b800f
 
 COCOAPODS: 1.9.1

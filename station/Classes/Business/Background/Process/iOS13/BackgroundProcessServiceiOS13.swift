@@ -1,5 +1,6 @@
 import Foundation
 import BackgroundTasks
+import Future
 
 @available(iOS 13, *)
 class BackgroundProcessServiceiOS13: BackgroundProcessService {
@@ -35,26 +36,32 @@ class BackgroundProcessServiceiOS13: BackgroundProcessService {
     private func handleDataPruning(task: BGProcessingTask) {
         schedule()
 
-        let operations = dataPruningOperationsManager.ruuviTagPruningOperations()
-                        + dataPruningOperationsManager.webTagPruningOperations()
-
-        if operations.count > 0 {
+        let ruuviTags = dataPruningOperationsManager.ruuviTagPruningOperations()
+        let virtualTags = dataPruningOperationsManager.webTagPruningOperations()
+        Future.zip(ruuviTags, virtualTags).on(success: { (ruuviTagOperations, virtualTagsOperations) in
             let queue = OperationQueue()
             queue.maxConcurrentOperationCount = 1
-            let lastOperation = operations.last!
+            let operations = ruuviTagOperations + virtualTagsOperations
+            if operations.count > 0 {
+                let queue = OperationQueue()
+                queue.maxConcurrentOperationCount = 1
+                let lastOperation = operations.last!
 
-            lastOperation.completionBlock = {
-                task.setTaskCompleted(success: !lastOperation.isCancelled)
+                lastOperation.completionBlock = {
+                    task.setTaskCompleted(success: !lastOperation.isCancelled)
+                }
+
+                queue.addOperations(operations, waitUntilFinished: false)
+
+                task.expirationHandler = {
+                    queue.cancelAllOperations()
+                }
+            } else {
+                task.setTaskCompleted(success: true)
             }
-
-            queue.addOperations(operations, waitUntilFinished: false)
-
-            task.expirationHandler = {
-                queue.cancelAllOperations()
-            }
-        } else {
-            task.setTaskCompleted(success: true)
-        }
+        }, failure: { _ in
+            task.setTaskCompleted(success: false)
+        })
     }
 
 }

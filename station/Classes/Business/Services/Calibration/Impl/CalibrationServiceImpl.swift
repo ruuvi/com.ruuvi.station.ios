@@ -3,29 +3,58 @@ import Future
 
 class CalibrationServiceImpl: CalibrationService {
     var calibrationPersistence: CalibrationPersistence!
-    var ruuviTagPersistence: RuuviTagPersistence!
 
-    func calibrateHumiditySaltTest(currentValue: Double, for ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
+    func calibrateHumiditySaltTest(currentValue: Double, for ruuviTag: RuuviTagSensor) {
         let date = Date()
         let offset = 75.0 - currentValue
-        calibrationPersistence.setHumidity(date: date, offset: offset, for: ruuviTag.uuid)
-        return ruuviTagPersistence.update(humidityOffset: offset, date: date, of: ruuviTag)
+        if let luid = ruuviTag.luid {
+            calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
+            postHumidityOffsetDidChange(with: luid)
+        } else if let macId = ruuviTag.macId {
+            // FIXME
+//            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
+        } else {
+            assertionFailure()
+        }
     }
 
-    func calibrateHumidityTo100Percent(currentValue: Double,
-                                       for ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
+    func calibrateHumidityTo100Percent(currentValue: Double, for ruuviTag: RuuviTagSensor) {
         let date = Date()
         let offset = 100.0 - currentValue
-        calibrationPersistence.setHumidity(date: date, offset: offset, for: ruuviTag.uuid)
-        return ruuviTagPersistence.update(humidityOffset: offset, date: date, of: ruuviTag)
+        if let luid = ruuviTag.luid {
+            calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
+            postHumidityOffsetDidChange(with: luid)
+        } else if let macId = ruuviTag.macId {
+            // FIXME
+            // calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
+        } else {
+            assertionFailure()
+        }
+
     }
 
-    func cleanHumidityCalibration(for ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
-        calibrationPersistence.setHumidity(date: nil, offset: 0, for: ruuviTag.uuid)
-        return ruuviTagPersistence.clearHumidityCalibration(of: ruuviTag)
+    func cleanHumidityCalibration(for ruuviTag: RuuviTagSensor) {
+        if let luid = ruuviTag.luid {
+            calibrationPersistence.setHumidity(date: nil, offset: 0, for: luid)
+            postHumidityOffsetDidChange(with: luid)
+        } else if let macId = ruuviTag.macId {
+            // FIXME
+            // calibrationPersistence.setHumidity(date: nil, offset: 0, for: macId)
+        } else {
+            assertionFailure()
+        }
+
     }
 
-    func humidityOffset(for uuid: String) -> (Double, Date?) {
-        return calibrationPersistence.humidityOffset(for: uuid)
+    func humidityOffset(for luid: LocalIdentifier) -> (Double, Date?) {
+        return calibrationPersistence.humidityOffset(for: luid)
+    }
+
+    private func postHumidityOffsetDidChange(with luid: LocalIdentifier) {
+        NotificationCenter
+            .default
+            .post(name: .CalibrationServiceHumidityDidChange,
+                  object: nil,
+                  userInfo: [CalibrationServiceHumidityDidChangeKey.luid: luid])
     }
 }
