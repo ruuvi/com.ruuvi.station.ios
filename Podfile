@@ -5,7 +5,7 @@ inhibit_all_warnings!
 install! 'cocoapods', :disable_input_output_paths => true
 
 def shared_pods
-  pod 'BTKit'
+  pod 'BTKit', '0.1.13'
   pod 'Charts'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
