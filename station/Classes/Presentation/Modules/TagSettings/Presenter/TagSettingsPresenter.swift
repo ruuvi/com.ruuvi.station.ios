@@ -125,8 +125,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
-        let operation = ruuviTagTank.delete(ruuviTag)
-        operation.on(success: { [weak self] _ in
+        let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
+        let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
+        Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
             self?.router.dismiss()
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
