@@ -178,7 +178,7 @@ extension CardsPresenter: CardsViewOutput {
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
-        } else if let macId = viewModel.mac.value {
+        } else if let _ = viewModel.mac.value {
             #warning("Need show keep connection?")
             router.openTagCharts()
         } else {
@@ -208,6 +208,9 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidScroll(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value,
             let sensor = ruuviTags.first(where: {$0.luid?.any == luid}) {
+            tagCharts?.configure(ruuviTag: sensor)
+        } else if let macId = viewModel.mac.value,
+            let sensor = ruuviTags.first(where: {$0.macId?.any == macId}) {
             tagCharts?.configure(ruuviTag: sensor)
         }
     }

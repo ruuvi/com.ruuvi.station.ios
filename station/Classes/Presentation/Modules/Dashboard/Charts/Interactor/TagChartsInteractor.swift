@@ -115,11 +115,13 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         if let luid = ruuviTagSensor.luid {
             operations.append(syncLocalTag(luid: luid.value, progress: progress))
         }
-        if settings.kaltiotNetworkEnabled && keychainService.hasKaltiotApiKey {
-            operations.append(syncNetworkRecords(with: .kaltiot))
-        }
-        if settings.whereOSNetworkEnabled {
-            operations.append(syncNetworkRecords(with: .whereOS))
+        if let macId = ruuviTagSensor.macId {
+            if settings.kaltiotNetworkEnabled && keychainService.hasKaltiotApiKey {
+                operations.append(syncNetworkRecords(for: macId, with: .kaltiot))
+            }
+            if settings.whereOSNetworkEnabled {
+                operations.append(syncNetworkRecords(for: macId, with: .whereOS))
+            }
         }
         Future.zip(operations).on(success: { [weak self] (_) in
             self?.clearChartsAndRestartObserving()
@@ -240,18 +242,14 @@ extension TagChartsInteractor {
         return promise.future
     }
 
-    private func syncNetworkRecords(with provider: RuuviNetworkProvider) -> Future<Void, RUError> {
+    private func syncNetworkRecords(for macId: MACIdentifier, with provider: RuuviNetworkProvider) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        if let mac = ruuviTagSensor.macId?.mac {
-            let op = networkService.loadData(for: ruuviTagSensor.id, mac: mac, from: provider)
-            op.on(success: { _ in
-                promise.succeed(value: ())
-            }, failure: { error in
-                promise.fail(error: error)
-            })
-        } else {
-            promise.fail(error: RUError.unexpected(.viewModelUUIDIsNil))
-        }
+        let op = networkService.loadData(for: macId.value, mac: macId.mac, from: provider)
+        op.on(success: { _ in
+            promise.succeed(value: ())
+        }, failure: { error in
+            promise.fail(error: error)
+        })
         return promise.future
     }
 }

@@ -17,6 +17,7 @@ class DiscoverPresenter: DiscoverModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var keychainService: KeychainService!
     var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
+    var settings: Settings!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedWebTags: Results<WebTagRealm>! {
@@ -82,6 +83,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
             && foreground.bluetoothState != .unknown {
             view.showBluetoothDisabled()
         }
+        view.networkFeatureEnabled = settings.networkFeatureEnabled
+        view.networkKaltiotEnabled = settings.kaltiotNetworkEnabled
+        view.networkWhereOsEnabled = settings.whereOSNetworkEnabled
+
         startObservingPersistedRuuviSensors()
         startObservingPersistedWebTags()
     }
