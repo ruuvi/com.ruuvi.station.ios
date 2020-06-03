@@ -77,15 +77,15 @@
 "Defaults.CardsSwipeHint.title" = "Pyyhkäisyvinkki";
 "Defaults.AlertsRepeatInterval.title" = "Hälytysväli";
 "Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli";
-"Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
-"Defaults.Interval.Hour.string" = "h";
-"Defaults.ChartIntervalSeconds.title" = "Chart Interval";
-"Defaults.ChartDurationHours.title" = "Chart Duration";
+"Defaults.PruningOffsetHours.title" = "Poistojen tuntisiirtymä";
+"Defaults.Interval.Hour.string" = "t";
+"Defaults.ChartIntervalSeconds.title" = "Historian tarkkuus";
+"Defaults.ChartDurationHours.title" = "Historian kesto";
 
 // Advanced settings
-"Advanced.title" = "Advanced settings";
-"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
-"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.title" = "Lisäasetukset";
+"Advanced.ChartIntervalMinutes.title" = "Historian esitystarkkuus";
+"Advanced.Downsampling.title" = "Tarkkuuden vähennys";
 "Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
@@ -198,7 +198,7 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
-"Settings.Label.Advanced" = "Advanced";
+"Settings.Label.Advanced" = "Lisäasetukset";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
