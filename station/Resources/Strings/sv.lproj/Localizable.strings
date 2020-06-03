@@ -77,15 +77,15 @@
 "Defaults.CardsSwipeHint.title" = "Kort Swipe Tips Har Visats";
 "Defaults.AlertsRepeatInterval.title" = "Alarmintervall";
 "Defaults.WebPullInterval.title" = "Alarmintervall för Virtuella Sensorer";
-"Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
+"Defaults.PruningOffsetHours.title" = "Beskärning av förskjutningstider";
 "Defaults.Interval.Hour.string" = "h";
-"Defaults.ChartIntervalSeconds.title" = "Histogram Intervall";
-"Defaults.ChartDurationHours.title" = "Histogram Längd";
+"Defaults.ChartIntervalSeconds.title" = "Historikens noggrannhet";
+"Defaults.ChartDurationHours.title" = "Historikens längd";
 
 // Advanced settings
-"Advanced.title" = "Advanced settings";
-"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
-"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.title" = "Avancerade inställningar";
+"Advanced.ChartIntervalMinutes.title" = "Historikens noggrannhet";
+"Advanced.Downsampling.title" = "Nedsampling";
 "Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
@@ -107,7 +107,7 @@
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API Key saknas. Du kan få en från openweathermap.org website och sätt den sedan i filen station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
-"ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
+"ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "ENHETSMEDDELANDEN";
@@ -198,7 +198,7 @@
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
-"Settings.Label.Advanced" = "Advanced";
+"Settings.Label.Advanced" = "Avancerat";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";
@@ -295,7 +295,7 @@
 "UnexpectedError.failedToFindLogsForTheTag" = "Ingen sensorlogginformation hittades";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
-"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+"UnexpectedError.failedToFindVirtualTag" = "Hittade inte den virtuella sensorn";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";
