@@ -1,7 +1,7 @@
 import UIKit
 
 struct DiscoverDeviceViewModel {
-    var uuid: String
+    var id: String
     var isConnectable: Bool = false
     var rssi: Int?
     var mac: String?

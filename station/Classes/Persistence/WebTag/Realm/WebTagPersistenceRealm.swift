@@ -6,6 +6,48 @@ class WebTagPersistenceRealm: WebTagPersistence {
 
     var context: RealmContext!
 
+    func readAll() -> Future<[AnyVirtualTagSensor], RUError> {
+        let promise = Promise<[AnyVirtualTagSensor], RUError>()
+        context.bgWorker.enqueue {
+            let realmEntities = self.context.bg.objects(WebTagRealm.self)
+            let result: [AnyVirtualTagSensor] = realmEntities.map { webTagRealm in
+                return VirtualTagSensorStruct(id: webTagRealm.uuid, name: webTagRealm.name).any
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+
+    func readOne(_ id: String) -> Future<AnyVirtualTagSensor, RUError> {
+        let promise = Promise<AnyVirtualTagSensor, RUError>()
+        context.bgWorker.enqueue {
+            if let webTagRealm = self.context.bg.object(ofType: WebTagRealm.self, forPrimaryKey: id) {
+                let result = VirtualTagSensorStruct(id: webTagRealm.id, name: webTagRealm.name).any
+                promise.succeed(value: result)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindVirtualTag))
+            }
+        }
+        return promise.future
+    }
+
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        context.bgWorker.enqueue {
+            do {
+                let data = self.context.bg.objects(WebTagDataRealm.self)
+                               .filter("webTag.uuid == %@ AND date < %@", ruuviTagId, date)
+                try self.context.bg.write {
+                    self.context.bg.delete(data)
+                }
+                promise.succeed(value: true)
+            } catch {
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+
     func clearLocation(of webTag: WebTagRealm) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if webTag.realm == context.bg {
@@ -66,7 +108,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                         self.context.main.delete(oldLocation)
                     }
                     let newLocation = WebTagLocationRealm(location: location)
-                    self.context.main.add(newLocation)
+                    self.context.main.add(newLocation, update: .all)
                     webTag.location = newLocation
                     webTag.name = location.city ?? location.country ?? WebTagLocationSource.manual.title
                 }

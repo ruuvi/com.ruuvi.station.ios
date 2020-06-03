@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
         webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
-
         if #available(iOS 13, *) {
             // no need to setup background fetch, @see BackgroundTaskServiceiOS13
         } else {

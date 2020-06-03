@@ -5,13 +5,9 @@
 "Confirm" = "Bekräfta";
 "Remove" = "Ta bort";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
-"%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Uppdaterad"; // time ago string
@@ -85,6 +81,12 @@
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartIntervalSeconds.title" = "Histogram Intervall";
 "Defaults.ChartDurationHours.title" = "Histogram Längd";
+
+// Advanced settings
+"Advanced.title" = "Advanced settings";
+"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
@@ -196,6 +198,7 @@
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
+"Settings.Label.Advanced" = "Advanced";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";
@@ -291,6 +294,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Hittade inte sensorn";
 "UnexpectedError.failedToFindLogsForTheTag" = "Ingen sensorlogginformation hittades";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";

@@ -1,4 +1,4 @@
-enum MeasurementType {
+enum MeasurementType: String {
     case rssi
     case temperature
     case humidity

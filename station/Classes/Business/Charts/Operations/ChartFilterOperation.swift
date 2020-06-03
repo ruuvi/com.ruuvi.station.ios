@@ -1,29 +1,29 @@
 import Foundation
 
 class ChartFilterOperation: Operation {
-    private var uuid: String
     private var array: [RuuviMeasurement]
     private var startDate: TimeInterval
     private var endDate: TimeInterval
+    private var threshold: Int
     var sorted: [RuuviMeasurement] = []
     var type: MeasurementType
     override var isConcurrent: Bool {
         return true
     }
-    init(uuid: String,
-         array: [RuuviMeasurement],
+    init(array: [RuuviMeasurement],
+         threshold: Int,
          type: MeasurementType,
          start: TimeInterval,
          end: TimeInterval) {
-        self.uuid = uuid
         self.array = array
+        self.threshold = threshold
         self.type = type
         self.startDate = start
         self.endDate = end
     }
     override func main() {
         guard !isCancelled,
-            array.count > 100 else {
+            array.count > threshold else {
             sorted = array
             return
         }
@@ -35,8 +35,7 @@ class ChartFilterOperation: Operation {
                 cancel()
                 return
             }
-            if item.tagUuid == uuid,
-                item.date.timeIntervalSince1970 > startDate,
+            if item.date.timeIntervalSince1970 > startDate,
                 item.date.timeIntervalSince1970 < endDate {
                 sorted.append(item)
             }

@@ -54,4 +54,15 @@ struct TagSettingsViewModel {
 
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
+
+    func updateRecord(_ record: RuuviTagSensorRecord) {
+        relativeHumidity.value = record.humidity?.rh
+        voltage.value = record.voltage?.value
+        accelerationX.value = record.acceleration?.x.value
+        accelerationY.value = record.acceleration?.y.value
+        accelerationZ.value = record.acceleration?.z.value
+        movementCounter.value = record.movementCounter
+        measurementSequenceNumber.value = record.measurementSequenceNumber
+        txPower.value = record.txPower
+    }
 }

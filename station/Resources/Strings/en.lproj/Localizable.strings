@@ -5,9 +5,6 @@
 "Confirm" = "Confirm";
 "Remove" = "Remove";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
@@ -85,6 +82,12 @@
 "Defaults.Interval.Hour.string" = "h";
 "Defaults.ChartIntervalSeconds.title" = "Chart Interval";
 "Defaults.ChartDurationHours.title" = "Chart Duration";
+
+// Advanced settings
+"Advanced.title" = "Advanced settings";
+"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
@@ -196,6 +199,7 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
+"Settings.Label.Advanced" = "Advanced";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
@@ -291,6 +295,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Failed to find sensor";
 "UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the sensor";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";

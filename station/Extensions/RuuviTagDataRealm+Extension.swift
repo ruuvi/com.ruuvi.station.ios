@@ -1,4 +1,3 @@
-import RealmSwift
 import Foundation
 import Humidity
 
@@ -47,7 +46,7 @@ extension RuuviTagDataRealm {
         return Voltage(value: voltage, unit: .volts)
     }
     var measurement: RuuviMeasurement {
-        return RuuviMeasurement(tagUuid: ruuviTag!.uuid,
+        return RuuviMeasurement(ruuviTagId: ruuviTag!.uuid,
                                 measurementSequenceNumber: measurementSequenceNumber.value,
                                 date: date,
                                 rssi: rssi.value,

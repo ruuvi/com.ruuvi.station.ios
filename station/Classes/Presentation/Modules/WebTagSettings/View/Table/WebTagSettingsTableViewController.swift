@@ -63,7 +63,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
         relativeHumidityAlertHeaderCell.titleLabel.text
             = "WebTagSettings.RelativeAirHumidityAlert.title".localized()
-            + " " + "%".localized()
+            + " " + "%"
         absoluteHumidityAlertHeaderCell.titleLabel.text
             = "WebTagSettings.AbsoluteAirHumidityAlert.title".localized()
             + " " + "g/m³".localized()
@@ -857,14 +857,7 @@ extension WebTagSettingsTableViewController {
             dewPointAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
                     let title = "WebTagSettings.dewPointAlertTitleLabel.text"
-                    switch tu {
-                    case .celsius:
-                        label.text = title.localized() + " " + "°C".localized()
-                    case .fahrenheit:
-                        label.text = title.localized() + " " + "°F".localized()
-                    case .kelvin:
-                        label.text = title.localized() + " "  + "K".localized()
-                    }
+                    label.text = title.localized() + " " + tu.symbol
                 } else {
                     label.text = "N/A".localized()
                 }
@@ -1247,14 +1240,7 @@ extension WebTagSettingsTableViewController {
             temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
                 if let tu = temperatureUnit {
                     let title = "WebTagSettings.temperatureAlertTitleLabel.text"
-                    switch tu {
-                    case .celsius:
-                        label.text = title.localized() + " " + "°C".localized()
-                    case .fahrenheit:
-                        label.text = title.localized() + " " + "°F".localized()
-                    case .kelvin:
-                        label.text = title.localized() + " "  + "K".localized()
-                    }
+                    label.text = title.localized() + " " + tu.symbol
                 } else {
                     label.text = "N/A".localized()
                 }
