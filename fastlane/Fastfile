@@ -1,0 +1,77 @@
+default_platform(:ios)
+
+before_all do
+  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
+  sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
+  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist", key: "GOOGLE_APP_ID")
+end
+
+def remove_artifacts
+  clean_build_artifacts()
+  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
+  sh("rm", "README.md")
+  sh("rm", "report.xml")
+end
+
+platform :ios do
+  def install_pods
+    cocoapods(
+      podfile: "Podfile",
+      try_repo_update_on_error: true
+    )
+  end
+
+  lane :test do
+    install_pods()
+    scan(
+      scheme: "stationTests",
+      workspace: "station.xcworkspace",
+      devices: ["iPhone 8"],
+      clean: true
+    )
+  end
+
+  desc """
+  Upload to firebase AppDistribution with options
+
+  -group - testers group [alpha|beta]
+  -notes - release notes for testers
+  -scheme - [station|station_dev]
+
+  fastlane ios upload_to_firebase group:alpha notes:'New feature' scheme:station_dev
+  """
+  lane :upload_to_firebase do |options|
+    configuration = options[:scheme] == "station" ? "Release" : "Debug"
+#    match(type: "adhoc", app_identifier: "com.ruuvi.station")
+    build_app(
+      scheme: options[:scheme],
+      export_xcargs: "-allowProvisioningUpdates",
+      configuration: configuration,
+      output_directory: "./Build",
+      export_options: {
+        method: "ad-hoc",
+        provisioningProfiles: {
+          "com.ruuvi.station" => "PAKKVQG4X9.mobileprovision"
+        }
+      }
+    )
+    firebase_app_distribution(
+      app: ENV["GOOGLE_APP_ID"],
+      release_notes: git_branch.concat("\n".concat(options[:notes])),
+      ipa_path: "",
+      groups: options[:group]
+    )
+    upload_symbols_to_crashlytics(
+      dsym_path: "./Build/station.app.dSYM.zip",
+      gsp_path: "./fastlane/com.ruuvi.station.ios.keystore/Firebase/GoogleService-Info.plist"
+    )
+  end
+
+  error do |lane, exception|
+    remove_artifacts()
+  end
+end
+
+after_all do
+  remove_artifacts()
+end
