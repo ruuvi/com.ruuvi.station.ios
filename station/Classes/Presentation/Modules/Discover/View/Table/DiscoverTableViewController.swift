@@ -143,6 +143,10 @@ class DiscoverTableViewController: UITableViewController {
             updateTableView()
         }
     }
+    private var networkSectionIsVisible: Bool {
+        return networkFeatureEnabled &&
+            (networkKaltiotEnabled || networkWhereOsEnabled)
+    }
 }
 
 // MARK: - DiscoverViewInput
@@ -241,7 +245,7 @@ extension DiscoverTableViewController {
 // MARK: - UITableViewDataSource
 extension DiscoverTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return networkFeatureEnabled ? DiscoverTableSection.count : DiscoverTableSection.count - 1
+        return DiscoverTableSection.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -285,7 +289,8 @@ extension DiscoverTableViewController {
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         case .network:
-            if networkWhereOsEnabled && networkKaltiotEnabled,
+            if networkWhereOsEnabled,
+                networkKaltiotEnabled,
                 let networkCellType = DiscoverNetworkCell(rawValue: indexPath.row) {
                 return networkCellType.cell(tableView, indexPath: indexPath)
             } else {
@@ -305,10 +310,7 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        var sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
-        if !networkFeatureEnabled && sectionType == .network {
-            sectionType = DiscoverTableSection.section(for: indexPath.section + 1, deviceCount: shownDevices.count)
-        }
+        let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
         switch sectionType {
         case .webTag:
             if indexPath.row < shownWebTags.count {
@@ -320,13 +322,20 @@ extension DiscoverTableViewController {
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
         case .network:
-            switch DiscoverNetworkCell(rawValue: indexPath.row) {
-            case .whereOS:
+            if networkWhereOsEnabled,
+                networkKaltiotEnabled {
+                switch DiscoverNetworkCell(rawValue: indexPath.row) {
+                case .whereOS:
+                    output.viewDidAskToAddTagWithMACAddress()
+                case .kaltiot:
+                    output.viewDidSelectKaltiotProvider()
+                default:
+                    fatalError()
+                }
+            } else if networkWhereOsEnabled {
                 output.viewDidAskToAddTagWithMACAddress()
-            case .kaltiot:
+            } else if networkKaltiotEnabled {
                 output.viewDidSelectKaltiotProvider()
-            default:
-                fatalError()
             }
         default:
             break
@@ -334,28 +343,29 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        var sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if !networkFeatureEnabled && sectionType == .network {
-            sectionType = DiscoverTableSection.section(for: section + 1, deviceCount: shownDevices.count)
-        }
-        if sectionType == .webTag {
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if !networkSectionIsVisible,
+            sectionType == .network {
+            return .leastNonzeroMagnitude
+        } else if sectionType == .webTag {
             return 60
-        } else if !networkFeatureEnabled && sectionType == .network {
-            return 0
         } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
 
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 40
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if !networkSectionIsVisible,
+            sectionType == .network {
+            return .leastNonzeroMagnitude
+        } else {
+            return 40
+        }
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        var sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if !networkFeatureEnabled && sectionType == .network {
-            sectionType = DiscoverTableSection.section(for: section + 1, deviceCount: shownDevices.count)
-        }
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         if sectionType == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
@@ -370,13 +380,10 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if !networkFeatureEnabled && sectionType == .network {
-            sectionType = DiscoverTableSection.section(for: section + 1, deviceCount: shownDevices.count)
-        }
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch sectionType {
         case .network:
-            return "DiscoverTable.SectionTitle.Network".localized()
+            return networkSectionIsVisible ? "DiscoverTable.SectionTitle.Network".localized() : nil
         case .device:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:
@@ -384,7 +391,6 @@ extension DiscoverTableViewController {
         default:
             return nil
         }
-
     }
 }
 
