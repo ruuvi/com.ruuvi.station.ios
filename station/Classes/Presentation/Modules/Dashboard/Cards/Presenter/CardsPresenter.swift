@@ -323,9 +323,10 @@ extension CardsPresenter {
             }
             viewModel.humidityUnit.value = settings.humidityUnit
             viewModel.temperatureUnit.value = settings.temperatureUnit
-            ruuviTagTrunk.readLast(ruuviTag).on { record in
+            ruuviTagTrunk.readLast(ruuviTag).on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
+                    self?.updateAlertState(for: viewModel)
                 }
             }
             return viewModel
@@ -457,6 +458,7 @@ extension CardsPresenter {
                 if let ruuviTag = device.ruuvi?.tag,
                     let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                     viewModel.update(with: ruuviTag)
+                    self?.updateAlertState(for: viewModel)
                 }
             })
         }
@@ -472,6 +474,7 @@ extension CardsPresenter {
                         let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         viewModel.update(with: ruuviTag)
                         viewModel.update(rssi: ruuviTag.rssi)
+                        self?.updateAlertState(for: viewModel)
                     }
                 })
             }

@@ -9,6 +9,7 @@ def shared_pods
   pod 'Charts'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
+  pod 'Firebase/Crashlytics'
   pod 'FutureX'
   pod 'GestureInstructions'
   pod 'GRDB.swift'
