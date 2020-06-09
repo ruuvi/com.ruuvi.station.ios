@@ -1961,6 +1961,10 @@
 		A90E16A82460975600631E6C /* TagChartAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartAssembler.swift; sourceTree = "<group>"; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
+		A92C75DF24896BA100E332FE /* Appfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Appfile; sourceTree = "<group>"; };
+		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Fastfile; sourceTree = "<group>"; };
+		A92C75E124896BA100E332FE /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
+		A92C75E2248982A000E332FE /* Pluginfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Pluginfile; sourceTree = "<group>"; };
 		A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotBeaconLogs.swift; sourceTree = "<group>"; };
 		A9227BA0245C86FA00466B23 /* NetworkSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NetworkSettings.storyboard; sourceTree = "<group>"; };
 		A9227BA3245C86FA00466B23 /* NetworkSettingsTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTableInitializer.swift; sourceTree = "<group>"; };
@@ -2008,6 +2012,7 @@
 		A95BA3E42451ECB000EF923D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceImpl.swift; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
+		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotApiKeyTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTextTableViewCell.swift; sourceTree = "<group>"; };
@@ -4794,6 +4799,7 @@
 		64333D1C20B0C45900CDF4B6 = {
 			isa = PBXGroup;
 			children = (
+				A92C75DD24896B7400E332FE /* Fastlane */,
 				64333D2720B0C45900CDF4B6 /* station */,
 				64333D3C20B0C45A00CDF4B6 /* stationTests */,
 				64333D4720B0C45B00CDF4B6 /* stationUITests */,
@@ -4934,6 +4940,26 @@
 			);
 			name = Mock;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		A92C75DD24896B7400E332FE /* Fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				A92C75DE24896BA100E332FE /* fastlane */,
+				A92C75E124896BA100E332FE /* Gemfile */,
+			);
+			name = Fastlane;
+			sourceTree = "<group>";
+		};
+		A92C75DE24896BA100E332FE /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				A986147A248C49B00030F197 /* Matchfile */,
+				A92C75E2248982A000E332FE /* Pluginfile */,
+				A92C75DF24896BA100E332FE /* Appfile */,
+				A92C75E024896BA100E332FE /* Fastfile */,
+			);
+			path = fastlane;
 			sourceTree = "<group>";
 		};
 		A9227B5F245C41A900466B23 /* Cells */ = {
@@ -5390,6 +5416,7 @@
 				64333D2320B0C45900CDF4B6 /* Resources */,
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 				D8D6263A7DCBC83A9674EE17 /* [CP] Embed Pods Frameworks */,
+				A986147C248CD47A0030F197 /* Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -5751,6 +5778,26 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A986147C248CD47A0030F197 /* Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = Crashlytics;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		A9AB57592413CCAB006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7325,7 +7372,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7369,7 +7416,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7413,7 +7460,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7512,7 +7559,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7727,7 +7774,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7858,7 +7905,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
