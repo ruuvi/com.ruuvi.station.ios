@@ -1791,6 +1791,10 @@
 		A90E16A82460975600631E6C /* TagChartAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartAssembler.swift; sourceTree = "<group>"; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
+		A92C75DF24896BA100E332FE /* Appfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Appfile; sourceTree = "<group>"; };
+		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Fastfile; sourceTree = "<group>"; };
+		A92C75E124896BA100E332FE /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
+		A92C75E2248982A000E332FE /* Pluginfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Pluginfile; sourceTree = "<group>"; };
 		A92E3C4B24261CF900D981D5 /* MeasurementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementType.swift; sourceTree = "<group>"; };
 		A92E3C532426346B00D981D5 /* RuuviMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviMeasurement.swift; sourceTree = "<group>"; };
 		A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagDataRealm+Extension.swift"; sourceTree = "<group>"; };
@@ -1821,6 +1825,7 @@
 		A9646465247BAE6A0001D55D /* AdvancedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouter.swift; sourceTree = "<group>"; };
 		A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AdvancedSettings.storyboard; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
+		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		B02A96F4FE9661D2E122F527 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0533218B36A75D84CD26304 /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4489,6 +4494,7 @@
 		64333D1C20B0C45900CDF4B6 = {
 			isa = PBXGroup;
 			children = (
+				A92C75DD24896B7400E332FE /* Fastlane */,
 				64333D2720B0C45900CDF4B6 /* station */,
 				64333D3C20B0C45A00CDF4B6 /* stationTests */,
 				64333D4720B0C45B00CDF4B6 /* stationUITests */,
@@ -4628,6 +4634,26 @@
 			);
 			name = Mock;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		A92C75DD24896B7400E332FE /* Fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				A92C75DE24896BA100E332FE /* fastlane */,
+				A92C75E124896BA100E332FE /* Gemfile */,
+			);
+			name = Fastlane;
+			sourceTree = "<group>";
+		};
+		A92C75DE24896BA100E332FE /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				A986147A248C49B00030F197 /* Matchfile */,
+				A92C75E2248982A000E332FE /* Pluginfile */,
+				A92C75DF24896BA100E332FE /* Appfile */,
+				A92C75E024896BA100E332FE /* Fastfile */,
+			);
+			path = fastlane;
 			sourceTree = "<group>";
 		};
 		A92E3C4724261BD000D981D5 /* View */ = {
@@ -4839,6 +4865,7 @@
 				64333D2320B0C45900CDF4B6 /* Resources */,
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 				D8D6263A7DCBC83A9674EE17 /* [CP] Embed Pods Frameworks */,
+				A986147C248CD47A0030F197 /* Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -5193,6 +5220,26 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A986147C248CD47A0030F197 /* Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = Crashlytics;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		A9AB57592413CCAB006FD3D2 /* Fetch secrets */ = {
 			isa = PBXShellScriptBuildPhase;
