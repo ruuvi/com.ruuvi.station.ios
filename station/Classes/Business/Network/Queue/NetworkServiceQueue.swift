@@ -15,13 +15,17 @@ class NetworkServiceQueue: NetworkService {
 
     @discardableResult
     func loadData(for ruuviTagId: String, mac: String, from provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
-        var promise = Promise<Bool, RUError>()
+        let promise = Promise<Bool, RUError>()
         let operation = ruuviTagTrunk.readOne(ruuviTagId)
         operation.on(success: { [weak self] sensor in
             if let strongSelf = self {
-                promise = strongSelf.loadDataOperation(for: sensor,
-                                                       mac: mac,
-                                                       from: provider)
+                strongSelf.loadDataOperation(for: sensor,
+                                             mac: mac,
+                                             from: provider).on(success: { (result) in
+                                                promise.succeed(value: result)
+                                             }, failure: { (error) in
+                                                promise.fail(error: error)
+                                             })
             } else {
                 promise.fail(error: .unexpected(.failedToFindLogsForTheTag))
             }
@@ -33,7 +37,7 @@ class NetworkServiceQueue: NetworkService {
 
     private func loadDataOperation(for sensor: AnyRuuviTagSensor,
                                    mac: String,
-                                   from provider: RuuviNetworkProvider) -> Promise<Bool, RUError> {
+                                   from provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         let network = ruuviNetworkFactory.network(for: provider)
         let operation = RuuviTagLoadDataOperation(ruuviTagId: sensor.id,
@@ -49,6 +53,6 @@ class NetworkServiceQueue: NetworkService {
             }
         }
         queue.addOperation(operation)
-        return promise
+        return promise.future
     }
 }

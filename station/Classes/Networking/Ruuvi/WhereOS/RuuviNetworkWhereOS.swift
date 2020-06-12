@@ -42,4 +42,34 @@ extension RuuviNetworkWhereOS {
         })
         return promise.future
     }
+
+    func getSensor(mac: String) -> Future<AnyRuuviTagSensor, RUError> {
+        let promise = Promise<AnyRuuviTagSensor, RUError>()
+        let operation: Future<[WhereOSData], RUError> = load(mac: mac)
+        operation.on(success: { records in
+            let decoder = Ruuvi.decoder
+            if let record = records.first,
+                let device = decoder.decodeNetwork(uuid: mac,
+                                                  rssi: record.rssi,
+                                                  isConnectable: true,
+                                                  payload: record.data),
+                let tag = device.ruuvi?.tag {
+                let macId = tag.macId ?? MACIdentifierStruct(value: tag.id)
+                let name = "RuuviNetworkWhereOS.Name.prefix".localized()
+                    + " " + macId.mac.replacingOccurrences(of: ":", with: "").suffix(4)
+                let sensorStuct = RuuviTagSensorStruct(version: tag.version,
+                                                       luid: nil,
+                                                       macId: macId,
+                                                       isConnectable: tag.isConnectable,
+                                                       name: name)
+                let anyStruct = AnyRuuviTagSensor(object: sensorStuct)
+                promise.succeed(value: anyStruct)
+            } else {
+                promise.fail(error: RUError.ruuviNetwork(.noStoredData))
+            }
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
 }

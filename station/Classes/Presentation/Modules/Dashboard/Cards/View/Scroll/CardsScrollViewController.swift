@@ -224,7 +224,8 @@ extension CardsScrollViewController {
         }
         return { label, pressure in
             if let pressure = pressure {
-                label.text = String.localizedStringWithFormat(pressureFormat, pressure) + " " + CardsScrollViewController.localizedCache.hPa
+                label.text = String.localizedStringWithFormat(pressureFormat, pressure)
+                    + " " + CardsScrollViewController.localizedCache.hPa
             } else {
                 label.text = CardsScrollViewController.localizedCache.notAvailable
             }
@@ -315,7 +316,8 @@ extension CardsScrollViewController {
                     }
                 case .gm3:
                     if let ah = ah?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", ah) + " " + CardsScrollViewController.localizedCache.gm3
+                        label.text = String.localizedStringWithFormat("%.2f", ah)
+                            + " " + CardsScrollViewController.localizedCache.gm3
                     } else {
                         label.text = CardsScrollViewController.localizedCache.notAvailable
                     }
@@ -478,7 +480,10 @@ extension CardsScrollViewController {
     }
 
     private func bind(view: CardView, with viewModel: CardsViewModel) {
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable })
+        view.nameLabel.bind(viewModel.name,
+                            block: {
+            $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable
+        })
 
         bindConnectionRelated(view: view, with: viewModel)
         bindTemperature(view: view, with: viewModel)

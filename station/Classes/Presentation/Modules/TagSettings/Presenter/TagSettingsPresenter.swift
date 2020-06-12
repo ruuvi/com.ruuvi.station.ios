@@ -258,8 +258,10 @@ extension TagSettingsPresenter {
         } else if let macId = ruuviTag.macId {
             viewModel.background.value = backgroundPersistence.background(for: macId)
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId.value)
-            viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: macId.value)
-            viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: macId.value)
+            viewModel.relativeHumidityAlertDescription.value
+                = alertService.relativeHumidityDescription(for: macId.value)
+            viewModel.absoluteHumidityAlertDescription.value
+                = alertService.absoluteHumidityDescription(for: macId.value)
             viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId.value)
             viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId.value)
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId.value)
