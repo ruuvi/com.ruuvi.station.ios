@@ -176,13 +176,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
             }
         }
         op.on(success: { [weak self] _ in
-                self?.view.setSync(progress: nil, for: viewModel)
-            }, failure: { [weak self] error in
-                self?.view.setSync(progress: nil, for: viewModel)
-                if case .btkit(.logic(.connectionTimedOut)) = error {
-                    self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-                } else if case .btkit(.logic(.serviceTimedOut)) = error {
-                    self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
+            self?.view.setSync(progress: nil, for: viewModel)
+        }, failure: { [weak self] error in
+            self?.view.setSync(progress: nil, for: viewModel)
+            if case .btkit(.logic(.connectionTimedOut)) = error {
+                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+            } else if case .btkit(.logic(.serviceTimedOut)) = error {
+                self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
             }

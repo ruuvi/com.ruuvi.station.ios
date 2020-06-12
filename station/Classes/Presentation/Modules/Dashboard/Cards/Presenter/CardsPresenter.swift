@@ -70,7 +70,7 @@ class CardsPresenter: CardsModuleInput {
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity, function_body_length
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
@@ -165,7 +165,8 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
-        } else if viewModel.type == .web, let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
+        } else if viewModel.type == .web,
+            let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag)
         }
     }
@@ -178,7 +179,7 @@ extension CardsPresenter: CardsViewOutput {
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
-        } else if let _ = viewModel.mac.value {
+        } else if viewModel.mac.value != nil {
             #warning("Need show keep connection?")
             router.openTagCharts()
         } else {
@@ -311,12 +312,12 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                 viewModel.background.value = backgroundPersistence.background(for: macId)
-                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
-                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
+                viewModel.background.value = backgroundPersistence.background(for: macId)
+                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
+                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
-                viewModel.isConnected.value = false
+                viewModel.isConnected.value = true
                 viewModel.alertState.value = .empty
             } else {
                 assertionFailure()

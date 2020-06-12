@@ -308,6 +308,7 @@ extension DiscoverTableViewController {
 
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
+//swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)

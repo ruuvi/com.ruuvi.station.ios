@@ -42,12 +42,12 @@ extension AlertServiceImpl {
                 break
             }
         }
-        
+
         let uuid = ruuviTag.uuid
         if let movementCounter = ruuviTag.movementCounter {
             setMovement(counter: movementCounter, for: uuid)
         }
-        
+
         if hasRegistrations(for: uuid) {
             notify(uuid: uuid, isTriggered: isTriggered)
         }
@@ -223,10 +223,10 @@ extension AlertServiceImpl {
             }
             let h = Humidity(c: c, rh: sh / 100.0)
             let ah = h.ah
-            
+
             let isLower = ah < lower
             let isUpper = ah > upper
-            
+
             if isLower {
                 DispatchQueue.main.async { [weak self] in
                     self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: identifier.value)

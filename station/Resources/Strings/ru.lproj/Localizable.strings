@@ -107,6 +107,7 @@
 // KaltiotPicker
 "KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
 "RuuviNetworkKaltiot.Name.prefix" = "Kaltiot";
+"RuuviNetworkWhereOS.Name.prefix" = "WhereOS";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";

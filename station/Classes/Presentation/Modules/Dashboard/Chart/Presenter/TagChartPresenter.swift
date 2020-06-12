@@ -333,7 +333,10 @@ extension TagChartPresenter {
                     next_a = range_offs // Next a is this b
                 }
             }
-            chartData.addEntry(ChartDataEntry(x: max_area_point.0, y: Double(round(100 * max_area_point.1)/100)), dataSetIndex: 0)
+            chartData.addEntry(
+                ChartDataEntry(x: max_area_point.0,
+                               y: Double(round(100 * max_area_point.1)/100)),
+                dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
         chartData.addEntry(chartEntry(for: dataSet[dataSet.count - 2]), dataSetIndex: 0)
