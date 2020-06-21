@@ -83,8 +83,9 @@ class BusinessAssembly: Assembly {
             return service
         }.inObjectScope(.container)
 
-        container.register(LocationService.self) { _ in
+        container.register(LocationService.self) { r in
             let service = LocationServiceApple()
+            service.locationPersistence = r.resolve(LocationPersistence.self)
             return service
         }
 
