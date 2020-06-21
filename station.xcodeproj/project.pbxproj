@@ -1401,6 +1401,15 @@
 		A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
 		A9646490247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */; };
 		A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A971B0DB24215334008EF50D /* XCTest+Extension.swift */; };
+		A9758179249F471900BC150A /* LocationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758178249F471900BC150A /* LocationPersistence.swift */; };
+		A975817A249F471900BC150A /* LocationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758178249F471900BC150A /* LocationPersistence.swift */; };
+		A975817B249F471900BC150A /* LocationPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758178249F471900BC150A /* LocationPersistence.swift */; };
+		A975817D249F476700BC150A /* LocationPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A975817C249F476700BC150A /* LocationPersistenceImpl.swift */; };
+		A975817E249F476700BC150A /* LocationPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A975817C249F476700BC150A /* LocationPersistenceImpl.swift */; };
+		A975817F249F476700BC150A /* LocationPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A975817C249F476700BC150A /* LocationPersistenceImpl.swift */; };
+		A9758181249F4C9600BC150A /* LocationAppleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758180249F4C9600BC150A /* LocationAppleClass.swift */; };
+		A9758182249F4C9600BC150A /* LocationAppleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758180249F4C9600BC150A /* LocationAppleClass.swift */; };
+		A9758183249F4C9600BC150A /* LocationAppleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758180249F4C9600BC150A /* LocationAppleClass.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A980CC6C2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */; };
@@ -2011,6 +2020,9 @@
 		A9646465247BAE6A0001D55D /* AdvancedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouter.swift; sourceTree = "<group>"; };
 		A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AdvancedSettings.storyboard; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
+		A9758178249F471900BC150A /* LocationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistence.swift; sourceTree = "<group>"; };
+		A975817C249F476700BC150A /* LocationPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistenceImpl.swift; sourceTree = "<group>"; };
+		A9758180249F4C9600BC150A /* LocationAppleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppleClass.swift; sourceTree = "<group>"; };
 		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotApiKeyTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
@@ -2536,6 +2548,7 @@
 				0E1C1E1522B76F400032F6CA /* Settings */,
 				0E8BAC5A245C41A900D380FB /* SQLite */,
 				0E9F979D22EB0AF80015ADE2 /* WebTag */,
+				A9758176249F46D100BC150A /* Locations */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -5199,6 +5212,24 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		A9758176249F46D100BC150A /* Locations */ = {
+			isa = PBXGroup;
+			children = (
+				A9758177249F46E500BC150A /* LocationPersistence */,
+				A9758178249F471900BC150A /* LocationPersistence.swift */,
+			);
+			path = Locations;
+			sourceTree = "<group>";
+		};
+		A9758177249F46E500BC150A /* LocationPersistence */ = {
+			isa = PBXGroup;
+			children = (
+				A975817C249F476700BC150A /* LocationPersistenceImpl.swift */,
+				A9758180249F4C9600BC150A /* LocationAppleClass.swift */,
+			);
+			path = LocationPersistence;
+			sourceTree = "<group>";
+		};
 		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
 			isa = PBXGroup;
 			children = (
@@ -5983,6 +6014,7 @@
 				0E6BAD9A23856A01003A2D4C /* WebTagSettingsRouter.swift in Sources */,
 				0E6BAD9B23856A01003A2D4C /* DefaultsPresenter.swift in Sources */,
 				A92A66BF2450C64B002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
+				A975817B249F471900BC150A /* LocationPersistence.swift in Sources */,
 				0E6BAD9C23856A01003A2D4C /* WelcomeViewInput.swift in Sources */,
 				0E8BACD9245EE72500D380FB /* TrunkAssembly.swift in Sources */,
 				0E6BAD9D23856A01003A2D4C /* ForegroundList.swift in Sources */,
@@ -6133,6 +6165,7 @@
 				0E6BADFB23856A01003A2D4C /* ForegroundEnvironmentObject.swift in Sources */,
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
 				0E6BADFD23856A01003A2D4C /* AlertService.swift in Sources */,
+				A975817F249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */,
 				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E6BADFE23856A01003A2D4C /* TagChartsDismissTransitionAnimation.swift in Sources */,
@@ -6152,6 +6185,7 @@
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
 				0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */,
 				0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */,
+				A9758183249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E6BAE0923856A01003A2D4C /* RuuviTagDataRealm.swift in Sources */,
 				0E6BAE0A23856A01003A2D4C /* HumidityCalibrationViewController.swift in Sources */,
 				A90E16992460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
@@ -6517,6 +6551,7 @@
 				0E8BD306238566AB008B31EF /* HumidityCalibrationRouter.swift in Sources */,
 				0E8BD307238566AB008B31EF /* WebTagService.swift in Sources */,
 				0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
+				A975817A249F471900BC150A /* LocationPersistence.swift in Sources */,
 				A92E3C6C2426767E00D981D5 /* MeasurementType.swift in Sources */,
 				0E8BD309238566AB008B31EF /* WeatherProviderService.swift in Sources */,
 				0E8BD30A238566AB008B31EF /* PermissionPresenterAlert.swift in Sources */,
@@ -6616,6 +6651,7 @@
 				0E8BAC7B245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0E8BD348238566AB008B31EF /* SettingsRouterInput.swift in Sources */,
 				0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
+				A9758182249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E8BD349238566AB008B31EF /* ForegroundStepperTableViewCell.swift in Sources */,
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
 				0E8BD34B238566AB008B31EF /* TagChartsViewOutput.swift in Sources */,
@@ -6676,6 +6712,7 @@
 				A9828E4F24792DF300E7E9D4 /* Array+Extension.swift in Sources */,
 				0EAD33E42399273D00EC5BAA /* HeartbeatViewController.swift in Sources */,
 				0E8BD377238566AB008B31EF /* AboutViewController.swift in Sources */,
+				A975817E249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				0E8BD378238566AB008B31EF /* DiscoverRouterInput.swift in Sources */,
 				0E8BAC85245C4F0900D380FB /* Sensor.swift in Sources */,
 				0E8BD379238566AB008B31EF /* ExportService.swift in Sources */,
@@ -6888,6 +6925,7 @@
 				0E84BF592397F3C600A37E1A /* HeartbeatViewModel.swift in Sources */,
 				0E8FD0D323336B4200FFA577 /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E046F3222F057DD00BD4E9C /* WebTagSettingsRouter.swift in Sources */,
+				A9758179249F471900BC150A /* LocationPersistence.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
 				0E8BACD7245EE72500D380FB /* TrunkAssembly.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
@@ -7042,6 +7080,7 @@
 				0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E02ABBD2375A1CF00ED4629 /* AlertService.swift in Sources */,
+				A975817D249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				A949A83B24707FD0006B7F4F /* LocalizedCache.swift in Sources */,
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E84BF5F2397F6BE00A37E1A /* HeartbeatViewController.swift in Sources */,
@@ -7060,6 +7099,7 @@
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
+				A9758181249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				A90E16972460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
@@ -7371,7 +7411,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7415,7 +7455,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7459,7 +7499,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7558,7 +7598,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7773,7 +7813,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7904,7 +7944,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 24;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
