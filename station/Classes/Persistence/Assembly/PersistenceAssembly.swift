@@ -78,5 +78,10 @@ class PersistenceAssembly: Assembly {
             persistence.context = r.resolve(RealmContext.self)
             return persistence
         }
+
+        container.register(LocationPersistence.self, factory: { _ in
+            let persistence = LocationPersistenceImpl()
+            return persistence
+        })
     }
 }
