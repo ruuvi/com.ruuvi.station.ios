@@ -1969,10 +1969,6 @@
 		A90E16A82460975600631E6C /* TagChartAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartAssembler.swift; sourceTree = "<group>"; };
 		A9100D6B241AC741004007FD /* WPSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPSData.swift; sourceTree = "<group>"; };
 		A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertPersistence.swift; sourceTree = "<group>"; };
-		A92C75DF24896BA100E332FE /* Appfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Appfile; sourceTree = "<group>"; };
-		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Fastfile; sourceTree = "<group>"; };
-		A92C75E124896BA100E332FE /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
-		A92C75E2248982A000E332FE /* Pluginfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Pluginfile; sourceTree = "<group>"; };
 		A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotBeaconLogs.swift; sourceTree = "<group>"; };
 		A9227BA0245C86FA00466B23 /* NetworkSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NetworkSettings.storyboard; sourceTree = "<group>"; };
 		A9227BA3245C86FA00466B23 /* NetworkSettingsTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTableInitializer.swift; sourceTree = "<group>"; };
@@ -1986,6 +1982,10 @@
 		A9227BB0245C86FA00466B23 /* NetworkSettingsRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsRouterInput.swift; sourceTree = "<group>"; };
 		A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverKaltiotTableViewCell.swift; sourceTree = "<group>"; };
 		A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+ReusableView.swift"; sourceTree = "<group>"; };
+		A92C75DF24896BA100E332FE /* Appfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Appfile; sourceTree = "<group>"; };
+		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Fastfile; sourceTree = "<group>"; };
+		A92C75E124896BA100E332FE /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
+		A92C75E2248982A000E332FE /* Pluginfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Pluginfile; sourceTree = "<group>"; };
 		A92E3C4B24261CF900D981D5 /* MeasurementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementType.swift; sourceTree = "<group>"; };
 		A92E3C532426346B00D981D5 /* RuuviMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviMeasurement.swift; sourceTree = "<group>"; };
 		A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagDataRealm+Extension.swift"; sourceTree = "<group>"; };
@@ -2023,10 +2023,10 @@
 		A9758178249F471900BC150A /* LocationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistence.swift; sourceTree = "<group>"; };
 		A975817C249F476700BC150A /* LocationPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistenceImpl.swift; sourceTree = "<group>"; };
 		A9758180249F4C9600BC150A /* LocationAppleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppleClass.swift; sourceTree = "<group>"; };
-		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotApiKeyTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTextTableViewCell.swift; sourceTree = "<group>"; };
+		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewController.swift; sourceTree = "<group>"; };
 		A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleOutput.swift; sourceTree = "<group>"; };
@@ -4954,26 +4954,6 @@
 			path = ../..;
 			sourceTree = "<group>";
 		};
-		A92C75DD24896B7400E332FE /* Fastlane */ = {
-			isa = PBXGroup;
-			children = (
-				A92C75DE24896BA100E332FE /* fastlane */,
-				A92C75E124896BA100E332FE /* Gemfile */,
-			);
-			name = Fastlane;
-			sourceTree = "<group>";
-		};
-		A92C75DE24896BA100E332FE /* fastlane */ = {
-			isa = PBXGroup;
-			children = (
-				A986147A248C49B00030F197 /* Matchfile */,
-				A92C75E2248982A000E332FE /* Pluginfile */,
-				A92C75DF24896BA100E332FE /* Appfile */,
-				A92C75E024896BA100E332FE /* Fastfile */,
-			);
-			path = fastlane;
-			sourceTree = "<group>";
-		};
 		A9227B5F245C41A900466B23 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -5047,6 +5027,26 @@
 				A9227BB0245C86FA00466B23 /* NetworkSettingsRouterInput.swift */,
 			);
 			path = Router;
+			sourceTree = "<group>";
+		};
+		A92C75DD24896B7400E332FE /* Fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				A92C75DE24896BA100E332FE /* fastlane */,
+				A92C75E124896BA100E332FE /* Gemfile */,
+			);
+			name = Fastlane;
+			sourceTree = "<group>";
+		};
+		A92C75DE24896BA100E332FE /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				A986147A248C49B00030F197 /* Matchfile */,
+				A92C75E2248982A000E332FE /* Pluginfile */,
+				A92C75DF24896BA100E332FE /* Appfile */,
+				A92C75E024896BA100E332FE /* Fastfile */,
+			);
+			path = fastlane;
 			sourceTree = "<group>";
 		};
 		A92E3C4724261BD000D981D5 /* View */ = {
@@ -5194,24 +5194,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		A980CC6A2468123A00C9A14C /* ReusableViews */ = {
-			isa = PBXGroup;
-			children = (
-				A980CC6D246812D000C9A14C /* Cells */,
-			);
-			path = ReusableViews;
-			sourceTree = "<group>";
-		};
-		A980CC6D246812D000C9A14C /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */,
-				A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */,
-				A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
 		A9758176249F46D100BC150A /* Locations */ = {
 			isa = PBXGroup;
 			children = (
@@ -5228,6 +5210,24 @@
 				A9758180249F4C9600BC150A /* LocationAppleClass.swift */,
 			);
 			path = LocationPersistence;
+			sourceTree = "<group>";
+		};
+		A980CC6A2468123A00C9A14C /* ReusableViews */ = {
+			isa = PBXGroup;
+			children = (
+				A980CC6D246812D000C9A14C /* Cells */,
+			);
+			path = ReusableViews;
+			sourceTree = "<group>";
+		};
+		A980CC6D246812D000C9A14C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */,
+				A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */,
+				A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
@@ -7411,7 +7411,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7421,7 +7421,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -7455,7 +7455,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7465,7 +7465,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -7499,7 +7499,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7508,7 +7508,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -7598,7 +7598,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7607,7 +7607,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -7813,7 +7813,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7854,7 +7854,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -7944,7 +7944,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -7952,7 +7952,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6;
+				MARKETING_VERSION = 0.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
