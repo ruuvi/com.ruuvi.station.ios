@@ -5,10 +5,12 @@ import BackgroundTasks
 class BackgroundTaskServiceiOS13: BackgroundTaskService {
 
     var webTagOperationsManager: WebTagOperationsManager!
-    private let webTagRefresh = "com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh"
+    var ruuviTagNetworkOperationManager: RuuviNetworkTagOperationsManager!
+
+    private let networkTagRefresh = "com.ruuvi.station.BackgroundTaskServiceiOS13.networkTagRefresh"
 
     func register() {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: webTagRefresh, using: nil) { task in
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: networkTagRefresh, using: nil) { task in
             if let bgTask = task as? BGAppRefreshTask {
                 self.handleWebTagRefresh(task: bgTask)
             } else {
@@ -18,9 +20,8 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     }
 
     func schedule() {
-        let request = BGAppRefreshTaskRequest(identifier: webTagRefresh)
+        let request = BGAppRefreshTaskRequest(identifier: networkTagRefresh)
         request.earliestBeginDate = Date(timeIntervalSinceNow: 5 * 60)
-
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
@@ -31,19 +32,23 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     private func handleWebTagRefresh(task: BGAppRefreshTask) {
         schedule()
 
-        let operations = webTagOperationsManager.alertsPullOperations()
+        var operations = webTagOperationsManager.alertsPullOperations()
+        ruuviTagNetworkOperationManager.pullNetworkTagOperations()
+            .on {[weak self] (networkTagOperations) in
+            operations.append(contentsOf: networkTagOperations)
+                self?.enqueueOperations(operations, task: task)
+        }
+    }
 
+    private func enqueueOperations(_ operations: [Operation], task: BGAppRefreshTask) {
         if operations.count > 0 {
             let queue = OperationQueue()
             queue.maxConcurrentOperationCount = 1
             let lastOperation = operations.last!
-
             lastOperation.completionBlock = {
                 task.setTaskCompleted(success: !lastOperation.isCancelled)
             }
-
             queue.addOperations(operations, waitUntilFinished: false)
-
             task.expirationHandler = {
                 queue.cancelAllOperations()
             }
@@ -51,5 +56,4 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
             task.setTaskCompleted(success: true)
         }
     }
-
 }
