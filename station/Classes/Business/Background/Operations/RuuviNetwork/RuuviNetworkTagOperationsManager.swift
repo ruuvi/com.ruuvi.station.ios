@@ -3,7 +3,7 @@ import RealmSwift
 import Future
 
 class RuuviNetworkTagOperationsManager {
-    var ruuviNetwork: RuuviNetwork!
+    var ruuviNetworkFactory: RuuviNetworkFactory!
     var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagTank: RuuviTagTank!
     var settings: Settings!
@@ -18,7 +18,7 @@ class RuuviNetworkTagOperationsManager {
         ruuviTagTrunk.readAll().on { [weak self] (sensors) in
             sensors.forEach({
                 guard let mac = $0.macId?.mac,
-                    let ruuviNetwork = self?.ruuviNetwork,
+                    let ruuviNetworkFactory = self?.ruuviNetworkFactory,
                     let ruuviTagTank = self?.ruuviTagTank else {
                     return
                 }
@@ -26,14 +26,14 @@ class RuuviNetworkTagOperationsManager {
                     operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
                                                                 mac: mac,
                                                                 isConnectable: $0.isConnectable,
-                                                                network: ruuviNetwork,
+                                                                network: ruuviNetworkFactory.network(for: .kaltiot),
                                                                 ruuviTagTank: ruuviTagTank))
                 }
                 if self?.settings.whereOSNetworkEnabled == true {
                     operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
                                                                 mac: mac,
                                                                 isConnectable: $0.isConnectable,
-                                                                network: ruuviNetwork,
+                                                                network: ruuviNetworkFactory.network(for: .whereOS),
                                                                 ruuviTagTank: ruuviTagTank))
                 }
             })

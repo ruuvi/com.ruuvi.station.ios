@@ -200,7 +200,7 @@ class BusinessAssembly: Assembly {
 
         container.register(RuuviNetworkTagOperationsManager.self) { r in
             let service = RuuviNetworkTagOperationsManager()
-            service.ruuviNetwork = r.resolve(RuuviNetwork.self)
+            service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             service.settings = r.resolve(Settings.self)
