@@ -31,6 +31,7 @@ class CardsPresenter: CardsModuleInput {
     weak var tagCharts: TagChartsModuleInput?
 
     private var ruuviTagToken: RUObservationToken?
+    private var ruuviTagNetworkToken: RUObservationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
     private var advertisementTokens = [ObservationToken]()
@@ -74,6 +75,7 @@ class CardsPresenter: CardsModuleInput {
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
+        ruuviTagNetworkToken?.invalidate()
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
         advertisementTokens.forEach({ $0.invalidate() })
@@ -180,7 +182,6 @@ extension CardsPresenter: CardsViewOutput {
                 view.showKeepConnectionDialog(for: viewModel)
             }
         } else if viewModel.mac.value != nil {
-            #warning("Need show keep connection?")
             router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -209,9 +210,11 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidScroll(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value,
             let sensor = ruuviTags.first(where: {$0.luid?.any == luid}) {
+            restartObservingRuuviTagNetwork(for: sensor)
             tagCharts?.configure(ruuviTag: sensor)
         } else if let macId = viewModel.mac.value,
             let sensor = ruuviTags.first(where: {$0.macId?.any == macId}) {
+            restartObservingRuuviTagNetwork(for: sensor)
             tagCharts?.configure(ruuviTag: sensor)
         }
     }
@@ -482,6 +485,17 @@ extension CardsPresenter {
         }
     }
 
+    private func restartObservingRuuviTagNetwork(for sensor: AnyRuuviTagSensor) {
+        ruuviTagNetworkToken?.invalidate()
+        ruuviTagNetworkToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
+            if case .update(let anyRecord) = changes,
+                let viewModel = self?.viewModels.first(where: {$0.id.value == anyRecord?.ruuviTagId}),
+                let record = anyRecord?.object {
+                viewModel.update(record)
+            }
+        }
+    }
+
     private func startObservingWebTagsData() {
         webTagsDataTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.removeAll()
@@ -546,6 +560,7 @@ extension CardsPresenter {
                 self?.ruuviTags = ruuviTags.map({ $0.any })
                 if let firstTag = ruuviTags.first {
                     self?.tagCharts?.configure(ruuviTag: firstTag)
+                    self?.restartObservingRuuviTagNetwork(for: firstTag)
                 }
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
@@ -557,6 +572,7 @@ extension CardsPresenter {
                 self?.observeRuuviTags()
                 if let index = self?.viewModels.firstIndex(where: { $0.luid.value == sensor.luid?.any }) {
                     self?.view.scroll(to: index)
+                    self?.restartObservingRuuviTagNetwork(for: sensor)
                     self?.tagCharts?.configure(ruuviTag: sensor)
                     if let viewModels = self?.viewModels,
                         let settings = self?.settings,
