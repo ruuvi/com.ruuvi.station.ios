@@ -39,7 +39,7 @@ protocol Settings {
     var networkFeatureEnabled: Bool { get set }
     var kaltiotNetworkEnabled: Bool { get set }
     var whereOSNetworkEnabled: Bool { get set }
-    var networkPullIntervalMinutes: Int { get set }
+    var networkPullIntervalSeconds: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)

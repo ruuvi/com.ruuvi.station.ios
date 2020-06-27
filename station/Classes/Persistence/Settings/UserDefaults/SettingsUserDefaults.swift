@@ -200,7 +200,7 @@ class SettingsUserDegaults: Settings {
 
     #warning("Dont foreget return to 300")
     @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 15)
-    var networkPullIntervalMinutes: Int
+    var networkPullIntervalSeconds: Int
 
 // MARK: - Private
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
