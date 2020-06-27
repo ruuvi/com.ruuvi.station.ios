@@ -19,7 +19,7 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
     func start() {
         start { [weak self] in
             guard let sSelf = self else { return }
-            let timer = Timer.scheduledTimer(timeInterval: 15,
+            let timer = Timer.scheduledTimer(timeInterval: 60,
                                              target: sSelf,
                                              selector: #selector(PullRuuviNetworkDaemonOperation.wakeUp),
                                              userInfo: nil,
@@ -44,7 +44,7 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
 
     private var needsToPullNetworkTagData: Bool {
         let elapsed = Int(Date().timeIntervalSince(lastPullDate))
-        return elapsed > settings.networkPullIntervalSeconds
+        return elapsed >= settings.networkPullIntervalSeconds
     }
 
     private func pullNetworkTagData() {

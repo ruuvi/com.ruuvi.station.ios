@@ -1416,6 +1416,9 @@
 		A976CA7624A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7524A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift */; };
 		A976CA7724A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7524A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift */; };
 		A976CA7824A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7524A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift */; };
+		A976CA7A24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */; };
+		A976CA7B24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */; };
+		A976CA7C24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A980CC6C2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */; };
@@ -2034,6 +2037,7 @@
 		A9758180249F4C9600BC150A /* LocationAppleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppleClass.swift; sourceTree = "<group>"; };
 		A976CA7024A5E5FE0099BDC1 /* PullRuuviNetworkDaemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullRuuviNetworkDaemon.swift; sourceTree = "<group>"; };
 		A976CA7524A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullRuuviNetworkDaemonOperation.swift; sourceTree = "<group>"; };
+		A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotApiKeyTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTextTableViewCell.swift; sourceTree = "<group>"; };
@@ -5257,6 +5261,7 @@
 				A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */,
 				A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */,
 				A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */,
+				A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -6246,6 +6251,7 @@
 				0EAD33F12399273E00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				0E6BAE1323856A01003A2D4C /* ForegroundStepperTableViewCell.swift in Sources */,
 				0E6BAE1423856A01003A2D4C /* MenuTableTransitionManager.swift in Sources */,
+				A976CA7C24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0E6BAE1523856A01003A2D4C /* TagChartsViewOutput.swift in Sources */,
 				A9828E3724792D4500E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */,
 				A9828E1024792CB200E7E9D4 /* DiffCalculator.swift in Sources */,
@@ -6527,6 +6533,7 @@
 				0E31B03E23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				A907A1D82460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0E8BD2D8238566AB008B31EF /* WelcomeRouterInput.swift in Sources */,
+				A976CA7B24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0E8BAC90245C522D00D380FB /* Measurement.swift in Sources */,
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
 				0E8BD2DB238566AB008B31EF /* CalibrationServiceImpl.swift in Sources */,
@@ -6993,6 +7000,7 @@
 				0E8BAC8F245C522D00D380FB /* Measurement.swift in Sources */,
 				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
+				A976CA7A24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
 				0E1C1DA322B36DC80032F6CA /* RuuviTagRealm.swift in Sources */,
 				0E70A46322AF959E006CB87C /* Localizable.swift in Sources */,

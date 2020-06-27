@@ -198,8 +198,7 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
     var whereOSNetworkEnabled: Bool
 
-    #warning("Dont foreget return to 300")
-    @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 15)
+    @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
     var networkPullIntervalSeconds: Int
 
 // MARK: - Private
