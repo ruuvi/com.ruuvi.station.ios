@@ -30,6 +30,9 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
     }
 
     func stop() {
+        guard let thread = thread else {
+            return
+        }
         perform(#selector(PullRuuviNetworkDaemonOperation.stopDaemon),
                 on: thread,
                 with: nil,
