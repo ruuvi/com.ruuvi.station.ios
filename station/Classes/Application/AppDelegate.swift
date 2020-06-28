@@ -88,7 +88,8 @@ extension AppDelegate {
         }
     }
 
-    private func enqueueOperations(_ operations: [Operation], completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    private func enqueueOperations(_ operations: [Operation],
+                                   completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if operations.count > 0 {
             let queue = OperationQueue()
             queue.maxConcurrentOperationCount = 1

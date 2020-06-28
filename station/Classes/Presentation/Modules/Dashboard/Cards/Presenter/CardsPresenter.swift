@@ -570,7 +570,10 @@ extension CardsPresenter {
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
-                if let index = self?.viewModels.firstIndex(where: { $0.luid.value == sensor.luid?.any }) {
+                if let index = self?.viewModels.firstIndex(where: {
+                    return $0.luid.value == sensor.luid?.any
+                        || $0.mac.value == sensor.macId?.any
+                }) {
                     self?.view.scroll(to: index)
                     self?.restartObservingRuuviTagNetwork(for: sensor)
                     self?.tagCharts?.configure(ruuviTag: sensor)
