@@ -484,11 +484,9 @@ extension CardsScrollViewController {
                             block: {
             $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable
         })
-
         bindConnectionRelated(view: view, with: viewModel)
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-
         let pressureUpdate = pressureUpdateBlock(for: viewModel)
         view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
 
@@ -500,11 +498,8 @@ extension CardsScrollViewController {
             let locationUpdate = locationUpdateBlock(for: viewModel)
             view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
         }
-
         bindUpdated(view: view, with: viewModel)
-
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
-
         view.alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
                 switch state {
