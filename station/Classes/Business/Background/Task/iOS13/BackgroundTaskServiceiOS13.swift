@@ -7,7 +7,7 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     var webTagOperationsManager: WebTagOperationsManager!
     var ruuviTagNetworkOperationManager: RuuviNetworkTagOperationsManager!
 
-    private let networkTagRefresh = "com.ruuvi.station.BackgroundTaskServiceiOS13.networkTagRefresh"
+    private let networkTagRefresh = "com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh"
 
     func register() {
         BGTaskScheduler.shared.register(forTaskWithIdentifier: networkTagRefresh, using: nil) { task in
