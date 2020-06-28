@@ -107,8 +107,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
         } else if let macId = ruuviTag.macId {
-//            FIXME
-//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
+            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
         } else {
             assertionFailure()
         }
@@ -227,9 +226,7 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
         if let luid = ruuviTag.luid {
             set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
         } else if let macId = ruuviTag.macId {
-            // FIXME
-            // set = backgroundPersistence.setCustomBackground(image: photo, for: mac)
-            set = nil
+            set = backgroundPersistence.setCustomBackground(image: photo, for: macId)
         } else {
             set = nil
             assertionFailure()
@@ -259,15 +256,16 @@ extension TagSettingsPresenter {
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
         } else if let macId = ruuviTag.macId {
-            // FIXME
-            // viewModel.background.value = backgroundPersistence.background(for: mac)
-//            viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId)
-//            viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: macId)
-//            viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: macId)
-//            viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId)
-//            viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId)
-//            viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId)
-//            viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId)
+            viewModel.background.value = backgroundPersistence.background(for: macId)
+            viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId.value)
+            viewModel.relativeHumidityAlertDescription.value
+                = alertService.relativeHumidityDescription(for: macId.value)
+            viewModel.absoluteHumidityAlertDescription.value
+                = alertService.absoluteHumidityDescription(for: macId.value)
+            viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId.value)
+            viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId.value)
+            viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId.value)
+            viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId.value)
         } else {
             assertionFailure()
         }
@@ -294,27 +292,25 @@ extension TagSettingsPresenter {
     }
 
     private func syncAlerts() {
-        if let luid = ruuviTag.luid {
+        if let identifier = ruuviTag.luid ?? ruuviTag.macId {
             AlertType.allCases.forEach { (type) in
                 switch type {
                 case .temperature:
-                    sync(temperature: type, uuid: luid.value)
+                    sync(temperature: type, uuid: identifier.value)
                 case .relativeHumidity:
-                    sync(relativeHumidity: type, uuid: luid.value)
+                    sync(relativeHumidity: type, uuid: identifier.value)
                 case .absoluteHumidity:
-                    sync(abosluteHumidity: type, uuid: luid.value)
+                    sync(abosluteHumidity: type, uuid: identifier.value)
                 case .dewPoint:
-                    sync(dewPoint: type, uuid: luid.value)
+                    sync(dewPoint: type, uuid: identifier.value)
                 case .pressure:
-                    sync(pressure: type, uuid: luid.value)
+                    sync(pressure: type, uuid: identifier.value)
                 case .connection:
-                    sync(connection: type, uuid: luid.value)
+                    sync(connection: type, uuid: identifier.value)
                 case .movement:
-                    sync(movement: type, uuid: luid.value)
+                    sync(movement: type, uuid: identifier.value)
                 }
             }
-        } else {
-            // FIXME
         }
     }
 
@@ -489,19 +485,19 @@ extension TagSettingsPresenter {
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
-        if let luid = ruuviTag.luid {
-            bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
-                observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+        if let identifier = ruuviTag.luid ?? ruuviTag.macId {
+            if let luid = identifier as? LocalIdentifier {
+                bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
+                    observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                }
             }
-            bindTemperatureAlert(uuid: luid.value)
-            bindRelativeHumidityAlert(uuid: luid.value)
-            bindAbsoluteHumidityAlert(uuid: luid.value)
-            bindDewPoint(uuid: luid.value)
-            bindPressureAlert(uuid: luid.value)
-            bindConnectionAlert(uuid: luid.value)
-            bindMovementAlert(uuid: luid.value)
-        } else {
-            //FIXME
+            bindTemperatureAlert(uuid: identifier.value)
+            bindRelativeHumidityAlert(uuid: identifier.value)
+            bindAbsoluteHumidityAlert(uuid: identifier.value)
+            bindDewPoint(uuid: identifier.value)
+            bindPressureAlert(uuid: identifier.value)
+            bindConnectionAlert(uuid: identifier.value)
+            bindMovementAlert(uuid: identifier.value)
         }
     }
 

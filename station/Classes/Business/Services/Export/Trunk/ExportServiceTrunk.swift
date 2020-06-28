@@ -4,6 +4,7 @@ import Future
 
 class ExportServiceTrunk: ExportService {
     var ruuviTagTrunk: RuuviTagTrunk!
+    var calibrationService: CalibrationService!
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTrunk.queue", qos: .userInitiated)
     private let iso8601: DateFormatter = {
@@ -70,6 +71,12 @@ extension ExportServiceTrunk {
                     + "Measurement Sequence Number,"
                     + "TX Power\n"
                 var csvText = "\(ruuviTag.name)\n" + header.localized()
+                let humidityOffset: Double?
+                if let identifier = ruuviTag.luid ?? ruuviTag.macId {
+                    humidityOffset = self.calibrationService.humidityOffset(for: identifier).0
+                } else {
+                    humidityOffset = nil
+                }
                 for log in records {
                     autoreleasepool {
                         let date = dateFormatter.string(from: log.date)
@@ -106,13 +113,15 @@ extension ExportServiceTrunk {
                         var dewPointCelsius: String
                         var dewPointFahrenheit: String
                         var dewPointKelvin: String
-                        // FIXME: use humidity
                         if let c = log.temperature?.converted(to: .celsius).value, let rh = log.humidity?.rh {
-//                            var sh = rh + ruuviTag.humidityOffset TODO: calibration srvice
-//                            if sh > 100.0 {
-//                                sh = 100.0
-//                            }
-                            let h = Humidity(c: c, rh: rh)
+                            var sh = rh
+                            if let offset = humidityOffset {
+                                sh += offset
+                                if sh > 100.0 {
+                                    sh = 100.0
+                                }
+                            }
+                            let h = Humidity(c: c, rh: sh)
                             absoluteHumidity = String(format: "%.2f", h.ah)
                             if let hTd = h.Td {
                                 dewPointCelsius = String(format: "%.2f", hTd)

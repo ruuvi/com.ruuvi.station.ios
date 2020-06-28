@@ -72,7 +72,7 @@ extension RuuviNetworkKaltiot {
             if let tag = result.first {
                 let macId = tag.macId ?? MACIdentifierStruct(value: tag.id)
                 let name = "RuuviNetworkKaltiot.Name.prefix".localized()
-                    + " " + macId.value.replacingOccurrences(of: ":", with: "").suffix(4)
+                    + " " + macId.mac.replacingOccurrences(of: ":", with: "").suffix(4)
                 let sensorStuct = RuuviTagSensorStruct(version: tag.version,
                                                        luid: nil,
                                                        macId: macId,

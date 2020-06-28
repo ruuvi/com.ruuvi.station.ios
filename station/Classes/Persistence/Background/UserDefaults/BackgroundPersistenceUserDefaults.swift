@@ -21,51 +21,60 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
 
-    func deleteCustomBackground(for luid: LocalIdentifier) {
-        imagePersistence.deleteBgIfExists(for: luid)
+    func deleteCustomBackground(for identifier: Identifier) {
+        imagePersistence.deleteBgIfExists(for: identifier)
     }
 
-    func setNextDefaultBackground(for luid: LocalIdentifier) -> UIImage? {
-        var id = backgroundId(for: luid)
+    func setNextDefaultBackground(for identifier: Identifier) -> UIImage? {
+        var id = backgroundId(for: identifier)
         if id >= bgMinIndex && id < bgMaxIndex {
             id += 1
-            setBackground(id, for: luid)
+            setBackground(id, for: identifier)
         } else if id >= bgMaxIndex {
             id = bgMinIndex
-            setBackground(id, for: luid)
+            setBackground(id, for: identifier)
         } else {
             id = biasedToNotUsedRandom()
-            setBackground(id, for: luid)
+            setBackground(id, for: identifier)
         }
-        imagePersistence.deleteBgIfExists(for: luid)
+        imagePersistence.deleteBgIfExists(for: identifier)
         return UIImage(named: "bg\(id)")
     }
 
-    func background(for luid: LocalIdentifier) -> UIImage? {
-        var id = backgroundId(for: luid)
+    func background(for identifier: Identifier) -> UIImage? {
+        var id = backgroundId(for: identifier)
         if id >= bgMinIndex && id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
         } else {
-            if let custom = imagePersistence.fetchBg(for: luid) {
+            if let custom = imagePersistence.fetchBg(for: identifier) {
                 return custom
             } else {
                 id = biasedToNotUsedRandom()
-                setBackground(id, for: luid)
+                setBackground(id, for: identifier)
                 return UIImage(named: "bg\(id)")
             }
         }
     }
 
-    func setCustomBackground(image: UIImage, for luid: LocalIdentifier) -> Future<URL, RUError> {
+    func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
-        let persist = imagePersistence.persistBg(image: image, for: luid)
+        let persist = imagePersistence.persistBg(image: image, for: identifier)
         persist.on(success: { url in
-            self.setBackground(0, for: luid)
+            self.setBackground(0, for: identifier)
+            let userInfoKey: BPDidChangeBackgroundKey
+            if identifier is LocalIdentifier {
+                userInfoKey = .luid
+            } else if identifier is MACIdentifier {
+                userInfoKey = .macId
+            } else {
+                userInfoKey = .luid
+                assertionFailure()
+            }
             NotificationCenter
                 .default
                 .post(name: .BackgroundPersistenceDidChangeBackground,
                       object: nil,
-                      userInfo: [BPDidChangeBackgroundKey.luid: luid ])
+                      userInfo: [userInfoKey: identifier])
             promise.succeed(value: url)
         }, failure: { (error) in
             promise.fail(error: error)
@@ -73,16 +82,25 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         return promise.future
     }
 
-    func setBackground(_ id: Int, for luid: LocalIdentifier) {
-        let uuid = luid.value
+    func setBackground(_ id: Int, for identifier: Identifier) {
+        let uuid = identifier.value
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
         UserDefaults.standard.synchronize()
+        let userInfoKey: BPDidChangeBackgroundKey
+        if identifier is LocalIdentifier {
+            userInfoKey = .luid
+        } else if identifier is MACIdentifier {
+            userInfoKey = .macId
+        } else {
+            userInfoKey = .luid
+            assertionFailure()
+        }
         NotificationCenter
             .default
             .post(name: .BackgroundPersistenceDidChangeBackground,
                   object: nil,
-                  userInfo: [BPDidChangeBackgroundKey.luid: luid ])
+                  userInfo: [userInfoKey: identifier])
         if id >= bgMinIndex && id <= bgMaxIndex {
             var array = usedBackgrounds
             array[id - bgMinIndex] += 1
@@ -90,8 +108,8 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
 
-    private func backgroundId(for luid: LocalIdentifier) -> Int {
-        let uuid = luid.value
+    private func backgroundId(for identifier: Identifier) -> Int {
+        let uuid = identifier.value
         let key = bgUDKeyPrefix + uuid
         let id = UserDefaults.standard.integer(forKey: key)
         return id

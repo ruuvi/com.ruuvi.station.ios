@@ -19,8 +19,10 @@ class DiscoverTableConfigurator {
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.keychainService = r.resolve(KeychainService.self)
         presenter.ruuviNetworkKaltiot = r.resolve(RuuviNetworkKaltiot.self)
+        presenter.ruuviNetworkWhereOS = r.resolve(RuuviNetworkWhereOS.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.settings = r.resolve(Settings.self)
 
         view.output = presenter
     }
