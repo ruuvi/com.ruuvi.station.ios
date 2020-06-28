@@ -53,14 +53,4 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
-
-    func openNetworkSettings() {
-        let factory = StoryboardFactory(storyboardName: "NetworkSettings")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: NetworkSettingsModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ module in
-                module.configure()
-            })
-    }
 }

@@ -88,6 +88,9 @@
 "Advanced.ChartIntervalMinutes.title" = "Historikens noggrannhet";
 "Advanced.Downsampling.title" = "Nedsampling";
 "Advanced.Interval.Min.string" = "min";
+"Advanced.RuuviNetwork.Section.title" = "RUUVI NETWORK";
+"Advanced.RuuviNetwork.title" = "Network Configuration";
+"Advanced.Charts.title" = "CHARTS";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
@@ -210,8 +213,6 @@
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
 "Settings.Label.Advanced" = "Advanced";
-"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
-"Settings.Label.NetworkSettings" = "Network Configuration";
 
 // Network settings
 "NetworkSettings.title" = "Network Configuration";
