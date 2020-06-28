@@ -12,4 +12,7 @@ protocol DiscoverViewInput: ViewInput {
     func showWebTagInfoDialog()
     func showAddTagWithMACAddressDialog()
     func showAddKaltiotApiKey()
+    var networkFeatureEnabled: Bool { get set }
+    var networkKaltiotEnabled: Bool { get set }
+    var networkWhereOsEnabled: Bool { get set }
 }

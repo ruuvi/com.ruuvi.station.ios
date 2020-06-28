@@ -4,6 +4,7 @@ import BTKit
 protocol AlertService {
     func process(heartbeat ruuviTag: RuuviTagProtocol)
     func process(data: WPSData, for uuid: String)
+    func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
 
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)
     func hasRegistrations(for uuid: String) -> Bool

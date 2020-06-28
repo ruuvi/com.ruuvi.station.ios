@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UserNotifications
 import UIKit
 
@@ -415,5 +416,5 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
         nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
     }
-
 }
+// swiftlint:enable file_length

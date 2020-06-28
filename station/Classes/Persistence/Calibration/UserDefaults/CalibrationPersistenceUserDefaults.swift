@@ -7,17 +7,16 @@ class CalibrationPersistenceUserDefaults: CalibrationPersistence {
     private let humidityOffsetPrefixUDKey =
     "CalibrationPersistenceUserDefaults.humidityOffset"
 
-    func humidityOffset(for luid: LocalIdentifier) -> (Double, Date?) {
-        let uuid = luid.value
+    func humidityOffset(for identifier: Identifier) -> (Double, Date?) {
+        let uuid = identifier.value
         let date = UserDefaults.standard.object(forKey: humidityOffsetDatePrefixUDKey + uuid) as? Date
         let offset = UserDefaults.standard.double(forKey: humidityOffsetPrefixUDKey + uuid)
         return (offset, date)
     }
 
-    func setHumidity(date: Date?, offset: Double, for luid: LocalIdentifier) {
-        let uuid = luid.value
-        UserDefaults.standard.set(date, forKey: humidityOffsetDatePrefixUDKey + uuid)
-        UserDefaults.standard.set(offset, forKey: humidityOffsetPrefixUDKey + uuid)
+    func setHumidity(date: Date?, offset: Double, for identifier: Identifier) {
+        UserDefaults.standard.set(date, forKey: humidityOffsetDatePrefixUDKey + identifier.value)
+        UserDefaults.standard.set(offset, forKey: humidityOffsetPrefixUDKey + identifier.value)
     }
 
 }

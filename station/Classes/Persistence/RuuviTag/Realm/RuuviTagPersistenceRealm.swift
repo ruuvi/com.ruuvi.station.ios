@@ -3,6 +3,7 @@ import Future
 import BTKit
 import Foundation
 
+//swiftlint:disable:next type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     var context: RealmContext!
@@ -290,7 +291,8 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                        acceleration: record.acceleration,
                                                        voltage: record.unitVoltage,
                                                        movementCounter: record.movementCounter.value,
-                                                       measurementSequenceNumber: record.measurementSequenceNumber.value,
+                                                       measurementSequenceNumber: record
+                                                        .measurementSequenceNumber.value,
                                                        txPower: record.txPower.value)
                 promise.succeed(value: result)
             } else {

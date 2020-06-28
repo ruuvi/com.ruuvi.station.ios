@@ -163,8 +163,6 @@ struct CardsViewModel {
         }
         pressure.value = record.pressure?.converted(to: .hectopascals).value
         voltage.value = record.voltage?.converted(to: .volts).value
-
-        mac.value = record.macId?.any
         date.value = record.date
     }
 
@@ -203,8 +201,6 @@ struct CardsViewModel {
 
         version.value = ruuviTag.version
         voltage.value = ruuviTag.volts
-
-        mac.value = ruuviTag.mac?.mac.any
         date.value = Date()
     }
 

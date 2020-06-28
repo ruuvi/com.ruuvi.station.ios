@@ -18,7 +18,6 @@ class VirtualTagSubjectCombine {
         webTagsRealmToken?.invalidate()
     }
 
-    //swiftlint:disable:next cyclomatic_complexity
     init(realm: RealmContext) {
         self.realm = realm
         DispatchQueue.main.async { [weak self] in
@@ -38,7 +37,6 @@ class VirtualTagSubjectCombine {
                                                     .map { $0.element }
                     for ins in insertions {
                         sSelf.insertSubject.send(webTags[ins].any)
-                        // TODO: test if ok with multiple
                         sSelf.webTagRealmCache.insert(webTags[ins].any, at: ins)
                     }
                     for mod in modifications {

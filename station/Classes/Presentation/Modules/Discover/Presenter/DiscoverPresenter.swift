@@ -17,6 +17,8 @@ class DiscoverPresenter: DiscoverModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var keychainService: KeychainService!
     var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
+    var ruuviNetworkWhereOS: RuuviNetworkWhereOS!
+    var settings: Settings!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedWebTags: Results<WebTagRealm>! {
@@ -82,6 +84,10 @@ extension DiscoverPresenter: DiscoverViewOutput {
             && foreground.bluetoothState != .unknown {
             view.showBluetoothDisabled()
         }
+        view.networkFeatureEnabled = settings.networkFeatureEnabled
+        view.networkKaltiotEnabled = settings.kaltiotNetworkEnabled
+        view.networkWhereOsEnabled = settings.whereOSNetworkEnabled
+
         startObservingPersistedRuuviSensors()
         startObservingPersistedWebTags()
     }
@@ -163,20 +169,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidEnterMACAddressToAddTag(mac: String) {
-        // TODO fix version of sensor
-        let sensor = RuuviTagSensorStruct(version: 5,
-                                          luid: LocalIdentifierStruct(value: mac),
-                                          macId: MACIdentifierStruct(value: mac),
-                                          isConnectable: true,
-                                          name: mac)
-        let operation = ruuviTagTank.create(sensor)
-        operation.on(success: { [weak self] (_) in
-            guard let sSelf = self else { return }
-            if sSelf.isOpenedFromWelcome {
-                sSelf.router.openCards()
-            } else {
-                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
-            }
+        ruuviNetworkWhereOS.getSensor(mac: mac).on(success: {[weak self] (sensor) in
+            self?.saveWhereOSSensor(sensor: sensor, mac: mac)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
@@ -362,5 +356,19 @@ extension DiscoverPresenter {
 
     private func openKaltiotPicker() {
         router.openKaltiotPicker(output: self)
+    }
+
+    private func saveWhereOSSensor(sensor: AnyRuuviTagSensor, mac: String) {
+        let operation = ruuviTagTank.create(sensor)
+        operation.on(success: { [weak self] (_) in
+            guard let sSelf = self else { return }
+            if sSelf.isOpenedFromWelcome {
+                sSelf.router.openCards()
+            } else {
+                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
+            }
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }

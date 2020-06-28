@@ -11,8 +11,7 @@ class CalibrationServiceImpl: CalibrationService {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
             postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
-            // FIXME
-//            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
+            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
         } else {
             assertionFailure()
         }
@@ -25,8 +24,7 @@ class CalibrationServiceImpl: CalibrationService {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
             postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
-            // FIXME
-            // calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
+            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
         } else {
             assertionFailure()
         }
@@ -38,23 +36,31 @@ class CalibrationServiceImpl: CalibrationService {
             calibrationPersistence.setHumidity(date: nil, offset: 0, for: luid)
             postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
-            // FIXME
-            // calibrationPersistence.setHumidity(date: nil, offset: 0, for: macId)
+            calibrationPersistence.setHumidity(date: nil, offset: 0, for: macId)
         } else {
             assertionFailure()
         }
 
     }
 
-    func humidityOffset(for luid: LocalIdentifier) -> (Double, Date?) {
-        return calibrationPersistence.humidityOffset(for: luid)
+    func humidityOffset(for identifier: Identifier) -> (Double, Date?) {
+        return calibrationPersistence.humidityOffset(for: identifier)
     }
 
-    private func postHumidityOffsetDidChange(with luid: LocalIdentifier) {
+    private func postHumidityOffsetDidChange(with identifier: Identifier) {
+        let userInfoKey: CalibrationServiceHumidityDidChangeKey
+        if identifier is LocalIdentifier {
+            userInfoKey = .luid
+        } else if identifier is MACIdentifier {
+            userInfoKey = .macId
+        } else {
+            userInfoKey = .luid
+            assertionFailure()
+        }
         NotificationCenter
             .default
             .post(name: .CalibrationServiceHumidityDidChange,
                   object: nil,
-                  userInfo: [CalibrationServiceHumidityDidChangeKey.luid: luid])
+                  userInfo: [userInfoKey: identifier])
     }
 }

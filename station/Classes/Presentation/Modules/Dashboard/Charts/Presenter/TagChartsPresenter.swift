@@ -176,13 +176,13 @@ extension TagChartsPresenter: TagChartsViewOutput {
             }
         }
         op.on(success: { [weak self] _ in
-                self?.view.setSync(progress: nil, for: viewModel)
-            }, failure: { [weak self] error in
-                self?.view.setSync(progress: nil, for: viewModel)
-                if case .btkit(.logic(.connectionTimedOut)) = error {
-                    self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
-                } else if case .btkit(.logic(.serviceTimedOut)) = error {
-                    self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
+            self?.view.setSync(progress: nil, for: viewModel)
+        }, failure: { [weak self] error in
+            self?.view.setSync(progress: nil, for: viewModel)
+            if case .btkit(.logic(.connectionTimedOut)) = error {
+                self?.view.showFailedToSyncIn(connectionTimeout: connectionTimeout)
+            } else if case .btkit(.logic(.serviceTimedOut)) = error {
+                self?.view.showFailedToServeIn(serviceTimeout: serviceTimeout)
             } else {
                 self?.errorPresenter.present(error: error)
             }
@@ -212,6 +212,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidDeleteTag() {
         self.router.dismiss()
     }
+
     func interactorDidDeleteLast() {
         self.router.openDiscover(output: self)
     }
@@ -306,10 +307,9 @@ extension TagChartsPresenter {
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
                                                                 ? .registered : .empty
         } else if let macId = ruuviTag.macId {
-            // FIXME
-            // viewModel.background.value = backgroundPersistence.background(for: macId)
-            // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
-             viewModel.isConnected.value = false
+            viewModel.background.value = backgroundPersistence.background(for: macId)
+            viewModel.alertState.value = alertService.hasRegistrations(for: macId.value) ? .registered : .empty
+            viewModel.isConnected.value = false
         } else {
             assertionFailure()
         }
@@ -365,6 +365,16 @@ extension TagChartsPresenter {
                             self?.viewModel.uuid.value == luid.value {
                 self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
             }
+
+            if let userInfo = notification.userInfo {
+                if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+                self?.viewModel.uuid.value == luid.value {
+                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
+                    self?.viewModel.mac.value == macId.value {
+                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                }
+            }
         }
     }
 
@@ -404,7 +414,7 @@ extension TagChartsPresenter {
         if let luid = ruuviTag.luid {
             alertService.subscribe(self, to: luid.value)
         } else if let macId = ruuviTag.macId {
-            // FIXME
+            alertService.subscribe(self, to: macId.value)
         } else {
             assertionFailure()
         }
