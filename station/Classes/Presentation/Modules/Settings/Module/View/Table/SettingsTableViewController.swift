@@ -3,7 +3,6 @@ import UIKit
 private enum SettingsTableSection: Int {
     case general = 0
     case application = 1
-    case network = 2
 }
 
 class SettingsTableViewController: UITableViewController {
@@ -25,8 +24,6 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var foregroundTitleLabel: UILabel!
     @IBOutlet weak var advancedCell: UITableViewCell!
     @IBOutlet weak var advancedTitleLabel: UILabel!
-    @IBOutlet weak var networkSettingsTitleLabel: UILabel!
-    @IBOutlet weak var networkSettingsCell: UITableViewCell!
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -78,7 +75,6 @@ extension SettingsTableViewController: SettingsViewInput {
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
         heartbeatTitleLabel.text = "Settings.Label.Heartbeat".localized()
         advancedTitleLabel.text = "Settings.Label.Advanced".localized()
-        networkSettingsTitleLabel.text = "Settings.Label.NetworkSettings".localized()
         updateUILanguage()
         tableView.reloadData()
     }
@@ -147,8 +143,6 @@ extension SettingsTableViewController {
             return "Settings.SectionHeader.General.title".localized()
         case SettingsTableSection.application.rawValue:
             return "Settings.SectionHeader.Application.title".localized()
-        case SettingsTableSection.network.rawValue:
-            return "Settings.SectionHeader.Network.title".localized()
         default:
             return nil
         }
@@ -175,8 +169,6 @@ extension SettingsTableViewController {
                 output.viewDidTapOnHeartbeat()
             case advancedCell:
                 output.viewDidTapOnAdvanced()
-            case networkSettingsCell:
-                output.viewDidTapOnKaltiot()
             default:
                 break
             }

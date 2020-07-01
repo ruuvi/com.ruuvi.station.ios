@@ -87,6 +87,9 @@
 "Advanced.ChartIntervalMinutes.title" = "Интервал графиков";
 "Advanced.Downsampling.title" = "Downsampling";
 "Advanced.Interval.Min.string" = "мин";
+"Advanced.RuuviNetwork.Section.title" = "RUUVI NETWORK";
+"Advanced.RuuviNetwork.title" = "Конфигурация сети";
+"Advanced.Charts.title" = "ГРАФИКИ";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
@@ -208,8 +211,6 @@
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
 "Settings.Label.Advanced" = "Дополнительно";
-"Settings.SectionHeader.Network.title" = "RUUVI NETWORK";
-"Settings.Label.NetworkSettings" = "Network settings";
 
 // Network settings
 "NetworkSettings.title" = "Network settings";

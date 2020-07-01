@@ -52,7 +52,9 @@ extension NetworkSettingsTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let section = NetworkSettingsSection(rawValue: section)
         switch section {
-        case .common, .whereOS:
+        case .common:
+            return networkFeatureEnabled ? 2 : 1
+        case .whereOS:
             return 1
         case .kaltiot:
             return viewModel.kaltiotNetworkEnabled.value == true ? 2 : 1
@@ -60,42 +62,26 @@ extension NetworkSettingsTableViewController {
             return 0
         }
     }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch NetworkSettingsSection(indexPath: indexPath) {
         case .common:
-            let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
-            cell.settingsSwitch.isOn = networkFeatureEnabled
-            cell.settingsSwitch.addTarget(self,
-                                          action: #selector(didChangeNetworkFeatureEnabled(_:)),
-                                          for: .valueChanged)
-            cell.settingsTitleLabel.text = "NetworkSettings.NetworkFeature".localized()
-            return cell
+            switch indexPath.row {
+            case 0:
+                return getNetworkTogglerCell(tableView, indexPath)
+            case 1:
+                return getNetworkStepperCell(tableView, indexPath)
+            default:
+                fatalError()
+            }
         case .whereOS:
-            let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
-            cell.settingsSwitch.isOn = viewModel.whereOSNetworkEnabled.value ?? false
-            cell.settingsSwitch.addTarget(self,
-                                          action: #selector(didChangeWhereOSNetworkEnabled(_:)),
-                                          for: .valueChanged)
-            cell.settingsTitleLabel.text = "NetworkSettings.WhereOS".localized()
-            return cell
+            return getWhereOsTogglerCell(tableView, indexPath)
         case .kaltiot:
             switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
-                cell.settingsSwitch.isOn = viewModel.kaltiotNetworkEnabled.value ?? false
-                cell.settingsSwitch.addTarget(self,
-                                              action: #selector(didChangeKaltiotNetworkEnabled(_:)),
-                                              for: .valueChanged)
-                cell.settingsTitleLabel.text = "NetworkSettings.Kaltiot".localized()
-                return cell
+                return getKaltiotTogglerCell(tableView, indexPath)
             case 1:
-                let cell = tableView.dequeueReusableCell(with: KaltiotApiKeyTableViewCell.self, for: indexPath)
-                cell.apiKeyTextField.text = viewModel.kaltiotApiKey.value
-                cell.apiKeyTextField.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
-                cell.apiKeyTextField.addTarget(self,
-                                               action: #selector(didEndEditingApiKey(_:)),
-                                               for: .editingDidEndOnExit)
-                return cell
+                return getKaltiotApiKeyInputCell(tableView, indexPath)
             default:
                 fatalError()
             }
@@ -146,5 +132,67 @@ extension NetworkSettingsTableViewController {
     }
     @objc func didEndEditingApiKey(_ sender: UITextField) {
         output.viewDidEnterApiKey(sender.text)
+    }
+}
+
+extension NetworkSettingsTableViewController: NetworkSettingsStepperTableViewCellDelegate {
+    func foregroundStepper(cell: NetworkSettingsStepperTableViewCell, didChange value: Int) {
+        viewModel.networkRefreshInterval.value = value
+    }
+}
+
+// MARK: - Private
+extension NetworkSettingsTableViewController {
+    private func getNetworkTogglerCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
+        cell.settingsSwitch.isOn = networkFeatureEnabled
+        cell.settingsSwitch.addTarget(self,
+                                      action: #selector(didChangeNetworkFeatureEnabled(_:)),
+                                      for: .valueChanged)
+        cell.settingsTitleLabel.text = "NetworkSettings.NetworkFeature".localized()
+        return cell
+    }
+
+    private func getNetworkStepperCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: NetworkSettingsStepperTableViewCell.self, for: indexPath)
+        if let minInterval = viewModel.minNetworkRefreshInterval.value {
+            cell.stepper.minimumValue = minInterval
+        }
+        if let refreshInterval = viewModel.networkRefreshInterval.value {
+            cell.stepper.value = Double(refreshInterval)
+            cell.setTitle(withValue: refreshInterval)
+        }
+        cell.delegate = self
+        return cell
+    }
+
+    private func getWhereOsTogglerCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
+        cell.settingsSwitch.isOn = viewModel.whereOSNetworkEnabled.value ?? false
+        cell.settingsSwitch.addTarget(self,
+                                      action: #selector(didChangeWhereOSNetworkEnabled(_:)),
+                                      for: .valueChanged)
+        cell.settingsTitleLabel.text = "NetworkSettings.WhereOS".localized()
+        return cell
+    }
+
+    private func getKaltiotTogglerCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: NetworkSettingsSwitchTableViewCell.self, for: indexPath)
+        cell.settingsSwitch.isOn = viewModel.kaltiotNetworkEnabled.value ?? false
+        cell.settingsSwitch.addTarget(self,
+                                      action: #selector(didChangeKaltiotNetworkEnabled(_:)),
+                                      for: .valueChanged)
+        cell.settingsTitleLabel.text = "NetworkSettings.Kaltiot".localized()
+        return cell
+    }
+
+    private func getKaltiotApiKeyInputCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(with: KaltiotApiKeyTableViewCell.self, for: indexPath)
+        cell.apiKeyTextField.text = viewModel.kaltiotApiKey.value
+        cell.apiKeyTextField.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
+        cell.apiKeyTextField.addTarget(self,
+                                       action: #selector(didEndEditingApiKey(_:)),
+                                       for: .editingDidEndOnExit)
+        return cell
     }
 }

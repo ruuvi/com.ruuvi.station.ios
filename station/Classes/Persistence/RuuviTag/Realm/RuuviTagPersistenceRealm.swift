@@ -273,7 +273,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         let promise = Promise<RuuviTagSensorRecord?, RUError>()
         guard ruuviTag.macId == nil,
             let luid = ruuviTag.luid else {
-            promise.fail(error: .unexpected(.attemptToReadDataFromRealmWithoutLUID))
+            promise.succeed(value: nil)
             return promise.future
         }
         context.bgWorker.enqueue {

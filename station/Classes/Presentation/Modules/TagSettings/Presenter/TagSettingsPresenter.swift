@@ -498,6 +498,7 @@ extension TagSettingsPresenter {
             bindPressureAlert(uuid: identifier.value)
             bindConnectionAlert(uuid: identifier.value)
             bindMovementAlert(uuid: identifier.value)
+            viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
         }
     }
 

@@ -200,30 +200,6 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="NETWORK" footerTitle="" id="92d-Sm-rwT">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="GAZ-Te-CtF">
-                                        <rect key="frame" x="0.0" y="478.5" width="414" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GAZ-Te-CtF" id="xk7-x9-BEU">
-                                            <rect key="frame" x="0.0" y="0.0" width="383" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Kaltiot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rko-7w-JTk">
-                                                    <rect key="frame" x="20" y="11.5" width="49" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="Rko-7w-JTk" firstAttribute="leading" secondItem="xk7-x9-BEU" secondAttribute="leading" constant="20" id="Hki-bw-5zp"/>
-                                                <constraint firstItem="Rko-7w-JTk" firstAttribute="centerY" secondItem="xk7-x9-BEU" secondAttribute="centerY" id="cxe-Ej-Brv"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Vxh-DE-JMT" id="Qox-7b-1rn"/>
@@ -253,8 +229,6 @@
                         <outlet property="languageCell" destination="7Hf-la-egS" id="RhN-Ls-L2H"/>
                         <outlet property="languageTitleLabel" destination="B4i-sU-siT" id="3li-U5-kZZ"/>
                         <outlet property="languageValueLabel" destination="mhK-Ub-ply" id="xdk-hx-RX7"/>
-                        <outlet property="networkSettingsCell" destination="GAZ-Te-CtF" id="Mhb-8v-Usv"/>
-                        <outlet property="networkSettingsTitleLabel" destination="Rko-7w-JTk" id="SiN-hD-wBE"/>
                         <outlet property="temperatureUnitLabel" destination="vN3-8D-6Uc" id="BFX-XU-8Na"/>
                         <outlet property="temperatureUnitSegmentedControl" destination="xCo-14-Jo8" id="bFj-VL-KLy"/>
                     </connections>

@@ -7,7 +7,7 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
     var realm: RuuviTagPersistence!
 
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
-        // FIXME: respect realm
+        // MARK: - respect realm
         return sqlite.readOne(ruuviTagId)
     }
 

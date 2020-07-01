@@ -8,6 +8,7 @@ class AppStateServiceImpl: AppStateService {
     var webTagDaemon: WebTagDaemon!
     var heartbeatDaemon: RuuviTagHeartbeatDaemon!
     var pullWebDaemon: PullWebDaemon!
+    var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
 
@@ -18,6 +19,9 @@ class AppStateServiceImpl: AppStateService {
         }
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
+        }
+        if settings.networkFeatureEnabled {
+            pullNetworkTagDaemon.start()
         }
         heartbeatDaemon.start()
         propertiesDaemon.start()
@@ -41,6 +45,9 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.stop()
         }
+        if settings.networkFeatureEnabled {
+            pullNetworkTagDaemon.stop()
+        }
         propertiesDaemon.stop()
         pullWebDaemon.stop()
         backgroundTaskService.schedule()
@@ -53,6 +60,9 @@ class AppStateServiceImpl: AppStateService {
         }
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
+        }
+        if settings.networkFeatureEnabled {
+            pullNetworkTagDaemon.start()
         }
         propertiesDaemon.start()
         pullWebDaemon.start()

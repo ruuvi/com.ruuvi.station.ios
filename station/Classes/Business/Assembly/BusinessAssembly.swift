@@ -24,6 +24,7 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
+            service.pullNetworkTagDaemon = r.resolve(PullRuuviNetworkDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
@@ -47,6 +48,7 @@ class BusinessAssembly: Assembly {
             if #available(iOS 13, *) {
                 let service = BackgroundTaskServiceiOS13()
                 service.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
+                service.ruuviTagNetworkOperationManager = r.resolve(RuuviNetworkTagOperationsManager.self)
                 return service
             } else {
                 let service = BackgroundTaskServiceiOS12()
@@ -127,6 +129,13 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
+        container.register(PullRuuviNetworkDaemon.self) { r in
+            let daemon = PullRuuviNetworkDaemonOperation()
+            daemon.settings = r.resolve(Settings.self)
+            daemon.ruuviTagNetworkOperationsManager = r.resolve(RuuviNetworkTagOperationsManager.self)
+            return daemon
+        }.inObjectScope(.container)
+
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
@@ -186,6 +195,15 @@ class BusinessAssembly: Assembly {
             let service = WebTagServiceImpl()
             service.webTagPersistence = r.resolve(WebTagPersistence.self)
             service.weatherProviderService = r.resolve(WeatherProviderService.self)
+            return service
+        }
+
+        container.register(RuuviNetworkTagOperationsManager.self) { r in
+            let service = RuuviNetworkTagOperationsManager()
+            service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.settings = r.resolve(Settings.self)
             return service
         }
     }
