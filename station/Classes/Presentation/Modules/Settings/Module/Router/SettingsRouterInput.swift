@@ -7,5 +7,4 @@ protocol SettingsRouterInput {
     func openDefaults()
     func openHeartbeat()
     func openAdvanced()
-    func openNetworkSettings()
 }

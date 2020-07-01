@@ -10,5 +10,4 @@ protocol SettingsViewOutput {
     func viewDidTapOnDefaults()
     func viewDidTapOnHeartbeat()
     func viewDidTapOnAdvanced()
-    func viewDidTapOnKaltiot()
 }

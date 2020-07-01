@@ -84,8 +84,4 @@ extension SettingsPresenter: SettingsViewOutput {
     func viewDidTapOnAdvanced() {
         router.openAdvanced()
     }
-
-    func viewDidTapOnKaltiot() {
-        router.openNetworkSettings()
-    }
 }

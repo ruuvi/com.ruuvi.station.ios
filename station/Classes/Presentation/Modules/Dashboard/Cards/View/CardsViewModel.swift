@@ -135,11 +135,11 @@ struct CardsViewModel {
         celsius.value = record.temperature?.converted(to: .celsius).value
         fahrenheit.value = record.temperature?.converted(to: .fahrenheit).value
         kelvin.value = record.temperature?.converted(to: .kelvin).value
-        relativeHumidity.value = record.humidity?.rh
-
         if let c = celsius.value, let rh = record.humidity?.rh {
+            relativeHumidity.value = rh * 100
             if let ho = humidityOffset.value {
-                var sh = rh + ho
+                let relative = rh * 100.0
+                var sh = relative + ho
                 if sh > 100.0 {
                     sh = 100.0
                 }
@@ -149,7 +149,7 @@ struct CardsViewModel {
                 dewPointFahrenheit.value = h.TdF
                 dewPointKelvin.value = h.TdK
             } else {
-                let h = Humidity(c: c, rh: rh / 100.0)
+                let h = Humidity(c: c, rh: rh)
                 absoluteHumidity.value = h.ah
                 dewPointCelsius.value = h.Td
                 dewPointFahrenheit.value = h.TdF

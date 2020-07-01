@@ -198,6 +198,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
     var whereOSNetworkEnabled: Bool
 
+    @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
+    var networkPullIntervalSeconds: Int
+
 // MARK: - Private
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool

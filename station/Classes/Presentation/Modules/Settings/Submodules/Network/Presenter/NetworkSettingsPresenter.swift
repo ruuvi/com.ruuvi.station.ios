@@ -1,6 +1,6 @@
 import UIKit
 
-class NetworkSettingsPresenter {
+class NetworkSettingsPresenter: NSObject {
     weak var view: NetworkSettingsViewInput!
     var router: NetworkSettingsRouterInput!
     var activityPresenter: ActivityPresenter!
@@ -22,6 +22,8 @@ class NetworkSettingsPresenter {
             view.viewModel = viewModel
         }
     }
+    /// in minutes
+    private let minNetworkRefreshInterval: Double = 1
 }
 // MARK: - KaltiotSettingsModuleInput
 extension NetworkSettingsPresenter: NetworkSettingsModuleInput {
@@ -60,7 +62,18 @@ extension NetworkSettingsPresenter {
         viewModel.networkFeatureEnabled.value = settings.networkFeatureEnabled
         viewModel.kaltiotNetworkEnabled.value = settings.kaltiotNetworkEnabled
         viewModel.whereOSNetworkEnabled.value = settings.whereOSNetworkEnabled
+        viewModel.minNetworkRefreshInterval.value = minNetworkRefreshInterval
+        viewModel.networkRefreshInterval.value = settings.networkPullIntervalSeconds / 60
         viewModel.kaltiotApiKey.value = keychainService.kaltiotApiKey
+        bindNetworkRefreshIntervalChanges()
+    }
+
+    private func bindNetworkRefreshIntervalChanges() {
+        bind(viewModel.networkRefreshInterval) { (sSelf, newValue) in
+            if let value = newValue {
+                sSelf.settings.networkPullIntervalSeconds = value * 60
+            }
+        }
     }
     private func validateApiKey(_ apiKey: String?) {
         guard let apiKey = apiKey else {

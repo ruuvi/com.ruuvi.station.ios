@@ -11,11 +11,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateService: AppStateService!
     var localNotificationsManager: LocalNotificationsManager!
     var webTagOperationsManager: WebTagOperationsManager!
+    var ruuviTagNetworkOperationManager: RuuviNetworkTagOperationsManager!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
         webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
+        ruuviTagNetworkOperationManager = r.resolve(RuuviNetworkTagOperationsManager.self)
         if #available(iOS 13, *) {
             // no need to setup background fetch, @see BackgroundTaskServiceiOS13
         } else {
@@ -77,18 +79,27 @@ extension AppDelegate {
         if #available(iOS 13, *) {
             completionHandler(.noData)
         } else {
-            let operations = webTagOperationsManager.alertsPullOperations()
-            if operations.count > 0 {
-                let queue = OperationQueue()
-                queue.maxConcurrentOperationCount = 1
-                let lastOperation = operations.last!
-                lastOperation.completionBlock = {
-                    completionHandler(.newData)
-                }
-                queue.addOperations(operations, waitUntilFinished: false)
-            } else {
-                completionHandler(.noData)
+            var operations = webTagOperationsManager.alertsPullOperations()
+            ruuviTagNetworkOperationManager.pullNetworkTagOperations()
+                .on {[weak self] (networkTagOperations) in
+                operations.append(contentsOf: networkTagOperations)
+                    self?.enqueueOperations(operations, completionHandler: completionHandler)
             }
+        }
+    }
+
+    private func enqueueOperations(_ operations: [Operation],
+                                   completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        if operations.count > 0 {
+            let queue = OperationQueue()
+            queue.maxConcurrentOperationCount = 1
+            let lastOperation = operations.last!
+            lastOperation.completionBlock = {
+                completionHandler(.newData)
+            }
+            queue.addOperations(operations, waitUntilFinished: false)
+        } else {
+            completionHandler(.noData)
         }
     }
 }
