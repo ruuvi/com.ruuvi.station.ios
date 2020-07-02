@@ -1248,6 +1248,12 @@
 		A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907A1D62460376600041F6E /* TagChartViewModel.swift */; };
 		A907A1D82460376600041F6E /* TagChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907A1D62460376600041F6E /* TagChartViewModel.swift */; };
 		A907A1D92460376600041F6E /* TagChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907A1D62460376600041F6E /* TagChartViewModel.swift */; };
+		A907BB0C24AE5268009DA3DB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A907BB0B24AE5268009DA3DB /* RxSwift */; };
+		A907BB0E24AE5268009DA3DB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A907BB0D24AE5268009DA3DB /* RxCocoa */; };
+		A907BB0F24AE60AB009DA3DB /* RuuviTagRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */; };
+		A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */; };
+		A907BB1224AE620D009DA3DB /* UIWindow+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */; };
+		A907BB1324AE620E009DA3DB /* UIWindow+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */; };
 		A90E168F24604F7400631E6C /* TagChartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E168E24604F7400631E6C /* TagChartPresenter.swift */; };
 		A90E169024604F7400631E6C /* TagChartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E168E24604F7400631E6C /* TagChartPresenter.swift */; };
 		A90E169124604F7400631E6C /* TagChartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90E168E24604F7400631E6C /* TagChartPresenter.swift */; };
@@ -1975,6 +1981,7 @@
 		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
 		A907A1D2245F7C6600041F6E /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		A907A1D62460376600041F6E /* TagChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewModel.swift; sourceTree = "<group>"; };
+		A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Orientation.swift"; sourceTree = "<group>"; };
 		A90E168E24604F7400631E6C /* TagChartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartPresenter.swift; sourceTree = "<group>"; };
 		A90E169224604FD100631E6C /* TagChartModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TagChartModuleInput.swift; path = station/Classes/Presentation/Modules/Dashboard/Chart/Presenter/TagChartModuleInput.swift; sourceTree = SOURCE_ROOT; };
 		A90E16962460504C00631E6C /* TagChartModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartModuleOutput.swift; sourceTree = "<group>"; };
@@ -2091,11 +2098,13 @@
 				0E8BAC4A245C393000D380FB /* GRDB in Frameworks */,
 				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
 				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
+				A907BB0E24AE5268009DA3DB /* RxCocoa in Frameworks */,
 				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
 				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
 				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
 				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
 				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
+				A907BB0C24AE5268009DA3DB /* RxSwift in Frameworks */,
 				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2486,6 +2495,7 @@
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 				A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */,
 				A9E58CF72459F7A7000C38DA /* Array+Extension.swift */,
+				A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -5459,6 +5469,8 @@
 				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
 				0E8BAC49245C393000D380FB /* GRDB */,
 				A95BA3ED2452006F00EF923D /* KeychainAccess */,
+				A907BB0B24AE5268009DA3DB /* RxSwift */,
+				A907BB0D24AE5268009DA3DB /* RxCocoa */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -5600,6 +5612,7 @@
 				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
 				0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */,
 				A95BA3EC2452006E00EF923D /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				A907BB0A24AE5267009DA3DB /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -6187,6 +6200,7 @@
 				0E6BADEA23856A01003A2D4C /* DefaultsInitializer.swift in Sources */,
 				0E6BADEB23856A01003A2D4C /* HumidityCalibrationInitializer.swift in Sources */,
 				A9227BC2245C86FA00466B23 /* NetworkSettingsTableViewController.swift in Sources */,
+				A907BB0F24AE60AB009DA3DB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
 				0E6BADEC23856A01003A2D4C /* MainInitializer.swift in Sources */,
 				0E6BADED23856A01003A2D4C /* WebTagDaemon.swift in Sources */,
 				0E6BADEE23856A01003A2D4C /* ForegroundSwitchTableViewCell.swift in Sources */,
@@ -6382,6 +6396,7 @@
 				0E6BAE7123856A01003A2D4C /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E6BAE7223856A01003A2D4C /* TagChartsScrollInitializer.swift in Sources */,
 				0E8BAC6F245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift in Sources */,
+				A907BB1324AE620E009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				A9944F7224A3C6A300EC37C1 /* RuuviNetworkTagOperationsManager.swift in Sources */,
 				A90E169E24606ABF00631E6C /* TagChartsInteractor.swift in Sources */,
 				0EAD33EF2399273E00EC5BAA /* HeartbeatViewInput.swift in Sources */,
@@ -6675,6 +6690,7 @@
 				0E8BD331238566AB008B31EF /* ForegroundEnvironmentObject.swift in Sources */,
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
 				0E8BD333238566AB008B31EF /* AlertService.swift in Sources */,
+				A907BB1224AE620D009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
@@ -7307,6 +7323,7 @@
 				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,
 				0E8BAC6D245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift in Sources */,
 				A90E169C24606ABF00631E6C /* TagChartsInteractor.swift in Sources */,
+				A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				A976CA7124A5E5FE0099BDC1 /* PullRuuviNetworkDaemon.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
@@ -8288,7 +8305,7 @@
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.7;
+				minimumVersion = 0.1.13;
 			};
 		};
 		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
@@ -8345,6 +8362,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.14.0;
+			};
+		};
+		A907BB0A24AE5267009DA3DB /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
 			};
 		};
 		A95BA3EC2452006E00EF923D /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
@@ -8427,6 +8452,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
 			productName = GRDB;
+		};
+		A907BB0B24AE5268009DA3DB /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A907BB0A24AE5267009DA3DB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		A907BB0D24AE5268009DA3DB /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A907BB0A24AE5267009DA3DB /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
 		};
 		A95BA3ED2452006F00EF923D /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
