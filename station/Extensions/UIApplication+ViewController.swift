@@ -2,7 +2,7 @@ import UIKit
 
 extension UIApplication {
     func topViewController(_ base: UIViewController? = nil) -> UIViewController? {
-        let base = base ?? keyWindow?.rootViewController
+        let base = base ?? UIWindow.key?.rootViewController
         if let top = (base as? UINavigationController)?.topViewController {
             return topViewController(top)
         }

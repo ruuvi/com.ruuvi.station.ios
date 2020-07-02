@@ -6,7 +6,7 @@ import UIKit
 import Charts
 import Future
 
-class TagChartsPresenter: TagChartsModuleInput {
+class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
     var router: TagChartsRouterInput!
     var interactor: TagChartsInteractorInput!
@@ -45,6 +45,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var chartIntervalDidChangeToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
+    private var exportFileUrl: URL?
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -154,7 +155,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
         isLoading = true
         interactor.export().on(success: { [weak self] url in
+            #if targetEnvironment(macCatalyst)
+            guard let sSelf = self else {
+                fatalError()
+            }
+            sSelf.exportFileUrl = url
+            sSelf.router.macCatalystExportFile(with: url, delegate: sSelf)
+            #else
             self?.view.showExportSheet(with: url)
+            #endif
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         }, completion: { [weak self] in
@@ -291,7 +300,7 @@ extension TagChartsPresenter: AlertServiceObserver {
 extension TagChartsPresenter {
 
     private func tryToShowSwipeUpHint() {
-        if UIApplication.shared.statusBarOrientation.isLandscape
+        if UIWindow.isLandscape
             && !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
             view.showSwipeUpInstruction()
@@ -460,6 +469,13 @@ extension TagChartsPresenter {
                                 self?.dismiss()
                             }
             })
+    }
+}
+extension TagChartsPresenter: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let url = exportFileUrl {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 }
 //swiftlint:enable file_length

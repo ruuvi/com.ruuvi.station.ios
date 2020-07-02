@@ -114,14 +114,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     }
 
     func showExportSheet(with path: URL) {
-        var shareItems = [Any]()
-        #if targetEnvironment(macCatalyst)
-        if let nsUrl = NSURL(string: path.absoluteString) {
-            shareItems.append(nsUrl)
-        }
-        #else
-        shareItems.append(path)
-        #endif
         let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
         vc.excludedActivityTypes = [
             UIActivity.ActivityType.assignToContact,
@@ -240,7 +232,7 @@ extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: scrollView)
-            return abs(velocity.y) > abs(velocity.x) && UIApplication.shared.statusBarOrientation.isPortrait
+            return abs(velocity.y) > abs(velocity.x) && UIWindow.isPortrait
         } else {
             return true
         }
@@ -302,7 +294,7 @@ extension TagChartsScrollViewController {
         super.viewDidLayoutSubviews()
         var maxY: CGFloat = 0
         let height: CGFloat
-        if UIApplication.shared.statusBarOrientation.isLandscape {
+        if UIWindow.isLandscape {
             height = scrollView.frame.height
         } else {
             height = scrollView.frame.height / 3

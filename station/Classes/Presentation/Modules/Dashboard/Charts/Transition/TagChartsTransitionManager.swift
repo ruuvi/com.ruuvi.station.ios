@@ -8,7 +8,7 @@ class TagChartsTransitionManager: NSObject {
     var presentDirection: UIRectEdge = .bottom
 
     static var appScreenRect: CGRect {
-       let appWindowRect = UIApplication.shared.keyWindow?.bounds ?? UIWindow().bounds
+        let appWindowRect = UIWindow.key?.bounds ?? UIWindow().bounds
        return appWindowRect
     }
 
