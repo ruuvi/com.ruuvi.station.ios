@@ -163,7 +163,6 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         return promise.future
     }
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError> {
-        assert(ruuviTag.macId != nil)
         let promise = Promise<RuuviTagSensorRecord?, RUError>()
         readQueue.async {
             do {
