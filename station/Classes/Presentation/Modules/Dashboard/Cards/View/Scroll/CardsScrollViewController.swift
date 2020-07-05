@@ -224,7 +224,9 @@ extension CardsScrollViewController {
         }
         return { label, pressure in
             if let pressure = pressure {
-                label.text = String.localizedStringWithFormat(pressureFormat, pressure) + " " + CardsScrollViewController.localizedCache.hPa
+                label.text = String.localizedStringWithFormat(pressureFormat, pressure)
+                    + " "
+                    + CardsScrollViewController.localizedCache.hPa
             } else {
                 label.text = CardsScrollViewController.localizedCache.notAvailable
             }
@@ -236,9 +238,8 @@ extension CardsScrollViewController {
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         let kelvin = viewModel.kelvin
-
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
-            [weak self, weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
+            [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
                 var temperature: Double?
                 switch temperatureUnit {
@@ -281,8 +282,7 @@ extension CardsScrollViewController {
             rhFormat = "%.0f"
         }
         let humidityBlock: ((UILabel, Double?) -> Void) = {
-            [weak self,
-            weak hu,
+            [weak hu,
             weak rh,
             weak ah,
             weak ho,
@@ -316,7 +316,9 @@ extension CardsScrollViewController {
                     }
                 case .gm3:
                     if let ah = ah?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", ah) + " " + CardsScrollViewController.localizedCache.gm3
+                        label.text = String.localizedStringWithFormat("%.2f", ah)
+                            + " "
+                            + CardsScrollViewController.localizedCache.gm3
                     } else {
                         label.text = CardsScrollViewController.localizedCache.notAvailable
                     }
@@ -430,7 +432,7 @@ extension CardsScrollViewController {
     }
 
     private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
-        view.chartsButtonContainerView.bind(viewModel.isConnectable) { [weak self] (view, isConnectable) in
+        view.chartsButtonContainerView.bind(viewModel.isConnectable) {(view, isConnectable) in
             view.isHidden = !isConnectable.bound
         }
 
@@ -479,7 +481,9 @@ extension CardsScrollViewController {
     }
 
     private func bind(view: CardView, with viewModel: CardsViewModel) {
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable })
+        view.nameLabel.bind(viewModel.name, block: {
+            $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable
+        })
 
         bindConnectionRelated(view: view, with: viewModel)
         bindTemperature(view: view, with: viewModel)
