@@ -70,7 +70,7 @@ class CardsPresenter: CardsModuleInput {
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity,function_body_length
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
@@ -165,7 +165,8 @@ extension CardsPresenter: CardsViewOutput {
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
             router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
-        } else if viewModel.type == .web, let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
+        } else if viewModel.type == .web,
+            let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag)
         }
     }
