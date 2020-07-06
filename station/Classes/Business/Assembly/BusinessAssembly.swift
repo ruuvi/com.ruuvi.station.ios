@@ -106,7 +106,6 @@ class BusinessAssembly: Assembly {
             manager.settingsPersistence = r.resolve(Settings.self)
             manager.realmContext = r.resolve(RealmContext.self)
             manager.sqliteContext = r.resolve(SQLiteContext.self)
-            manager.activityPresenter = r.resolve(ActivityPresenter.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
             return manager
