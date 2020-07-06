@@ -16,7 +16,6 @@ class MigrationManagerToSQLite: MigrationManager {
     var sqliteContext: SQLiteContext!
 
     // presenter
-    var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
 
     // car
@@ -27,11 +26,9 @@ class MigrationManagerToSQLite: MigrationManager {
     private let migrationQueue: DispatchQueue = DispatchQueue(label: "MigrationManagerToSQLite")
     func migrateIfNeeded() {
         if !didMigrateRuuviTagRealmWithMAC {
-            activityPresenter.increment()
             let realmTags = realmContext.main.objects(RuuviTagRealm.self)
             realmTags.forEach({ migrate(realmTag: $0) })
             didMigrateRuuviTagRealmWithMAC = true
-            activityPresenter.decrement()
         }
     }
 
