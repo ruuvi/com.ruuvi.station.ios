@@ -23,7 +23,7 @@ class MigrationManagerToSQLite: MigrationManager {
 
     @UserDefault("MigrationManagerToSQLite.didMigrateRuuviTagRealmWithMAC", defaultValue: false)
     private var didMigrateRuuviTagRealmWithMAC: Bool
-    private let migrationQueue: DispatchQueue = DispatchQueue(label: "MigrationManagerToSQLite")
+
     func migrateIfNeeded() {
         if !didMigrateRuuviTagRealmWithMAC {
             let realmTags = realmContext.main.objects(RuuviTagRealm.self)
