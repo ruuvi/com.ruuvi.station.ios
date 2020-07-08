@@ -33,7 +33,7 @@ class MigrationManagerToSQLite: MigrationManager {
     }
 
     private func migrate(realmTag: RuuviTagRealm) {
-        if let mac = realmTag.mac {
+        if let mac = realmTag.mac, !mac.isEmpty {
             idPersistence.set(mac: mac.mac, for: realmTag.uuid.luid)
             ruuviTagTank.create(realmTag)
                 .on(failure: { [weak self] error in
