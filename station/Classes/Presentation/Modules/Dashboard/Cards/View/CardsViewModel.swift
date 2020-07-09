@@ -233,3 +233,18 @@ extension CardsViewModel: Equatable {
         return lhs.luid.value?.value == rhs.luid.value?.value
     }
 }
+
+extension CardsViewModel {
+    var needUpdateFromObservingLastRecord: Bool {
+        return (luid.value == nil
+            && mac.value != nil)
+            || (celsius.value == nil
+            || fahrenheit.value == nil
+            || kelvin.value == nil
+            || absoluteHumidity.value == nil
+            || dewPointCelsius.value == nil
+            || dewPointFahrenheit.value == nil
+            || dewPointKelvin.value == nil
+            || pressure.value == nil)
+    }
+}

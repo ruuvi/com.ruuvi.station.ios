@@ -10,7 +10,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var connectionPersistence: ConnectionPersistence!
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
-        if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
+        if let macId = ruuviTag.macId,
+            let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
         }
         if ruuviTag.macId != nil {
