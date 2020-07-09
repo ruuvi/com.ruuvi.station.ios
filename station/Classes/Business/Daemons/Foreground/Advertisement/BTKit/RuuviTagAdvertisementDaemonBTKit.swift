@@ -138,9 +138,8 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                 unexpectedError == .failedToFindRuuviTag {
                 self?.ruuviTags.removeAll(where: { $0.id == uuid })
                 self?.restartObserving()
-            } else {
-                self?.post(error: error)
             }
+            self?.post(error: error)
         })
         savedDate[uuid] = Date()
     }

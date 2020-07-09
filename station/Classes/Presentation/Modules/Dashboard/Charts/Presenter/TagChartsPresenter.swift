@@ -282,7 +282,6 @@ extension TagChartsPresenter: AlertServiceObserver {
 // MARK: - TagSettingsModuleOutput
 extension TagChartsPresenter: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
-        self.dismiss()
     }
 }
 
