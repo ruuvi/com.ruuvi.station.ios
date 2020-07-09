@@ -14,7 +14,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
             let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
         }
-        if ruuviTag.macId != nil {
+        if ruuviTag.macId != nil,
+            ruuviTag.macId?.value.isEmpty == false {
             return sqlite.create(ruuviTag)
         } else {
             return realm.create(ruuviTag)
