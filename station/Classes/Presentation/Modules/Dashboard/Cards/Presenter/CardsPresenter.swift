@@ -166,7 +166,7 @@ extension CardsPresenter: CardsViewOutput {
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value, output: self)
         } else if viewModel.type == .web,
             let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag)
@@ -292,6 +292,13 @@ extension CardsPresenter: AlertServiceObserver {
     }
 }
 
+// MARK: - TagSettingsModuleOutput
+extension CardsPresenter: TagSettingsModuleOutput {
+    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
+        syncViewModels()
+    }
+}
+
 // MARK: - Private
 extension CardsPresenter {
 
@@ -341,8 +348,10 @@ extension CardsPresenter {
         viewModels = ruuviViewModels + virtualViewModels
 
         // if no tags, open discover
-        if didLoadInitialRuuviTags && didLoadInitialWebTags && viewModels.count == 0 {
-            router.openDiscover(output: self)
+        if didLoadInitialRuuviTags
+            && didLoadInitialWebTags
+            && viewModels.isEmpty {
+            self.router.openDiscover(output: self)
         }
     }
 
@@ -582,10 +591,21 @@ extension CardsPresenter {
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
+                if let currentPage = self?.view.currentPage,
+                    let tagsCount = self?.ruuviTags.count,
+                    currentPage < tagsCount,
+                    let tag = self?.ruuviTags[currentPage] {
+                    self?.restartObservingRuuviTagNetwork(for: tag)
+                } else {
+                    self?.ruuviTagObserveLastRecordToken?.invalidate()
+                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
-            default:
-                break
+            case .update(let sensor):
+                if let index = self?.ruuviTags.firstIndex(of: sensor) {
+                    self?.ruuviTags[index] = sensor
+                    self?.syncViewModels()
+                }
             }
         }
     }

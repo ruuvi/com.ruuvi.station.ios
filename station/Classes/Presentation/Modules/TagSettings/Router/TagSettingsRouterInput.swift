@@ -1,7 +1,7 @@
 import Foundation
 
 protocol TagSettingsRouterInput {
-    func dismiss()
+    func dismiss(completion: (() -> Void)?)
 
     func openHumidityCalibration(ruuviTag: RuuviTagSensor, humidity: Double)
 }

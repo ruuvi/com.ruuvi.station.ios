@@ -115,16 +115,10 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         let uuid = wrapper.device.uuid
         if let date = savedDate[uuid] {
             if Date().timeIntervalSince(date) > saveInterval {
-                ruuviTagTank.create(wrapper.device).on(failure: { [weak self] error in
-                    self?.post(error: error)
-                })
-                savedDate[uuid] = Date()
+                persist(wrapper.device, uuid)
             }
         } else {
-            ruuviTagTank.create(wrapper.device).on(failure: { [weak self] error in
-                self?.post(error: error)
-            })
-            savedDate[uuid] = Date()
+            persist(wrapper.device, uuid)
         }
     }
 
@@ -136,5 +130,17 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                       object: nil,
                       userInfo: [RuuviTagAdvertisementDaemonDidFailKey.error: error])
         }
+    }
+
+    private func persist(_ record: RuuviTag, _ uuid: String) {
+        ruuviTagTank.create(record).on(failure: { [weak self] error in
+            if case RUError.unexpected(let unexpectedError) = error,
+                unexpectedError == .failedToFindRuuviTag {
+                self?.ruuviTags.removeAll(where: { $0.id == uuid })
+                self?.restartObserving()
+            }
+            self?.post(error: error)
+        })
+        savedDate[uuid] = Date()
     }
 }
