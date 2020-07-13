@@ -4,7 +4,8 @@ protocol RuuviTagSensor: PhysicalSensor, Versionable { }
 
 extension RuuviTagSensor {
     var id: String {
-        if let macId = macId {
+        if let macId = macId,
+            !macId.value.isEmpty {
             return macId.value
         } else if let luid = luid {
             return luid.value
