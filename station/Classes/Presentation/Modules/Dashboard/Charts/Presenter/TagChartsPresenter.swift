@@ -141,7 +141,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi,
             ruuviTag.luid?.value == viewModel.uuid.value {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: nil)
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: nil, output: self)
         } else {
             assert(false)
         }
@@ -284,6 +284,12 @@ extension TagChartsPresenter: AlertServiceObserver {
         if newValue != viewModel.alertState.value {
             viewModel.alertState.value = newValue
         }
+    }
+}
+
+// MARK: - TagSettingsModuleOutput
+extension TagChartsPresenter: TagSettingsModuleOutput {
+    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
     }
 }
 

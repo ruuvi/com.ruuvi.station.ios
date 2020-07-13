@@ -53,12 +53,12 @@ class TagChartsRouter: TagChartsRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
 
-    func openTagSettings(ruuviTag: RuuviTagSensor, humidity: Double?) {
+    func openTagSettings(ruuviTag: RuuviTagSensor, humidity: Double?, output: TagSettingsModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag, humidity: humidity)
+                module.configure(ruuviTag: ruuviTag, humidity: humidity, output: output)
             })
     }
 

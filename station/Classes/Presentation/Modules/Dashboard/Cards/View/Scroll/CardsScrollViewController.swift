@@ -24,7 +24,7 @@ class CardsScrollViewController: UIViewController {
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
     private var views = [CardView]()
-    private var currentPage: Int {
+    var currentPage: Int {
         if isViewLoaded {
             return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         } else {
@@ -225,7 +225,8 @@ extension CardsScrollViewController {
         return { label, pressure in
             if let pressure = pressure {
                 label.text = String.localizedStringWithFormat(pressureFormat, pressure)
-                    + " " + CardsScrollViewController.localizedCache.hPa
+                    + " "
+                    + CardsScrollViewController.localizedCache.hPa
             } else {
                 label.text = CardsScrollViewController.localizedCache.notAvailable
             }
@@ -237,7 +238,6 @@ extension CardsScrollViewController {
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         let kelvin = viewModel.kelvin
-
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
             [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
@@ -317,7 +317,8 @@ extension CardsScrollViewController {
                 case .gm3:
                     if let ah = ah?.value {
                         label.text = String.localizedStringWithFormat("%.2f", ah)
-                            + " " + CardsScrollViewController.localizedCache.gm3
+                            + " "
+                            + CardsScrollViewController.localizedCache.gm3
                     } else {
                         label.text = CardsScrollViewController.localizedCache.notAvailable
                     }
@@ -538,7 +539,8 @@ extension CardsScrollViewController {
 // MARK: - UIGestureRecognizerDelegate
 extension CardsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let pan = gestureRecognizer as? UIPanGestureRecognizer {
+        if let pan = gestureRecognizer as? UIPanGestureRecognizer,
+            !viewModels.isEmpty {
             let velocity = pan.velocity(in: scrollView)
             return abs(velocity.y) > abs(velocity.x) && viewModels[currentPage].isConnectable.value.bound
         } else {

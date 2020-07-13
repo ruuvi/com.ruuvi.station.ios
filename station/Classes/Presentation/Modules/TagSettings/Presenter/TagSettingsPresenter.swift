@@ -6,6 +6,7 @@ import Future
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
+    weak var output: TagSettingsModuleOutput!
     var router: TagSettingsRouterInput!
     var backgroundPersistence: BackgroundPersistence!
     var errorPresenter: ErrorPresenter!
@@ -77,8 +78,9 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
 
-    func configure(ruuviTag: RuuviTagSensor, humidity: Double?) {
+    func configure(ruuviTag: RuuviTagSensor, humidity: Double?, output: TagSettingsModuleOutput) {
         self.viewModel = TagSettingsViewModel()
+        self.output = output
         self.ruuviTag = ruuviTag
         self.humidity = humidity
         bindViewModel(to: ruuviTag)
@@ -100,7 +102,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToDismiss() {
-        router.dismiss()
+        router.dismiss(completion: nil)
     }
 
     func viewDidAskToRandomizeBackground() {
@@ -127,7 +129,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
         Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
-            self?.router.dismiss()
+            self?.router.dismiss(completion: {
+                guard let self = self else { return }
+                self.output.tagSettingsDidDeleteTag(ruuviTag: self.ruuviTag)
+            })
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
