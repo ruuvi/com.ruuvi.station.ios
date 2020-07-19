@@ -4,5 +4,7 @@ protocol KaltiotPickerViewOutput {
     func viewDidLoad()
     func viewDidTriggerClose()
     func viewDidTriggerLoadNextPage()
-    func viewDidSelectTag(at index: Int)
+    func viewDidSelectBeacon(_ beacon: KaltiotBeaconViewModel)
+    func viewDidStartSearch(mac: String)
+    func viewDidCancelSearch()
 }
