@@ -31,6 +31,16 @@ platform :ios do
     )
   end
 
+  desc "Register devices"
+  lane :reg do
+    register_devices(devices: {
+                    "Marko 6" => "2cc93059fe0e9cc7cd815128e032cdbecdde33cb",
+                    "Marko 5s" => "ad7a30c543977fb7d88ade9b60c34acbc10fd707"
+    })
+    match(type: "development", force_for_new_devices: true)
+    match(type: "adhoc", force_for_new_devices: true)
+  end
+
   desc """
   Upload to firebase AppDistribution with options
 
