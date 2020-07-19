@@ -602,9 +602,10 @@ extension CardsPresenter {
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             case .update(let sensor):
-                if let index = self?.ruuviTags.firstIndex(of: sensor) {
-                    self?.ruuviTags[index] = sensor
-                    self?.syncViewModels()
+                guard let sSelf = self else { return }
+                if let index = sSelf.ruuviTags.firstIndex(of: sensor) {
+                    sSelf.ruuviTags[index] = sensor
+                    sSelf.syncViewModels()
                 }
             }
         }
