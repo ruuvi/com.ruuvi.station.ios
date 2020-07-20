@@ -37,9 +37,7 @@ class CardsScrollViewController: UIViewController {
     }
 
     deinit {
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
+        appDidBecomeActiveToken?.invalidate()
     }
 }
 

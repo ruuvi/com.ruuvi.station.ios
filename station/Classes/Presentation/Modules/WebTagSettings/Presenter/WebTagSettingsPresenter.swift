@@ -34,18 +34,10 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
 
     deinit {
         webTagToken?.invalidate()
-        if let temperatureUnitToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(temperatureUnitToken)
-        }
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        appDidBecomeActiveToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        alertDidChangeToken?.invalidate()
     }
 
     func configure(webTag: WebTagRealm) {

@@ -58,24 +58,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         ruuviTagSensorRecordToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
-        if let temperatureUnitToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(temperatureUnitToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let connectToken = connectToken {
-            NotificationCenter.default.removeObserver(connectToken)
-        }
-        if let disconnectToken = disconnectToken {
-            NotificationCenter.default.removeObserver(disconnectToken)
-        }
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        connectToken?.invalidate()
+        disconnectToken?.invalidate()
+        appDidBecomeActiveToken?.invalidate()
+        alertDidChangeToken?.invalidate()
     }
 
     func configure(ruuviTag: RuuviTagSensor, humidity: Double?, output: TagSettingsModuleOutput) {
