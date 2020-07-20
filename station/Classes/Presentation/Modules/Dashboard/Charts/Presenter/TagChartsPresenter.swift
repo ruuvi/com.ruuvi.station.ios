@@ -57,33 +57,15 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     deinit {
         stateToken?.invalidate()
-        if let settingsToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(settingsToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let backgroundToken = backgroundToken {
-            NotificationCenter.default.removeObserver(backgroundToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
-        if let didConnectToken = didConnectToken {
-            NotificationCenter.default.removeObserver(didConnectToken)
-        }
-        if let didDisconnectToken = didDisconnectToken {
-            NotificationCenter.default.removeObserver(didDisconnectToken)
-        }
-        if let lnmDidReceiveToken = lnmDidReceiveToken {
-            NotificationCenter.default.removeObserver(lnmDidReceiveToken)
-        }
-        if let downsampleDidChangeToken = downsampleDidChangeToken {
-            NotificationCenter.default.removeObserver(downsampleDidChangeToken)
-        }
-        if let chartIntervalDidChangeToken = chartIntervalDidChangeToken {
-            NotificationCenter.default.removeObserver(chartIntervalDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        backgroundToken?.invalidate()
+        alertDidChangeToken?.invalidate()
+        didConnectToken?.invalidate()
+        didDisconnectToken?.invalidate()
+        lnmDidReceiveToken?.invalidate()
+        downsampleDidChangeToken?.invalidate()
+        chartIntervalDidChangeToken?.invalidate()
     }
 
     func configure(output: TagChartsModuleOutput) {

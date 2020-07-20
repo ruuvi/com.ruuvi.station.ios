@@ -12,9 +12,7 @@ class SettingsPresenter: SettingsModuleInput {
 
     deinit {
         ruuviTagsToken?.invalidate()
-        if let languageToken = languageToken {
-            NotificationCenter.default.removeObserver(languageToken)
-        }
+        languageToken?.invalidate()
     }
 }
 
