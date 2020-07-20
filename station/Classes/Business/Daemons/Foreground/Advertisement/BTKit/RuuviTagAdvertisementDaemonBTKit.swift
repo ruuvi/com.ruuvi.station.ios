@@ -28,9 +28,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         ruuviTagsToken?.invalidate()
-        if let isOnToken = isOnToken {
-            NotificationCenter.default.removeObserver(isOnToken)
-        }
+        isOnToken?.invalidate()
     }
 
     override init() {

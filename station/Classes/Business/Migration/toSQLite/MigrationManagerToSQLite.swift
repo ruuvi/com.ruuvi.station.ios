@@ -1,6 +1,10 @@
 import Foundation
 import RealmSwift
 
+extension Notification.Name {
+    static let DidMigrationComplete = Notification.Name("MigrationManagerToSQLite.DidMigrationComplete")
+}
+
 class MigrationManagerToSQLite: MigrationManager {
 
     // persistence
@@ -27,12 +31,23 @@ class MigrationManagerToSQLite: MigrationManager {
     func migrateIfNeeded() {
         if !didMigrateRuuviTagRealmWithMAC {
             let realmTags = realmContext.main.objects(RuuviTagRealm.self)
-            realmTags.forEach({ migrate(realmTag: $0) })
+            let dispatchGroup = DispatchGroup()
+            realmTags.forEach({
+                dispatchGroup.enter()
+                migrate(realmTag: $0, group: dispatchGroup)
+            })
+            dispatchGroup.notify(queue: .main) {
+                NotificationCenter
+                    .default
+                    .post(name: .DidMigrationComplete,
+                          object: self,
+                          userInfo: nil)
+            }
             didMigrateRuuviTagRealmWithMAC = true
         }
     }
 
-    private func migrate(realmTag: RuuviTagRealm) {
+    private func migrate(realmTag: RuuviTagRealm, group: DispatchGroup) {
         if let mac = realmTag.mac, !mac.isEmpty {
             idPersistence.set(mac: mac.mac, for: realmTag.uuid.luid)
             ruuviTagTank.create(realmTag)
@@ -50,6 +65,8 @@ class MigrationManagerToSQLite: MigrationManager {
             ruuviTagTank?.create(records)
                 .on(failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
+                }, completion: {
+                    group.leave()
                 })
             do {
                 try realmContext.main.write {
@@ -59,6 +76,8 @@ class MigrationManagerToSQLite: MigrationManager {
             } catch {
                 errorPresenter.present(error: error)
             }
+        } else {
+            group.leave()
         }
     }
 }

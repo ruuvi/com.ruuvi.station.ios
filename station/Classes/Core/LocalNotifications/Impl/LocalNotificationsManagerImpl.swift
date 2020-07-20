@@ -65,9 +65,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     deinit {
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
+        alertDidChangeToken?.invalidate()
     }
 
     private func id(for uuid: String) -> String {
