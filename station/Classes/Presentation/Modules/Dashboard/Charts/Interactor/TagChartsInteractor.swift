@@ -50,12 +50,11 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                 self?.sensors.append(sensor)
             case .delete(let sensor):
                 self?.sensors.removeAll(where: {$0 == sensor})
-                if sensor.id == self?.ruuviTagSensor.id,
-                self?.sensors.isEmpty == false {
+                if sensor == self?.ruuviTagSensor, self?.sensors.isEmpty == false {
                     self?.presenter.interactorDidDeleteTag()
                 } else {
                     self?.clearChartsAndRestartObserving()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50), execute: {
                         self?.presenter.interactorDidDeleteLast()
                     })
                 }
