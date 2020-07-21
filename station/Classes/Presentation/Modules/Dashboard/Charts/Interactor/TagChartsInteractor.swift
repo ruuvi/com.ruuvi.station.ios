@@ -49,13 +49,16 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             case .insert(let sensor):
                 self?.sensors.append(sensor)
             case .delete(let sensor):
-                self?.sensors.removeAll(where: {$0 == sensor})
-                if sensor == self?.ruuviTagSensor, self?.sensors.isEmpty == false {
-                    self?.presenter.interactorDidDeleteTag()
+                guard let sSelf = self else { return }
+                sSelf.sensors.removeAll(where: {$0 == sensor})
+                if let ruuviTagSensor = sSelf.ruuviTagSensor,
+                    sensor == ruuviTagSensor,
+                    sSelf.sensors.isEmpty == false {
+                    sSelf.presenter.interactorDidDeleteTag()
                 } else {
-                    self?.clearChartsAndRestartObserving()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50), execute: {
-                        self?.presenter.interactorDidDeleteLast()
+                    sSelf.clearChartsAndRestartObserving()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: { [weak sSelf] in
+                        sSelf?.presenter.interactorDidDeleteLast()
                     })
                 }
             default:
