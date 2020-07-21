@@ -12,7 +12,8 @@ class TagChartsInteractor {
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
     var lastMeasurement: RuuviMeasurement?
-    private var ruuviTagSensorObservationToken: RUObservationToken!
+    private var ruuviTagSensorObservationToken: RUObservationToken?
+    private var didMigrationCompleteToken: NSObjectProtocol?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
@@ -29,6 +30,12 @@ class TagChartsInteractor {
     }
     private var sensors: [AnyRuuviTagSensor] = []
 
+    deinit {
+        didMigrationCompleteToken?.invalidate()
+        ruuviTagSensorObservationToken?.invalidate()
+        ruuviTagSensorObservationToken = nil
+    }
+
     func createChartModules() {
         chartModules = []
         MeasurementType.chartsCases.forEach({
@@ -41,7 +48,8 @@ class TagChartsInteractor {
 }
 // MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
-    func startObservingTags() {
+    func restartObservingTags() {
+        ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
             switch change {
             case .initial(let sensors):
@@ -67,7 +75,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
     }
     func stopObservingTags() {
-        ruuviTagSensorObservationToken.invalidate()
+        ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
     }
     func configure(withTag ruuviTag: AnyRuuviTagSensor) {
@@ -151,6 +159,14 @@ extension TagChartsInteractor: TagChartModuleOutput {
 }
 // MARK: - Private
 extension TagChartsInteractor {
+    private func startObserveMigrationCompletion() {
+        didMigrationCompleteToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
+                self?.restartObservingTags()
+            })
+    }
+
     private func startSheduler() {
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(settings.chartIntervalSeconds),
                                      repeats: true,

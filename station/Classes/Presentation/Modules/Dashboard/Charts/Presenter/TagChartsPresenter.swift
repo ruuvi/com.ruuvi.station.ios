@@ -96,7 +96,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
         restartObservingData()
-        interactor.startObservingTags()
+        interactor.restartObservingTags()
         syncChartViews()
     }
 
