@@ -1,7 +1,7 @@
 import Foundation
 
 protocol TagChartsRouterInput {
-    func dismiss()
+    func dismiss(completion: (() -> Void)?)
     func openDiscover(output: DiscoverModuleOutput)
     func openSettings()
     func openAbout()
