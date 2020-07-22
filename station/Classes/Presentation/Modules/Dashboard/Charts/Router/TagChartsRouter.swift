@@ -6,8 +6,8 @@ class TagChartsRouter: TagChartsRouterInput {
 
     private var menuTableTransition: MenuTableTransitioningDelegate!
 
-    func dismiss() {
-        try! transitionHandler.closeCurrentModule().perform()
+    func dismiss(completion: (() -> Void)? = nil) {
+        transitionHandler.dismiss(animated: true, completion: completion)
     }
 
     func openMenu(output: MenuModuleOutput) {

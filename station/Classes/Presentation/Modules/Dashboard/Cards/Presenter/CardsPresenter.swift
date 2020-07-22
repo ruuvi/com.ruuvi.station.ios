@@ -238,6 +238,12 @@ extension CardsPresenter: TagChartsModuleOutput {
             view.scroll(to: index, immediately: true)
         }
     }
+
+    func tagChartsDidDeleteTag(module: TagChartsModuleInput) {
+        module.dismiss(completion: { [weak self] in
+            self?.syncViewModels()
+        })
+    }
 }
 
 // MARK: - CardsRouterDelegate

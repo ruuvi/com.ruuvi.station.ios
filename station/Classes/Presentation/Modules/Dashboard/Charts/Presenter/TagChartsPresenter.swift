@@ -76,8 +76,8 @@ class TagChartsPresenter: TagChartsModuleInput {
         self.ruuviTag = ruuviTag
     }
 
-    func dismiss() {
-        router.dismiss()
+    func dismiss(completion: (() -> Void)? = nil) {
+        router.dismiss(completion: completion)
     }
 }
 
@@ -117,7 +117,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
     }
 
     func viewDidTriggerCards(for viewModel: TagChartsViewModel) {
-        router.dismiss()
+        router.dismiss(completion: nil)
     }
 
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
@@ -190,30 +190,24 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
-    func interactorDidDeleteTag() {
-        self.router.dismiss()
-    }
-    func interactorDidDeleteLast() {
-        self.router.openDiscover(output: self)
-    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
     func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
         module.dismiss { [weak self] in
-            self?.router.dismiss()
+            self?.router.dismiss(completion: nil)
         }
     }
 
     func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
         module.dismiss { [weak self] in
-            self?.router.dismiss()
+            self?.router.dismiss(completion: nil)
         }
     }
 
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
         module.dismiss { [weak self] in
-            self?.router.dismiss()
+            self?.router.dismiss(completion: nil)
         }
     }
 }
@@ -264,6 +258,7 @@ extension TagChartsPresenter: AlertServiceObserver {
 // MARK: - TagSettingsModuleOutput
 extension TagChartsPresenter: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
+        output?.tagChartsDidDeleteTag(module: self)
     }
 }
 
