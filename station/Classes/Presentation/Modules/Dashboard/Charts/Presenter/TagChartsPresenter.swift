@@ -257,8 +257,14 @@ extension TagChartsPresenter: AlertServiceObserver {
 
 // MARK: - TagSettingsModuleOutput
 extension TagChartsPresenter: TagSettingsModuleOutput {
-    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
-        output?.tagChartsDidDeleteTag(module: self)
+    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
+                                 ruuviTag: RuuviTagSensor) {
+        module.dismiss { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.output?.tagChartsDidDeleteTag(module: self)
+        }
     }
 }
 
