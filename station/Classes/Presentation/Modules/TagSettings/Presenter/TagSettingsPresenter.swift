@@ -80,6 +80,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingApplicationState()
         startObservingAlertChanges()
     }
+
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss(completion: completion)
+    }
 }
 
 // MARK: - TagSettingsViewOutput
@@ -90,7 +94,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToDismiss() {
-        router.dismiss(completion: nil)
+        router.dismiss()
     }
 
     func viewDidAskToRandomizeBackground() {
@@ -118,10 +122,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
         Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
-            self?.router.dismiss(completion: {
-                guard let self = self else { return }
-                self.output.tagSettingsDidDeleteTag(ruuviTag: self.ruuviTag)
-            })
+            guard let sSelf = self else {
+                return
+            }
+            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
