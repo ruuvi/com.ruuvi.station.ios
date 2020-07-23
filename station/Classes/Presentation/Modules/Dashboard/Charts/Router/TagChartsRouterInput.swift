@@ -10,3 +10,8 @@ protocol TagChartsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor, humidity: Double?, output: TagSettingsModuleOutput)
     func openWebTagSettings(webTag: WebTagRealm)
 }
+extension TagChartsRouterInput {
+    func dismiss() {
+        dismiss(completion: nil)
+    }
+}

@@ -94,7 +94,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToDismiss() {
-        router.dismiss(completion: nil)
+        router.dismiss()
     }
 
     func viewDidAskToRandomizeBackground() {
@@ -122,10 +122,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
         Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
-            guard let self = self else {
+            guard let sSelf = self else {
                 return
             }
-            self.output.tagSettingsDidDeleteTag(module: self, ruuviTag: self.ruuviTag)
+            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
