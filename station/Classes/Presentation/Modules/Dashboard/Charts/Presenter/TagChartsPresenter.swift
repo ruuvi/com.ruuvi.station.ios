@@ -76,8 +76,8 @@ class TagChartsPresenter: TagChartsModuleInput {
         self.ruuviTag = ruuviTag
     }
 
-    func dismiss() {
-        router.dismiss()
+    func dismiss(completion: (() -> Void)? = nil) {
+        router.dismiss(completion: completion)
     }
 }
 
@@ -190,12 +190,6 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
-    func interactorDidDeleteTag() {
-        self.router.dismiss()
-    }
-    func interactorDidDeleteLast() {
-        self.router.openDiscover(output: self)
-    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
@@ -263,7 +257,14 @@ extension TagChartsPresenter: AlertServiceObserver {
 
 // MARK: - TagSettingsModuleOutput
 extension TagChartsPresenter: TagSettingsModuleOutput {
-    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
+    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
+                                 ruuviTag: RuuviTagSensor) {
+        module.dismiss { [weak self] in
+            guard let sSelf = self else {
+                return
+            }
+            sSelf.output?.tagChartsDidDeleteTag(module: sSelf)
+        }
     }
 }
 

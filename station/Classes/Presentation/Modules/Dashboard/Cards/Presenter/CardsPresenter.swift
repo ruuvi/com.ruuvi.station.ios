@@ -187,6 +187,7 @@ extension CardsPresenter: CardsViewOutput {
 extension CardsPresenter: DiscoverModuleOutput {
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
         module.dismiss()
+        self.startObservingRuuviTags()
     }
 
     func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
@@ -238,6 +239,12 @@ extension CardsPresenter: TagChartsModuleOutput {
             view.scroll(to: index, immediately: true)
         }
     }
+
+    func tagChartsDidDeleteTag(module: TagChartsModuleInput) {
+        module.dismiss(completion: { [weak self] in
+            self?.syncViewModels()
+        })
+    }
 }
 
 // MARK: - CardsRouterDelegate
@@ -263,8 +270,10 @@ extension CardsPresenter: AlertServiceObserver {
 
 // MARK: - TagSettingsModuleOutput
 extension CardsPresenter: TagSettingsModuleOutput {
-    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
-        syncViewModels()
+    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput, ruuviTag: RuuviTagSensor) {
+        module.dismiss(completion: { [weak self] in
+            self?.syncViewModels()
+        })
     }
 }
 
