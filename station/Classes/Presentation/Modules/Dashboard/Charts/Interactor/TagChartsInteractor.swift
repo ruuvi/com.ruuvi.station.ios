@@ -14,7 +14,8 @@ class TagChartsInteractor {
     var networkService: NetworkService!
     var keychainService: KeychainService!
     var lastMeasurement: RuuviMeasurement?
-    private var ruuviTagSensorObservationToken: RUObservationToken!
+    private var ruuviTagSensorObservationToken: RUObservationToken?
+    private var didMigrationCompleteToken: NSObjectProtocol?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
     private var ruuviTagData: [RuuviMeasurement] = [] {
@@ -31,6 +32,12 @@ class TagChartsInteractor {
     }
     private var sensors: [AnyRuuviTagSensor] = []
 
+    deinit {
+        didMigrationCompleteToken?.invalidate()
+        ruuviTagSensorObservationToken?.invalidate()
+        ruuviTagSensorObservationToken = nil
+    }
+
     func createChartModules() {
         chartModules = []
         MeasurementType.chartsCases.forEach({
@@ -43,25 +50,14 @@ class TagChartsInteractor {
 }
 // MARK: - TagChartsInteractorInput
 extension TagChartsInteractor: TagChartsInteractorInput {
-// MARK: - RuuviTags
-    func startObservingTags() {
+    func restartObservingTags() {
+        ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
             switch change {
             case .initial(let sensors):
                 self?.sensors = sensors
             case .insert(let sensor):
                 self?.sensors.append(sensor)
-            case .delete(let sensor):
-                self?.sensors.removeAll(where: {$0 == sensor})
-                if sensor.id == self?.ruuviTagSensor.id,
-                self?.sensors.isEmpty == false {
-                    self?.presenter.interactorDidDeleteTag()
-                } else {
-                    self?.clearChartsAndRestartObserving()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                        self?.presenter.interactorDidDeleteLast()
-                    })
-                }
             default:
                 return
             }
@@ -69,7 +65,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     }
 
     func stopObservingTags() {
-        ruuviTagSensorObservationToken.invalidate()
+        ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
     }
 
@@ -134,6 +130,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
         return promise.future
     }
+
     func deleteAllRecords(ruuviTagId: String) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         let op = ruuviTagTank.deleteAllRecords(ruuviTagId)
@@ -145,6 +142,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         })
         return promise.future
     }
+
     func notifyDownsamleOnDidChange() {
         self.clearChartsAndRestartObserving()
     }
@@ -157,18 +155,20 @@ extension TagChartsInteractor: TagChartModuleOutput {
 }
 // MARK: - Private
 extension TagChartsInteractor {
+    private func startObserveMigrationCompletion() {
+        didMigrationCompleteToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
+                self?.restartObservingTags()
+            })
+    }
+
     private func startSheduler() {
         timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(settings.chartIntervalSeconds),
                                      repeats: true,
                                      block: { [weak self] (_) in
             self?.fetchLast()
         })
-    }
-
-    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
-            let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
-        ruuviTagData.append(contentsOf: newValues)
-        insertMeasurements(newValues)
     }
 
     private func fetchLast() {
@@ -202,6 +202,13 @@ extension TagChartsInteractor {
         }, failure: {[weak self] (error) in
             self?.presenter.interactorDidError(error)
         }, completion: competion)
+    }
+
+    // MARK: - Charts
+    private func handleUpdateRuuviTagData(_ results: [RuuviTagSensorRecord]) {
+        let newValues: [RuuviMeasurement] = results.map({ $0.measurement })
+        ruuviTagData.append(contentsOf: newValues)
+        insertMeasurements(newValues)
     }
 
     private func clearChartsAndRestartObserving() {

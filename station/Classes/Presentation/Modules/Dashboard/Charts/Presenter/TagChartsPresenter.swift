@@ -57,33 +57,15 @@ class TagChartsPresenter: TagChartsModuleInput {
     }
     deinit {
         stateToken?.invalidate()
-        if let settingsToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(settingsToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let backgroundToken = backgroundToken {
-            NotificationCenter.default.removeObserver(backgroundToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
-        if let didConnectToken = didConnectToken {
-            NotificationCenter.default.removeObserver(didConnectToken)
-        }
-        if let didDisconnectToken = didDisconnectToken {
-            NotificationCenter.default.removeObserver(didDisconnectToken)
-        }
-        if let lnmDidReceiveToken = lnmDidReceiveToken {
-            NotificationCenter.default.removeObserver(lnmDidReceiveToken)
-        }
-        if let downsampleDidChangeToken = downsampleDidChangeToken {
-            NotificationCenter.default.removeObserver(downsampleDidChangeToken)
-        }
-        if let chartIntervalDidChangeToken = chartIntervalDidChangeToken {
-            NotificationCenter.default.removeObserver(chartIntervalDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        backgroundToken?.invalidate()
+        alertDidChangeToken?.invalidate()
+        didConnectToken?.invalidate()
+        didDisconnectToken?.invalidate()
+        lnmDidReceiveToken?.invalidate()
+        downsampleDidChangeToken?.invalidate()
+        chartIntervalDidChangeToken?.invalidate()
     }
 
     func configure(output: TagChartsModuleOutput) {
@@ -94,8 +76,8 @@ class TagChartsPresenter: TagChartsModuleInput {
         self.ruuviTag = ruuviTag
     }
 
-    func dismiss() {
-        router.dismiss()
+    func dismiss(completion: (() -> Void)? = nil) {
+        router.dismiss(completion: completion)
     }
 }
 
@@ -114,7 +96,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingBluetoothState()
         tryToShowSwipeUpHint()
         restartObservingData()
-        interactor.startObservingTags()
+        interactor.restartObservingTags()
         syncChartViews()
     }
 
@@ -208,14 +190,6 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
-
-    func interactorDidDeleteTag() {
-        self.router.dismiss()
-    }
-
-    func interactorDidDeleteLast() {
-        self.router.openDiscover(output: self)
-    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
@@ -289,7 +263,14 @@ extension TagChartsPresenter: AlertServiceObserver {
 
 // MARK: - TagSettingsModuleOutput
 extension TagChartsPresenter: TagSettingsModuleOutput {
-    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor) {
+    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
+                                 ruuviTag: RuuviTagSensor) {
+        module.dismiss { [weak self] in
+            guard let sSelf = self else {
+                return
+            }
+            sSelf.output?.tagChartsDidDeleteTag(module: sSelf)
+        }
     }
 }
 

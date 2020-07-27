@@ -23,12 +23,8 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
             wsTokens.forEach({ $0.invalidate() })
             wsTokens.removeAll()
             token?.invalidate()
-            if let isOnToken = isOnToken {
-                NotificationCenter.default.removeObserver(isOnToken)
-            }
-            if let intervalToken = intervalToken {
-                NotificationCenter.default.removeObserver(intervalToken)
-            }
+            isOnToken?.invalidate()
+            intervalToken?.invalidate()
         }
     }
 
@@ -111,9 +107,7 @@ class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
             wsTokens.removeAll()
             token?.invalidate()
             token = nil
-            if let intervalToken = intervalToken {
-                NotificationCenter.default.removeObserver(intervalToken)
-            }
+            intervalToken?.invalidate()
             webTags = nil
         }
     }
