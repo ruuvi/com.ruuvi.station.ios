@@ -21,6 +21,11 @@ or alternatively using `brew cask install fastlane`
 fastlane ios test
 ```
 
+### ios reg
+```
+fastlane ios reg
+```
+Register devices
 ### ios upload_to_firebase
 ```
 fastlane ios upload_to_firebase

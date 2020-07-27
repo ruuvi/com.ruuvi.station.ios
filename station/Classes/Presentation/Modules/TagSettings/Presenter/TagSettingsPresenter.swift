@@ -58,24 +58,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         ruuviTagSensorRecordToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
-        if let temperatureUnitToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(temperatureUnitToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let connectToken = connectToken {
-            NotificationCenter.default.removeObserver(connectToken)
-        }
-        if let disconnectToken = disconnectToken {
-            NotificationCenter.default.removeObserver(disconnectToken)
-        }
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        connectToken?.invalidate()
+        disconnectToken?.invalidate()
+        appDidBecomeActiveToken?.invalidate()
+        alertDidChangeToken?.invalidate()
     }
 
     func configure(ruuviTag: RuuviTagSensor, humidity: Double?, output: TagSettingsModuleOutput) {
@@ -92,6 +80,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingApplicationState()
         startObservingAlertChanges()
     }
+
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss(completion: completion)
+    }
 }
 
 // MARK: - TagSettingsViewOutput
@@ -102,7 +94,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToDismiss() {
-        router.dismiss(completion: nil)
+        router.dismiss()
     }
 
     func viewDidAskToRandomizeBackground() {
@@ -129,10 +121,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
         Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
-            self?.router.dismiss(completion: {
-                guard let self = self else { return }
-                self.output.tagSettingsDidDeleteTag(ruuviTag: self.ruuviTag)
-            })
+            guard let sSelf = self else {
+                return
+            }
+            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })

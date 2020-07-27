@@ -1,4 +1,4 @@
-git_url("git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
+git_url("git@github.com:ruuvi/com.ruuvi.station.ios.certificates.git")
 storage_mode("git")
 app_identifier("com.ruuvi.station")
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
