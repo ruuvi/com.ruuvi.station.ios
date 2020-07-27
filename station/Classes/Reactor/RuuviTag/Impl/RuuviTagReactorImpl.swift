@@ -22,8 +22,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
     @available(iOS 13, *)
     private lazy var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
     #endif
-
-//swiftlint:disable:next function_body_length
+// swiftlint:disable:next function_body_length
     func observe(_ ruuviTagId: String,
                  _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RUObservationToken {
         #if canImport(Combine)
@@ -90,8 +89,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         }
         #endif
     }
-
-//swiftlint:disable:next function_body_length
+// swiftlint:disable:next function_body_length
     func observe(_ block: @escaping (ReactorChange<AnyRuuviTagSensor>) -> Void) -> RUObservationToken {
         let sqliteOperation = sqlitePersistence.readAll()
         let realmOperation = realmPersistence.readAll()
@@ -150,8 +148,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         }
         #endif
     }
-
-//swiftlint:disable:next function_body_length
+// swiftlint:disable:next function_body_length
     func observeLast(_ ruuviTag: RuuviTagSensor,
                      _ block: @escaping (ReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RUObservationToken {
         let sqliteOperation = sqlitePersistence.readLast(ruuviTag)

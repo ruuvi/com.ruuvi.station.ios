@@ -87,7 +87,7 @@ extension TagChartPresenter {
         lineChartDataSet.axisDependency = .left
         lineChartDataSet.setColor(NSUIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
         lineChartDataSet.lineWidth = 1.5
-        lineChartDataSet.drawCirclesEnabled = true
+        lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.drawValuesEnabled = false
         lineChartDataSet.fillAlpha = 0.26
         lineChartDataSet.fillColor = NSUIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
@@ -142,11 +142,11 @@ extension TagChartPresenter {
     }
 
     private func createChartDataWithoutDownsampling() {
-        viewModel.chartData.value = LineChartData(dataSet: newDataSet())
+        let lineChartData = LineChartData(dataSet: newDataSet())
         ouptut.dataSource.forEach({
-            viewModel.chartData.value?.addEntry(chartEntry(for: $0), dataSetIndex: 0)
+            addEntry(for: lineChartData, data: $0)
         })
-        drawCirclesIfNeeded(for: chartData)
+        viewModel.chartData.value = lineChartData
         view.reloadData()
     }
 
@@ -155,32 +155,10 @@ extension TagChartPresenter {
             return
         }
         newValues.forEach {
-            chartData.addEntry(chartEntry(for: $0), dataSetIndex: 0)
+            addEntry(for: chartData, data: $0)
             chartData.notifyDataChanged()
         }
-        drawCirclesIfNeeded(for: chartData)
         view.reloadData()
-    }
-
-    private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
-        if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
-            let count: Int
-            if let entriesCount = entriesCount {
-                count = entriesCount
-            } else {
-                count = dataSet.entries.count
-            }
-            switch count {
-            case 1:
-                dataSet.circleRadius = 6
-                dataSet.drawCirclesEnabled = true
-            case 2...threshold:
-                dataSet.circleRadius = 2
-                dataSet.drawCirclesEnabled = true
-            default:
-                dataSet.drawCirclesEnabled = false
-            }
-        }
     }
 
     private func fetchPointsByDates(start: TimeInterval,
@@ -203,8 +181,6 @@ extension TagChartPresenter {
                     if self.settings.chartDownsamplingOn {
                         self.setDownSampled(dataSet: sorted,
                                             completion: completion)
-                    } else {
-                        self.drawCirclesIfNeeded(for: self.chartData, entriesCount: sorted.count)
                     }
                 }
             }
@@ -212,7 +188,7 @@ extension TagChartPresenter {
         queue.addOperation(filterOperation)
     }
 //swiftlint:disable:next cyclomatic_complexity
-    private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry {
+    private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry? {
         var value: Double?
         switch viewModel.type {
         case .temperature:
@@ -243,10 +219,17 @@ extension TagChartPresenter {
             fatalError("before need implement chart with current type!")
         }
         guard let y = value else {
-            fatalError("before need implement chart with current type!")
+            return nil
         }
         return ChartDataEntry(x: data.date.timeIntervalSince1970, y: Double(round(100*y)/100))
     }
+
+    private func addEntry(for chartData: ChartData, data: RuuviMeasurement, dataSetIndex: Int = 0) {
+        if let entity = chartEntry(for: data) {
+            chartData.addEntry(entity, dataSetIndex: dataSetIndex)
+        }
+    }
+
     // swiftlint:disable function_body_length
     private func setDownSampled(dataSet: [RuuviMeasurement], completion: (() -> Void)? = nil) {
         defer {
@@ -257,18 +240,15 @@ extension TagChartPresenter {
         }
         if let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
             chartDataSet.removeAll(keepingCapacity: true)
-            chartDataSet.drawCirclesEnabled = false
         } else {
             let chartDataSet = newDataSet()
-            chartDataSet.drawCirclesEnabled = false
             chartData.addDataSet(chartDataSet)
         }
         let data_length = dataSet.count
         if data_length <= threshold {
             dataSet.forEach({
-                chartData.addEntry(chartEntry(for: $0), dataSetIndex: 0)
+                addEntry(for: chartData, data: $0)
             })
-            drawCirclesIfNeeded(for: chartData)
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
@@ -287,8 +267,8 @@ extension TagChartPresenter {
         var range_to: Int = 0
         var point_a_x: Double = 0
         var point_a_y: Double = 0
-        chartData.addEntry(chartEntry(for: dataSet[0]), dataSetIndex: 0)
-        chartData.addEntry(chartEntry(for: dataSet[1]), dataSetIndex: 0)
+        addEntry(for: chartData, data: dataSet[0])
+        addEntry(for: chartData, data: dataSet[1])
         for i in 0..<data_length/every {
             // Calculate point average for next bucket (containing c)
             avg_x = 0
@@ -299,13 +279,15 @@ extension TagChartPresenter {
             avg_range_length = avg_range_end - avg_range_start
             guard avg_range_length > 0 else {
                 if a < data_length {
-                    chartData.addEntry(chartEntry(for: dataSet[a]), dataSetIndex: 0)
+                    addEntry(for: chartData, data: dataSet[a])
                     a += every
                 }
                 continue
             }
             for range_start in avg_range_start..<avg_range_end {
-                let point_a = chartEntry(for: dataSet[range_start])
+                guard let point_a = chartEntry(for: dataSet[range_start]) else {
+                    continue
+                }
                 avg_x += point_a.x
                 avg_y += point_a.y
             }
@@ -315,14 +297,18 @@ extension TagChartPresenter {
             range_offs = Int(floor( Double(i * every) ) + 1)
             range_to   = Int(floor( Double((i + 1) * every) ) + 1)
             // Point a
-            let point_a = chartEntry(for: dataSet[a])
+            guard let point_a = chartEntry(for: dataSet[a]) else {
+                continue
+            }
             point_a_x = point_a.x
             point_a_y = point_a.y
             max_area = -1
             area = -1
             for range_offs in range_offs..<range_to {
                 // Calculate triangle area over three buckets
-                let point_offs = chartEntry(for: dataSet[range_offs])
+                guard let point_offs = chartEntry(for: dataSet[range_offs]) else {
+                    continue
+                }
                 area = abs( ( point_a_x - avg_x ) * ( point_offs.y  - point_a_y ) -
                     ( point_a_x - point_offs.x ) * ( avg_y - point_a_y )
                 )
@@ -333,14 +319,12 @@ extension TagChartPresenter {
                     next_a = range_offs // Next a is this b
                 }
             }
-            chartData.addEntry(
-                ChartDataEntry(x: max_area_point.0,
-                               y: Double(round(100 * max_area_point.1)/100)),
-                dataSetIndex: 0)
+            let entry = ChartDataEntry(x: max_area_point.0, y: Double(round(100 * max_area_point.1)/100))
+            chartData.addEntry(entry, dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
-        chartData.addEntry(chartEntry(for: dataSet[dataSet.count - 2]), dataSetIndex: 0)
-        chartData.addEntry(chartEntry(for: dataSet[dataSet.count - 1]), dataSetIndex: 0)
+        addEntry(for: chartData, data: dataSet[dataSet.count - 2])
+        addEntry(for: chartData, data: dataSet[dataSet.count - 1])
     }
     // swiftlint:enable function_body_length
 }
