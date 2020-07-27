@@ -5,7 +5,7 @@ import BTKit
 protocol TagChartsInteractorInput: class {
     var chartViews: [TagChartView] { get }
     func configure(withTag ruuviTag: AnyRuuviTagSensor)
-    func startObservingTags()
+    func restartObservingTags()
     func stopObservingTags()
     func restartObservingData()
     func stopObservingRuuviTagsData()

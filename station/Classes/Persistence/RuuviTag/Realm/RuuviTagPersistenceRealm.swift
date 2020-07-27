@@ -281,6 +281,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 .filter("ruuviTag.uuid == %@", luid.value)
                 .sorted(byKeyPath: "date", ascending: false)
                 .first {
+                let sequenceNumber = record.measurementSequenceNumber.value
                 let result = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
                                                        date: record.date,
                                                        macId: nil,
@@ -291,8 +292,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                        acceleration: record.acceleration,
                                                        voltage: record.unitVoltage,
                                                        movementCounter: record.movementCounter.value,
-                                                       measurementSequenceNumber: record
-                                                        .measurementSequenceNumber.value,
+                                                       measurementSequenceNumber: sequenceNumber,
                                                        txPower: record.txPower.value)
                 promise.succeed(value: result)
             } else {

@@ -37,9 +37,7 @@ class TagChartsScrollViewController: UIViewController {
     private let alertOnImage = UIImage(named: "icon-alert-on")
 
     deinit {
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
+        appDidBecomeActiveToken?.invalidate()
     }
 // MARK: - Actions
     @IBAction func didTriggerCards(_ sender: Any) {

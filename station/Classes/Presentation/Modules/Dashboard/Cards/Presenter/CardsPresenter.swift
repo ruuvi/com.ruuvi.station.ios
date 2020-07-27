@@ -31,7 +31,7 @@ class CardsPresenter: CardsModuleInput {
     weak var tagCharts: TagChartsModuleInput?
 
     private var ruuviTagToken: RUObservationToken?
-    private var ruuviTagNetworkToken: RUObservationToken?
+    private var ruuviTagObserveLastRecordToken: RUObservationToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
     private var advertisementTokens = [ObservationToken]()
@@ -54,6 +54,7 @@ class CardsPresenter: CardsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var calibrationHumidityDidChangeToken: NSObjectProtocol?
+    private var didMigrationCompleteToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var virtualTags: Results<WebTagRealm>? {
@@ -75,64 +76,31 @@ class CardsPresenter: CardsModuleInput {
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
-        ruuviTagNetworkToken?.invalidate()
+        ruuviTagObserveLastRecordToken?.invalidate()
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
         advertisementTokens.forEach({ $0.invalidate() })
         heartbeatTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
-        if let temperatureUnitToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(temperatureUnitToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let backgroundToken = backgroundToken {
-            NotificationCenter.default.removeObserver(backgroundToken)
-        }
-        if let webTagDaemonFailureToken = webTagDaemonFailureToken {
-            NotificationCenter.default.removeObserver(webTagDaemonFailureToken)
-        }
-        if let ruuviTagAdvertisementDaemonFailureToken = ruuviTagAdvertisementDaemonFailureToken {
-            NotificationCenter.default.removeObserver(ruuviTagAdvertisementDaemonFailureToken)
-        }
-        if let ruuviTagHeartbeatDaemonFailureToken = ruuviTagHeartbeatDaemonFailureToken {
-            NotificationCenter.default.removeObserver(ruuviTagHeartbeatDaemonFailureToken)
-        }
-        if let ruuviTagReadLogsOperationFailureToken = ruuviTagReadLogsOperationFailureToken {
-            NotificationCenter.default.removeObserver(ruuviTagReadLogsOperationFailureToken)
-        }
-        if let startKeepingConnectionToken = startKeepingConnectionToken {
-            NotificationCenter.default.removeObserver(startKeepingConnectionToken)
-        }
-        if let stopKeepingConnectionToken = stopKeepingConnectionToken {
-            NotificationCenter.default.removeObserver(stopKeepingConnectionToken)
-        }
-        if let ruuviTagPropertiesDaemonFailureToken = ruuviTagPropertiesDaemonFailureToken {
-            NotificationCenter.default.removeObserver(ruuviTagPropertiesDaemonFailureToken)
-        }
-        if let didConnectToken = didConnectToken {
-            NotificationCenter.default.removeObserver(didConnectToken)
-        }
-        if let didDisconnectToken = didDisconnectToken {
-            NotificationCenter.default.removeObserver(didDisconnectToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
-        if let readRSSIToken = readRSSIToken {
-            NotificationCenter.default.removeObserver(readRSSIToken)
-        }
-        if let readRSSIIntervalToken = readRSSIIntervalToken {
-            NotificationCenter.default.removeObserver(readRSSIIntervalToken)
-        }
-        if let lnmDidReceiveToken = lnmDidReceiveToken {
-            NotificationCenter.default.removeObserver(lnmDidReceiveToken)
-        }
-        if let calibrationHumidityDidChangeToken = calibrationHumidityDidChangeToken {
-            NotificationCenter.default.removeObserver(calibrationHumidityDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        backgroundToken?.invalidate()
+        webTagDaemonFailureToken?.invalidate()
+        ruuviTagAdvertisementDaemonFailureToken?.invalidate()
+        ruuviTagHeartbeatDaemonFailureToken?.invalidate()
+        ruuviTagReadLogsOperationFailureToken?.invalidate()
+        startKeepingConnectionToken?.invalidate()
+        stopKeepingConnectionToken?.invalidate()
+        ruuviTagPropertiesDaemonFailureToken?.invalidate()
+        didConnectToken?.invalidate()
+        didDisconnectToken?.invalidate()
+        alertDidChangeToken?.invalidate()
+        readRSSIToken?.invalidate()
+        readRSSIIntervalToken?.invalidate()
+        lnmDidReceiveToken?.invalidate()
+        calibrationHumidityDidChangeToken?.invalidate()
+        didMigrationCompleteToken?.invalidate()
     }
 }
 
@@ -140,6 +108,7 @@ class CardsPresenter: CardsModuleInput {
 extension CardsPresenter: CardsViewOutput {
     func viewDidLoad() {
         startObservingRuuviTags()
+        startObserveMigrationCompletion()
         startObservingWebTags()
         startObservingSettingsChanges()
         startObservingBackgroundChanges()
@@ -166,7 +135,7 @@ extension CardsPresenter: CardsViewOutput {
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value)
+            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value, output: self)
         } else if viewModel.type == .web,
             let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag)
@@ -228,6 +197,7 @@ extension CardsPresenter: DiscoverModuleOutput {
 
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
         module.dismiss()
+        self.startObservingRuuviTags()
     }
 
     func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
@@ -279,6 +249,12 @@ extension CardsPresenter: TagChartsModuleOutput {
             view.scroll(to: index, immediately: true)
         }
     }
+
+    func tagChartsDidDeleteTag(module: TagChartsModuleInput) {
+        module.dismiss(completion: { [weak self] in
+            self?.syncViewModels()
+        })
+    }
 }
 
 // MARK: - CardsRouterDelegate
@@ -299,6 +275,15 @@ extension CardsPresenter: AlertServiceObserver {
                     $0.alertState.value = newValue
                 }
             })
+    }
+}
+
+// MARK: - TagSettingsModuleOutput
+extension CardsPresenter: TagSettingsModuleOutput {
+    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput, ruuviTag: RuuviTagSensor) {
+        module.dismiss(completion: { [weak self] in
+            self?.syncViewModels()
+        })
     }
 }
 
@@ -351,8 +336,10 @@ extension CardsPresenter {
         viewModels = ruuviViewModels + virtualViewModels
 
         // if no tags, open discover
-        if didLoadInitialRuuviTags && didLoadInitialWebTags && viewModels.count == 0 {
-            router.openDiscover(output: self)
+        if didLoadInitialRuuviTags
+            && didLoadInitialWebTags
+            && viewModels.isEmpty {
+            self.router.openDiscover(output: self)
         }
     }
 
@@ -486,12 +473,14 @@ extension CardsPresenter {
     }
 
     private func restartObservingRuuviTagNetwork(for sensor: AnyRuuviTagSensor) {
-        ruuviTagNetworkToken?.invalidate()
-        ruuviTagNetworkToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
+        ruuviTagObserveLastRecordToken?.invalidate()
+        ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                 let viewModel = self?.viewModels.first(where: {$0.id.value == anyRecord?.ruuviTagId}),
                 let record = anyRecord?.object {
-                viewModel.update(record)
+                if viewModel.needUpdateFromObservingLastRecord {
+                    viewModel.update(record)
+                }
             }
         }
     }
@@ -593,10 +582,22 @@ extension CardsPresenter {
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
+                if let currentPage = self?.view.currentPage,
+                    let tagsCount = self?.ruuviTags.count,
+                    currentPage < tagsCount,
+                    let tag = self?.ruuviTags[currentPage] {
+                    self?.restartObservingRuuviTagNetwork(for: tag)
+                } else {
+                    self?.ruuviTagObserveLastRecordToken?.invalidate()
+                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
-            default:
-                break
+            case .update(let sensor):
+                guard let sSelf = self else { return }
+                if let index = sSelf.ruuviTags.firstIndex(of: sensor) {
+                    sSelf.ruuviTags[index] = sensor
+                    sSelf.syncViewModels()
+                }
             }
         }
     }
@@ -785,6 +786,14 @@ extension CardsPresenter {
                        })
                    }
                })
+    }
+
+    private func startObserveMigrationCompletion() {
+        didMigrationCompleteToken = NotificationCenter
+            .default
+            .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
+                self?.startObservingRuuviTags()
+            })
     }
 
     private func updateAlertState(for viewModel: CardsViewModel) {
