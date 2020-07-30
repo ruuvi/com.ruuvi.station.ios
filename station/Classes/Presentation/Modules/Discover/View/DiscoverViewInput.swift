@@ -15,4 +15,5 @@ protocol DiscoverViewInput: ViewInput {
     var networkFeatureEnabled: Bool { get set }
     var networkKaltiotEnabled: Bool { get set }
     var networkWhereOsEnabled: Bool { get set }
+    var canSendMac: Bool { get set }
 }
