@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import UserNotifications
 import UIKit
 
@@ -28,9 +29,12 @@ enum BlastNotificationType: String {
 
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
-    var realmContext: RealmContext!
+    var ruuviTagTrunk: RuuviTagTrunk!
+    var virtualTagTrunk: VirtualTagTrunk!
+    var idPersistence: IDPersistence!
     var alertService: AlertService!
     var settings: Settings!
+    var errorPresenter: ErrorPresenter!
 
     var lowTemperatureAlerts = [String: Date]()
     var highTemperatureAlerts = [String: Date]()
@@ -61,29 +65,36 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     deinit {
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
+        alertDidChangeToken?.invalidate()
+    }
+
+    private func id(for uuid: String) -> String {
+        var id: String
+        if let macId = idPersistence.mac(for: uuid.luid) {
+            id = macId.value
+        } else {
+            id = uuid
         }
+        return id
     }
 
     func showDidConnect(uuid: String) {
-
         let content = UNMutableNotificationContent()
         content.title = "LocalNotificationsManager.DidConnect.title".localized()
         content.sound = .default
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
 
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
-        } else {
-            content.body = alertService.connectionDescription(for: uuid) ?? uuid
-        }
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
     func showDidDisconnect(uuid: String) {
@@ -91,17 +102,18 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.sound = .default
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
-
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+
+        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = alertService.connectionDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
-        } else {
-            content.body = alertService.connectionDescription(for: uuid) ?? uuid
-        }
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
     func notifyDidMove(for uuid: String, counter: Int) {
@@ -111,15 +123,17 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.categoryIdentifier = blast.id
 
         content.title = "LocalNotificationsManager.DidMove.title".localized()
-        if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
+
+        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+            guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
-            content.body = alertService.movementDescription(for: uuid) ?? (ruuviTag.mac ?? ruuviTag.uuid)
-        } else {
-            content.body = alertService.movementDescription(for: uuid) ?? uuid
-        }
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            content.body = sSelf.alertService.movementDescription(for: uuid) ?? ""
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
@@ -200,30 +214,36 @@ extension LocalNotificationsManagerImpl {
             content.title = title
             content.userInfo = [lowHigh.uuidKey: uuid, lowHigh.typeKey: type.rawValue]
             content.categoryIdentifier = lowHigh.id
-            if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
-                content.subtitle = ruuviTag.name
-            } else if let webTag = realmContext.main.object(ofType: WebTagRealm.self, forPrimaryKey: uuid) {
-                content.subtitle = webTag.name
-            }
 
             let body: String
             switch type {
             case .temperature:
-                body = alertService.temperatureDescription(for: uuid) ?? uuid
+                body = alertService.temperatureDescription(for: uuid) ?? ""
             case .relativeHumidity:
-                body = alertService.relativeHumidityDescription(for: uuid) ?? uuid
+                body = alertService.relativeHumidityDescription(for: uuid) ?? ""
             case .absoluteHumidity:
-                body = alertService.absoluteHumidityDescription(for: uuid) ?? uuid
+                body = alertService.absoluteHumidityDescription(for: uuid) ?? ""
             case .dewPoint:
-                body = alertService.dewPointDescription(for: uuid) ?? uuid
+                body = alertService.dewPointDescription(for: uuid) ?? ""
             case .pressure:
-                body = alertService.pressureDescription(for: uuid) ?? uuid
+                body = alertService.pressureDescription(for: uuid) ?? ""
             }
             content.body = body
 
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-            let request = UNNotificationRequest(identifier: uuid + type.rawValue, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            ruuviTagTrunk.readOne(id(for: uuid)).on(success: { ruuviTag in
+                content.subtitle = ruuviTag.name
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: uuid + type.rawValue,
+                                                    content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
+            virtualTagTrunk.readOne(id(for: uuid)).on(success: { virtualTag in
+                content.subtitle = virtualTag.name
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                let request = UNNotificationRequest(identifier: uuid + type.rawValue,
+                                                    content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+            })
 
             switch reason {
             case .low:
@@ -260,6 +280,7 @@ extension LocalNotificationsManagerImpl {
 // MARK: - Private
 extension LocalNotificationsManagerImpl {
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -347,45 +368,36 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         completionHandler([.alert, .badge, .sound])
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
             let typeString = userInfo[lowHigh.typeKey] as? String,
-            let type = LowHighNotificationType(rawValue: typeString) {
-            switch response.actionIdentifier {
-            case lowHigh.disable:
-                switch type {
-                case .temperature:
-                    alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
-                        uuid)
-                case .relativeHumidity:
-                    alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
-                case .absoluteHumidity:
-                    alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
-                case .dewPoint:
-                    alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
-                case .pressure:
-                    alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
-                }
-            default:
-                break
+            let type = LowHighNotificationType(rawValue: typeString),
+            response.actionIdentifier == lowHigh.disable {
+            switch type {
+            case .temperature:
+                alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
+                    uuid)
+            case .relativeHumidity:
+                alertService.unregister(type: .relativeHumidity(lower: 0, upper: 0), for: uuid)
+            case .absoluteHumidity:
+                alertService.unregister(type: .absoluteHumidity(lower: 0, upper: 0), for: uuid)
+            case .dewPoint:
+                alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
+            case .pressure:
+                alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
             }
         } else if let uuid = userInfo[blast.uuidKey] as? String,
             let typeString = userInfo[blast.typeKey] as? String,
-            let type = BlastNotificationType(rawValue: typeString) {
-            switch response.actionIdentifier {
-            case blast.disable:
-                switch type {
-                case .connection:
-                    alertService.unregister(type: .connection, for: uuid)
-                case .movement:
-                    alertService.unregister(type: .movement(last: 0), for: uuid)
-                }
-            default:
-                break
+            let type = BlastNotificationType(rawValue: typeString),
+            response.actionIdentifier == blast.disable {
+            switch type {
+            case .connection:
+                alertService.unregister(type: .connection, for: uuid)
+            case .movement:
+                alertService.unregister(type: .movement(last: 0), for: uuid)
             }
         }
 
@@ -404,3 +416,4 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
     }
 
 }
+// swiftlint:enable file_length

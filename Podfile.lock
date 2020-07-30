@@ -1,8 +1,8 @@
 PODS:
-  - BTKit (0.1.9)
-  - Charts (3.4.0):
-    - Charts/Core (= 3.4.0)
-  - Charts/Core (3.4.0)
+  - BTKit (0.1.13)
+  - Charts (3.5.0):
+    - Charts/Core (= 3.5.0)
+  - Charts/Core (3.5.0)
   - Firebase/Analytics (6.15.0):
     - Firebase/Core
   - Firebase/Core (6.15.0):
@@ -10,6 +10,9 @@ PODS:
     - FirebaseAnalytics (= 6.2.1)
   - Firebase/CoreOnly (6.15.0):
     - FirebaseCore (= 6.6.0)
+  - Firebase/Crashlytics (6.15.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 4.0.0-beta.1)
   - Firebase/Messaging (6.15.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.2.0)
@@ -35,6 +38,11 @@ PODS:
     - GoogleUtilities/Logger (~> 6.5)
     - nanopb (~> 0.3.901)
   - FirebaseCoreDiagnosticsInterop (1.2.0)
+  - FirebaseCrashlytics (4.0.0-beta.5):
+    - FirebaseAnalyticsInterop (~> 1.2)
+    - FirebaseCore (~> 6.6)
+    - FirebaseInstallations (~> 1.1)
+    - PromisesObjC (~> 1.2)
   - FirebaseInstallations (1.1.0):
     - FirebaseCore (~> 6.6)
     - GoogleUtilities/UserDefaults (~> 6.5)
@@ -53,6 +61,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 6.5)
     - GoogleUtilities/UserDefaults (~> 6.5)
     - Protobuf (>= 3.9.2, ~> 3.9)
+  - FLEX (4.1.1)
   - FutureX (1.1.1)
   - GestureInstructions (0.0.2)
   - GoogleAppMeasurement (6.2.1):
@@ -83,6 +92,9 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.5.0):
     - GoogleUtilities/Logger
+  - GRDB.swift (4.14.0):
+    - GRDB.swift/standard (= 4.14.0)
+  - GRDB.swift/standard (4.14.0)
   - Humidity (0.0.8)
   - LightRoute (2.2.2)
   - Localize-Swift (3.1.0)
@@ -92,31 +104,40 @@ PODS:
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
   - Nantes (0.0.9)
+  - Nimble (8.0.5)
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.2)
-  - RangeSeekSlider (1.8.0)
+  - Quick (2.2.0)
+  - RangeSeekSlider (1.8.2)
   - Realm (4.3.1):
     - Realm/Headers (= 4.3.1)
   - Realm/Headers (4.3.1)
   - RealmSwift (4.3.1):
     - Realm (= 4.3.1)
+  - RxSwift (5.1.1)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
 
 DEPENDENCIES:
-  - BTKit (= 0.1.9)
+  - BTKit (= 0.1.13)
   - Charts
   - Firebase/Analytics
+  - Firebase/Crashlytics
   - Firebase/Messaging
+  - FLEX
   - FutureX
   - GestureInstructions
+  - GRDB.swift
   - Humidity
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
   - Nantes
-  - RangeSeekSlider
+  - Nimble
+  - Quick
+  - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
+  - RxSwift
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
 
@@ -130,29 +151,36 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseCoreDiagnosticsInterop
+    - FirebaseCrashlytics
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
+    - FLEX
     - FutureX
     - GestureInstructions
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
+    - GRDB.swift
     - Humidity
     - Localize-Swift
     - nanopb
     - Nantes
+    - Nimble
     - PromisesObjC
     - Protobuf
-    - RangeSeekSlider
+    - Quick
     - Realm
     - RealmSwift
+    - RxSwift
     - Swinject
 
 EXTERNAL SOURCES:
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
+  RangeSeekSlider:
+    :git: https://github.com/rinat-enikeev/RangeSeekSlider
   SwinjectPropertyLoader:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
@@ -160,41 +188,50 @@ CHECKOUT OPTIONS:
   LightRoute:
     :commit: fcea1b3808b75be92d983316742bf186e21981ec
     :git: https://github.com/rinat-enikeev/LightRoute.git
+  RangeSeekSlider:
+    :commit: 35712fc13229f527e0a356f3de34deccbcfd6b59
+    :git: https://github.com/rinat-enikeev/RangeSeekSlider
   SwinjectPropertyLoader:
     :commit: 653f1b149c575921fbc1cb02a447aa2f6da9e94c
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 SPEC CHECKSUMS:
-  BTKit: f6d4664ce14ea2939d7458466765ed38da47dd3d
-  Charts: 74c9f256eaf0460c0c416522d1cf8c634ea6b286
+  BTKit: ea4207739e19fdcfbcbb75ed243fb7800d5a9c16
+  Charts: 40a08591df1f8ad5c223ddedfb1a06da92f24f7c
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
   FirebaseAnalyticsInterop: 3f86269c38ae41f47afeb43ebf32a001f58fcdae
   FirebaseCore: 4aeb81ff53dcd9a3634ca725dc1fb8c2a4622046
   FirebaseCoreDiagnostics: 5e78803ab276bc5b50340e3c539c06c3de35c649
   FirebaseCoreDiagnosticsInterop: 296e2c5f5314500a850ad0b83e9e7c10b011a850
+  FirebaseCrashlytics: 7c95218730d1debf493e987233c7b41dd7ba1329
   FirebaseInstallations: 575cd32f2aec0feeb0e44f5d0110a09e5e60b47b
   FirebaseInstanceID: 6668efc1655a4052c083f287a7141f1ead12f9c2
   FirebaseMessaging: 448cf4c727f3c95f4f90816907d67306ba785cfe
+  FLEX: 81096107977a09836eb440173010ceeef01105d6
   FutureX: 85faeccb370f5a4286ae8540849095adb0bd7b2d
   GestureInstructions: acbd12854a5c7658365a11eaae2652dcbe623038
   GoogleAppMeasurement: a08a43b8677b95ed51fcef880e36737334d804fd
   GoogleDataTransport: 574a983e829327d7c18f2627f65d9e80164ea8a4
   GoogleDataTransportCCTSupport: cad3cd6cdbdbad6b5c2c9206ec413402755faaaa
   GoogleUtilities: f8de7ddf8c706f58e9b405d53e38bbdaa2731e5a
+  GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
   Humidity: 293c834c017c111d254440f234fcf8d7e6fe4493
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 4bed4f0ccac8be2ec3517ee359da80ba2adb0fae
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Nantes: c1b4eec0748c01f4c6b83e16a11e52ab2007cd4d
+  Nimble: 4ab1aeb9b45553c75b9687196b0fa0713170a332
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
-  RangeSeekSlider: 650b11fa1edcb92e1e0ede797669d98622570fb5
+  Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
+  RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 31dc40934081ef740f60feedc46d88473cbfeb40
   RealmSwift: b5199e9a41f67b99f51acf6874a6166f5fbe93d1
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 7f27ca24a863f81c9e920381f7978252a4d81aa6
+PODFILE CHECKSUM: f46b2733a212255f7aad88b0b4b94ef2455ff9ee
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3

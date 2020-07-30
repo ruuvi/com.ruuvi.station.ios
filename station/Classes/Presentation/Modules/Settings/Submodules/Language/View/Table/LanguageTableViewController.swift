@@ -3,7 +3,11 @@ import UIKit
 class LanguageTableViewController: UITableViewController {
     var output: LanguageViewOutput!
 
-    var languages: [Language] = [Language]() { didSet { updateUILanguages() } }
+    var languages: [Language] = [Language]() {
+        didSet {
+            updateUILanguages()
+        }
+    }
 
     private let cellReuseIdentifier = "LanguageTableViewCellReuseIdentifier"
 }
@@ -13,16 +17,13 @@ extension LanguageTableViewController: LanguageViewInput {
     func localize() {
         tableView.reloadData()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - View lifecycle
 extension LanguageTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateUI()
         setupLocalization()
         output.viewDidLoad()
     }

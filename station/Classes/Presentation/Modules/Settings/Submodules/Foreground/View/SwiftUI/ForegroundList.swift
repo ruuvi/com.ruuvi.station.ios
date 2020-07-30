@@ -20,7 +20,7 @@ struct ForegroundList: View {
                         Stepper("Foreground.Interval.Every.string".localized()
                             + " " + "\(daemon.interval.value.bound)"
                             + " " + "Foreground.Interval.Min.string".localized(),
-                                value: self.$env.daemons[self.index(of: daemon)].interval.value.bound, in: 1...3600)
+                                value: self.$env.daemons[self.index(of: daemon)].interval.value.bound, in: 0...3600)
                     }
                 }
             }

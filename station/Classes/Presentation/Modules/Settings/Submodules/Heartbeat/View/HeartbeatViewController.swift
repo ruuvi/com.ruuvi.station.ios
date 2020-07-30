@@ -32,10 +32,6 @@ extension HeartbeatViewController: HeartbeatViewInput {
     func localize() {
         navigationItem.title = "Heartbeat.navigationItem.title".localized()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - View lifecycle

@@ -7,7 +7,8 @@ protocol GATTService {
     func isSyncingLogs(with uuid: String) -> Bool
 
     @discardableResult
-    func syncLogs(with uuid: String,
+    func syncLogs(uuid: String,
+                  mac: String?,
                   progress: ((BTServiceProgress) -> Void)?,
                   connectionTimeout: TimeInterval?,
                   serviceTimeout: TimeInterval?) -> Future<Bool, RUError>
@@ -16,8 +17,8 @@ protocol GATTService {
 extension GATTService {
 
     @discardableResult
-    func syncLogs(with uuid: String) -> Future<Bool, RUError> {
-        return syncLogs(with: uuid, progress: nil, connectionTimeout: nil, serviceTimeout: nil)
+    func syncLogs(uuid: String, mac: String?) -> Future<Bool, RUError> {
+        return syncLogs(uuid: uuid, mac: mac, progress: nil, connectionTimeout: nil, serviceTimeout: nil)
     }
 
 }

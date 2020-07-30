@@ -109,7 +109,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="NlI-i8-HBY">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" maximumValue="3600" translatesAutoresizingMaskIntoConstraints="NO" id="NlI-i8-HBY">
                                                     <rect key="frame" x="300" y="6" width="94" height="32"/>
                                                     <connections>
                                                         <action selector="saveHeartbeatsIntervalStepperValueChanged:" destination="ybW-bv-0sg" eventType="valueChanged" id="Iay-5B-i7o"/>

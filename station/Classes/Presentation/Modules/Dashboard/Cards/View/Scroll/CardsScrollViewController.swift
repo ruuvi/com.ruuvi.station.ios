@@ -2,6 +2,7 @@
 import UIKit
 import Localize_Swift
 import GestureInstructions
+import Humidity
 
 class CardsScrollViewController: UIViewController {
     var output: CardsViewOutput!
@@ -12,29 +13,31 @@ class CardsScrollViewController: UIViewController {
 
     @IBOutlet weak var scrollView: UIScrollView!
 
-    var viewModels = [CardsViewModel]() { didSet { updateUIViewModels() }  }
+    var viewModels = [CardsViewModel]() {
+        didSet {
+            updateUIViewModels()
+        }
+    }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
     private var views = [CardView]()
-    private var currentPage: Int {
+    var currentPage: Int {
         if isViewLoaded {
             return Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         } else {
             return 0
         }
     }
-
+    private static var localizedCache: LocalizedCache = LocalizedCache()
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
     deinit {
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
+        appDidBecomeActiveToken?.invalidate()
     }
 }
 
@@ -42,6 +45,7 @@ class CardsScrollViewController: UIViewController {
 extension CardsScrollViewController: CardsViewInput {
 
     func localize() {
+        CardsScrollViewController.localizedCache = LocalizedCache()
         for (i, viewModel) in viewModels.enumerated() where i < views.count {
             let view = views[i]
             let updatePressure = pressureUpdateBlock(for: viewModel)
@@ -50,16 +54,9 @@ extension CardsScrollViewController: CardsViewInput {
             updateTemperature(view.temperatureLabel, nil) // can be nil, not used
 
             if let temperatureUnit = viewModel.temperatureUnit.value {
-                switch temperatureUnit {
-                case .celsius:
-                    view.temperatureUnitLabel.text = "°C".localized()
-                case .fahrenheit:
-                    view.temperatureUnitLabel.text = "°F".localized()
-                case .kelvin:
-                    view.temperatureUnitLabel.text = "K".localized()
-                }
+                view.temperatureUnitLabel.text = temperatureUnit.symbol
             } else {
-                view.temperatureUnitLabel.text = "N/A".localized()
+                view.temperatureUnitLabel.text = CardsScrollViewController.localizedCache.notAvailable
             }
 
             let updateHumidity = humidityUpdateBlock(for: viewModel, in: view)
@@ -74,10 +71,6 @@ extension CardsScrollViewController: CardsViewInput {
                 view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
         }
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showWebTagAPILimitExceededError() {
@@ -229,9 +222,11 @@ extension CardsScrollViewController {
         }
         return { label, pressure in
             if let pressure = pressure {
-                label.text = String.localizedStringWithFormat(pressureFormat, pressure) + " " + "hPa".localized()
+                label.text = String.localizedStringWithFormat(pressureFormat, pressure)
+                    + " "
+                    + CardsScrollViewController.localizedCache.hPa
             } else {
-                label.text = "N/A".localized()
+                label.text = CardsScrollViewController.localizedCache.notAvailable
             }
         }
     }
@@ -241,32 +236,26 @@ extension CardsScrollViewController {
         let fahrenheit = viewModel.fahrenheit
         let celsius = viewModel.celsius
         let kelvin = viewModel.kelvin
-
         let temperatureBlock: ((UILabel, Double?) -> Void) = {
             [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
             if let temperatureUnit = temperatureUnit?.value {
+                var temperature: Double?
                 switch temperatureUnit {
                 case .celsius:
-                    if let celsius = celsius?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", celsius)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = celsius?.value
                 case .fahrenheit:
-                    if let fahrenheit = fahrenheit?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", fahrenheit)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = fahrenheit?.value
                 case .kelvin:
-                    if let kelvin = kelvin?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", kelvin)
-                    } else {
-                        label.text = "N/A".localized()
-                    }
+                    temperature = kelvin?.value
                 }
+                if let temperature = temperature {
+                    label.text = String.localizedStringWithFormat("%.2f", temperature)
+                } else {
+                    label.text = CardsScrollViewController.localizedCache.notAvailable
+                }
+
             } else {
-                label.text = "N/A".localized()
+                label.text = CardsScrollViewController.localizedCache.notAvailable
             }
         }
         return temperatureBlock
@@ -306,57 +295,59 @@ extension CardsScrollViewController {
                     if let rh = rh?.value, let ho = ho?.value {
                         let sh = rh + ho
                         if sh < 100.0 {
-                            label.text = String.localizedStringWithFormat(rhFormat, rh + ho) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, rh + ho) + " " + "%"
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%"
                             humidityWarning?.isHidden = false
                         }
                     } else if let rh = rh?.value {
                         if rh < 100.0 {
-                            label.text = String.localizedStringWithFormat(rhFormat, rh) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, rh) + " " + "%"
                             humidityWarning?.isHidden = true
                         } else {
-                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%".localized()
+                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%"
                             humidityWarning?.isHidden = false
                         }
                     } else {
-                        label.text = "N/A".localized()
+                        label.text = CardsScrollViewController.localizedCache.notAvailable
                     }
                 case .gm3:
                     if let ah = ah?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", ah) + " " + "g/m³".localized()
+                        label.text = String.localizedStringWithFormat("%.2f", ah)
+                            + " "
+                            + CardsScrollViewController.localizedCache.gm3
                     } else {
-                        label.text = "N/A".localized()
+                        label.text = CardsScrollViewController.localizedCache.notAvailable
                     }
                 case .dew:
                     if let tu = tu?.value {
                         switch tu {
                         case .celsius:
                             if let dc = dc?.value {
-                                label.text = String.localizedStringWithFormat("%.2f", dc) + " " + "°C".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", dc) + " " + tu.symbol
                             } else {
-                                label.text = "N/A".localized()
+                                label.text = CardsScrollViewController.localizedCache.notAvailable
                             }
                         case .fahrenheit:
                             if let df = df?.value {
-                                label.text = String.localizedStringWithFormat("%.2f", df) + " " + "°F".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", df) + " " + tu.symbol
                             } else {
-                                label.text = "N/A".localized()
+                                label.text = CardsScrollViewController.localizedCache.notAvailable
                             }
                         case .kelvin:
                             if let dk = dk?.value {
-                                label.text = String.localizedStringWithFormat("%.2f", dk) + " " + "K".localized()
+                                label.text = String.localizedStringWithFormat("%.2f", dk) + " " + tu.symbol
                             } else {
-                                label.text = "N/A".localized()
+                                label.text = CardsScrollViewController.localizedCache.notAvailable
                             }
                         }
                     } else {
-                        label.text = "N/A".localized()
+                        label.text = CardsScrollViewController.localizedCache.notAvailable
                     }
                 }
             } else {
-                label.text = "N/A".localized()
+                label.text = CardsScrollViewController.localizedCache.notAvailable
             }
         }
         return humidityBlock
@@ -364,17 +355,22 @@ extension CardsScrollViewController {
 
     private func rssiUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void {
         let animated = viewModel.animateRSSI
-        return { [weak animated] label, rssi in
+        return {
+            [weak self,
+            weak animated] label, rssi in
             if let rssi = rssi {
-                label.text = "\(rssi)" + " " + "dBm".localized()
-                if let animated = animated?.value, animated {
+                label.text = "\(rssi)" + " " + CardsScrollViewController.localizedCache.dBm
+                if let animated = animated?.value,
+                    animated,
+                    self?.pageIsVisible(for: viewModel) == true {
+                    label.layer.removeAllAnimations()
                     label.alpha = 0.0
                     UIView.animate(withDuration: 1.0, animations: {
                         label.alpha = 1.0
                     })
                 }
             } else {
-                label.text = "N/A".localized()
+                label.text = CardsScrollViewController.localizedCache.notAvailable
             }
         }
     }
@@ -387,7 +383,7 @@ extension CardsScrollViewController {
             } else if let currentLocation = currentLocation {
                 label.text = currentLocation.city ?? currentLocation.country
             } else {
-                label.text = "N/A".localized()
+                label.text = CardsScrollViewController.localizedCache.notAvailable
             }
         }
     }
@@ -408,16 +404,9 @@ extension CardsScrollViewController {
                 [unowned temperatureLabel]
                 label, temperatureUnit in
                 if let temperatureUnit = temperatureUnit {
-                    switch temperatureUnit {
-                    case .celsius:
-                        label.text = "°C".localized()
-                    case .fahrenheit:
-                        label.text = "°F".localized()
-                    case .kelvin:
-                        label.text = "K".localized()
-                    }
+                    label.text = temperatureUnit.symbol
                 } else {
-                    label.text = "N/A".localized()
+                    label.text = CardsScrollViewController.localizedCache.notAvailable
                 }
                 temperatureBlock(temperatureLabel, nil)
             }
@@ -440,10 +429,8 @@ extension CardsScrollViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func bind(view: CardView, with viewModel: CardsViewModel) {
-
-        view.chartsButtonContainerView.bind(viewModel.isConnectable) { (view, isConnectable) in
+    private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
+        view.chartsButtonContainerView.bind(viewModel.isConnectable) {(view, isConnectable) in
             view.isHidden = !isConnectable.bound
         }
 
@@ -456,9 +443,47 @@ extension CardsScrollViewController {
                 view.isHidden = false
             }
         }
+    }
 
-        view.nameLabel.bind(viewModel.name, block: { $0.text = $1?.uppercased() ?? "N/A".localized() })
+    private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
+        let isConnected = viewModel.isConnected
+        let date = viewModel.date
 
+        view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
+            if let isConnected = isConnected, isConnected, let date = date?.value {
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+            } else {
+                if let date = date?.value {
+                    label.text = date.ruuviAgo
+                } else {
+                    label.text = CardsScrollViewController.localizedCache.notAvailable
+                }
+            }
+            view?.updatedAt = date?.value
+            view?.isConnected = isConnected
+        }
+
+        view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
+            if let isConnected = isConnected, isConnected.value.bound, let date = date {
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+            } else {
+                if let date = date {
+                    label.text = date.ruuviAgo
+                } else {
+                    label.text = CardsScrollViewController.localizedCache.notAvailable
+                }
+            }
+            view?.updatedAt = date
+            view?.isConnected = isConnected?.value
+        }
+    }
+
+    private func bind(view: CardView, with viewModel: CardsViewModel) {
+        view.nameLabel.bind(viewModel.name, block: {
+            $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable
+        })
+
+        bindConnectionRelated(view: view, with: viewModel)
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
 
@@ -474,36 +499,7 @@ extension CardsScrollViewController {
             view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
         }
 
-        let isConnected = viewModel.isConnected
-        let date = viewModel.date
-
-        view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
-            if let isConnected = isConnected, isConnected, let date = date?.value {
-                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
-            } else {
-                if let date = date?.value {
-                    label.text = date.ruuviAgo
-                } else {
-                    label.text = "N/A".localized()
-                }
-            }
-            view?.updatedAt = date?.value
-            view?.isConnected = isConnected
-        }
-
-        view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
-            if let isConnected = isConnected, isConnected.value.bound, let date = date {
-                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
-            } else {
-                if let date = date {
-                    label.text = date.ruuviAgo
-                } else {
-                    label.text = "N/A".localized()
-                }
-            }
-            view?.updatedAt = date
-            view?.isConnected = isConnected?.value
-        }
+        bindUpdated(view: view, with: viewModel)
 
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
 
@@ -545,7 +541,8 @@ extension CardsScrollViewController {
 // MARK: - UIGestureRecognizerDelegate
 extension CardsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let pan = gestureRecognizer as? UIPanGestureRecognizer {
+        if let pan = gestureRecognizer as? UIPanGestureRecognizer,
+            !viewModels.isEmpty {
             let velocity = pan.velocity(in: scrollView)
             return abs(velocity.y) > abs(velocity.x) && viewModels[currentPage].isConnectable.value.bound
         } else {
@@ -710,6 +707,12 @@ extension CardsScrollViewController {
                 imageView?.image = nil
             }
         }
+    }
+
+    private func pageIsVisible(for viewModel: CardsViewModel) -> Bool {
+        return viewModels[currentPage].id.value != nil &&
+            viewModel.id.value != nil
+            && viewModels[currentPage].id.value == viewModel.id.value
     }
 }
 // swiftlint:enable file_length

@@ -1,0 +1,8 @@
+NSBluetoothPeripheralUsageDescription = "Appen använder Bluetooth LE för att läsa data från RuuviTag sensorer.";
+NSBluetoothAlwaysUsageDescription = "Appen använder Bluetooth LE för att läsa data från RuuviTag sensorer.";
+NSCameraUsageDescription = "Ruuvi Station behöver tillgång till kameran för att ta foton och använda dom som bakgrundsbilder.";
+NSLocationUsageDescription = "Ruuvi Station behöver tillgång till din platsinformation för att kunna visa väderinformation vid din nuvarande plats.";
+NSLocationAlwaysUsageDescription = "Ruuvi Station behöver tillgång till din platsinformation för att kunna visa väderinformation och alarm vid din nuvarande plats.";
+NSLocationWhenInUseUsageDescription = "Ruuvi Station behöver tillgång till din platsinformation för att kunna visa väderinformation och alarm vid din nuvarande plats.";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Ruuvi Station behöver tillgång till din platsinformation för att kunna visa väderinformation och alarm vid din nuvarande plats.";
+NSPhotoLibraryUsageDescription = "Ruuvi Station behöver tillgång till dina bilder för att kunna använda dom som bakgrundsbilder.";

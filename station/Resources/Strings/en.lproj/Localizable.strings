@@ -5,9 +5,6 @@
 "Confirm" = "Confirm";
 "Remove" = "Remove";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
@@ -81,6 +78,16 @@
 "Defaults.CardsSwipeHint.title" = "Cards Swipe Hint Was Shown";
 "Defaults.AlertsRepeatInterval.title" = "Alerts Interval";
 "Defaults.WebPullInterval.title" = "Web Alerts Interval";
+"Defaults.PruningOffsetHours.title" = "Pruning Offset Hours";
+"Defaults.Interval.Hour.string" = "h";
+"Defaults.ChartIntervalSeconds.title" = "Chart Interval";
+"Defaults.ChartDurationHours.title" = "Chart Duration";
+
+// Advanced settings
+"Advanced.title" = "Advanced settings";
+"Advanced.ChartIntervalMinutes.title" = "Chart Interval";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Nearby Ruuvi sensors";
@@ -101,6 +108,7 @@
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this sensor";
+"ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
@@ -112,6 +120,7 @@
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Load and save from web";
 "ForegroundRow.webTags.section" = "VIRTUAL SENSORS";
+"Foreground.Interval.All.string" = "All";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Background";
@@ -120,6 +129,7 @@
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Read RSSI";
 "Heartbeat.Interval.Sec.string" = "sec";
+"Heartbeat.Interval.All.string" = "All";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "In order to measure relative humidity as accurately as possible, a sodium chloride (salt) calibration is recommended. See video tutorials on how to easily do it at home.";
@@ -138,6 +148,7 @@
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
+"Language.Swedish" = "Svenska";
 
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Connected";
@@ -188,6 +199,7 @@
 "Settings.Label.Foreground" = "Foreground";
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
+"Settings.Label.Advanced" = "Advanced";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Failed to parse Open Weather Map response.";
@@ -283,6 +295,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Failed to find sensor";
 "UnexpectedError.failedToFindLogsForTheTag" = "Failed to find logs for the sensor";
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID is nil";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";

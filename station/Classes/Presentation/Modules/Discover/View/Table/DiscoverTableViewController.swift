@@ -46,7 +46,7 @@ class DiscoverTableViewController: UITableViewController {
     var devices: [DiscoverDeviceViewModel] = [DiscoverDeviceViewModel]() {
         didSet {
             shownDevices = devices
-                .filter({ !savedDevicesUUIDs.contains($0.uuid) })
+                .filter({ !savedDevicesIds.contains($0.id) })
                 .sorted(by: {
                     if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
                         return rssi0 > rssi1
@@ -56,23 +56,31 @@ class DiscoverTableViewController: UITableViewController {
                 })
         }
     }
-    var savedDevicesUUIDs: [String] = [String]() {
+    var savedDevicesIds: [String] = [String]() {
         didSet {
             shownDevices = devices
-            .filter({ !savedDevicesUUIDs.contains($0.uuid) })
-            .sorted(by: {
-                if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
-                    return rssi0 > rssi1
-                } else {
-                    return false
-                }
-            })
+                .filter({ !savedDevicesIds.contains($0.id) })
+                .sorted(by: {
+                    if let rssi0 = $0.rssi, let rssi1 = $1.rssi {
+                        return rssi0 > rssi1
+                    } else {
+                        return false
+                    }
+                })
         }
     }
 
-    var isBluetoothEnabled: Bool = true { didSet { updateUIISBluetoothEnabled() } }
+    var isBluetoothEnabled: Bool = true {
+        didSet {
+            updateUIISBluetoothEnabled()
+        }
+    }
 
-    var isCloseEnabled: Bool = true { didSet { updateUIIsCloseEnabled() } }
+    var isCloseEnabled: Bool = true {
+        didSet {
+            updateUIIsCloseEnabled()
+        }
+    }
 
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
@@ -98,10 +106,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
         getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
         getMoreSensorsEmptyDataSetButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
-    }
-
-    func apply(theme: Theme) {
-
     }
 
     func showBluetoothDisabled() {
@@ -231,10 +235,9 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch s {
-        case .webTag:
+        if s == .webTag {
             return 60
-        default:
+        } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
     }
@@ -245,8 +248,7 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch section {
-        case .webTag:
+        if section == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
                 .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
@@ -254,7 +256,7 @@ extension DiscoverTableViewController {
             // swiftlint:enable force_cast
             header.delegate = self
             return header
-        default:
+        } else {
             return nil
         }
     }
@@ -371,7 +373,7 @@ extension DiscoverTableViewController {
                 + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
             return "DiscoverTable.RuuviDevice.prefix".localized()
-                + " " + device.uuid.prefix(4)
+                + " " + device.id.prefix(4)
         }
     }
 }

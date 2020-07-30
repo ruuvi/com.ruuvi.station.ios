@@ -32,10 +32,6 @@ extension DefaultsViewController: DefaultsViewInput {
     func localize() {
         navigationItem.title = "Defaults.navigationItem.title".localized()
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - View lifecycle

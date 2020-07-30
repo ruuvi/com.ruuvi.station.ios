@@ -19,9 +19,12 @@ class CoreAssembly: Assembly {
 
         container.register(LocalNotificationsManager.self) { r in
             let manager = LocalNotificationsManagerImpl()
-            manager.realmContext = r.resolve(RealmContext.self)
             manager.alertService = r.resolve(AlertService.self)
             manager.settings = r.resolve(Settings.self)
+            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
+            manager.idPersistence = r.resolve(IDPersistence.self)
+            manager.errorPresenter = r.resolve(ErrorPresenter.self)
             return manager
         }.inObjectScope(.container)
 

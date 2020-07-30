@@ -1,10 +1,9 @@
 import Foundation
-import RealmSwift
 import BTKit
 
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
-
+    var currentPage: Int { get }
     func scroll(to index: Int, immediately: Bool)
     func showBluetoothDisabled()
     func showSwipeLeftRightHint()

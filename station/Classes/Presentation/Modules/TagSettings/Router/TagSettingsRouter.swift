@@ -7,11 +7,12 @@ class TagSettingsRouter: TagSettingsRouterInput {
     private lazy var humidityCalibrationTransitioningDelegate = HumidityCalibrationTransitioningDelegate()
     // swiftlint:enable weak_delegate
 
-    func dismiss() {
+    func dismiss(completion: (() -> Void)?) {
         try! transitionHandler.closeCurrentModule().perform()
+        completion?()
     }
 
-    func openHumidityCalibration(ruuviTag: RuuviTagRealm, humidity: Double) {
+    func openHumidityCalibration(ruuviTag: RuuviTagSensor, humidity: Double) {
         let factory = StoryboardFactory(storyboardName: "HumidityCalibration")
         try! transitionHandler
             .forStoryboard(factory: factory, to: HumidityCalibrationModuleInput.self)

@@ -5,13 +5,9 @@
 "Confirm" = "Подтвердить";
 "Remove" = "Удалить";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "гПа";
 "dBm" = "дБм";
 "V" = "В"; // voltage
-"%" = "%";
 "g/m³" = "г/м³";
 "g" = "g"; // acceleration
 "Updated" = "Обновлено"; // time ago string
@@ -81,6 +77,16 @@
 "Defaults.CardsSwipeHint.title" = "Свайп Подсказка на Графиках";
 "Defaults.AlertsRepeatInterval.title" = "Интервал Уведомлений";
 "Defaults.WebPullInterval.title" = "Интервал Уведомления для Виртуальных Сенсоров";
+"Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
+"Defaults.Interval.Hour.string" = "ч";
+"Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
+"Defaults.ChartDurationHours.title" = "Размер Графиков";
+
+// Advanced settings
+"Advanced.title" = "Расширенные настройки";
+"Advanced.ChartIntervalMinutes.title" = "Интервал графиков";
+"Advanced.Downsampling.title" = "Downsampling";
+"Advanced.Interval.Min.string" = "мин";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
@@ -101,6 +107,7 @@
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
+"ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
@@ -112,6 +119,7 @@
 "Foreground.Interval.Min.string" = "мин";
 "ForegroundRow.webTags.title" = "Загружать из интернета";
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
+"Foreground.Interval.All.string" = "Все";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Фоновый Режим";
@@ -120,6 +128,7 @@
 "Heartbeat.Interval.Min.string" = "мин";
 "Heartbeat.readRSSITitle.title" = "Считывать RSSI";
 "Heartbeat.Interval.Sec.string" = "сек";
+"Heartbeat.Interval.All.string" = "Все";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с поваренной солью. Посмотрите обучающие видео о том, как легко сделать это дома. ";
@@ -138,6 +147,7 @@
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
+"Language.Swedish" = "Svenska";
 
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Соединился";
@@ -188,6 +198,7 @@
 "Settings.Label.Foreground" = "Активный Режим";
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
+"Settings.Label.Advanced" = "Дополнительно";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
@@ -283,6 +294,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Не удалось найти RuuviTag";
 "UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

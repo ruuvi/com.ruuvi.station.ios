@@ -18,10 +18,6 @@ extension WelcomeViewController: WelcomeViewInput {
         configureDescriptionLabel()
         scanButton.setTitle("Welcome.scan.title".localized(), for: .normal)
     }
-
-    func apply(theme: Theme) {
-
-    }
 }
 
 // MARK: - IBActions

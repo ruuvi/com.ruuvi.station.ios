@@ -1,21 +1,18 @@
 import Foundation
-import RealmSwift
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
     var router: SettingsRouterInput!
     var settings: Settings!
-    var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
+    var ruuviTagReactor: RuuviTagReactor!
 
     private var languageToken: NSObjectProtocol?
-    private var connectableRuuviTagsToken: NotificationToken?
+    private var ruuviTagsToken: RUObservationToken?
 
     deinit {
-        connectableRuuviTagsToken?.invalidate()
-        if let languageToken = languageToken {
-            NotificationCenter.default.removeObserver(languageToken)
-        }
+        ruuviTagsToken?.invalidate()
+        languageToken?.invalidate()
     }
 }
 
@@ -34,16 +31,22 @@ extension SettingsPresenter: SettingsViewOutput {
             self?.view.language = self?.settings.language ?? .english
         })
 
-        connectableRuuviTagsToken?.invalidate()
-        connectableRuuviTagsToken = realmContext.main.objects(RuuviTagRealm.self)
-            .filter("isConnectable == true").observe({ [weak self] (change) in
+        ruuviTagsToken?.invalidate()
+        // TODO: this logic doesn't hide the background if no connectable tags, fix it
+        ruuviTagsToken = ruuviTagReactor.observe({ [weak self] change in
+            guard let sSelf = self else { return }
             switch change {
-            case .initial(let ruuviTags):
-                self?.view.isBackgroundVisible = ruuviTags.count > 0
-            case .update(let ruuviTags, _, _, _):
-                self?.view.isBackgroundVisible = ruuviTags.count > 0
+            case .initial(let sensors):
+                let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
+                sSelf.view.isBackgroundVisible = containsConnectable
+                sSelf.view.isAdvancedVisible = containsConnectable
+            case .insert(let sensor):
+                sSelf.view.isBackgroundVisible = sSelf.view.isBackgroundVisible || sensor.isConnectable
+                sSelf.view.isAdvancedVisible = sSelf.view.isAdvancedVisible || sensor.isConnectable
             case .error(let error):
-                self?.errorPresenter.present(error: error)
+                sSelf.errorPresenter.present(error: error)
+            default:
+                break
             }
         })
     }
@@ -74,5 +77,9 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnHeartbeat() {
         router.openHeartbeat()
+    }
+
+    func viewDidTapOnAdvanced() {
+        router.openAdvanced()
     }
 }
