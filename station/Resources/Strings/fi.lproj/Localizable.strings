@@ -5,13 +5,9 @@
 "Confirm" = "Vahvista";
 "Remove" = "Poista";
 "N/A" = "-";
-"°C" = "°C";
-"°F" = "°F";
-"K" = "K"; // kelvin
 "hPa" = "hPa";
 "dBm" = "dBm";
 "V" = "V"; // voltage
-"%" = "%";
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Päivitetty"; // time ago string
@@ -81,6 +77,16 @@
 "Defaults.CardsSwipeHint.title" = "Pyyhkäisyvinkki";
 "Defaults.AlertsRepeatInterval.title" = "Hälytysväli";
 "Defaults.WebPullInterval.title" = "Virtuaalisten antureiden hälytysväli";
+"Defaults.PruningOffsetHours.title" = "Poistojen tuntisiirtymä";
+"Defaults.Interval.Hour.string" = "t";
+"Defaults.ChartIntervalSeconds.title" = "Historian tarkkuus";
+"Defaults.ChartDurationHours.title" = "Historian kesto";
+
+// Advanced settings
+"Advanced.title" = "Lisäasetukset";
+"Advanced.ChartIntervalMinutes.title" = "Historian esitystarkkuus";
+"Advanced.Downsampling.title" = "Tarkkuuden vähennys";
+"Advanced.Interval.Min.string" = "min";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Lähellä olevat Ruuvi-laitteet";
@@ -101,6 +107,7 @@
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
+"ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "LAITEILMOITUKSET";
@@ -112,6 +119,7 @@
 "Foreground.Interval.Min.string" = "min";
 "ForegroundRow.webTags.title" = "Lataa ja tallenna verkkopalvelusta";
 "ForegroundRow.webTags.section" = "VIRTUAALISET ANTURIT";
+"Foreground.Interval.All.string" = "Kaikki";
 
 // Heartbeat
 "Heartbeat.navigationItem.title" = "Taustaprosessit";
@@ -120,6 +128,7 @@
 "Heartbeat.Interval.Min.string" = "min";
 "Heartbeat.readRSSITitle.title" = "Lue RSSI";
 "Heartbeat.Interval.Sec.string" = "sek";
+"Heartbeat.Interval.All.string" = "Kaikki";
 
 // HumidityCalibration
 "HumidityCalibration.Description.text" = "Suosittelemme kalibrointia suolaliuoksen avulla mahdollisimman tarkkojen ilmankosteusmittausten saamiseksi. Video-ohje.";
@@ -138,6 +147,7 @@
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
+"Language.Swedish" = "Svenska";
 
 // LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Yhdistetty";
@@ -188,6 +198,7 @@
 "Settings.Label.Foreground" = "Prosessit";
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
+"Settings.Label.Advanced" = "Lisäasetukset";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Open Weather Map -vastauksen jäsentäminen epäonnistui.";
@@ -283,6 +294,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
+"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

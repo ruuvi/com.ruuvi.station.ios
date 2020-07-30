@@ -30,6 +30,9 @@ class CardsScrollConfigurator {
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
+        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        presenter.virtualTagReactor = r.resolve(VirtualTagReactor.self)
 
         router.delegate = presenter
 

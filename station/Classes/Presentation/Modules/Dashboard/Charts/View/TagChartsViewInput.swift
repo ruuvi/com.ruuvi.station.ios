@@ -1,11 +1,11 @@
 import Foundation
 import BTKit
-
+import Charts
 protocol TagChartsViewInput: ViewInput {
-    var viewModels: [TagChartsViewModel] { get set }
-
+    var viewModel: TagChartsViewModel { get set }
+    var viewIsVisible: Bool { get }
+    func setupChartViews(chartViews: [TagChartView])
     func showBluetoothDisabled()
-    func scroll(to index: Int, immediately: Bool)
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel)
     func showClearConfirmationDialog(for viewModel: TagChartsViewModel)
     func showExportSheet(with path: URL)
@@ -13,10 +13,4 @@ protocol TagChartsViewInput: ViewInput {
     func showFailedToSyncIn(connectionTimeout: TimeInterval)
     func showFailedToServeIn(serviceTimeout: TimeInterval)
     func showSwipeUpInstruction()
-}
-
-extension TagChartsViewInput {
-    func scroll(to index: Int) {
-        scroll(to: index, immediately: false)
-    }
 }

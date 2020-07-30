@@ -10,7 +10,7 @@ class ForegroundPresenter: NSObject, ForegroundModuleInput {
         advertisement.type = .advertisement
         advertisement.isOn.value = settings.isAdvertisementDaemonOn
         advertisement.interval.value = settings.advertisementDaemonIntervalMinutes
-        advertisement.minValue.value = 1
+        advertisement.minValue.value = 0
         advertisement.maxValue.value = 3600
         bind(advertisement.isOn, fire: false) { (observer, isOn) in
             observer.settings.isAdvertisementDaemonOn = isOn ?? true

@@ -94,6 +94,7 @@ extension CoreError: LocalizedError {
 enum ExpectedError: Error {
     case missingOpenWeatherMapAPIKey
     case isAlreadySyncingLogsWithThisTag
+    case failedToDeleteTag
 }
 
 extension ExpectedError: LocalizedError {
@@ -103,6 +104,8 @@ extension ExpectedError: LocalizedError {
             return "ExpectedError.missingOpenWeatherMapAPIKey".localized()
         case .isAlreadySyncingLogsWithThisTag:
             return "ExpectedError.isAlreadySyncingLogsWithThisTag".localized()
+        case .failedToDeleteTag:
+            return "ExpectedError.failedToDeleteTag".localized()
         }
     }
 }
@@ -112,8 +115,10 @@ enum UnexpectedError: Error {
     case callerDeinitedDuringOperation
     case failedToReverseGeocodeCoordinate
     case failedToFindRuuviTag
+    case failedToFindVirtualTag
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
+    case attemptToReadDataFromRealmWithoutLUID
 }
 
 extension UnexpectedError: LocalizedError {
@@ -131,6 +136,10 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.failedToFindLogsForTheTag".localized()
         case .viewModelUUIDIsNil:
             return "UnexpectedError.viewModelUUIDIsNil".localized()
+        case .attemptToReadDataFromRealmWithoutLUID:
+            return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
+        case .failedToFindVirtualTag:
+            return "UnexpectedError.failedToFindVirtualTag".localized()
         }
     }
 }

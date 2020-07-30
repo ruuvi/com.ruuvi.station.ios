@@ -34,18 +34,10 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
 
     deinit {
         webTagToken?.invalidate()
-        if let temperatureUnitToken = temperatureUnitToken {
-            NotificationCenter.default.removeObserver(temperatureUnitToken)
-        }
-        if let appDidBecomeActiveToken = appDidBecomeActiveToken {
-            NotificationCenter.default.removeObserver(appDidBecomeActiveToken)
-        }
-        if let humidityUnitToken = humidityUnitToken {
-            NotificationCenter.default.removeObserver(humidityUnitToken)
-        }
-        if let alertDidChangeToken = alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
-        }
+        temperatureUnitToken?.invalidate()
+        appDidBecomeActiveToken?.invalidate()
+        humidityUnitToken?.invalidate()
+        alertDidChangeToken?.invalidate()
     }
 
     func configure(webTag: WebTagRealm) {
@@ -68,7 +60,7 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid)
+        view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid.luid)
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {
@@ -76,11 +68,10 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidChangeTag(name: String) {
-        let finalName = name.isEmpty ?
-                        (webTag.location == nil
-                            ? WebTagLocationSource.current.title
-                            : WebTagLocationSource.manual.title)
-                        : name
+        let defaultName = webTag.location == nil
+            ? WebTagLocationSource.current.title
+            : WebTagLocationSource.manual.title
+        let finalName = name.isEmpty ? defaultName : name
         let operation = webTagService.update(name: finalName, of: webTag)
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
@@ -164,7 +155,7 @@ extension WebTagSettingsPresenter {
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        let set = backgroundPersistence.setCustomBackground(image: photo, for: webTag.uuid)
+        let set = backgroundPersistence.setCustomBackground(image: photo, for: webTag.uuid.luid)
         set.on(success: { [weak self] _ in
             self?.view.viewModel.background.value = photo
         }, failure: { [weak self] (error) in
@@ -187,9 +178,15 @@ extension WebTagSettingsPresenter: LocationPickerModuleOutput {
 // MARK: - Private
 extension WebTagSettingsPresenter {
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel(to webTag: WebTagRealm) {
-        // temperature alert
+        bindTemperatureAlert(webTag)
+        bindRelativeHumidityAlert(webTag)
+        bindAbsoluteHumidityAlert(webTag)
+        bindDewPointAlert(webTag)
+        bindPressureAlert(webTag)
+    }
+
+    private func bindTemperatureAlert(_ webTag: WebTagRealm) {
         let temperatureLower = view.viewModel.celsiusLowerBound
         let temperatureUpper = view.viewModel.celsiusUpperBound
         bind(view.viewModel.isTemperatureAlertOn, fire: false) {
@@ -215,8 +212,9 @@ extension WebTagSettingsPresenter {
         bind(view.viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
             observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // relative humidity alert
+    private func bindRelativeHumidityAlert(_ webTag: WebTagRealm) {
         let relativeHumidityLower = view.viewModel.relativeHumidityLowerBound
         let relativeHumidityUpper = view.viewModel.relativeHumidityUpperBound
         bind(view.viewModel.isRelativeHumidityAlertOn, fire: false) {
@@ -243,8 +241,9 @@ extension WebTagSettingsPresenter {
             observer, relativeHumidityAlertDescription in
             observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // absolute humidity alert
+    fileprivate func bindAbsoluteHumidityAlert(_ webTag: WebTagRealm) {
         let absoluteHumidityLower = view.viewModel.absoluteHumidityLowerBound
         let absoluteHumidityUpper = view.viewModel.absoluteHumidityUpperBound
         bind(view.viewModel.isAbsoluteHumidityAlertOn, fire: false) {
@@ -274,8 +273,9 @@ extension WebTagSettingsPresenter {
             observer, absoluteHumidityAlertDescription in
             observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // dew point alert
+    private func bindDewPointAlert(_ webTag: WebTagRealm) {
         let dewPointLower = view.viewModel.dewPointCelsiusLowerBound
         let dewPointUpper = view.viewModel.dewPointCelsiusUpperBound
         bind(view.viewModel.isDewPointAlertOn, fire: false) {
@@ -301,8 +301,9 @@ extension WebTagSettingsPresenter {
         bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
             observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
         }
+    }
 
-        // pressure
+    private func bindPressureAlert(_ webTag: WebTagRealm) {
         let pressureLower = view.viewModel.pressureLowerBound
         let pressureUpper = view.viewModel.pressureUpperBound
         bind(view.viewModel.isPressureAlertOn, fire: false) {
@@ -332,6 +333,7 @@ extension WebTagSettingsPresenter {
             observer.alertService.setPressure(description: pressureAlertDescription, for: webTag.uuid)
         }
     }
+
     private func startObservingWebTag() {
         webTagToken = webTag.observe({ [weak self] (change) in
             switch change {
@@ -364,7 +366,7 @@ extension WebTagSettingsPresenter {
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.humidityUnit.value = settings.humidityUnit
-        view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid)
+        view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
 
         if webTag.name == WebTagLocationSource.manual.title {
             view.viewModel.name.value = nil
@@ -483,7 +485,6 @@ extension WebTagSettingsPresenter {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -495,41 +496,36 @@ extension WebTagSettingsPresenter {
                 let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
                 uuid == self?.view.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                    switch type {
-                    case .temperature:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isTemperatureAlertOn.value {
-                            self?.view.viewModel.isTemperatureAlertOn.value = isOn
-                        }
-                    case .relativeHumidity:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isRelativeHumidityAlertOn.value {
-                            self?.view.viewModel.isRelativeHumidityAlertOn.value = isOn
-                        }
-                    case .absoluteHumidity:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isAbsoluteHumidityAlertOn.value {
-                            self?.view.viewModel.isAbsoluteHumidityAlertOn.value = isOn
-                        }
-                    case .dewPoint:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isDewPointAlertOn.value {
-                            self?.view.viewModel.isDewPointAlertOn.value = isOn
-                        }
-                    case .pressure:
-                        let isOn = self?.alertService.isOn(type: type, for: uuid)
-                        if isOn != self?.view.viewModel.isPressureAlertOn.value {
-                            self?.view.viewModel.isPressureAlertOn.value = isOn
-                        }
-                    case .connection:
-                        // do nothing, no connection alert here
-                        break
-                    case .movement:
-                        // do nothing, no movement alert here
-                        break
-                    }
+                self?.updateIsOnState(of: type, for: uuid)
             }
         })
+    }
+
+    private func updateIsOnState(of type: AlertType, for uuid: String) {
+        var observable: Observable<Bool?>?
+        switch type {
+        case .temperature:
+            observable = view.viewModel.isTemperatureAlertOn
+        case .relativeHumidity:
+            observable = view.viewModel.isRelativeHumidityAlertOn
+        case .absoluteHumidity:
+            observable = view.viewModel.isAbsoluteHumidityAlertOn
+        case .dewPoint:
+            observable = view.viewModel.isDewPointAlertOn
+        case .pressure:
+            observable = view.viewModel.isPressureAlertOn
+        case .connection:
+            observable = nil
+        case .movement:
+            observable = nil
+        }
+
+        if let observable = observable {
+            let isOn = alertService.isOn(type: type, for: uuid)
+            if isOn != observable.value {
+                observable.value = isOn
+            }
+        }
     }
 }
 // swiftlint:enable file_length

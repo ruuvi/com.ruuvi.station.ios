@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
         webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
-
         if #available(iOS 13, *) {
             // no need to setup background fetch, @see BackgroundTaskServiceiOS13
         } else {
@@ -55,10 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         appStateService.applicationDidBecomeActive(application)
     }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-    }
-
 }
 
 // MARK: - Push Notifications

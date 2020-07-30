@@ -18,22 +18,23 @@ class HeartbeatTableViewController: UITableViewController {
     @IBOutlet weak var readRSSISwitch: UISwitch!
     @IBOutlet weak var readRSSIIntervalLabel: UILabel!
     @IBOutlet weak var readRSSIIntervalStepper: UIStepper!
+
+    private let everyString = "Heartbeat.Interval.Every.string"
 }
 
 // MARK: - HeartbeatViewInput
 extension HeartbeatTableViewController: HeartbeatViewInput {
-
-    func apply(theme: Theme) {
-
-    }
-
     func localize() {
         saveHeartbeatsTitleLabel.text = viewModel.saveHeartbeatsTitle
-        saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.Every.string".localized()
-            + " " + "\(viewModel.saveHeartbeatsInterval.value.bound)"
-            + " " + "Heartbeat.Interval.Min.string".localized()
+        if viewModel.saveHeartbeatsInterval.value.bound > 0 {
+            saveHeartbeatsIntervalLabel.text = everyString.localized()
+                + " " + "\(viewModel.saveHeartbeatsInterval.value.bound)"
+                + " " + "Heartbeat.Interval.Min.string".localized()
+        } else {
+            saveHeartbeatsIntervalLabel.text = "Heartbeat.Interval.All.string".localized()
+        }
         readRSSITitleLabel.text = viewModel.readRSSITitle
-        readRSSIIntervalLabel.text = "Heartbeat.Interval.Every.string".localized()
+        readRSSIIntervalLabel.text = everyString.localized()
             + " " + "\(viewModel.readRSSIInterval.value.bound)"
             + " " + "Heartbeat.Interval.Sec.string".localized()
     }
@@ -76,11 +77,15 @@ extension HeartbeatTableViewController {
             saveHeartbeatsSwitch.bind(viewModel.saveHeartbeats) { (view, isOn) in
                 view.isOn = isOn.bound
             }
-
+            let every = everyString
             saveHeartbeatsIntervalLabel.bind(viewModel.saveHeartbeatsInterval) { (label, interval) in
-                label.text = "Heartbeat.Interval.Every.string".localized()
-                            + " " + "\(interval.bound)"
-                            + " " + "Heartbeat.Interval.Min.string".localized()
+                if interval.bound > 0 {
+                    label.text = every.localized()
+                                + " " + "\(interval.bound)"
+                                + " " + "Heartbeat.Interval.Min.string".localized()
+                } else {
+                    label.text = "Heartbeat.Interval.All.string".localized()
+                }
             }
 
             readRSSISwitch.bind(viewModel.readRSSI) { (view, isOn) in
@@ -88,7 +93,7 @@ extension HeartbeatTableViewController {
             }
 
             readRSSIIntervalLabel.bind(viewModel.readRSSIInterval) { (label, interval) in
-                label.text = "Heartbeat.Interval.Every.string".localized()
+                label.text = every.localized()
                             + " " + "\(interval.bound)"
                             + " " + "Heartbeat.Interval.Sec.string".localized()
             }

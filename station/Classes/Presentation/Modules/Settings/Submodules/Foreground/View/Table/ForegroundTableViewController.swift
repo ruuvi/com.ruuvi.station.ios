@@ -17,12 +17,8 @@ class ForegroundTableViewController: UITableViewController {
 
 // MARK: - ForegroundViewInput
 extension ForegroundTableViewController: ForegroundViewInput {
-    func apply(theme: Theme) {
-
-    }
-
     func localize() {
-
+        // do nothing
     }
 }
 
@@ -59,9 +55,13 @@ extension ForegroundTableViewController {
                 .dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier,
                                      for: indexPath) as! ForegroundStepperTableViewCell
             // swiftlint:enable force_cast
-            cell.titleLabel.text = "Foreground.Interval.Every.string".localized()
-                + " " + "\(viewModel.interval.value.bound)"
-                + " " + "Foreground.Interval.Min.string".localized()
+            if viewModel.interval.value.bound > 0 {
+                cell.titleLabel.text = "Foreground.Interval.Every.string".localized()
+                    + " " + "\(viewModel.interval.value.bound)"
+                    + " " + "Foreground.Interval.Min.string".localized()
+            } else {
+                cell.titleLabel.text = "Foreground.Interval.All.string".localized()
+            }
             cell.stepper.value = Double(viewModel.interval.value.bound)
             cell.stepper.minimumValue = Double(viewModel.minValue.value.bound)
             cell.stepper.maximumValue = Double(viewModel.maxValue.value.bound)

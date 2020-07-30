@@ -43,4 +43,14 @@ class SettingsRouter: SettingsRouterInput {
                 module.configure()
             })
     }
+
+    func openAdvanced() {
+        let factory = StoryboardFactory(storyboardName: "AdvancedSettings")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: AdvancedModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
 }

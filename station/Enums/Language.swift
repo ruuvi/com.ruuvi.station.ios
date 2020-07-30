@@ -4,6 +4,7 @@ enum Language: String, CaseIterable {
     case english = "en"
     case russian = "ru"
     case finnish = "fi"
+    case swedish = "sv"
 }
 
 extension Language {
@@ -15,6 +16,8 @@ extension Language {
             return "Language.Russian".localized()
         case .finnish:
             return "Language.Finnish".localized()
+        case .swedish:
+            return "Language.Swedish".localized()
         }
     }
 }
