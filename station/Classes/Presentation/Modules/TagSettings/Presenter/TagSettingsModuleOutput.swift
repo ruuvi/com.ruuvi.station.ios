@@ -1,5 +1,6 @@
 import Foundation
 
 protocol TagSettingsModuleOutput: class {
-    func tagSettingsDidDeleteTag(ruuviTag: RuuviTagSensor)
+    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput,
+                                 ruuviTag: RuuviTagSensor)
 }
