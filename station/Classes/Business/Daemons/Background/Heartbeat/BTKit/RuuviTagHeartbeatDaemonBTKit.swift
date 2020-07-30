@@ -58,12 +58,8 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     deinit {
         invalidateTokens()
-        if let connectionAddedToken = connectionAddedToken {
-            NotificationCenter.default.removeObserver(connectionAddedToken)
-        }
-        if let connectionRemovedToken = connectionRemovedToken {
-            NotificationCenter.default.removeObserver(connectionRemovedToken)
-        }
+        connectionAddedToken?.invalidate()
+        connectionRemovedToken?.invalidate()
     }
 
     func start() {

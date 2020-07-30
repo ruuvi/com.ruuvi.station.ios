@@ -82,7 +82,7 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
     }
 
     static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id || lhs.luid?.value == rhs.luid?.value || lhs.macId?.value == rhs.macId?.value
     }
 
     func hash(into hasher: inout Hasher) {

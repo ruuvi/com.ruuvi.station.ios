@@ -18,7 +18,7 @@ class LocationPersistenceImpl: LocationPersistence {
         }
         let key = regionKey + region.identifier
         guard let data = UserDefaults.standard.data(forKey: key),
-            let locations = NSKeyedUnarchiver.unarchiveObject(with: data) as? [LocationAppleClass] else {
+            let locations = unarchive(data, with: [LocationAppleClass].self) else {
             return nil
         }
         return locations.map({$0.asStruct})
@@ -34,7 +34,7 @@ class LocationPersistenceImpl: LocationPersistence {
         }
         let key = regionKey + region.identifier
         let array = NSArray(array: locations.map({$0.asClass}))
-        let data = NSKeyedArchiver.archivedData(withRootObject: array)
+        let data: Data? = archive(object: array)
         UserDefaults.standard.set(data, forKey: key)
     }
 }
@@ -43,14 +43,30 @@ extension LocationPersistenceImpl {
     private var regions: [CLCircularRegion] {
         get {
             guard let data = UserDefaults.standard.data(forKey: regionsKey),
-                let regionsPersisted = NSKeyedUnarchiver.unarchiveObject(with: data) as? [CLCircularRegion] else {
+                let regionsPersisted = unarchive(data, with: [CLCircularRegion].self) else {
                 return []
             }
             return regionsPersisted
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
+            let data = archive(object: newValue)
             UserDefaults.standard.set(data, forKey: regionsKey)
+        }
+    }
+
+    private func archive(object: Any) -> Data? {
+        if #available(iOS 12.0, *) {
+            return try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
+        } else {
+            return NSKeyedArchiver.archivedData(withRootObject: object)
+        }
+    }
+
+    private func unarchive<T: Any>(_ data: Data, with type: T.Type) -> T? {
+        if #available(iOS 12.0, *) {
+            return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T
+        } else {
+            return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
         }
     }
 }
