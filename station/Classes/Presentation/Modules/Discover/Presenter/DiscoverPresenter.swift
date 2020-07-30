@@ -4,7 +4,7 @@ import RealmSwift
 import UIKit
 import Future
 
-class DiscoverPresenter: DiscoverModuleInput {
+class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
     var router: DiscoverRouterInput!
     var realmContext: RealmContext!
@@ -370,5 +370,76 @@ extension DiscoverPresenter {
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+    }
+}
+extension DiscoverPresenter: UITextFieldDelegate {
+    @discardableResult
+    private func didPasteText(text string: String, intoTextField textField: UITextField, range: NSRange) -> Bool {
+        let doubleDotsLocations: [Int] = [2, 5, 8, 11, 14]
+        let text = string.reduce(into: "") { (result, nextChar) in
+            guard nextChar.isHexDigit,
+                result.count < 17 else {
+                return
+            }
+            if doubleDotsLocations.contains(result.count) {
+                result += ":"
+            }
+            result += String(nextChar).uppercased()
+        }
+        textField.text = text
+        textField.selectedTextRange = textField.textRange(from: textField.endOfDocument, to: textField.endOfDocument)
+        return false
+    }
+
+    private func didErasedText(_ textField: UITextField, inRange range: NSRange) -> Bool {
+        if let text = textField.text?.replace(with: "", in: range) {
+            didPasteText(text: text, intoTextField: textField, range: range)
+        }
+        if #available(iOS 11, *) {
+            textField.caretPosition = range.location
+        } else {
+            if let newPosition = textField.position(from: textField.beginningOfDocument, offset: range.location) {
+                textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
+            }
+        }
+        return false
+    }
+
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        let doubleDotsLocations: [Int] = [2, 5, 8, 11, 14]
+        let futureText = textField.text?.replace(with: string, in: range) ?? ""
+        view.canSendMac = futureText.count >= 17
+        guard !string.isEmpty else {
+            return didErasedText(textField, inRange: range)
+        }
+        guard string.count == 1 else {
+            return didPasteText(text: string, intoTextField: textField, range: range)
+        }
+        let textFieldText = textField.text?.replacingOccurrences(of: ":", with: "") ?? ""
+        let shouldChange = string.allSatisfy({ $0.isHexDigit })
+            && textFieldText.allSatisfy({ $0.isHexDigit })
+            && textFieldText.count < 12
+        if !shouldChange {
+            let propertyAnimator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.3) {
+                textField.transform = CGAffineTransform(translationX: -3, y: 0)
+            }
+            propertyAnimator.addAnimations({
+                textField.transform = CGAffineTransform(translationX: 3, y: 0)
+            }, delayFactor: 0.2)
+            propertyAnimator.addAnimations({
+                textField.transform = CGAffineTransform(translationX: 0, y: 0)
+            }, delayFactor: 0.2)
+            propertyAnimator.startAnimation()
+            let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
+            notificationFeedbackGenerator.notificationOccurred(.error)
+            notificationFeedbackGenerator.prepare()
+        } else {
+            if doubleDotsLocations.contains(range.location) {
+                textField.text?.append(":")
+            }
+        }
+        return shouldChange
     }
 }

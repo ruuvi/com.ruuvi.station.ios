@@ -49,7 +49,7 @@ enum DiscoverNetworkCell: Int, CaseIterable {
 
 class DiscoverTableViewController: UITableViewController {
 
-    var output: DiscoverViewOutput!
+    var output: (DiscoverViewOutput & UITextFieldDelegate)!
 
     @IBOutlet var closeBarButtonItem: UIBarButtonItem!
     @IBOutlet var btDisabledEmptyDataSetView: UIView!
@@ -57,6 +57,8 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
+
+    private var alertVC: UIAlertController?
 
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
     var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
@@ -130,6 +132,15 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
+    var canSendMac: Bool = false {
+        didSet {
+            guard let action = alertVC?.actions.first(where: {$0.style == .default}) else {
+                return
+            }
+            action.isEnabled = canSendMac
+        }
+    }
+
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
@@ -174,19 +185,21 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
     func showAddTagWithMACAddressDialog() {
         let title = "DiscoverTable.AddTagWithMACAddressDialog.title".localized()
-        let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alertVC.addTextField()
-
-        let submitAction = UIAlertAction(title: "OK".localized(), style: .default) { [weak self, unowned alertVC] _ in
-            if let answer = alertVC.textFields?[0].text {
+        alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        alertVC!.addTextField {[weak self] (textField) in
+            textField.delegate = self?.output
+            textField.autocapitalizationType = .allCharacters
+        }
+        let submitAction = UIAlertAction(title: "OK".localized(), style: .default) { [weak self, weak alertVC] _ in
+            if let answer = alertVC?.textFields?[0].text {
                 self?.output.viewDidEnterMACAddressToAddTag(mac: answer)
             }
         }
+        submitAction.isEnabled = false
+        alertVC!.addAction(submitAction)
+        alertVC!.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
 
-        alertVC.addAction(submitAction)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-
-        present(alertVC, animated: true)
+        present(alertVC!, animated: true)
     }
 
     func showAddKaltiotApiKey() {
