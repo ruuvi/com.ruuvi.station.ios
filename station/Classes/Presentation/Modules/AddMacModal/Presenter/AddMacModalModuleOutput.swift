@@ -1,0 +1,2 @@
+protocol AddMacModalModuleOutput: class {
+}
