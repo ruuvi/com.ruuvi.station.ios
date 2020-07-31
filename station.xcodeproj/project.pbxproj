@@ -1339,6 +1339,33 @@
 		A94A87F824D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */; };
 		A94A87F924D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */; };
 		A94A87FA24D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */; };
+		A94A880524D4373600D2CBA4 /* AddMacModalModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModalModuleOutput.swift */; };
+		A94A880624D4373600D2CBA4 /* AddMacModalModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModalModuleOutput.swift */; };
+		A94A880724D4373700D2CBA4 /* AddMacModalModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModalModuleOutput.swift */; };
+		A94A880824D4373900D2CBA4 /* AddMacModalModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModalModuleInput.swift */; };
+		A94A880924D4373A00D2CBA4 /* AddMacModalModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModalModuleInput.swift */; };
+		A94A880A24D4373A00D2CBA4 /* AddMacModalModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModalModuleInput.swift */; };
+		A94A880B24D4374300D2CBA4 /* AddMacModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacModalPresenter.swift */; };
+		A94A880C24D4374300D2CBA4 /* AddMacModalRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacModalRouter.swift */; };
+		A94A880D24D4374300D2CBA4 /* AddMacModalRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacModalRouterInput.swift */; };
+		A94A880E24D4374300D2CBA4 /* AddMacModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacModalViewController.swift */; };
+		A94A880F24D4374300D2CBA4 /* AddMacModalViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacModalViewInput.swift */; };
+		A94A881024D4374300D2CBA4 /* AddMacModalViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacModalViewOutput.swift */; };
+		A94A881124D4374300D2CBA4 /* AddMacModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacModalViewModel.swift */; };
+		A94A881224D4374400D2CBA4 /* AddMacModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacModalPresenter.swift */; };
+		A94A881324D4374400D2CBA4 /* AddMacModalRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacModalRouter.swift */; };
+		A94A881424D4374400D2CBA4 /* AddMacModalRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacModalRouterInput.swift */; };
+		A94A881524D4374400D2CBA4 /* AddMacModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacModalViewController.swift */; };
+		A94A881624D4374400D2CBA4 /* AddMacModalViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacModalViewInput.swift */; };
+		A94A881724D4374400D2CBA4 /* AddMacModalViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacModalViewOutput.swift */; };
+		A94A881824D4374400D2CBA4 /* AddMacModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacModalViewModel.swift */; };
+		A94A881924D4374500D2CBA4 /* AddMacModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacModalPresenter.swift */; };
+		A94A881A24D4374500D2CBA4 /* AddMacModalRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacModalRouter.swift */; };
+		A94A881B24D4374500D2CBA4 /* AddMacModalRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacModalRouterInput.swift */; };
+		A94A881C24D4374500D2CBA4 /* AddMacModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacModalViewController.swift */; };
+		A94A881D24D4374500D2CBA4 /* AddMacModalViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacModalViewInput.swift */; };
+		A94A881E24D4374500D2CBA4 /* AddMacModalViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacModalViewOutput.swift */; };
+		A94A881F24D4374500D2CBA4 /* AddMacModalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacModalViewModel.swift */; };
 		A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
@@ -6176,6 +6203,7 @@
 				0E8BACCF245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8BACDD245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
+				A94A880D24D4374300D2CBA4 /* AddMacModalRouterInput.swift in Sources */,
 				0E8BAC5E245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E6BADAC23856A01003A2D4C /* WelcomePresenter.swift in Sources */,
 				A9828E5324792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */,
@@ -6249,6 +6277,7 @@
 				0E6BADE023856A01003A2D4C /* DefaultsViewModel.swift in Sources */,
 				0E6BADE123856A01003A2D4C /* TagChartsScrollConfigurator.swift in Sources */,
 				A9227BBF245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
+				A94A881024D4374300D2CBA4 /* AddMacModalViewOutput.swift in Sources */,
 				0E79F27B244201540048BF86 /* NetworkService.swift in Sources */,
 				0E45580323E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8BAC77245C4C8E00D380FB /* RuuviTagTank.swift in Sources */,
@@ -6333,6 +6362,7 @@
 				A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
+				A94A880724D4373700D2CBA4 /* AddMacModalModuleOutput.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
 				0E8BAC7C245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0E6BAE1223856A01003A2D4C /* SettingsRouterInput.swift in Sources */,
@@ -6363,6 +6393,7 @@
 				A980CC7F24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
 				A9828E2024792D3200E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */,
 				0E6BAE2523856A01003A2D4C /* PresentationAssembly.swift in Sources */,
+				A94A880E24D4374300D2CBA4 /* AddMacModalViewController.swift in Sources */,
 				0E6BAE2623856A01003A2D4C /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0E6BAE2723856A01003A2D4C /* AboutModuleInput.swift in Sources */,
 				0E6BAE2823856A01003A2D4C /* WelcomeViewOutput.swift in Sources */,
@@ -6375,6 +6406,7 @@
 				0E6BAE2C23856A01003A2D4C /* PermissionsManagerImpl.swift in Sources */,
 				0E6BAE2D23856A01003A2D4C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E6BAE2E23856A01003A2D4C /* MenuRouterInput.swift in Sources */,
+				A94A880824D4373900D2CBA4 /* AddMacModalModuleInput.swift in Sources */,
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
 				0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */,
 				0E28642D2460687200363DCB /* VirtualTagTank.swift in Sources */,
@@ -6492,9 +6524,11 @@
 				0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E6BAE8423856A01003A2D4C /* MenuTableTransitioningDelegate.swift in Sources */,
+				A94A881124D4374300D2CBA4 /* AddMacModalViewModel.swift in Sources */,
 				A9828E3524792D4500E7E9D4 /* KaltiotPickerRouter.swift in Sources */,
 				0E6BAE8523856A01003A2D4C /* ErrorPresenter.swift in Sources */,
 				0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */,
+				A94A880B24D4374300D2CBA4 /* AddMacModalPresenter.swift in Sources */,
 				0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */,
 				0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */,
@@ -6503,6 +6537,7 @@
 				0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */,
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
+				A94A880C24D4374300D2CBA4 /* AddMacModalRouter.swift in Sources */,
 				0E8BACB9245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E79F2812442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
@@ -6534,6 +6569,7 @@
 				0E6BAE9D23856A01003A2D4C /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */,
 				A9646477247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
+				A94A880F24D4374300D2CBA4 /* AddMacModalViewInput.swift in Sources */,
 				0E6BAE9E23856A01003A2D4C /* Worker.swift in Sources */,
 				0E6BAE9F23856A01003A2D4C /* ErrorPresenterAlert.swift in Sources */,
 				0E6BAEA023856A01003A2D4C /* ForegroundViewController.swift in Sources */,
@@ -6611,6 +6647,7 @@
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
 				0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */,
+				A94A880924D4373A00D2CBA4 /* AddMacModalModuleInput.swift in Sources */,
 				A976CA7724A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				A9828E0824792C5900E7E9D4 /* KaltiotBeacons.swift in Sources */,
@@ -6664,6 +6701,7 @@
 				0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */,
 				0E8BAC9F245C755400D380FB /* RuuviTagReactorImpl.swift in Sources */,
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
+				A94A881724D4374400D2CBA4 /* AddMacModalViewOutput.swift in Sources */,
 				0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EA92FDC2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				A9828E1724792CC100E7E9D4 /* KaltiotPickerPresenter.swift in Sources */,
@@ -6704,6 +6742,7 @@
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
 				A980CC7E24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
+				A94A881224D4374400D2CBA4 /* AddMacModalPresenter.swift in Sources */,
 				0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */,
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
 				0E8BACBC245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
@@ -6764,6 +6803,7 @@
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0E8BD337238566AB008B31EF /* ExportServiceTemp.swift in Sources */,
+				A94A881624D4374400D2CBA4 /* AddMacModalViewInput.swift in Sources */,
 				0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */,
 				A92E3C55242636DE00D981D5 /* RuuviMeasurement.swift in Sources */,
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
@@ -6771,6 +6811,7 @@
 				A94FFD38241C1B0900888017 /* RuuviTagProtocol.swift in Sources */,
 				0E286419246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E8BD33B238566AB008B31EF /* ConnectionPersistence.swift in Sources */,
+				A94A880624D4373600D2CBA4 /* AddMacModalModuleOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
@@ -6874,6 +6915,7 @@
 				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD383238566AB008B31EF /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
+				A94A881524D4374400D2CBA4 /* AddMacModalViewController.swift in Sources */,
 				0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */,
 				0E8BD385238566AB008B31EF /* DiscoverTableInitializer.swift in Sources */,
 				0E8BD386238566AB008B31EF /* DiscoverViewOutput.swift in Sources */,
@@ -6897,6 +6939,7 @@
 				0E8BD390238566AB008B31EF /* TagSettingsPresenter.swift in Sources */,
 				0E8BD391238566AB008B31EF /* TagChartsModuleOutput.swift in Sources */,
 				0E8BD392238566AB008B31EF /* HumidityUnit.swift in Sources */,
+				A94A881424D4374400D2CBA4 /* AddMacModalRouterInput.swift in Sources */,
 				0E8BD393238566AB008B31EF /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0E8BD394238566AB008B31EF /* TagSettingsRouterInput.swift in Sources */,
 				0E8BD395238566AB008B31EF /* NSObject+Observable.swift in Sources */,
@@ -6918,6 +6961,7 @@
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
 				A9828E4724792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */,
+				A94A881824D4374400D2CBA4 /* AddMacModalViewModel.swift in Sources */,
 				0E8BD3A3238566AB008B31EF /* AlertServiceImpl.swift in Sources */,
 				0E8BACEC245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
@@ -7004,6 +7048,7 @@
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
 				A9828E0B24792C7000E7E9D4 /* WhereOSData.swift in Sources */,
+				A94A881324D4374400D2CBA4 /* AddMacModalRouter.swift in Sources */,
 				0E8BD3D7238566AB008B31EF /* Settings.swift in Sources */,
 				0E8BD3D8238566AB008B31EF /* ForegroundInitializer.swift in Sources */,
 				0E8BD3DA238566AB008B31EF /* WebTagPersistence.swift in Sources */,
@@ -7032,6 +7077,7 @@
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				A9646472247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				A9828E2624792D4400E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */,
+				A94A881F24D4374500D2CBA4 /* AddMacModalViewModel.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
@@ -7042,6 +7088,7 @@
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
+				A94A881E24D4374500D2CBA4 /* AddMacModalViewOutput.swift in Sources */,
 				0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
@@ -7095,6 +7142,7 @@
 				A94A87F824D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */,
 				0E8BAC8F245C522D00D380FB /* Measurement.swift in Sources */,
 				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
+				A94A881C24D4374500D2CBA4 /* AddMacModalViewController.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				A976CA7A24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
@@ -7104,6 +7152,7 @@
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
 				A90E16A424606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
+				A94A881924D4374500D2CBA4 /* AddMacModalPresenter.swift in Sources */,
 				0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8BACDB245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
 				A9828E1324792CBA00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */,
@@ -7153,6 +7202,7 @@
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0E28641D2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
+				A94A881D24D4374500D2CBA4 /* AddMacModalViewInput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
 				A9828E2424792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
@@ -7178,8 +7228,10 @@
 				0E8BACBB245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
 				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
+				A94A880524D4373600D2CBA4 /* AddMacModalModuleOutput.swift in Sources */,
 				A9828E0D24792CAC00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E79F28B244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
+				A94A881B24D4374500D2CBA4 /* AddMacModalRouterInput.swift in Sources */,
 				A9828E0424792C4400E7E9D4 /* NetworkSettingsViewModel.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				A9227BBD245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
@@ -7214,6 +7266,7 @@
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */,
+				A94A880A24D4373A00D2CBA4 /* AddMacModalModuleInput.swift in Sources */,
 				A9100D6C241AC741004007FD /* WPSData.swift in Sources */,
 				A9646487247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				0E45580523E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
@@ -7392,6 +7445,7 @@
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
 				A9828E2824792D4400E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
+				A94A881A24D4374500D2CBA4 /* AddMacModalRouter.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,
 				0E8BAC6D245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift in Sources */,
