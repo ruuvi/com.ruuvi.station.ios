@@ -1336,6 +1336,9 @@
 		A949A83B24707FD0006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
+		A94A87F824D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */; };
+		A94A87F924D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */; };
+		A94A87FA24D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */; };
 		A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
@@ -2016,6 +2019,16 @@
 		A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectRxSwift.swift; sourceTree = "<group>"; };
 		A93DB9E824732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectCombine.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
+		A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalConfigurator.swift; sourceTree = "<group>"; };
+		A94A87FB24D433E800D2CBA4 /* AddMacModalModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalModuleInput.swift; sourceTree = "<group>"; };
+		A94A87FC24D433E800D2CBA4 /* AddMacModalModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalModuleOutput.swift; sourceTree = "<group>"; };
+		A94A87FD24D433E800D2CBA4 /* AddMacModalPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalPresenter.swift; sourceTree = "<group>"; };
+		A94A87FE24D434E700D2CBA4 /* AddMacModalRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalRouterInput.swift; sourceTree = "<group>"; };
+		A94A87FF24D434E800D2CBA4 /* AddMacModalRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalRouter.swift; sourceTree = "<group>"; };
+		A94A880024D4351D00D2CBA4 /* AddMacModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalViewController.swift; sourceTree = "<group>"; };
+		A94A880124D4352400D2CBA4 /* AddMacModalViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalViewInput.swift; sourceTree = "<group>"; };
+		A94A880224D4352400D2CBA4 /* AddMacModalViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalViewOutput.swift; sourceTree = "<group>"; };
+		A94A880324D4352400D2CBA4 /* AddMacModalViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalViewModel.swift; sourceTree = "<group>"; };
 		A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmProtocol.swift; sourceTree = "<group>"; };
 		A94FFD36241C189000888017 /* RuuviTagProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagProtocol.swift; sourceTree = "<group>"; };
 		A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertServiceSpec.swift; sourceTree = "<group>"; };
@@ -2055,7 +2068,6 @@
 		A9944F6F24A3C6A300EC37C1 /* RuuviNetworkTagOperationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkTagOperationsManager.swift; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
-		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewController.swift; sourceTree = "<group>"; };
 		A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleOutput.swift; sourceTree = "<group>"; };
 		A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleInput.swift; sourceTree = "<group>"; };
@@ -2081,6 +2093,7 @@
 		A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculatorImpl.swift; sourceTree = "<group>"; };
 		A9E58CF72459F7A7000C38DA /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewCell.swift; sourceTree = "<group>"; };
+		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		B02A96F4FE9661D2E122F527 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0533218B36A75D84CD26304 /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -2441,6 +2454,7 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				A94A87F224D432E500D2CBA4 /* AddMacModal */,
 				0EEB20E922B7D1350015F9E0 /* About */,
 				0EEC3F4422C5E13800C51D81 /* Calibration */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
@@ -5101,6 +5115,63 @@
 			path = ChartView;
 			sourceTree = "<group>";
 		};
+		A94A87F224D432E500D2CBA4 /* AddMacModal */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87F324D432F200D2CBA4 /* Assembly */,
+				A94A87F424D432FC00D2CBA4 /* Presenter */,
+				A94A87F524D4331000D2CBA4 /* Router */,
+				A94A87F624D4331A00D2CBA4 /* View */,
+			);
+			path = AddMacModal;
+			sourceTree = "<group>";
+		};
+		A94A87F324D432F200D2CBA4 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87F724D4334200D2CBA4 /* AddMacModalConfigurator.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		A94A87F424D432FC00D2CBA4 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87FC24D433E800D2CBA4 /* AddMacModalModuleOutput.swift */,
+				A94A87FB24D433E800D2CBA4 /* AddMacModalModuleInput.swift */,
+				A94A87FD24D433E800D2CBA4 /* AddMacModalPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		A94A87F524D4331000D2CBA4 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87FF24D434E800D2CBA4 /* AddMacModalRouter.swift */,
+				A94A87FE24D434E700D2CBA4 /* AddMacModalRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		A94A87F624D4331A00D2CBA4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A94A880424D4352E00D2CBA4 /* ViewController */,
+				A94A880124D4352400D2CBA4 /* AddMacModalViewInput.swift */,
+				A94A880224D4352400D2CBA4 /* AddMacModalViewOutput.swift */,
+				A94A880324D4352400D2CBA4 /* AddMacModalViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A94A880424D4352E00D2CBA4 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A94A880024D4351D00D2CBA4 /* AddMacModalViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		A94FFD25241C0F8000888017 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -6384,6 +6455,7 @@
 				A964647D247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				0E6BAE6B23856A01003A2D4C /* LocationPickerModuleOutput.swift in Sources */,
 				0E6BAE6C23856A01003A2D4C /* DiscoverTableConfigurator.swift in Sources */,
+				A94A87FA24D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */,
 				0E6BAE6D23856A01003A2D4C /* AlertServiceImpl.swift in Sources */,
 				0E8BACED245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E6BAE6E23856A01003A2D4C /* LocationPickerViewInput.swift in Sources */,
@@ -6709,6 +6781,7 @@
 				0E8BAC62245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
 				0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				0E8BD342238566AB008B31EF /* ImagePersistence.swift in Sources */,
+				A94A87F924D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E8BD344238566AB008B31EF /* RuuviTagPersistenceRealm.swift in Sources */,
@@ -7019,6 +7092,7 @@
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
+				A94A87F824D4334200D2CBA4 /* AddMacModalConfigurator.swift in Sources */,
 				0E8BAC8F245C522D00D380FB /* Measurement.swift in Sources */,
 				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
