@@ -18,49 +18,42 @@ class HexadecimalKeyboard: UIView {
     weak var target: UIKeyInput?
     weak var delegate: RemoveKeyboardDelegate?
 
-    var hexadecimalButtons: [HexButton] = [
-        "0", "7", "8", "9",
-        "4", "5", "6",
-        "1", "2", "3",
-        "A", "B", "C",
-        "D", "E", "F"
+    lazy var hexadecimalButtons: [HexButton] = {
+        return [
+            "0", "7", "8", "9",
+            "4", "5", "6",
+            "1", "2", "3",
+            "A", "B", "C",
+            "D", "E", "F"
         ].map {
-        let button = HexButton(type: .system)
-        button.commonFormat()
-        button.hexCharacter = $0
-        button.setTitle("\($0)", for: .normal)
-        if #available(iOS 13.0, *) {
-            button.backgroundColor = UIColor.secondarySystemGroupedBackground
-        } else {
-            // Fallback on earlier versions
+            let button = HexButton(type: .system)
+            button.commonFormat()
+            button.hexCharacter = $0
+            button.setTitle("\($0)", for: .normal)
+            button.backgroundColor = RUColor.secondarySystemGroupedBackground
+            setupColors(for: button)
+            button.addTarget(self, action: #selector(didTapHexButton(_:)), for: .touchUpInside)
+            return button
         }
-        button.addTarget(self, action: #selector(didTapHexButton(_:)), for: .touchUpInside)
-        return button
-    }
+    }()
 
-    var deleteButton: UIButton = {
+    lazy var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.commonFormat()
         button.setTitle("⌫", for: .normal)
-        if #available(iOS 13.0, *) {
-            button.backgroundColor = UIColor.systemGray4
-        } else {
-            // Fallback on earlier versions
-        }
+        button.backgroundColor = RUColor.systemGray4
         button.accessibilityLabel = "Delete"
+        setupColors(for: button)
         button.addTarget(self, action: #selector(didTapDeleteButton(_:)), for: .touchUpInside)
         return button
     }()
 
-    var okButton: UIButton = {
+    lazy var okButton: UIButton = {
         let button = UIButton(type: .system)
         button.commonFormat()
         button.setTitle("OK", for: .normal)
-        if #available(iOS 13.0, *) {
-            button.backgroundColor = UIColor.systemGray4
-        } else {
-            // Fallback on earlier versions
-        }
+        button.backgroundColor = RUColor.systemGray4
+        setupColors(for: button)
         button.accessibilityLabel = "OK"
         button.addTarget(self, action: #selector(didTapOKButton(_:)), for: .touchUpInside)
         return button
@@ -69,7 +62,7 @@ class HexadecimalKeyboard: UIView {
     var mainStack: UIStackView = {
         let stackView = UIStackView()
         stackView.distribution = .fillEqually
-        stackView.spacing      = 10
+        stackView.spacing = 10
         stackView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -106,13 +99,15 @@ extension HexadecimalKeyboard {
 // MARK: - Private initial configuration methods
 private extension HexadecimalKeyboard {
     func configure() {
-        if #available(iOS 13.0, *) {
-            self.backgroundColor = .systemGray3
-        } else {
-            // Fallback on earlier versions
-        }
-        autoresizingMask     = [.flexibleWidth, .flexibleHeight]
+        backgroundColor = RUColor.systemGray3
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
         buildKeyboard()
+    }
+
+    private func setupColors(for button: UIButton) {
+        button.setTitleColor(RUColor.label, for: .normal)
+        button.setTitleColor(RUColor.secondaryLabel, for: .disabled)
+        button.setTitleColor(RUColor.tertiaryLabel, for: .highlighted)
     }
 
     func buildKeyboard() {
