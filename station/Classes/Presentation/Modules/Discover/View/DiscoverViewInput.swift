@@ -10,10 +10,9 @@ protocol DiscoverViewInput: ViewInput {
 
     func showBluetoothDisabled()
     func showWebTagInfoDialog()
-    func showAddTagWithMACAddressDialog()
     func showAddKaltiotApiKey()
+    func showChoiseDialog()
     var networkFeatureEnabled: Bool { get set }
     var networkKaltiotEnabled: Bool { get set }
     var networkWhereOsEnabled: Bool { get set }
-    var canSendMac: Bool { get set }
 }

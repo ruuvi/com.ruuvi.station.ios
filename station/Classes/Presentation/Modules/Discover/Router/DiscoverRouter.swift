@@ -35,6 +35,14 @@ class DiscoverRouter: DiscoverRouterInput {
             })
     }
 
+    func openAddUsingMac(output: AddMacModalModuleOutput,
+                         for provider: RuuviNetworkProvider) {
+        let factory = StoryboardFactory(storyboardName: "AddMacModal")
+        try! transitionHandler.forStoryboard(factory: factory, to: AddMacModalModuleInput.self).then({ (module) -> Any? in
+            module.configure(output: output, for: provider)
+        })
+    }
+
     func dismiss(completion: (() -> Void)?) {
         transitionHandler.dismiss(animated: true, completion: completion)
     }

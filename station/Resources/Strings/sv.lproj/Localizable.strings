@@ -92,6 +92,10 @@
 "Advanced.RuuviNetwork.title" = "Network Configuration";
 "Advanced.Charts.title" = "CHARTS";
 
+// AddMacModalViewController
+"AddMacModalViewController.EnterMacAddress" = "Enter mac-address";
+"AddMacModalViewController.Send" = "Send";
+
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
@@ -105,9 +109,10 @@
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
 "DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
-"DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
+"DiscoverTable.NetworkChoiseDialog.title" = "Choise network provider";
+"DiscoverTable.KaltiotNetwork" = "Kaltiot";
+"DiscoverTable.WhereOSNetwork" = "WhereOS";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
-"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
 // KaltiotPicker
 "KaltiotPicker.Title.text" = "Add Kaltiot tag";
