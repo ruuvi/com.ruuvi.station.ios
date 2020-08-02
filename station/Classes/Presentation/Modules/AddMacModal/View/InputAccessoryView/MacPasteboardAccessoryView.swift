@@ -27,6 +27,14 @@ class MacPasteboardAccessoryView: UIScrollView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let itemsCount = toolBar.items?.count ?? 0
+        let width = max(UIScreen.main.bounds.width, CGFloat(itemsCount) * buttonSize.width)
+        toolBar.frame.size = CGSize(width: width, height: buttonSize.height)
+        contentSize = CGSize(width: width, height: buttonSize.height)
+    }
+
     private func configureView() {
         autoresizingMask = toolBar.autoresizingMask
         showsVerticalScrollIndicator = false
@@ -54,8 +62,5 @@ extension MacPasteboardAccessoryView: MacPasteboardAccessoryViewInput {
                             action: #selector(self.didPasteMac(_:)))
         })
         toolBar.setItems(buttons, animated: true)
-        let width = max(UIScreen.main.bounds.width, CGFloat(items.count) * buttonSize.width)
-        toolBar.frame.size = CGSize(width: width, height: buttonSize.height)
-        contentSize = CGSize(width: width, height: buttonSize.height)
     }
 }
