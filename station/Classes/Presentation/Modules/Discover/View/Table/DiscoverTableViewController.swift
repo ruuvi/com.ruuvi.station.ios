@@ -242,8 +242,10 @@ extension DiscoverTableViewController {
             return shownWebTags.count
         case .device:
             return shownDevices.count
-        case .noDevices, .network:
+        case .noDevices:
             return 1
+        case .network:
+            return networkFeatureEnabled ? 1 : 0
         }
     }
 
