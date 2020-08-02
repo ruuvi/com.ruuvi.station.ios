@@ -165,26 +165,23 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidAskToAddTagWithMACAddress() {
-        view.showAddTagWithMACAddressDialog()
-    }
-
-    func viewDidEnterMACAddressToAddTag(mac: String) {
-        ruuviNetworkWhereOS.getSensor(mac: mac).on(success: {[weak self] (sensor) in
-            self?.saveWhereOSSensor(sensor: sensor, mac: mac)
-        }, failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        })
+        view.showChoiseDialog()
     }
 
     func viewDidEnterKaltiotApiKey(apiKey: String) {
         validateApiKey(apiKey: apiKey)
     }
 
-    func viewDidSelectKaltiotProvider() {
-        if keychainService.hasKaltiotApiKey {
-            router.openKaltiotPicker(output: self)
-        } else {
-            view.showAddKaltiotApiKey()
+    func viewDidSelectProvider(_ provider: RuuviNetworkProvider) {
+        switch provider {
+        case .whereOS:
+            router.openAddUsingMac(output: self, for: .whereOS)
+        case .kaltiot:
+            if keychainService.hasKaltiotApiKey {
+                openKaltiotPicker()
+            } else {
+                view.showAddKaltiotApiKey()
+            }
         }
     }
 }
@@ -215,8 +212,21 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
 // MARK: - KaltiotPickerModuleOutput
 extension DiscoverPresenter: KaltiotPickerModuleOutput {
     func kaltiotPicker(module: KaltiotPickerModuleInput, didPick tagUuid: String) {
+        
     }
 }
+// MARK: - AddMacModalModuleOutput
+extension DiscoverPresenter: AddMacModalModuleOutput {
+    func addMacDidEnter(_ mac: String, for provider: RuuviNetworkProvider) {
+        switch provider {
+        case .whereOS:
+            searchWhereOSTag(with: mac)
+        case .kaltiot:
+            searchKaltiotTag(with: mac)
+        }
+    }
+}
+
 // MARK: - Private
 extension DiscoverPresenter {
 
@@ -355,10 +365,11 @@ extension DiscoverPresenter {
     }
 
     private func openKaltiotPicker() {
-        router.openKaltiotPicker(output: self)
+        router.openAddUsingMac(output: self, for: .kaltiot)
+//        router.openKaltiotPicker(output: self)
     }
 
-    private func saveWhereOSSensor(sensor: AnyRuuviTagSensor, mac: String) {
+    private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {
         let operation = ruuviTagTank.create(sensor)
         operation.on(success: { [weak self] (_) in
             guard let sSelf = self else { return }
@@ -371,75 +382,28 @@ extension DiscoverPresenter {
             self?.errorPresenter.present(error: error)
         })
     }
-}
-extension DiscoverPresenter: UITextFieldDelegate {
-    @discardableResult
-    private func didPasteText(text string: String, intoTextField textField: UITextField, range: NSRange) -> Bool {
-        let doubleDotsLocations: [Int] = [2, 5, 8, 11, 14]
-        let text = string.reduce(into: "") { (result, nextChar) in
-            guard nextChar.isHexDigit,
-                result.count < 17 else {
-                return
-            }
-            if doubleDotsLocations.contains(result.count) {
-                result += ":"
-            }
-            result += String(nextChar).uppercased()
-        }
-        textField.text = text
-        textField.selectedTextRange = textField.textRange(from: textField.endOfDocument, to: textField.endOfDocument)
-        return false
+
+    private func searchWhereOSTag(with mac: String) {
+        ruuviNetworkWhereOS.getSensor(mac: mac).on(success: {[weak self] (sensor) in
+            self?.saveSensor(sensor: sensor, mac: mac)
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
-    private func didErasedText(_ textField: UITextField, inRange range: NSRange) -> Bool {
-        if let text = textField.text?.replace(with: "", in: range) {
-            didPasteText(text: text, intoTextField: textField, range: range)
-        }
-        if #available(iOS 11, *) {
-            textField.caretPosition = range.location
-        } else {
-            if let newPosition = textField.position(from: textField.beginningOfDocument, offset: range.location) {
-                textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
-            }
-        }
-        return false
+    private func searchKaltiotTag(with mac: String) {
+        ruuviNetworkKaltiot.getBeacon(mac: mac).on(success: { [weak self] (beacon) in
+            self?.saveKaltiotBeacon(beacon, mac: mac)
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
-    func textField(_ textField: UITextField,
-                   shouldChangeCharactersIn range: NSRange,
-                   replacementString string: String) -> Bool {
-        let doubleDotsLocations: [Int] = [2, 5, 8, 11, 14]
-        let futureText = textField.text?.replace(with: string, in: range) ?? ""
-        view.canSendMac = futureText.count >= 17
-        guard !string.isEmpty else {
-            return didErasedText(textField, inRange: range)
-        }
-        guard string.count == 1 else {
-            return didPasteText(text: string, intoTextField: textField, range: range)
-        }
-        let textFieldText = textField.text?.replacingOccurrences(of: ":", with: "") ?? ""
-        let shouldChange = string.allSatisfy({ $0.isHexDigit })
-            && textFieldText.allSatisfy({ $0.isHexDigit })
-            && textFieldText.count < 12
-        if !shouldChange {
-            let propertyAnimator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.3) {
-                textField.transform = CGAffineTransform(translationX: -3, y: 0)
-            }
-            propertyAnimator.addAnimations({
-                textField.transform = CGAffineTransform(translationX: 3, y: 0)
-            }, delayFactor: 0.2)
-            propertyAnimator.addAnimations({
-                textField.transform = CGAffineTransform(translationX: 0, y: 0)
-            }, delayFactor: 0.2)
-            propertyAnimator.startAnimation()
-            let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
-            notificationFeedbackGenerator.notificationOccurred(.error)
-            notificationFeedbackGenerator.prepare()
-        } else {
-            if doubleDotsLocations.contains(range.location) {
-                textField.text?.append(":")
-            }
-        }
-        return shouldChange
+    private func saveKaltiotBeacon(_ beacon: KaltiotBeacon, mac: String) {
+        ruuviNetworkKaltiot.getSensor(for: beacon).on(success: { [weak self] (sensor) in
+            self?.saveSensor(sensor: sensor, mac: mac)
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }

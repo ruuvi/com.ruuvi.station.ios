@@ -1,10 +1,8 @@
 import Foundation
 
 class AddMacModalConfigurator {
-    func configure() {
-        let r = AppAssembly.shared.assembler.resolver
-
-        let view = AddMacModalViewController()
+    func configure(view: AddMacModalViewController) {
+        // let r = AppAssembly.shared.assembler.resolver
         let router = AddMacModalRouter()
         let presenter = AddMacModalPresenter()
 

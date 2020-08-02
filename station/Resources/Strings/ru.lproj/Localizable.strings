@@ -31,6 +31,10 @@
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
+// AddMacModalViewController
+"AddMacModalViewController.EnterMacAddress" = "Введите mac-адрес";
+"AddMacModalViewController.Send" = "Отправить";
+
 // Background
 "Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
@@ -102,11 +106,13 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
-"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
+"DiscoverTable.AddWithMACSection.text" = "Добавить по MAC адресу";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
-"DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
+"DiscoverTable.NetworkChoiseDialog.title" = "Выберите провайдер";
+"DiscoverTable.KaltiotNetwork" = "Kaltiot";
+"DiscoverTable.WhereOSNetwork" = "WhereOS";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
-"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
+
 // KaltiotPicker
 "KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
 "RuuviNetworkKaltiot.Name.prefix" = "Kaltiot";

@@ -128,7 +128,7 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
             return .init(error: .ruuviNetwork(.noSavedApiKeyValue))
         }
         let promise = Promise<KaltiotBeacon, RUError>()
-        guard let url = url(for: .beacon(mac: mac)) else {
+        guard let url = url(for: .beacon(mac: mac.lowercased())) else {
             return .init(error: .unexpected(.failedToConstructURL))
         }
         var request = URLRequest(url: url)
