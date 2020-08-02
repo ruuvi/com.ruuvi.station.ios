@@ -9,6 +9,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var router: DiscoverRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
+    var activityPresenter: ActivityPresenter!
     var webTagService: WebTagService!
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
@@ -178,7 +179,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             router.openAddUsingMac(output: self, for: .whereOS)
         case .kaltiot:
             if keychainService.hasKaltiotApiKey {
-                openKaltiotPicker()
+                openKaltiotAddMac()
             } else {
                 view.showAddKaltiotApiKey()
             }
@@ -208,16 +209,10 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
         }
     }
 }
-
-// MARK: - KaltiotPickerModuleOutput
-extension DiscoverPresenter: KaltiotPickerModuleOutput {
-    func kaltiotPicker(module: KaltiotPickerModuleInput, didPick tagUuid: String) {
-        
-    }
-}
 // MARK: - AddMacModalModuleOutput
 extension DiscoverPresenter: AddMacModalModuleOutput {
     func addMacDidEnter(_ mac: String, for provider: RuuviNetworkProvider) {
+        activityPresenter.increment()
         switch provider {
         case .whereOS:
             searchWhereOSTag(with: mac)
@@ -265,6 +260,8 @@ extension DiscoverPresenter {
                 self?.persistedSensors = sensors
             case .insert(let sensor):
                 self?.persistedSensors.append(sensor)
+            case .delete(let sensor):
+                self?.persistedSensors.removeAll(where: {$0.any == sensor})
             default:
                 return
             }
@@ -358,20 +355,25 @@ extension DiscoverPresenter {
         let op = ruuviNetworkKaltiot.validateApiKey(apiKey: apiKey)
         op.on(success: {[weak self] in
             self?.keychainService.kaltiotApiKey = apiKey
-            self?.openKaltiotPicker()
+            self?.openKaltiotAddMac()
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }
 
-    private func openKaltiotPicker() {
+    private func openKaltiotAddMac() {
         router.openAddUsingMac(output: self, for: .kaltiot)
-//        router.openKaltiotPicker(output: self)
     }
 
     private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {
+        guard !persistedSensors.contains(where: {$0.any == sensor}) else {
+            activityPresenter.decrement()
+            errorPresenter.present(error: RUError.ruuviNetwork(.tagAlreadyExists))
+            return
+        }
         let operation = ruuviTagTank.create(sensor)
         operation.on(success: { [weak self] (_) in
+            self?.activityPresenter.decrement()
             guard let sSelf = self else { return }
             if sSelf.isOpenedFromWelcome {
                 sSelf.router.openCards()
@@ -379,6 +381,7 @@ extension DiscoverPresenter {
                 sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
             }
         }, failure: { [weak self] (error) in
+            self?.activityPresenter.decrement()
             self?.errorPresenter.present(error: error)
         })
     }
@@ -387,6 +390,7 @@ extension DiscoverPresenter {
         ruuviNetworkWhereOS.getSensor(mac: mac).on(success: {[weak self] (sensor) in
             self?.saveSensor(sensor: sensor, mac: mac)
         }, failure: { [weak self] (error) in
+            self?.activityPresenter.decrement()
             self?.errorPresenter.present(error: error)
         })
     }
@@ -395,6 +399,7 @@ extension DiscoverPresenter {
         ruuviNetworkKaltiot.getBeacon(mac: mac).on(success: { [weak self] (beacon) in
             self?.saveKaltiotBeacon(beacon, mac: mac)
         }, failure: { [weak self] (error) in
+            self?.activityPresenter.decrement()
             self?.errorPresenter.present(error: error)
         })
     }
@@ -403,6 +408,7 @@ extension DiscoverPresenter {
         ruuviNetworkKaltiot.getSensor(for: beacon).on(success: { [weak self] (sensor) in
             self?.saveSensor(sensor: sensor, mac: mac)
         }, failure: { [weak self] (error) in
+            self?.activityPresenter.decrement()
             self?.errorPresenter.present(error: error)
         })
     }

@@ -334,8 +334,9 @@
 "RuuviNetworkError.FailedToLogIn" = "Не удалось авторизоваться";
 "RuuviNetworkError.DoesNotHaveSensors" = "У метки нет сенсоров";
 "RuuviNetworkError.NoStoredData" = "Нет сохраненных данных. Метка не будет добавлена";
-
+"RuuviNetworkError.TagAlreadyExists" = "Метка уже добавлена";
 "RuuviNetworkError.TagIsNotPluggable" = "The tag is not pluggable";
+
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";
