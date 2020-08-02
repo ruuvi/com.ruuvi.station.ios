@@ -1381,6 +1381,9 @@
 		A94A886624D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
 		A94A886724D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
 		A94A886824D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
+		A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
+		A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
+		A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
 		A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
@@ -2077,6 +2080,7 @@
 		A94A885224D4492700D2CBA4 /* AddMacModal.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddMacModal.storyboard; sourceTree = "<group>"; };
 		A94A885324D4498B00D2CBA4 /* AddMacModalInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModalInitializer.swift; sourceTree = "<group>"; };
 		A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPasteboardAccessoryView.swift; sourceTree = "<group>"; };
+		A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUColor.swift; sourceTree = "<group>"; };
 		A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmProtocol.swift; sourceTree = "<group>"; };
 		A94FFD36241C189000888017 /* RuuviTagProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagProtocol.swift; sourceTree = "<group>"; };
 		A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertServiceSpec.swift; sourceTree = "<group>"; };
@@ -4082,6 +4086,7 @@
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 				0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */,
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
+				A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -6391,6 +6396,7 @@
 				0E6BAE0123856A01003A2D4C /* ExportServiceTemp.swift in Sources */,
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
 				A92E3C56242636DF00D981D5 /* RuuviMeasurement.swift in Sources */,
+				A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				A9828E0924792C5A00E7E9D4 /* KaltiotBeacons.swift in Sources */,
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A93DB9EB24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
@@ -6847,6 +6853,7 @@
 				0E8BD32A238566AB008B31EF /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A9100D6D241AC751004007FD /* WPSData.swift in Sources */,
 				0E45580623E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
+				A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				0E8BD32B238566AB008B31EF /* AlertType.swift in Sources */,
 				0E79F284244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
@@ -7360,6 +7367,7 @@
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
+				A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A9646484247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,

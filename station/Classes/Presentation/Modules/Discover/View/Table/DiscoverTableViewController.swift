@@ -275,6 +275,7 @@ extension DiscoverTableViewController {
                 return cell
             } else {
                 assert(false)
+                return .init()
             }
         }
     }
