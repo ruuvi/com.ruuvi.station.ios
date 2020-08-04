@@ -31,9 +31,9 @@
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
-// AddMacModalViewController
-"AddMacModalViewController.EnterMacAddress" = "Введите mac-адрес";
-"AddMacModalViewController.Send" = "Отправить";
+// AddMacViewController
+"AddMacViewController.EnterMacAddress" = "Введите mac-адрес";
+"AddMacViewController.Send" = "Отправить";
 
 // Background
 "Background.navigationItem.title" = "Фоновый Режим";

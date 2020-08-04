@@ -1,15 +1,15 @@
 import UIKit
 import Future
 
-class AddMacModalPresenter: NSObject {
-    weak var view: AddMacModalViewInput!
-    var output: AddMacModalModuleOutput!
-    var router: AddMacModalRouterInput!
+class AddMacPresenter: NSObject {
+    weak var view: AddMacViewInput!
+    var output: AddMacModuleOutput!
+    var router: AddMacRouterInput!
     private var networkProvider: RuuviNetworkProvider!
 
     private let macRegex: String = "([[:xdigit:]]{2}[:.-]?){5}[[:xdigit:]]{2}"
     private var willEnterForegroundToken: NSObjectProtocol!
-    private var viewModel: AddMacModalViewModel! {
+    private var viewModel: AddMacViewModel! {
         didSet {
             view.viewModel = viewModel
         }
@@ -19,8 +19,8 @@ class AddMacModalPresenter: NSObject {
     }
 }
 
-// MARK: - AddMacModalViewOutput
-extension AddMacModalPresenter: AddMacModalViewOutput {
+// MARK: - AddMacViewOutput
+extension AddMacPresenter: AddMacViewOutput {
     func viewDidLoad() {
         createViewModel()
         startObservingWillEnterForeground()
@@ -32,34 +32,29 @@ extension AddMacModalPresenter: AddMacModalViewOutput {
     }
 
     func viewDidTriggerSend(mac: String) {
-        router.dismiss { [weak self] in
-            guard let sSelf = self else {
-                return
-            }
-            sSelf.output.addMacDidEnter(mac, for: sSelf.networkProvider)
-        }
+        output.addMac(module: self, didEnter: mac, for: self.networkProvider)
     }
 }
 
-// MARK: - AddMacModalModuleInput
-extension AddMacModalPresenter: AddMacModalModuleInput {
-    func configure(output: AddMacModalModuleOutput, for provider: RuuviNetworkProvider) {
+// MARK: - AddMacModuleInput
+extension AddMacPresenter: AddMacModuleInput {
+    func configure(output: AddMacModuleOutput, for provider: RuuviNetworkProvider) {
         self.networkProvider = provider
         self.output = output
     }
 
-    func dismiss() {
-        router.dismiss(completion: nil)
+    func dismiss(completion: (() -> Void)?) {
+        router.dismiss(completion: completion)
     }
 }
 
-extension AddMacModalPresenter: MacPasteboardAccessoryViewOutput {
+extension AddMacPresenter: MacPasteboardAccessoryViewOutput {
     func didSelect(item: String) {
         view.didSelectMacAddress(item.replacingOccurrences(of: ":", with: ""))
     }
 }
 // MARK: - Private
-extension AddMacModalPresenter {
+extension AddMacPresenter {
     private func findMacAddressesInPasteBoard() {
         guard let pasteboardString = UIPasteboard.general.string else {
             return
@@ -93,7 +88,7 @@ extension AddMacModalPresenter {
     }
 
     private func createViewModel() {
-        viewModel = AddMacModalViewModel()
+        viewModel = AddMacViewModel()
     }
 
     private func startObservingWillEnterForeground() {

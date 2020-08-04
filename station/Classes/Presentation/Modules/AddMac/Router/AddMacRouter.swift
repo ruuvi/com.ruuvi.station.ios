@@ -1,6 +1,6 @@
 import UIKit
 
-class AddMacModalRouter: AddMacModalRouterInput {
+class AddMacRouter: AddMacRouterInput {
     weak var transitionHandler: UIViewController!
 
     func dismiss(completion: (() -> Void)?) {

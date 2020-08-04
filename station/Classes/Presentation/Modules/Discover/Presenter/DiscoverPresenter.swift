@@ -209,15 +209,19 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
         }
     }
 }
-// MARK: - AddMacModalModuleOutput
-extension DiscoverPresenter: AddMacModalModuleOutput {
-    func addMacDidEnter(_ mac: String, for provider: RuuviNetworkProvider) {
-        activityPresenter.increment()
-        switch provider {
-        case .whereOS:
-            searchWhereOSTag(with: mac)
-        case .kaltiot:
-            searchKaltiotTag(with: mac)
+// MARK: - AddMacModuleOutput
+extension DiscoverPresenter: AddMacModuleOutput {
+    func addMac(module: AddMacModuleInput,
+                didEnter mac: String,
+                for provider: RuuviNetworkProvider) {
+        module.dismiss { [weak self] in
+            self?.activityPresenter.increment()
+            switch provider {
+            case .whereOS:
+                self?.searchWhereOSTag(with: mac)
+            case .kaltiot:
+                self?.searchKaltiotTag(with: mac)
+            }
         }
     }
 }

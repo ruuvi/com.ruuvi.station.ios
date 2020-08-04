@@ -1,6 +1,6 @@
 import Foundation
 
-protocol AddMacModalViewOutput {
+protocol AddMacViewOutput {
     func viewDidLoad()
     func viewDidTriggerDismiss()
     func viewDidTriggerSend(mac: String)

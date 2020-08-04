@@ -1,9 +1,9 @@
 import Foundation
 
-protocol AddMacModalRouterInput {
+protocol AddMacRouterInput {
     func dismiss(completion: (() -> Void)?)
 }
-extension AddMacModalRouterInput {
+extension AddMacRouterInput {
     func dismiss() {
         dismiss(completion: nil)
     }
