@@ -5,7 +5,7 @@ protocol DiscoverRouterInput {
     func openCards()
     func openRuuviWebsite()
     func openLocationPicker(output: LocationPickerModuleOutput)
-    func openAddUsingMac(output: AddMacModalModuleOutput,
+    func openAddUsingMac(output: AddMacModuleOutput,
                          for provider: RuuviNetworkProvider)
     func dismiss(completion: (() -> Void)?)
 }

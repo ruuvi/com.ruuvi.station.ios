@@ -92,9 +92,9 @@
 "Advanced.RuuviNetwork.title" = "Network Configuration";
 "Advanced.Charts.title" = "CHARTS";
 
-// AddMacModalViewController
-"AddMacModalViewController.EnterMacAddress" = "Enter mac-address";
-"AddMacModalViewController.Send" = "Send";
+// AddMacViewController
+"AddMacViewController.EnterMacAddress" = "Enter mac-address";
+"AddMacViewController.Send" = "Send";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";

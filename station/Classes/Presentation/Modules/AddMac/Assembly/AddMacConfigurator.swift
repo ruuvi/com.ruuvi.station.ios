@@ -1,10 +1,10 @@
 import Foundation
 
-class AddMacModalConfigurator {
-    func configure(view: AddMacModalViewController) {
+class AddMacConfigurator {
+    func configure(view: AddMacViewController) {
         // let r = AppAssembly.shared.assembler.resolver
-        let router = AddMacModalRouter()
-        let presenter = AddMacModalPresenter()
+        let router = AddMacRouter()
+        let presenter = AddMacPresenter()
 
         router.transitionHandler = view
 

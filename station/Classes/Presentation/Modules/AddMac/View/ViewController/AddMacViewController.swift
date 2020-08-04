@@ -1,7 +1,7 @@
 import UIKit
-class AddMacModalViewController: UIViewController {
-    var output: (AddMacModalViewOutput & MacPasteboardAccessoryViewOutput)!
-    var viewModel: AddMacModalViewModel! {
+class AddMacViewController: UIViewController {
+    var output: (AddMacViewOutput & MacPasteboardAccessoryViewOutput)!
+    var viewModel: AddMacViewModel! {
         didSet {
             bindViewModel()
         }
@@ -81,10 +81,10 @@ class AddMacModalViewController: UIViewController {
     }
 }
 
-// MARK: - AddMacModalViewInput
-extension AddMacModalViewController: AddMacModalViewInput {
+// MARK: - AddMacViewInput
+extension AddMacViewController: AddMacViewInput {
     func localize() {
-        title = "AddMacModalViewController.EnterMacAddress".localized()
+        title = "AddMacViewController.EnterMacAddress".localized()
     }
 
     func didSelectMacAddress(_ mac: String) {
@@ -98,13 +98,13 @@ extension AddMacModalViewController: AddMacModalViewInput {
 }
 
 // MARK: - RemoveKeyboardDelegate
-extension AddMacModalViewController: RemoveKeyboardDelegate {
+extension AddMacViewController: RemoveKeyboardDelegate {
     func removeKeyboard() {
     }
 }
 
 // MARK: - Private
-extension AddMacModalViewController {
+extension AddMacViewController {
 
     @objc private func textDidChange(_ sender: UITextField) {
         let text = sender.text ?? ""
@@ -145,7 +145,7 @@ extension AddMacModalViewController {
         hexadecimalKeyboard = HexadecimalKeyboard(target: textField)
         hexadecimalKeyboard.okButton.isEnabled = false
         hexadecimalKeyboard.delegate = self
-        hexadecimalKeyboard.okButton.setTitle("AddMacModalViewController.Send".localized(), for: .normal)
+        hexadecimalKeyboard.okButton.setTitle("AddMacViewController.Send".localized(), for: .normal)
         if #available(iOS 13.0, *) {
             hexadecimalKeyboard.okButton.setTitleColor(.label, for: .normal)
             hexadecimalKeyboard.okButton.setTitleColor(.placeholderText, for: .disabled)

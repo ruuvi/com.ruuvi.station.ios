@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="0dM-Rr-rch">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="32" y="142"/>
         </scene>
-        <!--Add Mac Modal View Controller-->
+        <!--Add Mac View Controller-->
         <scene sceneID="UWO-VM-DlQ">
             <objects>
-                <viewController storyboardIdentifier="AddMacModalViewController" id="Xjo-Vx-KDj" customClass="AddMacModalViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddMacViewController" id="Xjo-Vx-KDj" customClass="AddMacViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ga7-ml-9wb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -146,7 +147,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eeb-9o-9GX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="whT-1U-0Zk" userLabel="AddMacModalInitializer" customClass="AddMacModalInitializer" customModuleProvider="target">
+                <customObject id="whT-1U-0Zk" userLabel="AddMacInitializer" customClass="AddMacInitializer" customModule="station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="Xjo-Vx-KDj" id="Wb9-yl-E7v"/>
                     </connections>
