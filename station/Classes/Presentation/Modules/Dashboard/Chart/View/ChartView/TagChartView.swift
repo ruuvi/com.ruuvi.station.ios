@@ -94,7 +94,6 @@ class TagChartView: LineChartView {
     }
 // MARK: - UpdateUI
     private func updateUIViewModel() {
-        let delta = viewModel.yAxisDelta
         bind(viewModel.chartData) { (view, data) in
             view.data = data
             view.data?.notifyDataChanged()
