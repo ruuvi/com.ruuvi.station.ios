@@ -94,6 +94,7 @@ class TagChartView: LineChartView {
     }
 // MARK: - UpdateUI
     private func updateUIViewModel() {
+        let delta = viewModel.yAxisDelta
         bind(viewModel.chartData) { (view, data) in
             view.data = data
             view.data?.notifyDataChanged()
@@ -131,6 +132,7 @@ class TagChartView: LineChartView {
         leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.labelTextColor = UIColor.white
+        leftAxis.minWidth = 2
         rightAxis.enabled = false
         legend.form = .line
         noDataTextColor = UIColor.white
