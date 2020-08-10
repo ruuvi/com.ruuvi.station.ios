@@ -31,6 +31,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
             view.savedDevicesIds = persistedSensors.map({$0.id})
+            view.containsPhysicalSensors = !persistedSensors.compactMap({$0.isNetworkConnectable}).isEmpty
             updateCloseButtonVisibilityState()
         }
     }
@@ -166,7 +167,16 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidAskToAddTagWithMACAddress() {
-        view.showChoiseDialog()
+        switch (settings.kaltiotNetworkEnabled, settings.whereOSNetworkEnabled) {
+        case (true, true):
+            view.showChoiseDialog()
+        case (true, false):
+            startKaltiotAddingFlow()
+        case (false, true):
+            openAddUsingMac(for: .whereOS)
+        default:
+            assert(false)
+        }
     }
 
     func viewDidEnterKaltiotApiKey(apiKey: String) {
@@ -176,13 +186,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidSelectProvider(_ provider: RuuviNetworkProvider) {
         switch provider {
         case .whereOS:
-            router.openAddUsingMac(output: self, for: .whereOS)
+            openAddUsingMac(for: .whereOS)
         case .kaltiot:
-            if keychainService.hasKaltiotApiKey {
-                openKaltiotAddMac()
-            } else {
-                view.showAddKaltiotApiKey()
-            }
+            startKaltiotAddingFlow()
         }
     }
 }
@@ -359,14 +365,22 @@ extension DiscoverPresenter {
         let op = ruuviNetworkKaltiot.validateApiKey(apiKey: apiKey)
         op.on(success: {[weak self] in
             self?.keychainService.kaltiotApiKey = apiKey
-            self?.openKaltiotAddMac()
+            self?.openAddUsingMac(for: .kaltiot)
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }
 
-    private func openKaltiotAddMac() {
-        router.openAddUsingMac(output: self, for: .kaltiot)
+    private func startKaltiotAddingFlow() {
+        if keychainService.hasKaltiotApiKey {
+            openAddUsingMac(for: .kaltiot)
+        } else {
+            view.showAddKaltiotApiKey()
+        }
+    }
+
+    private func openAddUsingMac(for provider: RuuviNetworkProvider) {
+        router.openAddUsingMac(output: self, for: provider)
     }
 
     private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {

@@ -674,13 +674,17 @@ extension TagSettingsTableViewController {
         if isViewLoaded, let viewModel = viewModel {
 
             dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
-                if let isConnected = isConnected, isConnected {
+                if isConnected == true {
                     label.text = "TagSettings.DataSource.Heartbeat.title".localized()
                 } else {
                     label.text = "TagSettings.DataSource.Advertisement.title".localized()
                 }
             }
-
+            dataSourceValueLabel.bind(viewModel.isNetworkConnected) { (label, isNetworkConnected) in
+                if isNetworkConnected == true {
+                    label.text = "TagSettings.DataSource.Network.title".localized()
+                }
+            }
             tableView.bind(viewModel.version) { (tableView, _) in
                 tableView.reloadData()
             }

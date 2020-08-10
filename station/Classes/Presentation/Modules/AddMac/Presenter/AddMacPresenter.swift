@@ -89,6 +89,12 @@ extension AddMacPresenter {
 
     private func createViewModel() {
         viewModel = AddMacViewModel()
+        switch networkProvider! {
+        case .kaltiot:
+            viewModel.title.value = "AddMacViewController.EnterKaltiotMacAddress".localized()
+        case .whereOS:
+            viewModel.title.value = "AddMacViewController.EnterWhereOsMacAddress".localized()
+        }
     }
 
     private func startObservingWillEnterForeground() {

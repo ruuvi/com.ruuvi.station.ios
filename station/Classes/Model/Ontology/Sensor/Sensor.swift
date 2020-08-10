@@ -20,6 +20,10 @@ protocol Locateable {
     var location: Location { get }
 }
 
+protocol Networkable {
+    var networkProvider: RuuviNetworkProvider? { get }
+}
+
 protocol Sensor: StringIdentifieable {}
 
 protocol PhysicalSensor: Sensor, Connectable, Nameable {
