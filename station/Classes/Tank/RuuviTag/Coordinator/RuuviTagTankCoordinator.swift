@@ -6,20 +6,33 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var sqlite: RuuviTagPersistence!
     var realm: RuuviTagPersistence!
     var idPersistence: IDPersistence!
+    var settings: Settings!
     var backgroundPersistence: BackgroundPersistence!
     var connectionPersistence: ConnectionPersistence!
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
         if let macId = ruuviTag.macId,
             let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
         }
         if ruuviTag.macId != nil,
             ruuviTag.macId?.value.isEmpty == false {
-            return sqlite.create(ruuviTag)
+            sqlite.create(ruuviTag).on(success: { [weak self] (result) in
+                self?.settings.tagsSorting.append(ruuviTag.id)
+                promise.succeed(value: result)
+            }, failure: { (error) in
+                promise.fail(error: error)
+            })
         } else {
-            return realm.create(ruuviTag)
+            realm.create(ruuviTag).on(success: { [weak self] (result) in
+                self?.settings.tagsSorting.append(ruuviTag.id)
+                promise.succeed(value: result)
+            }, failure: { (error) in
+                promise.fail(error: error)
+            })
         }
+        return promise.future
     }
 
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
@@ -44,6 +57,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
                 } else {
                     assertionFailure()
                 }
+                self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
                 promise.succeed(value: success)
             }, failure: { error in
                 promise.fail(error: error)
@@ -60,6 +74,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
                 } else {
                     assertionFailure()
                 }
+                self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
                 promise.succeed(value: success)
             }, failure: { error in
                 promise.fail(error: error)
