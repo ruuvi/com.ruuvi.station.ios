@@ -84,7 +84,8 @@ class AddMacViewController: UIViewController {
 // MARK: - AddMacViewInput
 extension AddMacViewController: AddMacViewInput {
     func localize() {
-        title = "AddMacViewController.EnterMacAddress".localized()
+        title = viewModel?.title.value?.localized()
+        hexadecimalKeyboard.okButton.setTitle("AddMacViewController.Send".localized(), for: .normal)
     }
 
     func didSelectMacAddress(_ mac: String) {
@@ -138,6 +139,9 @@ extension AddMacViewController {
     private func bindViewModel() {
         bind(viewModel.pasteboardDetectedMacs) { (view, items) in
             view.pasteboardAccessoryView.setItems(items ?? [])
+        }
+        bind(viewModel.title) { (view, title) in
+            view.title = title
         }
     }
 

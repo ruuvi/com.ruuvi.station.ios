@@ -78,7 +78,8 @@ extension RuuviNetworkKaltiot {
                                                        luid: nil,
                                                        macId: macId,
                                                        isConnectable: tag.isConnectable,
-                                                       name: name)
+                                                       name: name,
+                                                       networkProvider: .kaltiot )
                 let anyStruct = AnyRuuviTagSensor(object: sensorStuct)
                 promise.succeed(value: anyStruct)
             } else {

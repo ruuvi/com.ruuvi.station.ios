@@ -93,8 +93,9 @@
 "Advanced.Charts.title" = "CHARTS";
 
 // AddMacViewController
-"AddMacViewController.EnterMacAddress" = "Enter mac-address";
 "AddMacViewController.Send" = "Send";
+"AddMacViewController.EnterKaltiotMacAddress" = "Enter Kaltiot mac-address";
+"AddMacViewController.EnterWhereOsMacAddress" = "Enter WhereOS mac-address";
 
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
@@ -295,6 +296,7 @@
 "TagSettings.dataSourceTitleLabel.text" = "Data Mottagen Via";
 "TagSettings.DataSource.Heartbeat.title" = "Hjärtslag";
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
+"TagSettings.DataSource.Network.title" = "Network";
 "TagSettings.Label.disabled.text" = "INAKTIVERAD?";
 "TagSettings.Label.alerts.text" = "ALARM";
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alarm är inaktiverade eftersom enheten inte är ansluten och behörigheten att se Push-meddelanden saknas. Anslut först till enheten.";

@@ -32,8 +32,9 @@
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
 // AddMacViewController
-"AddMacViewController.EnterMacAddress" = "Введите mac-адрес";
 "AddMacViewController.Send" = "Отправить";
+"AddMacViewController.EnterKaltiotMacAddress" = "Введите mac-адрес Kaltiot";
+"AddMacViewController.EnterWhereOsMacAddress" = "Введите mac-адрес WhereOS";
 
 // Background
 "Background.navigationItem.title" = "Фоновый Режим";
@@ -294,6 +295,7 @@
 "TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
+"TagSettings.DataSource.Network.title" = "Сеть";
 "TagSettings.Label.disabled.text" = "НЕДОСТУПНО?";
 "TagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Уведомления недоступны поскольку девайс не подсоединен и нет разрешения на показ уведомлений. Пожалуйста, сперва соединитесь с устройством.";

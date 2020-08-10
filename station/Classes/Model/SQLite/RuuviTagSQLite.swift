@@ -8,6 +8,7 @@ struct RuuviTagSQLite: RuuviTagSensor {
     var name: String
     var version: Int
     var isConnectable: Bool
+    var networkProvider: RuuviNetworkProvider?
 }
 
 extension RuuviTagSQLite {
@@ -17,6 +18,7 @@ extension RuuviTagSQLite {
     static let nameColumn = Column("name")
     static let versionColumn = Column("version")
     static let isConnectableColumn = Column("isConnectable")
+    static let networkProviderColumn = Column("networkProvider")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -31,6 +33,9 @@ extension RuuviTagSQLite: FetchableRecord {
         name = row[RuuviTagSQLite.nameColumn]
         version = row[RuuviTagSQLite.versionColumn]
         isConnectable = row[RuuviTagSQLite.isConnectableColumn]
+        if row[RuuviTagSQLite.networkProviderColumn] != nil {
+            networkProvider = RuuviNetworkProvider(rawValue: row[RuuviTagSQLite.networkProviderColumn])
+        }
     }
 }
 
@@ -46,6 +51,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.nameColumn] = name
         container[RuuviTagSQLite.versionColumn] = version
         container[RuuviTagSQLite.isConnectableColumn] = isConnectable
+        container[RuuviTagSQLite.networkProviderColumn] = networkProvider?.rawValue
     }
 }
 
@@ -58,6 +64,7 @@ extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
             table.column(RuuviTagSQLite.versionColumn.name, .integer).notNull()
             table.column(RuuviTagSQLite.isConnectableColumn.name, .boolean).notNull()
+            table.column(RuuviTagSQLite.networkProviderColumn.name, .integer)
         })
     }
 }

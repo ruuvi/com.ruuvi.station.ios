@@ -107,6 +107,12 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
+    var containsPhysicalSensors: Bool = false {
+        didSet {
+            updateTableView()
+        }
+    }
+
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
@@ -121,8 +127,9 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
     private var networkSectionIsVisible: Bool {
-        return networkFeatureEnabled &&
-            (networkKaltiotEnabled || networkWhereOsEnabled)
+        return networkFeatureEnabled
+            && (networkKaltiotEnabled || networkWhereOsEnabled)
+            && containsPhysicalSensors
     }
 }
 
@@ -245,7 +252,7 @@ extension DiscoverTableViewController {
         case .noDevices:
             return 1
         case .network:
-            return networkFeatureEnabled ? 1 : 0
+            return networkSectionIsVisible ? 1 : 0
         }
     }
 
@@ -269,21 +276,15 @@ extension DiscoverTableViewController {
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         case .network:
-            if networkWhereOsEnabled {
-                let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
-                cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
-                return cell
-            } else {
-                assert(false)
-                return .init()
-            }
+            let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
+            cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
+            return cell
         }
     }
 }
 
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
-//swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
@@ -298,9 +299,7 @@ extension DiscoverTableViewController {
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
         case .network:
-            if networkWhereOsEnabled {
-                output.viewDidAskToAddTagWithMACAddress()
-            }
+            output.viewDidAskToAddTagWithMACAddress()
         default:
             break
         }
