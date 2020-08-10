@@ -1344,6 +1344,9 @@
 		A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
 		A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
 		A9A67BFC24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
+		A9BB445524E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
+		A9BB445624E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
+		A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
 		A9F4471624B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471724B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471824B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
@@ -1846,6 +1849,7 @@
 		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
+		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
 		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		B02A96F4FE9661D2E122F527 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0533218B36A75D84CD26304 /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2257,6 +2261,7 @@
 				A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */,
 				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
 				A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */,
+				A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -5531,6 +5536,7 @@
 				0E6BADCF23856A01003A2D4C /* DiscoverDeviceViewModel.swift in Sources */,
 				0E6BADD023856A01003A2D4C /* HumidityCalibrationRouter.swift in Sources */,
 				0E6BADD123856A01003A2D4C /* WebTagService.swift in Sources */,
+				A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
 				0E6BADD223856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A92E3C6D2426767F00D981D5 /* MeasurementType.swift in Sources */,
 				0E6BADD323856A01003A2D4C /* WeatherProviderService.swift in Sources */,
@@ -6034,6 +6040,7 @@
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
 				0E8BD34B238566AB008B31EF /* TagChartsViewOutput.swift in Sources */,
 				0E8BD34C238566AB008B31EF /* DefaultsRouter.swift in Sources */,
+				A9BB445624E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
 				0E8BD34D238566AB008B31EF /* ForegroundViewInput.swift in Sources */,
 				0E197C7523C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E8BD34E238566AB008B31EF /* WebTagSettingsRouterInput.swift in Sources */,
@@ -6348,6 +6355,7 @@
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
+				A9BB445524E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
 				0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
 				0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */,
