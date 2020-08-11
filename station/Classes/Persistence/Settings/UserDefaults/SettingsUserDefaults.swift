@@ -189,6 +189,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 72)
     var chartDurationHours: Int
 
+    @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])
+    var tagsSorting: [String]
+
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
 
