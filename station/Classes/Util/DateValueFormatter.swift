@@ -6,10 +6,15 @@ public class DateValueFormatter: NSObject, IAxisValueFormatter {
 
     override init() {
         super.init()
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.dateFormat = "dd/MM"
     }
 
     public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        return dateFormatter.string(from: Date(timeIntervalSince1970: value))
+        let date = Date(timeIntervalSince1970: value)
+        return DateFormatter.localizedString(from: date,
+                                             dateStyle: .none,
+                                             timeStyle: .short)
+        + "\n"
+            + dateFormatter.string(from: date)
     }
 }

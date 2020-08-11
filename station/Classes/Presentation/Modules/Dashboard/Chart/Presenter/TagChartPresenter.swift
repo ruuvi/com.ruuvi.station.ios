@@ -147,6 +147,7 @@ extension TagChartPresenter {
             addEntry(for: lineChartData, data: $0)
         })
         viewModel.chartData.value = lineChartData
+        drawCirclesIfNeeded(for: chartData)
         view.reloadData()
     }
 
@@ -158,7 +159,26 @@ extension TagChartPresenter {
             addEntry(for: chartData, data: $0)
             chartData.notifyDataChanged()
         }
+        drawCirclesIfNeeded(for: chartData)
         view.reloadData()
+    }
+
+    private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
+        if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
+            let count: Int
+            if let entriesCount = entriesCount {
+                count = entriesCount
+            } else {
+                count = dataSet.entries.count
+            }
+            switch count {
+            case 1:
+                dataSet.circleRadius = 6
+                dataSet.drawCirclesEnabled = true
+            default:
+                dataSet.drawCirclesEnabled = false
+            }
+        }
     }
 
     private func fetchPointsByDates(start: TimeInterval,
@@ -181,6 +201,8 @@ extension TagChartPresenter {
                     if self.settings.chartDownsamplingOn {
                         self.setDownSampled(dataSet: sorted,
                                             completion: completion)
+                    } else {
+                        self.drawCirclesIfNeeded(for: self.chartData, entriesCount: sorted.count)
                     }
                 }
             }
@@ -240,8 +262,10 @@ extension TagChartPresenter {
         }
         if let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
             chartDataSet.removeAll(keepingCapacity: true)
+            chartDataSet.drawCirclesEnabled = false
         } else {
             let chartDataSet = newDataSet()
+            chartDataSet.drawCirclesEnabled = false
             chartData.addDataSet(chartDataSet)
         }
         let data_length = dataSet.count
@@ -249,6 +273,7 @@ extension TagChartPresenter {
             dataSet.forEach({
                 addEntry(for: chartData, data: $0)
             })
+            drawCirclesIfNeeded(for: chartData)
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
