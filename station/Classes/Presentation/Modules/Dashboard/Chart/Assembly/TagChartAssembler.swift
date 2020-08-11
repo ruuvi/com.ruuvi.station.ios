@@ -6,6 +6,7 @@ final class TagChartAssembler {
         let view = TagChartView(frame: .zero)
         let presenter = TagChartPresenter()
         presenter.settings = r.resolve(Settings.self)
+        presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.view = view
 
         view.presenter = presenter
