@@ -10,6 +10,15 @@ class TagChartPresenter: NSObject {
         }
     }
     weak var ouptut: TagChartModuleOutput!
+    var calibrationService: CalibrationService!
+    private var humidityOffset: Double = 0.0
+    private var luid: LocalIdentifier? {
+        didSet {
+            if let luid = luid {
+                getHumityCalibration(for: luid)
+            }
+        }
+    }
 
     private let threshold: Int = 100
     private lazy var queue: OperationQueue = {
@@ -19,8 +28,14 @@ class TagChartPresenter: NSObject {
         queue.qualityOfService = .userInteractive
         return queue
     }()
+
     private var chartData: LineChartData? {
         return viewModel.chartData.value
+    }
+    private var calibrationHumidityDidChangeToken: NSObjectProtocol?
+
+    deinit {
+        calibrationHumidityDidChangeToken?.invalidate()
     }
 }
 // MARK: - TagChartModuleInput
@@ -51,9 +66,11 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput) {
+    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput, luid: LocalIdentifier?) {
         configureViewModel(viewModel)
         self.ouptut = output
+        self.luid = luid
+        startObservingCalibrationHumidityChanges()
     }
 
     func reloadChart() {
@@ -82,6 +99,29 @@ extension TagChartPresenter: TagChartViewOutput {
 }
 
 extension TagChartPresenter {
+    private func getHumityCalibration(for luid: LocalIdentifier?) {
+        guard let luid = luid else {
+            return
+        }
+        humidityOffset = calibrationService.humidityOffset(for: luid).0
+    }
+
+    private func startObservingCalibrationHumidityChanges() {
+        calibrationHumidityDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .CalibrationServiceHumidityDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier,
+                luid == self?.luid {
+                self?.getHumityCalibration(for: luid)
+                self?.reloadChart()
+            }
+        })
+    }
+
     private func newDataSet() -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet()
         lineChartDataSet.axisDependency = .left
@@ -230,7 +270,8 @@ extension TagChartPresenter {
                 value = data.humidity?.ah
             case .percent:
                 if let relativeHumidity = data.humidity?.rh {
-                    value = relativeHumidity * 100
+                    let sumHumidity = relativeHumidity * 100.0 + humidityOffset
+                    value = min(sumHumidity, 100.0)
                 } else {
                     value = nil
                 }
