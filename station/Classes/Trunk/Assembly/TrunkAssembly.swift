@@ -6,6 +6,7 @@ class TrunkAssembly: Assembly {
             let trunk = RuuviTagTrunkCoordinator()
             trunk.realm = r.resolve(RuuviTagPersistenceRealm.self)
             trunk.sqlite = r.resolve(RuuviTagPersistenceSQLite.self)
+            trunk.settings = r.resolve(Settings.self)
             return trunk
         }
 

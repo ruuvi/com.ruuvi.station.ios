@@ -36,6 +36,7 @@ protocol Settings {
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
     var chartDownsamplingOn: Bool { get set }
+    var tagsSorting: [String] { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
