@@ -41,7 +41,7 @@ class TagChartsInteractor {
         MeasurementType.chartsCases.forEach({
             let viewModel = TagChartViewModel(type: $0)
             let module = TagChartAssembler.createModule()
-            module.configure(viewModel, output: self)
+            module.configure(viewModel, output: self, luid: ruuviTagSensor.luid)
             chartModules.append(module)
         })
     }
