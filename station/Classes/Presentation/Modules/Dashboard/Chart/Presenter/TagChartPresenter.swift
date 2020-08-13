@@ -115,7 +115,7 @@ extension TagChartPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier,
-                luid == self?.luid {
+                self?.luid?.any == luid.any {
                 self?.getHumityCalibration(for: luid)
                 self?.reloadChart()
             }
