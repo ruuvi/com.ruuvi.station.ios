@@ -94,6 +94,32 @@ class SettingsUserDegaults: Settings {
         }
     }
 
+    var pressureUnit: UnitPressure {
+        get {
+            switch pressureUnitInt {
+            case UnitPressure.bars.hashValue:
+                return .bars
+            case UnitPressure.inchesOfMercury.hashValue:
+                return .inchesOfMercury
+            case UnitPressure.millimetersOfMercury.hashValue:
+                return .millimetersOfMercury
+            default:
+                return .hectopascals
+            }
+        }
+        set {
+            pressureUnitInt = newValue.hashValue
+            NotificationCenter
+                .default
+                .post(name: .PressureUnitDidChange,
+                      object: self,
+                      userInfo: nil)
+        }
+    }
+
+    @UserDefault("SettingsUserDefaults.pressureUnitInt", defaultValue: UnitPressure.hectopascals.hashValue)
+    private var pressureUnitInt: Int
+
     @UserDefault("SettingsUserDegaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
 
