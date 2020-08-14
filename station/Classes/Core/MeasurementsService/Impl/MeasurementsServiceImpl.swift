@@ -40,32 +40,8 @@ class MeasurementsServiceImpl: NSObject {
         guard !listeners.contains(listener) else { return }
         listeners.add(listener)
     }
-
-    private func updateCache() {
-        settingsCache = MeasurementsServiceSettingsCache(temperatureUnit: settings.temperatureUnit.unitTemperature,
-                                                         humidityUnit: settings.humidityUnit,
-                                                         pressureUnit: settings.pressureUnit)
-        listeners
-            .allObjects
-            .compactMap({
-                $0 as? MeasurementsServiceDelegate
-            }).forEach({
-                $0.measurementServiceDidUpdateUnit()
-            })
-    }
-
-    private func startSettingsObserving() {
-        notificationsNamesToObserve.forEach({
-            NotificationCenter
-                .default
-                .addObserver(forName: $0,
-                             object: self,
-                             queue: queue) { [weak self] (_) in
-                self?.updateCache()
-            }
-        })
-    }
 }
+// MARK: - MeasurementsService
 extension MeasurementsServiceImpl: MeasurementsService {
     func double(for measurement: Measurement<Dimension>) -> Double {
         let dimension: Dimension
@@ -136,5 +112,42 @@ extension MeasurementsServiceImpl: MeasurementsService {
             let measurement = Measurement(value: doubleValue, unit: settingsCache.temperatureUnit)
             return formatter.string(from: measurement)
         }
+    }
+}
+// MARK: - Localizable
+extension MeasurementsServiceImpl: Localizable {
+    func localize() {
+        notifyListeners()
+    }
+}
+// MARK: - Private
+extension MeasurementsServiceImpl {
+    private func notifyListeners() {
+        listeners
+            .allObjects
+            .compactMap({
+                $0 as? MeasurementsServiceDelegate
+            }).forEach({
+                $0.measurementServiceDidUpdateUnit()
+            })
+    }
+
+    private func updateCache() {
+        settingsCache = MeasurementsServiceSettingsCache(temperatureUnit: settings.temperatureUnit.unitTemperature,
+                                                         humidityUnit: settings.humidityUnit,
+                                                         pressureUnit: settings.pressureUnit)
+        notifyListeners()
+    }
+
+    private func startSettingsObserving() {
+        notificationsNamesToObserve.forEach({
+            NotificationCenter
+                .default
+                .addObserver(forName: $0,
+                             object: self,
+                             queue: queue) { [weak self] (_) in
+                self?.updateCache()
+            }
+        })
     }
 }
