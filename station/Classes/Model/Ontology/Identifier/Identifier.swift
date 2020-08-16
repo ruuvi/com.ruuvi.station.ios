@@ -8,7 +8,6 @@ protocol LocalIdentifier: Identifier {
 }
 
 protocol MACIdentifier: Identifier {
-
 }
 
 struct MACIdentifierStruct: MACIdentifier {

@@ -135,11 +135,12 @@ struct CardsViewModel {
         celsius.value = record.temperature?.converted(to: .celsius).value
         fahrenheit.value = record.temperature?.converted(to: .fahrenheit).value
         kelvin.value = record.temperature?.converted(to: .kelvin).value
-        relativeHumidity.value = record.humidity?.rh
-
+        if let rh = record.humidity?.rh {
+            relativeHumidity.value = rh * 100.0
+        }
         if let c = celsius.value, let rh = record.humidity?.rh {
             if let ho = humidityOffset.value {
-                var sh = rh + ho
+                var sh = rh * 100 + ho
                 if sh > 100.0 {
                     sh = 100.0
                 }
