@@ -36,6 +36,7 @@ protocol Settings {
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
     var chartDownsamplingOn: Bool { get set }
+    var tagsSorting: [String] { get set }
     var networkFeatureEnabled: Bool { get set }
     var kaltiotNetworkEnabled: Bool { get set }
     var whereOSNetworkEnabled: Bool { get set }

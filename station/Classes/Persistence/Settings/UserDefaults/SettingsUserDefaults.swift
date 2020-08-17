@@ -189,6 +189,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 72)
     var chartDurationHours: Int
 
+    @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])
+    var tagsSorting: [String]
+
     @UserDefault("SettingsUserDefaults.networkFeatureEnabled", defaultValue: false)
     var networkFeatureEnabled: Bool
 
