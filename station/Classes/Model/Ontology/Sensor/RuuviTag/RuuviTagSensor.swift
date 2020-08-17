@@ -64,7 +64,8 @@ struct RuuviTagSensorStruct: RuuviTagSensor {
     var networkProvider: RuuviNetworkProvider?
 }
 
-struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
+struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
+
     var object: RuuviTagSensor
 
     var id: String {
@@ -95,5 +96,9 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+
+    var orderElement: String {
+        return id
     }
 }
