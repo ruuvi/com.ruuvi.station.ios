@@ -11,7 +11,6 @@ protocol DiscoverViewInput: ViewInput {
     var networkFeatureEnabled: Bool { get set }
     var networkKaltiotEnabled: Bool { get set }
     var networkWhereOsEnabled: Bool { get set }
-    var containsPhysicalSensors: Bool { get set }
 
     func showBluetoothDisabled()
     func showWebTagInfoDialog()
