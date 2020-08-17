@@ -21,7 +21,8 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable)
+                            isConnectable: ruuviTag.isConnectable,
+                            networkProvider: ruuviTag.networkProvider)
 
         do {
             try database.dbPool.write { db in

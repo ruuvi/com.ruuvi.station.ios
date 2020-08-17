@@ -61,7 +61,8 @@ extension RuuviNetworkWhereOS {
                                                        luid: nil,
                                                        macId: macId,
                                                        isConnectable: tag.isConnectable,
-                                                       name: name)
+                                                       name: name,
+                                                       networkProvider: .whereOS)
                 let anyStruct = AnyRuuviTagSensor(object: sensorStuct)
                 promise.succeed(value: anyStruct)
             } else {

@@ -16,4 +16,7 @@ extension RuuviTagRealm: RuuviTagSensor {
                                                               isConnectable: isConnectable,
                                                               name: name))
     }
+    var networkProvider: RuuviNetworkProvider? {
+        return nil
+    }
 }

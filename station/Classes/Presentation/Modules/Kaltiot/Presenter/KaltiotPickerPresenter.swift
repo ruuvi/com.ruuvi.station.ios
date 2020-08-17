@@ -53,12 +53,38 @@ extension KaltiotPickerPresenter: KaltiotPickerViewOutput {
         router.dismiss(completion: nil)
     }
 
-    func viewDidSelectTag(at index: Int) {
-        if beacons[index].isConnectable {
-            fetchSensor(for: beacons[index].beacon)
+    func viewDidSelectBeacon(_ viewModel: KaltiotBeaconViewModel) {
+        if viewModel.isConnectable {
+            fetchSensor(for: viewModel.beacon)
         } else {
             errorPresenter.present(error: RUError.ruuviNetwork(.doesNotHaveSensors))
         }
+    }
+
+    func viewDidStartSearch(mac: String) {
+        let oldValue = viewModel.beacons.map({$0.value})
+        if mac.count == 12 {
+            ruuviNetworkKaltiot.getBeacon(mac: mac.lowercased())
+                .on(success: { [weak self] (beacon) in
+                    let newValue = KaltiotBeaconViewModel(beacon: beacon)
+                    self?.calculateDiff(oldValue,
+                                        newValue: [newValue])
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        } else {
+            let newValue = beacons.filter({
+                $0.beacon.id
+                    .lowercased()
+                    .starts(with: mac.lowercased())
+            })
+            calculateDiff(oldValue, newValue: newValue)
+        }
+    }
+
+    func viewDidCancelSearch() {
+        let oldValue = viewModel.beacons.map({$0.value})
+        calculateDiff(oldValue, newValue: beacons)
     }
 }
 // MARK: - KaltiotPickerModuleInput
@@ -89,7 +115,7 @@ extension KaltiotPickerPresenter {
         })
     }
 
-    private func fetchBeacons() {
+    private func fetchBeacons(complition: (() -> Void)? = nil) {
         if canLoadNextPage {
             let op = ruuviNetworkKaltiot.beacons(page: page)
             op.on(success: { [weak self] (result) in
@@ -107,6 +133,8 @@ extension KaltiotPickerPresenter {
                 self?.beacons = beaconsViewModels
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.fetchBeacons()
             })
         }
     }

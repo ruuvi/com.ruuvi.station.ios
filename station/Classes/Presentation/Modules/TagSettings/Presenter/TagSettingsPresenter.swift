@@ -274,6 +274,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable
+        viewModel.isNetworkConnected.value = ruuviTag.any.isNetworkConnectable
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
@@ -281,7 +282,6 @@ extension TagSettingsPresenter {
             viewModel.isConnected.value = false
             viewModel.keepConnection.value = false
         }
-
         viewModel.mac.value = ruuviTag.macId?.mac
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
@@ -496,6 +496,7 @@ extension TagSettingsPresenter {
             bindConnectionAlert(uuid: identifier.value)
             bindMovementAlert(uuid: identifier.value)
             viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
+            viewModel.isNetworkConnected.value = ruuviTag.isNetworkConnectable
         }
     }
 

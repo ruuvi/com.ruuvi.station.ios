@@ -4,10 +4,20 @@ class KaltiotPickerTableViewController: UITableViewController {
     var output: KaltiotPickerViewOutput!
     var viewModel: KaltiotPickerViewModel!
 
-// MARK: - Lifecycle
+    @IBOutlet weak var searchBar: UISearchBar! {
+        didSet {
+            searchBar.delegate = self
+        }
+    }
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
+        tableView.keyboardDismissMode = .onDrag
+        if #available(iOS 11.0, *) {
+            navigationItem.hidesSearchBarWhenScrolling = false
+        }
         output.viewDidLoad()
     }
 // MARK: - Table view data source
@@ -36,7 +46,8 @@ class KaltiotPickerTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        output.viewDidSelectTag(at: indexPath.row)
+        let beacon = viewModel.beacons[indexPath.row].value
+        output.viewDidSelectBeacon(beacon)
     }
 // MARK: - IBActions
     @IBAction func didTapCloseButton(_ sender: Any) {
@@ -63,5 +74,42 @@ extension KaltiotPickerTableViewController: KaltiotPickerViewInput {
             tableView.deleteRows(at: changes.deletes, with: .fade)
             tableView.endUpdates()
         }
+    }
+}
+// MARK: - UISearchBarDelegate
+extension KaltiotPickerTableViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        doSearch(text: searchBar.text)
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchBar.text = nil
+        output.viewDidCancelSearch()
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchBar.text = searchText.lowercased()
+        doSearch(text: searchText)
+    }
+
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard !text.isEmpty else {
+            return true
+        }
+        let searchText = searchBar.text ?? ""
+        return text.allSatisfy({ $0.isHexDigit })
+            && searchText.allSatisfy({ $0.isHexDigit }) && searchText.count < 12
+    }
+}
+// MARK: - Private
+extension KaltiotPickerTableViewController {
+    func doSearch(text: String?) {
+        guard let text = text else {
+            output.viewDidCancelSearch()
+            return
+        }
+        output.viewDidStartSearch(mac: text)
     }
 }
