@@ -18,6 +18,7 @@ struct TagSettingsViewModel {
     let txPower: Observable<Int?> = Observable<Int?>()
     let isConnectable: Observable<Bool?> = Observable<Bool?>()
     let isConnected: Observable<Bool?> = Observable<Bool?>()
+    let isNetworkConnected: Observable<Bool?> = Observable<Bool?>()
     let keepConnection: Observable<Bool?> = Observable<Bool?>()
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
 

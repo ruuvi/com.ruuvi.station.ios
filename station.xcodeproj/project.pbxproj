@@ -1336,6 +1336,54 @@
 		A949A83B24707FD0006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
+		A94A87F824D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */; };
+		A94A87F924D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */; };
+		A94A87FA24D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */; };
+		A94A880524D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */; };
+		A94A880624D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */; };
+		A94A880724D4373700D2CBA4 /* AddMacModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */; };
+		A94A880824D4373900D2CBA4 /* AddMacModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */; };
+		A94A880924D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */; };
+		A94A880A24D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */; };
+		A94A880B24D4374300D2CBA4 /* AddMacPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */; };
+		A94A880C24D4374300D2CBA4 /* AddMacRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */; };
+		A94A880D24D4374300D2CBA4 /* AddMacRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */; };
+		A94A880E24D4374300D2CBA4 /* AddMacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */; };
+		A94A880F24D4374300D2CBA4 /* AddMacViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */; };
+		A94A881024D4374300D2CBA4 /* AddMacViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */; };
+		A94A881124D4374300D2CBA4 /* AddMacViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */; };
+		A94A881224D4374400D2CBA4 /* AddMacPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */; };
+		A94A881324D4374400D2CBA4 /* AddMacRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */; };
+		A94A881424D4374400D2CBA4 /* AddMacRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */; };
+		A94A881524D4374400D2CBA4 /* AddMacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */; };
+		A94A881624D4374400D2CBA4 /* AddMacViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */; };
+		A94A881724D4374400D2CBA4 /* AddMacViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */; };
+		A94A881824D4374400D2CBA4 /* AddMacViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */; };
+		A94A881924D4374500D2CBA4 /* AddMacPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */; };
+		A94A881A24D4374500D2CBA4 /* AddMacRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */; };
+		A94A881B24D4374500D2CBA4 /* AddMacRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */; };
+		A94A881C24D4374500D2CBA4 /* AddMacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */; };
+		A94A881D24D4374500D2CBA4 /* AddMacViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */; };
+		A94A881E24D4374500D2CBA4 /* AddMacViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */; };
+		A94A881F24D4374500D2CBA4 /* AddMacViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */; };
+		A94A883A24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */; };
+		A94A883B24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */; };
+		A94A883C24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */; };
+		A94A884C24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */; };
+		A94A884D24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */; };
+		A94A884E24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */; };
+		A94A885424D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */; };
+		A94A885524D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */; };
+		A94A885624D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */; };
+		A94A885724D44C1300D2CBA4 /* AddMac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A94A885224D4492700D2CBA4 /* AddMac.storyboard */; };
+		A94A885824D44C1400D2CBA4 /* AddMac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A94A885224D4492700D2CBA4 /* AddMac.storyboard */; };
+		A94A885924D44C1400D2CBA4 /* AddMac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A94A885224D4492700D2CBA4 /* AddMac.storyboard */; };
+		A94A886624D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
+		A94A886724D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
+		A94A886824D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
+		A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
+		A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
+		A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
 		A94FFD30241C173D00888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
 		A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */; };
@@ -2016,6 +2064,23 @@
 		A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectRxSwift.swift; sourceTree = "<group>"; };
 		A93DB9E824732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectCombine.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
+		A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacConfigurator.swift; sourceTree = "<group>"; };
+		A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModuleInput.swift; sourceTree = "<group>"; };
+		A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModuleOutput.swift; sourceTree = "<group>"; };
+		A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacPresenter.swift; sourceTree = "<group>"; };
+		A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacRouterInput.swift; sourceTree = "<group>"; };
+		A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacRouter.swift; sourceTree = "<group>"; };
+		A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewController.swift; sourceTree = "<group>"; };
+		A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewInput.swift; sourceTree = "<group>"; };
+		A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewOutput.swift; sourceTree = "<group>"; };
+		A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewModel.swift; sourceTree = "<group>"; };
+		A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Ext-UIButton-CommonFormat.swift"; path = "Extension/Ext-UIButton-CommonFormat.swift"; sourceTree = "<group>"; };
+		A94A882A24D4386D00D2CBA4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = HexadecimalKeyboard/LICENSE; sourceTree = "<group>"; };
+		A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalKeyboard.swift; path = Controllers/HexadecimalKeyboard.swift; sourceTree = "<group>"; };
+		A94A885224D4492700D2CBA4 /* AddMac.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddMac.storyboard; sourceTree = "<group>"; };
+		A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacInitializer.swift; sourceTree = "<group>"; };
+		A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPasteboardAccessoryView.swift; sourceTree = "<group>"; };
+		A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUColor.swift; sourceTree = "<group>"; };
 		A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmProtocol.swift; sourceTree = "<group>"; };
 		A94FFD36241C189000888017 /* RuuviTagProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagProtocol.swift; sourceTree = "<group>"; };
 		A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertServiceSpec.swift; sourceTree = "<group>"; };
@@ -2055,7 +2120,6 @@
 		A9944F6F24A3C6A300EC37C1 /* RuuviNetworkTagOperationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkTagOperationsManager.swift; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
-		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewController.swift; sourceTree = "<group>"; };
 		A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleOutput.swift; sourceTree = "<group>"; };
 		A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleInput.swift; sourceTree = "<group>"; };
@@ -2081,6 +2145,7 @@
 		A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculatorImpl.swift; sourceTree = "<group>"; };
 		A9E58CF72459F7A7000C38DA /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewCell.swift; sourceTree = "<group>"; };
+		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		B02A96F4FE9661D2E122F527 /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0533218B36A75D84CD26304 /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -2441,6 +2506,7 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				A94A87F224D432E500D2CBA4 /* AddMac */,
 				0EEB20E922B7D1350015F9E0 /* About */,
 				0EEC3F4422C5E13800C51D81 /* Calibration */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
@@ -4020,6 +4086,7 @@
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 				0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */,
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
+				A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -4872,6 +4939,7 @@
 				0E09671622AE74D600E85F48 /* Classes */,
 				0E502FB822B27D3100E8A6CC /* Enums */,
 				0E09672322AE895600E85F48 /* Extensions */,
+				A94A882024D437AB00D2CBA4 /* ThirdParty */,
 				0E09671722AE762900E85F48 /* Resources */,
 			);
 			path = station;
@@ -5099,6 +5167,92 @@
 				A907A1D62460376600041F6E /* TagChartViewModel.swift */,
 			);
 			path = ChartView;
+			sourceTree = "<group>";
+		};
+		A94A87F224D432E500D2CBA4 /* AddMac */ = {
+			isa = PBXGroup;
+			children = (
+				A94A885224D4492700D2CBA4 /* AddMac.storyboard */,
+				A94A87F324D432F200D2CBA4 /* Assembly */,
+				A94A87F424D432FC00D2CBA4 /* Presenter */,
+				A94A87F524D4331000D2CBA4 /* Router */,
+				A94A87F624D4331A00D2CBA4 /* View */,
+			);
+			path = AddMac;
+			sourceTree = "<group>";
+		};
+		A94A87F324D432F200D2CBA4 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */,
+				A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		A94A87F424D432FC00D2CBA4 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */,
+				A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */,
+				A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		A94A87F524D4331000D2CBA4 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */,
+				A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		A94A87F624D4331A00D2CBA4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A94A886324D5BACB00D2CBA4 /* InputAccessoryView */,
+				A94A880424D4352E00D2CBA4 /* ViewController */,
+				A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */,
+				A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */,
+				A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A94A880424D4352E00D2CBA4 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		A94A882024D437AB00D2CBA4 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				A94A882224D4386D00D2CBA4 /* HexadecimalKeyboard */,
+				A94A882A24D4386D00D2CBA4 /* LICENSE */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		A94A882224D4386D00D2CBA4 /* HexadecimalKeyboard */ = {
+			isa = PBXGroup;
+			children = (
+				A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */,
+				A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */,
+			);
+			path = HexadecimalKeyboard;
+			sourceTree = "<group>";
+		};
+		A94A886324D5BACB00D2CBA4 /* InputAccessoryView */ = {
+			isa = PBXGroup;
+			children = (
+				A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */,
+			);
+			path = InputAccessoryView;
 			sourceTree = "<group>";
 		};
 		A94FFD25241C0F8000888017 /* Services */ = {
@@ -5649,6 +5803,7 @@
 				0E6BAEB723856A01003A2D4C /* TagSettings.storyboard in Resources */,
 				0E6BAEB823856A01003A2D4C /* TagCharts.storyboard in Resources */,
 				0E6BAEB923856A01003A2D4C /* Muli-Regular.ttf in Resources */,
+				A94A885924D44C1400D2CBA4 /* AddMac.storyboard in Resources */,
 				0EA92FE12387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E6BAEBA23856A01003A2D4C /* Oswald-ExtraLight.ttf in Resources */,
 				0E6BAEBB23856A01003A2D4C /* Language.storyboard in Resources */,
@@ -5695,6 +5850,7 @@
 				0E8BD3ED238566AB008B31EF /* TagSettings.storyboard in Resources */,
 				0E8BD3EE238566AB008B31EF /* TagCharts.storyboard in Resources */,
 				0E8BD3EF238566AB008B31EF /* Muli-Regular.ttf in Resources */,
+				A94A885824D44C1400D2CBA4 /* AddMac.storyboard in Resources */,
 				0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
 				0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */,
@@ -5741,6 +5897,7 @@
 				0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */,
 				0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
+				A94A885724D44C1300D2CBA4 /* AddMac.storyboard in Resources */,
 				0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
@@ -6105,6 +6262,7 @@
 				0E8BACCF245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8BACDD245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
+				A94A880D24D4374300D2CBA4 /* AddMacRouterInput.swift in Sources */,
 				0E8BAC5E245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E6BADAC23856A01003A2D4C /* WelcomePresenter.swift in Sources */,
 				A9828E5324792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */,
@@ -6123,6 +6281,7 @@
 				0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */,
 				0E6BADB623856A01003A2D4C /* HumidityCalibrationPresenter.swift in Sources */,
 				0E6BADB723856A01003A2D4C /* DefaultsStepperTableViewCell.swift in Sources */,
+				A94A885424D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */,
 				A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */,
 				0E6BADB823856A01003A2D4C /* RealmContext.swift in Sources */,
 				0E6BADB923856A01003A2D4C /* RealmContextImpl.swift in Sources */,
@@ -6178,6 +6337,7 @@
 				0E6BADE023856A01003A2D4C /* DefaultsViewModel.swift in Sources */,
 				0E6BADE123856A01003A2D4C /* TagChartsScrollConfigurator.swift in Sources */,
 				A9227BBF245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
+				A94A881024D4374300D2CBA4 /* AddMacViewOutput.swift in Sources */,
 				0E79F27B244201540048BF86 /* NetworkService.swift in Sources */,
 				0E45580323E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8BAC77245C4C8E00D380FB /* RuuviTagTank.swift in Sources */,
@@ -6190,6 +6350,7 @@
 				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0EE49BB823B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
+				A94A883C24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */,
 				0E8BACE9245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */,
 				0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */,
@@ -6224,7 +6385,9 @@
 				A9828E1A24792CD400E7E9D4 /* RuuviNetworkKaltiotURLSession.swift in Sources */,
 				0E6BADFB23856A01003A2D4C /* ForegroundEnvironmentObject.swift in Sources */,
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
+				A94A884E24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0E6BADFD23856A01003A2D4C /* AlertService.swift in Sources */,
+				A94A886824D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */,
 				A975817F249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */,
 				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
@@ -6233,6 +6396,7 @@
 				0E6BAE0123856A01003A2D4C /* ExportServiceTemp.swift in Sources */,
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
 				A92E3C56242636DF00D981D5 /* RuuviMeasurement.swift in Sources */,
+				A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				A9828E0924792C5A00E7E9D4 /* KaltiotBeacons.swift in Sources */,
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A93DB9EB24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
@@ -6262,6 +6426,7 @@
 				A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
+				A94A880724D4373700D2CBA4 /* AddMacModuleOutput.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
 				0E8BAC7C245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0E6BAE1223856A01003A2D4C /* SettingsRouterInput.swift in Sources */,
@@ -6292,6 +6457,7 @@
 				A980CC7F24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
 				A9828E2024792D3200E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */,
 				0E6BAE2523856A01003A2D4C /* PresentationAssembly.swift in Sources */,
+				A94A880E24D4374300D2CBA4 /* AddMacViewController.swift in Sources */,
 				0E6BAE2623856A01003A2D4C /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0E6BAE2723856A01003A2D4C /* AboutModuleInput.swift in Sources */,
 				0E6BAE2823856A01003A2D4C /* WelcomeViewOutput.swift in Sources */,
@@ -6304,6 +6470,7 @@
 				0E6BAE2C23856A01003A2D4C /* PermissionsManagerImpl.swift in Sources */,
 				0E6BAE2D23856A01003A2D4C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E6BAE2E23856A01003A2D4C /* MenuRouterInput.swift in Sources */,
+				A94A880824D4373900D2CBA4 /* AddMacModuleInput.swift in Sources */,
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
 				0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */,
 				0E28642D2460687200363DCB /* VirtualTagTank.swift in Sources */,
@@ -6384,6 +6551,7 @@
 				A964647D247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				0E6BAE6B23856A01003A2D4C /* LocationPickerModuleOutput.swift in Sources */,
 				0E6BAE6C23856A01003A2D4C /* DiscoverTableConfigurator.swift in Sources */,
+				A94A87FA24D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */,
 				0E6BAE6D23856A01003A2D4C /* AlertServiceImpl.swift in Sources */,
 				0E8BACED245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E6BAE6E23856A01003A2D4C /* LocationPickerViewInput.swift in Sources */,
@@ -6420,9 +6588,11 @@
 				0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E6BAE8423856A01003A2D4C /* MenuTableTransitioningDelegate.swift in Sources */,
+				A94A881124D4374300D2CBA4 /* AddMacViewModel.swift in Sources */,
 				A9828E3524792D4500E7E9D4 /* KaltiotPickerRouter.swift in Sources */,
 				0E6BAE8523856A01003A2D4C /* ErrorPresenter.swift in Sources */,
 				0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */,
+				A94A880B24D4374300D2CBA4 /* AddMacPresenter.swift in Sources */,
 				0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */,
 				0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */,
@@ -6431,6 +6601,7 @@
 				0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */,
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
+				A94A880C24D4374300D2CBA4 /* AddMacRouter.swift in Sources */,
 				0E8BACB9245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E79F2812442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
@@ -6462,6 +6633,7 @@
 				0E6BAE9D23856A01003A2D4C /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */,
 				A9646477247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
+				A94A880F24D4374300D2CBA4 /* AddMacViewInput.swift in Sources */,
 				0E6BAE9E23856A01003A2D4C /* Worker.swift in Sources */,
 				0E6BAE9F23856A01003A2D4C /* ErrorPresenterAlert.swift in Sources */,
 				0E6BAEA023856A01003A2D4C /* ForegroundViewController.swift in Sources */,
@@ -6539,6 +6711,7 @@
 				0E8BD2D4238566AB008B31EF /* SettingsPresenter.swift in Sources */,
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
 				0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */,
+				A94A880924D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */,
 				A976CA7724A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				A9828E0824792C5900E7E9D4 /* KaltiotBeacons.swift in Sources */,
@@ -6556,6 +6729,7 @@
 				0E8BAC90245C522D00D380FB /* Measurement.swift in Sources */,
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
 				0E8BD2DB238566AB008B31EF /* CalibrationServiceImpl.swift in Sources */,
+				A94A884D24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				A9828E2D24792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */,
 				A980CC7A24681A5800C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */,
 				A9828E5224792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */,
@@ -6592,6 +6766,7 @@
 				0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */,
 				0E8BAC9F245C755400D380FB /* RuuviTagReactorImpl.swift in Sources */,
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
+				A94A881724D4374400D2CBA4 /* AddMacViewOutput.swift in Sources */,
 				0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EA92FDC2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				A9828E1724792CC100E7E9D4 /* KaltiotPickerPresenter.swift in Sources */,
@@ -6632,6 +6807,7 @@
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
 				A980CC7E24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
+				A94A881224D4374400D2CBA4 /* AddMacPresenter.swift in Sources */,
 				0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */,
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
 				0E8BACBC245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
@@ -6677,6 +6853,7 @@
 				0E8BD32A238566AB008B31EF /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A9100D6D241AC751004007FD /* WPSData.swift in Sources */,
 				0E45580623E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
+				A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				0E8BD32B238566AB008B31EF /* AlertType.swift in Sources */,
 				0E79F284244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0EAD33E02399273D00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
@@ -6692,6 +6869,7 @@
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0E8BD337238566AB008B31EF /* ExportServiceTemp.swift in Sources */,
+				A94A881624D4374400D2CBA4 /* AddMacViewInput.swift in Sources */,
 				0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */,
 				A92E3C55242636DE00D981D5 /* RuuviMeasurement.swift in Sources */,
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
@@ -6699,6 +6877,7 @@
 				A94FFD38241C1B0900888017 /* RuuviTagProtocol.swift in Sources */,
 				0E286419246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E8BD33B238566AB008B31EF /* ConnectionPersistence.swift in Sources */,
+				A94A880624D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
@@ -6708,7 +6887,9 @@
 				A9828E4624792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
 				0E8BAC62245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
 				0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
+				A94A885624D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */,
 				0E8BD342238566AB008B31EF /* ImagePersistence.swift in Sources */,
+				A94A87F924D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E8BD344238566AB008B31EF /* RuuviTagPersistenceRealm.swift in Sources */,
@@ -6733,6 +6914,7 @@
 				0E8BD352238566AB008B31EF /* WebTagRealm.swift in Sources */,
 				0E8BD353238566AB008B31EF /* LocalizationService.swift in Sources */,
 				0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */,
+				A94A886724D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */,
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,
 				0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */,
 				A9227B59245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */,
@@ -6801,6 +6983,7 @@
 				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD383238566AB008B31EF /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
+				A94A881524D4374400D2CBA4 /* AddMacViewController.swift in Sources */,
 				0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */,
 				0E8BD385238566AB008B31EF /* DiscoverTableInitializer.swift in Sources */,
 				0E8BD386238566AB008B31EF /* DiscoverViewOutput.swift in Sources */,
@@ -6815,6 +6998,7 @@
 				0E79F25B2441ACBA0048BF86 /* RuuviNetwork.swift in Sources */,
 				0E8BD389238566AB008B31EF /* PhotoPickerPresenter.swift in Sources */,
 				0E8BD38A238566AB008B31EF /* LocationPickerPresenter.swift in Sources */,
+				A94A883B24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */,
 				0E8BD38C238566AB008B31EF /* BusinessAssembly.swift in Sources */,
 				A964646D247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0EE49BC523B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
@@ -6824,6 +7008,7 @@
 				0E8BD390238566AB008B31EF /* TagSettingsPresenter.swift in Sources */,
 				0E8BD391238566AB008B31EF /* TagChartsModuleOutput.swift in Sources */,
 				0E8BD392238566AB008B31EF /* HumidityUnit.swift in Sources */,
+				A94A881424D4374400D2CBA4 /* AddMacRouterInput.swift in Sources */,
 				0E8BD393238566AB008B31EF /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0E8BD394238566AB008B31EF /* TagSettingsRouterInput.swift in Sources */,
 				0E8BD395238566AB008B31EF /* NSObject+Observable.swift in Sources */,
@@ -6845,6 +7030,7 @@
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
 				A9828E4724792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */,
+				A94A881824D4374400D2CBA4 /* AddMacViewModel.swift in Sources */,
 				0E8BD3A3238566AB008B31EF /* AlertServiceImpl.swift in Sources */,
 				0E8BACEC245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
@@ -6931,6 +7117,7 @@
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
 				A9828E0B24792C7000E7E9D4 /* WhereOSData.swift in Sources */,
+				A94A881324D4374400D2CBA4 /* AddMacRouter.swift in Sources */,
 				0E8BD3D7238566AB008B31EF /* Settings.swift in Sources */,
 				0E8BD3D8238566AB008B31EF /* ForegroundInitializer.swift in Sources */,
 				0E8BD3DA238566AB008B31EF /* WebTagPersistence.swift in Sources */,
@@ -6959,6 +7146,7 @@
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				A9646472247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				A9828E2624792D4400E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */,
+				A94A881F24D4374500D2CBA4 /* AddMacViewModel.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
@@ -6969,6 +7157,7 @@
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
+				A94A881E24D4374500D2CBA4 /* AddMacViewOutput.swift in Sources */,
 				0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
@@ -6977,6 +7166,7 @@
 				0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				A980CC6C2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
+				A94A883A24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */,
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
@@ -7019,8 +7209,10 @@
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
+				A94A87F824D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */,
 				0E8BAC8F245C522D00D380FB /* Measurement.swift in Sources */,
 				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
+				A94A881C24D4374500D2CBA4 /* AddMacViewController.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				A976CA7A24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
@@ -7030,6 +7222,7 @@
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
 				A90E16A424606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
+				A94A881924D4374500D2CBA4 /* AddMacPresenter.swift in Sources */,
 				0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8BACDB245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
 				A9828E1324792CBA00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */,
@@ -7079,8 +7272,10 @@
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0E28641D2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
+				A94A881D24D4374500D2CBA4 /* AddMacViewInput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
 				A9828E2424792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */,
+				A94A884C24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
@@ -7104,8 +7299,10 @@
 				0E8BACBB245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
 				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
+				A94A880524D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */,
 				A9828E0D24792CAC00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E79F28B244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
+				A94A881B24D4374500D2CBA4 /* AddMacRouterInput.swift in Sources */,
 				A9828E0424792C4400E7E9D4 /* NetworkSettingsViewModel.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				A9227BBD245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
@@ -7140,6 +7337,7 @@
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */,
+				A94A880A24D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */,
 				A9100D6C241AC741004007FD /* WPSData.swift in Sources */,
 				A9646487247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				0E45580523E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
@@ -7169,6 +7367,7 @@
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
+				A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A9646484247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
@@ -7212,6 +7411,7 @@
 				0ECDF1BC2313E08E00A09ACA /* PushNotificationsManagerImpl.swift in Sources */,
 				0ECFF35E23506BC40061D11B /* ForegroundViewOutput.swift in Sources */,
 				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
+				A94A886624D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */,
 				0EE49BC023B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				A980CC7D24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
@@ -7315,9 +7515,11 @@
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0E8BACEB245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
+				A94A885524D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */,
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
 				A9828E2824792D4400E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
+				A94A881A24D4374500D2CBA4 /* AddMacRouter.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,
 				0E8BAC6D245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift in Sources */,

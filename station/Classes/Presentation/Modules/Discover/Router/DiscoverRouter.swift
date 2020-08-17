@@ -26,13 +26,13 @@ class DiscoverRouter: DiscoverRouterInput {
             })
     }
 
-    func openKaltiotPicker(output: KaltiotPickerModuleOutput) {
-        let factory = StoryboardFactory(storyboardName: "KaltiotPicker")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: KaltiotPickerModuleInput.self)
+    func openAddUsingMac(output: AddMacModuleOutput,
+                         for provider: RuuviNetworkProvider) {
+        let factory = StoryboardFactory(storyboardName: "AddMac")
+        try! transitionHandler.forStoryboard(factory: factory, to: AddMacModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(output: output)
-            })
+            module.configure(output: output, for: provider)
+        })
     }
 
     func dismiss(completion: (() -> Void)?) {

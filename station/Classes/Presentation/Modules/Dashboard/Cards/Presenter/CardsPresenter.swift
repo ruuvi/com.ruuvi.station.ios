@@ -193,6 +193,7 @@ extension CardsPresenter: CardsViewOutput {
 extension CardsPresenter: DiscoverModuleOutput {
     func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
         module.dismiss()
+        self.startObservingRuuviTags()
     }
 
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
