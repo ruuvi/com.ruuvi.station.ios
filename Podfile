@@ -5,7 +5,7 @@ inhibit_all_warnings!
 install! 'cocoapods', :disable_input_output_paths => true
 
 def shared_pods
-  pod 'BTKit', '0.1.13'
+  pod 'BTKit', '~> 0.1.13'
   pod 'Charts'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
@@ -13,7 +13,7 @@ def shared_pods
   pod 'FutureX'
   pod 'GestureInstructions'
   pod 'GRDB.swift'
-  pod 'Humidity'
+  pod 'Humidity', '~> 0.0.8'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'Nantes'

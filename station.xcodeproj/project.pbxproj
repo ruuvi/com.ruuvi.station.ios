@@ -7529,7 +7529,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
-				kind = upToNextMajorVersion;
+				kind = versionRange;
+				maximumVersion = 0.2.0;
 				minimumVersion = 0.1.7;
 			};
 		};
@@ -7545,7 +7546,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
 			requirement = {
-				kind = upToNextMajorVersion;
+				kind = versionRange;
+				maximumVersion = 0.1.0;
 				minimumVersion = 0.0.8;
 			};
 		};
