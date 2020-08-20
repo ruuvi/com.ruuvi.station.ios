@@ -7,8 +7,6 @@ script:
 branches:
   only:
   - master
-before_install:
-  - rvm use system
-  - sudo gem install xcpretty
-  - sudo gem install cocoapods 
+before_install: 
   - pod repo update
+  - pod install
