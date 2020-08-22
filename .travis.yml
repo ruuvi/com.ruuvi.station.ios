@@ -1,6 +1,4 @@
 language: swift
-env:
-  - SKIP_FETCH_SECRETS=true
 osx_image: xcode11.6
 xcode_workspace: station.xcworkspace
 xcode_scheme: station
