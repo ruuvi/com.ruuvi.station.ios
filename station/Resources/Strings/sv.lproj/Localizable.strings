@@ -220,6 +220,9 @@
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
 "Settings.Label.Advanced" = "Advanced";
 
+// MailComposerPresenterMessageUI
+"MailComposerPresenterMessageUI.AppFeedback" = "App Feedback <%@>";
+
 // Network settings
 "NetworkSettings.title" = "Network Configuration";
 "NetworkSettings.NetworkFeature" = "Network Is Enabled";

@@ -238,7 +238,7 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "\n\n" + summary)
+                                                body: "<br><br>" + summary)
         }
     }
 }
