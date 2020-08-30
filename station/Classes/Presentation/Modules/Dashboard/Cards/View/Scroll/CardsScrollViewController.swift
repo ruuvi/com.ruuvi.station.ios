@@ -39,6 +39,42 @@ class CardsScrollViewController: UIViewController {
     deinit {
         appDidBecomeActiveToken?.invalidate()
     }
+    // MacCatalyst arrows detect
+    #if targetEnvironment(macCatalyst)
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        var didHandleEvent = false
+        for press in presses {
+            guard let key = press.key else {
+                continue
+            }
+            if key.charactersIgnoringModifiers == UIKeyCommand.inputLeftArrow {
+                if currentPage == 0 {
+                    didHandleEvent = false
+                } else {
+                    scroll(to: currentPage - 1,
+                           immediately: true,
+                           animated: true)
+                    output.viewDidScroll(to: viewModels[currentPage - 1])
+                    didHandleEvent = true
+                }
+            }
+            if key.charactersIgnoringModifiers == UIKeyCommand.inputRightArrow {
+                if currentPage + 1 < viewModels.count {
+                    scroll(to: currentPage + 1,
+                           immediately: true,
+                           animated: true)
+                    output.viewDidScroll(to: viewModels[currentPage + 1])
+                    didHandleEvent = true
+                } else {
+                    didHandleEvent = false
+                }
+            }
+        }
+        if didHandleEvent == false {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    #endif
 }
 
 // MARK: - CardsViewInput
@@ -93,17 +129,17 @@ extension CardsScrollViewController: CardsViewInput {
         gestureInstructor.show(.swipeRight, after: 0.1)
     }
 
-    func scroll(to index: Int, immediately: Bool = false) {
+    func scroll(to index: Int, immediately: Bool = false, animated: Bool = false) {
         if immediately {
             view.layoutIfNeeded()
             scrollView.layoutIfNeeded()
             let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
-            scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
+            scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                 guard let sSelf = self else { return }
                 let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
-                sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+                sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
             }
         }
     }
