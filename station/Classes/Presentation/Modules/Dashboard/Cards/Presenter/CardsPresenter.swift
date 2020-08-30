@@ -247,7 +247,7 @@ extension CardsPresenter: MenuModuleOutput {
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
         if let index = viewModels.firstIndex(where: { $0.luid.value?.value == uuid }) {
-            view.scroll(to: index, immediately: true)
+            view.scroll(to: index, immediately: true, animated: false)
         }
     }
 

@@ -200,9 +200,10 @@
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station behöver behörighett ill Push-meddelanden för att aktivera den här funktionen.";
 
 // PhotoPicker
-"PhotoPicker.Sheet.message" = "Välj ett foto";
+"PhotoPicker.Sheet.title" = "Välj ett foto";
 "PhotoPicker.Sheet.library" = "Välj från bilder";
 "PhotoPicker.Sheet.camera" = "Ta ett foto";
+"PhotoPicker.Sheet.files" = "Pick from files";
 
 // Settings
 "Settings.navigationItem.title" = "Inställningar";

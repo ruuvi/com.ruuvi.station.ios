@@ -199,9 +199,10 @@
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию";
 
 // PhotoPicker
-"PhotoPicker.Sheet.message" = "Выбрать фотографию";
+"PhotoPicker.Sheet.title" = "Выбрать фотографию";
 "PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
 "PhotoPicker.Sheet.camera" = "Сделать фото";
+"PhotoPicker.Sheet.files" = "Выбрать из файлов";
 
 // Settings
 "Settings.navigationItem.title" = "Настройки";
