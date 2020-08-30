@@ -31,7 +31,6 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
             view.savedDevicesIds = persistedSensors.map({$0.id})
-            view.containsPhysicalSensors = !persistedSensors.compactMap({$0.isNetworkConnectable}).isEmpty
             updateCloseButtonVisibilityState()
         }
     }

@@ -107,12 +107,6 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
-    var containsPhysicalSensors: Bool = false {
-        didSet {
-            updateTableView()
-        }
-    }
-
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
@@ -129,7 +123,6 @@ class DiscoverTableViewController: UITableViewController {
     private var networkSectionIsVisible: Bool {
         return networkFeatureEnabled
             && (networkKaltiotEnabled || networkWhereOsEnabled)
-            && containsPhysicalSensors
     }
 }
 
