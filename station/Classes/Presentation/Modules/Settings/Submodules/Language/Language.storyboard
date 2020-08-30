@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PdF-Y5-1vM">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PdF-Y5-1vM">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Language Table View Controller-->
         <scene sceneID="khz-pU-Lms">
             <objects>
-                <tableViewController storyboardIdentifier="LanguageTableViewController" id="PdF-Y5-1vM" customClass="LanguageTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="LanguageTableViewController" id="PdF-Y5-1vM" customClass="LanguageTableViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="1zQ-JX-1To">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LanguageTableViewCellReuseIdentifier" id="UiS-iq-DwB" customClass="LanguageTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LanguageTableViewCellReuseIdentifier" id="UiS-iq-DwB" customClass="LanguageTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UiS-iq-DwB" id="HrB-F0-P4C">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -37,6 +35,7 @@
                                         <constraint firstItem="DVb-al-h02" firstAttribute="leading" secondItem="HrB-F0-P4C" secondAttribute="leading" constant="20" id="wEb-yp-Cxo"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                 <connections>
                                     <outlet property="languageNameLabel" destination="DVb-al-h02" id="f9M-5u-Lkm"/>
                                 </connections>
@@ -49,7 +48,7 @@
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QBY-SR-9HW" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="dl0-K2-4T7" customClass="LanguageTableInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="dl0-K2-4T7" customClass="LanguageTableInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="PdF-Y5-1vM" id="YMv-Km-EbB"/>
                     </connections>
