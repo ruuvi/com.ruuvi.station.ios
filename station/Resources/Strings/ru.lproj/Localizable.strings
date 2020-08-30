@@ -219,6 +219,9 @@
 "Settings.Label.Heartbeat" = "Фоновый Режим";
 "Settings.Label.Advanced" = "Дополнительно";
 
+// MailComposerPresenterMessageUI
+"MailComposerPresenterMessageUI.AppFeedback" = "Обратная связь <%@>";
+
 // Network settings
 "NetworkSettings.title" = "Network settings";
 "NetworkSettings.NetworkFeature" = "Network feature";
