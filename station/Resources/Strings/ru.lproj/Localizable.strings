@@ -31,6 +31,11 @@
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
+// AddMacViewController
+"AddMacViewController.Send" = "Отправить";
+"AddMacViewController.EnterKaltiotMacAddress" = "Введите mac-адрес Kaltiot";
+"AddMacViewController.EnterWhereOsMacAddress" = "Введите mac-адрес WhereOS";
+
 // Background
 "Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
@@ -102,11 +107,13 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
-"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
+"DiscoverTable.AddWithMACSection.text" = "Добавить по MAC адресу";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
-"DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
+"DiscoverTable.NetworkChoiseDialog.title" = "Выберите провайдер";
+"DiscoverTable.KaltiotNetwork" = "Kaltiot";
+"DiscoverTable.WhereOSNetwork" = "WhereOS";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
-"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
+
 // KaltiotPicker
 "KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
 "RuuviNetworkKaltiot.Name.prefix" = "Kaltiot";
@@ -288,6 +295,7 @@
 "TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
+"TagSettings.DataSource.Network.title" = "Сеть";
 "TagSettings.Label.disabled.text" = "НЕДОСТУПНО?";
 "TagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Уведомления недоступны поскольку девайс не подсоединен и нет разрешения на показ уведомлений. Пожалуйста, сперва соединитесь с устройством.";
@@ -328,8 +336,9 @@
 "RuuviNetworkError.FailedToLogIn" = "Не удалось авторизоваться";
 "RuuviNetworkError.DoesNotHaveSensors" = "У метки нет сенсоров";
 "RuuviNetworkError.NoStoredData" = "Нет сохраненных данных. Метка не будет добавлена";
-
+"RuuviNetworkError.TagAlreadyExists" = "Метка уже добавлена";
 "RuuviNetworkError.TagIsNotPluggable" = "The tag is not pluggable";
+
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";

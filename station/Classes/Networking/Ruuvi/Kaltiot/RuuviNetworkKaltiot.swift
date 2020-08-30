@@ -7,6 +7,7 @@ protocol RuuviNetworkKaltiot: RuuviNetwork {
     func validateApiKey(apiKey: String) -> Future<Void, RUError>
     func beacons(page: Int) -> Future<KaltiotBeacons, RUError>
     func history(ids: [String], from: TimeInterval?, to: TimeInterval?) -> Future<[KaltiotBeaconLogs], RUError>
+    func getBeacon(mac: String) -> Future<KaltiotBeacon, RUError>
 }
 
 extension RuuviNetworkKaltiot {
@@ -77,7 +78,8 @@ extension RuuviNetworkKaltiot {
                                                        luid: nil,
                                                        macId: macId,
                                                        isConnectable: tag.isConnectable,
-                                                       name: name)
+                                                       name: name,
+                                                       networkProvider: .kaltiot )
                 let anyStruct = AnyRuuviTagSensor(object: sensorStuct)
                 promise.succeed(value: anyStruct)
             } else {

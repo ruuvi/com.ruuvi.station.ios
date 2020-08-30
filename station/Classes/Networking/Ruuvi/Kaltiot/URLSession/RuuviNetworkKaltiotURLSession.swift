@@ -123,19 +123,58 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
         return promise.future
     }
 
+    func getBeacon(mac: String) -> Future<KaltiotBeacon, RUError> {
+        guard keychainService.hasKaltiotApiKey else {
+            return .init(error: .ruuviNetwork(.noSavedApiKeyValue))
+        }
+        let promise = Promise<KaltiotBeacon, RUError>()
+        guard let url = url(for: .beacon(mac: mac.lowercased())) else {
+            return .init(error: .unexpected(.failedToConstructURL))
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let response = response as? HTTPURLResponse,
+                200...204 ~= response.statusCode else {
+                    self?.keychainService.kaltiotApiKey = nil
+                    promise.fail(error: .ruuviNetwork(.failedToLogIn))
+                    return
+            }
+            if let error = error {
+                promise.fail(error: .networking(error))
+            } else {
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        let result = try decoder.decode(KaltiotBeacon.self, from: data)
+                        promise.succeed(value: result)
+                    } catch let error {
+                        promise.fail(error: .parse(error))
+                    }
+                } else {
+                    promise.fail(error: .unexpected(.failedToParseHttpResponse))
+                }
+            }
+        }
+        task.resume()
+        return promise.future
+    }
+}
 // MARK: - Private
-    private lazy var baseUrlComponents: URLComponents = {
+extension RuuviNetworkKaltiotURLSession {
+    private var baseUrlComponents: URLComponents {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "beacontracker.ruuvi.torqhub.io"
         components.path = "/api"
         return components
-    }()
+    }
 
     private enum Resources {
         case appid
         case sensorHistory
         case beacons
+        case beacon(mac: String)
 
         var endpoint: String {
             switch self {
@@ -143,6 +182,8 @@ class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
                 return "/appid"
             case .beacons:
                 return "/beacons"
+            case .beacon(let mac):
+                return "/beacons/\(mac)/"
             case .sensorHistory:
                 return "/history/sensor/hexdump"
             }

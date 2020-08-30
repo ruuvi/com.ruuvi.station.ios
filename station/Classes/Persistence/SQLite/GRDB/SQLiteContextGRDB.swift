@@ -66,6 +66,13 @@ extension SQLiteGRDBDatabase {
             try RuuviTagDataSQLite.createTable(in: db)
         }
 
+        // v2
+        migrator.registerMigration("Add networkProvider column") { (db) in
+            try db.alter(table: RuuviTagSQLite.databaseTableName) { (t) in
+                t.add(column: RuuviTagSQLite.networkProviderColumn.name, .integer)
+            }
+        }
+
         try migrator.migrate(dbPool)
     }
 }

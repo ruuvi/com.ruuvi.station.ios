@@ -10,6 +10,15 @@ class TagChartPresenter: NSObject {
         }
     }
     weak var ouptut: TagChartModuleOutput!
+    var calibrationService: CalibrationService!
+    private var humidityOffset: Double = 0.0
+    private var luid: LocalIdentifier? {
+        didSet {
+            if let luid = luid {
+                getHumityCalibration(for: luid)
+            }
+        }
+    }
 
     private let threshold: Int = 100
     private lazy var queue: OperationQueue = {
@@ -19,8 +28,14 @@ class TagChartPresenter: NSObject {
         queue.qualityOfService = .userInteractive
         return queue
     }()
+
     private var chartData: LineChartData? {
         return viewModel.chartData.value
+    }
+    private var calibrationHumidityDidChangeToken: NSObjectProtocol?
+
+    deinit {
+        calibrationHumidityDidChangeToken?.invalidate()
     }
 }
 // MARK: - TagChartModuleInput
@@ -51,9 +66,11 @@ extension TagChartPresenter: TagChartModuleInput {
         self.viewModel = viewModel
     }
 
-    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput) {
+    func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput, luid: LocalIdentifier?) {
         configureViewModel(viewModel)
         self.ouptut = output
+        self.luid = luid
+        startObservingCalibrationHumidityChanges()
     }
 
     func reloadChart() {
@@ -82,6 +99,29 @@ extension TagChartPresenter: TagChartViewOutput {
 }
 
 extension TagChartPresenter {
+    private func getHumityCalibration(for luid: LocalIdentifier?) {
+        guard let luid = luid else {
+            return
+        }
+        humidityOffset = calibrationService.humidityOffset(for: luid).0
+    }
+
+    private func startObservingCalibrationHumidityChanges() {
+        calibrationHumidityDidChangeToken = NotificationCenter
+            .default
+            .addObserver(forName: .CalibrationServiceHumidityDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            if let userInfo = notification.userInfo,
+                let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier,
+                self?.luid?.any == luid.any {
+                self?.getHumityCalibration(for: luid)
+                self?.reloadChart()
+            }
+        })
+    }
+
     private func newDataSet() -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet()
         lineChartDataSet.axisDependency = .left
@@ -147,6 +187,7 @@ extension TagChartPresenter {
             addEntry(for: lineChartData, data: $0)
         })
         viewModel.chartData.value = lineChartData
+        drawCirclesIfNeeded(for: chartData)
         view.reloadData()
     }
 
@@ -158,7 +199,26 @@ extension TagChartPresenter {
             addEntry(for: chartData, data: $0)
             chartData.notifyDataChanged()
         }
+        drawCirclesIfNeeded(for: chartData)
         view.reloadData()
+    }
+
+    private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
+        if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
+            let count: Int
+            if let entriesCount = entriesCount {
+                count = entriesCount
+            } else {
+                count = dataSet.entries.count
+            }
+            switch count {
+            case 1:
+                dataSet.circleRadius = 6
+                dataSet.drawCirclesEnabled = true
+            default:
+                dataSet.drawCirclesEnabled = false
+            }
+        }
     }
 
     private func fetchPointsByDates(start: TimeInterval,
@@ -181,6 +241,8 @@ extension TagChartPresenter {
                     if self.settings.chartDownsamplingOn {
                         self.setDownSampled(dataSet: sorted,
                                             completion: completion)
+                    } else {
+                        self.drawCirclesIfNeeded(for: self.chartData, entriesCount: sorted.count)
                     }
                 }
             }
@@ -208,7 +270,8 @@ extension TagChartPresenter {
                 value = data.humidity?.ah
             case .percent:
                 if let relativeHumidity = data.humidity?.rh {
-                    value = relativeHumidity * 100
+                    let sumHumidity = relativeHumidity * 100.0 + humidityOffset
+                    value = min(sumHumidity, 100.0)
                 } else {
                     value = nil
                 }
@@ -221,7 +284,8 @@ extension TagChartPresenter {
         guard let y = value else {
             return nil
         }
-        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: Double(round(100*y)/100))
+        let rounded = Double(round(10*y)/10)
+        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: rounded)
     }
 
     private func addEntry(for chartData: ChartData, data: RuuviMeasurement, dataSetIndex: Int = 0) {
@@ -240,8 +304,10 @@ extension TagChartPresenter {
         }
         if let chartDataSet = chartData.dataSets.first as? LineChartDataSet {
             chartDataSet.removeAll(keepingCapacity: true)
+            chartDataSet.drawCirclesEnabled = false
         } else {
             let chartDataSet = newDataSet()
+            chartDataSet.drawCirclesEnabled = false
             chartData.addDataSet(chartDataSet)
         }
         let data_length = dataSet.count
@@ -249,6 +315,7 @@ extension TagChartPresenter {
             dataSet.forEach({
                 addEntry(for: chartData, data: $0)
             })
+            drawCirclesIfNeeded(for: chartData)
             return // Nothing to do
         }
         // Bucket size. Leave room for start and end data points
@@ -319,7 +386,8 @@ extension TagChartPresenter {
                     next_a = range_offs // Next a is this b
                 }
             }
-            let entry = ChartDataEntry(x: max_area_point.0, y: Double(round(100 * max_area_point.1)/100))
+            let rounded = Double(round(10 * max_area_point.1)/10)
+            let entry = ChartDataEntry(x: max_area_point.0, y: rounded)
             chartData.addEntry(entry, dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }

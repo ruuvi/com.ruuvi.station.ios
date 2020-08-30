@@ -21,31 +21,6 @@ enum DiscoverTableSection {
         }
     }
 }
-enum DiscoverNetworkCell: Int, CaseIterable {
-    case whereOS = 0
-    case kaltiot
-
-    func cell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        switch self {
-        case .whereOS:
-            return getWhereOSCell(tableView, indexPath: indexPath)
-        case .kaltiot:
-            return getKaltiotCell(tableView, indexPath: indexPath)
-        }
-    }
-
-    private func getWhereOSCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
-        cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
-        return cell
-    }
-
-    private func getKaltiotCell(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(with: DiscoverKaltiotTableViewCell.self, for: indexPath)
-        cell.descriptionLabel.text = "DiscoverTable.KaltiotCell.text".localized()
-        return cell
-    }
-}
 
 class DiscoverTableViewController: UITableViewController {
 
@@ -57,6 +32,8 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
+
+    private var alertVC: UIAlertController?
 
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
     var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
@@ -144,13 +121,14 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
     private var networkSectionIsVisible: Bool {
-        return networkFeatureEnabled &&
-            (networkKaltiotEnabled || networkWhereOsEnabled)
+        return networkFeatureEnabled
+            && (networkKaltiotEnabled || networkWhereOsEnabled)
     }
 }
 
 // MARK: - DiscoverViewInput
 extension DiscoverTableViewController: DiscoverViewInput {
+
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
         getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
@@ -172,23 +150,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         present(alertVC, animated: true)
     }
 
-    func showAddTagWithMACAddressDialog() {
-        let title = "DiscoverTable.AddTagWithMACAddressDialog.title".localized()
-        let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alertVC.addTextField()
-
-        let submitAction = UIAlertAction(title: "OK".localized(), style: .default) { [weak self, unowned alertVC] _ in
-            if let answer = alertVC.textFields?[0].text {
-                self?.output.viewDidEnterMACAddressToAddTag(mac: answer)
-            }
-        }
-
-        alertVC.addAction(submitAction)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-
-        present(alertVC, animated: true)
-    }
-
     func showAddKaltiotApiKey() {
         let title = "DiscoverTable.AddKaltiotApiKeyDialog.title".localized()
         let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
@@ -203,6 +164,32 @@ extension DiscoverTableViewController: DiscoverViewInput {
         alertVC.addAction(submitAction)
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
+    }
+
+    func showChoiseDialog() {
+        let title = "DiscoverTable.NetworkChoiseDialog.title".localized()
+        let actionSheetVC = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        if networkKaltiotEnabled {
+            let kaltiotNetworkAction = UIAlertAction(title: "DiscoverTable.KaltiotNetwork".localized(),
+                                                     style: .default) { [weak self] (_) in
+                self?.output.viewDidSelectProvider(.kaltiot)
+            }
+            actionSheetVC.addAction(kaltiotNetworkAction)
+        }
+        if networkWhereOsEnabled {
+            let whereOSNetworkAction = UIAlertAction(title: "DiscoverTable.WhereOSNetwork".localized(),
+                                                     style: .default) { [weak self] (_) in
+                self?.output.viewDidSelectProvider(.whereOS)
+            }
+            actionSheetVC.addAction(whereOSNetworkAction)
+        }
+        actionSheetVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
+        if UIDevice.current.userInterfaceIdiom == .pad,
+            let cell = tableView.cellForRow(at: IndexPath(item: 0, section: 1)) {
+            actionSheetVC.popoverPresentationController?.sourceView = view
+            actionSheetVC.popoverPresentationController?.sourceRect = cell.frame
+        }
+        present(actionSheetVC, animated: true)
     }
 }
 
@@ -258,14 +245,7 @@ extension DiscoverTableViewController {
         case .noDevices:
             return 1
         case .network:
-            var rows = 0
-            if networkKaltiotEnabled {
-                rows += 1
-            }
-            if networkWhereOsEnabled {
-                rows += 1
-            }
-            return rows
+            return networkSectionIsVisible ? 1 : 0
         }
     }
 
@@ -289,26 +269,15 @@ extension DiscoverTableViewController {
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
         case .network:
-            if networkWhereOsEnabled,
-                networkKaltiotEnabled,
-                let networkCellType = DiscoverNetworkCell(rawValue: indexPath.row) {
-                return networkCellType.cell(tableView, indexPath: indexPath)
-            } else {
-                if networkWhereOsEnabled {
-                    return DiscoverNetworkCell.whereOS.cell(tableView, indexPath: indexPath)
-                } else if networkKaltiotEnabled {
-                    return DiscoverNetworkCell.kaltiot.cell(tableView, indexPath: indexPath)
-                } else {
-                    fatalError()
-                }
-            }
+            let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
+            cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
+            return cell
         }
     }
 }
 
 // MARK: - UITableViewDelegate {
 extension DiscoverTableViewController {
-//swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
@@ -323,21 +292,7 @@ extension DiscoverTableViewController {
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
         case .network:
-            if networkWhereOsEnabled,
-                networkKaltiotEnabled {
-                switch DiscoverNetworkCell(rawValue: indexPath.row) {
-                case .whereOS:
-                    output.viewDidAskToAddTagWithMACAddress()
-                case .kaltiot:
-                    output.viewDidSelectKaltiotProvider()
-                default:
-                    fatalError()
-                }
-            } else if networkWhereOsEnabled {
-                output.viewDidAskToAddTagWithMACAddress()
-            } else if networkKaltiotEnabled {
-                output.viewDidSelectKaltiotProvider()
-            }
+            output.viewDidAskToAddTagWithMACAddress()
         default:
             break
         }

@@ -1,6 +1,6 @@
 import Foundation
 
-enum RuuviNetworkProvider {
-    case kaltiot
+enum RuuviNetworkProvider: Int {
+    case kaltiot = 0
     case whereOS
 }
