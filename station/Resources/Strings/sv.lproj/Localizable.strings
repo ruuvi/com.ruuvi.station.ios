@@ -92,6 +92,11 @@
 "Advanced.RuuviNetwork.title" = "Network Configuration";
 "Advanced.Charts.title" = "CHARTS";
 
+// AddMacViewController
+"AddMacViewController.Send" = "Send";
+"AddMacViewController.EnterKaltiotMacAddress" = "Enter Kaltiot mac-address";
+"AddMacViewController.EnterWhereOsMacAddress" = "Enter WhereOS mac-address";
+
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
@@ -105,9 +110,10 @@
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
 "DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
-"DiscoverTable.KaltiotCell.text" = "Add Kaltiot tag";
+"DiscoverTable.NetworkChoiseDialog.title" = "Choise network provider";
+"DiscoverTable.KaltiotNetwork" = "Kaltiot";
+"DiscoverTable.WhereOSNetwork" = "WhereOS";
 "DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
-"DiscoverTable.AddTagWithMACAddressDialog.title" = "Enter MAC address";
 
 // KaltiotPicker
 "KaltiotPicker.Title.text" = "Add Kaltiot tag";
@@ -290,6 +296,7 @@
 "TagSettings.dataSourceTitleLabel.text" = "Data Mottagen Via";
 "TagSettings.DataSource.Heartbeat.title" = "Hjärtslag";
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
+"TagSettings.DataSource.Network.title" = "Network";
 "TagSettings.Label.disabled.text" = "INAKTIVERAD?";
 "TagSettings.Label.alerts.text" = "ALARM";
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alarm är inaktiverade eftersom enheten inte är ansluten och behörigheten att se Push-meddelanden saknas. Anslut först till enheten.";
@@ -330,6 +337,7 @@
 "RuuviNetworkError.FailedToLogIn" = "Failed to log in";
 "RuuviNetworkError.DoesNotHaveSensors" = "The beacon does not have sensors";
 "RuuviNetworkError.NoStoredData" = "No stored data. The tag will not be added";
+"RuuviNetworkError.TagAlreadyExists" = "Tag already exists";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";

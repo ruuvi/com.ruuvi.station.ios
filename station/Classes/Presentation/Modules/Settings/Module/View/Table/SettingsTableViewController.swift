@@ -51,11 +51,6 @@ class SettingsTableViewController: UITableViewController {
             updateTableIfLoaded()
         }
     }
-    var isAdvancedVisible: Bool = false {
-        didSet {
-            updateTableIfLoaded()
-        }
-    }
 }
 
 // MARK: - SettingsViewInput
@@ -129,8 +124,7 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if !isBackgroundVisible && cell == heartbeatCell ||
-            !showDefaults && cell == defaultsCell ||
-            !isAdvancedVisible && cell == advancedCell {
+            !showDefaults && cell == defaultsCell {
             return 0
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)

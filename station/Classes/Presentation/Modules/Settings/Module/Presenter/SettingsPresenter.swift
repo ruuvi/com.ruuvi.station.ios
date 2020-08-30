@@ -39,10 +39,8 @@ extension SettingsPresenter: SettingsViewOutput {
             case .initial(let sensors):
                 let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
                 sSelf.view.isBackgroundVisible = containsConnectable
-                sSelf.view.isAdvancedVisible = containsConnectable
             case .insert(let sensor):
                 sSelf.view.isBackgroundVisible = sSelf.view.isBackgroundVisible || sensor.isConnectable
-                sSelf.view.isAdvancedVisible = sSelf.view.isAdvancedVisible || sensor.isConnectable
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
             default:

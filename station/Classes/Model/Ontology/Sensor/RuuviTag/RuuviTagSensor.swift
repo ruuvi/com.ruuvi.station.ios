@@ -1,6 +1,6 @@
 import Foundation
 
-protocol RuuviTagSensor: PhysicalSensor, Versionable { }
+protocol RuuviTagSensor: PhysicalSensor, Versionable, Networkable {}
 
 extension RuuviTagSensor {
     var id: String {
@@ -49,6 +49,10 @@ extension RuuviTagSensor {
                                     isConnectable: isConnectable,
                                     name: name)
     }
+
+    var isNetworkConnectable: Bool {
+        return networkProvider != nil
+    }
 }
 
 struct RuuviTagSensorStruct: RuuviTagSensor {
@@ -57,9 +61,11 @@ struct RuuviTagSensorStruct: RuuviTagSensor {
     var macId: MACIdentifier?
     var isConnectable: Bool
     var name: String
+    var networkProvider: RuuviNetworkProvider?
 }
 
-struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
+struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
+
     var object: RuuviTagSensor
 
     var id: String {
@@ -80,6 +86,9 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
     var name: String {
         return object.name
     }
+    var networkProvider: RuuviNetworkProvider? {
+        return object.networkProvider
+    }
 
     static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
         return lhs.id == rhs.id || lhs.luid?.value == rhs.luid?.value || lhs.macId?.value == rhs.macId?.value
@@ -87,5 +96,9 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+
+    var orderElement: String {
+        return id
     }
 }
