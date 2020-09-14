@@ -17,12 +17,26 @@ class WebTagDataRealm: Object {
         self.humidity.value = data.humidity
         self.pressure.value = data.pressure
     }
-
-    var fahrenheit: Double? {
-        return celsius.value?.fahrenheit
-    }
-
-    var kelvin: Double? {
-        return celsius.value?.kelvin
+}
+extension WebTagDataRealm {
+    var record: RuuviTagSensorRecord? {
+        guard let id = webTag?.id else {
+            return nil
+        }
+        let t = Temperature(celsius.value)
+        let h = Humidity(relative: humidity.value, temperature: t)
+        let p = Pressure(pressure.value)
+        return RuuviTagSensorRecordStruct(ruuviTagId: id,
+                                          date: date,
+                                          macId: nil,
+                                          rssi: nil,
+                                          temperature:t,
+                                          humidity: h,
+                                          pressure: p,
+                                          acceleration: nil,
+                                          voltage: nil,
+                                          movementCounter: nil,
+                                          measurementSequenceNumber: nil,
+                                          txPower: nil)
     }
 }

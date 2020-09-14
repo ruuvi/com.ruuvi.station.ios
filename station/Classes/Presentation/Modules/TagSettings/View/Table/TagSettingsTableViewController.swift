@@ -98,6 +98,8 @@ class TagSettingsTableViewController: UITableViewController {
         }
     }
 
+    var measurementService: MeasurementsService!
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.default
     }
@@ -818,44 +820,46 @@ extension TagSettingsTableViewController {
     }
 
     private func bindHumidity() {
-       if isViewLoaded, let viewModel = viewModel {
-           let humidity = viewModel.relativeHumidity
-           let humidityOffset = viewModel.humidityOffset
-           let humidityCell = calibrationHumidityCell
-           let humidityTrailing = humidityLabelTrailing
+        if isViewLoaded,
+            let viewModel = viewModel {
+            let temperature = viewModel.temperature.value
+            let humidity = viewModel.humidity.value
+            let humidityOffset = viewModel.humidityOffset.value
+            let humidityCell = calibrationHumidityCell
+            let humidityTrailing = humidityLabelTrailing
 
-           let humidityBlock: ((UILabel, Double?) -> Void) = {
-            [weak humidity,
-            weak humidityOffset,
-            weak humidityCell,
-            weak humidityTrailing] label, _ in
-               if let humidity = humidity?.value, let humidityOffset = humidityOffset?.value {
-                   if humidityOffset > 0 {
-                       let shownHumidity = humidity + humidityOffset
-                       if shownHumidity > 100.0 {
-                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
+            let humidityBlock: ((UILabel, Any?) -> Void) = {
+                [weak humidityCell,
+                weak humidityTrailing] label, _ in
+                // TODO with use measurement service
+                if let temperature = temperature,
+                    let humidityOffset = humidityOffset,
+                    let humidity = humidity?.converted(to: .relative(temperature: temperature)).value {
+                    if humidityOffset > 0 {
+                        let shownHumidity = humidity + humidityOffset
+                        if shownHumidity > 100.0 {
+                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
                             + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
                            humidityCell?.accessoryType = .detailButton
                            humidityTrailing?.constant = 0
-                       } else {
+                        } else {
                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
                             + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
                            humidityCell?.accessoryType = .none
                            humidityTrailing?.constant = 16.0
                        }
-                   } else {
+                    } else {
                        label.text = nil
                        humidityCell?.accessoryType = .none
                        humidityTrailing?.constant = 16.0
-                   }
-               } else {
+                    }
+                } else {
                    label.text = nil
-               }
-           }
-
-           humidityLabel.bind(viewModel.relativeHumidity, block: humidityBlock)
-           humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
-       }
+                }
+            }
+            humidityLabel.bind(viewModel.humidity, block: humidityBlock)
+            humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
+        }
     }
 
     // swiftlint:disable:next function_body_length

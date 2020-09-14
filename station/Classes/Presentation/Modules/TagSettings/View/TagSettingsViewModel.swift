@@ -5,9 +5,9 @@ struct TagSettingsViewModel {
     let name: Observable<String?> = Observable<String?>()
     let uuid: Observable<String?> = Observable<String?>()
     let mac: Observable<String?> = Observable<String?>()
-    let relativeHumidity: Observable<Double?> = Observable<Double?>()
+    let humidity: Observable<Humidity?> = Observable<Humidity?>()
+    let temperature: Observable<Temperature?> = Observable<Temperature?>()
     let humidityOffset: Observable<Double?> = Observable<Double?>()
-    let humidityOffsetDate: Observable<Date?> = Observable<Date?>()
     let voltage: Observable<Double?> = Observable<Double?>()
     let accelerationX: Observable<Double?> = Observable<Double?>()
     let accelerationY: Observable<Double?> = Observable<Double?>()
@@ -56,7 +56,8 @@ struct TagSettingsViewModel {
     let movementAlertDescription: Observable<String?> = Observable<String?>()
 
     func updateRecord(_ record: RuuviTagSensorRecord) {
-        relativeHumidity.value = record.humidity?.rh
+        humidity.value = record.humidity
+        temperature.value = record.temperature
         voltage.value = record.voltage?.value
         accelerationX.value = record.acceleration?.x.value
         accelerationY.value = record.acceleration?.y.value

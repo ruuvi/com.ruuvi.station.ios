@@ -16,16 +16,11 @@ extension RuuviTag: RuuviTagSensorRecord {
     }
 
     var temperature: Temperature? {
-        guard let celsius = self.celsius else { return nil }
-        return Temperature(value: celsius, unit: .celsius)
+        return Temperature(self.celsius)
     }
 
     var humidity: Humidity? {
-        guard let celsius = self.celsius,
-            let relativeHumidity = self.relativeHumidity else {
-            return nil
-        }
-        return Humidity(c: celsius, rh: relativeHumidity / 100.0)
+        return Humidity(relative: self.relativeHumidity, temperature: temperature)
     }
 
     var pressure: Pressure? {
