@@ -50,8 +50,10 @@ extension RuuviTagDataSQLite: FetchableRecord {
         if let celsius = Double.fromDatabaseValue(row[RuuviTagDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)
             if let relativeHumidity
-                = Double.fromDatabaseValue(row[RuuviTagDataSQLite.relativeHumidityInPercentColumn]) {
-                humidity = Humidity(c: celsius, rh: relativeHumidity)
+                = Double.fromDatabaseValue(row[RuuviTagDataSQLite.relativeHumidityInPercentColumn]),
+                let temperature = temperature {
+                humidity = Humidity(value: relativeHumidity,
+                                    unit: .relative(temperature: temperature))
             }
         }
         if let hectopascals = Double.fromDatabaseValue(row[RuuviTagDataSQLite.hectopascalsColumn]) {
@@ -85,7 +87,7 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.macColumn] = macId?.value
         container[RuuviTagDataSQLite.rssiColumn] = rssi
         container[RuuviTagDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
-        container[RuuviTagDataSQLite.relativeHumidityInPercentColumn] = humidity?.rh
+        container[RuuviTagDataSQLite.relativeHumidityInPercentColumn] = humidity?.value
         container[RuuviTagDataSQLite.hectopascalsColumn] = pressure?.converted(to: .hectopascals).value
         container[RuuviTagDataSQLite.accelerationXColumn] = acceleration?.x.converted(to: .metersPerSecondSquared).value
         container[RuuviTagDataSQLite.accelerationYColumn] = acceleration?.y.converted(to: .metersPerSecondSquared).value

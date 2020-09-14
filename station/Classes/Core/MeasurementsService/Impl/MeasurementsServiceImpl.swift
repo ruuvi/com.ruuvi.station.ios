@@ -1,15 +1,21 @@
 import Foundation
 import Humidity
 
-struct MeasurementsServiceSettingsCache {
+struct MeasurementsServiceSettigsUnit {
     let temperatureUnit: UnitTemperature
     let humidityUnit: HumidityUnit
     let pressureUnit: UnitPressure
 }
 
 class MeasurementsServiceImpl: NSObject {
-    var settings: Settings!
-    private var settingsCache: MeasurementsServiceSettingsCache!
+    var settings: Settings! {
+        didSet {
+            units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
+                                                   humidityUnit: settings.humidityUnit,
+                                                   pressureUnit: settings.pressureUnit)
+        }
+    }
+    var units: MeasurementsServiceSettigsUnit!
 
     private let notificationsNamesToObserve: [Notification.Name] = [
         .TemperatureUnitDidChange,
@@ -17,17 +23,26 @@ class MeasurementsServiceImpl: NSObject {
         .PressureUnitDidChange
     ]
 
-    private var queue: OperationQueue = {
-        $0.qualityOfService = .userInitiated
-        $0.maxConcurrentOperationCount = 3
+    private var observers: [NSObjectProtocol] = []
+
+    private lazy var numberFormatter: NumberFormatter = {
+        $0.numberStyle = .decimal
+        $0.minimumFractionDigits = 0
+        $0.maximumFractionDigits = 2
         return $0
-    }(OperationQueue())
+    }(NumberFormatter())
 
     private lazy var formatter: MeasurementFormatter = {
-        $0.unitOptions = .naturalScale
         $0.unitStyle = .short
+        $0.numberFormatter = self.numberFormatter
+        $0.unitOptions = .providedUnit
         return $0
     }(MeasurementFormatter())
+
+    private lazy var humidityFormatter: HumidityFormatter = {
+        $0.unitStyle = .medium
+        return $0
+    }(HumidityFormatter())
 
     private var listeners = NSHashTable<AnyObject>.weakObjects()
 
@@ -43,80 +58,101 @@ class MeasurementsServiceImpl: NSObject {
 }
 // MARK: - MeasurementsService
 extension MeasurementsServiceImpl: MeasurementsService {
-    func double(for measurement: Measurement<Dimension>) -> Double {
-        let dimension: Dimension
-        switch measurement.unit {
-        case is UnitTemperature:
-            dimension = settingsCache.temperatureUnit
-        case is UnitPressure:
-            dimension = settingsCache.pressureUnit
-        case is UnitElectricPotentialDifference:
-            dimension = UnitElectricPotentialDifference.volts
-        default:
-            fatalError("Need implement measurement type \(measurement.unit.description)")
-        }
-        return measurement
-            .converted(to: dimension).value
+
+    func double(for temperature: Temperature) -> Double {
+        return temperature
+            .converted(to: units.temperatureUnit)
+            .value
+            .round(to: numberFormatter.maximumFractionDigits)
     }
 
-    func string(for measurement: Measurement<Dimension>) -> String {
-        let dimension: Dimension
-        switch measurement.unit {
-        case is UnitTemperature:
-            dimension = settingsCache.temperatureUnit
-        case is UnitPressure:
-            dimension = settingsCache.pressureUnit
-        case is UnitElectricPotentialDifference:
-            dimension = UnitElectricPotentialDifference.volts
-        default:
-            fatalError("Need implement measurement type \(measurement.unit.description)")
-        }
-        return formatter.string(from: dimension)
-    }
-
-    func double(for humidity: Humidity, with offset: Double) -> Double {
-        let relativeHumidity = min(humidity.rh + offset, 100.0)
-        let offsetedHumidity = Humidity(c: humidity.c, rh:relativeHumidity)
-        switch settingsCache.humidityUnit {
-        case .percent:
-            return relativeHumidity
-        case .gm3:
-            return offsetedHumidity.ah
-        case .dew:
-            switch settingsCache.temperatureUnit {
-            case .celsius:
-                return offsetedHumidity.Td ?? .nan
-            case .fahrenheit:
-                return offsetedHumidity.TdF ?? .nan
-            case .kelvin:
-                return offsetedHumidity.TdK ?? .nan
-            default:
-                return offsetedHumidity.Td ?? .nan
-            }
-        }
-    }
-
-    func string(for humidity: Humidity, with offset: Double) -> String {
-        let doubleValue = double(for: humidity, with: offset)
-        guard doubleValue != .nan else {
+    func string(for temperature: Temperature?) -> String {
+        guard let temperature = temperature else {
             return "N/A".localized()
         }
-        switch settingsCache.humidityUnit {
+        return formatter.string(from: temperature.converted(to: units.temperatureUnit))
+    }
+
+    func double(for pressure: Pressure) -> Double {
+        return pressure
+            .converted(to: units.pressureUnit)
+            .value
+            .round(to: numberFormatter.maximumFractionDigits)
+    }
+
+    func string(for pressure: Pressure?) -> String {
+        guard let pressure = pressure else {
+            return "N/A".localized()
+        }
+        return formatter.string(from: pressure.converted(to: units.pressureUnit))
+    }
+
+    func double(for voltage: Voltage) -> Double {
+        return voltage
+            .converted(to: .volts)
+            .value
+            .round(to: numberFormatter.maximumFractionDigits)
+    }
+
+    func string(for voltage: Voltage?) -> String {
+        guard let voltage = voltage else {
+            return "N/A".localized()
+        }
+        return formatter.string(from: voltage.converted(to: .volts))
+    }
+
+    func double(for humidity: Humidity,
+                withOffset offset: Double,
+                temperature: Temperature,
+                isDecimal: Bool) -> Double? {
+        let offsetedHumidity = humidity.withRelativeOffset(by: offset, withTemperature: temperature)
+        switch units.humidityUnit {
         case .percent:
-            return .localizedStringWithFormat("%.2f", doubleValue)
-                + " " + "%"
+            let value = offsetedHumidity
+                .converted(to: .relative(temperature: temperature))
+                .value
+            return isDecimal
+                ? value
+                    .round(to: numberFormatter.maximumFractionDigits)
+                : (value * 100)
+                    .round(to: numberFormatter.maximumFractionDigits)
         case .gm3:
-            return .localizedStringWithFormat("%.2f", doubleValue)
-                + " " + "g/m³".localized()
+            return offsetedHumidity.converted(to: .absolute)
+                .value
+                .round(to: numberFormatter.maximumFractionDigits)
         case .dew:
-            let measurement = Measurement(value: doubleValue, unit: settingsCache.temperatureUnit)
-            return formatter.string(from: measurement)
+            let dp = try? offsetedHumidity.dewPoint(temperature: temperature)
+            return dp?.converted(to: settings.temperatureUnit.unitTemperature)
+                .value
+                .round(to: numberFormatter.maximumFractionDigits)
+        }
+    }
+
+    func string(for humidity: Humidity?,
+                withOffset offset: Double?,
+                temperature: Temperature?) -> String {
+        guard let humidity = humidity,
+            let temperature = temperature else {
+                return "N/A".localized()
+        }
+        let offsetedHumidity = humidity.withRelativeOffset(by: offset ?? 0.0, withTemperature: temperature)
+        switch units.humidityUnit {
+        case .percent:
+            return humidityFormatter.string(from: offsetedHumidity.converted(to: .relative(temperature: temperature)))
+        case .gm3:
+            return humidityFormatter.string(from: offsetedHumidity.converted(to: .absolute))
+        case .dew:
+            let dp = try? offsetedHumidity.dewPoint(temperature: temperature)
+            return string(for: dp)
         }
     }
 }
 // MARK: - Localizable
 extension MeasurementsServiceImpl: Localizable {
     func localize() {
+        formatter.locale = self.settings.language.locale
+        HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
+        humidityFormatter.numberFormatter.locale = self.settings.language.locale
         notifyListeners()
     }
 }
@@ -133,7 +169,7 @@ extension MeasurementsServiceImpl {
     }
 
     private func updateCache() {
-        settingsCache = MeasurementsServiceSettingsCache(temperatureUnit: settings.temperatureUnit.unitTemperature,
+        units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
                                                          humidityUnit: settings.humidityUnit,
                                                          pressureUnit: settings.pressureUnit)
         notifyListeners()
@@ -141,13 +177,14 @@ extension MeasurementsServiceImpl {
 
     private func startSettingsObserving() {
         notificationsNamesToObserve.forEach({
-            NotificationCenter
+            let observer = NotificationCenter
                 .default
                 .addObserver(forName: $0,
-                             object: self,
-                             queue: queue) { [weak self] (_) in
+                             object: nil,
+                             queue: .main) { [weak self] (_) in
                 self?.updateCache()
             }
+            self.observers.append(observer)
         })
     }
 }

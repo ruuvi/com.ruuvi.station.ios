@@ -93,48 +93,49 @@ extension ExportServiceTrunk {
                             kelvin = "N/A".localized()
                         }
                         var relativeHumidity: String
-                        if let rh = log.humidity?.rh {
-                            if rh > 100 {
-                                relativeHumidity = "100"
-                            } else {
-                                relativeHumidity = String(format: "%.2f", rh * 100)
-                            }
-                        } else {
-                            relativeHumidity = "N/A".localized()
-                        }
+                        // TODO: - add measurementService
+//                        if let rh = log.humidity?.rh {
+//                            if rh > 100 {
+//                                relativeHumidity = "100"
+//                            } else {
+//                                relativeHumidity = String(format: "%.2f", rh * 100)
+//                            }
+//                        } else {
+//                            relativeHumidity = "N/A".localized()
+//                        }
                         var absoluteHumidity: String
                         var dewPointCelsius: String
                         var dewPointFahrenheit: String
                         var dewPointKelvin: String
                         // FIXME: use humidity
-                        if let c = log.temperature?.converted(to: .celsius).value, let rh = log.humidity?.rh {
+//                        if let c = log.temperature?.converted(to: .celsius).value, let rh = log.humidity?.value {
 //                            var sh = rh + ruuviTag.humidityOffset TODO: calibration srvice
 //                            if sh > 100.0 {
 //                                sh = 100.0
 //                            }
-                            let h = Humidity(c: c, rh: rh)
-                            absoluteHumidity = String(format: "%.2f", h.ah)
-                            if let hTd = h.Td {
-                                dewPointCelsius = String(format: "%.2f", hTd)
-                            } else {
-                                dewPointCelsius = "N/A".localized()
-                            }
-                            if let hTdF = h.TdF {
-                                dewPointFahrenheit = String(format: "%.2f", hTdF)
-                            } else {
-                                dewPointFahrenheit = "N/A".localized()
-                            }
-                            if let hTdK = h.TdK {
-                                dewPointKelvin = String(format: "%.2f", hTdK)
-                            } else {
-                                dewPointKelvin = "N/A".localized()
-                            }
-                        } else {
+//                            let h = Humidity(c: c, rh: rh)
+//                            absoluteHumidity = String(format: "%.2f", h.ah)
+//                            if let hTd = h.Td {
+//                                dewPointCelsius = String(format: "%.2f", hTd)
+//                            } else {
+//                                dewPointCelsius = "N/A".localized()
+//                            }
+//                            if let hTdF = h.TdF {
+//                                dewPointFahrenheit = String(format: "%.2f", hTdF)
+//                            } else {
+//                                dewPointFahrenheit = "N/A".localized()
+//                            }
+//                            if let hTdK = h.TdK {
+//                                dewPointKelvin = String(format: "%.2f", hTdK)
+//                            } else {
+//                                dewPointKelvin = "N/A".localized()
+//                            }
+//                        } else {
                             absoluteHumidity = "N/A".localized()
                             dewPointCelsius = "N/A".localized()
                             dewPointFahrenheit = "N/A".localized()
                             dewPointKelvin = "N/A".localized()
-                        }
+//                        }
                         var pressure: String
                         if let p = log.pressure?.converted(to: .hectopascals).value {
                             pressure = String(format: "%.2f", p)
@@ -188,7 +189,7 @@ extension ExportServiceTrunk {
                             + "\(celsius)" + ","
                             + "\(fahrenheit)" + ","
                             + "\(kelvin)" + ","
-                            + "\(relativeHumidity)" + ","
+//                            + "\(relativeHumidity)" + ","
                             + "\(absoluteHumidity)" + ","
                             + "\(dewPointCelsius)" + ","
                             + "\(dewPointFahrenheit)" + ","

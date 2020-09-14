@@ -14,8 +14,8 @@ extension RuuviTagDataRealm {
             let relativeHumidity = self.humidity.value else {
             return nil
         }
-        return Humidity(c: celsius,
-                        rh: relativeHumidity / 100.0)
+        return Humidity(relative: relativeHumidity,
+                        temperature: Temperature(value: celsius, unit: .celsius))
     }
     var unitPressure: Pressure? {
         guard let pressure = self.pressure.value else {

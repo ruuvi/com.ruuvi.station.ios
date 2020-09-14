@@ -5,6 +5,7 @@ class AlertServiceImpl: AlertService {
 
     var alertPersistence: AlertPersistence!
     var calibrationService: CalibrationService!
+    var measurementService: MeasurementsService!
     weak var localNotificationsManager: LocalNotificationsManager!
 
     var observations = [String: NSPointerArray]()

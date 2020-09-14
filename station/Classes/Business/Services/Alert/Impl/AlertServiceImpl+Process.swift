@@ -84,29 +84,27 @@ extension AlertServiceImpl {
 
     private func process(absoluteHumidity: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .absoluteHumidity(let lower, let upper) = alert(for: ruuviTag.uuid, of: absoluteHumidity),
-            let rh = ruuviTag.relativeHumidity,
-            let c = ruuviTag.celsius {
-            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
-            var sh = rh + ho
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let h = Humidity(c: c, rh: sh / 100.0)
-            let ah = h.ah
-
-            let isLower = ah < lower
-            let isUpper = ah > upper
-
-            if isLower {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: ruuviTag.uuid)
+            let c = Temperature(ruuviTag.celsius),
+            let rh = Humidity(relative: ruuviTag.relativeHumidity, temperature: c) {
+                let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
+                guard let h = rh.offseted(by: ho, temperature: c) else {
+                    return false
                 }
-            } else if isUpper {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: ruuviTag.uuid)
+                let ah = h.converted(to: .absolute).value
+
+                let isLower = ah < lower
+                let isUpper = ah > upper
+
+                if isLower {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: ruuviTag.uuid)
+                    }
+                } else if isUpper {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: ruuviTag.uuid)
+                    }
                 }
-            }
-            return isLower || isUpper
+                return isLower || isUpper
         } else {
             return false
         }
@@ -114,31 +112,30 @@ extension AlertServiceImpl {
 
     private func process(dewPoint: AlertType, ruuviTag: RuuviTagProtocol) -> Bool {
         if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.uuid, of: dewPoint),
-            let rh = ruuviTag.relativeHumidity, let c = ruuviTag.celsius {
-            let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
-            var sh = rh + ho
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let h = Humidity(c: c, rh: sh / 100.0)
-            if let hTd = h.Td {
-                let isLower = hTd < lower
-                let isUpper = hTd > upper
-
-                if isLower {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.localNotificationsManager.notify(.low, .dewPoint, for: ruuviTag.uuid)
-                    }
-                } else if isUpper {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.localNotificationsManager.notify(.high, .dewPoint, for: ruuviTag.uuid)
-                    }
+            let c = Temperature(ruuviTag.celsius),
+            let rh = Humidity(relative: ruuviTag.relativeHumidity, temperature: c) {
+                let ho = calibrationService.humidityOffset(for: ruuviTag.uuid.luid).0
+                guard let h = rh.offseted(by: ho, temperature: c) else {
+                    return false
                 }
+                if let hTd = try? h.dewPoint(temperature: c).converted(to: .celsius).value {
+                    let isLower = hTd < lower
+                    let isUpper = hTd > upper
 
-                return isLower || isUpper
-            } else {
-                return false
-            }
+                    if isLower {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.low, .dewPoint, for: ruuviTag.uuid)
+                        }
+                    } else if isUpper {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.localNotificationsManager.notify(.high, .dewPoint, for: ruuviTag.uuid)
+                        }
+                    }
+
+                    return isLower || isUpper
+                } else {
+                    return false
+                }
         } else {
             return false
         }
@@ -250,24 +247,23 @@ extension AlertServiceImpl {
 
     private func process(absoluteHumidity: AlertType, uuid: String, data: WPSData) -> Bool {
         if case .absoluteHumidity(let lower, let upper) = alert(for: uuid, of: absoluteHumidity),
-            let rh = data.humidity,
-            let c = data.celsius {
-            let h = Humidity(c: c, rh: rh / 100.0)
-            let ah = h.ah
+            let c = Temperature(data.celsius),
+            let rh = Humidity(relative: data.humidity, temperature: c) {
+                let ah = rh.converted(to: .absolute).value
 
-            let isLower = ah < lower
-            let isUpper = ah > upper
+                let isLower = ah < lower
+                let isUpper = ah > upper
 
-            if isLower {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: uuid)
+                if isLower {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.localNotificationsManager.notify(.low, .absoluteHumidity, for: uuid)
+                    }
+                } else if isUpper {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
+                    }
                 }
-            } else if isUpper {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .absoluteHumidity, for: uuid)
-                }
-            }
-            return isLower || isUpper
+                return isLower || isUpper
         } else {
             return false
         }
@@ -275,9 +271,9 @@ extension AlertServiceImpl {
 
     private func process(dewPoint: AlertType, uuid: String, data: WPSData) -> Bool {
         if case .dewPoint(let lower, let upper) = alert(for: uuid, of: dewPoint),
-            let rh = data.humidity, let c = data.celsius {
-            let h = Humidity(c: c, rh: rh / 100.0)
-            if let hTd = h.Td {
+            let c = Temperature(data.celsius),
+            let rh = Humidity(relative: data.humidity, temperature: c) {
+            if let hTd = try? rh.dewPoint(temperature: c).converted(to: .celsius).value {
                 let isLower = hTd < lower
                 let isUpper = hTd > upper
 

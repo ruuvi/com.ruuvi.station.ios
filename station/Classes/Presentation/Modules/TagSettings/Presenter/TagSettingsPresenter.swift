@@ -32,9 +32,9 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             syncViewModel()
         }
     }
-    private var humidity: Double? {
+    private var humidity: Humidity? {
         didSet {
-            viewModel.relativeHumidity.value = humidity
+            viewModel.humidity.value = humidity
         }
     }
     private var viewModel: TagSettingsViewModel! {
@@ -66,7 +66,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         alertDidChangeToken?.invalidate()
     }
 
-    func configure(ruuviTag: RuuviTagSensor, humidity: Double?, output: TagSettingsModuleOutput) {
+    func configure(ruuviTag: RuuviTagSensor, humidity: Humidity?, output: TagSettingsModuleOutput) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
         self.ruuviTag = ruuviTag
@@ -143,7 +143,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToCalibrateHumidity() {
         if let humidity = humidity {
-            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity)
+            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity.value)
         }
     }
 
@@ -195,7 +195,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToFixHumidityAdjustment() {
         if let humidity = humidity {
-            calibrationService.calibrateHumidityTo100Percent(currentValue: humidity, for: ruuviTag)
+            calibrationService.calibrateHumidityTo100Percent(currentValue: humidity.value, for: ruuviTag)
         }
     }
 
@@ -457,7 +457,7 @@ extension TagSettingsPresenter {
     }
 
     private func sync(device: RuuviTag) {
-        humidity = device.relativeHumidity
+        humidity = device.humidity
         let record = RuuviTagSensorRecordStruct(ruuviTagId: device.ruuviTagId,
                                                 date: device.date,
                                                 macId: device.mac?.mac,
