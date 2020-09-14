@@ -244,7 +244,7 @@ extension CardsPresenter: TagChartsModuleOutput {
 
     func tagChartsDidDeleteTag(module: TagChartsModuleInput) {
         module.dismiss(completion: { [weak self] in
-            self?.syncViewModels()
+            self?.startObservingRuuviTags()
         })
     }
 }
@@ -274,7 +274,7 @@ extension CardsPresenter: AlertServiceObserver {
 extension CardsPresenter: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(module: TagSettingsModuleInput, ruuviTag: RuuviTagSensor) {
         module.dismiss(completion: { [weak self] in
-            self?.syncViewModels()
+            self?.startObservingRuuviTags()
         })
     }
 }
