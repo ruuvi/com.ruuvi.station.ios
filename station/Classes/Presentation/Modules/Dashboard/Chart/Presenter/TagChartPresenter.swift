@@ -117,7 +117,7 @@ extension TagChartPresenter {
                          using: { [weak self] (notification) in
             if let userInfo = notification.userInfo,
                 let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier,
-                luid.any == self?.luid?.any {
+                self?.luid?.any == luid.any {
                 self?.getHumityCalibration(for: luid)
                 self?.reloadChart()
             }
@@ -270,7 +270,8 @@ extension TagChartPresenter {
         guard let y = value else {
             return nil
         }
-        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: Double(round(100*y)/100))
+        let rounded = Double(round(10*y)/10)
+        return ChartDataEntry(x: data.date.timeIntervalSince1970, y: rounded)
     }
 
     private func addEntry(for chartData: ChartData, data: RuuviMeasurement, dataSetIndex: Int = 0) {
@@ -371,7 +372,8 @@ extension TagChartPresenter {
                     next_a = range_offs // Next a is this b
                 }
             }
-            let entry = ChartDataEntry(x: max_area_point.0, y: Double(round(100 * max_area_point.1)/100))
+            let rounded = Double(round(10 * max_area_point.1)/10)
+            let entry = ChartDataEntry(x: max_area_point.0, y: rounded)
             chartData.addEntry(entry, dataSetIndex: 0)
             a = next_a // This a is the next a (chosen b)
         }
