@@ -190,6 +190,7 @@
 "Settings.SectionFooter.General.title" = "Отн означает относительную влажность воздуха в %, Абс означает абсолютную влажность воздуха в г/м³, ТР означает точку росы в градусах °.";
 "Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
+"Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
@@ -296,6 +297,12 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// UnitPressure
+"UnitPressure.bars.title" = "Бар (bar)";
+"UnitPressure.hectopascals.title" = "Гектопаскаль (гПа)";
+"UnitPressure.inchesOfMercury.title" = "Дюймов ртутного столба (inHg)";
+"UnitPressure.millimetersOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

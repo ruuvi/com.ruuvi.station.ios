@@ -21,6 +21,7 @@ extension SettingsPresenter: SettingsViewOutput {
         view.temperatureUnit = settings.temperatureUnit
         view.humidityUnit = settings.humidityUnit
         view.language = settings.language
+        view.pressureUnit = settings.pressureUnit
 
         languageToken = NotificationCenter
             .default
@@ -81,5 +82,24 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnAdvanced() {
         router.openAdvanced()
+    }
+
+    func viewDidTapOnPressure() {
+        let selectionItems: [UnitPressure] = [
+            .bars,
+            .hectopascals,
+            .inchesOfMercury,
+            .millimetersOfMercury
+        ]
+        router.openPressureSelection(withDataSource: selectionItems, output: self)
+    }
+}
+extension SettingsPresenter: SelectionModuleOutput {
+    func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol) {
+        if let pressureUnit = item as? UnitPressure {
+            settings.pressureUnit = pressureUnit
+            view.pressureUnit = pressureUnit
+        }
+        module.dismiss()
     }
 }

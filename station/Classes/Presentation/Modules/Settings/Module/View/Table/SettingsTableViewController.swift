@@ -8,6 +8,10 @@ private enum SettingsTableSection: Int {
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
+    @IBOutlet weak var pressureTitleLabel: UILabel!
+    @IBOutlet weak var pressureSubitleLabel: UILabel!
+    @IBOutlet weak var pressureCell: UITableViewCell!
+
     @IBOutlet weak var heartbeatTitleLabel: UILabel!
     @IBOutlet weak var heartbeatCell: UITableViewCell!
     @IBOutlet weak var defaultsTitleLabel: UILabel!
@@ -41,6 +45,11 @@ class SettingsTableViewController: UITableViewController {
             updateUIHumidityUnit()
         }
     }
+    var pressureUnit: UnitPressure = .hectopascals {
+        didSet {
+            updateUIPressureUnit()
+        }
+    }
     var language: Language = .english {
         didSet {
             updateUILanguage()
@@ -64,6 +73,7 @@ extension SettingsTableViewController: SettingsViewInput {
         navigationItem.title = "Settings.navigationItem.title".localized()
         temperatureUnitLabel.text = "Settings.Label.TemperatureUnit.text".localized()
         humidityUnitLabel.text = "Settings.Label.HumidityUnit.text".localized()
+        pressureTitleLabel.text = "Settings.Label.PressureUnit.text".localized()
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(),
                                               forSegmentAt: 0)
         humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(),
@@ -159,6 +169,8 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
+            case pressureCell:
+                output.viewDidTapOnPressure()
             case languageCell:
                 output.viewDidTapOnLanguage()
             case foregroundCell:
@@ -207,6 +219,12 @@ extension SettingsTableViewController {
             case .dew:
                 humidityUnitSegmentedControl.selectedSegmentIndex = 2
             }
+        }
+    }
+
+    private func updateUIPressureUnit() {
+        if isViewLoaded {
+            pressureSubitleLabel.text = pressureUnit.title
         }
     }
 

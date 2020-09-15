@@ -190,6 +190,7 @@
 "Settings.SectionFooter.General.title" = "Suht. on suhteellinen ilmankosteus (%), Abs. on absoluuttinen ilmankosteus (g/m³), Kast. on kastepiste (°).";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
+"Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Suht.";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs.";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
@@ -296,6 +297,12 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// UnitPressure
+"UnitPressure.bars.title" = "Bar (bar)";
+"UnitPressure.hectopascals.title" = "Hectopascals (hPa)";
+"UnitPressure.inchesOfMercury.title" = "Inches of mercury (inHg)";
+"UnitPressure.millimetersOfMercury.title" = "Millimeters of merchury (mmHg)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
