@@ -190,6 +190,7 @@
 "Settings.SectionFooter.General.title" = "Rel är relativ luftfuktighet i %, Abs är absolut luftfuktighet i g/m³, Dew är daggpunkt i °.";
 "Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
+"Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
@@ -296,6 +297,12 @@
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Hittade inte den virtuella sensorn";
+
+// UnitPressure
+"UnitPressure.bars.title" = "Bar (bar)";
+"UnitPressure.hectopascals.title" = "Hectopascals (hPa)";
+"UnitPressure.inchesOfMercury.title" = "Inches of mercury (inHg)";
+"UnitPressure.millimetersOfMercury.title" = "Millimeters of merchury (mmHg)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";
