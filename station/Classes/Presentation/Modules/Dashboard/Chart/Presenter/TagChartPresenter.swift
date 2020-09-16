@@ -61,7 +61,7 @@ extension TagChartPresenter: TagChartModuleInput {
                 viewModel.unit.value = Unit(symbol: "g/m³".localized())
             }
         case .pressure:
-            viewModel.unit.value =  Unit(symbol: "hPa".localized())
+            viewModel.unit.value =  measurementService.units.pressureUnit
         default:
             viewModel.unit.value = Unit(symbol: "N/A".localized())
         }
@@ -263,7 +263,7 @@ extension TagChartPresenter {
                                               temperature: data.temperature,
                                               isDecimal: false)
         case .pressure:
-            value = data.pressure?.converted(to: .hectopascals).value
+            value = measurementService.double(for: data.pressure)
         default:
             fatalError("before need implement chart with current type!")
         }

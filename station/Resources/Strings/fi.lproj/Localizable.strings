@@ -186,8 +186,10 @@
 
 // Settings
 "Settings.navigationItem.title" = "Asetukset";
+"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to displayed";
+"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to displayed";
 "Settings.SectionHeader.General.title" = "YLEISET";
-"Settings.SectionFooter.General.title" = "Suht. on suhteellinen ilmankosteus (%), Abs. on absoluuttinen ilmankosteus (g/m³), Kast. on kastepiste (°).";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
 "Settings.Label.PressureUnit.text" = "Pressure Unit";
@@ -297,6 +299,16 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Celsius (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
+"TemperatureUnit.Kelvin.title" = "Kelvin (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Relative (%)";
+"HumidityUnit.gm3.title" = "Absolute (gr/m³)";
+"HumidityUnit.Dew.title" = "Dew point (%@)";
 
 // UnitPressure
 "UnitPressure.bars.title" = "Bar (bar)";
