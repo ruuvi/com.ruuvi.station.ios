@@ -11,7 +11,8 @@ class SelectionPresenter {
     var output: SelectionModuleOutput?
 }
 extension SelectionPresenter: SelectionModuleInput {
-    func configure(dataSource: [SelectionItemProtocol], output: SelectionModuleOutput?) {
+    func configure(dataSource: [SelectionItemProtocol], title: String, output: SelectionModuleOutput?) {
+        view.title = title
         self.items = dataSource
         self.output = output
     }

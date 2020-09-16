@@ -7,5 +7,5 @@ protocol SettingsRouterInput {
     func openDefaults()
     func openHeartbeat()
     func openAdvanced()
-    func openPressureSelection(withDataSource items: [UnitPressure], output: SelectionModuleOutput?)
+    func openPressureSelection(withDataSource items: [UnitPressure], title: String, output: SelectionModuleOutput?)
 }
