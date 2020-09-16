@@ -91,7 +91,8 @@ extension SettingsPresenter: SettingsViewOutput {
             .inchesOfMercury,
             .millimetersOfMercury
         ]
-        router.openPressureSelection(withDataSource: selectionItems, output: self)
+        let selectorTitle = "Settings.Label.PressureUnit.text".localized()
+        router.openPressureSelection(withDataSource: selectionItems, title: selectorTitle, output: self)
     }
 }
 extension SettingsPresenter: SelectionModuleOutput {

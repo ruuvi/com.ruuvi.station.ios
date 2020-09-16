@@ -54,13 +54,13 @@ class SettingsRouter: SettingsRouterInput {
             })
     }
 
-    func openPressureSelection(withDataSource items: [UnitPressure], output: SelectionModuleOutput?) {
+    func openPressureSelection(withDataSource items: [UnitPressure], title: String, output: SelectionModuleOutput?) {
         let factory = StoryboardFactory(storyboardName: "Selection")
         try! transitionHandler
             .forStoryboard(factory: factory, to: SelectionModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ module in
-                module.configure(dataSource: items, output: output)
+                module.configure(dataSource: items, title: title, output: output)
             })
     }
 }
