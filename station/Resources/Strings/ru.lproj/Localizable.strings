@@ -186,8 +186,10 @@
 
 // Settings
 "Settings.navigationItem.title" = "Настройки";
+"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения";
+"Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
+"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
-"Settings.SectionFooter.General.title" = "Отн означает относительную влажность воздуха в %, Абс означает абсолютную влажность воздуха в г/м³, ТР означает точку росы в градусах °.";
 "Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
 "Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
@@ -297,6 +299,16 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Цельсий (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
+"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Относительная влажность (%)";
+"HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
+"HumidityUnit.Dew.title" = "Точка росы (%@)";
 
 // UnitPressure
 "UnitPressure.bars.title" = "Бар (bar)";

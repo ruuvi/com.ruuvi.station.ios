@@ -8,6 +8,14 @@ private enum SettingsTableSection: Int {
 class SettingsTableViewController: UITableViewController {
     var output: SettingsViewOutput!
 
+    @IBOutlet weak var temperatureTitleLabel: UILabel!
+    @IBOutlet weak var temperatureSubtitleLabel: UILabel!
+    @IBOutlet weak var temperatureCell: UITableViewCell!
+
+    @IBOutlet weak var humidityTitleLabel: UILabel!
+    @IBOutlet weak var humiditySubtitleLabel: UILabel!
+    @IBOutlet weak var humidityCell: UITableViewCell!
+
     @IBOutlet weak var pressureTitleLabel: UILabel!
     @IBOutlet weak var pressureSubitleLabel: UILabel!
     @IBOutlet weak var pressureCell: UITableViewCell!
@@ -16,11 +24,7 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var heartbeatCell: UITableViewCell!
     @IBOutlet weak var defaultsTitleLabel: UILabel!
     @IBOutlet weak var defaultsCell: UITableViewCell!
-    @IBOutlet weak var humidityUnitSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var temperatureUnitSegmentedControl: UISegmentedControl!
     @IBOutlet weak var closeBarButtonItem: UIBarButtonItem!
-    @IBOutlet weak var humidityUnitLabel: UILabel!
-    @IBOutlet weak var temperatureUnitLabel: UILabel!
     @IBOutlet weak var languageValueLabel: UILabel!
     @IBOutlet weak var languageTitleLabel: UILabel!
     @IBOutlet weak var languageCell: UITableViewCell!
@@ -71,15 +75,16 @@ class SettingsTableViewController: UITableViewController {
 extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = "Settings.navigationItem.title".localized()
-        temperatureUnitLabel.text = "Settings.Label.TemperatureUnit.text".localized()
-        humidityUnitLabel.text = "Settings.Label.HumidityUnit.text".localized()
+        temperatureTitleLabel.text = "Settings.Label.TemperatureUnit.text".localized()
+        temperatureSubtitleLabel.text = temperatureUnit.title
+        humidityTitleLabel.text = "Settings.Label.HumidityUnit.text".localized()
+        if humidityUnit == .dew {
+            humiditySubtitleLabel.text = String(format: humidityUnit.title, temperatureUnit.symbol)
+        } else {
+            humiditySubtitleLabel.text = humidityUnit.title
+        }
         pressureTitleLabel.text = "Settings.Label.PressureUnit.text".localized()
-        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Relative.title".localized(),
-                                              forSegmentAt: 0)
-        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.Absolute.title".localized(),
-                                              forSegmentAt: 1)
-        humidityUnitSegmentedControl.setTitle("Settings.SegmentedControl.Humidity.DewPoint.title".localized(),
-                                              forSegmentAt: 2)
+        pressureSubitleLabel.text = pressureUnit.title
         languageTitleLabel.text = "Settings.Label.Language.text".localized()
         foregroundTitleLabel.text = "Settings.Label.Foreground".localized()
         defaultsTitleLabel.text = "Settings.Label.Defaults".localized()
@@ -92,32 +97,6 @@ extension SettingsTableViewController: SettingsViewInput {
 
 // MARK: - IBActions
 extension SettingsTableViewController {
-
-    @IBAction func temperatureUnitSegmentedControlValueChanged(_ sender: Any) {
-        switch temperatureUnitSegmentedControl.selectedSegmentIndex {
-        case 0:
-            output.viewDidChange(temperatureUnit: .kelvin)
-        case 1:
-            output.viewDidChange(temperatureUnit: .celsius)
-        case 2:
-            output.viewDidChange(temperatureUnit: .fahrenheit)
-        default:
-            break
-        }
-    }
-
-    @IBAction func humidityUnitSegmentedControlValueChanged(_ sender: Any) {
-        switch humidityUnitSegmentedControl.selectedSegmentIndex {
-        case 0:
-            output.viewDidChange(humidityUnit: .percent)
-        case 1:
-            output.viewDidChange(humidityUnit: .gm3)
-        case 2:
-            output.viewDidChange(humidityUnit: .dew)
-        default:
-            break
-        }
-    }
 
     @IBAction func closeBarButtonItemAction(_ sender: Any) {
         output.viewDidTriggerClose()
@@ -158,17 +137,13 @@ extension SettingsTableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        if section == SettingsTableSection.general.rawValue {
-            return "Settings.SectionFooter.General.title".localized()
-        } else {
-            return nil
-        }
-    }
-
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {
+            case temperatureCell:
+                output.viewDidTapTemperatureUnit()
+            case humidityCell:
+                output.viewDidTapHumidityUnit()
             case pressureCell:
                 output.viewDidTapOnPressure()
             case languageCell:
@@ -209,15 +184,21 @@ extension SettingsTableViewController {
         }
     }
 
+    private func updateUITemperatureUnit() {
+        if isViewLoaded {
+            if humidityUnit == .dew {
+                updateUIHumidityUnit()
+            }
+            temperatureSubtitleLabel.text = temperatureUnit.title
+        }
+    }
+
     private func updateUIHumidityUnit() {
         if isViewLoaded {
-            switch humidityUnit {
-            case .percent:
-                humidityUnitSegmentedControl.selectedSegmentIndex = 0
-            case .gm3:
-                humidityUnitSegmentedControl.selectedSegmentIndex = 1
-            case .dew:
-                humidityUnitSegmentedControl.selectedSegmentIndex = 2
+            if humidityUnit == .dew {
+                humiditySubtitleLabel.text = String(format: humidityUnit.title, temperatureUnit.symbol)
+            } else {
+                humiditySubtitleLabel.text = humidityUnit.title
             }
         }
     }
@@ -225,19 +206,6 @@ extension SettingsTableViewController {
     private func updateUIPressureUnit() {
         if isViewLoaded {
             pressureSubitleLabel.text = pressureUnit.title
-        }
-    }
-
-    private func updateUITemperatureUnit() {
-        if isViewLoaded {
-            switch temperatureUnit {
-            case .kelvin:
-                temperatureUnitSegmentedControl.selectedSegmentIndex = 0
-            case .celsius:
-                temperatureUnitSegmentedControl.selectedSegmentIndex = 1
-            case .fahrenheit:
-                temperatureUnitSegmentedControl.selectedSegmentIndex = 2
-            }
         }
     }
 }

@@ -3,17 +3,16 @@ import Foundation
 class SelectionPresenter {
     weak var view: SelectionViewInput!
     var router: SelectionRouterInput!
-    private var items: [SelectionItemProtocol] = [] {
+    private var viewModel: SelectionViewModel? {
         didSet {
-            view.items = items
+            view.viewModel = viewModel
         }
     }
     var output: SelectionModuleOutput?
 }
 extension SelectionPresenter: SelectionModuleInput {
-    func configure(dataSource: [SelectionItemProtocol], title: String, output: SelectionModuleOutput?) {
-        view.title = title
-        self.items = dataSource
+    func configure(viewModel: SelectionViewModel, output: SelectionModuleOutput?) {
+        self.viewModel = viewModel
         self.output = output
     }
 
@@ -24,6 +23,10 @@ extension SelectionPresenter: SelectionModuleInput {
 
 extension SelectionPresenter: SelectionViewOutput {
     func viewDidSelect(itemAtIndex index: Int) {
-        output?.selection(module: self, didSelectItem: items[index])
+        guard let item = viewModel?.items[index] else {
+            dismiss()
+            return
+        }
+        output?.selection(module: self, didSelectItem: item)
     }
 }

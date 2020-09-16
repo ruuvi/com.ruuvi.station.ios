@@ -2,14 +2,17 @@ import UIKit
 
 class SelectionTableViewController: UITableViewController {
     var output: SelectionViewOutput!
+    var settings: Settings!
+    @IBOutlet weak var descriptionTextView: UITextView!
 
-    var items: [SelectionItemProtocol] = [SelectionItemProtocol]() {
+    var viewModel: SelectionViewModel? {
         didSet {
-            updateUISelections()
+            updateUI()
         }
     }
 
     private let cellReuseIdentifier = "SelectionTableViewCellReuseIdentifier"
+    private let descriptionLabelInsets: UIEdgeInsets = .init(top: 8, left: 16, bottom: 8, right: 16)
 }
 
 // MARK: - SelectionViewInput
@@ -31,16 +34,21 @@ extension SelectionTableViewController {
 // MARK: - UITableViewDataSource
 extension SelectionTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return viewModel?.items.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // swiftlint:disable force_cast
-        let cell = tableView
-            .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
-                                 for: indexPath) as! SelectionTableViewCell
-        // swiftlint:enable force_cast
-        cell.nameLabel.text = items[indexPath.row].title
+        guard let item = viewModel?.items[indexPath.row],
+              let cell = tableView
+                .dequeueReusableCell(withIdentifier: cellReuseIdentifier,
+                                     for: indexPath) as? SelectionTableViewCell else {
+            return .init()
+        }
+        if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
+            cell.nameLabel.text = String(format: item.title, settings.temperatureUnit.symbol)
+        } else {
+            cell.nameLabel.text = item.title
+        }
         return cell
     }
 }
@@ -56,6 +64,10 @@ extension SelectionTableViewController {
 // MARK: - Update UI
 extension SelectionTableViewController {
     private func updateUI() {
+        title = viewModel?.title
+        if isViewLoaded {
+            descriptionTextView.text = viewModel?.description
+        }
         updateUISelections()
     }
 
