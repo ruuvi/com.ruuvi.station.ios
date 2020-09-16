@@ -12,7 +12,6 @@ class SelectionTableViewController: UITableViewController {
     }
 
     private let cellReuseIdentifier = "SelectionTableViewCellReuseIdentifier"
-    private let descriptionLabelInsets: UIEdgeInsets = .init(top: 8, left: 16, bottom: 8, right: 16)
 }
 
 // MARK: - SelectionViewInput
