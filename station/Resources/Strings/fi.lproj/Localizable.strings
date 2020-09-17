@@ -186,9 +186,9 @@
 
 // Settings
 "Settings.navigationItem.title" = "Asetukset";
-"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to displayed";
-"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to displayed";
-"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to displayed";
+"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to be displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
+"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed";
 "Settings.SectionHeader.General.title" = "YLEISET";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";

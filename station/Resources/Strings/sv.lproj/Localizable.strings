@@ -186,9 +186,9 @@
 
 // Settings
 "Settings.navigationItem.title" = "Inställningar";
-"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to displayed";
-"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to displayed";
-"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to displayed";
+"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to be displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
+"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed";
 "Settings.SectionHeader.General.title" = "ALLMÄNT";
 "Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
