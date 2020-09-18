@@ -33,3 +33,18 @@ extension TemperatureUnit: SelectionItemProtocol {
         }
     }
 }
+
+extension UnitTemperature: SelectionItemProtocol {
+    var title: String {
+        switch self {
+        case .celsius:
+            return "TemperatureUnit.Celsius.title".localized()
+        case .fahrenheit:
+            return "TemperatureUnit.Fahrenheit.title".localized()
+        case .kelvin:
+            return "TemperatureUnit.Kelvin.title".localized()
+        default:
+            return "N/A".localized()
+        }
+    }
+}

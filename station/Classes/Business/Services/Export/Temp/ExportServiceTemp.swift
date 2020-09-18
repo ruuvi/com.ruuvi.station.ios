@@ -6,6 +6,10 @@ import Future
 class ExportServiceTemp: ExportService {
     var realmContext: RealmContext!
     var realmQueue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTemp.realm", qos: .userInitiated)
+
+    var measurementService: MeasurementsService!
+    var calibrationService: CalibrationService!
+    
     private let iso8601: DateFormatter = {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .iso8601)
@@ -14,6 +18,7 @@ class ExportServiceTemp: ExportService {
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         return formatter
     }()
+
     func csvLog(for uuid: String) -> Future<URL, RUError> {
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             return csvLog(for: ruuviTag)

@@ -109,6 +109,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
 "ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
 
+// ExportService
+"ExportService.Date" = "Date";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Temperature (%@)";
+"ExportService.Humidity" = "Humidity (%@)";
+"ExportService.DewPoint" = "Dew point (%@)";
+"ExportService.Pressure" = "Pressure (%@)";
+"ExportService.AccelerationX" = "Acceleration X";
+"ExportService.AccelerationY" = "Acceleration Y";
+"ExportService.AccelerationZ" = "Acceleration Z";
+"ExportService.Voltage" = "Voltage (V)";
+"ExportService.MovementCounter" = "Movement Counter";
+"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
+"ExportService.TXPower" = "TX Power";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "ENHETSMEDDELANDEN";
 "ForegroundRow.advertisement.title" = "Spara enhetsmeddelanden";

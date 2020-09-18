@@ -109,6 +109,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
 "ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
 
+// ExportService
+"ExportService.Date" = "Date";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Temperature (%@)";
+"ExportService.Humidity" = "Humidity (%@)";
+"ExportService.DewPoint" = "Dew point (%@)";
+"ExportService.Pressure" = "Pressure (%@)";
+"ExportService.AccelerationX" = "Acceleration X";
+"ExportService.AccelerationY" = "Acceleration Y";
+"ExportService.AccelerationZ" = "Acceleration Z";
+"ExportService.Voltage" = "Voltage (V)";
+"ExportService.MovementCounter" = "Movement Counter";
+"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
+"ExportService.TXPower" = "TX Power";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "LAITEILMOITUKSET";
 "ForegroundRow.advertisement.title" = "Tallenna laiteilmoitukset";
