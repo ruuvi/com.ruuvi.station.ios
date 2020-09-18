@@ -13,6 +13,7 @@ extension UnitPressure: SelectionItemProtocol {
             return "UnitPressure.millimetersOfMercury.title".localized()
         default:
             assert(false, "Not allowed")
+            return .init()
         }
     }
 }
