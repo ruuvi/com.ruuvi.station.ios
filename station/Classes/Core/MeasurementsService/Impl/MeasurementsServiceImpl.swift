@@ -39,10 +39,7 @@ class MeasurementsServiceImpl: NSObject {
         return $0
     }(MeasurementFormatter())
 
-    private lazy var humidityFormatter: HumidityFormatter = {
-        $0.unitStyle = .medium
-        return $0
-    }(HumidityFormatter())
+    private var humidityFormatter: HumidityFormatter = HumidityFormatter()
 
     private var listeners = NSHashTable<AnyObject>.weakObjects()
 
@@ -152,7 +149,7 @@ extension MeasurementsServiceImpl: Localizable {
     func localize() {
         formatter.locale = self.settings.language.locale
         HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
-        humidityFormatter.numberFormatter.locale = self.settings.language.locale
+        humidityFormatter = HumidityFormatter()
         notifyListeners()
     }
 }
