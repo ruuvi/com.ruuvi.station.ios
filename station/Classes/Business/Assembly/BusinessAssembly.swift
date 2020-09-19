@@ -73,6 +73,8 @@ class BusinessAssembly: Assembly {
         container.register(ExportService.self) { r in
             let service = ExportServiceTrunk()
             service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.measurementService = r.resolve(MeasurementsService.self)
+            service.calibrationService = r.resolve(CalibrationService.self)
             return service
         }
 

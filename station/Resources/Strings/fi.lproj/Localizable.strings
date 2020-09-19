@@ -109,6 +109,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
 "ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
 
+// ExportService
+"ExportService.Date" = "Date";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Temperature (%@)";
+"ExportService.Humidity" = "Humidity (%@)";
+"ExportService.DewPoint" = "Dew point (%@)";
+"ExportService.Pressure" = "Pressure (%@)";
+"ExportService.AccelerationX" = "Acceleration X";
+"ExportService.AccelerationY" = "Acceleration Y";
+"ExportService.AccelerationZ" = "Acceleration Z";
+"ExportService.Voltage" = "Voltage (V)";
+"ExportService.MovementCounter" = "Movement Counter";
+"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
+"ExportService.TXPower" = "TX Power";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "LAITEILMOITUKSET";
 "ForegroundRow.advertisement.title" = "Tallenna laiteilmoitukset";
@@ -186,10 +201,13 @@
 
 // Settings
 "Settings.navigationItem.title" = "Asetukset";
+"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to be displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
+"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed";
 "Settings.SectionHeader.General.title" = "YLEISET";
-"Settings.SectionFooter.General.title" = "Suht. on suhteellinen ilmankosteus (%), Abs. on absoluuttinen ilmankosteus (g/m³), Kast. on kastepiste (°).";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
+"Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Suht.";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs.";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
@@ -296,6 +314,22 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Celsius (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
+"TemperatureUnit.Kelvin.title" = "Kelvin (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Relative (%)";
+"HumidityUnit.gm3.title" = "Absolute (gr/m³)";
+"HumidityUnit.Dew.title" = "Dew point (%@)";
+
+// UnitPressure
+"UnitPressure.bars.title" = "Bar (bar)";
+"UnitPressure.hectopascals.title" = "Hectopascals (hPa)";
+"UnitPressure.inchesOfMercury.title" = "Inches of mercury (inHg)";
+"UnitPressure.millimetersOfMercury.title" = "Millimeters of merchury (mmHg)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";

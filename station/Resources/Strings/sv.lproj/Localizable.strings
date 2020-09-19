@@ -109,6 +109,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
 "ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
 
+// ExportService
+"ExportService.Date" = "Date";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Temperature (%@)";
+"ExportService.Humidity" = "Humidity (%@)";
+"ExportService.DewPoint" = "Dew point (%@)";
+"ExportService.Pressure" = "Pressure (%@)";
+"ExportService.AccelerationX" = "Acceleration X";
+"ExportService.AccelerationY" = "Acceleration Y";
+"ExportService.AccelerationZ" = "Acceleration Z";
+"ExportService.Voltage" = "Voltage (V)";
+"ExportService.MovementCounter" = "Movement Counter";
+"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
+"ExportService.TXPower" = "TX Power";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "ENHETSMEDDELANDEN";
 "ForegroundRow.advertisement.title" = "Spara enhetsmeddelanden";
@@ -186,10 +201,13 @@
 
 // Settings
 "Settings.navigationItem.title" = "Inställningar";
+"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to be displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
+"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed";
 "Settings.SectionHeader.General.title" = "ALLMÄNT";
-"Settings.SectionFooter.General.title" = "Rel är relativ luftfuktighet i %, Abs är absolut luftfuktighet i g/m³, Dew är daggpunkt i °.";
 "Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
+"Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
@@ -296,6 +314,22 @@
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Hittade inte den virtuella sensorn";
+
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Celsius (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
+"TemperatureUnit.Kelvin.title" = "Kelvin (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Relative (%)";
+"HumidityUnit.gm3.title" = "Absolute (gr/m³)";
+"HumidityUnit.Dew.title" = "Dew point (%@)";
+
+// UnitPressure
+"UnitPressure.bars.title" = "Bar (bar)";
+"UnitPressure.hectopascals.title" = "Hectopascals (hPa)";
+"UnitPressure.inchesOfMercury.title" = "Inches of mercury (inHg)";
+"UnitPressure.millimetersOfMercury.title" = "Millimeters of merchury (mmHg)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";

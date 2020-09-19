@@ -109,6 +109,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 "ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
 
+// ExportService
+"ExportService.Date" = "Дата";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Температура (%@)";
+"ExportService.Humidity" = "Влажность (%@)";
+"ExportService.DewPoint" = "Точка росы (%@)";
+"ExportService.Pressure" = "Давление (%@)";
+"ExportService.AccelerationX" = "Ускорение по X";
+"ExportService.AccelerationY" = "Ускорение по Y";
+"ExportService.AccelerationZ" = "Ускорение по Z";
+"ExportService.Voltage" = "Напряжение (В)";
+"ExportService.MovementCounter" = "Счетчик Движения";
+"ExportService.MeasurementSequenceNumber" = "Порядковый Номер Измерения";
+"ExportService.TXPower" = "Мощность Передачи";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
 "ForegroundRow.advertisement.title" = "Сохранять данные";
@@ -186,10 +201,13 @@
 
 // Settings
 "Settings.navigationItem.title" = "Настройки";
+"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения";
+"Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
+"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
-"Settings.SectionFooter.General.title" = "Отн означает относительную влажность воздуха в %, Абс означает абсолютную влажность воздуха в г/м³, ТР означает точку росы в градусах °.";
 "Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
+"Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
@@ -296,6 +314,22 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Цельсий (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
+"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Относительная влажность (%)";
+"HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
+"HumidityUnit.Dew.title" = "Точка росы (%@)";
+
+// UnitPressure
+"UnitPressure.bars.title" = "Бар (bar)";
+"UnitPressure.hectopascals.title" = "Гектопаскаль (гПа)";
+"UnitPressure.inchesOfMercury.title" = "Дюймов ртутного столба (inHg)";
+"UnitPressure.millimetersOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

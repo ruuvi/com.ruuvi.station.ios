@@ -3,6 +3,8 @@ PODS:
   - Charts (3.5.0):
     - Charts/Core (= 3.5.0)
   - Charts/Core (3.5.0)
+  - Firebase (6.15.0):
+    - Firebase/Core (= 6.15.0)
   - Firebase/Analytics (6.15.0):
     - Firebase/Core
   - Firebase/Core (6.15.0):
@@ -13,6 +15,9 @@ PODS:
   - Firebase/Crashlytics (6.15.0):
     - Firebase/CoreOnly
     - FirebaseCrashlytics (~> 4.0.0-beta.1)
+  - Firebase/InAppMessaging (6.15.0):
+    - Firebase/CoreOnly
+    - FirebaseInAppMessaging (~> 0.16.0)
   - Firebase/Messaging (6.15.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 4.2.0)
@@ -43,6 +48,11 @@ PODS:
     - FirebaseCore (~> 6.6)
     - FirebaseInstallations (~> 1.1)
     - PromisesObjC (~> 1.2)
+  - FirebaseInAppMessaging (0.16.0):
+    - FirebaseAnalyticsInterop (~> 1.3)
+    - FirebaseCore (~> 6.2)
+    - FirebaseInstanceID (~> 4.0)
+    - GoogleDataTransportCCTSupport (~> 1.0)
   - FirebaseInstallations (1.1.0):
     - FirebaseCore (~> 6.6)
     - GoogleUtilities/UserDefaults (~> 6.5)
@@ -122,8 +132,10 @@ PODS:
 DEPENDENCIES:
   - BTKit (~> 0.1.13)
   - Charts
+  - Firebase
   - Firebase/Analytics
   - Firebase/Crashlytics
+  - Firebase/InAppMessaging
   - Firebase/Messaging
   - FLEX
   - FutureX
@@ -152,6 +164,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCoreDiagnosticsInterop
     - FirebaseCrashlytics
+    - FirebaseInAppMessaging
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
@@ -209,6 +222,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 5e78803ab276bc5b50340e3c539c06c3de35c649
   FirebaseCoreDiagnosticsInterop: 296e2c5f5314500a850ad0b83e9e7c10b011a850
   FirebaseCrashlytics: 7c95218730d1debf493e987233c7b41dd7ba1329
+  FirebaseInAppMessaging: 05d3a05e92e07a2a3234083ea6c90898ea48eebf
   FirebaseInstallations: 575cd32f2aec0feeb0e44f5d0110a09e5e60b47b
   FirebaseInstanceID: 6668efc1655a4052c083f287a7141f1ead12f9c2
   FirebaseMessaging: 448cf4c727f3c95f4f90816907d67306ba785cfe
@@ -236,6 +250,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 90715e79dc5ad68594bd8e4fcaa1e9db2158f438
+PODFILE CHECKSUM: 1e77c27977577d8b90a3d446da379298e9beaf32
 
 COCOAPODS: 1.9.3
