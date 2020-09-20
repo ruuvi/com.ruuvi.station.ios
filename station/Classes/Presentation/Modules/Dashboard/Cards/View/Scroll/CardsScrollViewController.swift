@@ -225,7 +225,7 @@ extension CardsScrollViewController {
             weak temperatureUnitLabel] label, _ in
             //todo add format for numbers in measurement
             if let temp = self?.measurementService.double(for: viewModel.temperature.value) {
-                label.text = String(temp)
+                label.text = String(temp).replacingOccurrences(of: ".", with: ",")
             } else {
                 label.text = "N/A".localized()
             }
