@@ -54,11 +54,12 @@ extension CardsScrollViewController: CardsViewInput {
             let view = views[i]
             let updatePressure = pressureUpdateBlock(for: viewModel)
             updatePressure(view.pressureLabel, viewModel.pressure.value)
+
             let updateTemperature = temperatureUpdateBlock(for: viewModel, in: view)
-            updateTemperature(view.temperatureLabel, nil) // can be nil, not used
+            updateTemperature(view.temperatureLabel, viewModel.temperature.value)
 
             let updateHumidity = humidityUpdateBlock(for: viewModel, in: view)
-            updateHumidity(view.humidityLabel, nil) // can be nil, not used
+            updateHumidity(view.humidityLabel, viewModel.humidity.value)
 
             switch viewModel.type {
             case .ruuvi:
@@ -596,7 +597,7 @@ extension CardsScrollViewController {
 }
 extension CardsScrollViewController: MeasurementsServiceDelegate {
     func measurementServiceDidUpdateUnit() {
-        localize()
+        updateUI()
     }
 }
 // swiftlint:enable file_length
