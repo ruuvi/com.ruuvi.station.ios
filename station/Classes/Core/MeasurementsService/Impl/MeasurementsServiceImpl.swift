@@ -29,15 +29,20 @@ class MeasurementsServiceImpl: NSObject {
         $0.numberStyle = .decimal
         $0.minimumFractionDigits = 0
         $0.maximumFractionDigits = 2
+        $0.decimalSeparator = ","
         return $0
     }(NumberFormatter())
 
-    private lazy var formatter: MeasurementFormatter = {
+    private lazy var measurementFormatter: MeasurementFormatter = {
         $0.unitStyle = .short
-        $0.numberFormatter = self.numberFormatter
         $0.unitOptions = .providedUnit
         return $0
     }(MeasurementFormatter())
+
+    private var formatter: MeasurementFormatter {
+        measurementFormatter.numberFormatter = numberFormatter
+        return measurementFormatter
+    }
 
     private var humidityFormatter: HumidityFormatter = HumidityFormatter()
 
