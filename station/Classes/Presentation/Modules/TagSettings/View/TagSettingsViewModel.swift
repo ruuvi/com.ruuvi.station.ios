@@ -23,6 +23,7 @@ struct TagSettingsViewModel {
 
     let temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     let humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
+    let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let celsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
@@ -30,14 +31,9 @@ struct TagSettingsViewModel {
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
 
     let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let humidityLowerBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 0, unit: .relative(temperature: .init(value: 0, unit: .celsius))))
-    let humidityUpperBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 1, unit: .relative(temperature: .init(value: 0, unit: .celsius))))
+    let humidityLowerBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 0, unit: .absolute))
+    let humidityUpperBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 40, unit: .absolute))
     let humidityAlertDescription: Observable<String?> = Observable<String?>()
-
-    let isDewPointAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let dewPointCelsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
-    let dewPointCelsiusUpperBound: Observable<Double?> = Observable<Double?>(85)
-    let dewPointAlertDescription: Observable<String?> = Observable<String?>()
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureLowerBound: Observable<Double?> = Observable<Double?>(300)

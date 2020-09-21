@@ -771,10 +771,8 @@ extension CardsPresenter {
                     switch type {
                     case .temperature:
                         isTriggered = isTriggered || isTriggering(temperature: type, for: viewModel)
-                    case .relativeHumidity:
-                        isTriggered = isTriggered || isTriggering(relativeHumidity: type, for: viewModel)
-                    case .absoluteHumidity:
-                        isTriggered = isTriggered || isTriggering(absoluteHumidity: type, for: viewModel)
+                    case .humidity:
+                        isTriggered = isTriggered || isTriggering(humidity: type, for: viewModel)
                     case .pressure:
                         isTriggered = isTriggered || isTriggering(pressure: type, for: viewModel)
                     default:
@@ -803,35 +801,14 @@ extension CardsPresenter {
         }
     }
 
-    private func isTriggering(relativeHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
+    private func isTriggering(humidity: AlertType, for viewModel: CardsViewModel) -> Bool {
         if let luid = viewModel.luid.value,
-            case .relativeHumidity(let lower, let upper) = alertService.alert(for: luid.value, of: relativeHumidity),
+            case .humidity(let lower, let upper) = alertService.alert(for: luid.value, of: humidity),
             let humidity = viewModel.humidity.value,
             let temperature = viewModel.temperature.value,
-            let offsetedHumidity = measurementService.double(for: humidity,
-                                                             withOffset: calibrationService.humidityOffset(for: luid).0,
-                                                             temperature: temperature,
-                                                             isDecimal: false) {
+            let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0, temperature: temperature) {
             let isLower = offsetedHumidity < lower
             let isUpper = offsetedHumidity > upper
-            return isLower || isUpper
-        } else {
-            return false
-        }
-    }
-
-    private func isTriggering(absoluteHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let luid = viewModel.luid.value,
-            case .absoluteHumidity(let lower, let upper) = alertService.alert(for: luid.value, of: absoluteHumidity),
-            let humidity = viewModel.humidity.value,
-            let temperature = viewModel.temperature.value,
-            let offsetedHumidity = measurementService.double(for: humidity,
-                                                             withOffset: calibrationService.humidityOffset(for: luid).0,
-                                                             temperature: temperature,
-                                                             isDecimal: false),
-            let ah = Humidity(relative: offsetedHumidity, temperature: temperature)?.converted(to: .absolute).value {
-            let isLower = ah < lower
-            let isUpper = ah > upper
             return isLower || isUpper
         } else {
             return false

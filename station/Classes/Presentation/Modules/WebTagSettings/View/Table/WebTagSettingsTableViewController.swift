@@ -325,8 +325,10 @@ extension WebTagSettingsTableViewController {
 
     private func updateUIPressureLowerBound() {
         if isViewLoaded {
-            if let lower = viewModel.pressureLowerBound.value {
-                pressureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+            if let lower = viewModel.pressureLowerBound.value,
+               let pu = viewModel.pressureUnit.value,
+               let p = Pressure(lower, unit: pu)?.value {
+                pressureAlertControlsCell.slider.selectedMinValue = CGFloat(p)
             } else {
                 pressureAlertControlsCell.slider.selectedMinValue = 300
             }
@@ -335,8 +337,10 @@ extension WebTagSettingsTableViewController {
 
     private func updateUIPressureUpperBound() {
         if isViewLoaded {
-            if let upper = viewModel.pressureUpperBound.value {
-                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+            if let upper = viewModel.pressureUpperBound.value,
+               let pu = viewModel.pressureUnit.value,
+               let p = Pressure(upper, unit: pu)?.value {
+                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(p)
             } else {
                 pressureAlertControlsCell.slider.selectedMaxValue = 1100
             }
@@ -362,11 +366,11 @@ extension WebTagSettingsTableViewController {
 
     private func updateUIHumidityAlertDescription() {
         if isViewLoaded {
-            if let isRelativeHumidityAlertOn = viewModel.isHumidityAlertOn.value,
-                isRelativeHumidityAlertOn {
+            if let isHumidityAlertOn = viewModel.isHumidityAlertOn.value,
+                isHumidityAlertOn {
                 if let l = viewModel.humidityLowerBound.value,
                     let u = viewModel.humidityUpperBound.value {
-                    let format = "WebTagSettings.Alerts.RelativeHumidity.description".localized()
+                    let format = "WebTagSettings.Alerts.Humidity.description".localized()
                     humidityAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
                 } else {
                     humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
@@ -809,8 +813,8 @@ extension WebTagSettingsTableViewController {
             }
 
             humidityAlertControlsCell.textField.bind(viewModel.humidityAlertDescription) {
-                (textField, relativeHumidityAlertDescription) in
-                textField.text = relativeHumidityAlertDescription
+                (textField, humidityAlertDescription) in
+                textField.text = humidityAlertDescription
             }
 
             tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in

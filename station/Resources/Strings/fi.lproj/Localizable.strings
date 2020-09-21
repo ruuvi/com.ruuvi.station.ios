@@ -288,12 +288,8 @@
 "TagSettings.ConnectStatus.Connecting" = "Yhdistetään...";
 "TagSettings.ConnectStatus.Disconnected" = "Ei yhteyttä";
 "TagSettings.Alert.CustomDescription.placeholder" = "Muokkaa kuvausta...";
-"TagSettings.Alerts.RelativeHumidity.description" = "Hälytä, mikäli ilmankosteus alle %.0f tai yli %.0f";
-"TagSettings.RelativeAirHumidityAlert.title" = "Suhteellinen ilmankosteus";
-"TagSettings.AbsoluteAirHumidityAlert.title" = "Absoluuttinen ilmankosteus";
-"TagSettings.Alerts.AbsoluteHumidity.description" = "Hälytä, mikäli ilmankosteus alle %.0f tai yli %.0f";
-"TagSettings.Alerts.DewPoint.description" = "Hälytä, mikäli kastepiste alle %.0f tai yli %.0f";
-"TagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
+"TagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.AirHumidityAlert.title" = "Air Humidity";
 "TagSettings.PressureAlert.title" = "Ilmanpaine";
 "TagSettings.Alerts.Pressure.description" = "Hälytä, mikäli ilmanpaine %.0f tai yli %.0f";
 "TagSettings.Alerts.Connection.description" = "Hälytä, mikäli yhteys muodostettu/yhteys menetetty";
