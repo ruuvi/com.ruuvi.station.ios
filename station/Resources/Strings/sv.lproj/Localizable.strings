@@ -170,10 +170,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
 "LocalNotificationsManager.HighTemperature.title" = "För hög temperatur!";
 "LocalNotificationsManager.Disable.button" = "Stäng av";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "För låg Relativ Luftfuktighet!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "För hög Relativ Luftfuktighet!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "För låg Absolut Luftfuktighet!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "För hög Absolut Luftfuktighet!";
+"LocalNotificationsManager.LowHumidity.title" = "För låg Luftfuktighet!";
+"LocalNotificationsManager.HighHumidity.title" = "För hög Luftfuktighet!";
 "LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
 "LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
 "LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";
@@ -353,12 +351,8 @@
 "WebTagSettings.Label.alerts.text" = "ALARM";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Den virtuella sensorns alarmfunktion kräver rätt att visa både platsinformation och push-meddelanden. Kontrollera applikationsinställningarna.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Inställningar";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Relativ Luftfuktighet";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absolut Luftfuktighet";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Daggpunkt";
+"WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
+"WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.PressureAlert.title" = "Luftfuktighet";
 "WebTagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 

@@ -170,10 +170,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.Disable.button" = "Poista käytöstä";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "Suhteellinen ilmankosteus liian alhainen!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "Suhteellinen ilmankosteus liian korkea!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absoluuttinen ilmankosteus liian alhainen!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absoluuttinen ilmankosteus liian korkea!";
+"LocalNotificationsManager.LowHumidity.title" = "Suhteellinen ilmankosteus liian alhainen!";
+"LocalNotificationsManager.HighHumidity.title" = "Suhteellinen ilmankosteus liian korkea!";
 "LocalNotificationsManager.LowPressure.title" = "Ilmanpaine liian alhainen!";
 "LocalNotificationsManager.HighPressure.title" = "Ilmanpaine liian korkea!";
 "LocalNotificationsManager.DidMove.title" = "Liike havaittu!";
@@ -353,12 +351,8 @@
 "WebTagSettings.Label.alerts.text" = "HÄLYTYKSET";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Virtuaalisten antureiden hälytysominaisuus tarvitsee oikeuden sekä paikkatiedon että palveluilmoitusten näyttämiseen. Tarkasta sovellusasetukset.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Asetukset";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Suhteellinen ilmankosteus";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Hälytä, mikäli ilmankosteus alle %.0f tai yli %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absoluuttinen ilmankosteus";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Hälytä, mikäli ilmankosteus alle %.0f tai yli %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Hälytä, mikäli kastepiste alle %.0f tai yli %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
+"WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
+"WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.PressureAlert.title" = "Ilmanpaine";
 "WebTagSettings.Alerts.Pressure.description" = "Hälytä, mikäli ilmanpaine alle %.0f tai yli %.0f";
 

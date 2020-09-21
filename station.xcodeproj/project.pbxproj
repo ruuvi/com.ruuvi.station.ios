@@ -4355,7 +4355,7 @@
 		0EEB215E22BA610E0015F9E0 /* Migration */ = {
 			isa = PBXGroup;
 			children = (
-				A98D997F25175C6100ED3760 /* alertService */,
+				A98D997F25175C6100ED3760 /* AlertService */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB215F22BA61430015F9E0 /* MigrationManager.swift */,
@@ -5009,12 +5009,12 @@
 			path = Adavanced;
 			sourceTree = "<group>";
 		};
-		A98D997F25175C6100ED3760 /* alertService */ = {
+		A98D997F25175C6100ED3760 /* AlertService */ = {
 			isa = PBXGroup;
 			children = (
 				A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */,
 			);
-			path = alertService;
+			path = AlertService;
 			sourceTree = "<group>";
 		};
 		A9C03F7D24E708A800BC046F /* Impl */ = {
