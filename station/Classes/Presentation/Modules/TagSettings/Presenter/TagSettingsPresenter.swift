@@ -251,7 +251,6 @@ extension TagSettingsPresenter {
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
             viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: luid.value)
             viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: luid.value)
-            viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: luid.value)
             viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: luid.value)
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
@@ -300,8 +299,6 @@ extension TagSettingsPresenter {
                     sync(relativeHumidity: type, uuid: luid.value)
                 case .absoluteHumidity:
                     sync(abosluteHumidity: type, uuid: luid.value)
-                case .dewPoint:
-                    sync(dewPoint: type, uuid: luid.value)
                 case .pressure:
                     sync(pressure: type, uuid: luid.value)
                 case .connection:
@@ -359,22 +356,6 @@ extension TagSettingsPresenter {
             }
             if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: uuid) {
                 viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
-            }
-        }
-    }
-
-    private func sync(dewPoint: AlertType, uuid: String) {
-        if case .dewPoint(let lower, let upper) = alertService.alert(for: uuid, of: dewPoint) {
-            viewModel.isDewPointAlertOn.value = true
-            viewModel.dewPointCelsiusLowerBound.value = lower
-            viewModel.dewPointCelsiusUpperBound.value = upper
-        } else {
-            viewModel.isDewPointAlertOn.value = false
-            if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: uuid) {
-                viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
-            }
-            if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: uuid) {
-                viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
             }
         }
     }
@@ -493,7 +474,6 @@ extension TagSettingsPresenter {
             bindTemperatureAlert(uuid: luid.value)
             bindRelativeHumidityAlert(uuid: luid.value)
             bindAbsoluteHumidityAlert(uuid: luid.value)
-            bindDewPoint(uuid: luid.value)
             bindPressureAlert(uuid: luid.value)
             bindConnectionAlert(uuid: luid.value)
             bindMovementAlert(uuid: luid.value)
@@ -530,34 +510,6 @@ extension TagSettingsPresenter {
 
         bind(viewModel.absoluteHumidityAlertDescription, fire: false) { observer, absoluteHumidityAlertDescription in
             observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: uuid)
-        }
-    }
-
-    private func bindDewPoint(uuid: String) {
-        let dewPointLower = viewModel.dewPointCelsiusLowerBound
-        let dewPointUpper = viewModel.dewPointCelsiusUpperBound
-        bind(viewModel.isDewPointAlertOn, fire: false) {
-            [weak dewPointLower, weak dewPointUpper] observer, isOn in
-            if let l = dewPointLower?.value, let u = dewPointUpper?.value {
-                let type: AlertType = .dewPoint(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
-                    } else {
-                        observer.alertService.unregister(type: type, for: uuid)
-                    }
-                }
-            }
-        }
-        bind(viewModel.dewPointCelsiusLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLowerDewPoint(celsius: lower, for: uuid)
-        }
-        bind(viewModel.dewPointCelsiusUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpperDewPoint(celsius: upper, for: uuid)
-        }
-        bind(viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: uuid)
         }
     }
 
@@ -786,8 +738,6 @@ extension TagSettingsPresenter {
             observable = viewModel.isRelativeHumidityAlertOn
         case .absoluteHumidity:
             observable = viewModel.isAbsoluteHumidityAlertOn
-        case .dewPoint:
-            observable = viewModel.isDewPointAlertOn
         case .pressure:
             observable = viewModel.isPressureAlertOn
         case .connection:

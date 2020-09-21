@@ -164,42 +164,6 @@ extension AlertServiceImpl {
     }
 }
 
-// MARK: - Dew Point
-extension AlertServiceImpl {
-    func lowerDewPointCelsius(for uuid: String) -> Double? {
-        return alertPersistence.lowerDewPointCelsius(for: uuid)
-    }
-
-    func setLowerDewPoint(celsius: Double?, for uuid: String) {
-        alertPersistence.setLowerDewPoint(celsius: celsius, for: uuid)
-        if let l = celsius, let u = upperDewPointCelsius(for: uuid) {
-            postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    func upperDewPointCelsius(for uuid: String) -> Double? {
-        return alertPersistence.upperDewPointCelsius(for: uuid)
-    }
-
-    func setUpperDewPoint(celsius: Double?, for uuid: String) {
-        alertPersistence.setUpperDewPoint(celsius: celsius, for: uuid)
-        if let u = celsius, let l = lowerDewPointCelsius(for: uuid) {
-            postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-
-    func dewPointDescription(for uuid: String) -> String? {
-        return alertPersistence.dewPointDescription(for: uuid)
-    }
-
-    func setDewPoint(description: String?, for uuid: String) {
-        alertPersistence.setDewPoint(description: description, for: uuid)
-        if let l = lowerDewPointCelsius(for: uuid), let u = upperDewPointCelsius(for: uuid) {
-            postAlertDidChange(with: uuid, of: .dewPoint(lower: l, upper: u))
-        }
-    }
-}
-
 // MARK: - Pressure
 extension AlertServiceImpl {
     func lowerPressure(for uuid: String) -> Double? {

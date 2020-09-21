@@ -1388,6 +1388,9 @@
 		A98BC875250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC877250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
+		A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
+		A98D998225175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
+		A98D998325175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
 		A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
 		A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
@@ -1917,6 +1920,7 @@
 		A9758180249F4C9600BC150A /* LocationAppleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppleClass.swift; sourceTree = "<group>"; };
 		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A98BC874250E4265001CEFDC /* Double+Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Round.swift"; sourceTree = "<group>"; };
+		A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerAlertService.swift; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
 		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
@@ -4351,6 +4355,7 @@
 		0EEB215E22BA610E0015F9E0 /* Migration */ = {
 			isa = PBXGroup;
 			children = (
+				A98D997F25175C6100ED3760 /* alertService */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB215F22BA61430015F9E0 /* MigrationManager.swift */,
@@ -5004,6 +5009,14 @@
 			path = Adavanced;
 			sourceTree = "<group>";
 		};
+		A98D997F25175C6100ED3760 /* alertService */ = {
+			isa = PBXGroup;
+			children = (
+				A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */,
+			);
+			path = alertService;
+			sourceTree = "<group>";
+		};
 		A9C03F7D24E708A800BC046F /* Impl */ = {
 			isa = PBXGroup;
 			children = (
@@ -5611,6 +5624,7 @@
 				0E6BAD8E23856A01003A2D4C /* WelcomeConfigurator.swift in Sources */,
 				0E6BAD8F23856A01003A2D4C /* ForegroundModuleInput.swift in Sources */,
 				0E31B05223BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
+				A98D998325175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0318251124F900694733 /* SelectionItem.swift in Sources */,
 				0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */,
 				0E8BAC82245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
@@ -6274,6 +6288,7 @@
 				0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
+				A98D998225175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				0E8BD369238566AB008B31EF /* HumidityCalibrationViewInput.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */,
@@ -6464,6 +6479,7 @@
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
 				0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
+				A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0316251124F900694733 /* SelectionItem.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
