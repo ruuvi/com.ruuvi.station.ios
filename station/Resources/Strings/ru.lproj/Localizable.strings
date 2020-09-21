@@ -170,10 +170,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
 "LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.Disable.button" = "Отключить";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "Низкая Относительная Влажность!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "ВЫсокая Относительная Влажность!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Низкая Абсолютная Влажность!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Высокая Абсолютная Влажность!";
+"LocalNotificationsManager.LowHumidity.title" = "Низкая Влажность!";
+"LocalNotificationsManager.HighHumidity.title" = "Высокая Влажность!";
 "LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
 "LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
 "LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
@@ -353,12 +351,8 @@
 "WebTagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Чтобы включить уведомления для Виртуальных Сенсоров, пожалуйста дайте разрешение на использование геолокации в Настройках.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Настройки";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Относительная Влажность";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Абсолютная Влажность";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
+"WebTagSettings.AirHumidityAlert.title" = "Относительная Влажность";
+"WebTagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
 "WebTagSettings.PressureAlert.title" = "Атмосферное Давление";
 "WebTagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 

@@ -171,10 +171,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "Temperature too low!";
 "LocalNotificationsManager.HighTemperature.title" = "Temperature too high!";
 "LocalNotificationsManager.Disable.button" = "Turn Off";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "Relative Air Humidity too low!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "Relative Air Humidity too high!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absolute Air Humidity too low!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absolute Air Humidity too high!";
+"LocalNotificationsManager.LowHumidity.title" = "Air Humidity too low!";
+"LocalNotificationsManager.HighHumidity.title" = "Air Humidity too high!";
 "LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
 "LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
 "LocalNotificationsManager.DidMove.title" = "Movement detected!";
@@ -354,12 +352,8 @@
 "WebTagSettings.Label.alerts.text" = "ALERTS";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "In order to enable Virtual Sensor alerts please grant location always and notification permissions in Settings.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Settings";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
+"WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
+"WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.PressureAlert.title" = "Air Pressure";
 "WebTagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
 

@@ -9,28 +9,21 @@ struct WebTagSettingsViewModel {
     let isLocationAuthorizedAlways: Observable<Bool?> = Observable<Bool?>(false)
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
 
+    let currentTemperature: Observable<Temperature?> = Observable<Temperature?>()
+
     let temperatureUnit: Observable<TemperatureUnit?> = Observable<TemperatureUnit?>()
     let humidityUnit: Observable<HumidityUnit?> = Observable<HumidityUnit?>()
+    let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let celsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
     let celsiusUpperBound: Observable<Double?> = Observable<Double?>(85)
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
 
-    let isRelativeHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let relativeHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
-    let relativeHumidityUpperBound: Observable<Double?> = Observable<Double?>(100)
-    let relativeHumidityAlertDescription: Observable<String?> = Observable<String?>()
-
-    let isAbsoluteHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let absoluteHumidityLowerBound: Observable<Double?> = Observable<Double?>(0)
-    let absoluteHumidityUpperBound: Observable<Double?> = Observable<Double?>(40)
-    let absoluteHumidityAlertDescription: Observable<String?> = Observable<String?>()
-
-    let isDewPointAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let dewPointCelsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
-    let dewPointCelsiusUpperBound: Observable<Double?> = Observable<Double?>(85)
-    let dewPointAlertDescription: Observable<String?> = Observable<String?>()
+    let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
+    let humidityLowerBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 0, unit: .absolute))
+    let humidityUpperBound: Observable<Humidity?> = Observable<Humidity?>(.init(value: 40, unit: .absolute))
+    let humidityAlertDescription: Observable<String?> = Observable<String?>()
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let pressureLowerBound: Observable<Double?> = Observable<Double?>(300)

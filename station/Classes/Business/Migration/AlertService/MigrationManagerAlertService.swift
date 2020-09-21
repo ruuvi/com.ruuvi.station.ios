@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import AVKit
+
 class MigrationManagerAlertService: MigrationManager {
 
     // persistence
@@ -9,6 +10,7 @@ class MigrationManagerAlertService: MigrationManager {
     var realmContext: RealmContext!
     var ruuviTagTrunk: RuuviTagTrunk!
     var settings: Settings!
+    private let prefs = UserDefaults.standard
 
     @UserDefault("MigrationManagerAlertService.persistanceVersion", defaultValue: 0)
     private var persistanceVersion: UInt
@@ -36,6 +38,29 @@ class MigrationManagerAlertService: MigrationManager {
         default:
             assert(false, "⛔️ Need implement v\(version) migration before")
             completion(true)
+        }
+    }
+
+    private enum Keys {
+        struct v1 {
+            // relativeHumidity
+            static let relativeHumidityLowerBoundUDKeyPrefix
+                = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
+            static let relativeHumidityUpperBoundUDKeyPrefix
+                = "AlertPersistenceUserDefaults.relativeHumidityUpperBoundUDKeyPrefix."
+            static let relativeHumidityAlertIsOnUDKeyPrefix
+                = "AlertPersistenceUserDefaults.relativeHumidityAlertIsOnUDKeyPrefix."
+            static let relativeHumidityAlertDescriptionUDKeyPrefix
+                = "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
+            // absoluteHumidity
+            static let absoluteHumidityLowerBoundUDKeyPrefix
+                = "AlertPersistenceUserDefaults.absoluteHumidityLowerBoundUDKeyPrefix."
+            static let absoluteHumidityUpperBoundUDKeyPrefix
+                = "AlertPersistenceUserDefaults.absoluteHumidityUpperBoundUDKeyPrefix."
+            static let absoluteHumidityAlertIsOnUDKeyPrefix
+                = "AlertPersistenceUserDefaults.absoluteHumidityAlertIsOnUDKeyPrefix."
+            static let absoluteHumidityAlertDescriptionUDKeyPrefix
+                = "AlertPersistenceUserDefaults.absoluteHumidityAlertDescriptionUDKeyPrefix."
         }
     }
 }
@@ -68,14 +93,28 @@ extension MigrationManagerAlertService {
             completion()
         }
         let id = element.0
-        if alertService.isOn(type: .relativeHumidity(lower: .nan, upper: .nan), for: id),
-           let lower = alertService.lowerRelativeHumidity(for: id),
-           let upper = alertService.upperRelativeHumidity(for: id) {
-            alertService.unregister(type: .relativeHumidity(lower: .nan, upper: .nan), for: id)
-            
-            alertService.register(type: .absoluteHumidity(lower: <#T##Double#>, upper: <#T##Double#>), for: <#T##String#>)
-        } else if alertService.isOn(type: .absoluteHumidity(lower: .nan, upper: .nan), for: id) {
-
+        if prefs.bool(forKey: Keys.v1.relativeHumidityAlertIsOnUDKeyPrefix + id),
+           let lower = prefs.optionalDouble(forKey: Keys.v1.relativeHumidityLowerBoundUDKeyPrefix + id),
+           let upper = prefs.optionalDouble(forKey: Keys.v1.relativeHumidityUpperBoundUDKeyPrefix + id),
+           let temperature = element.1 {
+            prefs.set(false, forKey: Keys.v1.relativeHumidityAlertIsOnUDKeyPrefix + id)
+            let lowerHumidity: Humidity = Humidity(value: lower,
+                                                   unit: .relative(temperature: temperature))
+            let upperHumidity: Humidity = Humidity(value: upper,
+                                                   unit: .relative(temperature: temperature))
+            alertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
+                                  for: id)
+        } else if prefs.bool(forKey: Keys.v1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
+                  let lower = prefs.optionalDouble(forKey: Keys.v1.absoluteHumidityLowerBoundUDKeyPrefix + id),
+                  let upper = prefs.optionalDouble(forKey: Keys.v1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
+            prefs.set(false, forKey: Keys.v1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
+            let lowerHumidity: Humidity = Humidity(value: lower,
+                                                   unit: .absolute)
+            let upperHumidity: Humidity = Humidity(value: upper,
+                                                   unit: .absolute)
+            alertService.register(type: .humidity(lower: lowerHumidity,
+                                                  upper: upperHumidity),
+                                  for: id)
         }
     }
 
