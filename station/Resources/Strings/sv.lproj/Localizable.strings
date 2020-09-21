@@ -174,8 +174,6 @@
 "LocalNotificationsManager.HighRelativeHumidity.title" = "För hög Relativ Luftfuktighet!";
 "LocalNotificationsManager.LowAbsoluteHumidity.title" = "För låg Absolut Luftfuktighet!";
 "LocalNotificationsManager.HighAbsoluteHumidity.title" = "För hög Absolut Luftfuktighet!";
-"LocalNotificationsManager.LowDewPoint.title" = "För låg Daggpunkt!";
-"LocalNotificationsManager.HighDewPoint.title" = "För hög Daggpunkt!";
 "LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
 "LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
 "LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";

@@ -174,8 +174,6 @@
 "LocalNotificationsManager.HighRelativeHumidity.title" = "ВЫсокая Относительная Влажность!";
 "LocalNotificationsManager.LowAbsoluteHumidity.title" = "Низкая Абсолютная Влажность!";
 "LocalNotificationsManager.HighAbsoluteHumidity.title" = "Высокая Абсолютная Влажность!";
-"LocalNotificationsManager.LowDewPoint.title" = "Ниже Точки Росы!";
-"LocalNotificationsManager.HighDewPoint.title" = "Выше Точки Росы!";
 "LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
 "LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
 "LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";

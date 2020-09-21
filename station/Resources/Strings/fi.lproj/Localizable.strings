@@ -174,8 +174,6 @@
 "LocalNotificationsManager.HighRelativeHumidity.title" = "Suhteellinen ilmankosteus liian korkea!";
 "LocalNotificationsManager.LowAbsoluteHumidity.title" = "Absoluuttinen ilmankosteus liian alhainen!";
 "LocalNotificationsManager.HighAbsoluteHumidity.title" = "Absoluuttinen ilmankosteus liian korkea!";
-"LocalNotificationsManager.LowDewPoint.title" = "Kastepiste liian alhainen!";
-"LocalNotificationsManager.HighDewPoint.title" = "Kastepiste liian korkea!";
 "LocalNotificationsManager.LowPressure.title" = "Ilmanpaine liian alhainen!";
 "LocalNotificationsManager.HighPressure.title" = "Ilmanpaine liian korkea!";
 "LocalNotificationsManager.DidMove.title" = "Liike havaittu!";

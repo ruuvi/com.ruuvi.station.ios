@@ -182,7 +182,6 @@ extension WebTagSettingsPresenter {
         bindTemperatureAlert(webTag)
         bindRelativeHumidityAlert(webTag)
         bindAbsoluteHumidityAlert(webTag)
-        bindDewPointAlert(webTag)
         bindPressureAlert(webTag)
     }
 
@@ -275,34 +274,6 @@ extension WebTagSettingsPresenter {
         }
     }
 
-    private func bindDewPointAlert(_ webTag: WebTagRealm) {
-        let dewPointLower = view.viewModel.dewPointCelsiusLowerBound
-        let dewPointUpper = view.viewModel.dewPointCelsiusUpperBound
-        bind(view.viewModel.isDewPointAlertOn, fire: false) {
-            [weak dewPointLower, weak dewPointUpper] observer, isOn in
-            if let l = dewPointLower?.value, let u = dewPointUpper?.value {
-                let type: AlertType = .dewPoint(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
-                    } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
-                    }
-                }
-            }
-        }
-        bind(view.viewModel.dewPointCelsiusLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLowerDewPoint(celsius: lower, for: webTag.uuid)
-        }
-        bind(view.viewModel.dewPointCelsiusUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpperDewPoint(celsius: upper, for: webTag.uuid)
-        }
-        bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
-        }
-    }
-
     private func bindPressureAlert(_ webTag: WebTagRealm) {
         let pressureLower = view.viewModel.pressureLowerBound
         let pressureUpper = view.viewModel.pressureUpperBound
@@ -389,8 +360,6 @@ extension WebTagSettingsPresenter {
             = alertService.relativeHumidityDescription(for: webTag.uuid)
         view.viewModel.absoluteHumidityAlertDescription.value
             = alertService.absoluteHumidityDescription(for: webTag.uuid)
-        view.viewModel.dewPointAlertDescription.value
-            = alertService.dewPointDescription(for: webTag.uuid)
         view.viewModel.pressureAlertDescription.value
             = alertService.pressureDescription(for: webTag.uuid)
 
@@ -438,21 +407,6 @@ extension WebTagSettingsPresenter {
             }
             if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: webTag.uuid) {
                 view.viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
-            }
-        }
-
-        let dewPointAlertType: AlertType = .dewPoint(lower: 0, upper: 0)
-        if case .dewPoint(let lower, let upper) = alertService.alert(for: webTag.uuid, of: dewPointAlertType) {
-            view.viewModel.isDewPointAlertOn.value = true
-            view.viewModel.dewPointCelsiusLowerBound.value = lower
-            view.viewModel.dewPointCelsiusUpperBound.value = upper
-        } else {
-            view.viewModel.isDewPointAlertOn.value = false
-            if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: webTag.uuid) {
-                view.viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
-            }
-            if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: webTag.uuid) {
-                view.viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
             }
         }
 
@@ -510,8 +464,6 @@ extension WebTagSettingsPresenter {
             observable = view.viewModel.isRelativeHumidityAlertOn
         case .absoluteHumidity:
             observable = view.viewModel.isAbsoluteHumidityAlertOn
-        case .dewPoint:
-            observable = view.viewModel.isDewPointAlertOn
         case .pressure:
             observable = view.viewModel.isPressureAlertOn
         case .connection:
