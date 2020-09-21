@@ -59,11 +59,10 @@ struct CardsViewModel {
     }
 
     func update(_ wpsData: WPSData, current: Location?) {
-        
         isConnectable.value = false
-        temperature.value = Temperature(wpsData.celsius)
-        humidity.value = Humidity(relative: wpsData.pressure, temperature: temperature.value)
-        pressure.value = Pressure(wpsData.pressure)
+        temperature.value = wpsData.temperature
+        humidity.value = wpsData.humidity
+        pressure.value = wpsData.pressure
         currentLocation.value = current
         date.value = Date()
     }

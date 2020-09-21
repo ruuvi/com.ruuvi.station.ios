@@ -14,8 +14,8 @@ class WebTagDataRealm: Object {
         self.init()
         self.webTag = webTag
         self.celsius.value = data.celsius
-        self.humidity.value = data.humidity
-        self.pressure.value = data.pressure
+        self.humidity.value = data.relativeHumidity
+        self.pressure.value = data.hPa
     }
 }
 extension WebTagDataRealm {
