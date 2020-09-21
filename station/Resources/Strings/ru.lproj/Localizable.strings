@@ -288,12 +288,8 @@
 "TagSettings.ConnectStatus.Connecting" = "Соединяюсь...";
 "TagSettings.ConnectStatus.Disconnected" = "Отсоединен";
 "TagSettings.Alert.CustomDescription.placeholder" = "Введите описание...";
-"TagSettings.Alerts.RelativeHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.RelativeAirHumidityAlert.title" = "Относительная Влажность";
-"TagSettings.AbsoluteAirHumidityAlert.title" = "Абсолютная Влажность";
-"TagSettings.Alerts.AbsoluteHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
+"TagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.AirHumidityAlert.title" = "Влажность воздуха";
 "TagSettings.PressureAlert.title" = "Атмосферное Давление";
 "TagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.Alerts.Connection.description" = "Уведомить при установке/разрыве соединения";

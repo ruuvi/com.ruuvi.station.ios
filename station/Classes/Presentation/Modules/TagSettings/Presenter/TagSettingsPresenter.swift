@@ -249,8 +249,7 @@ extension TagSettingsPresenter {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
-            viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: luid.value)
-            viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: luid.value)
+            viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: luid.value)
             viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: luid.value)
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
@@ -295,10 +294,8 @@ extension TagSettingsPresenter {
                 switch type {
                 case .temperature:
                     sync(temperature: type, uuid: luid.value)
-                case .relativeHumidity:
-                    sync(relativeHumidity: type, uuid: luid.value)
-                case .absoluteHumidity:
-                    sync(abosluteHumidity: type, uuid: luid.value)
+                case .humidity:
+                    sync(temperature: type, uuid: luid.value)
                 case .pressure:
                     sync(pressure: type, uuid: luid.value)
                 case .connection:
@@ -328,34 +325,18 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func sync(relativeHumidity: AlertType, uuid: String) {
-        if case .relativeHumidity(let lower, let upper) = alertService.alert(for: uuid, of: relativeHumidity) {
-            viewModel.isRelativeHumidityAlertOn.value = true
-            viewModel.relativeHumidityLowerBound.value = lower
-            viewModel.relativeHumidityUpperBound.value = upper
+    private func sync(humidity: AlertType, uuid: String) {
+        if case .humidity(let lower, let upper) = alertService.alert(for: uuid, of: humidity) {
+            viewModel.isHumidityAlertOn.value = true
+            viewModel.humidityLowerBound.value = lower
+            viewModel.humidityUpperBound.value = upper
         } else {
-            viewModel.isRelativeHumidityAlertOn.value = false
-            if let realtiveHumidityLower = alertService.lowerRelativeHumidity(for: uuid) {
-                viewModel.relativeHumidityLowerBound.value = realtiveHumidityLower
+            viewModel.isHumidityAlertOn.value = false
+            if let humidityLower = alertService.lowerHumidity(for: uuid) {
+                viewModel.humidityLowerBound.value = humidityLower
             }
-            if let relativeHumidityUpper = alertService.upperRelativeHumidity(for: uuid) {
-                viewModel.relativeHumidityUpperBound.value = relativeHumidityUpper
-            }
-        }
-    }
-
-    private func sync(abosluteHumidity: AlertType, uuid: String) {
-        if case .absoluteHumidity(let lower, let upper) = alertService.alert(for: uuid, of: abosluteHumidity) {
-            viewModel.isAbsoluteHumidityAlertOn.value = true
-            viewModel.absoluteHumidityLowerBound.value = lower
-            viewModel.absoluteHumidityUpperBound.value = upper
-        } else {
-            viewModel.isAbsoluteHumidityAlertOn.value = false
-            if let absoluteHumidityLower = alertService.lowerAbsoluteHumidity(for: uuid) {
-                viewModel.absoluteHumidityLowerBound.value = absoluteHumidityLower
-            }
-            if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: uuid) {
-                viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
+            if let humidityUpper = alertService.upperHumidity(for: uuid) {
+                viewModel.humidityUpperBound.value = humidityUpper
             }
         }
     }
@@ -472,44 +453,12 @@ extension TagSettingsPresenter {
                 observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
             }
             bindTemperatureAlert(uuid: luid.value)
-            bindRelativeHumidityAlert(uuid: luid.value)
-            bindAbsoluteHumidityAlert(uuid: luid.value)
+            bindHumidityAlert(uuid: luid.value)
             bindPressureAlert(uuid: luid.value)
             bindConnectionAlert(uuid: luid.value)
             bindMovementAlert(uuid: luid.value)
         } else {
             //FIXME
-        }
-    }
-
-    private func bindAbsoluteHumidityAlert(uuid: String) {
-        let absoluteHumidityLower = viewModel.absoluteHumidityLowerBound
-        let absoluteHumidityUpper = viewModel.absoluteHumidityUpperBound
-        bind(viewModel.isAbsoluteHumidityAlertOn, fire: false) {
-            [weak absoluteHumidityLower, weak absoluteHumidityUpper] observer, isOn in
-            if let l = absoluteHumidityLower?.value, let u = absoluteHumidityUpper?.value {
-                let type: AlertType = .absoluteHumidity(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: uuid)
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, for: uuid)
-                    } else {
-                        observer.alertService.unregister(type: type, for: uuid)
-                    }
-                }
-            }
-        }
-
-        bind(viewModel.absoluteHumidityLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(absoluteHumidity: lower, for: uuid)
-        }
-
-        bind(viewModel.absoluteHumidityUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(absoluteHumidity: upper, for: uuid)
-        }
-
-        bind(viewModel.absoluteHumidityAlertDescription, fire: false) { observer, absoluteHumidityAlertDescription in
-            observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: uuid)
         }
     }
 
@@ -541,13 +490,14 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func bindRelativeHumidityAlert(uuid: String) {
-        let relativeHumidityLower = viewModel.relativeHumidityLowerBound
-        let relativeHumidityUpper = viewModel.relativeHumidityUpperBound
-        bind(viewModel.isRelativeHumidityAlertOn, fire: false) {
-            [weak relativeHumidityLower, weak relativeHumidityUpper] observer, isOn in
-            if let l = relativeHumidityLower?.value, let u = relativeHumidityUpper?.value {
-                let type: AlertType = .relativeHumidity(lower: l, upper: u)
+    private func bindHumidityAlert(uuid: String) {
+        let humidityLower = viewModel.humidityLowerBound
+        let humidityUpper = viewModel.humidityUpperBound
+        bind(viewModel.isHumidityAlertOn, fire: false) {
+            [weak humidityLower, weak humidityUpper] observer, isOn in
+            if let l = humidityLower?.value,
+               let u = humidityUpper?.value {
+                let type: AlertType = .humidity(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
@@ -558,14 +508,14 @@ extension TagSettingsPresenter {
                 }
             }
         }
-        bind(viewModel.relativeHumidityLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(relativeHumidity: lower, for: uuid)
+        bind(viewModel.humidityLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(humidity: lower, for: uuid)
         }
-        bind(viewModel.relativeHumidityUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(relativeHumidity: upper, for: uuid)
+        bind(viewModel.humidityUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(humidity: upper, for: uuid)
         }
-        bind(viewModel.relativeHumidityAlertDescription, fire: false) { observer, relativeHumidityAlertDescription in
-            observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: uuid)
+        bind(viewModel.humidityAlertDescription, fire: false) { observer, humidityAlertDescription in
+            observer.alertService.setHumidity(description: humidityAlertDescription, for: uuid)
         }
     }
 
@@ -734,10 +684,8 @@ extension TagSettingsPresenter {
         switch type {
         case .temperature:
             observable = viewModel.isTemperatureAlertOn
-        case .relativeHumidity:
-            observable = viewModel.isRelativeHumidityAlertOn
-        case .absoluteHumidity:
-            observable = viewModel.isAbsoluteHumidityAlertOn
+        case .humidity:
+            observable = viewModel.isHumidityAlertOn
         case .pressure:
             observable = viewModel.isPressureAlertOn
         case .connection:
