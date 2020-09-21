@@ -409,16 +409,15 @@ extension TagSettingsTableViewController {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
-            let hu = viewModel?.humidityUnit.value
             switch cell {
             case temperatureAlertHeaderCell:
                 return headerHeight
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
             case humidityAlertHeaderCell:
-                return (hu == .percent) ? headerHeight : 0
+                return headerHeight
             case humidityAlertControlsCell:
-                return ((hu == .percent) && (viewModel?.isHumidityAlertOn.value ?? false)) ? controlsHeight : 0
+                return (viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case pressureAlertHeaderCell:
                 return headerHeight
             case pressureAlertControlsCell:
@@ -536,15 +535,16 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
             }
         case humidityAlertControlsCell:
             if let hu = viewModel?.humidityUnit.value,
-               let tu = viewModel?.temperatureUnit.value?.unitTemperature,
                let t = viewModel?.temperature.value {
                 switch hu {
                 case .gm3:
                     viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue), unit: .absolute)
                     viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue), unit: .absolute)
                 default:
-                    viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue), unit: .relative(temperature: t.converted(to: tu)))
-                    viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue), unit: .relative(temperature: t.converted(to: tu)))
+                    viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue),
+                                                                   unit: .relative(temperature: t))
+                    viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue),
+                                                                   unit: .relative(temperature: t))
                 }
             }
         case pressureAlertControlsCell:
@@ -1197,7 +1197,8 @@ extension TagSettingsTableViewController {
                 case .gm3:
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lower.converted(to: .absolute).value)
                 default:
-                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lower.converted(to: .relative(temperature: t)).value)
+                    let minValue: Double = lower.converted(to: .relative(temperature: t)).value
+                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(minValue)
                 }
             } else {
                 humidityAlertControlsCell.slider.selectedMinValue = 0

@@ -99,8 +99,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
         case .humidity(let lower, let upper):
             prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: humidityLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: humidityUpperBoundUDKeyPrefix + uuid)
+            setLower(humidity: lower, for: uuid)
+            setUpper(humidity: upper, for: uuid)
         case .pressure(let lower, let upper):
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
@@ -159,19 +159,33 @@ extension AlertPersistenceUserDefaults {
 // MARK: - Humidity
 extension AlertPersistenceUserDefaults {
     func lowerHumidity(for uuid: String) -> Humidity? {
-        return prefs.object(forKey: humidityLowerBoundUDKeyPrefix + uuid) as? Humidity
+        guard let data = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid) else {
+            return nil
+        }
+        return KeyedArchiver.unarchive(data, with: Humidity.self)
     }
 
     func setLower(humidity: Humidity?, for uuid: String) {
-        prefs.set(humidity, forKey: humidityLowerBoundUDKeyPrefix + uuid)
+        if let humidity = humidity {
+            prefs.set(KeyedArchiver.archive(object: humidity), forKey: humidityLowerBoundUDKeyPrefix + uuid)
+        } else {
+            prefs.set(nil, forKey: humidityLowerBoundUDKeyPrefix + uuid)
+        }
     }
 
     func upperHumidity(for uuid: String) -> Humidity? {
-        return prefs.object(forKey: humidityUpperBoundUDKeyPrefix + uuid) as? Humidity
+        guard let data = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid) else {
+            return nil
+        }
+        return KeyedArchiver.unarchive(data, with: Humidity.self)
     }
 
     func setUpper(humidity: Humidity?, for uuid: String) {
-        prefs.set(humidity, forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        if let humidity = humidity {
+            prefs.set(KeyedArchiver.archive(object: humidity), forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        } else {
+            prefs.set(nil, forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        }
     }
 
     func humidityDescription(for uuid: String) -> String? {

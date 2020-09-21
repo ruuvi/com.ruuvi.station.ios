@@ -42,7 +42,7 @@ class MigrationManagerAlertService: MigrationManager {
     }
 
     private enum Keys {
-        struct v1 {
+        struct V1 {
             // relativeHumidity
             static let relativeHumidityLowerBoundUDKeyPrefix
                 = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
@@ -65,7 +65,7 @@ class MigrationManagerAlertService: MigrationManager {
     }
 }
 
-// MARK: - v1 migration
+// MARK: - V1 migration
 extension MigrationManagerAlertService {
 
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
@@ -93,21 +93,21 @@ extension MigrationManagerAlertService {
             completion()
         }
         let id = element.0
-        if prefs.bool(forKey: Keys.v1.relativeHumidityAlertIsOnUDKeyPrefix + id),
-           let lower = prefs.optionalDouble(forKey: Keys.v1.relativeHumidityLowerBoundUDKeyPrefix + id),
-           let upper = prefs.optionalDouble(forKey: Keys.v1.relativeHumidityUpperBoundUDKeyPrefix + id),
+        if prefs.bool(forKey: Keys.V1.relativeHumidityAlertIsOnUDKeyPrefix + id),
+           let lower = prefs.optionalDouble(forKey: Keys.V1.relativeHumidityLowerBoundUDKeyPrefix + id),
+           let upper = prefs.optionalDouble(forKey: Keys.V1.relativeHumidityUpperBoundUDKeyPrefix + id),
            let temperature = element.1 {
-            prefs.set(false, forKey: Keys.v1.relativeHumidityAlertIsOnUDKeyPrefix + id)
+            prefs.set(false, forKey: Keys.V1.relativeHumidityAlertIsOnUDKeyPrefix + id)
             let lowerHumidity: Humidity = Humidity(value: lower,
                                                    unit: .relative(temperature: temperature))
             let upperHumidity: Humidity = Humidity(value: upper,
                                                    unit: .relative(temperature: temperature))
             alertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                                   for: id)
-        } else if prefs.bool(forKey: Keys.v1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
-                  let lower = prefs.optionalDouble(forKey: Keys.v1.absoluteHumidityLowerBoundUDKeyPrefix + id),
-                  let upper = prefs.optionalDouble(forKey: Keys.v1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
-            prefs.set(false, forKey: Keys.v1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
+        } else if prefs.bool(forKey: Keys.V1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
+                  let lower = prefs.optionalDouble(forKey: Keys.V1.absoluteHumidityLowerBoundUDKeyPrefix + id),
+                  let upper = prefs.optionalDouble(forKey: Keys.V1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
+            prefs.set(false, forKey: Keys.V1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
             let lowerHumidity: Humidity = Humidity(value: lower,
                                                    unit: .absolute)
             let upperHumidity: Humidity = Humidity(value: upper,
@@ -130,7 +130,9 @@ extension MigrationManagerAlertService {
             let group = DispatchGroup()
             group.enter()
             self.ruuviTagTrunk.readAll().on(success: {[weak self] sensors in
+                group.leave()
                 sensors.forEach({ sensor in
+                    group.enter()
                     self?.fetchRecord(for: sensor) {
                         result.append($0)
                         group.leave()
