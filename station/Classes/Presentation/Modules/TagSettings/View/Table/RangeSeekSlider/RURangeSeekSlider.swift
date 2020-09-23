@@ -17,6 +17,29 @@ class RURangeSeekSlider: RangeSeekSlider {
         }
     }
 
+    override var selectedMinValue: CGFloat {
+        didSet {
+            debugPrint(selectedMinValue)
+        }
+    }
+
+    override var selectedMaxValue: CGFloat {
+        didSet {
+            debugPrint(selectedMaxValue)
+        }
+    }
+
+    override var minValue: CGFloat {
+        didSet {
+            debugPrint(minValue)
+        }
+    }
+
+    override var maxValue: CGFloat {
+        didSet {
+            debugPrint(maxValue)
+        }
+    }
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return !(gestureRecognizer is UIPanGestureRecognizer)
     }

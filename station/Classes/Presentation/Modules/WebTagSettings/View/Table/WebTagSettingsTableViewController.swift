@@ -57,12 +57,6 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         locationTitleLabel.text = "WebTagSettings.Label.Location.text".localized()
 
         removeThisWebTagButton.setTitle("WebTagSettings.Button.Remove.title".localized(), for: .normal)
-        humidityAlertHeaderCell.titleLabel.text
-            = "WebTagSettings.AirHumidityAlert.title".localized()
-            + " " + "%"
-        pressureAlertHeaderCell.titleLabel.text
-            = "WebTagSettings.PressureAlert.title".localized()
-            + " " + "hPa".localized()
 
         let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
         temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
@@ -271,43 +265,16 @@ extension WebTagSettingsTableViewController {
 
     private func configureMinMaxForSliders() {
         let tu = viewModel.temperatureUnit.value ?? .celsius
-        switch tu {
-        case .celsius:
-            temperatureAlertControlsCell.slider.minValue = -40
-            temperatureAlertControlsCell.slider.maxValue = 85
-        case .fahrenheit:
-            temperatureAlertControlsCell.slider.minValue = -40
-            temperatureAlertControlsCell.slider.maxValue = 185
-        case .kelvin:
-            temperatureAlertControlsCell.slider.minValue = 233
-            temperatureAlertControlsCell.slider.maxValue = 358
-        }
+        temperatureAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
+        temperatureAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
 
         let hu = viewModel.humidityUnit.value ?? .percent
-        switch hu {
-        case .gm3:
-            humidityAlertControlsCell.slider.minValue = 0
-            humidityAlertControlsCell.slider.maxValue = 40
-        default:
-            humidityAlertControlsCell.slider.minValue = 0
-            humidityAlertControlsCell.slider.maxValue = 100
-        }
+        humidityAlertControlsCell.slider.minValue = CGFloat(hu.alertRange.lowerBound)
+        humidityAlertControlsCell.slider.maxValue = CGFloat(hu.alertRange.upperBound)
 
         let p = viewModel.pressureUnit.value ?? .hectopascals
-        switch p {
-        case .bars:
-            pressureAlertControlsCell.slider.minValue = 0.3
-            pressureAlertControlsCell.slider.maxValue = 1.1
-        case .inchesOfMercury:
-            pressureAlertControlsCell.slider.minValue = 8
-            pressureAlertControlsCell.slider.maxValue = 33
-        case .millimetersOfMercury:
-            pressureAlertControlsCell.slider.minValue = 225
-            pressureAlertControlsCell.slider.maxValue = 825
-        default:
-            pressureAlertControlsCell.slider.minValue = 300
-            pressureAlertControlsCell.slider.maxValue = 1100
-        }
+        pressureAlertControlsCell.slider.minValue = CGFloat(p.alertRange.lowerBound)
+        pressureAlertControlsCell.slider.maxValue = CGFloat(p.alertRange.upperBound)
     }
 }
 
@@ -329,6 +296,8 @@ extension WebTagSettingsTableViewController {
                let pu = viewModel.pressureUnit.value,
                let p = Pressure(lower, unit: pu)?.value {
                 pressureAlertControlsCell.slider.selectedMinValue = CGFloat(p)
+            } else if let pu = viewModel.pressureUnit.value {
+                    pressureAlertControlsCell.slider.selectedMinValue = CGFloat(pu.alertRange.lowerBound)
             } else {
                 pressureAlertControlsCell.slider.selectedMinValue = 300
             }
@@ -341,6 +310,8 @@ extension WebTagSettingsTableViewController {
                let pu = viewModel.pressureUnit.value,
                let p = Pressure(upper, unit: pu)?.value {
                 pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(p)
+            } else if let pu = viewModel.pressureUnit.value {
+                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(pu.alertRange.upperBound)
             } else {
                 pressureAlertControlsCell.slider.selectedMaxValue = 1100
             }
@@ -410,12 +381,9 @@ extension WebTagSettingsTableViewController {
                     humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.converted(to: .relative(temperature: t)).value)
                 }
             } else if let hu = viewModel.humidityUnit.value {
-                switch hu {
-                case .gm3:
-                    humidityAlertControlsCell.slider.selectedMaxValue = 40
-                default:
-                    humidityAlertControlsCell.slider.selectedMaxValue = 100
-                }
+                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
+            } else {
+                humidityAlertControlsCell.slider.selectedMaxValue = 40
             }
         }
     }
@@ -423,22 +391,11 @@ extension WebTagSettingsTableViewController {
     private func updateUITemperatureAlertDescription() {
         if isViewLoaded {
             if let isTemperatureAlertOn = viewModel.isTemperatureAlertOn.value, isTemperatureAlertOn {
-                if let l = viewModel.celsiusLowerBound.value,
+                if let tu = viewModel.temperatureUnit.value?.unitTemperature,
+                    let l = viewModel.celsiusLowerBound.value,
                     let u = viewModel.celsiusUpperBound.value,
-                    let tu = viewModel.temperatureUnit.value {
-                    var la: Double
-                    var ua: Double
-                    switch tu {
-                    case .celsius:
-                        la = l
-                        ua = u
-                    case .fahrenheit:
-                        la = l.fahrenheit
-                        ua = u.fahrenheit
-                    case .kelvin:
-                        la = l.kelvin
-                        ua = u.kelvin
-                    }
+                    let la = Temperature(l, unit: tu)?.value,
+                    let ua = Temperature(u, unit: tu)?.value {
                     let format = "WebTagSettings.Alerts.Temperature.description".localized()
                     temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
@@ -453,17 +410,11 @@ extension WebTagSettingsTableViewController {
     private func updateUICelsiusLowerBound() {
         if isViewLoaded {
             if let temperatureUnit = viewModel.temperatureUnit.value {
-                if let lower = viewModel.celsiusLowerBound.value {
-                    switch temperatureUnit {
-                    case .celsius:
-                        temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
-                    case .fahrenheit:
-                        temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower.fahrenheit)
-                    case .kelvin:
-                        temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower.kelvin)
-                    }
+                if let lower = viewModel.celsiusLowerBound.value,
+                   let temperature = Temperature(lower, unit: temperatureUnit.unitTemperature)?.value {
+                    temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(temperature)
                 } else {
-                    temperatureAlertControlsCell.slider.selectedMinValue = -40
+                    temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(temperatureUnit.alertRange.lowerBound)
                 }
             } else {
                 temperatureAlertControlsCell.slider.minValue = -40
@@ -475,17 +426,11 @@ extension WebTagSettingsTableViewController {
     private func updateUICelsiusUpperBound() {
         if isViewLoaded {
             if let temperatureUnit = viewModel.temperatureUnit.value {
-                if let upper = viewModel.celsiusUpperBound.value {
-                    switch temperatureUnit {
-                    case .celsius:
-                        temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
-                    case .fahrenheit:
-                        temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.fahrenheit)
-                    case .kelvin:
-                        temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.kelvin)
-                    }
+                if let upper = viewModel.celsiusUpperBound.value,
+                   let temperature = Temperature(upper, unit: temperatureUnit.unitTemperature)?.value {
+                    temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(temperature)
                 } else {
-                    temperatureAlertControlsCell.slider.selectedMaxValue = 85
+                    temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(temperatureUnit.alertRange.upperBound)
                 }
             } else {
                 temperatureAlertControlsCell.slider.maxValue = 85
@@ -589,7 +534,7 @@ extension WebTagSettingsTableViewController {
         }
 
         bindTemperatureAlertCells()
-        bindHumidityCells()
+        bindHumidityAlertCells()
         bindPressureAlertCells()
     }
 
@@ -613,6 +558,21 @@ extension WebTagSettingsTableViewController {
                 self?.updateUIPressureUpperBound()
                 self?.updateUIPressureAlertDescription()
             }
+
+            pressureAlertHeaderCell.titleLabel.bind(viewModel.pressureUnit) { (label, pressureUnit) in
+                let title = "TagSettings.PressureAlert.title"
+                label.text = title.localized()
+                    + " "
+                    + (pressureUnit?.symbol ?? "N/A".localized())
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.pressureUnit) { (slider, pressureUnit) in
+                if let pu = pressureUnit {
+                    slider.minValue = CGFloat(pu.alertRange.lowerBound)
+                    slider.maxValue = CGFloat(pu.alertRange.upperBound)
+                }
+            }
+
             pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) {
                 [weak self] (_, _) in
                 self?.updateUIPressureAlertDescription()
@@ -711,7 +671,7 @@ extension WebTagSettingsTableViewController {
     }
 
     // swiftlint:disable:next function_body_length
-    private func bindHumidityCells() {
+    private func bindHumidityAlertCells() {
         if isViewLoaded {
             humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
                 view.isOn = isOn.bound
@@ -730,6 +690,22 @@ extension WebTagSettingsTableViewController {
                 self?.updateUIHumidityUpperBound()
                 self?.updateUIHumidityAlertDescription()
             }
+
+            humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
+                let title = "TagSettings.AirHumidityAlert.title"
+                let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
+                label.text = title.localized()
+                    + " "
+                    + (symbol ?? "N/A".localized())
+            }
+
+            humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
+                if let hu = humidityUnit {
+                    slider.minValue = CGFloat(hu.alertRange.lowerBound)
+                    slider.maxValue = CGFloat(hu.alertRange.upperBound)
+                }
+            }
+
             humidityAlertHeaderCell.descriptionLabel.bind(viewModel.isHumidityAlertOn) {
                 [weak self] (_, _) in
                 self?.updateUIHumidityAlertDescription()
@@ -832,17 +808,8 @@ extension WebTagSettingsTableViewController {
 
             temperatureAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
                 if let tu = temperatureUnit {
-                    switch tu {
-                    case .celsius:
-                        slider.minValue = -40
-                        slider.maxValue = 85
-                    case .fahrenheit:
-                        slider.minValue = -40
-                        slider.maxValue = 185
-                    case .kelvin:
-                        slider.minValue = 233
-                        slider.maxValue = 358
-                    }
+                    slider.minValue = CGFloat(tu.alertRange.lowerBound)
+                    slider.maxValue = CGFloat(tu.alertRange.upperBound)
                 }
             }
             temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in

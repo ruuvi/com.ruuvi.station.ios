@@ -61,9 +61,11 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             }
         case .humidity:
             if prefs.bool(forKey: humidityAlertIsOnUDKeyPrefix + uuid),
-                let lower = prefs.object(forKey: humidityLowerBoundUDKeyPrefix + uuid) as? Humidity,
-                let upper = prefs.object(forKey: humidityUpperBoundUDKeyPrefix + uuid) as? Humidity {
-                return .humidity(lower: lower, upper: upper)
+               let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid) as? Data,
+                let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
+                let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self) {
+                return .humidity(lower: lowerHumidity, upper: upperHumidity)
             } else {
                 return nil
             }
@@ -99,8 +101,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
         case .humidity(let lower, let upper):
             prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
-            setLower(humidity: lower, for: uuid)
-            setUpper(humidity: upper, for: uuid)
+            prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
         case .pressure(let lower, let upper):
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)

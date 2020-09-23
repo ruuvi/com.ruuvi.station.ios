@@ -129,10 +129,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         keepConnectionTitleLabel.text = "TagSettings.KeepConnection.title".localized()
         humidityAlertHeaderCell.titleLabel.text
             = "TagSettings.AirHumidityAlert.title".localized()
-            + " " + "%"
         pressureAlertHeaderCell.titleLabel.text
             = "TagSettings.PressureAlert.title".localized()
-            + " " + "hPa".localized()
         connectionAlertHeaderCell.titleLabel.text = "TagSettings.ConnectionAlert.title".localized()
         movementAlertHeaderCell.titleLabel.text = "TagSettings.MovementAlert.title".localized()
 
@@ -582,43 +580,16 @@ extension TagSettingsTableViewController {
 
     private func configureMinMaxForSliders() {
         let tu = viewModel?.temperatureUnit.value ?? .celsius
-        switch tu {
-        case .celsius:
-            temperatureAlertControlsCell.slider.minValue = -40
-            temperatureAlertControlsCell.slider.maxValue = 85
-        case .fahrenheit:
-            temperatureAlertControlsCell.slider.minValue = -40
-            temperatureAlertControlsCell.slider.maxValue = 185
-        case .kelvin:
-            temperatureAlertControlsCell.slider.minValue = 233
-            temperatureAlertControlsCell.slider.maxValue = 358
-        }
+        temperatureAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
+        temperatureAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
 
         let hu = viewModel?.humidityUnit.value ?? .percent
-        switch hu {
-        case .gm3:
-            humidityAlertControlsCell.slider.minValue = 0
-            humidityAlertControlsCell.slider.maxValue = 40
-        default:
-            humidityAlertControlsCell.slider.minValue = 0
-            humidityAlertControlsCell.slider.maxValue = 100
-        }
+        humidityAlertControlsCell.slider.minValue = CGFloat(hu.alertRange.lowerBound)
+        humidityAlertControlsCell.slider.maxValue = CGFloat(hu.alertRange.upperBound)
 
         let p = viewModel?.pressureUnit.value ?? .hectopascals
-        switch p {
-        case .bars:
-            pressureAlertControlsCell.slider.minValue = 0.3
-            pressureAlertControlsCell.slider.maxValue = 1.1
-        case .inchesOfMercury:
-            pressureAlertControlsCell.slider.minValue = 8
-            pressureAlertControlsCell.slider.maxValue = 33
-        case .millimetersOfMercury:
-            pressureAlertControlsCell.slider.minValue = 225
-            pressureAlertControlsCell.slider.maxValue = 825
-        default:
-            pressureAlertControlsCell.slider.minValue = 300
-            pressureAlertControlsCell.slider.maxValue = 1100
-        }
+        pressureAlertControlsCell.slider.minValue = CGFloat(p.alertRange.lowerBound)
+        pressureAlertControlsCell.slider.maxValue = CGFloat(p.alertRange.upperBound)
     }
 }
 
@@ -632,7 +603,7 @@ extension TagSettingsTableViewController {
     private func bindViewModel() {
         bindHumidity()
         bindTemperatureAlertCells()
-        bindHumidityCells()
+        bindHumidityAlertCells()
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
@@ -845,27 +816,16 @@ extension TagSettingsTableViewController {
             }
 
             temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
-                if let tu = temperatureUnit {
-                    let title = "TagSettings.temperatureAlertTitleLabel.text"
-                    label.text = title.localized() + " " + tu.symbol
-                } else {
-                    label.text = "N/A".localized()
-                }
+                let title = "TagSettings.temperatureAlertTitleLabel.text"
+                label.text = title.localized()
+                    + " "
+                    + (temperatureUnit?.symbol ?? "N/A".localized())
             }
 
             temperatureAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
                 if let tu = temperatureUnit {
-                    switch tu {
-                    case .celsius:
-                        slider.minValue = -40
-                        slider.maxValue = 85
-                    case .fahrenheit:
-                        slider.minValue = -40
-                        slider.maxValue = 185
-                    case .kelvin:
-                        slider.minValue = 233
-                        slider.maxValue = 358
-                    }
+                    slider.minValue = CGFloat(tu.alertRange.lowerBound)
+                    slider.maxValue = CGFloat(tu.alertRange.upperBound)
                 }
             }
 
@@ -999,78 +959,93 @@ extension TagSettingsTableViewController {
 
     // swiftlint:disable:next function_body_length
     private func bindPressureAlertCells() {
-       if isViewLoaded, let viewModel = viewModel {
-           pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
-               view.isOn = isOn.bound
-           }
+        if isViewLoaded, let viewModel = viewModel {
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
+                view.isOn = isOn.bound
+            }
 
-           pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
-               slider.isEnabled = isOn.bound
-           }
+            pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
+                slider.isEnabled = isOn.bound
+            }
 
-           pressureAlertControlsCell.slider.bind(viewModel.pressureLowerBound) { [weak self] (_, _) in
-               self?.updateUIPressureLowerBound()
-               self?.updateUIPressureAlertDescription()
-           }
+            pressureAlertControlsCell.slider.bind(viewModel.pressureLowerBound) { [weak self] (_, _) in
+                self?.updateUIPressureLowerBound()
+                self?.updateUIPressureAlertDescription()
+            }
 
-           pressureAlertControlsCell.slider.bind(viewModel.pressureUpperBound) { [weak self] (_, _) in
-               self?.updateUIPressureUpperBound()
-               self?.updateUIPressureAlertDescription()
-           }
-           pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) { [weak self] (_, _) in
-               self?.updateUIPressureAlertDescription()
-           }
+            pressureAlertControlsCell.slider.bind(viewModel.pressureUpperBound) { [weak self] (_, _) in
+                self?.updateUIPressureUpperBound()
+                self?.updateUIPressureAlertDescription()
+            }
 
-           let isPNEnabled = viewModel.isPushNotificationsEnabled
-           let isPressureAlertOn = viewModel.isPressureAlertOn
-           let isConnected = viewModel.isConnected
+            pressureAlertHeaderCell.titleLabel.bind(viewModel.pressureUnit) { (label, pressureUnit) in
+                let title = "TagSettings.PressureAlert.title"
+                label.text = title.localized()
+                    + " "
+                    + (pressureUnit?.symbol ?? "N/A".localized())
+            }
 
-           pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-               let isPN = isPNEnabled?.value ?? false
-               let isEnabled = isPN && isConnected.bound
-               view.isEnabled = isEnabled
-               view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-           }
+            pressureAlertControlsCell.slider.bind(viewModel.pressureUnit) { (slider, pressureUnit) in
+                if let pu = pressureUnit {
+                    slider.minValue = CGFloat(pu.alertRange.lowerBound)
+                    slider.maxValue = CGFloat(pu.alertRange.upperBound)
+                }
+            }
 
-           pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-               [weak isConnected] view, isPushNotificationsEnabled in
-               let isPN = isPushNotificationsEnabled ?? false
-               let isCo = isConnected?.value ?? false
-               let isEnabled = isPN && isCo
-               view.isEnabled = isEnabled
-               view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-           }
+            pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) { [weak self] (_, _) in
+                self?.updateUIPressureAlertDescription()
+            }
 
-           pressureAlertControlsCell.slider.bind(viewModel.isConnected) {
-               [weak isPressureAlertOn, weak isPNEnabled] (slider, isConnected) in
-               let isPN = isPNEnabled?.value ?? false
-               let isOn = isPressureAlertOn?.value ?? false
-               slider.isEnabled = isConnected.bound && isOn && isPN
-           }
+            let isPNEnabled = viewModel.isPushNotificationsEnabled
+            let isPressureAlertOn = viewModel.isPressureAlertOn
+            let isConnected = viewModel.isConnected
 
-           pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-               [weak isPressureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-               let isOn = isPressureAlertOn?.value ?? false
-               let isCo = isConnected?.value ?? false
-               slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
-           }
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isEnabled = isPN && isConnected.bound
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
 
-           pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
-               (textField, pressureAlertDescription) in
-               textField.text = pressureAlertDescription
-           }
+            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isConnected] view, isPushNotificationsEnabled in
+                let isPN = isPushNotificationsEnabled ?? false
+                let isCo = isConnected?.value ?? false
+                let isEnabled = isPN && isCo
+                view.isEnabled = isEnabled
+                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+            }
 
-           tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
-               if tableView.window != nil {
-                   tableView.beginUpdates()
-                   tableView.endUpdates()
-               }
-           }
-       }
+            pressureAlertControlsCell.slider.bind(viewModel.isConnected) {
+                [weak isPressureAlertOn, weak isPNEnabled] (slider, isConnected) in
+                let isPN = isPNEnabled?.value ?? false
+                let isOn = isPressureAlertOn?.value ?? false
+                slider.isEnabled = isConnected.bound && isOn && isPN
+            }
+
+            pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+                [weak isPressureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+                let isOn = isPressureAlertOn?.value ?? false
+                let isCo = isConnected?.value ?? false
+                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+            }
+
+            pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
+                (textField, pressureAlertDescription) in
+                textField.text = pressureAlertDescription
+            }
+
+            tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
+                if tableView.window != nil {
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
+            }
+        }
     }
 
     // swiftlint:disable:next function_body_length
-    private func bindHumidityCells() {
+    private func bindHumidityAlertCells() {
         if isViewLoaded, let viewModel = viewModel {
             humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
                 view.isOn = isOn.bound
@@ -1089,6 +1064,22 @@ extension TagSettingsTableViewController {
                 self?.updateUIHumidityUpperBound()
                 self?.updateUIHumidityAlertDescription()
             }
+
+            humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
+                let title = "TagSettings.AirHumidityAlert.title"
+                let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
+                label.text = title.localized()
+                    + " "
+                    + (symbol ?? "N/A".localized())
+            }
+
+            humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
+                if let hu = humidityUnit {
+                    slider.minValue = CGFloat(hu.alertRange.lowerBound)
+                    slider.maxValue = CGFloat(hu.alertRange.upperBound)
+                }
+            }
+
             humidityAlertHeaderCell.descriptionLabel.bind(viewModel.isHumidityAlertOn) {
                 [weak self] (_, _) in
                 self?.updateUIHumidityAlertDescription()
@@ -1162,6 +1153,10 @@ extension TagSettingsTableViewController {
         updateUIHumidityAlertDescription()
         updateUIHumidityLowerBound()
         updateUIHumidityUpperBound()
+
+        updateUIPressureAlertDescription()
+        updateUIPressureLowerBound()
+        updateUIPressureUpperBound()
     }
 
     private func updateUIPressureLowerBound() {
@@ -1170,6 +1165,8 @@ extension TagSettingsTableViewController {
                let pu = viewModel?.pressureUnit.value,
                let p = Pressure(lower, unit: pu)?.value {
                 pressureAlertControlsCell.slider.selectedMinValue = CGFloat(p)
+            } else if let pu = viewModel?.pressureUnit.value {
+                    pressureAlertControlsCell.slider.selectedMinValue = CGFloat(pu.alertRange.lowerBound)
             } else {
                 pressureAlertControlsCell.slider.selectedMinValue = 300
             }
@@ -1182,6 +1179,8 @@ extension TagSettingsTableViewController {
                let pu = viewModel?.pressureUnit.value,
                let p = Pressure(upper, unit: pu)?.value {
                 pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(p)
+            } else if let pu = viewModel?.pressureUnit.value {
+                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(pu.alertRange.upperBound)
             } else {
                 pressureAlertControlsCell.slider.selectedMaxValue = 1100
             }
@@ -1200,6 +1199,8 @@ extension TagSettingsTableViewController {
                     let minValue: Double = lower.converted(to: .relative(temperature: t)).value
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(minValue)
                 }
+            } else if let hu = viewModel?.humidityUnit.value {
+                humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
             } else {
                 humidityAlertControlsCell.slider.selectedMinValue = 0
             }
@@ -1215,15 +1216,13 @@ extension TagSettingsTableViewController {
                 case .gm3:
                     humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.converted(to: .absolute).value)
                 default:
-                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.converted(to: .relative(temperature: t)).value)
+                    let maxValue: Double = upper.converted(to: .relative(temperature: t)).value
+                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(maxValue)
                 }
             } else if let hu = viewModel?.humidityUnit.value {
-                switch hu {
-                case .gm3:
-                    humidityAlertControlsCell.slider.selectedMaxValue = 40
-                default:
-                    humidityAlertControlsCell.slider.selectedMaxValue = 100
-                }
+                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
+            } else {
+                humidityAlertControlsCell.slider.selectedMaxValue = 40
             }
         }
     }
@@ -1270,7 +1269,8 @@ extension TagSettingsTableViewController {
         if isViewLoaded {
             if let isHumidityAlertOn = viewModel?.isHumidityAlertOn.value,
                 isHumidityAlertOn {
-                if let l = viewModel?.humidityLowerBound.value,
+                if let hu = viewModel?.humidityUnit.value,
+                   let l = viewModel?.humidityLowerBound.value,
                     let u = viewModel?.humidityUpperBound.value {
                     let format = "TagSettings.Alerts.Humidity.description".localized()
                     humidityAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
@@ -1286,17 +1286,12 @@ extension TagSettingsTableViewController {
     private func updateUICelsiusLowerBound() {
         if isViewLoaded {
             if let temperatureUnit = viewModel?.temperatureUnit.value {
-                if let lower = viewModel?.celsiusLowerBound.value {
-                    switch temperatureUnit {
-                    case .celsius:
-                        temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
-                    case .fahrenheit:
-                        temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower.fahrenheit)
-                    case .kelvin:
-                        temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower.kelvin)
-                    }
+                if let lower = viewModel?.celsiusLowerBound.value,
+                   let temperature = Temperature(lower, unit: temperatureUnit.unitTemperature)?.value {
+                    temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(temperature)
                 } else {
-                    temperatureAlertControlsCell.slider.selectedMinValue = -40
+                    let lower: CGFloat = CGFloat(temperatureUnit.alertRange.lowerBound)
+                    temperatureAlertControlsCell.slider.selectedMinValue = lower
                 }
             } else {
                 temperatureAlertControlsCell.slider.minValue = -40
@@ -1308,17 +1303,12 @@ extension TagSettingsTableViewController {
     private func updateUICelsiusUpperBound() {
         if isViewLoaded {
             if let temperatureUnit = viewModel?.temperatureUnit.value {
-                if let upper = viewModel?.celsiusUpperBound.value {
-                    switch temperatureUnit {
-                    case .celsius:
-                        temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
-                    case .fahrenheit:
-                        temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.fahrenheit)
-                    case .kelvin:
-                        temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.kelvin)
-                    }
+                if let upper = viewModel?.celsiusUpperBound.value,
+                   let temperature = Temperature(upper, unit: temperatureUnit.unitTemperature)?.value {
+                    temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(temperature)
                 } else {
-                    temperatureAlertControlsCell.slider.selectedMaxValue = 85
+                    let lower: CGFloat = CGFloat(temperatureUnit.alertRange.upperBound)
+                    temperatureAlertControlsCell.slider.selectedMaxValue = lower
                 }
             } else {
                 temperatureAlertControlsCell.slider.maxValue = 85
@@ -1330,22 +1320,11 @@ extension TagSettingsTableViewController {
     private func updateUITemperatureAlertDescription() {
         if isViewLoaded {
             if let isTemperatureAlertOn = viewModel?.isTemperatureAlertOn.value, isTemperatureAlertOn {
-                if let l = viewModel?.celsiusLowerBound.value,
+                if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
+                    let l = viewModel?.celsiusLowerBound.value,
                     let u = viewModel?.celsiusUpperBound.value,
-                    let tu = viewModel?.temperatureUnit.value {
-                    var la: Double
-                    var ua: Double
-                    switch tu {
-                    case .celsius:
-                        la = l
-                        ua = u
-                    case .fahrenheit:
-                        la = l.fahrenheit
-                        ua = u.fahrenheit
-                    case .kelvin:
-                        la = l.kelvin
-                        ua = u.kelvin
-                    }
+                    let la = Temperature(l, unit: tu)?.value,
+                    let ua = Temperature(u, unit: tu)?.value {
                     let format = "TagSettings.Alerts.Temperature.description".localized()
                     temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
                 } else {
