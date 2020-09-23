@@ -328,9 +328,9 @@
 
 // UnitPressure
 "UnitPressure.bars.title" = "Bar (bar)";
-"UnitPressure.hectopascals.title" = "Hectopascals (hPa)";
-"UnitPressure.inchesOfMercury.title" = "Inches of mercury (inHg)";
-"UnitPressure.millimetersOfMercury.title" = "Millimeters of merchury (mmHg)";
+"UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
+"UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";
