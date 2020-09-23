@@ -48,3 +48,17 @@ extension UnitTemperature: SelectionItemProtocol {
         }
     }
 }
+
+// defaults range of temperature
+extension TemperatureUnit {
+    var alertRange: Range<Double> {
+        switch self {
+        case .celsius:
+            return .init(uncheckedBounds: (lower: -40, upper: 85))
+        case .fahrenheit:
+            return .init(uncheckedBounds: (lower: -40, upper: 185))
+        case .kelvin:
+            return .init(uncheckedBounds: (lower: 233, upper: 358))
+        }
+    }
+}

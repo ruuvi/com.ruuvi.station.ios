@@ -16,4 +16,9 @@ extension UnitPressure: SelectionItemProtocol {
             return .init()
         }
     }
+    var alertRange: Range<Double> {
+        let min = Pressure(300, unit: .hectopascals)?.converted(to: self).value ?? 300
+        let max = Pressure(1100, unit: .hectopascals)?.converted(to: self).value ?? 1100
+        return .init(uncheckedBounds: (lower: min, upper: max))
+    }
 }

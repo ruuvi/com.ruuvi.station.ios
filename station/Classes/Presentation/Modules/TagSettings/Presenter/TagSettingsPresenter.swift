@@ -48,6 +48,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var heartbeatToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
+    private var pressureUnitToken: NSObjectProtocol?
     private var connectToken: NSObjectProtocol?
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -60,6 +61,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         heartbeatToken?.invalidate()
         temperatureUnitToken?.invalidate()
         humidityUnitToken?.invalidate()
+        pressureUnitToken?.invalidate()
         connectToken?.invalidate()
         disconnectToken?.invalidate()
         appDidBecomeActiveToken?.invalidate()
@@ -245,6 +247,7 @@ extension TagSettingsPresenter {
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
+        viewModel.pressureUnit.value = settings.pressureUnit
 
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.background(for: luid)
@@ -608,6 +611,14 @@ extension TagSettingsPresenter {
                          queue: .main,
                          using: { [weak self] _ in
             self?.viewModel.humidityUnit.value = self?.settings.humidityUnit
+        })
+        pressureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.viewModel.pressureUnit.value = self?.settings.pressureUnit
         })
     }
 
