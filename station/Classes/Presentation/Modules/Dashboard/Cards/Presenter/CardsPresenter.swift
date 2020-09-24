@@ -136,6 +136,7 @@ extension CardsPresenter: CardsViewOutput {
             let temperature =  viewModel.temperature.value {
             let humidity: Humidity? = viewModel.humidity.value?.converted(to: .relative(temperature: temperature))
             router.openTagSettings(ruuviTag: ruuviTag,
+                                   temperature: temperature,
                                    humidity: humidity,
                                    output: self)
         } else if viewModel.type == .web,

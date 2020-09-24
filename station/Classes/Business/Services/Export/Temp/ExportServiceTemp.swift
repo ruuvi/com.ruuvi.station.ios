@@ -9,7 +9,7 @@ class ExportServiceTemp: ExportService {
 
     var measurementService: MeasurementsService!
     var calibrationService: CalibrationService!
-    
+
     private let iso8601: DateFormatter = {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .iso8601)
@@ -113,7 +113,7 @@ extension ExportServiceTemp {
                             let h = rh.offseted(by: ruuviTag.humidityOffset, temperature: c) {
                             absoluteHumidity = String(format: "%.2f", h.converted(to: .absolute).value)
                             if let dp = try? h.dewPoint(temperature: c) {
-                                dewPointCelsius = String(format: "%.2f",  dp.converted(to: .celsius).value)
+                                dewPointCelsius = String(format: "%.2f", dp.converted(to: .celsius).value)
                                 dewPointFahrenheit = String(format: "%.2f", dp.converted(to: .fahrenheit).value)
                                 dewPointKelvin = String(format: "%.2f", dp.converted(to: .kelvin).value)
                             } else {
@@ -281,7 +281,7 @@ extension ExportServiceTemp {
                             let rh = log.record?.humidity {
                             absoluteHumidity = String(format: "%.2f", rh.converted(to: .absolute).value)
                             if let dp = try? rh.dewPoint(temperature: c) {
-                                dewPointCelsius = String(format: "%.2f",  dp.converted(to: .celsius).value)
+                                dewPointCelsius = String(format: "%.2f", dp.converted(to: .celsius).value)
                                 dewPointFahrenheit = String(format: "%.2f", dp.converted(to: .fahrenheit).value)
                                 dewPointKelvin = String(format: "%.2f", dp.converted(to: .kelvin).value)
                             } else {
