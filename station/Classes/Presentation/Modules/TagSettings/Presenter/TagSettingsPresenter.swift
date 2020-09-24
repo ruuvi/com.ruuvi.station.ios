@@ -32,6 +32,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             syncViewModel()
         }
     }
+    private var temperature: Temperature? {
+        didSet {
+            viewModel.temperature.value = temperature
+        }
+    }
     private var humidity: Humidity? {
         didSet {
             viewModel.humidity.value = humidity
@@ -68,11 +73,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         alertDidChangeToken?.invalidate()
     }
 
-    func configure(ruuviTag: RuuviTagSensor, humidity: Humidity?, output: TagSettingsModuleOutput) {
+    func configure(ruuviTag: RuuviTagSensor, temperature: Temperature?, humidity: Humidity?, output: TagSettingsModuleOutput) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
-        self.ruuviTag = ruuviTag
+        self.temperature = temperature
         self.humidity = humidity
+        self.ruuviTag = ruuviTag
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
         startScanningRuuviTag()
@@ -298,7 +304,7 @@ extension TagSettingsPresenter {
                 case .temperature:
                     sync(temperature: type, uuid: luid.value)
                 case .humidity:
-                    sync(temperature: type, uuid: luid.value)
+                    sync(humidity: type, uuid: luid.value)
                 case .pressure:
                     sync(pressure: type, uuid: luid.value)
                 case .connection:
@@ -315,15 +321,15 @@ extension TagSettingsPresenter {
     private func sync(temperature: AlertType, uuid: String) {
         if case .temperature(let lower, let upper) = alertService.alert(for: uuid, of: temperature) {
             viewModel.isTemperatureAlertOn.value = true
-            viewModel.celsiusLowerBound.value = lower
-            viewModel.celsiusUpperBound.value = upper
+            viewModel.celsiusLowerBound.value = Temperature(Double(lower), unit: .celsius)
+            viewModel.celsiusUpperBound.value = Temperature(Double(upper), unit: .celsius)
         } else {
             viewModel.isTemperatureAlertOn.value = false
             if let celsiusLower = alertService.lowerCelsius(for: uuid) {
-                viewModel.celsiusLowerBound.value = celsiusLower
+                viewModel.celsiusLowerBound.value = Temperature(Double(celsiusLower), unit: .celsius)
             }
             if let celsiusUpper = alertService.upperCelsius(for: uuid) {
-                viewModel.celsiusUpperBound.value = celsiusUpper
+                viewModel.celsiusUpperBound.value = Temperature(Double(celsiusUpper), unit: .celsius)
             }
         }
     }
@@ -331,8 +337,15 @@ extension TagSettingsPresenter {
     private func sync(humidity: AlertType, uuid: String) {
         if case .humidity(let lower, let upper) = alertService.alert(for: uuid, of: humidity) {
             viewModel.isHumidityAlertOn.value = true
-            viewModel.humidityLowerBound.value = lower
-            viewModel.humidityUpperBound.value = upper
+            if settings.humidityUnit == .gm3 {
+                viewModel.humidityLowerBound.value = lower.converted(to: .absolute)
+                viewModel.humidityUpperBound.value = upper.converted(to: .absolute)
+            } else if let temp = viewModel.temperature.value {
+                viewModel.humidityLowerBound.value = lower
+                    .converted(to: .relative(temperature: temp))
+                viewModel.humidityUpperBound.value = upper
+                    .converted(to: .relative(temperature: temp))
+            }
         } else {
             viewModel.isHumidityAlertOn.value = false
             if let humidityLower = alertService.lowerHumidity(for: uuid) {
@@ -347,15 +360,15 @@ extension TagSettingsPresenter {
     private func sync(pressure: AlertType, uuid: String) {
         if case .pressure(let lower, let upper) = alertService.alert(for: uuid, of: pressure) {
             viewModel.isPressureAlertOn.value = true
-            viewModel.pressureLowerBound.value = lower
-            viewModel.pressureUpperBound.value = upper
+            viewModel.pressureLowerBound.value = Pressure(Double(lower), unit: .hectopascals)
+            viewModel.pressureUpperBound.value =  Pressure(Double(upper), unit: .hectopascals)
         } else {
             viewModel.isPressureAlertOn.value = false
             if let pressureLowerBound = alertService.lowerPressure(for: uuid) {
-                viewModel.pressureLowerBound.value = pressureLowerBound
+                viewModel.pressureLowerBound.value = Pressure(Double(pressureLowerBound), unit: .hectopascals)
             }
             if let pressureUpperBound = alertService.upperPressure(for: uuid) {
-                viewModel.pressureUpperBound.value = pressureUpperBound
+                viewModel.pressureUpperBound.value = Pressure(Double(pressureUpperBound), unit: .hectopascals)
             }
         }
     }
@@ -469,8 +482,10 @@ extension TagSettingsPresenter {
         let temperatureLower = viewModel.celsiusLowerBound
         let temperatureUpper = viewModel.celsiusUpperBound
         bind(viewModel.isTemperatureAlertOn, fire: false) {
-            [weak temperatureLower, weak temperatureUpper] observer, isOn in
-            if let l = temperatureLower?.value, let u = temperatureUpper?.value {
+            [weak temperatureLower,
+             weak temperatureUpper] observer, isOn in
+            if let l = temperatureLower?.value?.converted(to: .celsius).value,
+               let u = temperatureUpper?.value?.converted(to: .celsius).value {
                 let type: AlertType = .temperature(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)
                 if currentState != isOn.bound {
@@ -483,10 +498,14 @@ extension TagSettingsPresenter {
             }
         }
         bind(viewModel.celsiusLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(celsius: lower, for: uuid)
+            if let l = lower?.converted(to: .celsius).value {
+                observer.alertService.setLower(celsius: l, for: uuid)
+            }
         }
         bind(viewModel.celsiusUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(celsius: upper, for: uuid)
+            if let u = upper?.converted(to: .celsius).value {
+                observer.alertService.setUpper(celsius: u, for: uuid)
+            }
         }
         bind(viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
             observer.alertService.setTemperature(description: temperatureAlertDescription, for: uuid)
@@ -527,7 +546,8 @@ extension TagSettingsPresenter {
         let pressureUpper = viewModel.pressureUpperBound
         bind(viewModel.isPressureAlertOn, fire: false) {
             [weak pressureLower, weak pressureUpper] observer, isOn in
-            if let l = pressureLower?.value, let u = pressureUpper?.value {
+            if let l = pressureLower?.value?.converted(to: .hectopascals).value,
+               let u = pressureUpper?.value?.converted(to: .hectopascals).value {
                 let type: AlertType = .pressure(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)
                 if currentState != isOn.bound {
@@ -541,11 +561,15 @@ extension TagSettingsPresenter {
         }
 
         bind(viewModel.pressureLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(pressure: lower, for: uuid)
+            if let l = lower?.converted(to: .hectopascals).value {
+                observer.alertService.setLower(pressure: l, for: uuid)
+            }
         }
 
         bind(viewModel.pressureUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(pressure: upper, for: uuid)
+            if let u = upper?.converted(to: .hectopascals).value {
+                observer.alertService.setUpper(pressure: u, for: uuid)
+            }
         }
 
         bind(viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in

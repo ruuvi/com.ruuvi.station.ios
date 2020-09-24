@@ -50,12 +50,18 @@ class CardsRouter: NSObject, CardsRouterInput {
             .perform()
     }
 
-    func openTagSettings(ruuviTag: RuuviTagSensor, humidity: Humidity?, output: TagSettingsModuleOutput) {
+    func openTagSettings(ruuviTag: RuuviTagSensor,
+                         temperature: Temperature?,
+                         humidity: Humidity?,
+                         output: TagSettingsModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: TagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(ruuviTag: ruuviTag, humidity: humidity, output: output)
+                module.configure(ruuviTag: ruuviTag,
+                                 temperature: temperature,
+                                 humidity: humidity,
+                                 output: output)
             })
     }
 

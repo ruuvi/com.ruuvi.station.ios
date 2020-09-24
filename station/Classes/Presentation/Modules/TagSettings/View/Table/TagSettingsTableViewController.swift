@@ -151,8 +151,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         controller.addAction(UIAlertAction(title: "Confirm".localized(),
                                            style: .destructive,
                                            handler: { [weak self] _ in
-            self?.output.viewDidConfirmTagRemoval()
-        }))
+                                            self?.output.viewDidConfirmTagRemoval()
+                                           }))
         controller.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
         present(controller, animated: true)
     }
@@ -283,25 +283,26 @@ extension TagSettingsTableViewController {
 extension TagSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        if let cell = tableView.cellForRow(at: indexPath) {
-            switch cell {
-            case tagNameCell:
-                tagNameTextField.becomeFirstResponder()
-            case calibrationHumidityCell:
-                output.viewDidAskToCalibrateHumidity()
-            case macAddressCell:
-                output.viewDidTapOnMacAddress()
-            case uuidCell:
-                output.viewDidTapOnUUID()
-            case txPowerCell:
-                output.viewDidTapOnTxPower()
-            case mcCell:
-                output.viewDidTapOnMovementCounter()
-            case msnCell:
-                output.viewDidTapOnMeasurementSequenceNumber()
-            default:
-                break
-            }
+        guard let cell = tableView.cellForRow(at: indexPath) else {
+            return
+        }
+        switch cell {
+        case tagNameCell:
+            tagNameTextField.becomeFirstResponder()
+        case calibrationHumidityCell:
+            output.viewDidAskToCalibrateHumidity()
+        case macAddressCell:
+            output.viewDidTapOnMacAddress()
+        case uuidCell:
+            output.viewDidTapOnUUID()
+        case txPowerCell:
+            output.viewDidTapOnTxPower()
+        case mcCell:
+            output.viewDidTapOnMovementCounter()
+        case msnCell:
+            output.viewDidTapOnMeasurementSequenceNumber()
+        default:
+            break
         }
     }
 
@@ -321,13 +322,14 @@ extension TagSettingsTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
-            switch cell {
-            case calibrationHumidityCell:
-                output.viewDidTapOnHumidityAccessoryButton()
-            default:
-                break
-            }
+        guard let cell = tableView.cellForRow(at: indexPath) else {
+            return
+        }
+        switch cell {
+        case calibrationHumidityCell:
+            output.viewDidTapOnHumidityAccessoryButton()
+        default:
+            break
         }
     }
 
@@ -403,7 +405,7 @@ extension TagSettingsTableViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if viewModel?.isConnectable.value ?? false {
+        if viewModel?.isConnectable.value == true {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
@@ -514,22 +516,12 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didSlideTo minValue: CGFloat, maxValue: CGFloat) {
         switch cell {
         case temperatureAlertControlsCell:
             if let tu = viewModel?.temperatureUnit.value {
-                switch tu {
-                case .celsius:
-                    viewModel?.celsiusLowerBound.value = Double(minValue)
-                    viewModel?.celsiusUpperBound.value = Double(maxValue)
-                case .fahrenheit:
-                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromFahrenheit
-                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromFahrenheit
-                case .kelvin:
-                    viewModel?.celsiusLowerBound.value = Double(minValue).celsiusFromKelvin
-                    viewModel?.celsiusUpperBound.value = Double(maxValue).celsiusFromKelvin
-                }
+                viewModel?.celsiusLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
+                viewModel?.celsiusUpperBound.value = Temperature(Double(maxValue), unit: tu.unitTemperature)
             }
         case humidityAlertControlsCell:
             if let hu = viewModel?.humidityUnit.value,
@@ -539,18 +531,16 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
                     viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue), unit: .absolute)
                     viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue), unit: .absolute)
                 default:
-                    viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue),
+                    viewModel?.humidityLowerBound.value = Humidity(value: Double(minValue / 100.0),
                                                                    unit: .relative(temperature: t))
-                    viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue),
+                    viewModel?.humidityUpperBound.value = Humidity(value: Double(maxValue / 100.0),
                                                                    unit: .relative(temperature: t))
                 }
             }
         case pressureAlertControlsCell:
             if let pu = viewModel?.pressureUnit.value {
-                viewModel?.pressureLowerBound.value = Pressure(Double(minValue), unit: pu)?
-                    .converted(to: .hectopascals).value
-                viewModel?.pressureUpperBound.value = Pressure(Double(maxValue), unit: pu)?
-                    .converted(to: .hectopascals).value
+                viewModel?.pressureLowerBound.value = Pressure(Double(minValue), unit: pu)
+                viewModel?.pressureUpperBound.value = Pressure(Double(maxValue), unit: pu)
             }
         default:
             break
@@ -607,529 +597,521 @@ extension TagSettingsTableViewController {
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
-        if isViewLoaded, let viewModel = viewModel {
+        guard isViewLoaded, let viewModel = viewModel  else { return }
 
-            dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
-                if let isConnected = isConnected, isConnected {
-                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
-                } else {
-                    label.text = "TagSettings.DataSource.Advertisement.title".localized()
-                }
+        dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
+            if let isConnected = isConnected, isConnected {
+                label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+            } else {
+                label.text = "TagSettings.DataSource.Advertisement.title".localized()
             }
+        }
 
-            tableView.bind(viewModel.version) { (tableView, _) in
-                tableView.reloadData()
+        tableView.bind(viewModel.version) { (tableView, _) in
+            tableView.reloadData()
+        }
+
+        tableView.bind(viewModel.humidityUnit) { tableView, _ in
+            tableView.reloadData()
+        }
+
+        backgroundImageView.bind(viewModel.background) { $0.image = $1 }
+        tagNameTextField.bind(viewModel.name) { $0.text = $1 }
+
+        let emptyValueString = "TagSettings.EmptyValue.sign"
+
+        uuidValueLabel.bind(viewModel.uuid) { label, uuid in
+            if let uuid = uuid {
+                label.text = uuid
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            tableView.bind(viewModel.humidityUnit) { tableView, _ in
-                tableView.reloadData()
+        macAddressValueLabel.bind(viewModel.mac) { label, mac in
+            if let mac = mac {
+                label.text = mac
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            backgroundImageView.bind(viewModel.background) { $0.image = $1 }
-            tagNameTextField.bind(viewModel.name) { $0.text = $1 }
-
-            let emptyValueString = "TagSettings.EmptyValue.sign"
-
-            uuidValueLabel.bind(viewModel.uuid) { label, uuid in
-                if let uuid = uuid {
-                    label.text = uuid
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        voltageValueLabel.bind(viewModel.voltage) { label, voltage in
+            if let voltage = voltage {
+                label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            macAddressValueLabel.bind(viewModel.mac) { label, mac in
-                if let mac = mac {
-                    label.text = mac
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        accelerationXValueLabel.bind(viewModel.accelerationX) { label, accelerationX in
+            if let accelerationX = accelerationX {
+                label.text = String.localizedStringWithFormat("%.3f", accelerationX) + " " + "g".localized()
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            voltageValueLabel.bind(viewModel.voltage) { label, voltage in
-                if let voltage = voltage {
-                    label.text = String.localizedStringWithFormat("%.3f", voltage) + " " + "V".localized()
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        accelerationYValueLabel.bind(viewModel.accelerationY) { label, accelerationY in
+            if let accelerationY = accelerationY {
+                label.text = String.localizedStringWithFormat("%.3f", accelerationY) + " " + "g".localized()
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            accelerationXValueLabel.bind(viewModel.accelerationX) { label, accelerationX in
-                if let accelerationX = accelerationX {
-                    label.text = String.localizedStringWithFormat("%.3f", accelerationX) + " " + "g".localized()
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
+            if let accelerationZ = accelerationZ {
+                label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            accelerationYValueLabel.bind(viewModel.accelerationY) { label, accelerationY in
-                if let accelerationY = accelerationY {
-                    label.text = String.localizedStringWithFormat("%.3f", accelerationY) + " " + "g".localized()
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        dataFormatValueLabel.bind(viewModel.version) { (label, version) in
+            if let version = version {
+                label.text = "\(version)"
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            accelerationZValueLabel.bind(viewModel.accelerationZ) { label, accelerationZ in
-                if let accelerationZ = accelerationZ {
-                    label.text = String.localizedStringWithFormat("%.3f", accelerationZ) + " " + "g".localized()
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
+            if let mc = mc {
+                label.text = "\(mc)"
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            dataFormatValueLabel.bind(viewModel.version) { (label, version) in
-                if let version = version {
-                    label.text = "\(version)"
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        msnValueLabel.bind(viewModel.measurementSequenceNumber) { (label, msn) in
+            if let msn = msn {
+                label.text = "\(msn)"
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
-                if let mc = mc {
-                    label.text = "\(mc)"
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
+            if let txPower = txPower {
+                label.text = "\(txPower)" + " " + "dBm".localized()
+            } else {
+                label.text = emptyValueString.localized()
             }
+        }
 
-            msnValueLabel.bind(viewModel.measurementSequenceNumber) { (label, msn) in
-                if let msn = msn {
-                    label.text = "\(msn)"
-                } else {
-                    label.text = emptyValueString.localized()
-                }
+        tableView.bind(viewModel.isConnectable) { (tableView, _) in
+            tableView.reloadData()
+        }
+
+        tableView.bind(viewModel.isConnected) { (tableView, _) in
+            tableView.reloadData()
+        }
+
+        tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, _) in
+            tableView.reloadData()
+        }
+
+        let keepConnection = viewModel.keepConnection
+        connectStatusLabel.bind(viewModel.isConnected) { [weak keepConnection] (label, isConnected) in
+            let keep = keepConnection?.value ?? false
+            if isConnected.bound {
+                label.text = "TagSettings.ConnectStatus.Connected".localized()
+            } else if keep {
+                label.text = "TagSettings.ConnectStatus.Connecting".localized()
+            } else {
+                label.text = "TagSettings.ConnectStatus.Disconnected".localized()
             }
+        }
 
-            txPowerValueLabel.bind(viewModel.txPower) { (label, txPower) in
-                if let txPower = txPower {
-                    label.text = "\(txPower)" + " " + "dBm".localized()
-                } else {
-                    label.text = emptyValueString.localized()
-                }
-            }
+        let isConnected = viewModel.isConnected
 
-            tableView.bind(viewModel.isConnectable) { (tableView, _) in
-                tableView.reloadData()
-            }
+        keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
+            view.isOn = keepConnection.bound
+        }
 
-            tableView.bind(viewModel.isConnected) { (tableView, _) in
-                tableView.reloadData()
-            }
-
-            tableView.bind(viewModel.isPushNotificationsEnabled) { (tableView, _) in
-                tableView.reloadData()
-            }
-
-            let keepConnection = viewModel.keepConnection
-            connectStatusLabel.bind(viewModel.isConnected) { [weak keepConnection] (label, isConnected) in
-                let keep = keepConnection?.value ?? false
-                if isConnected.bound {
-                    label.text = "TagSettings.ConnectStatus.Connected".localized()
-                } else if keep {
-                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
-                } else {
-                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
-                }
-            }
-
-            let isConnected = viewModel.isConnected
-
-            keepConnectionSwitch.bind(viewModel.keepConnection) { (view, keepConnection) in
-                view.isOn = keepConnection.bound
-            }
-
-            connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
-                let isConnected = isConnected?.value ?? false
-                if isConnected {
-                    label.text = "TagSettings.ConnectStatus.Connected".localized()
-                } else if keepConnection.bound {
-                    label.text = "TagSettings.ConnectStatus.Connecting".localized()
-                } else {
-                    label.text = "TagSettings.ConnectStatus.Disconnected".localized()
-                }
+        connectStatusLabel.bind(viewModel.keepConnection) { [weak isConnected] (label, keepConnection) in
+            let isConnected = isConnected?.value ?? false
+            if isConnected {
+                label.text = "TagSettings.ConnectStatus.Connected".localized()
+            } else if keepConnection.bound {
+                label.text = "TagSettings.ConnectStatus.Connecting".localized()
+            } else {
+                label.text = "TagSettings.ConnectStatus.Disconnected".localized()
             }
         }
     }
 
     private func bindHumidity() {
-        if isViewLoaded,
-            let viewModel = viewModel {
-            let temperature = viewModel.temperature.value
-            let humidity = viewModel.humidity.value
-            let humidityOffset = viewModel.humidityOffset.value
-            let humidityCell = calibrationHumidityCell
-            let humidityTrailing = humidityLabelTrailing
+        guard isViewLoaded, let viewModel = viewModel else { return }
+        let temperature = viewModel.temperature.value
+        let humidity = viewModel.humidity.value
+        let humidityOffset = viewModel.humidityOffset.value
+        let humidityCell = calibrationHumidityCell
+        let humidityTrailing = humidityLabelTrailing
 
-            let humidityBlock: ((UILabel, Any?) -> Void) = {
-                [weak humidityCell,
-                weak humidityTrailing] label, _ in
-                // TODO with use measurement service
-                if let temperature = temperature,
-                    let humidityOffset = humidityOffset,
-                    let humidity = humidity?.converted(to: .relative(temperature: temperature)).value {
-                    if humidityOffset > 0 {
-                        let shownHumidity = humidity + humidityOffset
-                        if shownHumidity > 100.0 {
-                            label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
+        let humidityBlock: ((UILabel, Any?) -> Void) = {
+            [weak humidityCell,
+             weak humidityTrailing] label, _ in
+            // TODO with use measurement service
+            if let temperature = temperature,
+               let humidityOffset = humidityOffset,
+               let humidity = humidity?.converted(to: .relative(temperature: temperature)).value {
+                if humidityOffset > 0 {
+                    let shownHumidity = humidity + humidityOffset
+                    if shownHumidity > 100.0 {
+                        label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
                             + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
-                           humidityCell?.accessoryType = .detailButton
-                           humidityTrailing?.constant = 0
-                        } else {
-                           label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
-                            + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
-                           humidityCell?.accessoryType = .none
-                           humidityTrailing?.constant = 16.0
-                       }
+                        humidityCell?.accessoryType = .detailButton
+                        humidityTrailing?.constant = 0
                     } else {
-                       label.text = nil
-                       humidityCell?.accessoryType = .none
-                       humidityTrailing?.constant = 16.0
+                        label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
+                            + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
+                        humidityCell?.accessoryType = .none
+                        humidityTrailing?.constant = 16.0
                     }
                 } else {
-                   label.text = nil
+                    label.text = nil
+                    humidityCell?.accessoryType = .none
+                    humidityTrailing?.constant = 16.0
                 }
+            } else {
+                label.text = nil
             }
-            humidityLabel.bind(viewModel.humidity, block: humidityBlock)
-            humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
         }
+        humidityLabel.bind(viewModel.humidity, block: humidityBlock)
+        humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
     }
 
     // swiftlint:disable:next function_body_length
     private func bindTemperatureAlertCells() {
-        if isViewLoaded, let viewModel = viewModel {
-            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
-                view.isOn = isOn.bound
-            }
-            temperatureAlertControlsCell.slider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
-                slider.isEnabled = isOn.bound
-            }
+        guard isViewLoaded, let viewModel = viewModel  else { return }
+        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isTemperatureAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
+        temperatureAlertControlsCell.slider.bind(viewModel.isTemperatureAlertOn) { (slider, isOn) in
+            slider.isEnabled = isOn.bound
+        }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.celsiusLowerBound) { [weak self] (_, _) in
-                self?.updateUICelsiusLowerBound()
-                self?.updateUITemperatureAlertDescription()
-            }
-            temperatureAlertControlsCell.slider.bind(viewModel.celsiusUpperBound) { [weak self] (_, _) in
-                self?.updateUICelsiusUpperBound()
-                self?.updateUITemperatureAlertDescription()
-            }
+        temperatureAlertControlsCell.slider.bind(viewModel.celsiusLowerBound) { [weak self] (_, _) in
+            self?.updateUITemperatureLowerBound()
+            self?.updateUITemperatureAlertDescription()
+        }
+        temperatureAlertControlsCell.slider.bind(viewModel.celsiusUpperBound) { [weak self] (_, _) in
+            self?.updateUITemperatureUpperBound()
+            self?.updateUITemperatureAlertDescription()
+        }
 
-            temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
-                let title = "TagSettings.temperatureAlertTitleLabel.text"
-                label.text = title.localized()
-                    + " "
-                    + (temperatureUnit?.symbol ?? "N/A".localized())
+        temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
+            let title = "TagSettings.temperatureAlertTitleLabel.text"
+            label.text = title.localized()
+                + " "
+                + (temperatureUnit?.symbol ?? "N/A".localized())
+        }
+
+        temperatureAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
+            if let tu = temperatureUnit {
+                slider.minValue = CGFloat(tu.alertRange.lowerBound)
+                slider.maxValue = CGFloat(tu.alertRange.upperBound)
             }
+        }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
-                if let tu = temperatureUnit {
-                    slider.minValue = CGFloat(tu.alertRange.lowerBound)
-                    slider.maxValue = CGFloat(tu.alertRange.upperBound)
-                }
-            }
+        temperatureAlertHeaderCell.descriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (_, _) in
+            self?.updateUITemperatureAlertDescription()
+        }
 
-            temperatureAlertHeaderCell.descriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (_, _) in
-                self?.updateUITemperatureAlertDescription()
-            }
+        let isPNEnabled = viewModel.isPushNotificationsEnabled
+        let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
+        let isConnected = viewModel.isConnected
 
-            let isPNEnabled = viewModel.isPushNotificationsEnabled
-            let isTemperatureAlertOn = viewModel.isTemperatureAlertOn
-            let isConnected = viewModel.isConnected
+        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
+            [weak isPNEnabled] (view, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isEnabled = isPN && isConnected.bound
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
-                [weak isPNEnabled] (view, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isEnabled = isPN && isConnected.bound
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
+        temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isConnected] view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isCo = isConnected?.value ?? false
+            let isEnabled = isPN && isCo
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            temperatureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isConnected] view, isPushNotificationsEnabled in
-                let isPN = isPushNotificationsEnabled ?? false
-                let isCo = isConnected?.value ?? false
-                let isEnabled = isPN && isCo
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
+        temperatureAlertControlsCell.slider.bind(viewModel.isConnected) {
+            [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isOn = isTemperatureAlertOn?.value ?? false
+            slider.isEnabled = isConnected.bound && isOn && isPN
+        }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.isConnected) {
-                [weak isTemperatureAlertOn, weak isPNEnabled] (slider, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isOn = isTemperatureAlertOn?.value ?? false
-                slider.isEnabled = isConnected.bound && isOn && isPN
-            }
+        temperatureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+            let isOn = isTemperatureAlertOn?.value ?? false
+            let isCo = isConnected?.value ?? false
+            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+        }
 
-            temperatureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isTemperatureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-                let isOn = isTemperatureAlertOn?.value ?? false
-                let isCo = isConnected?.value ?? false
-                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
-            }
+        temperatureAlertControlsCell.textField.bind(viewModel.temperatureAlertDescription) {
+            (textField, temperatureAlertDescription) in
+            textField.text = temperatureAlertDescription
+        }
 
-            temperatureAlertControlsCell.textField.bind(viewModel.temperatureAlertDescription) {
-                (textField, temperatureAlertDescription) in
-                textField.text = temperatureAlertDescription
-            }
-
-            tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
-                if tableView.window != nil {
-                    tableView.beginUpdates()
-                    tableView.endUpdates()
-                }
+        tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
             }
         }
     }
 
     private func bindConnectionAlertCells() {
-        if isViewLoaded, let viewModel = viewModel {
-            connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isConnectionAlertOn) { (view, isOn) in
-                view.isOn = isOn.bound
-            }
+        guard isViewLoaded, let viewModel = viewModel  else { return }
+        connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isConnectionAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
 
-            connectionAlertHeaderCell.descriptionLabel.bind(viewModel.isConnectionAlertOn) { [weak self] (_, _) in
-                self?.updateUIConnectionAlertDescription()
-            }
+        connectionAlertHeaderCell.descriptionLabel.bind(viewModel.isConnectionAlertOn) { [weak self] (_, _) in
+            self?.updateUIConnectionAlertDescription()
+        }
 
-            connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                view, isPushNotificationsEnabled in
-                let isPN = isPushNotificationsEnabled ?? false
-                let isEnabled = isPN
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
+        connectionAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isEnabled = isPN
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            connectionAlertDescriptionCell.textField.bind(viewModel.connectionAlertDescription) {
-                (textField, connectionAlertDescription) in
-                textField.text = connectionAlertDescription
-            }
+        connectionAlertDescriptionCell.textField.bind(viewModel.connectionAlertDescription) {
+            (textField, connectionAlertDescription) in
+            textField.text = connectionAlertDescription
+        }
 
-            tableView.bind(viewModel.isConnectionAlertOn) { tableView, _ in
-                if tableView.window != nil {
-                    tableView.beginUpdates()
-                    tableView.endUpdates()
-                }
+        tableView.bind(viewModel.isConnectionAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
             }
         }
     }
 
     private func bindMovementAlertCell() {
-        if isViewLoaded, let viewModel = viewModel {
-            movementAlertHeaderCell.isOnSwitch.bind(viewModel.isMovementAlertOn) { (view, isOn) in
-                view.isOn = isOn.bound
-            }
+        guard isViewLoaded, let viewModel = viewModel  else { return }
+        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isMovementAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
 
-            movementAlertHeaderCell.descriptionLabel.bind(viewModel.isMovementAlertOn) { [weak self] (_, _) in
-                self?.updateUIMovementAlertDescription()
-            }
+        movementAlertHeaderCell.descriptionLabel.bind(viewModel.isMovementAlertOn) { [weak self] (_, _) in
+            self?.updateUIMovementAlertDescription()
+        }
 
-            let isPNEnabled = viewModel.isPushNotificationsEnabled
-            let isConnected = viewModel.isConnected
+        let isPNEnabled = viewModel.isPushNotificationsEnabled
+        let isConnected = viewModel.isConnected
 
-            movementAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isEnabled = isPN && isConnected.bound
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
+        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isEnabled = isPN && isConnected.bound
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            movementAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isConnected] view, isPushNotificationsEnabled in
-                let isPN = isPushNotificationsEnabled ?? false
-                let isCo = isConnected?.value ?? false
-                let isEnabled = isPN && isCo
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
+        movementAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isConnected] view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isCo = isConnected?.value ?? false
+            let isEnabled = isPN && isCo
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            movementAlertDescriptionCell.textField.bind(viewModel.movementAlertDescription) {
-                (textField, movementAlertDescription) in
-                textField.text = movementAlertDescription
-            }
+        movementAlertDescriptionCell.textField.bind(viewModel.movementAlertDescription) {
+            (textField, movementAlertDescription) in
+            textField.text = movementAlertDescription
+        }
 
-            tableView.bind(viewModel.isMovementAlertOn) { tableView, _ in
-                if tableView.window != nil {
-                    tableView.beginUpdates()
-                    tableView.endUpdates()
-                }
+        tableView.bind(viewModel.isMovementAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
             }
         }
     }
 
     // swiftlint:disable:next function_body_length
     private func bindPressureAlertCells() {
-        if isViewLoaded, let viewModel = viewModel {
-            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
-                view.isOn = isOn.bound
+        guard isViewLoaded, let viewModel = viewModel  else { return }
+        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
+
+        pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
+            slider.isEnabled = isOn.bound
+        }
+
+        pressureAlertControlsCell.slider.bind(viewModel.pressureLowerBound) { [weak self] (_, _) in
+            self?.updateUIPressureLowerBound()
+            self?.updateUIPressureAlertDescription()
+        }
+
+        pressureAlertControlsCell.slider.bind(viewModel.pressureUpperBound) { [weak self] (_, _) in
+            self?.updateUIPressureUpperBound()
+            self?.updateUIPressureAlertDescription()
+        }
+
+        pressureAlertHeaderCell.titleLabel.bind(viewModel.pressureUnit) { (label, pressureUnit) in
+            let title = "TagSettings.PressureAlert.title"
+            label.text = title.localized()
+                + " "
+                + (pressureUnit?.symbol ?? "N/A".localized())
+        }
+
+        pressureAlertControlsCell.slider.bind(viewModel.pressureUnit) { (slider, pressureUnit) in
+            if let pu = pressureUnit {
+                slider.minValue = CGFloat(pu.alertRange.lowerBound)
+                slider.maxValue = CGFloat(pu.alertRange.upperBound)
             }
+        }
 
-            pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
-                slider.isEnabled = isOn.bound
-            }
+        pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) { [weak self] (_, _) in
+            self?.updateUIPressureAlertDescription()
+        }
 
-            pressureAlertControlsCell.slider.bind(viewModel.pressureLowerBound) { [weak self] (_, _) in
-                self?.updateUIPressureLowerBound()
-                self?.updateUIPressureAlertDescription()
-            }
+        let isPNEnabled = viewModel.isPushNotificationsEnabled
+        let isPressureAlertOn = viewModel.isPressureAlertOn
+        let isConnected = viewModel.isConnected
 
-            pressureAlertControlsCell.slider.bind(viewModel.pressureUpperBound) { [weak self] (_, _) in
-                self?.updateUIPressureUpperBound()
-                self?.updateUIPressureAlertDescription()
-            }
+        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isEnabled = isPN && isConnected.bound
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            pressureAlertHeaderCell.titleLabel.bind(viewModel.pressureUnit) { (label, pressureUnit) in
-                let title = "TagSettings.PressureAlert.title"
-                label.text = title.localized()
-                    + " "
-                    + (pressureUnit?.symbol ?? "N/A".localized())
-            }
+        pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isConnected] view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isCo = isConnected?.value ?? false
+            let isEnabled = isPN && isCo
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            pressureAlertControlsCell.slider.bind(viewModel.pressureUnit) { (slider, pressureUnit) in
-                if let pu = pressureUnit {
-                    slider.minValue = CGFloat(pu.alertRange.lowerBound)
-                    slider.maxValue = CGFloat(pu.alertRange.upperBound)
-                }
-            }
+        pressureAlertControlsCell.slider.bind(viewModel.isConnected) {
+            [weak isPressureAlertOn, weak isPNEnabled] (slider, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isOn = isPressureAlertOn?.value ?? false
+            slider.isEnabled = isConnected.bound && isOn && isPN
+        }
 
-            pressureAlertHeaderCell.descriptionLabel.bind(viewModel.isPressureAlertOn) { [weak self] (_, _) in
-                self?.updateUIPressureAlertDescription()
-            }
+        pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isPressureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+            let isOn = isPressureAlertOn?.value ?? false
+            let isCo = isConnected?.value ?? false
+            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+        }
 
-            let isPNEnabled = viewModel.isPushNotificationsEnabled
-            let isPressureAlertOn = viewModel.isPressureAlertOn
-            let isConnected = viewModel.isConnected
+        pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
+            (textField, pressureAlertDescription) in
+            textField.text = pressureAlertDescription
+        }
 
-            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) { [weak isPNEnabled] (view, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isEnabled = isPN && isConnected.bound
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
-            pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isConnected] view, isPushNotificationsEnabled in
-                let isPN = isPushNotificationsEnabled ?? false
-                let isCo = isConnected?.value ?? false
-                let isEnabled = isPN && isCo
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
-            pressureAlertControlsCell.slider.bind(viewModel.isConnected) {
-                [weak isPressureAlertOn, weak isPNEnabled] (slider, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isOn = isPressureAlertOn?.value ?? false
-                slider.isEnabled = isConnected.bound && isOn && isPN
-            }
-
-            pressureAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isPressureAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-                let isOn = isPressureAlertOn?.value ?? false
-                let isCo = isConnected?.value ?? false
-                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
-            }
-
-            pressureAlertControlsCell.textField.bind(viewModel.pressureAlertDescription) {
-                (textField, pressureAlertDescription) in
-                textField.text = pressureAlertDescription
-            }
-
-            tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
-                if tableView.window != nil {
-                    tableView.beginUpdates()
-                    tableView.endUpdates()
-                }
+        tableView.bind(viewModel.isPressureAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
             }
         }
     }
 
     // swiftlint:disable:next function_body_length
     private func bindHumidityAlertCells() {
-        if isViewLoaded, let viewModel = viewModel {
-            humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
-                view.isOn = isOn.bound
+        guard isViewLoaded, let viewModel = viewModel  else { return }
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
+
+        humidityAlertControlsCell.slider.bind(viewModel.isHumidityAlertOn) { (slider, isOn) in
+            slider.isEnabled = isOn.bound
+        }
+
+        humidityAlertControlsCell.slider.bind(viewModel.humidityLowerBound) { [weak self] (_, _) in
+            self?.updateUIHumidityLowerBound()
+            self?.updateUIHumidityAlertDescription()
+        }
+
+        humidityAlertControlsCell.slider.bind(viewModel.humidityUpperBound) { [weak self] (_, _) in
+            self?.updateUIHumidityUpperBound()
+            self?.updateUIHumidityAlertDescription()
+        }
+
+        humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
+            let title = "TagSettings.AirHumidityAlert.title"
+            let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
+            label.text = title.localized()
+                + " "
+                + (symbol ?? "N/A".localized())
+        }
+
+        humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
+            if let hu = humidityUnit {
+                slider.minValue = CGFloat(hu.alertRange.lowerBound)
+                slider.maxValue = CGFloat(hu.alertRange.upperBound)
             }
+        }
 
-            humidityAlertControlsCell.slider.bind(viewModel.isHumidityAlertOn) { (slider, isOn) in
-                slider.isEnabled = isOn.bound
-            }
+        humidityAlertHeaderCell.descriptionLabel.bind(viewModel.isHumidityAlertOn) {
+            [weak self] (_, _) in
+            self?.updateUIHumidityAlertDescription()
+        }
 
-            humidityAlertControlsCell.slider.bind(viewModel.humidityLowerBound) { [weak self] (_, _) in
-                self?.updateUIHumidityLowerBound()
-                self?.updateUIHumidityAlertDescription()
-            }
+        let isPNEnabled = viewModel.isPushNotificationsEnabled
+        let isHumidityAlertOn = viewModel.isHumidityAlertOn
+        let isConnected = viewModel.isConnected
 
-            humidityAlertControlsCell.slider.bind(viewModel.humidityUpperBound) { [weak self] (_, _) in
-                self?.updateUIHumidityUpperBound()
-                self?.updateUIHumidityAlertDescription()
-            }
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
+            [weak isPNEnabled] (view, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isEnabled = isPN && isConnected.bound
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
-                let title = "TagSettings.AirHumidityAlert.title"
-                let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
-                label.text = title.localized()
-                    + " "
-                    + (symbol ?? "N/A".localized())
-            }
+        humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isConnected] view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isCo = isConnected?.value ?? false
+            let isEnabled = isPN && isCo
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
 
-            humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
-                if let hu = humidityUnit {
-                    slider.minValue = CGFloat(hu.alertRange.lowerBound)
-                    slider.maxValue = CGFloat(hu.alertRange.upperBound)
-                }
-            }
+        humidityAlertControlsCell.slider.bind(viewModel.isConnected) {
+            [weak isHumidityAlertOn, weak isPNEnabled] (slider, isConnected) in
+            let isPN = isPNEnabled?.value ?? false
+            let isOn = isHumidityAlertOn?.value ?? false
+            slider.isEnabled = isConnected.bound && isOn && isPN
+        }
 
-            humidityAlertHeaderCell.descriptionLabel.bind(viewModel.isHumidityAlertOn) {
-                [weak self] (_, _) in
-                self?.updateUIHumidityAlertDescription()
-            }
+        humidityAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isHumidityAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
+            let isOn = isHumidityAlertOn?.value ?? false
+            let isCo = isConnected?.value ?? false
+            slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
+        }
 
-            let isPNEnabled = viewModel.isPushNotificationsEnabled
-            let isHumidityAlertOn = viewModel.isHumidityAlertOn
-            let isConnected = viewModel.isConnected
+        humidityAlertControlsCell.textField.bind(viewModel.humidityAlertDescription) {
+            (textField, humidityAlertDescription) in
+            textField.text = humidityAlertDescription
+        }
 
-            humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isConnected) {
-                [weak isPNEnabled] (view, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isEnabled = isPN && isConnected.bound
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
-            humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isConnected] view, isPushNotificationsEnabled in
-                let isPN = isPushNotificationsEnabled ?? false
-                let isCo = isConnected?.value ?? false
-                let isEnabled = isPN && isCo
-                view.isEnabled = isEnabled
-                view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
-            }
-
-            humidityAlertControlsCell.slider.bind(viewModel.isConnected) {
-                [weak isHumidityAlertOn, weak isPNEnabled] (slider, isConnected) in
-                let isPN = isPNEnabled?.value ?? false
-                let isOn = isHumidityAlertOn?.value ?? false
-                slider.isEnabled = isConnected.bound && isOn && isPN
-            }
-
-            humidityAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
-                [weak isHumidityAlertOn, weak isConnected] (slider, isPushNotificationsEnabled) in
-                let isOn = isHumidityAlertOn?.value ?? false
-                let isCo = isConnected?.value ?? false
-                slider.isEnabled = isPushNotificationsEnabled.bound && isOn && isCo
-            }
-
-            humidityAlertControlsCell.textField.bind(viewModel.humidityAlertDescription) {
-                (textField, humidityAlertDescription) in
-                textField.text = humidityAlertDescription
-            }
-
-            tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in
-                if tableView.window != nil {
-                    tableView.beginUpdates()
-                    tableView.endUpdates()
-                }
+        tableView.bind(viewModel.isHumidityAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
             }
         }
     }
@@ -1147,8 +1129,8 @@ extension TagSettingsTableViewController: UITextFieldDelegate {
 extension TagSettingsTableViewController {
     private func updateUI() {
         updateUITemperatureAlertDescription()
-        updateUICelsiusLowerBound()
-        updateUICelsiusUpperBound()
+        updateUITemperatureLowerBound()
+        updateUITemperatureUpperBound()
 
         updateUIHumidityAlertDescription()
         updateUIHumidityLowerBound()
@@ -1158,181 +1140,191 @@ extension TagSettingsTableViewController {
         updateUIPressureLowerBound()
         updateUIPressureUpperBound()
     }
+    // MARK: - updateUITemperature
 
-    private func updateUIPressureLowerBound() {
-        if isViewLoaded {
-            if let lower = viewModel?.pressureLowerBound.value,
-               let pu = viewModel?.pressureUnit.value,
-               let p = Pressure(lower, unit: pu)?.value {
-                pressureAlertControlsCell.slider.selectedMinValue = CGFloat(p)
-            } else if let pu = viewModel?.pressureUnit.value {
-                    pressureAlertControlsCell.slider.selectedMinValue = CGFloat(pu.alertRange.lowerBound)
-            } else {
-                pressureAlertControlsCell.slider.selectedMinValue = 300
-            }
+    private func updateUITemperatureLowerBound() {
+        guard isViewLoaded else { return }
+        guard let temperatureUnit = viewModel?.temperatureUnit.value else {
+            temperatureAlertControlsCell.slider.minValue = -40
+            temperatureAlertControlsCell.slider.selectedMinValue = -40
+            return
+        }
+        if let lower = viewModel?.celsiusLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
+            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower.value)
+        } else {
+            let lower: CGFloat = CGFloat(temperatureUnit.alertRange.lowerBound)
+            temperatureAlertControlsCell.slider.selectedMinValue = lower
         }
     }
 
-    private func updateUIPressureUpperBound() {
-        if isViewLoaded {
-            if let upper = viewModel?.pressureUpperBound.value,
-               let pu = viewModel?.pressureUnit.value,
-               let p = Pressure(upper, unit: pu)?.value {
-                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(p)
-            } else if let pu = viewModel?.pressureUnit.value {
-                pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(pu.alertRange.upperBound)
-            } else {
-                pressureAlertControlsCell.slider.selectedMaxValue = 1100
-            }
+    private func updateUITemperatureUpperBound() {
+        guard isViewLoaded else { return }
+        guard let temperatureUnit = viewModel?.temperatureUnit.value else {
+            temperatureAlertControlsCell.slider.maxValue = 85
+            temperatureAlertControlsCell.slider.selectedMaxValue = 85
+            return
         }
-    }
-
-    private func updateUIHumidityLowerBound() {
-        if isViewLoaded {
-            if let lower = viewModel?.humidityLowerBound.value,
-               let hu = viewModel?.humidityUnit.value,
-               let t = viewModel?.temperature.value {
-                switch hu {
-                case .gm3:
-                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lower.converted(to: .absolute).value)
-                default:
-                    let minValue: Double = lower.converted(to: .relative(temperature: t)).value
-                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(minValue)
-                }
-            } else if let hu = viewModel?.humidityUnit.value {
-                humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
-            } else {
-                humidityAlertControlsCell.slider.selectedMinValue = 0
-            }
-        }
-    }
-
-    private func updateUIHumidityUpperBound() {
-        if isViewLoaded {
-            if let upper = viewModel?.humidityUpperBound.value,
-               let hu = viewModel?.humidityUnit.value,
-               let t = viewModel?.temperature.value {
-                switch hu {
-                case .gm3:
-                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.converted(to: .absolute).value)
-                default:
-                    let maxValue: Double = upper.converted(to: .relative(temperature: t)).value
-                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(maxValue)
-                }
-            } else if let hu = viewModel?.humidityUnit.value {
-                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
-            } else {
-                humidityAlertControlsCell.slider.selectedMaxValue = 40
-            }
-        }
-    }
-
-    private func updateUIMovementAlertDescription() {
-        if isViewLoaded {
-            if let isMovementAlertOn = viewModel?.isMovementAlertOn.value, isMovementAlertOn {
-                movementAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Movement.description".localized()
-            } else {
-                movementAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-            }
-        }
-    }
-
-    private func updateUIConnectionAlertDescription() {
-        if isViewLoaded {
-            if let isConnectionAlertOn = viewModel?.isConnectionAlertOn.value, isConnectionAlertOn {
-                connectionAlertHeaderCell.descriptionLabel.text
-                    = "TagSettings.Alerts.Connection.description".localized()
-            } else {
-                connectionAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-            }
-        }
-    }
-
-    private func updateUIPressureAlertDescription() {
-        if isViewLoaded {
-            if let isPressureAlertOn = viewModel?.isPressureAlertOn.value,
-                isPressureAlertOn {
-                if let l = viewModel?.pressureLowerBound.value,
-                    let u = viewModel?.pressureUpperBound.value {
-                    let format = "TagSettings.Alerts.Pressure.description".localized()
-                    pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
-                } else {
-                    pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-                }
-            } else {
-                pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-            }
-        }
-    }
-
-    private func updateUIHumidityAlertDescription() {
-        if isViewLoaded {
-            if let isHumidityAlertOn = viewModel?.isHumidityAlertOn.value,
-                isHumidityAlertOn {
-                if let hu = viewModel?.humidityUnit.value,
-                   let l = viewModel?.humidityLowerBound.value,
-                    let u = viewModel?.humidityUpperBound.value {
-                    let format = "TagSettings.Alerts.Humidity.description".localized()
-                    humidityAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
-                } else {
-                    humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-                }
-            } else {
-                humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
-            }
-        }
-    }
-
-    private func updateUICelsiusLowerBound() {
-        if isViewLoaded {
-            if let temperatureUnit = viewModel?.temperatureUnit.value {
-                if let lower = viewModel?.celsiusLowerBound.value,
-                   let temperature = Temperature(lower, unit: temperatureUnit.unitTemperature)?.value {
-                    temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(temperature)
-                } else {
-                    let lower: CGFloat = CGFloat(temperatureUnit.alertRange.lowerBound)
-                    temperatureAlertControlsCell.slider.selectedMinValue = lower
-                }
-            } else {
-                temperatureAlertControlsCell.slider.minValue = -40
-                temperatureAlertControlsCell.slider.selectedMinValue = -40
-            }
-        }
-    }
-
-    private func updateUICelsiusUpperBound() {
-        if isViewLoaded {
-            if let temperatureUnit = viewModel?.temperatureUnit.value {
-                if let upper = viewModel?.celsiusUpperBound.value,
-                   let temperature = Temperature(upper, unit: temperatureUnit.unitTemperature)?.value {
-                    temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(temperature)
-                } else {
-                    let lower: CGFloat = CGFloat(temperatureUnit.alertRange.upperBound)
-                    temperatureAlertControlsCell.slider.selectedMaxValue = lower
-                }
-            } else {
-                temperatureAlertControlsCell.slider.maxValue = 85
-                temperatureAlertControlsCell.slider.selectedMaxValue = 85
-            }
+        if let upper = viewModel?.celsiusUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
+            temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.value)
+        } else {
+            let upper: CGFloat = CGFloat(temperatureUnit.alertRange.upperBound)
+            temperatureAlertControlsCell.slider.selectedMaxValue = upper
         }
     }
 
     private func updateUITemperatureAlertDescription() {
-        if isViewLoaded {
-            if let isTemperatureAlertOn = viewModel?.isTemperatureAlertOn.value, isTemperatureAlertOn {
-                if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
-                    let l = viewModel?.celsiusLowerBound.value,
-                    let u = viewModel?.celsiusUpperBound.value,
-                    let la = Temperature(l, unit: tu)?.value,
-                    let ua = Temperature(u, unit: tu)?.value {
-                    let format = "TagSettings.Alerts.Temperature.description".localized()
-                    temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, la, ua)
+        guard isViewLoaded else { return }
+        guard viewModel?.isTemperatureAlertOn.value == true else {
+            temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+            return
+        }
+        if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
+           let l = viewModel?.celsiusLowerBound.value?.converted(to: tu),
+           let u = viewModel?.celsiusUpperBound.value?.converted(to: tu) {
+            let format = "TagSettings.Alerts.Temperature.description".localized()
+            temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
+        } else {
+            temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+        }
+    }
+    // MARK: - updateUIHumidity
+    private func updateUIHumidityLowerBound() {
+        guard isViewLoaded else { return }
+        guard let hu = viewModel?.humidityUnit.value else {
+            humidityAlertControlsCell.slider.selectedMinValue = 0
+            return
+        }
+        if let lower = viewModel?.humidityLowerBound.value {
+            switch hu {
+            case .gm3:
+                humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lower.converted(to: .absolute).value)
+            default:
+                if let t = viewModel?.temperature.value {
+                    let minValue: Double = lower.converted(to: .relative(temperature: t)).value
+                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(minValue * 100)
                 } else {
-                    temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
                 }
-            } else {
-                temperatureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
             }
+        } else {
+            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
+        }
+    }
+
+    private func updateUIHumidityUpperBound() {
+        guard isViewLoaded else { return }
+        guard let hu = viewModel?.humidityUnit.value else {
+            humidityAlertControlsCell.slider.selectedMaxValue = 40
+            return
+        }
+        if let upper = viewModel?.humidityUpperBound.value {
+            switch hu {
+            case .gm3:
+                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.converted(to: .absolute).value)
+            default:
+                if let t = viewModel?.temperature.value {
+                    let maxValue: Double = upper.converted(to: .relative(temperature: t)).value
+                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(maxValue * 100)
+                } else {
+                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
+                }
+            }
+        } else {
+            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
+        }
+    }
+
+    private func updateUIHumidityAlertDescription() {
+        guard isViewLoaded else { return }
+        guard let isHumidityAlertOn = viewModel?.isHumidityAlertOn.value,
+              isHumidityAlertOn else {
+            humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+            return
+        }
+        if let hu = viewModel?.humidityUnit.value,
+           let l = viewModel?.humidityLowerBound.value,
+           let u = viewModel?.humidityUpperBound.value {
+            let format = "TagSettings.Alerts.Humidity.description".localized()
+            let description: String
+            if hu == .gm3 {
+                let la: Double = l.converted(to: .absolute).value
+                let ua: Double = u.converted(to: .absolute).value
+                description = String(format: format, la, ua)
+            } else {
+                if let t = viewModel?.temperature.value {
+                    let lr: Double = l.converted(to: .relative(temperature: t)).value * 100.0
+                    let ur: Double = u.converted(to: .relative(temperature: t)).value * 100.0
+                    description = String(format: format, lr, ur)
+                } else {
+                    description = alertOffString.localized()
+                }
+            }
+            humidityAlertHeaderCell.descriptionLabel.text = description
+        } else {
+            humidityAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+        }
+    }
+
+    // MARK: - updateUIPressure
+    private func updateUIPressureLowerBound() {
+        guard isViewLoaded else { return }
+        guard let pu = viewModel?.pressureUnit.value else {
+            pressureAlertControlsCell.slider.selectedMinValue = 300
+            return
+        }
+        if let lower = viewModel?.pressureLowerBound.value?.converted(to: pu).value {
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+        } else {
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(pu.alertRange.lowerBound)
+        }
+    }
+
+    private func updateUIPressureUpperBound() {
+        guard isViewLoaded else { return }
+        guard let pu = viewModel?.pressureUnit.value else {
+            pressureAlertControlsCell.slider.selectedMaxValue = 1100
+            return
+        }
+        if let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
+            pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+        } else {
+            pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(pu.alertRange.upperBound)
+        }
+    }
+
+    private func updateUIPressureAlertDescription() {
+        guard isViewLoaded else { return }
+        guard let isPressureAlertOn = viewModel?.isPressureAlertOn.value,
+              isPressureAlertOn else {
+            pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+            return
+        }
+        if let pu = viewModel?.pressureUnit.value,
+           let l = viewModel?.pressureLowerBound.value?.converted(to: pu),
+           let u = viewModel?.pressureUpperBound.value?.converted(to: pu) {
+            let format = "TagSettings.Alerts.Pressure.description".localized()
+            pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
+        } else {
+            pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+        }
+    }
+
+    private func updateUIMovementAlertDescription() {
+        guard isViewLoaded else { return }
+        if let isMovementAlertOn = viewModel?.isMovementAlertOn.value, isMovementAlertOn {
+            movementAlertHeaderCell.descriptionLabel.text = "TagSettings.Alerts.Movement.description".localized()
+        } else {
+            movementAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+        }
+    }
+
+    private func updateUIConnectionAlertDescription() {
+        guard isViewLoaded else { return }
+        if let isConnectionAlertOn = viewModel?.isConnectionAlertOn.value, isConnectionAlertOn {
+            connectionAlertHeaderCell.descriptionLabel.text
+                = "TagSettings.Alerts.Connection.description".localized()
+        } else {
+            connectionAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
         }
     }
 }
