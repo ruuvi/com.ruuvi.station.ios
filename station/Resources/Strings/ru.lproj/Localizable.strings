@@ -319,9 +319,9 @@
 
 // UnitPressure
 "UnitPressure.bars.title" = "Бар (bar)";
-"UnitPressure.hectopascals.title" = "Гектопаскаль (гПа)";
-"UnitPressure.inchesOfMercury.title" = "Дюймов ртутного столба (inHg)";
-"UnitPressure.millimetersOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
+"UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
+"UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
