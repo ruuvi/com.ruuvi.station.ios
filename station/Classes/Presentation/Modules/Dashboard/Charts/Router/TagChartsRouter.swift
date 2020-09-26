@@ -68,12 +68,13 @@ class TagChartsRouter: TagChartsRouterInput {
             })
     }
 
-    func openWebTagSettings(webTag: WebTagRealm) {
+    func openWebTagSettings(webTag: WebTagRealm,
+                            temperature: Temperature?) {
         let factory = StoryboardFactory(storyboardName: "WebTagSettings")
         try! transitionHandler
             .forStoryboard(factory: factory, to: WebTagSettingsModuleInput.self)
             .then({ (module) -> Any? in
-                module.configure(webTag: webTag)
+                module.configure(webTag: webTag, temperature: temperature)
             })
     }
 }

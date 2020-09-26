@@ -5,6 +5,7 @@ struct WebTagSettingsViewModel {
     let name: Observable<String?> = Observable<String?>()
     let uuid: Observable<String?> = Observable<String?>()
     let location: Observable<Location?> = Observable<Location?>()
+    let temperature: Observable<Temperature?> = Observable<Temperature?>()
 
     let isLocationAuthorizedAlways: Observable<Bool?> = Observable<Bool?>(false)
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
@@ -16,8 +17,8 @@ struct WebTagSettingsViewModel {
     let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let celsiusLowerBound: Observable<Double?> = Observable<Double?>(-40)
-    let celsiusUpperBound: Observable<Double?> = Observable<Double?>(85)
+    let temperatureLowerBound: Observable<Temperature?> = Observable<Temperature?>()
+    let temperatureUpperBound: Observable<Temperature?> = Observable<Temperature?>()
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
 
     let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)
@@ -26,7 +27,7 @@ struct WebTagSettingsViewModel {
     let humidityAlertDescription: Observable<String?> = Observable<String?>()
 
     let isPressureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let pressureLowerBound: Observable<Double?> = Observable<Double?>(300)
-    let pressureUpperBound: Observable<Double?> = Observable<Double?>(1100)
+    let pressureLowerBound: Observable<Pressure?> = Observable<Pressure?>()
+    let pressureUpperBound: Observable<Pressure?> = Observable<Pressure?>()
     let pressureAlertDescription: Observable<String?> = Observable<String?>()
 }

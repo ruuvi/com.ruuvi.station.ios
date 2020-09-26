@@ -10,6 +10,7 @@ protocol CardsRouterInput {
                          temperature: Temperature?,
                          humidity: Humidity?,
                          output: TagSettingsModuleOutput)
-    func openWebTagSettings(webTag: WebTagRealm)
+    func openWebTagSettings(webTag: WebTagRealm,
+                            temperature: Temperature?)
     func openTagCharts()
 }

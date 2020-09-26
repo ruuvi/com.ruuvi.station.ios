@@ -8,10 +8,13 @@ struct WPSData {
 
 extension WPSData {
     var temperature: Temperature? {
-        return Temperature(celsius)
+        return Temperature(celsius, unit: .celsius)
     }
     var humidity: Humidity? {
-        return Humidity(relative: relativeHumidity, temperature: temperature)
+        guard let relative = relativeHumidity else {
+            return nil
+        }
+        return Humidity(relative: relative / 100.0, temperature: temperature)
     }
     var pressure: Pressure? {
         return Pressure(hPa, unit: .hectopascals)

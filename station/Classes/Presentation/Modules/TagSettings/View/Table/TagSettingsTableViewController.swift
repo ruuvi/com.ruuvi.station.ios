@@ -520,8 +520,8 @@ extension TagSettingsTableViewController: TagSettingsAlertControlsCellDelegate {
         switch cell {
         case temperatureAlertControlsCell:
             if let tu = viewModel?.temperatureUnit.value {
-                viewModel?.celsiusLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
-                viewModel?.celsiusUpperBound.value = Temperature(Double(maxValue), unit: tu.unitTemperature)
+                viewModel?.temperatureLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
+                viewModel?.temperatureUpperBound.value = Temperature(Double(maxValue), unit: tu.unitTemperature)
             }
         case humidityAlertControlsCell:
             if let hu = viewModel?.humidityUnit.value,
@@ -793,11 +793,11 @@ extension TagSettingsTableViewController {
             slider.isEnabled = isOn.bound
         }
 
-        temperatureAlertControlsCell.slider.bind(viewModel.celsiusLowerBound) { [weak self] (_, _) in
+        temperatureAlertControlsCell.slider.bind(viewModel.temperatureLowerBound) { [weak self] (_, _) in
             self?.updateUITemperatureLowerBound()
             self?.updateUITemperatureAlertDescription()
         }
-        temperatureAlertControlsCell.slider.bind(viewModel.celsiusUpperBound) { [weak self] (_, _) in
+        temperatureAlertControlsCell.slider.bind(viewModel.temperatureUpperBound) { [weak self] (_, _) in
             self?.updateUITemperatureUpperBound()
             self?.updateUITemperatureAlertDescription()
         }
@@ -1149,7 +1149,7 @@ extension TagSettingsTableViewController {
             temperatureAlertControlsCell.slider.selectedMinValue = -40
             return
         }
-        if let lower = viewModel?.celsiusLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
+        if let lower = viewModel?.temperatureLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
             temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(lower.value)
         } else {
             let lower: CGFloat = CGFloat(temperatureUnit.alertRange.lowerBound)
@@ -1164,7 +1164,7 @@ extension TagSettingsTableViewController {
             temperatureAlertControlsCell.slider.selectedMaxValue = 85
             return
         }
-        if let upper = viewModel?.celsiusUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
+        if let upper = viewModel?.temperatureUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
             temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.value)
         } else {
             let upper: CGFloat = CGFloat(temperatureUnit.alertRange.upperBound)
@@ -1179,8 +1179,8 @@ extension TagSettingsTableViewController {
             return
         }
         if let tu = viewModel?.temperatureUnit.value?.unitTemperature,
-           let l = viewModel?.celsiusLowerBound.value?.converted(to: tu),
-           let u = viewModel?.celsiusUpperBound.value?.converted(to: tu) {
+           let l = viewModel?.temperatureLowerBound.value?.converted(to: tu),
+           let u = viewModel?.temperatureUpperBound.value?.converted(to: tu) {
             let format = "TagSettings.Alerts.Temperature.description".localized()
             temperatureAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
         } else {
@@ -1201,7 +1201,8 @@ extension TagSettingsTableViewController {
             default:
                 if let t = viewModel?.temperature.value {
                     let minValue: Double = lower.converted(to: .relative(temperature: t)).value
-                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(minValue * 100)
+                    let lowerRelative: Double = max(minValue * 100, HumidityUnit.percent.alertRange.lowerBound)
+                    humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerRelative)
                 } else {
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
                 }
@@ -1224,7 +1225,8 @@ extension TagSettingsTableViewController {
             default:
                 if let t = viewModel?.temperature.value {
                     let maxValue: Double = upper.converted(to: .relative(temperature: t)).value
-                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(maxValue * 100)
+                    let upperRelative: Double = min(maxValue * 100, HumidityUnit.percent.alertRange.upperBound)
+                    humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upperRelative)
                 } else {
                     humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(hu.alertRange.upperBound)
                 }
@@ -1247,13 +1249,13 @@ extension TagSettingsTableViewController {
             let format = "TagSettings.Alerts.Humidity.description".localized()
             let description: String
             if hu == .gm3 {
-                let la: Double = l.converted(to: .absolute).value
-                let ua: Double = u.converted(to: .absolute).value
+                let la: Double = max(l.converted(to: .absolute).value, hu.alertRange.lowerBound)
+                let ua: Double = min(u.converted(to: .absolute).value, hu.alertRange.upperBound)
                 description = String(format: format, la, ua)
             } else {
                 if let t = viewModel?.temperature.value {
-                    let lr: Double = l.converted(to: .relative(temperature: t)).value * 100.0
-                    let ur: Double = u.converted(to: .relative(temperature: t)).value * 100.0
+                    let lr: Double = max(l.converted(to: .relative(temperature: t)).value * 100.0, HumidityUnit.percent.alertRange.lowerBound)
+                    let ur: Double = min(u.converted(to: .relative(temperature: t)).value * 100.0, HumidityUnit.percent.alertRange.upperBound)
                     description = String(format: format, lr, ur)
                 } else {
                     description = alertOffString.localized()
