@@ -11,7 +11,8 @@ protocol TagChartsRouterInput {
                          temperature: Temperature?,
                          humidity: Humidity?,
                          output: TagSettingsModuleOutput)
-    func openWebTagSettings(webTag: WebTagRealm)
+    func openWebTagSettings(webTag: WebTagRealm,
+                            temperature: Temperature?)
 }
 extension TagChartsRouterInput {
     func dismiss() {

@@ -48,7 +48,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let movementAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
         case .temperature:
@@ -62,7 +62,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .humidity:
             if prefs.bool(forKey: humidityAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid) as? Data,
+               let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid),
                 let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
                 let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self) {
                 return .humidity(lower: lowerHumidity, upper: upperHumidity)

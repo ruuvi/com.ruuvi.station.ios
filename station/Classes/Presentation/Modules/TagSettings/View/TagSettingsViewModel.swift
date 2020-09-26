@@ -26,8 +26,8 @@ struct TagSettingsViewModel {
     let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
 
     let isTemperatureAlertOn: Observable<Bool?> = Observable<Bool?>(false)
-    let celsiusLowerBound: Observable<Temperature?> = Observable<Temperature?>()
-    let celsiusUpperBound: Observable<Temperature?> = Observable<Temperature?>()
+    let temperatureLowerBound: Observable<Temperature?> = Observable<Temperature?>()
+    let temperatureUpperBound: Observable<Temperature?> = Observable<Temperature?>()
     let temperatureAlertDescription: Observable<String?> = Observable<String?>()
 
     let isHumidityAlertOn: Observable<Bool?> = Observable<Bool?>(false)

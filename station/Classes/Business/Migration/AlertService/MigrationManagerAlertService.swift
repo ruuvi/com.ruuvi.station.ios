@@ -42,7 +42,7 @@ class MigrationManagerAlertService: MigrationManager {
     }
 
     private enum Keys {
-        struct V1 {
+        struct Ver1 {
             // relativeHumidity
             static let relativeHumidityLowerBoundUDKeyPrefix
                 = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
@@ -93,21 +93,21 @@ extension MigrationManagerAlertService {
             completion()
         }
         let id = element.0
-        if prefs.bool(forKey: Keys.V1.relativeHumidityAlertIsOnUDKeyPrefix + id),
-           let lower = prefs.optionalDouble(forKey: Keys.V1.relativeHumidityLowerBoundUDKeyPrefix + id),
-           let upper = prefs.optionalDouble(forKey: Keys.V1.relativeHumidityUpperBoundUDKeyPrefix + id),
+        if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
+           let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
+           let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
            let temperature = element.1 {
-            prefs.set(false, forKey: Keys.V1.relativeHumidityAlertIsOnUDKeyPrefix + id)
+            prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
             let lowerHumidity: Humidity = Humidity(value: lower,
                                                    unit: .relative(temperature: temperature))
             let upperHumidity: Humidity = Humidity(value: upper,
                                                    unit: .relative(temperature: temperature))
             alertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                                   for: id)
-        } else if prefs.bool(forKey: Keys.V1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
-                  let lower = prefs.optionalDouble(forKey: Keys.V1.absoluteHumidityLowerBoundUDKeyPrefix + id),
-                  let upper = prefs.optionalDouble(forKey: Keys.V1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
-            prefs.set(false, forKey: Keys.V1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
+        } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
+                  let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
+                  let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id) {
+            prefs.set(false, forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
             let lowerHumidity: Humidity = Humidity(value: lower,
                                                    unit: .absolute)
             let upperHumidity: Humidity = Humidity(value: upper,

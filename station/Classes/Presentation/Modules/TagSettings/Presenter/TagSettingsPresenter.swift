@@ -73,7 +73,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         alertDidChangeToken?.invalidate()
     }
 
-    func configure(ruuviTag: RuuviTagSensor, temperature: Temperature?, humidity: Humidity?, output: TagSettingsModuleOutput) {
+    func configure(ruuviTag: RuuviTagSensor,
+                   temperature: Temperature?,
+                   humidity: Humidity?,
+                   output: TagSettingsModuleOutput) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
         self.temperature = temperature
@@ -321,15 +324,15 @@ extension TagSettingsPresenter {
     private func sync(temperature: AlertType, uuid: String) {
         if case .temperature(let lower, let upper) = alertService.alert(for: uuid, of: temperature) {
             viewModel.isTemperatureAlertOn.value = true
-            viewModel.celsiusLowerBound.value = Temperature(Double(lower), unit: .celsius)
-            viewModel.celsiusUpperBound.value = Temperature(Double(upper), unit: .celsius)
+            viewModel.temperatureLowerBound.value = Temperature(Double(lower), unit: .celsius)
+            viewModel.temperatureUpperBound.value = Temperature(Double(upper), unit: .celsius)
         } else {
             viewModel.isTemperatureAlertOn.value = false
             if let celsiusLower = alertService.lowerCelsius(for: uuid) {
-                viewModel.celsiusLowerBound.value = Temperature(Double(celsiusLower), unit: .celsius)
+                viewModel.temperatureLowerBound.value = Temperature(Double(celsiusLower), unit: .celsius)
             }
             if let celsiusUpper = alertService.upperCelsius(for: uuid) {
-                viewModel.celsiusUpperBound.value = Temperature(Double(celsiusUpper), unit: .celsius)
+                viewModel.temperatureUpperBound.value = Temperature(Double(celsiusUpper), unit: .celsius)
             }
         }
     }
@@ -479,8 +482,8 @@ extension TagSettingsPresenter {
     }
 
     private func bindTemperatureAlert(uuid: String) {
-        let temperatureLower = viewModel.celsiusLowerBound
-        let temperatureUpper = viewModel.celsiusUpperBound
+        let temperatureLower = viewModel.temperatureLowerBound
+        let temperatureUpper = viewModel.temperatureUpperBound
         bind(viewModel.isTemperatureAlertOn, fire: false) {
             [weak temperatureLower,
              weak temperatureUpper] observer, isOn in
@@ -497,12 +500,12 @@ extension TagSettingsPresenter {
                 }
             }
         }
-        bind(viewModel.celsiusLowerBound, fire: false) { observer, lower in
+        bind(viewModel.temperatureLowerBound, fire: false) { observer, lower in
             if let l = lower?.converted(to: .celsius).value {
                 observer.alertService.setLower(celsius: l, for: uuid)
             }
         }
-        bind(viewModel.celsiusUpperBound, fire: false) { observer, upper in
+        bind(viewModel.temperatureUpperBound, fire: false) { observer, upper in
             if let u = upper?.converted(to: .celsius).value {
                 observer.alertService.setUpper(celsius: u, for: uuid)
             }
