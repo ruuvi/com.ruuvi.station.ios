@@ -6,11 +6,11 @@ extension UnitPressure: SelectionItemProtocol {
         case .bars:
             return "UnitPressure.bars.title".localized()
         case .hectopascals:
-            return "UnitPressure.hectopascals.title".localized()
+            return "UnitPressure.hectopascal.title".localized()
         case .inchesOfMercury:
-            return "UnitPressure.inchesOfMercury.title".localized()
+            return "UnitPressure.inchOfMercury.title".localized()
         case .millimetersOfMercury:
-            return "UnitPressure.millimetersOfMercury.title".localized()
+            return "UnitPressure.millimetreOfMercury.title".localized()
         default:
             assert(false, "Not allowed")
             return .init()
