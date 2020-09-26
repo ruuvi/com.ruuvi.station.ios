@@ -20,7 +20,7 @@ class MigrationManagerAlertService: MigrationManager {
     private let queue: DispatchQueue = DispatchQueue(label: "MigrationManagerAlertService", qos: .utility)
 
     func migrateIfNeeded() {
-        persistanceVersion = 0
+        guard persistanceVersion < actualServiceVersion else { return }
         for version in persistanceVersion..<actualServiceVersion {
             let nextVerstion = version + 1
             migrate(to: nextVerstion) { (result) in
@@ -70,13 +70,13 @@ extension MigrationManagerAlertService {
 
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
         var sensors: [(String, Temperature?)] = fetchWebTags()
-        fetchRuuviSensors { [weak self] in
+        fetchRuuviSensors {
             sensors.append(contentsOf: $0)
-            self?.queue.async {
+            self.queue.async {
                 let group = DispatchGroup()
                 sensors.forEach({ element in
                     group.enter()
-                    self?.migrateTo1Version(element: element, completion: {
+                    self.migrateTo1Version(element: element, completion: {
                         group.leave()
                     })
                 })
@@ -89,18 +89,15 @@ extension MigrationManagerAlertService {
     }
 
     private func migrateTo1Version(element: (String, Temperature?), completion: @escaping (() -> Void)) {
-        defer {
-            completion()
-        }
         let id = element.0
         if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
            let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
            let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
            let temperature = element.1 {
             prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity: Humidity = Humidity(value: lower,
+            let lowerHumidity: Humidity = Humidity(value: lower / 100,
                                                    unit: .relative(temperature: temperature))
-            let upperHumidity: Humidity = Humidity(value: upper,
+            let upperHumidity: Humidity = Humidity(value: upper / 100,
                                                    unit: .relative(temperature: temperature))
             alertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                                   for: id)
@@ -115,7 +112,10 @@ extension MigrationManagerAlertService {
             alertService.register(type: .humidity(lower: lowerHumidity,
                                                   upper: upperHumidity),
                                   for: id)
+        } else {
+            debugPrint("do nothing")
         }
+        completion()
     }
 
     private func fetchWebTags() -> [(String, Temperature?)] {
@@ -129,15 +129,15 @@ extension MigrationManagerAlertService {
         queue.async {
             let group = DispatchGroup()
             group.enter()
-            self.ruuviTagTrunk.readAll().on(success: {[weak self] sensors in
-                group.leave()
+            self.ruuviTagTrunk.readAll().on(success: {sensors in
                 sensors.forEach({ sensor in
                     group.enter()
-                    self?.fetchRecord(for: sensor) {
+                    self.fetchRecord(for: sensor) {
                         result.append($0)
                         group.leave()
                     }
                 })
+                group.leave()
             }, failure: { _ in
                 group.leave()
             })
@@ -149,10 +149,11 @@ extension MigrationManagerAlertService {
     }
 
     private func fetchRecord(for sensor: RuuviTagSensor, complete: @escaping (((String, Temperature?)) -> Void)) {
+        let id = sensor.luid?.value ?? sensor.id
         ruuviTagTrunk.readLast(sensor).on(success: { record in
-            complete((sensor.id, record?.temperature))
+            complete((id, record?.temperature))
         }, failure: { _ in
-            complete((sensor.id, nil))
+            complete((id, nil))
         })
     }
 
