@@ -308,6 +308,8 @@ extension TagSettingsPresenter {
                     sync(temperature: type, uuid: luid.value)
                 case .humidity:
                     sync(humidity: type, uuid: luid.value)
+                case .dewPoint:
+                    sync(dewPoint: type, uuid: luid.value)
                 case .pressure:
                     sync(pressure: type, uuid: luid.value)
                 case .connection:
@@ -356,6 +358,22 @@ extension TagSettingsPresenter {
             }
             if let humidityUpper = alertService.upperHumidity(for: uuid) {
                 viewModel.humidityUpperBound.value = humidityUpper
+            }
+        }
+    }
+
+    private func sync(dewPoint: AlertType, uuid: String) {
+        if case .dewPoint(let lower, let upper) = alertService.alert(for: uuid, of: dewPoint) {
+            viewModel.isDewPointAlertOn.value = true
+            viewModel.dewPointLowerBound.value =  Temperature(Double(lower), unit: .celsius)
+            viewModel.dewPointUpperBound.value =  Temperature(Double(upper), unit: .celsius)
+        } else {
+            viewModel.isDewPointAlertOn.value = false
+            if let dewPointLowerBound = alertService.lowerDewPointCelsius(for: uuid) {
+                viewModel.dewPointLowerBound.value = Temperature(Double(dewPointLowerBound), unit: .celsius)
+            }
+            if let dewPointUpperBound = alertService.upperDewPointCelsius(for: uuid) {
+                viewModel.dewPointUpperBound.value = Temperature(Double(dewPointUpperBound), unit: .celsius)
             }
         }
     }
@@ -473,6 +491,7 @@ extension TagSettingsPresenter {
             }
             bindTemperatureAlert(uuid: luid.value)
             bindHumidityAlert(uuid: luid.value)
+            bindDewPoint(uuid: luid.value)
             bindPressureAlert(uuid: luid.value)
             bindConnectionAlert(uuid: luid.value)
             bindMovementAlert(uuid: luid.value)
@@ -541,6 +560,39 @@ extension TagSettingsPresenter {
         }
         bind(viewModel.humidityAlertDescription, fire: false) { observer, humidityAlertDescription in
             observer.alertService.setHumidity(description: humidityAlertDescription, for: uuid)
+        }
+    }
+
+    private func bindDewPoint(uuid: String) {
+        let dewPointLower = viewModel.dewPointLowerBound
+        let dewPointUpper = viewModel.dewPointUpperBound
+        bind(viewModel.isDewPointAlertOn, fire: false) {
+            [weak dewPointLower, weak dewPointUpper] observer, isOn in
+            if let l = dewPointLower?.value?.converted(to: .celsius).value,
+               let u = dewPointUpper?.value?.converted(to: .celsius).value {
+                let type: AlertType = .dewPoint(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: uuid)
+                    }
+                }
+            }
+        }
+        bind(viewModel.dewPointLowerBound, fire: false) { observer, lower in
+            if let l = lower?.converted(to: .celsius).value {
+                observer.alertService.setLowerDewPoint(celsius: l, for: uuid)
+            }
+        }
+        bind(viewModel.dewPointUpperBound, fire: false) { observer, upper in
+            if let u = upper?.converted(to: .celsius).value {
+                observer.alertService.setUpperDewPoint(celsius: u, for: uuid)
+            }
+        }
+        bind(viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
+            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: uuid)
         }
     }
 
@@ -724,6 +776,8 @@ extension TagSettingsPresenter {
             observable = viewModel.isTemperatureAlertOn
         case .humidity:
             observable = viewModel.isHumidityAlertOn
+        case .dewPoint:
+            observable = viewModel.isDewPointAlertOn
         case .pressure:
             observable = viewModel.isPressureAlertOn
         case .connection:

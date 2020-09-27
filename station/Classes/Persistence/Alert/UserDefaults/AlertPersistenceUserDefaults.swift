@@ -24,6 +24,16 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let humidityAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
 
+    // dew point
+    private let dewPointCelsiusLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointCelsiusLowerBoundUDKeyPrefix."
+    private let dewPointCelsiusUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointCelsiusUpperBoundUDKeyPrefix."
+    private let dewPointAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertIsOnUDKeyPrefix."
+    private let dewPointAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertDescriptionUDKeyPrefix."
+
     // pressure
     private let pressureLowerBoundUDKeyPrefix
         = "AlertPersistenceUserDefaults.pressureLowerBoundUDKeyPrefix."
@@ -69,6 +79,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .dewPoint:
+            if prefs.bool(forKey: dewPointAlertIsOnUDKeyPrefix + uuid),
+                let lower = prefs.optionalDouble(forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid) {
+                return .dewPoint(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
         case .pressure:
             if prefs.bool(forKey: pressureAlertIsOnUDKeyPrefix + uuid),
                 let lower = prefs.optionalDouble(forKey: pressureLowerBoundUDKeyPrefix + uuid),
@@ -103,6 +121,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        case .dewPoint(let lower, let upper):
+            prefs.set(true, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
         case .pressure(let lower, let upper):
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
@@ -121,6 +143,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
         case .humidity:
             prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
         case .connection:
@@ -196,6 +220,33 @@ extension AlertPersistenceUserDefaults {
 
     func setHumidity(description: String?, for uuid: String) {
         prefs.set(description, forKey: humidityAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Dew Point
+extension AlertPersistenceUserDefaults {
+    func lowerDewPointCelsius(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLowerDewPoint(celsius: Double?, for uuid: String) {
+        prefs.set(celsius, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperDewPointCelsius(for uuid: String) -> Double? {
+        return prefs.optionalDouble(forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpperDewPoint(celsius: Double?, for uuid: String) {
+        prefs.set(celsius, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func dewPointDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: dewPointAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setDewPoint(description: String?, for uuid: String) {
+        prefs.set(description, forKey: dewPointAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

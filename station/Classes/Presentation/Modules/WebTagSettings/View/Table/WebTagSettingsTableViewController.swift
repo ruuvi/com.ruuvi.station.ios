@@ -16,6 +16,8 @@ class WebTagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var pressureAlertHeaderCell: WebTagSettingsAlertHeaderCell!
     @IBOutlet weak var pressureAlertControlsCell: WebTagSettingsAlertControlsCell!
+    @IBOutlet weak var dewPointAlertHeaderCell: WebTagSettingsAlertHeaderCell!
+    @IBOutlet weak var dewPointAlertControlsCell: WebTagSettingsAlertControlsCell!
     @IBOutlet weak var humidityAlertHeaderCell: WebTagSettingsAlertHeaderCell!
     @IBOutlet weak var humidityAlertControlsCell: WebTagSettingsAlertControlsCell!
     @IBOutlet weak var temperatureAlertHeaderCell: WebTagSettingsAlertHeaderCell!
@@ -61,6 +63,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsViewInput {
         let alertPlaceholder = "TagSettings.Alert.CustomDescription.placeholder".localized()
         temperatureAlertControlsCell.textField.placeholder = alertPlaceholder
         humidityAlertControlsCell.textField.placeholder = alertPlaceholder
+        dewPointAlertControlsCell.textField.placeholder = alertPlaceholder
         pressureAlertControlsCell.textField.placeholder = alertPlaceholder
 
         tableView.reloadData()
@@ -171,13 +174,20 @@ extension WebTagSettingsTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         let headerHeight: CGFloat = 66
         let controlsHeight: CGFloat = 148
+        let hu = viewModel.humidityUnit.value
         switch cell {
-        case temperatureAlertHeaderCell, humidityAlertHeaderCell, pressureAlertHeaderCell:
+        case temperatureAlertHeaderCell, pressureAlertHeaderCell:
             return headerHeight
         case temperatureAlertControlsCell:
             return (viewModel.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
+        case humidityAlertHeaderCell:
+            return (hu != .dew) ? headerHeight : 0
         case humidityAlertControlsCell:
-            return (viewModel.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+            return ((hu != .dew) && viewModel.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+        case dewPointAlertHeaderCell:
+            return (hu == .dew) ? headerHeight : 0
+        case dewPointAlertControlsCell:
+            return ((hu == .dew) && (viewModel.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
         case pressureAlertControlsCell:
             return (viewModel.isPressureAlertOn.value ?? false) ? controlsHeight : 0
         default:
@@ -252,6 +262,8 @@ extension WebTagSettingsTableViewController {
         temperatureAlertControlsCell.delegate = self
         humidityAlertHeaderCell.delegate = self
         humidityAlertControlsCell.delegate = self
+        dewPointAlertHeaderCell.delegate = self
+        dewPointAlertControlsCell.delegate = self
         pressureAlertHeaderCell.delegate = self
         pressureAlertControlsCell.delegate = self
 
@@ -262,6 +274,8 @@ extension WebTagSettingsTableViewController {
         let tu = viewModel.temperatureUnit.value ?? .celsius
         temperatureAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
         temperatureAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
+        dewPointAlertControlsCell.slider.minValue = CGFloat(tu.alertRange.lowerBound)
+        dewPointAlertControlsCell.slider.maxValue = CGFloat(tu.alertRange.upperBound)
 
         let hu = viewModel.humidityUnit.value ?? .percent
         humidityAlertControlsCell.slider.minValue = CGFloat(hu.alertRange.lowerBound)
@@ -289,8 +303,8 @@ extension WebTagSettingsTableViewController {
     private func updateUICelsiusLowerBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel.temperatureUnit.value else {
-            temperatureAlertControlsCell.slider.minValue = -40
-            temperatureAlertControlsCell.slider.selectedMinValue = -40
+            temperatureAlertControlsCell.slider.minValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
             return
         }
         if let lower = viewModel.temperatureLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -304,8 +318,8 @@ extension WebTagSettingsTableViewController {
     private func updateUICelsiusUpperBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel.temperatureUnit.value else {
-            temperatureAlertControlsCell.slider.maxValue = 85
-            temperatureAlertControlsCell.slider.selectedMaxValue = 85
+            temperatureAlertControlsCell.slider.maxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
+            temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
             return
         }
         if let upper = viewModel.temperatureUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -402,8 +416,10 @@ extension WebTagSettingsTableViewController {
                 description = String(format: format, la, ua)
             } else {
                 if let t = viewModel.temperature.value {
-                    let lr: Double = max(l.converted(to: .relative(temperature: t)).value * 100.0, HumidityUnit.percent.alertRange.lowerBound)
-                    let ur: Double = min(u.converted(to: .relative(temperature: t)).value * 100.0, HumidityUnit.percent.alertRange.upperBound)
+                    let lv: Double = l.converted(to: .relative(temperature: t)).value * 100.0
+                    let lr: Double = max(lv, HumidityUnit.percent.alertRange.lowerBound)
+                    let ua: Double = u.converted(to: .relative(temperature: t)).value * 100.0
+                    let ur: Double = min(ua, HumidityUnit.percent.alertRange.upperBound)
                     description = String(format: format, lr, ur)
                 } else {
                     description = alertOffString.localized()
@@ -419,7 +435,7 @@ extension WebTagSettingsTableViewController {
     private func updateUIPressureLowerBound() {
         guard isViewLoaded else { return }
         guard let pu = viewModel.pressureUnit.value else {
-            pressureAlertControlsCell.slider.selectedMinValue = 300
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(UnitPressure.hectopascals.alertRange.lowerBound)
             return
         }
         if let lower = viewModel.pressureLowerBound.value?.converted(to: pu).value {
@@ -432,7 +448,7 @@ extension WebTagSettingsTableViewController {
     private func updateUIPressureUpperBound() {
         guard isViewLoaded else { return }
         guard let pu = viewModel.pressureUnit.value else {
-            pressureAlertControlsCell.slider.selectedMaxValue = 1100
+            pressureAlertControlsCell.slider.selectedMaxValue =  CGFloat(UnitPressure.hectopascals.alertRange.upperBound)
             return
         }
         if let upper = viewModel.pressureUpperBound.value?.converted(to: pu).value {
@@ -458,6 +474,54 @@ extension WebTagSettingsTableViewController {
             pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
         }
     }
+
+    // MARK: updateUIDewPoint
+
+    private func updateUIDewPointCelsiusLowerBound() {
+        guard isViewLoaded else { return }
+        guard let temperatureUnit = viewModel.temperatureUnit.value else {
+            dewPointAlertControlsCell.slider.minValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            return
+        }
+        if let lower = viewModel.dewPointLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
+            dewPointAlertControlsCell.slider.selectedMinValue = CGFloat(lower.value)
+        } else {
+            let lower: CGFloat = CGFloat(temperatureUnit.alertRange.lowerBound)
+            dewPointAlertControlsCell.slider.selectedMinValue = lower
+        }
+    }
+
+    private func updateUIDewPointCelsiusUpperBound() {
+        guard isViewLoaded else { return }
+        guard let temperatureUnit = viewModel.temperatureUnit.value else {
+            dewPointAlertControlsCell.slider.maxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
+            dewPointAlertControlsCell.slider.selectedMaxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
+            return
+        }
+        if let upper = viewModel.dewPointUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
+            dewPointAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.value)
+        } else {
+            let upper: CGFloat = CGFloat(temperatureUnit.alertRange.upperBound)
+            dewPointAlertControlsCell.slider.selectedMaxValue = upper
+        }
+    }
+
+    private func updateUIDewPointAlertDescription() {
+        guard isViewLoaded else { return }
+        guard viewModel.isDewPointAlertOn.value == true else {
+            dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+            return
+        }
+        if let tu = viewModel.temperatureUnit.value?.unitTemperature,
+           let l = viewModel.dewPointLowerBound.value?.converted(to: tu),
+           let u = viewModel.dewPointUpperBound.value?.converted(to: tu) {
+            let format = "WebTagSettings.Alerts.DewPoint.description".localized()
+            dewPointAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
+        } else {
+            dewPointAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
+        }
+    }
 }
 
 // MARK: - WebTagSettingsAlertHeaderCellDelegate
@@ -468,6 +532,8 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertHeaderCellDelega
             viewModel.isTemperatureAlertOn.value = isOn
         case humidityAlertHeaderCell:
             viewModel.isHumidityAlertOn.value = isOn
+        case dewPointAlertHeaderCell:
+            viewModel.isDewPointAlertOn.value = isOn
         case pressureAlertHeaderCell:
             viewModel.isPressureAlertOn.value = isOn
         default:
@@ -484,6 +550,8 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
             viewModel.temperatureAlertDescription.value = description
         case humidityAlertControlsCell:
             viewModel.humidityAlertDescription.value = description
+        case dewPointAlertControlsCell:
+            viewModel.dewPointAlertDescription.value = description
         case pressureAlertControlsCell:
             viewModel.pressureAlertDescription.value = description
         default:
@@ -513,6 +581,11 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
                     viewModel.humidityUpperBound.value = Humidity(value: Double(maxValue / 100.0),
                                                                   unit: .relative(temperature: t))
                 }
+            }
+        case dewPointAlertControlsCell:
+            if let tu = viewModel.temperatureUnit.value {
+                viewModel.dewPointLowerBound.value = Temperature(Double(minValue), unit: tu.unitTemperature)
+                viewModel.dewPointUpperBound.value = Temperature(Double(maxValue), unit: tu.unitTemperature)
             }
         case pressureAlertControlsCell:
             if let pu = viewModel.pressureUnit.value {
@@ -551,6 +624,7 @@ extension WebTagSettingsTableViewController {
 
         bindTemperatureAlertCells()
         bindHumidityAlertCells()
+        bindDewPointAlertCells()
         bindPressureAlertCells()
     }
 
@@ -934,6 +1008,137 @@ extension WebTagSettingsTableViewController {
         }
 
         tableView.bind(viewModel.isTemperatureAlertOn) { tableView, _ in
+            if tableView.window != nil {
+                tableView.beginUpdates()
+                tableView.endUpdates()
+            }
+        }
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func bindDewPointAlertCells() {
+        guard isViewLoaded else {
+            return
+        }
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isDewPointAlertOn) { (view, isOn) in
+            view.isOn = isOn.bound
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.isDewPointAlertOn) { (slider, isOn) in
+            slider.isEnabled = isOn.bound
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.dewPointLowerBound) { [weak self] (_, _) in
+            self?.updateUIDewPointCelsiusLowerBound()
+            self?.updateUIDewPointAlertDescription()
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.dewPointUpperBound) { [weak self] (_, _) in
+            self?.updateUIDewPointCelsiusUpperBound()
+            self?.updateUIDewPointAlertDescription()
+        }
+
+        dewPointAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
+            let title = "WebTagSettings.dewPointAlertTitleLabel.text"
+            label.text = title.localized()
+                + " "
+                + (temperatureUnit?.symbol ?? "N/A".localized())
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
+            if let tu = temperatureUnit {
+                slider.minValue = CGFloat(tu.alertRange.lowerBound)
+                slider.maxValue = CGFloat(tu.alertRange.upperBound)
+            }
+        }
+
+        dewPointAlertHeaderCell.descriptionLabel.bind(viewModel.isDewPointAlertOn) { [weak self] (_, _) in
+            self?.updateUIDewPointAlertDescription()
+        }
+
+        let isPushNotificationsEnabled = viewModel.isPushNotificationsEnabled
+        let isDewPointAlertOn = viewModel.isDewPointAlertOn
+        let isLocationAuthorizedAlways = viewModel.isLocationAuthorizedAlways
+        let location = viewModel.location
+
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.location) {
+            [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways] (view, location) in
+            let isPN = isPushNotificationsEnabled?.value ?? false
+            let isLA = isLocationAuthorizedAlways?.value ?? false
+            let isFixed = location != nil
+            let isEnabled = isPN && (isLA || isFixed)
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
+
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isLocationAuthorizedAlways) {
+            [weak isPushNotificationsEnabled, weak location] (view, isLocationAuthorizedAlways) in
+            let isPN = isPushNotificationsEnabled?.value ?? false
+            let isLA = isLocationAuthorizedAlways.bound
+            let isFixed = location?.value != nil
+            let isEnabled = isPN && (isLA || isFixed)
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
+
+        dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isLocationAuthorizedAlways, weak location] view, isPushNotificationsEnabled in
+            let isPN = isPushNotificationsEnabled ?? false
+            let isLA = isLocationAuthorizedAlways?.value ?? false
+            let isFixed = location?.value != nil
+            let isEnabled = isPN && (isLA || isFixed)
+            view.isEnabled = isEnabled
+            view.onTintColor = isEnabled ? UISwitch.appearance().onTintColor : .gray
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.isDewPointAlertOn) {
+            [weak isPushNotificationsEnabled, weak isLocationAuthorizedAlways, weak location]
+            (slider, isOn) in
+            let isOn = isOn.bound
+            let isPN = isPushNotificationsEnabled?.value ?? false
+            let isLA = isLocationAuthorizedAlways?.value ?? false
+            let isFixed = location?.value != nil
+            let isEnabled = isOn && isPN && (isLA || isFixed)
+            slider.isEnabled = isEnabled
+        }
+        dewPointAlertControlsCell.slider.bind(viewModel.isPushNotificationsEnabled) {
+            [weak isDewPointAlertOn, weak isLocationAuthorizedAlways, weak location]
+            (slider, isPushNotificationsEnabled) in
+            let isOn = isDewPointAlertOn?.value ?? false
+            let isPN = isPushNotificationsEnabled.bound
+            let isLA = isLocationAuthorizedAlways?.value ?? false
+            let isFixed = location?.value != nil
+            let isEnabled = isOn && isPN && (isLA || isFixed)
+            slider.isEnabled = isEnabled
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.location) {
+            [weak isDewPointAlertOn, weak isLocationAuthorizedAlways, weak isPushNotificationsEnabled]
+            (slider, location) in
+            let isOn = isDewPointAlertOn?.value ?? false
+            let isPN = isPushNotificationsEnabled?.value ?? false
+            let isLA = isLocationAuthorizedAlways?.value ?? false
+            let isFixed = location != nil
+            let isEnabled = isOn && isPN && (isLA || isFixed)
+            slider.isEnabled = isEnabled
+        }
+
+        dewPointAlertControlsCell.slider.bind(viewModel.isLocationAuthorizedAlways) {
+            [weak isDewPointAlertOn, weak isPushNotificationsEnabled, weak location]
+            (slider, isLocationAuthorizedAlways) in
+            let isOn = isDewPointAlertOn?.value ?? false
+            let isPN = isPushNotificationsEnabled?.value ?? false
+            let isLA = isLocationAuthorizedAlways.bound
+            let isFixed = location?.value != nil
+            let isEnabled = isOn && isPN && (isLA || isFixed)
+            slider.isEnabled = isEnabled
+        }
+        dewPointAlertControlsCell.textField.bind(viewModel.dewPointAlertDescription) {
+            (textField, dewPointAlertDescription) in
+            textField.text = dewPointAlertDescription
+        }
+
+        tableView.bind(viewModel.isDewPointAlertOn) { tableView, _ in
             if tableView.window != nil {
                 tableView.beginUpdates()
                 tableView.endUpdates()

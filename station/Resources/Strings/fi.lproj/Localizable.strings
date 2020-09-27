@@ -173,6 +173,8 @@
 "LocalNotificationsManager.LowHumidity.title" = "Suhteellinen ilmankosteus liian alhainen!";
 "LocalNotificationsManager.HighHumidity.title" = "Suhteellinen ilmankosteus liian korkea!";
 "LocalNotificationsManager.LowPressure.title" = "Ilmanpaine liian alhainen!";
+"LocalNotificationsManager.LowDewPoint.title" = "Kastepiste liian alhainen!";
+"LocalNotificationsManager.HighDewPoint.title" = "Kastepiste liian korkea!";
 "LocalNotificationsManager.HighPressure.title" = "Ilmanpaine liian korkea!";
 "LocalNotificationsManager.DidMove.title" = "Liike havaittu!";
 
@@ -291,6 +293,8 @@
 "TagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity";
 "TagSettings.PressureAlert.title" = "Ilmanpaine";
+"TagSettings.Alerts.DewPoint.description" = "Hälytä, mikäli kastepiste alle %.0f tai yli %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
 "TagSettings.Alerts.Pressure.description" = "Hälytä, mikäli ilmanpaine %.0f tai yli %.0f";
 "TagSettings.Alerts.Connection.description" = "Hälytä, mikäli yhteys muodostettu/yhteys menetetty";
 "TagSettings.ConnectionAlert.title" = "Yhteys";
@@ -348,6 +352,8 @@
 "WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
 "WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.PressureAlert.title" = "Ilmanpaine";
+"WebTagSettings.Alerts.DewPoint.description" = "Hälytä, mikäli kastepiste alle %.0f tai yli %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
 "WebTagSettings.Alerts.Pressure.description" = "Hälytä, mikäli ilmanpaine alle %.0f tai yli %.0f";
 
 // Welcome
