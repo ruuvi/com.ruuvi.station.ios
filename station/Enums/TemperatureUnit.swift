@@ -52,13 +52,8 @@ extension UnitTemperature: SelectionItemProtocol {
 // defaults range of temperature
 extension TemperatureUnit {
     var alertRange: Range<Double> {
-        switch self {
-        case .celsius:
-            return .init(uncheckedBounds: (lower: -40, upper: 85))
-        case .fahrenheit:
-            return .init(uncheckedBounds: (lower: -40, upper: 185))
-        case .kelvin:
-            return .init(uncheckedBounds: (lower: 233, upper: 358))
-        }
+        let lowerTemp = Temperature(value: -40, unit: .celsius).converted(to: self.unitTemperature).value
+        let upperTemp = Temperature(value: 85, unit: .celsius).converted(to: self.unitTemperature).value
+        return .init(uncheckedBounds: (lowerTemp, upperTemp))
     }
 }

@@ -414,30 +414,24 @@ extension TagSettingsTableViewController {
             let headerHeight: CGFloat = 66
             let controlsHeight: CGFloat = 148
             let descriptionHeight: CGFloat = 60
-            let hu = viewModel?.humidityUnit.value
             switch cell {
-            case temperatureAlertHeaderCell:
+            case temperatureAlertHeaderCell,
+                 humidityAlertHeaderCell,
+                 dewPointAlertHeaderCell,
+                 pressureAlertHeaderCell,
+                 connectionAlertHeaderCell,
+                 movementAlertHeaderCell:
                 return headerHeight
             case temperatureAlertControlsCell:
                 return (viewModel?.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
-            case humidityAlertHeaderCell:
-                return (hu != .dew) ? headerHeight : 0
             case humidityAlertControlsCell:
-                return ((hu != .dew) && viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
-            case dewPointAlertHeaderCell:
-                return (hu == .dew) ? headerHeight : 0
+                return (viewModel?.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
             case dewPointAlertControlsCell:
-                return ((hu == .dew) && (viewModel?.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
-            case pressureAlertHeaderCell:
-                return headerHeight
+                return (viewModel?.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
             case pressureAlertControlsCell:
                 return (viewModel?.isPressureAlertOn.value ?? false) ? controlsHeight : 0
-            case connectionAlertHeaderCell:
-                return headerHeight
             case connectionAlertDescriptionCell:
                 return (viewModel?.isConnectionAlertOn.value ?? false) ? descriptionHeight : 0
-            case movementAlertHeaderCell:
-                return headerHeight
             case movementAlertDescriptionCell:
                 return (viewModel?.isMovementAlertOn.value ?? false) ? descriptionHeight : 0
             default:
@@ -1264,8 +1258,9 @@ extension TagSettingsTableViewController {
     private func updateUITemperatureLowerBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel?.temperatureUnit.value else {
-            temperatureAlertControlsCell.slider.minValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
-            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            let range = TemperatureUnit.celsius.alertRange
+            temperatureAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel?.temperatureLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -1279,8 +1274,9 @@ extension TagSettingsTableViewController {
     private func updateUITemperatureUpperBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel?.temperatureUnit.value else {
-            temperatureAlertControlsCell.slider.maxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
-            temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
+            let range = TemperatureUnit.celsius.alertRange
+            temperatureAlertControlsCell.slider.maxValue = CGFloat(range.upperBound)
+            temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(range.upperBound)
             return
         }
         if let upper = viewModel?.temperatureUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -1310,17 +1306,23 @@ extension TagSettingsTableViewController {
     private func updateUIHumidityLowerBound() {
         guard isViewLoaded else { return }
         guard let hu = viewModel?.humidityUnit.value else {
-            humidityAlertControlsCell.slider.selectedMinValue = 0
+            let range = HumidityUnit.gm3.alertRange
+            humidityAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel?.humidityLowerBound.value {
             switch hu {
             case .gm3:
-                humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lower.converted(to: .absolute).value)
+                let lowerAbsolute: Double = max(lower.converted(to: .absolute).value, hu.alertRange.lowerBound)
+                humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerAbsolute)
             default:
                 if let t = viewModel?.temperature.value {
                     let minValue: Double = lower.converted(to: .relative(temperature: t)).value
-                    let lowerRelative: Double = max(minValue * 100, HumidityUnit.percent.alertRange.lowerBound)
+                    let lowerRelative: Double = min(
+                        max(minValue * 100, HumidityUnit.percent.alertRange.lowerBound),
+                        HumidityUnit.percent.alertRange.upperBound
+                    )
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerRelative)
                 } else {
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
@@ -1334,13 +1336,16 @@ extension TagSettingsTableViewController {
     private func updateUIHumidityUpperBound() {
         guard isViewLoaded else { return }
         guard let hu = viewModel?.humidityUnit.value else {
-            humidityAlertControlsCell.slider.selectedMaxValue = 40
+            let range = HumidityUnit.gm3.alertRange
+            humidityAlertControlsCell.slider.maxValue = CGFloat(range.upperBound)
+            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(range.upperBound)
             return
         }
         if let upper = viewModel?.humidityUpperBound.value {
             switch hu {
             case .gm3:
-                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upper.converted(to: .absolute).value)
+                let upperAbsolute: Double = min(upper.converted(to: .absolute).value, hu.alertRange.upperBound)
+                humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(upperAbsolute)
             default:
                 if let t = viewModel?.temperature.value {
                     let maxValue: Double = upper.converted(to: .relative(temperature: t)).value
@@ -1373,8 +1378,16 @@ extension TagSettingsTableViewController {
                 description = String(format: format, la, ua)
             } else {
                 if let t = viewModel?.temperature.value {
-                    let lr: Double = max(l.converted(to: .relative(temperature: t)).value * 100.0, HumidityUnit.percent.alertRange.lowerBound)
-                    let ur: Double = min(u.converted(to: .relative(temperature: t)).value * 100.0, HumidityUnit.percent.alertRange.upperBound)
+                    let lv: Double = l.converted(to: .relative(temperature: t)).value * 100.0
+                    let lr: Double = min(
+                        max(lv, HumidityUnit.percent.alertRange.lowerBound),
+                        HumidityUnit.percent.alertRange.upperBound
+                    )
+                    let ua: Double = u.converted(to: .relative(temperature: t)).value * 100.0
+                    let ur: Double = max(
+                        min(ua, HumidityUnit.percent.alertRange.upperBound),
+                        HumidityUnit.percent.alertRange.lowerBound
+                    )
                     description = String(format: format, lr, ur)
                 } else {
                     description = alertOffString.localized()
@@ -1390,11 +1403,17 @@ extension TagSettingsTableViewController {
     private func updateUIPressureLowerBound() {
         guard isViewLoaded else { return }
         guard let pu = viewModel?.pressureUnit.value else {
-            pressureAlertControlsCell.slider.selectedMinValue = 300
+            let range = UnitPressure.hectopascals.alertRange
+            pressureAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel?.pressureLowerBound.value?.converted(to: pu).value {
-            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+            let l = min(
+                max(lower, pu.alertRange.lowerBound),
+                pu.alertRange.upperBound
+            )
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(l)
         } else {
             pressureAlertControlsCell.slider.selectedMinValue = CGFloat(pu.alertRange.lowerBound)
         }
@@ -1403,11 +1422,17 @@ extension TagSettingsTableViewController {
     private func updateUIPressureUpperBound() {
         guard isViewLoaded else { return }
         guard let pu = viewModel?.pressureUnit.value else {
-            pressureAlertControlsCell.slider.selectedMaxValue = 1100
+            let range = UnitPressure.hectopascals.alertRange
+            pressureAlertControlsCell.slider.maxValue =  CGFloat(range.upperBound)
+            pressureAlertControlsCell.slider.selectedMaxValue =  CGFloat(range.upperBound)
             return
         }
         if let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
-            pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+            let u = max(
+                min(upper, pu.alertRange.upperBound),
+                pu.alertRange.lowerBound
+            )
+            pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(u)
         } else {
             pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(pu.alertRange.upperBound)
         }
@@ -1421,10 +1446,18 @@ extension TagSettingsTableViewController {
             return
         }
         if let pu = viewModel?.pressureUnit.value,
-           let l = viewModel?.pressureLowerBound.value?.converted(to: pu),
-           let u = viewModel?.pressureUpperBound.value?.converted(to: pu) {
+           let lower = viewModel?.pressureLowerBound.value?.converted(to: pu).value,
+           let upper = viewModel?.pressureUpperBound.value?.converted(to: pu).value {
+            let l = min(
+                max(lower, pu.alertRange.lowerBound),
+                pu.alertRange.upperBound
+            )
+            let u = max(
+                min(upper, pu.alertRange.upperBound),
+                pu.alertRange.lowerBound
+            )
             let format = "TagSettings.Alerts.Pressure.description".localized()
-            pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
+            pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
         } else {
             pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
         }
@@ -1435,8 +1468,9 @@ extension TagSettingsTableViewController {
     private func updateUIDewPointCelsiusLowerBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel?.temperatureUnit.value else {
-            dewPointAlertControlsCell.slider.minValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
-            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            let range = TemperatureUnit.celsius.alertRange
+            dewPointAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            dewPointAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel?.dewPointLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {

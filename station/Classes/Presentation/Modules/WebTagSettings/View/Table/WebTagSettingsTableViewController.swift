@@ -174,20 +174,18 @@ extension WebTagSettingsTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         let headerHeight: CGFloat = 66
         let controlsHeight: CGFloat = 148
-        let hu = viewModel.humidityUnit.value
         switch cell {
-        case temperatureAlertHeaderCell, pressureAlertHeaderCell:
+        case temperatureAlertHeaderCell,
+             pressureAlertHeaderCell,
+             humidityAlertHeaderCell,
+             dewPointAlertHeaderCell:
             return headerHeight
         case temperatureAlertControlsCell:
             return (viewModel.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
-        case humidityAlertHeaderCell:
-            return (hu != .dew) ? headerHeight : 0
         case humidityAlertControlsCell:
-            return ((hu != .dew) && viewModel.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
-        case dewPointAlertHeaderCell:
-            return (hu == .dew) ? headerHeight : 0
+            return (viewModel.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
         case dewPointAlertControlsCell:
-            return ((hu == .dew) && (viewModel.isDewPointAlertOn.value ?? false)) ? controlsHeight : 0
+            return (viewModel.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
         case pressureAlertControlsCell:
             return (viewModel.isPressureAlertOn.value ?? false) ? controlsHeight : 0
         default:
@@ -300,11 +298,12 @@ extension WebTagSettingsTableViewController {
     }
     // MARK: - updateUITemperature
 
-    private func updateUICelsiusLowerBound() {
+    private func updateUITemperatureLowerBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel.temperatureUnit.value else {
-            temperatureAlertControlsCell.slider.minValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
-            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            let range = TemperatureUnit.celsius.alertRange
+            temperatureAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel.temperatureLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -315,11 +314,12 @@ extension WebTagSettingsTableViewController {
         }
     }
 
-    private func updateUICelsiusUpperBound() {
+    private func updateUITemperatureUpperBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel.temperatureUnit.value else {
-            temperatureAlertControlsCell.slider.maxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
-            temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(TemperatureUnit.celsius.alertRange.upperBound)
+            let range = TemperatureUnit.celsius.alertRange
+            temperatureAlertControlsCell.slider.maxValue = CGFloat(range.upperBound)
+            temperatureAlertControlsCell.slider.selectedMaxValue = CGFloat(range.upperBound)
             return
         }
         if let upper = viewModel.temperatureUpperBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -351,7 +351,9 @@ extension WebTagSettingsTableViewController {
     private func updateUIHumidityLowerBound() {
         guard isViewLoaded else { return }
         guard let hu = viewModel.humidityUnit.value else {
-            humidityAlertControlsCell.slider.selectedMinValue = 0
+            let range = HumidityUnit.gm3.alertRange
+            humidityAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            humidityAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel.humidityLowerBound.value {
@@ -362,7 +364,10 @@ extension WebTagSettingsTableViewController {
             default:
                 if let t = viewModel.temperature.value {
                     let minValue: Double = lower.converted(to: .relative(temperature: t)).value
-                    let lowerRelative: Double = max(minValue * 100, HumidityUnit.percent.alertRange.lowerBound)
+                    let lowerRelative: Double = min(
+                        max(minValue * 100, HumidityUnit.percent.alertRange.lowerBound),
+                        HumidityUnit.percent.alertRange.upperBound
+                    )
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(lowerRelative)
                 } else {
                     humidityAlertControlsCell.slider.selectedMinValue = CGFloat(hu.alertRange.lowerBound)
@@ -376,7 +381,9 @@ extension WebTagSettingsTableViewController {
     private func updateUIHumidityUpperBound() {
         guard isViewLoaded else { return }
         guard let hu = viewModel.humidityUnit.value else {
-            humidityAlertControlsCell.slider.selectedMaxValue = 40
+            let range = HumidityUnit.gm3.alertRange
+            humidityAlertControlsCell.slider.maxValue = CGFloat(range.upperBound)
+            humidityAlertControlsCell.slider.selectedMaxValue = CGFloat(range.upperBound)
             return
         }
         if let upper = viewModel.humidityUpperBound.value {
@@ -417,9 +424,15 @@ extension WebTagSettingsTableViewController {
             } else {
                 if let t = viewModel.temperature.value {
                     let lv: Double = l.converted(to: .relative(temperature: t)).value * 100.0
-                    let lr: Double = max(lv, HumidityUnit.percent.alertRange.lowerBound)
+                    let lr: Double = min(
+                        max(lv, HumidityUnit.percent.alertRange.lowerBound),
+                        HumidityUnit.percent.alertRange.upperBound
+                    )
                     let ua: Double = u.converted(to: .relative(temperature: t)).value * 100.0
-                    let ur: Double = min(ua, HumidityUnit.percent.alertRange.upperBound)
+                    let ur: Double = max(
+                        min(ua, HumidityUnit.percent.alertRange.upperBound),
+                        HumidityUnit.percent.alertRange.lowerBound
+                    )
                     description = String(format: format, lr, ur)
                 } else {
                     description = alertOffString.localized()
@@ -435,11 +448,17 @@ extension WebTagSettingsTableViewController {
     private func updateUIPressureLowerBound() {
         guard isViewLoaded else { return }
         guard let pu = viewModel.pressureUnit.value else {
-            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(UnitPressure.hectopascals.alertRange.lowerBound)
+            let range = UnitPressure.hectopascals.alertRange
+            pressureAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel.pressureLowerBound.value?.converted(to: pu).value {
-            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(lower)
+            let l = min(
+                max(lower, pu.alertRange.lowerBound),
+                pu.alertRange.upperBound
+            )
+            pressureAlertControlsCell.slider.selectedMinValue = CGFloat(l)
         } else {
             pressureAlertControlsCell.slider.selectedMinValue = CGFloat(pu.alertRange.lowerBound)
         }
@@ -448,11 +467,17 @@ extension WebTagSettingsTableViewController {
     private func updateUIPressureUpperBound() {
         guard isViewLoaded else { return }
         guard let pu = viewModel.pressureUnit.value else {
-            pressureAlertControlsCell.slider.selectedMaxValue =  CGFloat(UnitPressure.hectopascals.alertRange.upperBound)
+            let range = UnitPressure.hectopascals.alertRange
+            pressureAlertControlsCell.slider.maxValue =  CGFloat(range.upperBound)
+            pressureAlertControlsCell.slider.selectedMaxValue =  CGFloat(range.upperBound)
             return
         }
         if let upper = viewModel.pressureUpperBound.value?.converted(to: pu).value {
-            pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(upper)
+            let u = max(
+                min(upper, pu.alertRange.upperBound),
+                pu.alertRange.lowerBound
+            )
+            pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(u)
         } else {
             pressureAlertControlsCell.slider.selectedMaxValue = CGFloat(pu.alertRange.upperBound)
         }
@@ -466,10 +491,18 @@ extension WebTagSettingsTableViewController {
             return
         }
         if let pu = viewModel.pressureUnit.value,
-           let l = viewModel.pressureLowerBound.value?.converted(to: pu),
-           let u = viewModel.pressureUpperBound.value?.converted(to: pu) {
+           let lower = viewModel.pressureLowerBound.value?.converted(to: pu).value,
+           let upper = viewModel.pressureUpperBound.value?.converted(to: pu).value {
+            let l = min(
+                max(lower, pu.alertRange.lowerBound),
+                pu.alertRange.upperBound
+            )
+            let u = max(
+                min(upper, pu.alertRange.upperBound),
+                pu.alertRange.lowerBound
+            )
             let format = "WebTagSettings.Alerts.Pressure.description".localized()
-            pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l.value, u.value)
+            pressureAlertHeaderCell.descriptionLabel.text = String(format: format, l, u)
         } else {
             pressureAlertHeaderCell.descriptionLabel.text = alertOffString.localized()
         }
@@ -480,8 +513,9 @@ extension WebTagSettingsTableViewController {
     private func updateUIDewPointCelsiusLowerBound() {
         guard isViewLoaded else { return }
         guard let temperatureUnit = viewModel.temperatureUnit.value else {
-            dewPointAlertControlsCell.slider.minValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
-            temperatureAlertControlsCell.slider.selectedMinValue = CGFloat(TemperatureUnit.celsius.alertRange.lowerBound)
+            let range = TemperatureUnit.celsius.alertRange
+            dewPointAlertControlsCell.slider.minValue = CGFloat(range.lowerBound)
+            dewPointAlertControlsCell.slider.selectedMinValue = CGFloat(range.lowerBound)
             return
         }
         if let lower = viewModel.dewPointLowerBound.value?.converted(to: temperatureUnit.unitTemperature) {
@@ -905,11 +939,11 @@ extension WebTagSettingsTableViewController {
         }
 
         temperatureAlertControlsCell.slider.bind(viewModel.temperatureLowerBound) { [weak self] (_, _) in
-            self?.updateUICelsiusLowerBound()
+            self?.updateUITemperatureLowerBound()
             self?.updateUITemperatureAlertDescription()
         }
         temperatureAlertControlsCell.slider.bind(viewModel.temperatureUpperBound) { [weak self] (_, _) in
-            self?.updateUICelsiusUpperBound()
+            self?.updateUITemperatureUpperBound()
             self?.updateUITemperatureAlertDescription()
         }
 
