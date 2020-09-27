@@ -318,10 +318,9 @@
 "HumidityUnit.Dew.title" = "Точка росы (%@)";
 
 // UnitPressure
-"UnitPressure.bars.title" = "Бар (bar)";
-"UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
-"UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
-"UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
+"UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
+"UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";

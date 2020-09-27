@@ -97,8 +97,6 @@ class SettingsUserDegaults: Settings {
     var pressureUnit: UnitPressure {
         get {
             switch pressureUnitInt {
-            case UnitPressure.bars.hashValue:
-                return .bars
             case UnitPressure.inchesOfMercury.hashValue:
                 return .inchesOfMercury
             case UnitPressure.millimetersOfMercury.hashValue:
