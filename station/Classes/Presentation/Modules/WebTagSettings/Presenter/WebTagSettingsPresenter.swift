@@ -2,6 +2,7 @@
 import UIKit
 import RealmSwift
 import CoreLocation
+import Humidity
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
