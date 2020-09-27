@@ -21,6 +21,7 @@ extension SettingsPresenter: SettingsViewOutput {
         view.temperatureUnit = settings.temperatureUnit
         view.humidityUnit = settings.humidityUnit
         view.language = settings.language
+        view.pressureUnit = settings.pressureUnit
 
         languageToken = NotificationCenter
             .default
@@ -51,12 +52,40 @@ extension SettingsPresenter: SettingsViewOutput {
         })
     }
 
-    func viewDidChange(temperatureUnit: TemperatureUnit) {
-        settings.temperatureUnit = temperatureUnit
+    func viewDidTapTemperatureUnit() {
+        let selectionItems: [TemperatureUnit] = [
+            .celsius,
+            .fahrenheit,
+            .kelvin
+        ]
+        let viewModel = SelectionViewModel(title: "Settings.Label.TemperatureUnit.text".localized(),
+                                           items: selectionItems,
+                                           description: "Settings.ChooseTemperatureUnit.text".localized())
+        router.openSelection(with: viewModel, output: self)
     }
 
-    func viewDidChange(humidityUnit: HumidityUnit) {
-        settings.humidityUnit = humidityUnit
+    func viewDidTapHumidityUnit() {
+        let selectionItems: [HumidityUnit] = [
+            .percent,
+            .gm3,
+            .dew
+        ]
+        let viewModel = SelectionViewModel(title: "Settings.Label.HumidityUnit.text".localized(),
+                                           items: selectionItems,
+                                           description: "Settings.ChooseHumidityUnit.text".localized())
+        router.openSelection(with: viewModel, output: self)
+    }
+
+    func viewDidTapOnPressure() {
+        let selectionItems: [UnitPressure] = [
+            .hectopascals,
+            .inchesOfMercury,
+            .millimetersOfMercury
+        ]
+        let viewModel = SelectionViewModel(title: "Settings.Label.PressureUnit.text".localized(),
+                                           items: selectionItems,
+                                           description: "Settings.ChoosePressureUnit.text".localized())
+        router.openSelection(with: viewModel, output: self)
     }
 
     func viewDidTriggerClose() {
@@ -81,5 +110,23 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnAdvanced() {
         router.openAdvanced()
+    }
+}
+extension SettingsPresenter: SelectionModuleOutput {
+    func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol) {
+        switch item {
+        case let temperatureUnit as TemperatureUnit:
+            settings.temperatureUnit = temperatureUnit
+            view.temperatureUnit = temperatureUnit
+        case let humidityUnit as HumidityUnit:
+            settings.humidityUnit = humidityUnit
+            view.humidityUnit = humidityUnit
+        case let pressureUnit as UnitPressure:
+            settings.pressureUnit = pressureUnit
+            view.pressureUnit = pressureUnit
+        default:
+            break
+        }
+        module.dismiss()
     }
 }

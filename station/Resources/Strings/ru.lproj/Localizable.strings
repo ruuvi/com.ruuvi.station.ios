@@ -109,6 +109,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 "ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
 
+// ExportService
+"ExportService.Date" = "Дата";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Температура (%@)";
+"ExportService.Humidity" = "Влажность (%@)";
+"ExportService.DewPoint" = "Точка росы (%@)";
+"ExportService.Pressure" = "Давление (%@)";
+"ExportService.AccelerationX" = "Ускорение по X";
+"ExportService.AccelerationY" = "Ускорение по Y";
+"ExportService.AccelerationZ" = "Ускорение по Z";
+"ExportService.Voltage" = "Напряжение (В)";
+"ExportService.MovementCounter" = "Счетчик Движения";
+"ExportService.MeasurementSequenceNumber" = "Порядковый Номер Измерения";
+"ExportService.TXPower" = "Мощность Передачи";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
 "ForegroundRow.advertisement.title" = "Сохранять данные";
@@ -155,12 +170,8 @@
 "LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
 "LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.Disable.button" = "Отключить";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "Низкая Относительная Влажность!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "ВЫсокая Относительная Влажность!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "Низкая Абсолютная Влажность!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "Высокая Абсолютная Влажность!";
-"LocalNotificationsManager.LowDewPoint.title" = "Ниже Точки Росы!";
-"LocalNotificationsManager.HighDewPoint.title" = "Выше Точки Росы!";
+"LocalNotificationsManager.LowHumidity.title" = "Низкая Влажность!";
+"LocalNotificationsManager.HighHumidity.title" = "Высокая Влажность!";
 "LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
 "LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
 "LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
@@ -186,10 +197,13 @@
 
 // Settings
 "Settings.navigationItem.title" = "Настройки";
+"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения";
+"Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
+"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
-"Settings.SectionFooter.General.title" = "Отн означает относительную влажность воздуха в %, Абс означает абсолютную влажность воздуха в г/м³, ТР означает точку росы в градусах °.";
 "Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
 "Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
+"Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
@@ -274,12 +288,8 @@
 "TagSettings.ConnectStatus.Connecting" = "Соединяюсь...";
 "TagSettings.ConnectStatus.Disconnected" = "Отсоединен";
 "TagSettings.Alert.CustomDescription.placeholder" = "Введите описание...";
-"TagSettings.Alerts.RelativeHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.RelativeAirHumidityAlert.title" = "Относительная Влажность";
-"TagSettings.AbsoluteAirHumidityAlert.title" = "Абсолютная Влажность";
-"TagSettings.Alerts.AbsoluteHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
+"TagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.AirHumidityAlert.title" = "Влажность воздуха";
 "TagSettings.PressureAlert.title" = "Атмосферное Давление";
 "TagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.Alerts.Connection.description" = "Уведомить при установке/разрыве соединения";
@@ -296,6 +306,21 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Цельсий (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
+"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Относительная влажность (%)";
+"HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
+"HumidityUnit.Dew.title" = "Точка росы (%@)";
+
+// UnitPressure
+"UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
+"UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
 
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
@@ -321,12 +346,8 @@
 "WebTagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Чтобы включить уведомления для Виртуальных Сенсоров, пожалуйста дайте разрешение на использование геолокации в Настройках.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Настройки";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Относительная Влажность";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Абсолютная Влажность";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"WebTagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
-"WebTagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
+"WebTagSettings.AirHumidityAlert.title" = "Относительная Влажность";
+"WebTagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
 "WebTagSettings.PressureAlert.title" = "Атмосферное Давление";
 "WebTagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 

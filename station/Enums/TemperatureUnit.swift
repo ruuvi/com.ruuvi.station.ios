@@ -20,3 +20,45 @@ enum TemperatureUnit {
         return unitTemperature.symbol
     }
 }
+
+extension TemperatureUnit: SelectionItemProtocol {
+    var title: String {
+        switch self {
+        case .celsius:
+            return "TemperatureUnit.Celsius.title".localized()
+        case .fahrenheit:
+            return "TemperatureUnit.Fahrenheit.title".localized()
+        case .kelvin:
+            return "TemperatureUnit.Kelvin.title".localized()
+        }
+    }
+}
+
+extension UnitTemperature: SelectionItemProtocol {
+    var title: String {
+        switch self {
+        case .celsius:
+            return "TemperatureUnit.Celsius.title".localized()
+        case .fahrenheit:
+            return "TemperatureUnit.Fahrenheit.title".localized()
+        case .kelvin:
+            return "TemperatureUnit.Kelvin.title".localized()
+        default:
+            return "N/A".localized()
+        }
+    }
+}
+
+// defaults range of temperature
+extension TemperatureUnit {
+    var alertRange: Range<Double> {
+        switch self {
+        case .celsius:
+            return .init(uncheckedBounds: (lower: -40, upper: 85))
+        case .fahrenheit:
+            return .init(uncheckedBounds: (lower: -40, upper: 185))
+        case .kelvin:
+            return .init(uncheckedBounds: (lower: 233, upper: 358))
+        }
+    }
+}

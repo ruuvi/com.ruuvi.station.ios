@@ -73,6 +73,8 @@ class BusinessAssembly: Assembly {
         container.register(ExportService.self) { r in
             let service = ExportServiceTrunk()
             service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.measurementService = r.resolve(MeasurementsService.self)
+            service.calibrationService = r.resolve(CalibrationService.self)
             return service
         }
 
@@ -108,6 +110,16 @@ class BusinessAssembly: Assembly {
             manager.sqliteContext = r.resolve(SQLiteContext.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            return manager
+        }
+
+        container.register(MigrationManagerAlertService.self) { r in
+            let manager = MigrationManagerAlertService()
+            manager.alertService = r.resolve(AlertService.self)
+            manager.alertPersistence = r.resolve(AlertPersistence.self)
+            manager.realmContext = r.resolve(RealmContext.self)
+            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.settings = r.resolve(Settings.self)
             return manager
         }
 

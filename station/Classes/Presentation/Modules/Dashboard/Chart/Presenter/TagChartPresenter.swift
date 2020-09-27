@@ -11,6 +11,8 @@ class TagChartPresenter: NSObject {
     }
     weak var ouptut: TagChartModuleOutput!
     var calibrationService: CalibrationService!
+    var measurementService: MeasurementsService!
+
     private var humidityOffset: Double = 0.0
     private var luid: LocalIdentifier? {
         didSet {
@@ -59,7 +61,7 @@ extension TagChartPresenter: TagChartModuleInput {
                 viewModel.unit.value = Unit(symbol: "g/m³".localized())
             }
         case .pressure:
-            viewModel.unit.value =  Unit(symbol: "hPa".localized())
+            viewModel.unit.value =  measurementService.units.pressureUnit
         default:
             viewModel.unit.value = Unit(symbol: "N/A".localized())
         }
@@ -249,35 +251,18 @@ extension TagChartPresenter {
         }
         queue.addOperation(filterOperation)
     }
-//swiftlint:disable:next cyclomatic_complexity
     private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry? {
         var value: Double?
         switch viewModel.type {
         case .temperature:
-            value = data.temperature?.converted(to: settings.temperatureUnit.unitTemperature).value
+            value = measurementService.double(for: data.temperature)
         case .humidity:
-            switch settings.humidityUnit {
-            case .dew:
-                switch settings.temperatureUnit {
-                case .celsius:
-                    value = data.humidity?.Td
-                case .fahrenheit:
-                    value = data.humidity?.TdF
-                case .kelvin:
-                    value = data.humidity?.TdK
-                }
-            case .gm3:
-                value = data.humidity?.ah
-            case .percent:
-                if let relativeHumidity = data.humidity?.rh {
-                    let sumHumidity = relativeHumidity * 100.0 + humidityOffset
-                    value = min(sumHumidity, 100.0)
-                } else {
-                    value = nil
-                }
-            }
+            value = measurementService.double(for: data.humidity,
+                                              withOffset: humidityOffset,
+                                              temperature: data.temperature,
+                                              isDecimal: false)
         case .pressure:
-            value = data.pressure?.converted(to: .hectopascals).value
+            value = measurementService.double(for: data.pressure)
         default:
             fatalError("before need implement chart with current type!")
         }
