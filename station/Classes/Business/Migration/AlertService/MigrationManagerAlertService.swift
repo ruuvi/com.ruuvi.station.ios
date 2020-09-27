@@ -22,10 +22,10 @@ class MigrationManagerAlertService: MigrationManager {
     func migrateIfNeeded() {
         guard persistanceVersion < actualServiceVersion else { return }
         for version in persistanceVersion..<actualServiceVersion {
-            let nextVerstion = version + 1
-            migrate(to: nextVerstion) { (result) in
+            let nextVersion = version + 1
+            migrate(to: nextVersion) { (result) in
                 if result {
-                    self.persistanceVersion = nextVerstion
+                    self.persistanceVersion = nextVersion
                 }
             }
         }
