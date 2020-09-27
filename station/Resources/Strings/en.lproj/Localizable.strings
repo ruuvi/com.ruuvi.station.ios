@@ -174,6 +174,8 @@
 "LocalNotificationsManager.LowHumidity.title" = "Air Humidity too low!";
 "LocalNotificationsManager.HighHumidity.title" = "Air Humidity too high!";
 "LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
+"LocalNotificationsManager.HighDewPoint.title" = "Dew Point is too high!";
+"LocalNotificationsManager.LowPressure.title" = "Air Pressure is too low!";
 "LocalNotificationsManager.HighPressure.title" = "Air Pressure is too high!";
 "LocalNotificationsManager.DidMove.title" = "Movement detected!";
 
@@ -292,6 +294,8 @@
 "TagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity";
 "TagSettings.PressureAlert.title" = "Air Pressure";
+"TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
 "TagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.Alerts.Connection.description" = "Alert when connected/disconnected";
 "TagSettings.ConnectionAlert.title" = "Connection";
@@ -349,6 +353,8 @@
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Settings";
 "WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
 "WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
 "WebTagSettings.PressureAlert.title" = "Air Pressure";
 "WebTagSettings.Alerts.Pressure.description" = "Alert when less than %.0f or more than %.0f";
 

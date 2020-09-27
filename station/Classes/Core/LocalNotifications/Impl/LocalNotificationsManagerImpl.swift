@@ -12,6 +12,7 @@ struct LocalAlertCategory {
 enum LowHighNotificationType: String {
     case temperature
     case humidity
+    case dewPoint
     case pressure
 }
 
@@ -147,6 +148,8 @@ extension LocalNotificationsManagerImpl {
                 cache = lowTemperatureAlerts
             case .humidity:
                 cache = lowHumidityAlerts
+            case .dewPoint:
+                cache = lowDewPointAlerts
             case .pressure:
                 cache = lowPressureAlerts
             }
@@ -156,6 +159,8 @@ extension LocalNotificationsManagerImpl {
                 cache = highTemperatureAlerts
             case .humidity:
                 cache = highHumidityAlerts
+            case .dewPoint:
+                cache = highDewPointAlerts
             case .pressure:
                 cache = highPressureAlerts
             }
@@ -178,6 +183,8 @@ extension LocalNotificationsManagerImpl {
                     title = "LocalNotificationsManager.LowTemperature.title".localized()
                 case .humidity:
                     title = "LocalNotificationsManager.LowHumidity.title".localized()
+                case .dewPoint:
+                    title = "LocalNotificationsManager.LowDewPoint.title".localized()
                 case .pressure:
                     title = "LocalNotificationsManager.LowPressure.title".localized()
                 }
@@ -187,6 +194,8 @@ extension LocalNotificationsManagerImpl {
                     title = "LocalNotificationsManager.HighTemperature.title".localized()
                 case .humidity:
                     title = "LocalNotificationsManager.HighHumidity.title".localized()
+                case .dewPoint:
+                    title = "LocalNotificationsManager.HighDewPoint.title".localized()
                 case .pressure:
                     title = "LocalNotificationsManager.HighPressure.title".localized()
                 }
@@ -201,6 +210,8 @@ extension LocalNotificationsManagerImpl {
                 body = alertService.temperatureDescription(for: uuid) ?? ""
             case .humidity:
                 body = alertService.humidityDescription(for: uuid) ?? ""
+            case .dewPoint:
+                body = alertService.dewPointDescription(for: uuid) ?? ""
             case .pressure:
                 body = alertService.pressureDescription(for: uuid) ?? ""
             }
@@ -228,6 +239,8 @@ extension LocalNotificationsManagerImpl {
                     lowTemperatureAlerts[uuid] = Date()
                 case .humidity:
                     lowHumidityAlerts[uuid] = Date()
+                case .dewPoint:
+                    lowDewPointAlerts[uuid] = Date()
                 case .pressure:
                     lowPressureAlerts[uuid] = Date()
                 }
@@ -237,6 +250,8 @@ extension LocalNotificationsManagerImpl {
                     highTemperatureAlerts[uuid] = Date()
                 case .humidity:
                     highHumidityAlerts[uuid] = Date()
+                case .dewPoint:
+                    highDewPointAlerts[uuid] = Date()
                 case .pressure:
                     highPressureAlerts[uuid] = Date()
                 }
@@ -271,6 +286,12 @@ extension LocalNotificationsManagerImpl {
                     self?.highHumidityAlerts[uuid] = nil
                     if !isOn {
                         self?.cancel(.humidity, for: uuid)
+                    }
+                case .dewPoint:
+                    self?.lowDewPointAlerts[uuid] = nil
+                    self?.highDewPointAlerts[uuid] = nil
+                    if !isOn {
+                        self?.cancel(.dewPoint, for: uuid)
                     }
                 case .pressure:
                     self?.lowPressureAlerts[uuid] = nil
@@ -340,6 +361,8 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
                 alertService.unregister(type: .humidity(lower: Humidity(value: 0, unit: .absolute),
                                                         upper: Humidity(value: 0, unit: .absolute)),
                                         for: uuid)
+            case .dewPoint:
+                alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
             case .pressure:
                 alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
             }

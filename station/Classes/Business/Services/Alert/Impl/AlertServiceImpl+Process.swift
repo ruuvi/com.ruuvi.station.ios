@@ -13,6 +13,8 @@ extension AlertServiceImpl {
                 isTriggered = isTriggered || process(temperature: type, ruuviTag: ruuviTag)
             case .humidity:
                 isTriggered = isTriggered || process(humidity: type, ruuviTag: ruuviTag)
+            case .dewPoint:
+                isTriggered = isTriggered || process(dewPoint: type, ruuviTag: ruuviTag)
             case .pressure:
                 isTriggered = isTriggered || process(pressure: type, ruuviTag: ruuviTag)
             case .movement:
@@ -71,6 +73,31 @@ extension AlertServiceImpl {
                     self?.localNotificationsManager.notify(.high, .humidity, for: ruuviTag.ruuviTagId)
                 }
             }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(dewPoint: AlertType, ruuviTag: RuuviTagSensorRecord) -> Bool {
+        let ho = calibrationService.humidityOffset(for: ruuviTag.ruuviTagId.luid).0
+        if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.ruuviTagId, of: dewPoint),
+           let rh = ruuviTag.humidity,
+           let t = ruuviTag.temperature,
+            let sh = rh.offseted(by: ho, temperature: ruuviTag.temperature),
+            let dp = try? sh.dewPoint(temperature: t) {
+            let isLower = dp < Temperature(value: lower, unit: .celsius)
+            let isUpper = dp > Temperature(value: upper, unit: .celsius)
+            if isLower {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.low, .dewPoint, for: ruuviTag.ruuviTagId)
+                }
+            } else if isUpper {
+                DispatchQueue.main.async { [weak self] in
+                    self?.localNotificationsManager.notify(.high, .dewPoint, for: ruuviTag.ruuviTagId)
+                }
+            }
+
             return isLower || isUpper
         } else {
             return false
