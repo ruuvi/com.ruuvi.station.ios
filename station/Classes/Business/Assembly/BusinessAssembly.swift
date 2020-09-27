@@ -158,6 +158,8 @@ class BusinessAssembly: Assembly {
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.idPersistence = r.resolve(IDPersistence.self)
+            daemon.realmPersistence = r.resolve(RuuviTagPersistenceRealm.self)
+            daemon.sqiltePersistence = r.resolve(RuuviTagPersistenceSQLite.self)
             return daemon
         }.inObjectScope(.container)
 
