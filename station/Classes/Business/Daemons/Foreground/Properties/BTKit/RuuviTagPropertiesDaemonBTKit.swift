@@ -7,6 +7,8 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     var ruuviTagReactor: RuuviTagReactor!
     var foreground: BTForeground!
     var idPersistence: IDPersistence!
+    var realmPersistence: RuuviTagPersistenceRealm!
+    var sqiltePersistence: RuuviTagPersistenceSQLite!
 
     private var ruuviTagsToken: RUObservationToken?
     private var observeTokens = [ObservationToken]()
@@ -92,24 +94,54 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
-        if pair.device.version != pair.ruuviTag.version {
-            ruuviTagTank.update(pair.ruuviTag.with(version: pair.device.version))
-                .on(failure: { [weak self] error in
-                    self?.post(error: error)
-                })
-        }
         if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
-            idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
-            ruuviTagTank.update(pair.ruuviTag.with(macId: mac.mac))
-                .on(failure: { [weak self] error in
+            // this is the case when data format 3 tag (2.5.9) changes format
+            // either by pressing B or by upgrading firmware
+            if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
+                // tag is already saved to SQLite
+                ruuviTagTank.update(pair.ruuviTag.with(macId: mac))
+                    .on(failure: { [weak self] error in
+                        self?.post(error: error)
+                    })
+            } else {
+                idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
+                // now we need to remove the tag from Realm and add it to SQLite
+                sqiltePersistence.create(pair.ruuviTag.with(macId: mac.mac)).on(success: { [weak self] _ in
+                    self?.realmPersistence.delete(pair.ruuviTag.withoutMac()).on(failure: { error in
+                        self?.post(error: error)
+                    })
+                }, failure: { [weak self] (error) in
                     self?.post(error: error)
                 })
+            }
+        } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
+            // this is the case when 2.5.9 tag is returning to data format 3 mode
+            // but we have it in sqlite database already
+            if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
+                ruuviTagTank.update(pair.ruuviTag.with(macId: mac))
+                    .on(failure: { [weak self] error in
+                        self?.post(error: error)
+                    })
+            } else {
+                assertionFailure("Should never be there")
+            }
         }
-        if pair.device.isConnectable != pair.ruuviTag.isConnectable {
-            ruuviTagTank.update(pair.ruuviTag.with(isConnectable: pair.device.isConnectable))
-                .on(failure: { [weak self] error in
-                    self?.post(error: error)
-                })
+
+        // version and isConnectable change is allowed only when
+        // the tag is in SQLite and has MAC
+        if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
+            if pair.device.version != pair.ruuviTag.version {
+                ruuviTagTank.update(pair.ruuviTag.with(version: pair.device.version).with(macId: mac))
+                    .on(failure: { [weak self] error in
+                        self?.post(error: error)
+                    })
+            }
+            if pair.device.isConnectable != pair.ruuviTag.isConnectable {
+                ruuviTagTank.update(pair.ruuviTag.with(isConnectable: pair.device.isConnectable).with(macId: mac))
+                    .on(failure: { [weak self] error in
+                        self?.post(error: error)
+                    })
+            }
         }
     }
 

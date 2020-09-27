@@ -87,7 +87,6 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         if record.macId != nil {
             return sqlite.create(record)
-            // FIXME check if luid for ruuviTagId is ok
         } else if let macId = idPersistence.mac(for: record.ruuviTagId.luid) {
             return sqlite.create(record.with(macId: macId))
         } else {
