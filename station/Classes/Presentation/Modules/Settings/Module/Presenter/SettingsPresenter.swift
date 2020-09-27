@@ -78,7 +78,6 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnPressure() {
         let selectionItems: [UnitPressure] = [
-            .bars,
             .hectopascals,
             .inchesOfMercury,
             .millimetersOfMercury

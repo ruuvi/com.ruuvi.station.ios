@@ -123,7 +123,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi,
             ruuviTag.luid?.value == viewModel.uuid.value {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: nil, output: self)
+            router.openTagSettings(ruuviTag: ruuviTag,
+                                   temperature: interactor.lastMeasurement?.temperature,
+                                   humidity: interactor.lastMeasurement?.humidity,
+                                   output: self)
         } else {
             assert(false)
         }

@@ -113,6 +113,16 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerAlertService.self) { r in
+            let manager = MigrationManagerAlertService()
+            manager.alertService = r.resolve(AlertService.self)
+            manager.alertPersistence = r.resolve(AlertPersistence.self)
+            manager.realmContext = r.resolve(RealmContext.self)
+            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.settings = r.resolve(Settings.self)
+            return manager
+        }
+
         container.register(PullWebDaemon.self) { r in
             let daemon = PullWebDaemonOperations()
             daemon.settings = r.resolve(Settings.self)

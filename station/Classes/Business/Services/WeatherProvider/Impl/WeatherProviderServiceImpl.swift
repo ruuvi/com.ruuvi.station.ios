@@ -131,7 +131,7 @@ class WeatherProviderServiceImpl: WeatherProviderService {
                 if let kelvin = data.kelvin {
                     celsius = kelvin - 273.15
                 }
-                let result = WPSData(celsius: celsius, humidity: data.humidity, pressure: data.pressure)
+                let result = WPSData(celsius: celsius, relativeHumidity: data.humidity, hPa: data.pressure)
                 promise.succeed(value: result)
             }, failure: { (error) in
                 promise.fail(error: error)

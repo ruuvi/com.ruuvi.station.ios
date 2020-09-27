@@ -18,7 +18,6 @@ class VirtualTagSubjectCombine {
         webTagsRealmToken?.invalidate()
     }
 
-    //swiftlint:disable:next cyclomatic_complexity
     init(realm: RealmContext) {
         self.realm = realm
         DispatchQueue.main.async { [weak self] in

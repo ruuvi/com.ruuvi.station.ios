@@ -14,35 +14,15 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let temperatureAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
 
-    // relativeHumidity
-    private let relativeHumidityLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
-    private let relativeHumidityUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityUpperBoundUDKeyPrefix."
-    private let relativeHumidityAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertIsOnUDKeyPrefix."
-    private let relativeHumidityAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
-
-    // absoluteHumidity
-    private let absoluteHumidityLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.absoluteHumidityLowerBoundUDKeyPrefix."
-    private let absoluteHumidityUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.absoluteHumidityUpperBoundUDKeyPrefix."
-    private let absoluteHumidityAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.absoluteHumidityAlertIsOnUDKeyPrefix."
-    private let absoluteHumidityAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.absoluteHumidityAlertDescriptionUDKeyPrefix."
-
-    // dew point
-    private let dewPointCelsiusLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointCelsiusLowerBoundUDKeyPrefix."
-    private let dewPointCelsiusUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointCelsiusUpperBoundUDKeyPrefix."
-    private let dewPointAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertIsOnUDKeyPrefix."
-    private let dewPointAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertDescriptionUDKeyPrefix."
+    // Humidity
+    private let humidityLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.HumidityLowerBoundUDKeyPrefix."
+    private let humidityUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.HumidityUpperBoundUDKeyPrefix."
+    private let humidityAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.HumidityAlertIsOnUDKeyPrefix."
+    private let humidityAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
 
     // pressure
     private let pressureLowerBoundUDKeyPrefix
@@ -68,7 +48,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let movementAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
         case .temperature:
@@ -79,27 +59,13 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
-        case .relativeHumidity:
-            if prefs.bool(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid),
-                let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid) {
-                return .relativeHumidity(lower: lower, upper: upper)
-            } else {
-                return nil
-            }
-        case .absoluteHumidity:
-            if prefs.bool(forKey: absoluteHumidityAlertIsOnUDKeyPrefix + uuid),
-                let lower = prefs.optionalDouble(forKey: absoluteHumidityLowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.optionalDouble(forKey: absoluteHumidityUpperBoundUDKeyPrefix + uuid) {
-                return .absoluteHumidity(lower: lower, upper: upper)
-            } else {
-                return nil
-            }
-        case .dewPoint:
-            if prefs.bool(forKey: dewPointAlertIsOnUDKeyPrefix + uuid),
-                let lower = prefs.optionalDouble(forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.optionalDouble(forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid) {
-                return .dewPoint(lower: lower, upper: upper)
+        case .humidity:
+            if prefs.bool(forKey: humidityAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid),
+                let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
+                let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self) {
+                return .humidity(lower: lowerHumidity, upper: upperHumidity)
             } else {
                 return nil
             }
@@ -133,18 +99,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: temperatureLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: temperatureUpperBoundUDKeyPrefix + uuid)
-        case .relativeHumidity(let lower, let upper):
-            prefs.set(true, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
-        case .absoluteHumidity(let lower, let upper):
-            prefs.set(true, forKey: absoluteHumidityAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: absoluteHumidityLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: absoluteHumidityUpperBoundUDKeyPrefix + uuid)
-        case .dewPoint(let lower, let upper):
-            prefs.set(true, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
+        case .humidity(let lower, let upper):
+            prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
         case .pressure(let lower, let upper):
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
@@ -161,12 +119,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         switch type {
         case .temperature:
             prefs.set(false, forKey: temperatureAlertIsOnUDKeyPrefix + uuid)
-        case .relativeHumidity:
-            prefs.set(false, forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid)
-        case .absoluteHumidity:
-            prefs.set(false, forKey: absoluteHumidityAlertIsOnUDKeyPrefix + uuid)
-        case .dewPoint:
-            prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
+        case .humidity:
+            prefs.set(false, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
         case .connection:
@@ -204,84 +158,44 @@ extension AlertPersistenceUserDefaults {
     }
 }
 
-// MARK: - Relative Humidity
+// MARK: - Humidity
 extension AlertPersistenceUserDefaults {
-    func lowerRelativeHumidity(for uuid: String) -> Double? {
-        return prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+    func lowerHumidity(for uuid: String) -> Humidity? {
+        guard let data = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid) else {
+            return nil
+        }
+        return KeyedArchiver.unarchive(data, with: Humidity.self)
     }
 
-    func setLower(relativeHumidity: Double?, for uuid: String) {
-        prefs.set(relativeHumidity, forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid)
+    func setLower(humidity: Humidity?, for uuid: String) {
+        if let humidity = humidity {
+            prefs.set(KeyedArchiver.archive(object: humidity), forKey: humidityLowerBoundUDKeyPrefix + uuid)
+        } else {
+            prefs.set(nil, forKey: humidityLowerBoundUDKeyPrefix + uuid)
+        }
     }
 
-    func upperRelativeHumidity(for uuid: String) -> Double? {
-        return prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+    func upperHumidity(for uuid: String) -> Humidity? {
+        guard let data = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid) else {
+            return nil
+        }
+        return KeyedArchiver.unarchive(data, with: Humidity.self)
     }
 
-    func setUpper(relativeHumidity: Double?, for uuid: String) {
-        prefs.set(relativeHumidity, forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+    func setUpper(humidity: Humidity?, for uuid: String) {
+        if let humidity = humidity {
+            prefs.set(KeyedArchiver.archive(object: humidity), forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        } else {
+            prefs.set(nil, forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        }
     }
 
-    func relativeHumidityDescription(for uuid: String) -> String? {
-        return prefs.string(forKey: relativeHumidityAlertDescriptionUDKeyPrefix + uuid)
+    func humidityDescription(for uuid: String) -> String? {
+        return prefs.string(forKey: humidityAlertDescriptionUDKeyPrefix + uuid)
     }
 
-    func setRelativeHumidity(description: String?, for uuid: String) {
-        prefs.set(description, forKey: relativeHumidityAlertDescriptionUDKeyPrefix + uuid)
-    }
-}
-
-// MARK: - Absolute Humidity
-extension AlertPersistenceUserDefaults {
-    func lowerAbsoluteHumidity(for uuid: String) -> Double? {
-        return prefs.optionalDouble(forKey: absoluteHumidityLowerBoundUDKeyPrefix + uuid)
-    }
-
-    func setLower(absoluteHumidity: Double?, for uuid: String) {
-        prefs.set(absoluteHumidity, forKey: absoluteHumidityLowerBoundUDKeyPrefix + uuid)
-    }
-
-    func upperAbsoluteHumidity(for uuid: String) -> Double? {
-        return prefs.optionalDouble(forKey: absoluteHumidityUpperBoundUDKeyPrefix + uuid)
-    }
-
-    func setUpper(absoluteHumidity: Double?, for uuid: String) {
-        prefs.set(absoluteHumidity, forKey: absoluteHumidityUpperBoundUDKeyPrefix + uuid)
-    }
-
-    func absoluteHumidityDescription(for uuid: String) -> String? {
-        return prefs.string(forKey: absoluteHumidityAlertDescriptionUDKeyPrefix + uuid)
-    }
-
-    func setAbsoluteHumidity(description: String?, for uuid: String) {
-        prefs.set(description, forKey: absoluteHumidityAlertDescriptionUDKeyPrefix + uuid)
-    }
-}
-
-// MARK: - Dew Point
-extension AlertPersistenceUserDefaults {
-    func lowerDewPointCelsius(for uuid: String) -> Double? {
-        return prefs.optionalDouble(forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
-    }
-
-    func setLowerDewPoint(celsius: Double?, for uuid: String) {
-        prefs.set(celsius, forKey: dewPointCelsiusLowerBoundUDKeyPrefix + uuid)
-    }
-
-    func upperDewPointCelsius(for uuid: String) -> Double? {
-        return prefs.optionalDouble(forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
-    }
-
-    func setUpperDewPoint(celsius: Double?, for uuid: String) {
-        prefs.set(celsius, forKey: dewPointCelsiusUpperBoundUDKeyPrefix + uuid)
-    }
-
-    func dewPointDescription(for uuid: String) -> String? {
-        return prefs.string(forKey: dewPointAlertDescriptionUDKeyPrefix + uuid)
-    }
-
-    func setDewPoint(description: String?, for uuid: String) {
-        prefs.set(description, forKey: dewPointAlertDescriptionUDKeyPrefix + uuid)
+    func setHumidity(description: String?, for uuid: String) {
+        prefs.set(description, forKey: humidityAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 
