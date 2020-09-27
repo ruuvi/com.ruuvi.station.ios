@@ -3,8 +3,6 @@ import Foundation
 extension UnitPressure: SelectionItemProtocol {
     var title: String {
         switch self {
-        case .bars:
-            return "UnitPressure.bars.title".localized()
         case .hectopascals:
             return "UnitPressure.hectopascal.title".localized()
         case .inchesOfMercury:

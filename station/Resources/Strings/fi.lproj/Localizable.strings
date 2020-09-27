@@ -318,7 +318,6 @@
 "HumidityUnit.Dew.title" = "Dew point (%@)";
 
 // UnitPressure
-"UnitPressure.bars.title" = "Bar (bar)";
 "UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";

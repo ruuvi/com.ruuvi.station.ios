@@ -44,14 +44,17 @@ class ExportServiceTrunk: ExportService {
 extension ExportServiceTrunk {
 
     private func getHeaders(_ units: MeasurementsServiceSettigsUnit) -> [String] {
+        let tempFormat = "ExportService.Temperature".localized()
+        let pressureFormat = "ExportService.Pressure".localized()
+        let dewPointFormat = "ExportService.DewPoint".localized()
         return [
             "Date".localized(),
             "ISO8601".localized(),
-            String(format: "ExportService.Temperature".localized(), units.temperatureUnit.symbol),
+            String(format: tempFormat, units.temperatureUnit.symbol),
             units.humidityUnit == .dew
-                ? String(format: "ExportService.DewPoint".localized(), units.temperatureUnit.symbol)
+                ? String(format: dewPointFormat, units.temperatureUnit.symbol)
                 : units.humidityUnit.title,
-            String(format: "ExportService.Pressure".localized(), units.pressureUnit.symbol),
+            String(format: pressureFormat, units.pressureUnit.symbol),
             "ExportService.AccelerationX".localized(),
             "ExportService.AccelerationY".localized(),
             "ExportService.AccelerationZ".localized(),
@@ -62,7 +65,7 @@ extension ExportServiceTrunk {
         ]
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     private func csvLog(for ruuviTag: RuuviTagSensor, with records: [RuuviTagSensorRecord]) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
         let dateFormatter = DateFormatter()
