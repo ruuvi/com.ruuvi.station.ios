@@ -10,7 +10,11 @@ class CardsScrollViewController: UIViewController {
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var tagChartsDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
-
+    var measurementService: MeasurementsService! {
+        didSet {
+            measurementService?.add(self)
+        }
+    }
     @IBOutlet weak var scrollView: UIScrollView!
 
     var viewModels = [CardsViewModel]() {
@@ -50,17 +54,12 @@ extension CardsScrollViewController: CardsViewInput {
             let view = views[i]
             let updatePressure = pressureUpdateBlock(for: viewModel)
             updatePressure(view.pressureLabel, viewModel.pressure.value)
-            let updateTemperature = temperatureUpdateBlock(for: viewModel)
-            updateTemperature(view.temperatureLabel, nil) // can be nil, not used
 
-            if let temperatureUnit = viewModel.temperatureUnit.value {
-                view.temperatureUnitLabel.text = temperatureUnit.symbol
-            } else {
-                view.temperatureUnitLabel.text = CardsScrollViewController.localizedCache.notAvailable
-            }
+            let updateTemperature = temperatureUpdateBlock(for: viewModel, in: view)
+            updateTemperature(view.temperatureLabel, viewModel.temperature.value)
 
             let updateHumidity = humidityUpdateBlock(for: viewModel, in: view)
-            updateHumidity(view.humidityLabel, nil) // can be nil, not used
+            updateHumidity(view.humidityLabel, viewModel.humidity.value)
 
             switch viewModel.type {
             case .ruuvi:
@@ -212,143 +211,51 @@ extension CardsScrollViewController: UITextFieldDelegate {
 
 // MARK: - Update Blocks
 extension CardsScrollViewController {
-    private func pressureUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Double?) -> Void {
-        let pressureFormat: String
-        switch viewModel.type {
-        case .ruuvi:
-            pressureFormat = "%.2f"
-        case .web:
-            pressureFormat = "%.0f"
-        }
-        return { label, pressure in
-            if let pressure = pressure {
-                label.text = String.localizedStringWithFormat(pressureFormat, pressure)
-                    + " "
-                    + CardsScrollViewController.localizedCache.hPa
-            } else {
-                label.text = CardsScrollViewController.localizedCache.notAvailable
-            }
+    private func pressureUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Pressure?) -> Void {
+        return { [weak self] label, pressure in
+            label.text = self?.measurementService?.string(for: pressure)
         }
     }
 
-    private func temperatureUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Double?) -> Void {
-        let temperatureUnit = viewModel.temperatureUnit
-        let fahrenheit = viewModel.fahrenheit
-        let celsius = viewModel.celsius
-        let kelvin = viewModel.kelvin
-        let temperatureBlock: ((UILabel, Double?) -> Void) = {
-            [weak temperatureUnit, weak fahrenheit, weak celsius, weak kelvin] label, _ in
-            if let temperatureUnit = temperatureUnit?.value {
-                var temperature: Double?
-                switch temperatureUnit {
-                case .celsius:
-                    temperature = celsius?.value
-                case .fahrenheit:
-                    temperature = fahrenheit?.value
-                case .kelvin:
-                    temperature = kelvin?.value
-                }
-                if let temperature = temperature {
-                    label.text = String.localizedStringWithFormat("%.2f", temperature)
-                } else {
-                    label.text = CardsScrollViewController.localizedCache.notAvailable
-                }
-
+    private func temperatureUpdateBlock(for viewModel: CardsViewModel,
+                                        in view: CardView) -> (UILabel, Temperature?) -> Void {
+        let temperatureUnitLabel = view.temperatureUnitLabel
+        let temperatureBlock: ((UILabel, Temperature?) -> Void) = {
+            [weak self,
+            weak temperatureUnitLabel] label, _ in
+            //todo add format for numbers in measurement
+            if let temp = self?.measurementService.double(for: viewModel.temperature.value) {
+                label.text = String(temp).replacingOccurrences(of: ".", with: ",")
             } else {
-                label.text = CardsScrollViewController.localizedCache.notAvailable
+                label.text = "N/A".localized()
+            }
+            if let temperatureUnit = self?.measurementService.units.temperatureUnit {
+                temperatureUnitLabel?.text = temperatureUnit.symbol
+            } else {
+                temperatureUnitLabel?.text = CardsScrollViewController.localizedCache.notAvailable
             }
         }
         return temperatureBlock
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func humidityUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Double?) -> Void {
-        let hu = viewModel.humidityUnit
-        let rh = viewModel.relativeHumidity
-        let ah = viewModel.absoluteHumidity
-        let ho = viewModel.humidityOffset
-        let tu = viewModel.temperatureUnit
-        let dc = viewModel.dewPointCelsius
-        let df = viewModel.dewPointFahrenheit
-        let dk = viewModel.dewPointKelvin
+    private func humidityUpdateBlock(for viewModel: CardsViewModel, in view: CardView) -> (UILabel, Humidity?) -> Void {
         let humidityWarning = view.humidityWarningImageView
-        let rhFormat: String
-        switch viewModel.type {
-        case .ruuvi:
-            rhFormat = "%.2f"
-        case .web:
-            rhFormat = "%.0f"
-        }
-        let humidityBlock: ((UILabel, Double?) -> Void) = {
-            [weak hu,
-            weak rh,
-            weak ah,
-            weak ho,
-            weak tu,
-            weak dc,
-            weak df,
-            weak dk,
-            weak humidityWarning] label, _ in
-            if let hu = hu?.value {
-                switch hu {
-                case .percent:
-                    if let rh = rh?.value, let ho = ho?.value {
-                        let sh = rh + ho
-                        if sh < 100.0 {
-                            label.text = String.localizedStringWithFormat(rhFormat, rh + ho) + " " + "%"
-                            humidityWarning?.isHidden = true
-                        } else {
-                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%"
-                            humidityWarning?.isHidden = false
-                        }
-                    } else if let rh = rh?.value {
-                        if rh < 100.0 {
-                            label.text = String.localizedStringWithFormat(rhFormat, rh) + " " + "%"
-                            humidityWarning?.isHidden = true
-                        } else {
-                            label.text = String.localizedStringWithFormat(rhFormat, 100.0) + " " + "%"
-                            humidityWarning?.isHidden = false
-                        }
-                    } else {
-                        label.text = CardsScrollViewController.localizedCache.notAvailable
-                    }
-                case .gm3:
-                    if let ah = ah?.value {
-                        label.text = String.localizedStringWithFormat("%.2f", ah)
-                            + " "
-                            + CardsScrollViewController.localizedCache.gm3
-                    } else {
-                        label.text = CardsScrollViewController.localizedCache.notAvailable
-                    }
-                case .dew:
-                    if let tu = tu?.value {
-                        switch tu {
-                        case .celsius:
-                            if let dc = dc?.value {
-                                label.text = String.localizedStringWithFormat("%.2f", dc) + " " + tu.symbol
-                            } else {
-                                label.text = CardsScrollViewController.localizedCache.notAvailable
-                            }
-                        case .fahrenheit:
-                            if let df = df?.value {
-                                label.text = String.localizedStringWithFormat("%.2f", df) + " " + tu.symbol
-                            } else {
-                                label.text = CardsScrollViewController.localizedCache.notAvailable
-                            }
-                        case .kelvin:
-                            if let dk = dk?.value {
-                                label.text = String.localizedStringWithFormat("%.2f", dk) + " " + tu.symbol
-                            } else {
-                                label.text = CardsScrollViewController.localizedCache.notAvailable
-                            }
-                        }
-                    } else {
-                        label.text = CardsScrollViewController.localizedCache.notAvailable
-                    }
-                }
+        let humidityBlock: ((UILabel, Humidity?) -> Void) = {
+            [weak self,
+            weak humidityWarning] label, value in
+            let offset = viewModel.humidityOffset.value
+            let temperature = viewModel.temperature.value
+            if self?.measurementService.units.humidityUnit == .percent,
+                let offset = offset,
+                let temperature = temperature,
+                let offsetedValue = self?.measurementService.double(for: value,
+                                                                    withOffset: offset,
+                                                                    temperature: temperature, isDecimal: true) {
+                humidityWarning?.isHidden = offsetedValue < 1.0
             } else {
-                label.text = CardsScrollViewController.localizedCache.notAvailable
+                humidityWarning?.isHidden = true
             }
+            label.text = self?.measurementService.string(for: value, withOffset: offset, temperature: temperature)
         }
         return humidityBlock
     }
@@ -393,40 +300,13 @@ extension CardsScrollViewController {
 extension CardsScrollViewController {
 
     private func bindTemperature(view: CardView, with viewModel: CardsViewModel) {
-        let temperatureBlock = temperatureUpdateBlock(for: viewModel)
-
-        view.temperatureLabel.bind(viewModel.celsius, fire: false, block: temperatureBlock)
-        view.temperatureLabel.bind(viewModel.fahrenheit, fire: false, block: temperatureBlock)
-        view.temperatureLabel.bind(viewModel.kelvin, fire: false, block: temperatureBlock)
-
-        if let temperatureLabel = view.temperatureLabel {
-            view.temperatureUnitLabel.bind(viewModel.temperatureUnit) {
-                [unowned temperatureLabel]
-                label, temperatureUnit in
-                if let temperatureUnit = temperatureUnit {
-                    label.text = temperatureUnit.symbol
-                } else {
-                    label.text = CardsScrollViewController.localizedCache.notAvailable
-                }
-                temperatureBlock(temperatureLabel, nil)
-            }
-        }
+        let temperatureBlock = temperatureUpdateBlock(for: viewModel, in: view)
+        view.temperatureLabel.bind(viewModel.temperature, fire: false, block: temperatureBlock)
     }
 
     private func bindHumidity(view: CardView, with viewModel: CardsViewModel) {
         let humidityBlock = humidityUpdateBlock(for: viewModel, in: view)
-        view.humidityLabel.bind(viewModel.relativeHumidity, fire: false, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.absoluteHumidity, fire: false, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.dewPointCelsius, fire: false, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.dewPointFahrenheit, fire: false, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.dewPointKelvin, fire: false, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.humidityOffset, fire: false, block: humidityBlock)
-        view.humidityLabel.bind(viewModel.humidityUnit, fire: false) { label, _ in
-            humidityBlock(label, nil)
-        }
-        view.humidityLabel.bind(viewModel.temperatureUnit) { label, _ in
-            humidityBlock(label, nil)
-        }
+        view.humidityLabel.bind(viewModel.humidity, fire: false, block: humidityBlock)
     }
 
     private func bindConnectionRelated(view: CardView, with viewModel: CardsViewModel) {
@@ -713,6 +593,11 @@ extension CardsScrollViewController {
         return viewModels[currentPage].id.value != nil &&
             viewModel.id.value != nil
             && viewModels[currentPage].id.value == viewModel.id.value
+    }
+}
+extension CardsScrollViewController: MeasurementsServiceDelegate {
+    func measurementServiceDidUpdateUnit() {
+        updateUI()
     }
 }
 // swiftlint:enable file_length

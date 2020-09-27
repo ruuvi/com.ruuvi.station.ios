@@ -7,7 +7,7 @@ extension RuuviTagEnvLogFull {
         return Temperature(value: temperature, unit: .celsius)
     }
     var unitHumidity: Humidity? {
-        return Humidity(c: temperature, rh: humidity / 100.0)
+        return Humidity(relative: humidity, temperature: unitTemperature)
     }
     var unitPressure: Pressure? {
         return Pressure(value: pressure, unit: .hectopascals)

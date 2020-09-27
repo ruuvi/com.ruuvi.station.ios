@@ -1,4 +1,5 @@
 import Foundation
+import Humidity
 
 enum Language: String, CaseIterable {
     case english = "en"
@@ -18,6 +19,28 @@ extension Language {
             return "Language.Finnish".localized()
         case .swedish:
             return "Language.Swedish".localized()
+        }
+    }
+
+    var locale: Locale {
+        switch self {
+        case .english:
+            return Locale(identifier: "en_US")
+        case .russian:
+            return Locale(identifier: "ru_RU")
+        case .finnish:
+            return Locale(identifier: "fi")
+        case .swedish:
+            return Locale(identifier: "sv")
+        }
+    }
+
+    var humidityLanguage: HumiditySettings.Language {
+        switch self {
+        case .russian:
+            return .ru
+        default:
+            return .en
         }
     }
 }

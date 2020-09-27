@@ -43,5 +43,13 @@ class CoreAssembly: Assembly {
             let manager = PushNotificationsManagerImpl()
             return manager
         }
+
+        container.register(MeasurementsService.self, factory: { r in
+            let settings = r.resolve(Settings.self)
+            let service = MeasurementsServiceImpl()
+            service.settings = settings
+            service.setupLocalization()
+            return service
+        })
     }
 }
