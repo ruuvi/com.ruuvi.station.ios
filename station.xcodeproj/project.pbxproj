@@ -1385,9 +1385,15 @@
 		A9758183249F4C9600BC150A /* LocationAppleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9758180249F4C9600BC150A /* LocationAppleClass.swift */; };
 		A97A5AF02426C1E800AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
 		A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */; };
+		A97FDD762519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
+		A97FDD772519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
+		A97FDD782519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
 		A98BC875250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC877250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
+		A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
+		A98D998225175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
+		A98D998325175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
 		A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */; };
 		A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
 		A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
@@ -1915,8 +1921,10 @@
 		A9758178249F471900BC150A /* LocationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistence.swift; sourceTree = "<group>"; };
 		A975817C249F476700BC150A /* LocationPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistenceImpl.swift; sourceTree = "<group>"; };
 		A9758180249F4C9600BC150A /* LocationAppleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppleClass.swift; sourceTree = "<group>"; };
+		A97FDD752519343A00B12820 /* KeyedArchiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedArchiver.swift; sourceTree = "<group>"; };
 		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A98BC874250E4265001CEFDC /* Double+Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Round.swift"; sourceTree = "<group>"; };
+		A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerAlertService.swift; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
 		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
@@ -3780,6 +3788,7 @@
 				0EE1D2CB2338AFCC0071CE16 /* DateValueFormatter.swift */,
 				0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */,
 				0EE5B47E2351865300D5ED32 /* UserDefault.swift */,
+				A97FDD752519343A00B12820 /* KeyedArchiver.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -4351,6 +4360,7 @@
 		0EEB215E22BA610E0015F9E0 /* Migration */ = {
 			isa = PBXGroup;
 			children = (
+				A98D997F25175C6100ED3760 /* AlertService */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB215F22BA61430015F9E0 /* MigrationManager.swift */,
@@ -5004,6 +5014,14 @@
 			path = Adavanced;
 			sourceTree = "<group>";
 		};
+		A98D997F25175C6100ED3760 /* AlertService */ = {
+			isa = PBXGroup;
+			children = (
+				A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */,
+			);
+			path = AlertService;
+			sourceTree = "<group>";
+		};
 		A9C03F7D24E708A800BC046F /* Impl */ = {
 			isa = PBXGroup;
 			children = (
@@ -5611,6 +5629,7 @@
 				0E6BAD8E23856A01003A2D4C /* WelcomeConfigurator.swift in Sources */,
 				0E6BAD8F23856A01003A2D4C /* ForegroundModuleInput.swift in Sources */,
 				0E31B05223BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
+				A98D998325175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0318251124F900694733 /* SelectionItem.swift in Sources */,
 				0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */,
 				0E8BAC82245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
@@ -5918,6 +5937,7 @@
 				0E6BAE6823856A01003A2D4C /* SettingsTableConfigurator.swift in Sources */,
 				0E6BAE6923856A01003A2D4C /* RuuviTagPropertiesDaemon.swift in Sources */,
 				0E31B04D23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
+				A97FDD782519343A00B12820 /* KeyedArchiver.swift in Sources */,
 				0E6BAE6A23856A01003A2D4C /* LanguageTableInitializer.swift in Sources */,
 				0E2864482461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */,
 				A964647D247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
@@ -6274,6 +6294,7 @@
 				0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */,
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
+				A98D998225175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				0E8BD369238566AB008B31EF /* HumidityCalibrationViewInput.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */,
@@ -6397,6 +6418,7 @@
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				A9646476247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
+				A97FDD772519343A00B12820 /* KeyedArchiver.swift in Sources */,
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
 				0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */,
 				0E8BD3C8238566AB008B31EF /* RuuviTagHeartbeatDaemon.swift in Sources */,
@@ -6464,6 +6486,7 @@
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
 				0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
+				A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0316251124F900694733 /* SelectionItem.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
@@ -6771,6 +6794,7 @@
 				0EEB20E822B7C92C0015F9E0 /* SettingsTableConfigurator.swift in Sources */,
 				0EC61FD52373FFD600A654C8 /* RuuviTagPropertiesDaemon.swift in Sources */,
 				0EBAF07E2320086A0025A191 /* LanguageTableInitializer.swift in Sources */,
+				A97FDD762519343A00B12820 /* KeyedArchiver.swift in Sources */,
 				0E046F6222F193B300BD4E9C /* LocationPickerModuleOutput.swift in Sources */,
 				0E2864462461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */,
 				A964647B247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
@@ -6949,7 +6973,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -6993,7 +7017,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -7037,7 +7061,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7065,7 +7089,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -7209,7 +7233,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7269,7 +7293,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

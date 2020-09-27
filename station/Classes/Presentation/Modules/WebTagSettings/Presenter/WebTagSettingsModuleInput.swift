@@ -1,5 +1,6 @@
 import Foundation
 
 protocol WebTagSettingsModuleInput: class {
-    func configure(webTag: WebTagRealm)
+    func configure(webTag: WebTagRealm,
+                   temperature: Temperature?)
 }

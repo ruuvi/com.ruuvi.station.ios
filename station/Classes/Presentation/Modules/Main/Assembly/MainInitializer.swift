@@ -10,6 +10,7 @@ class MainInitializer: NSObject {
         r.resolve(MigrationManagerToVIPER.self)?.migrateIfNeeded()
         r.resolve(SQLiteContext.self)?.database.migrateIfNeeded()
         r.resolve(MigrationManagerToSQLite.self)?.migrateIfNeeded()
+        r.resolve(MigrationManagerAlertService.self)?.migrateIfNeeded()
         MainConfigurator().configure(navigationController: navigationController)
     }
 }

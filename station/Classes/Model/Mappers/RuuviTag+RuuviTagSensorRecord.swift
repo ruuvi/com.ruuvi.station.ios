@@ -20,7 +20,10 @@ extension RuuviTag: RuuviTagSensorRecord {
     }
 
     var humidity: Humidity? {
-        return Humidity(relative: self.relativeHumidity, temperature: temperature)
+        guard let rH = self.relativeHumidity else {
+            return nil
+        }
+        return Humidity(relative: rH / 100.0, temperature: temperature)
     }
 
     var pressure: Pressure? {

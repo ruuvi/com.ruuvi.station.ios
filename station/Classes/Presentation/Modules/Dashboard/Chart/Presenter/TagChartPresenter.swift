@@ -251,7 +251,6 @@ extension TagChartPresenter {
         }
         queue.addOperation(filterOperation)
     }
-//swiftlint:disable:next cyclomatic_complexity
     private func chartEntry(for data: RuuviMeasurement) -> ChartDataEntry? {
         var value: Double?
         switch viewModel.type {
