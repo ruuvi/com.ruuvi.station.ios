@@ -2,6 +2,8 @@ import RealmSwift
 import Future
 import BTKit
 import Foundation
+import FirebaseCrashlytics
+
 // swiftlint:disable:next type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
