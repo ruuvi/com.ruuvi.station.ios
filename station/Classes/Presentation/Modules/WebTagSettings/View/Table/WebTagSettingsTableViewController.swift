@@ -174,18 +174,21 @@ extension WebTagSettingsTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         let headerHeight: CGFloat = 66
         let controlsHeight: CGFloat = 148
+        let hu = viewModel.humidityUnit.value
         switch cell {
         case temperatureAlertHeaderCell,
-             pressureAlertHeaderCell,
-             humidityAlertHeaderCell,
-             dewPointAlertHeaderCell:
+             pressureAlertHeaderCell:
             return headerHeight
         case temperatureAlertControlsCell:
             return (viewModel.isTemperatureAlertOn.value ?? false) ? controlsHeight : 0
+        case humidityAlertHeaderCell:
+            return (hu != .dew) ? headerHeight : 0
         case humidityAlertControlsCell:
-            return (viewModel.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+            return ((hu != .dew) && viewModel.isHumidityAlertOn.value ?? false) ? controlsHeight : 0
+        case dewPointAlertHeaderCell:
+            return (hu == .dew) ? headerHeight : 0
         case dewPointAlertControlsCell:
-            return (viewModel.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
+            return ((hu == .dew)  && viewModel.isDewPointAlertOn.value ?? false) ? controlsHeight : 0
         case pressureAlertControlsCell:
             return (viewModel.isPressureAlertOn.value ?? false) ? controlsHeight : 0
         default:
