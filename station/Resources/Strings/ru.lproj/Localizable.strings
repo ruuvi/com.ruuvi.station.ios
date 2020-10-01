@@ -172,6 +172,8 @@
 "LocalNotificationsManager.Disable.button" = "Отключить";
 "LocalNotificationsManager.LowHumidity.title" = "Низкая Влажность!";
 "LocalNotificationsManager.HighHumidity.title" = "Высокая Влажность!";
+"LocalNotificationsManager.LowDewPoint.title" = "Ниже Точки Росы!";
+"LocalNotificationsManager.HighDewPoint.title" = "Выше Точки Росы!";
 "LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
 "LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
 "LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
@@ -290,6 +292,8 @@
 "TagSettings.Alert.CustomDescription.placeholder" = "Введите описание...";
 "TagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.AirHumidityAlert.title" = "Влажность воздуха";
+"TagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
 "TagSettings.PressureAlert.title" = "Атмосферное Давление";
 "TagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.Alerts.Connection.description" = "Уведомить при установке/разрыве соединения";
@@ -348,6 +352,8 @@
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Настройки";
 "WebTagSettings.AirHumidityAlert.title" = "Относительная Влажность";
 "WebTagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
+"WebTagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
 "WebTagSettings.PressureAlert.title" = "Атмосферное Давление";
 "WebTagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 
