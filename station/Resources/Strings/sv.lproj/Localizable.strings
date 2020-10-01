@@ -173,6 +173,8 @@
 "LocalNotificationsManager.LowHumidity.title" = "För låg Luftfuktighet!";
 "LocalNotificationsManager.HighHumidity.title" = "För hög Luftfuktighet!";
 "LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
+"LocalNotificationsManager.LowDewPoint.title" = "För låg Daggpunkt!";
+"LocalNotificationsManager.HighDewPoint.title" = "För hög Daggpunkt!";
 "LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
 "LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";
 
@@ -291,6 +293,8 @@
 "TagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity";
 "TagSettings.PressureAlert.title" = "Air Pressure";
+"TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
 "TagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
@@ -349,6 +353,8 @@
 "WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
 "WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
 "WebTagSettings.PressureAlert.title" = "Luftfuktighet";
+"WebTagSettings.Alerts.DewPoint.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
+"WebTagSettings.dewPointAlertTitleLabel.text" = "Daggpunkt";
 "WebTagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 
 // Welcome

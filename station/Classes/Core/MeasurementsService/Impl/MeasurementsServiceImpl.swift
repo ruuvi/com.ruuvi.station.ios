@@ -76,10 +76,14 @@ extension MeasurementsServiceImpl: MeasurementsService {
     }
 
     func double(for pressure: Pressure) -> Double {
-        return pressure
+        let pressureValue = pressure
             .converted(to: units.pressureUnit)
             .value
-            .round(to: numberFormatter.maximumFractionDigits)
+        if units.pressureUnit == .inchesOfMercury {
+            return pressureValue
+        } else {
+            return pressureValue.round(to: numberFormatter.maximumFractionDigits)
+        }
     }
 
     func string(for pressure: Pressure?) -> String {
