@@ -262,7 +262,11 @@ extension TagChartPresenter {
                                               temperature: data.temperature,
                                               isDecimal: false)
         case .pressure:
-            value = measurementService.double(for: data.pressure)
+            if let value = measurementService.double(for: data.pressure) {
+                return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
+            } else {
+                return nil
+            }
         default:
             fatalError("before need implement chart with current type!")
         }
