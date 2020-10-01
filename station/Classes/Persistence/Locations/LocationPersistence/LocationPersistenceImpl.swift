@@ -18,7 +18,7 @@ class LocationPersistenceImpl: LocationPersistence {
         }
         let key = regionKey + region.identifier
         guard let data = UserDefaults.standard.data(forKey: key),
-            let locations = unarchive(data, with: [LocationAppleClass].self) else {
+              let locations = KeyedArchiver.unarchive(data, with: [LocationAppleClass].self) else {
             return nil
         }
         return locations.map({$0.asStruct})
@@ -34,7 +34,7 @@ class LocationPersistenceImpl: LocationPersistence {
         }
         let key = regionKey + region.identifier
         let array = NSArray(array: locations.map({$0.asClass}))
-        let data: Data? = archive(object: array)
+        let data: Data? = KeyedArchiver.archive(object: array)
         UserDefaults.standard.set(data, forKey: key)
     }
 }
@@ -43,30 +43,14 @@ extension LocationPersistenceImpl {
     private var regions: [CLCircularRegion] {
         get {
             guard let data = UserDefaults.standard.data(forKey: regionsKey),
-                let regionsPersisted = unarchive(data, with: [CLCircularRegion].self) else {
+                  let regionsPersisted = KeyedArchiver.unarchive(data, with: [CLCircularRegion].self) else {
                 return []
             }
             return regionsPersisted
         }
         set {
-            let data = archive(object: newValue)
+            let data = KeyedArchiver.archive(object: newValue)
             UserDefaults.standard.set(data, forKey: regionsKey)
-        }
-    }
-
-    private func archive(object: Any) -> Data? {
-        if #available(iOS 12.0, *) {
-            return try? NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
-        } else {
-            return NSKeyedArchiver.archivedData(withRootObject: object)
-        }
-    }
-
-    private func unarchive<T: Any>(_ data: Data, with type: T.Type) -> T? {
-        if #available(iOS 12.0, *) {
-            return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? T
-        } else {
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? T
         }
     }
 }

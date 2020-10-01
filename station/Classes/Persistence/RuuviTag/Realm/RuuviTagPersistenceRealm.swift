@@ -2,8 +2,9 @@ import RealmSwift
 import Future
 import BTKit
 import Foundation
+import FirebaseCrashlytics
 
-//swiftlint:disable:next type_body_length
+// swiftlint:disable:next type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
 
     var context: RealmContext!
@@ -20,6 +21,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 }
                 promise.succeed(value: true)
             } catch {
+                self.reportToCrashlytics(error: error)
                 promise.fail(error: .persistence(error))
             }
         }
@@ -38,6 +40,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 }
                 promise.succeed(value: true)
             } catch {
+                self.reportToCrashlytics(error: error)
                 promise.fail(error: .persistence(error))
             }
         }
@@ -59,6 +62,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     promise.fail(error: .unexpected(.failedToFindRuuviTag))
                 }
             } catch {
+                self.reportToCrashlytics(error: error)
                 promise.fail(error: .persistence(error))
             }
         }
@@ -76,6 +80,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 }
                 promise.succeed(value: true)
             } catch {
+                self.reportToCrashlytics(error: error)
                 promise.fail(error: .persistence(error))
             }
         }
@@ -93,6 +98,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                 }
                 promise.succeed(value: true)
             } catch {
+                self.reportToCrashlytics(error: error)
                 promise.fail(error: .persistence(error))
             }
         }
@@ -300,5 +306,12 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             }
         }
         return promise.future
+    }
+}
+// MARK: - Private
+extension RuuviTagPersistenceRealm {
+    func reportToCrashlytics(error: Error, method: String = #function, line: Int = #line) {
+        Crashlytics.crashlytics().log("\(method)(line: \(line)")
+        Crashlytics.crashlytics().record(error: error)
     }
 }

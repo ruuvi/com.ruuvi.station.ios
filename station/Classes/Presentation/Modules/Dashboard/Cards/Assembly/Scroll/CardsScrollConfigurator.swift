@@ -33,6 +33,7 @@ class CardsScrollConfigurator {
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
         presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
         presenter.virtualTagReactor = r.resolve(VirtualTagReactor.self)
+        presenter.measurementService = r.resolve(MeasurementsService.self)
 
         router.delegate = presenter
 
@@ -75,6 +76,7 @@ class CardsScrollConfigurator {
 
         view.tagChartsPresentInteractiveTransition = chartsTransition.present
         view.tagChartsDismissInteractiveTransition = chartsTransition.dismiss
+        view.measurementService = r.resolve(MeasurementsService.self)
 
         view.output = presenter
     }

@@ -75,6 +75,7 @@ class BusinessAssembly: Assembly {
         container.register(ExportService.self) { r in
             let service = ExportServiceTrunk()
             service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.measurementService = r.resolve(MeasurementsService.self)
             service.calibrationService = r.resolve(CalibrationService.self)
             return service
         }
@@ -114,12 +115,14 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
-        container.register(NetworkService.self) { r in
-            let service = NetworkServiceQueue()
-            service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
-            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
-            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
-            return service
+        container.register(MigrationManagerAlertService.self) { r in
+            let manager = MigrationManagerAlertService()
+            manager.alertService = r.resolve(AlertService.self)
+            manager.alertPersistence = r.resolve(AlertPersistence.self)
+            manager.realmContext = r.resolve(RealmContext.self)
+            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.settings = r.resolve(Settings.self)
+            return manager
         }
 
         container.register(PullWebDaemon.self) { r in
@@ -164,6 +167,8 @@ class BusinessAssembly: Assembly {
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.idPersistence = r.resolve(IDPersistence.self)
+            daemon.realmPersistence = r.resolve(RuuviTagPersistenceRealm.self)
+            daemon.sqiltePersistence = r.resolve(RuuviTagPersistenceSQLite.self)
             return daemon
         }.inObjectScope(.container)
 

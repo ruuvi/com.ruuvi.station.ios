@@ -129,6 +129,21 @@
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
 "ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
 
+// ExportService
+"ExportService.Date" = "Date";
+"ExportService.ISO8601" = "ISO8601";
+"ExportService.Temperature" = "Temperature (%@)";
+"ExportService.Humidity" = "Humidity (%@)";
+"ExportService.DewPoint" = "Dew point (%@)";
+"ExportService.Pressure" = "Pressure (%@)";
+"ExportService.AccelerationX" = "Acceleration X";
+"ExportService.AccelerationY" = "Acceleration Y";
+"ExportService.AccelerationZ" = "Acceleration Z";
+"ExportService.Voltage" = "Voltage (V)";
+"ExportService.MovementCounter" = "Movement Counter";
+"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
+"ExportService.TXPower" = "TX Power";
+
 // Foreground
 "ForegroundRow.advertisement.section" = "ENHETSMEDDELANDEN";
 "ForegroundRow.advertisement.title" = "Spara enhetsmeddelanden";
@@ -175,13 +190,11 @@
 "LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
 "LocalNotificationsManager.HighTemperature.title" = "För hög temperatur!";
 "LocalNotificationsManager.Disable.button" = "Stäng av";
-"LocalNotificationsManager.LowRelativeHumidity.title" = "För låg Relativ Luftfuktighet!";
-"LocalNotificationsManager.HighRelativeHumidity.title" = "För hög Relativ Luftfuktighet!";
-"LocalNotificationsManager.LowAbsoluteHumidity.title" = "För låg Absolut Luftfuktighet!";
-"LocalNotificationsManager.HighAbsoluteHumidity.title" = "För hög Absolut Luftfuktighet!";
+"LocalNotificationsManager.LowHumidity.title" = "För låg Luftfuktighet!";
+"LocalNotificationsManager.HighHumidity.title" = "För hög Luftfuktighet!";
+"LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
 "LocalNotificationsManager.LowDewPoint.title" = "För låg Daggpunkt!";
 "LocalNotificationsManager.HighDewPoint.title" = "För hög Daggpunkt!";
-"LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
 "LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
 "LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";
 
@@ -206,10 +219,13 @@
 
 // Settings
 "Settings.navigationItem.title" = "Inställningar";
+"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to be displayed";
+"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
+"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed";
 "Settings.SectionHeader.General.title" = "ALLMÄNT";
-"Settings.SectionFooter.General.title" = "Rel är relativ luftfuktighet i %, Abs är absolut luftfuktighet i g/m³, Dew är daggpunkt i °.";
 "Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
 "Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
+"Settings.Label.PressureUnit.text" = "Pressure Unit";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
@@ -306,13 +322,11 @@
 "TagSettings.ConnectStatus.Connecting" = "Ansluter...";
 "TagSettings.ConnectStatus.Disconnected" = "Frånkopplad";
 "TagSettings.Alert.CustomDescription.placeholder" = "Redigera beskrivningen...";
-"TagSettings.Alerts.RelativeHumidity.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.RelativeAirHumidityAlert.title" = "Relative Air Humidity";
-"TagSettings.AbsoluteAirHumidityAlert.title" = "Absolute Air Humidity";
-"TagSettings.Alerts.AbsoluteHumidity.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
+"TagSettings.AirHumidityAlert.title" = "Air Humidity";
+"TagSettings.PressureAlert.title" = "Air Pressure";
 "TagSettings.Alerts.DewPoint.description" = "Alert when less than %.0f or more than %.0f";
 "TagSettings.dewPointAlertTitleLabel.text" = "Dew Point";
-"TagSettings.PressureAlert.title" = "Air Pressure";
 "TagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
@@ -339,6 +353,21 @@
 "RuuviNetworkError.NoStoredData" = "No stored data. The tag will not be added";
 "RuuviNetworkError.TagAlreadyExists" = "Tag already exists";
 
+// TemperatureUnit
+"TemperatureUnit.Celsius.title" = "Celsius (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
+"TemperatureUnit.Kelvin.title" = "Kelvin (K)";
+
+// HumidityUnit
+"HumidityUnit.Percent.title" = "Relative (%)";
+"HumidityUnit.gm3.title" = "Absolute (gr/m³)";
+"HumidityUnit.Dew.title" = "Dew point (%@)";
+
+// UnitPressure
+"UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
+"UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
+
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";
 "WebTagLocationSource.manual" = "Välj från karta";
@@ -363,13 +392,11 @@
 "WebTagSettings.Label.alerts.text" = "ALARM";
 "WebTagSettings.AlertsAreDisabled.Dialog.BothNoPNPermissionAndNoLocationPermission.message" = "Den virtuella sensorns alarmfunktion kräver rätt att visa både platsinformation och push-meddelanden. Kontrollera applikationsinställningarna.";
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Inställningar";
-"WebTagSettings.RelativeAirHumidityAlert.title" = "Relativ Luftfuktighet";
-"WebTagSettings.Alerts.RelativeHumidity.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-"WebTagSettings.AbsoluteAirHumidityAlert.title" = "Absolut Luftfuktighet";
-"WebTagSettings.Alerts.AbsoluteHumidity.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
+"WebTagSettings.AirHumidityAlert.title" = "Air Humidity";
+"WebTagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
+"WebTagSettings.PressureAlert.title" = "Luftfuktighet";
 "WebTagSettings.Alerts.DewPoint.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "WebTagSettings.dewPointAlertTitleLabel.text" = "Daggpunkt";
-"WebTagSettings.PressureAlert.title" = "Luftfuktighet";
 "WebTagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 
 // Welcome

@@ -27,6 +27,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTrunk: RuuviTagTrunk!
     var virtualTagReactor: VirtualTagReactor!
+    var measurementService: MeasurementsService!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -38,8 +39,6 @@ class CardsPresenter: CardsModuleInput {
     private var heartbeatTokens = [ObservationToken]()
     private var rssiTokens = [AnyLocalIdentifier: ObservationToken]()
     private var rssiTimers = [AnyLocalIdentifier: Timer]()
-    private var temperatureUnitToken: NSObjectProtocol?
-    private var humidityUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var webTagDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
@@ -83,8 +82,6 @@ class CardsPresenter: CardsModuleInput {
         heartbeatTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
-        temperatureUnitToken?.invalidate()
-        humidityUnitToken?.invalidate()
         backgroundToken?.invalidate()
         webTagDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
@@ -134,11 +131,17 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
-        if viewModel.type == .ruuvi, let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: viewModel.relativeHumidity.value, output: self)
+        if viewModel.type == .ruuvi,
+            let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }),
+            let temperature =  viewModel.temperature.value {
+            let humidity: Humidity? = viewModel.humidity.value?.converted(to: .relative(temperature: temperature))
+            router.openTagSettings(ruuviTag: ruuviTag,
+                                   temperature: temperature,
+                                   humidity: humidity,
+                                   output: self)
         } else if viewModel.type == .web,
             let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
-            router.openWebTagSettings(webTag: webTag)
+            router.openWebTagSettings(webTag: webTag, temperature: viewModel.temperature.value)
         }
     }
 
@@ -311,8 +314,6 @@ extension CardsPresenter {
             } else {
                 assertionFailure()
             }
-            viewModel.humidityUnit.value = settings.humidityUnit
-            viewModel.temperatureUnit.value = settings.temperatureUnit
             ruuviTagTrunk.readLast(ruuviTag).on { [weak self] record in
                 if let record = record {
                     viewModel.update(record)
@@ -326,9 +327,7 @@ extension CardsPresenter {
         if virtualTags != nil {
             virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
-                viewModel.humidityUnit.value = settings.humidityUnit
                 viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
-                viewModel.temperatureUnit.value = settings.temperatureUnit
                 viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
@@ -357,21 +356,6 @@ extension CardsPresenter {
     }
 
     private func startObservingSettingsChanges() {
-        temperatureUnitToken = NotificationCenter
-            .default
-            .addObserver(forName: .TemperatureUnitDidChange,
-                         object: nil,
-                         queue: .main) { [weak self] (_) in
-            self?.viewModels.forEach({ $0.temperatureUnit.value = self?.settings.temperatureUnit })
-        }
-        humidityUnitToken = NotificationCenter
-            .default
-            .addObserver(forName: .HumidityUnitDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] _ in
-            self?.viewModels.forEach({ $0.humidityUnit.value = self?.settings.humidityUnit })
-        })
         readRSSIToken = NotificationCenter
             .default
             .addObserver(forName: .ReadRSSIDidChange,
@@ -806,12 +790,8 @@ extension CardsPresenter {
                     switch type {
                     case .temperature:
                         isTriggered = isTriggered || isTriggering(temperature: type, for: viewModel)
-                    case .relativeHumidity:
-                        isTriggered = isTriggered || isTriggering(relativeHumidity: type, for: viewModel)
-                    case .absoluteHumidity:
-                        isTriggered = isTriggered || isTriggering(absoluteHumidity: type, for: viewModel)
-                    case .dewPoint:
-                        isTriggered = isTriggered || isTriggering(dewPoint: type, for: viewModel)
+                    case .humidity:
+                        isTriggered = isTriggered || isTriggering(humidity: type, for: viewModel)
                     case .pressure:
                         isTriggered = isTriggered || isTriggering(pressure: type, for: viewModel)
                     default:
@@ -831,7 +811,7 @@ extension CardsPresenter {
     private func isTriggering(temperature: AlertType, for viewModel: CardsViewModel) -> Bool {
         if let luid = viewModel.luid.value,
             case .temperature(let lower, let upper) = alertService.alert(for: luid.value, of: temperature),
-            let celsius = viewModel.celsius.value {
+            let celsius = viewModel.temperature.value?.converted(to: .celsius).value {
             let isLower = celsius < lower
             let isUpper = celsius > upper
             return isLower || isUpper
@@ -840,62 +820,15 @@ extension CardsPresenter {
         }
     }
 
-    private func isTriggering(relativeHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
+    private func isTriggering(humidity: AlertType, for viewModel: CardsViewModel) -> Bool {
         if let luid = viewModel.luid.value,
-            case .relativeHumidity(let lower, let upper) = alertService.alert(for: luid.value, of: relativeHumidity),
-            let rh = viewModel.relativeHumidity.value {
-            let ho = calibrationService.humidityOffset(for: luid).0
-            var sh = rh + ho
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let isLower = sh < lower
-            let isUpper = sh > upper
+            case .humidity(let lower, let upper) = alertService.alert(for: luid.value, of: humidity),
+            let humidity = viewModel.humidity.value,
+            let temperature = viewModel.temperature.value,
+            let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0, temperature: temperature) {
+            let isLower = offsetedHumidity < lower
+            let isUpper = offsetedHumidity > upper
             return isLower || isUpper
-        } else {
-            return false
-        }
-    }
-
-    private func isTriggering(absoluteHumidity: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let luid = viewModel.luid.value,
-            case .absoluteHumidity(let lower, let upper) = alertService.alert(for: luid.value, of: absoluteHumidity),
-            let rh = viewModel.relativeHumidity.value,
-            let c = viewModel.celsius.value {
-            let ho = calibrationService.humidityOffset(for: luid).0
-            var sh = rh + ho
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let h = Humidity(c: c, rh: sh / 100.0)
-            let ah = h.ah
-
-            let isLower = ah < lower
-            let isUpper = ah > upper
-            return isLower || isUpper
-        } else {
-            return false
-        }
-    }
-
-    private func isTriggering(dewPoint: AlertType, for viewModel: CardsViewModel) -> Bool {
-        if let luid = viewModel.luid.value,
-            case .dewPoint(let lower, let upper) = alertService.alert(for: luid.value, of: dewPoint),
-            let rh = viewModel.relativeHumidity.value,
-            let c = viewModel.celsius.value {
-            let ho = calibrationService.humidityOffset(for: luid).0
-            var sh = rh + ho
-            if sh > 100.0 {
-                sh = 100.0
-            }
-            let h = Humidity(c: c, rh: sh / 100.0)
-            if let hTd = h.Td {
-                let isLower = hTd < lower
-                let isUpper = hTd > upper
-                return isLower || isUpper
-            } else {
-                return false
-            }
         } else {
             return false
         }
@@ -904,7 +837,7 @@ extension CardsPresenter {
     private func isTriggering(pressure: AlertType, for viewModel: CardsViewModel) -> Bool {
         if let luid = viewModel.luid.value,
             case .pressure(let lower, let upper) = alertService.alert(for: luid.value, of: pressure),
-            let pressure = viewModel.pressure.value {
+            let pressure = viewModel.pressure.value?.converted(to: .hectopascals).value {
             let isLower = pressure < lower
             let isUpper = pressure > upper
             return isLower || isUpper

@@ -15,12 +15,13 @@ def shared_pods
   pod 'FutureX'
   pod 'GestureInstructions'
   pod 'GRDB.swift'
-  pod 'Humidity', '~> 0.0.8'
+  pod 'Humidity', :git => 'https://github.com/viikufa/Humidity.git'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'Nantes'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'RealmSwift'
+  pod 'RxGRDB'
   pod 'RxSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
@@ -40,4 +41,12 @@ target 'stationTests' do
   shared_pods
   pod 'Nimble'
   pod 'Quick'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+    end
+  end
 end

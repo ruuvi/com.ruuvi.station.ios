@@ -8,6 +8,7 @@ final class TagChartAssembler {
         presenter.settings = r.resolve(Settings.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.view = view
+        presenter.measurementService = r.resolve(MeasurementsService.self)
 
         view.presenter = presenter
         return presenter
