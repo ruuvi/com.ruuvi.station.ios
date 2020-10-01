@@ -36,6 +36,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var stateToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
+    private var pressureUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
@@ -59,6 +60,7 @@ class TagChartsPresenter: TagChartsModuleInput {
         stateToken?.invalidate()
         temperatureUnitToken?.invalidate()
         humidityUnitToken?.invalidate()
+        pressureUnitToken?.invalidate()
         backgroundToken?.invalidate()
         alertDidChangeToken?.invalidate()
         didConnectToken?.invalidate()
@@ -123,7 +125,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidTriggerSettings(for viewModel: TagChartsViewModel) {
         if viewModel.type == .ruuvi,
             ruuviTag.luid?.value == viewModel.uuid.value {
-            router.openTagSettings(ruuviTag: ruuviTag, humidity: nil, output: self)
+            router.openTagSettings(ruuviTag: ruuviTag,
+                                   temperature: interactor.lastMeasurement?.temperature,
+                                   humidity: interactor.lastMeasurement?.humidity,
+                                   output: self)
         } else {
             assert(false)
         }
@@ -317,6 +322,15 @@ extension TagChartsPresenter {
         humidityUnitToken = NotificationCenter
             .default
             .addObserver(forName: .HumidityUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.interactor.restartObservingData()
+            self?.interactor.notifySettingsChanged()
+        })
+        pressureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
