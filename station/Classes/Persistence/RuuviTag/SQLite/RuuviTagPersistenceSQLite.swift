@@ -2,7 +2,9 @@ import BTKit
 import Foundation
 import Future
 import GRDB
+#if canImport(FirebaseCrashlytics)
 import FirebaseCrashlytics
+#endif
 
 class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     typealias Entity = RuuviTagSQLite
@@ -270,7 +272,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
 // MARK: - Private
 extension RuuviTagPersistenceSQLite {
     func reportToCrashlytics(error: Error, method: String = #function, line: Int = #line) {
+        #if canImport(FirebaseCrashlytics)
         Crashlytics.crashlytics().log("\(method)(line: \(line)")
         Crashlytics.crashlytics().record(error: error)
+        #endif
     }
 }
