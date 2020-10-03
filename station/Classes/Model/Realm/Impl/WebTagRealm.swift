@@ -66,3 +66,9 @@ private struct LocationWebTag: Location {
     var country: String?
     var coordinate: CLLocationCoordinate2D
 }
+
+extension WebTagRealm {
+    var lastRecord: RuuviTagSensorRecord? {
+        return data.last?.record
+    }
+}

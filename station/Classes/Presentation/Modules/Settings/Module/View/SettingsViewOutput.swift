@@ -2,8 +2,9 @@ import Foundation
 
 protocol SettingsViewOutput {
     func viewDidLoad()
-    func viewDidChange(temperatureUnit: TemperatureUnit)
-    func viewDidChange(humidityUnit: HumidityUnit)
+    func viewDidTapTemperatureUnit()
+    func viewDidTapHumidityUnit()
+    func viewDidTapOnPressure()
     func viewDidTriggerClose()
     func viewDidTapOnLanguage()
     func viewDidTapOnForeground()

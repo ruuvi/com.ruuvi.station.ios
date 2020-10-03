@@ -15,7 +15,7 @@ def shared_pods
   pod 'FutureX'
   pod 'GestureInstructions'
   pod 'GRDB.swift'
-  pod 'Humidity', '~> 0.0.8'
+  pod 'Humidity'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'Nantes'
@@ -40,4 +40,12 @@ target 'stationTests' do
   shared_pods
   pod 'Nimble'
   pod 'Quick'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+    end
+  end
 end

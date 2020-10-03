@@ -6,6 +6,10 @@ import Future
 class ExportServiceTemp: ExportService {
     var realmContext: RealmContext!
     var realmQueue = DispatchQueue(label: "com.ruuvi.station.ExportServiceTemp.realm", qos: .userInitiated)
+
+    var measurementService: MeasurementsService!
+    var calibrationService: CalibrationService!
+
     private let iso8601: DateFormatter = {
         let formatter = DateFormatter()
         formatter.calendar = Calendar(identifier: .iso8601)
@@ -14,6 +18,7 @@ class ExportServiceTemp: ExportService {
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
         return formatter
     }()
+
     func csvLog(for uuid: String) -> Future<URL, RUError> {
         if let ruuviTag = realmContext.main.object(ofType: RuuviTagRealm.self, forPrimaryKey: uuid) {
             return csvLog(for: ruuviTag)
@@ -103,26 +108,17 @@ extension ExportServiceTemp {
                         var dewPointCelsius: String
                         var dewPointFahrenheit: String
                         var dewPointKelvin: String
-                        if let c = log.celsius.value, let rh = log.humidity.value {
-//                            var sh = rh + ruuviTag.humidityOffset TODO: calibration srvice
-//                            if sh > 100.0 {
-//                                sh = 100.0
-//                            }
-                            let h = Humidity(c: c, rh: rh / 100.0)
-                            absoluteHumidity = String(format: "%.2f", h.ah)
-                            if let hTd = h.Td {
-                                dewPointCelsius = String(format: "%.2f", hTd)
+                        if let c = log.unitTemperature,
+                            let rh = log.unitHumidity,
+                            let h = rh.offseted(by: ruuviTag.humidityOffset, temperature: c) {
+                            absoluteHumidity = String(format: "%.2f", h.converted(to: .absolute).value)
+                            if let dp = try? h.dewPoint(temperature: c) {
+                                dewPointCelsius = String(format: "%.2f", dp.converted(to: .celsius).value)
+                                dewPointFahrenheit = String(format: "%.2f", dp.converted(to: .fahrenheit).value)
+                                dewPointKelvin = String(format: "%.2f", dp.converted(to: .kelvin).value)
                             } else {
                                 dewPointCelsius = "N/A".localized()
-                            }
-                            if let hTdF = h.TdF {
-                                dewPointFahrenheit = String(format: "%.2f", hTdF)
-                            } else {
                                 dewPointFahrenheit = "N/A".localized()
-                            }
-                            if let hTdK = h.TdK {
-                                dewPointKelvin = String(format: "%.2f", hTdK)
-                            } else {
                                 dewPointKelvin = "N/A".localized()
                             }
                         } else {
@@ -256,21 +252,15 @@ extension ExportServiceTemp {
                         let date = dateFormatter.string(from: log.date)
                         let iso = self.iso8601.string(from: log.date)
                         var celsius: String
-                        if let c = log.celsius.value {
-                            celsius = String(format: "%.2f", c)
+                        var fahrenheit: String
+                        var kelvin: String
+                        if let temperature = log.record?.temperature {
+                            celsius = String(format: "%.2f", temperature.converted(to: .celsius).value)
+                            fahrenheit = String(format: "%.2f", temperature.converted(to: .fahrenheit).value)
+                            kelvin = String(format: "%.2f", temperature.converted(to: .kelvin).value)
                         } else {
                             celsius = "N/A".localized()
-                        }
-                        var fahrenheit: String
-                        if let f = log.fahrenheit {
-                            fahrenheit = String(format: "%.2f", f)
-                        } else {
                             fahrenheit = "N/A".localized()
-                        }
-                        var kelvin: String
-                        if let k = log.kelvin {
-                            kelvin = String(format: "%.2f", k)
-                        } else {
                             kelvin = "N/A".localized()
                         }
                         var relativeHumidity: String
@@ -287,25 +277,16 @@ extension ExportServiceTemp {
                         var dewPointCelsius: String
                         var dewPointFahrenheit: String
                         var dewPointKelvin: String
-                        if let c = log.celsius.value, var rh = log.humidity.value {
-                            if rh > 100.0 {
-                                rh = 100.0
-                            }
-                            let h = Humidity(c: c, rh: rh / 100.0)
-                            absoluteHumidity = String(format: "%.2f", h.ah)
-                            if let hTd = h.Td {
-                                dewPointCelsius = String(format: "%.2f", hTd)
+                        if let c = log.record?.temperature,
+                            let rh = log.record?.humidity {
+                            absoluteHumidity = String(format: "%.2f", rh.converted(to: .absolute).value)
+                            if let dp = try? rh.dewPoint(temperature: c) {
+                                dewPointCelsius = String(format: "%.2f", dp.converted(to: .celsius).value)
+                                dewPointFahrenheit = String(format: "%.2f", dp.converted(to: .fahrenheit).value)
+                                dewPointKelvin = String(format: "%.2f", dp.converted(to: .kelvin).value)
                             } else {
                                 dewPointCelsius = "N/A".localized()
-                            }
-                            if let hTdF = h.TdF {
-                                dewPointFahrenheit = String(format: "%.2f", hTdF)
-                            } else {
                                 dewPointFahrenheit = "N/A".localized()
-                            }
-                            if let hTdK = h.TdK {
-                                dewPointKelvin = String(format: "%.2f", hTdK)
-                            } else {
                                 dewPointKelvin = "N/A".localized()
                             }
                         } else {

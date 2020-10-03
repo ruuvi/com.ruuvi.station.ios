@@ -3,6 +3,7 @@ import Foundation
 extension Notification.Name {
     static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
     static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
+    static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
     static let LanguageDidChange = Notification.Name("LanguageDidChange")
     static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
     static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
@@ -16,6 +17,7 @@ extension Notification.Name {
 protocol Settings {
     var temperatureUnit: TemperatureUnit { get set }
     var humidityUnit: HumidityUnit { get set }
+    var pressureUnit: UnitPressure { get set }
     var welcomeShown: Bool { get set }
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
