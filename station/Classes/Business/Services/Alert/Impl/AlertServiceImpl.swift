@@ -5,6 +5,7 @@ class AlertServiceImpl: AlertService {
 
     var alertPersistence: AlertPersistence!
     var calibrationService: CalibrationService!
+    var measurementService: MeasurementsService!
     weak var localNotificationsManager: LocalNotificationsManager!
 
     var observations = [String: NSPointerArray]()
@@ -91,74 +92,39 @@ extension AlertServiceImpl {
     }
 }
 
-// MARK: - Relative Humidity
+// MARK: - Humidity
 extension AlertServiceImpl {
-    func lowerRelativeHumidity(for uuid: String) -> Double? {
-        return alertPersistence.lowerRelativeHumidity(for: uuid)
+    func lowerHumidity(for uuid: String) -> Humidity? {
+        return alertPersistence.lowerHumidity(for: uuid)
     }
 
-    func setLower(relativeHumidity: Double?, for uuid: String) {
-        alertPersistence.setLower(relativeHumidity: relativeHumidity, for: uuid)
-        if let l = relativeHumidity, let u = upperRelativeHumidity(for: uuid) {
-            postAlertDidChange(with: uuid, of: .relativeHumidity(lower: l, upper: u))
+    func setLower(humidity: Humidity?, for uuid: String) {
+        alertPersistence.setLower(humidity: humidity, for: uuid)
+        if let l = humidity, let u = upperHumidity(for: uuid) {
+            postAlertDidChange(with: uuid, of: .humidity(lower: l, upper: u))
         }
     }
 
-    func upperRelativeHumidity(for uuid: String) -> Double? {
-        return alertPersistence.upperRelativeHumidity(for: uuid)
+    func upperHumidity(for uuid: String) -> Humidity? {
+        return alertPersistence.upperHumidity(for: uuid)
     }
 
-    func setUpper(relativeHumidity: Double?, for uuid: String) {
-        alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: uuid)
-        if let u = relativeHumidity, let l = lowerRelativeHumidity(for: uuid) {
-            postAlertDidChange(with: uuid, of: .relativeHumidity(lower: l, upper: u))
+    func setUpper(humidity: Humidity?, for uuid: String) {
+        alertPersistence.setUpper(humidity: humidity, for: uuid)
+        if let u = humidity, let l = lowerHumidity(for: uuid) {
+            postAlertDidChange(with: uuid, of: .humidity(lower: l, upper: u))
         }
     }
 
-    func relativeHumidityDescription(for uuid: String) -> String? {
-        return alertPersistence.relativeHumidityDescription(for: uuid)
+    func humidityDescription(for uuid: String) -> String? {
+        return alertPersistence.humidityDescription(for: uuid)
     }
 
-    func setRelativeHumidity(description: String?, for uuid: String) {
-        alertPersistence.setRelativeHumidity(description: description, for: uuid)
-        if let l = lowerRelativeHumidity(for: uuid), let u = upperRelativeHumidity(for: uuid) {
-            postAlertDidChange(with: uuid, of: .relativeHumidity(lower: l, upper: u))
-        }
-    }
-}
-
-// MARK: - Absolute Humidity
-extension AlertServiceImpl {
-    func lowerAbsoluteHumidity(for uuid: String) -> Double? {
-        return alertPersistence.lowerAbsoluteHumidity(for: uuid)
-    }
-
-    func setLower(absoluteHumidity: Double?, for uuid: String) {
-        alertPersistence.setLower(absoluteHumidity: absoluteHumidity, for: uuid)
-        if let l = absoluteHumidity, let u = upperAbsoluteHumidity(for: uuid) {
-            postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
-        }
-    }
-
-    func upperAbsoluteHumidity(for uuid: String) -> Double? {
-        return alertPersistence.upperAbsoluteHumidity(for: uuid)
-    }
-
-    func setUpper(absoluteHumidity: Double?, for uuid: String) {
-        alertPersistence.setUpper(absoluteHumidity: absoluteHumidity, for: uuid)
-        if let u = absoluteHumidity, let l = lowerAbsoluteHumidity(for: uuid) {
-            postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
-        }
-    }
-
-    func absoluteHumidityDescription(for uuid: String) -> String? {
-        return alertPersistence.absoluteHumidityDescription(for: uuid)
-    }
-
-    func setAbsoluteHumidity(description: String?, for uuid: String) {
-        alertPersistence.setAbsoluteHumidity(description: description, for: uuid)
-        if let l = lowerAbsoluteHumidity(for: uuid), let u = upperAbsoluteHumidity(for: uuid) {
-            postAlertDidChange(with: uuid, of: .absoluteHumidity(lower: l, upper: u))
+    func setHumidity(description: String?, for uuid: String) {
+        alertPersistence.setHumidity(description: description, for: uuid)
+        if let l = lowerHumidity(for: uuid),
+           let u = upperHumidity(for: uuid) {
+            postAlertDidChange(with: uuid, of: .humidity(lower: l, upper: u))
         }
     }
 }

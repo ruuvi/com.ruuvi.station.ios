@@ -42,6 +42,14 @@ extension RuuviTagSensor {
                                     name: name)
     }
 
+    func withoutMac() -> RuuviTagSensor {
+        return RuuviTagSensorStruct(version: version,
+                                    luid: luid,
+                                    macId: nil,
+                                    isConnectable: isConnectable,
+                                    name: name)
+    }
+
     func with(isConnectable: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,

@@ -2,6 +2,7 @@
 import UIKit
 import RealmSwift
 import CoreLocation
+import Humidity
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
@@ -19,10 +20,15 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
             photoPickerPresenter.delegate = self
         }
     }
-
+    private var temperature: Temperature? {
+        didSet {
+            view.viewModel.temperature.value = temperature
+        }
+    }
     private var webTagToken: NotificationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
+    private var pressureUnitToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var webTag: WebTagRealm! {
@@ -37,11 +43,14 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         temperatureUnitToken?.invalidate()
         appDidBecomeActiveToken?.invalidate()
         humidityUnitToken?.invalidate()
+        pressureUnitToken?.invalidate()
         alertDidChangeToken?.invalidate()
     }
 
-    func configure(webTag: WebTagRealm) {
+    func configure(webTag: WebTagRealm,
+                   temperature: Temperature?) {
         self.webTag = webTag
+        self.temperature = temperature
         startObservingWebTag()
         startObservingSettingsChanges()
         startObservingApplicationState()
@@ -53,6 +62,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
 extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     func viewWillAppear() {
         checkPushNotificationsStatus()
+        syncViewModel()
     }
 
     func viewDidAskToDismiss() {
@@ -149,6 +159,14 @@ extension WebTagSettingsPresenter {
                          using: { [weak self] _ in
             self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
         })
+        pressureUnitToken = NotificationCenter
+            .default
+            .addObserver(forName: .PressureUnitDidChange,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+            self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
+        })
     }
 }
 
@@ -180,18 +198,19 @@ extension WebTagSettingsPresenter {
 
     private func bindViewModel(to webTag: WebTagRealm) {
         bindTemperatureAlert(webTag)
-        bindRelativeHumidityAlert(webTag)
-        bindAbsoluteHumidityAlert(webTag)
-        bindDewPointAlert(webTag)
+        bindHumidityAlert(webTag)
+        bindDewPoint(webTag)
         bindPressureAlert(webTag)
     }
 
     private func bindTemperatureAlert(_ webTag: WebTagRealm) {
-        let temperatureLower = view.viewModel.celsiusLowerBound
-        let temperatureUpper = view.viewModel.celsiusUpperBound
+        let temperatureLower = view.viewModel.temperatureLowerBound
+        let temperatureUpper = view.viewModel.temperatureUpperBound
         bind(view.viewModel.isTemperatureAlertOn, fire: false) {
-            [weak temperatureLower, weak temperatureUpper] observer, isOn in
-            if let l = temperatureLower?.value, let u = temperatureUpper?.value {
+            [weak temperatureLower,
+             weak temperatureUpper] observer, isOn in
+            if let l = temperatureLower?.value?.converted(to: .celsius).value,
+               let u = temperatureUpper?.value?.converted(to: .celsius).value {
                 let type: AlertType = .temperature(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
@@ -203,24 +222,29 @@ extension WebTagSettingsPresenter {
                 }
             }
         }
-        bind(view.viewModel.celsiusLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(celsius: lower, for: webTag.uuid)
+        bind(view.viewModel.temperatureLowerBound, fire: false) { observer, lower in
+            if let l = lower?.converted(to: .celsius).value {
+                observer.alertService.setLower(celsius: l, for: webTag.uuid)
+            }
         }
-        bind(view.viewModel.celsiusUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(celsius: upper, for: webTag.uuid)
+        bind(view.viewModel.temperatureUpperBound, fire: false) { observer, upper in
+            if let u = upper?.converted(to: .celsius).value {
+                observer.alertService.setUpper(celsius: u, for: webTag.uuid)
+            }
         }
         bind(view.viewModel.temperatureAlertDescription, fire: false) {observer, temperatureAlertDescription in
             observer.alertService.setTemperature(description: temperatureAlertDescription, for: webTag.uuid)
         }
     }
 
-    private func bindRelativeHumidityAlert(_ webTag: WebTagRealm) {
-        let relativeHumidityLower = view.viewModel.relativeHumidityLowerBound
-        let relativeHumidityUpper = view.viewModel.relativeHumidityUpperBound
-        bind(view.viewModel.isRelativeHumidityAlertOn, fire: false) {
-            [weak relativeHumidityLower, weak relativeHumidityUpper] observer, isOn in
-            if let l = relativeHumidityLower?.value, let u = relativeHumidityUpper?.value {
-                let type: AlertType = .relativeHumidity(lower: l, upper: u)
+    private func bindHumidityAlert(_ webTag: WebTagRealm) {
+        let humidityLower = view.viewModel.humidityLowerBound
+        let humidityUpper = view.viewModel.humidityUpperBound
+        bind(view.viewModel.isHumidityAlertOn, fire: false) {
+            [weak humidityLower, weak humidityUpper] observer, isOn in
+            if let l = humidityLower?.value,
+               let u = humidityUpper?.value {
+                let type: AlertType = .humidity(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
                     if isOn.bound {
@@ -231,75 +255,15 @@ extension WebTagSettingsPresenter {
                 }
             }
         }
-        bind(view.viewModel.relativeHumidityLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(relativeHumidity: lower, for: webTag.uuid)
+        bind(view.viewModel.humidityLowerBound, fire: false) { observer, lower in
+            observer.alertService.setLower(humidity: lower, for: webTag.uuid)
         }
-        bind(view.viewModel.relativeHumidityUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(relativeHumidity: upper, for: webTag.uuid)
+        bind(view.viewModel.humidityUpperBound, fire: false) { observer, upper in
+            observer.alertService.setUpper(humidity: upper, for: webTag.uuid)
         }
-        bind(view.viewModel.relativeHumidityAlertDescription, fire: false) {
-            observer, relativeHumidityAlertDescription in
-            observer.alertService.setRelativeHumidity(description: relativeHumidityAlertDescription, for: webTag.uuid)
-        }
-    }
-
-    fileprivate func bindAbsoluteHumidityAlert(_ webTag: WebTagRealm) {
-        let absoluteHumidityLower = view.viewModel.absoluteHumidityLowerBound
-        let absoluteHumidityUpper = view.viewModel.absoluteHumidityUpperBound
-        bind(view.viewModel.isAbsoluteHumidityAlertOn, fire: false) {
-            [weak absoluteHumidityLower, weak absoluteHumidityUpper] observer, isOn in
-            if let l = absoluteHumidityLower?.value, let u = absoluteHumidityUpper?.value {
-                let type: AlertType = .absoluteHumidity(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
-                    } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
-                    }
-                }
-            }
-        }
-
-        bind(view.viewModel.absoluteHumidityLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(absoluteHumidity: lower, for: webTag.uuid)
-        }
-
-        bind(view.viewModel.absoluteHumidityUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(absoluteHumidity: upper, for: webTag.uuid)
-        }
-
-        bind(view.viewModel.absoluteHumidityAlertDescription, fire: false) {
-            observer, absoluteHumidityAlertDescription in
-            observer.alertService.setAbsoluteHumidity(description: absoluteHumidityAlertDescription, for: webTag.uuid)
-        }
-    }
-
-    private func bindDewPointAlert(_ webTag: WebTagRealm) {
-        let dewPointLower = view.viewModel.dewPointCelsiusLowerBound
-        let dewPointUpper = view.viewModel.dewPointCelsiusUpperBound
-        bind(view.viewModel.isDewPointAlertOn, fire: false) {
-            [weak dewPointLower, weak dewPointUpper] observer, isOn in
-            if let l = dewPointLower?.value, let u = dewPointUpper?.value {
-                let type: AlertType = .dewPoint(lower: l, upper: u)
-                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
-                if currentState != isOn.bound {
-                    if isOn.bound {
-                        observer.alertService.register(type: type, for: webTag.uuid)
-                    } else {
-                        observer.alertService.unregister(type: type, for: webTag.uuid)
-                    }
-                }
-            }
-        }
-        bind(view.viewModel.dewPointCelsiusLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLowerDewPoint(celsius: lower, for: webTag.uuid)
-        }
-        bind(view.viewModel.dewPointCelsiusUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpperDewPoint(celsius: upper, for: webTag.uuid)
-        }
-        bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
-            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
+        bind(view.viewModel.humidityAlertDescription, fire: false) {
+            observer, humidityAlertDescription in
+            observer.alertService.setHumidity(description: humidityAlertDescription, for: webTag.uuid)
         }
     }
 
@@ -308,7 +272,8 @@ extension WebTagSettingsPresenter {
         let pressureUpper = view.viewModel.pressureUpperBound
         bind(view.viewModel.isPressureAlertOn, fire: false) {
             [weak pressureLower, weak pressureUpper] observer, isOn in
-            if let l = pressureLower?.value, let u = pressureUpper?.value {
+            if let l = pressureLower?.value?.converted(to: .hectopascals).value,
+               let u = pressureUpper?.value?.converted(to: .hectopascals).value {
                 let type: AlertType = .pressure(lower: l, upper: u)
                 let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
                 if currentState != isOn.bound {
@@ -322,15 +287,52 @@ extension WebTagSettingsPresenter {
         }
 
         bind(view.viewModel.pressureLowerBound, fire: false) { observer, lower in
-            observer.alertService.setLower(pressure: lower, for: webTag.uuid)
+            if let l = lower?.converted(to: .hectopascals).value {
+                observer.alertService.setLower(pressure: l, for: webTag.uuid)
+            }
         }
 
         bind(view.viewModel.pressureUpperBound, fire: false) { observer, upper in
-            observer.alertService.setUpper(pressure: upper, for: webTag.uuid)
+            if let u = upper?.converted(to: .hectopascals).value {
+                observer.alertService.setUpper(pressure: u, for: webTag.uuid)
+            }
         }
 
         bind(view.viewModel.pressureAlertDescription, fire: false) { observer, pressureAlertDescription in
             observer.alertService.setPressure(description: pressureAlertDescription, for: webTag.uuid)
+        }
+    }
+
+    private func bindDewPoint(_ webTag: WebTagRealm) {
+        let dewPointLower = view.viewModel.dewPointLowerBound
+        let dewPointUpper = view.viewModel.dewPointUpperBound
+        bind(view.viewModel.isDewPointAlertOn, fire: false) {
+            [weak dewPointLower, weak dewPointUpper] observer, isOn in
+            if let l = dewPointLower?.value?.converted(to: .celsius).value,
+               let u = dewPointUpper?.value?.converted(to: .celsius).value {
+                let type: AlertType = .dewPoint(lower: l, upper: u)
+                let currentState = observer.alertService.isOn(type: type, for: webTag.uuid)
+                if currentState != isOn.bound {
+                    if isOn.bound {
+                        observer.alertService.register(type: type, for: webTag.uuid)
+                    } else {
+                        observer.alertService.unregister(type: type, for: webTag.uuid)
+                    }
+                }
+            }
+        }
+        bind(view.viewModel.dewPointLowerBound, fire: false) { observer, lower in
+            if let l = lower?.converted(to: .celsius).value {
+                observer.alertService.setLowerDewPoint(celsius: l, for: webTag.uuid)
+            }
+        }
+        bind(view.viewModel.dewPointUpperBound, fire: false) { observer, upper in
+            if let u = upper?.converted(to: .celsius).value {
+                observer.alertService.setUpperDewPoint(celsius: u, for: webTag.uuid)
+            }
+        }
+        bind(view.viewModel.dewPointAlertDescription, fire: false) { observer, dewPointAlertDescription in
+            observer.alertService.setDewPoint(description: dewPointAlertDescription, for: webTag.uuid)
         }
     }
 
@@ -364,10 +366,11 @@ extension WebTagSettingsPresenter {
     private func syncViewModel() {
         view.viewModel.isLocationAuthorizedAlways.value
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
+        view.viewModel.currentTemperature.value = webTag.data.last?.record?.temperature
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.humidityUnit.value = settings.humidityUnit
+        view.viewModel.pressureUnit.value = settings.pressureUnit
         view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
-
         if webTag.name == WebTagLocationSource.manual.title {
             view.viewModel.name.value = nil
         } else {
@@ -385,89 +388,70 @@ extension WebTagSettingsPresenter {
 
         view.viewModel.temperatureAlertDescription.value
             = alertService.temperatureDescription(for: webTag.uuid)
-        view.viewModel.relativeHumidityAlertDescription.value
-            = alertService.relativeHumidityDescription(for: webTag.uuid)
-        view.viewModel.absoluteHumidityAlertDescription.value
-            = alertService.absoluteHumidityDescription(for: webTag.uuid)
-        view.viewModel.dewPointAlertDescription.value
-            = alertService.dewPointDescription(for: webTag.uuid)
+        view.viewModel.humidityAlertDescription.value
+            = alertService.humidityDescription(for: webTag.uuid)
         view.viewModel.pressureAlertDescription.value
             = alertService.pressureDescription(for: webTag.uuid)
 
         let temperatureAlertType: AlertType = .temperature(lower: 0, upper: 0)
         if case .temperature(let lower, let upper) = alertService.alert(for: webTag.uuid, of: temperatureAlertType) {
             view.viewModel.isTemperatureAlertOn.value = true
-            view.viewModel.celsiusLowerBound.value = lower
-            view.viewModel.celsiusUpperBound.value = upper
+            view.viewModel.temperatureLowerBound.value = Temperature(lower, unit: .celsius)
+            view.viewModel.temperatureUpperBound.value =  Temperature(upper, unit: .celsius)
         } else {
             view.viewModel.isTemperatureAlertOn.value = false
             if let celsiusLower = alertService.lowerCelsius(for: webTag.uuid) {
-                view.viewModel.celsiusLowerBound.value = celsiusLower
+                view.viewModel.temperatureLowerBound.value = Temperature(celsiusLower, unit: .celsius)
             }
             if let celsiusUpper = alertService.upperCelsius(for: webTag.uuid) {
-                view.viewModel.celsiusUpperBound.value = celsiusUpper
+                view.viewModel.temperatureUpperBound.value = Temperature(celsiusUpper, unit: .celsius)
             }
         }
 
-        let relativeHumidityAlertType: AlertType = .relativeHumidity(lower: 0, upper: 0)
-        if case .relativeHumidity(let lower, let upper)
-            = alertService.alert(for: webTag.uuid, of: relativeHumidityAlertType) {
-            view.viewModel.isRelativeHumidityAlertOn.value = true
-            view.viewModel.relativeHumidityLowerBound.value = lower
-            view.viewModel.relativeHumidityUpperBound.value = upper
+        let humidityAlertType: AlertType = .humidity(lower: .init(value: 0, unit: .absolute),
+                                                     upper: .init(value: 0, unit: .absolute))
+        if case .humidity(let lower, let upper)
+            = alertService.alert(for: webTag.uuid, of: humidityAlertType) {
+            view.viewModel.isHumidityAlertOn.value = true
+            view.viewModel.humidityLowerBound.value = lower
+            view.viewModel.humidityUpperBound.value = upper
         } else {
-            view.viewModel.isRelativeHumidityAlertOn.value = false
-            if let realtiveHumidityLower = alertService.lowerRelativeHumidity(for: webTag.uuid) {
-               view.viewModel.relativeHumidityLowerBound.value = realtiveHumidityLower
+            view.viewModel.isHumidityAlertOn.value = false
+            if let humidityLower = alertService.lowerHumidity(for: webTag.uuid) {
+                view.viewModel.humidityLowerBound.value = humidityLower
             }
-            if let relativeHumidityUpper = alertService.upperRelativeHumidity(for: webTag.uuid) {
-               view.viewModel.relativeHumidityUpperBound.value = relativeHumidityUpper
-            }
-        }
-
-        let absoluteHumidityAlertType: AlertType = .absoluteHumidity(lower: 0, upper: 0)
-        if case .absoluteHumidity(let lower, let upper)
-            = alertService.alert(for: webTag.uuid, of: absoluteHumidityAlertType) {
-            view.viewModel.isAbsoluteHumidityAlertOn.value = true
-            view.viewModel.absoluteHumidityLowerBound.value = lower
-            view.viewModel.absoluteHumidityUpperBound.value = upper
-        } else {
-            view.viewModel.isAbsoluteHumidityAlertOn.value = false
-            if let absoluteHumidityLower = alertService.lowerAbsoluteHumidity(for: webTag.uuid) {
-                view.viewModel.absoluteHumidityLowerBound.value = absoluteHumidityLower
-            }
-            if let absoluteHumidityUpper = alertService.upperAbsoluteHumidity(for: webTag.uuid) {
-                view.viewModel.absoluteHumidityUpperBound.value = absoluteHumidityUpper
+            if let humidityUpper = alertService.upperHumidity(for: webTag.uuid) {
+                view.viewModel.humidityUpperBound.value = humidityUpper
             }
         }
 
         let dewPointAlertType: AlertType = .dewPoint(lower: 0, upper: 0)
         if case .dewPoint(let lower, let upper) = alertService.alert(for: webTag.uuid, of: dewPointAlertType) {
             view.viewModel.isDewPointAlertOn.value = true
-            view.viewModel.dewPointCelsiusLowerBound.value = lower
-            view.viewModel.dewPointCelsiusUpperBound.value = upper
+            view.viewModel.dewPointLowerBound.value = Temperature(value: lower, unit: .celsius)
+            view.viewModel.dewPointUpperBound.value = Temperature(value: upper, unit: .celsius)
         } else {
             view.viewModel.isDewPointAlertOn.value = false
-            if let dewPointCelsiusLowerBound = alertService.lowerDewPointCelsius(for: webTag.uuid) {
-                view.viewModel.dewPointCelsiusLowerBound.value = dewPointCelsiusLowerBound
+            if let lowerBound = alertService.lowerDewPointCelsius(for: webTag.uuid) {
+                view.viewModel.dewPointLowerBound.value = Temperature(value: lowerBound, unit: .celsius)
             }
-            if let dewPointCelsiusUpperBound = alertService.upperDewPointCelsius(for: webTag.uuid) {
-                view.viewModel.dewPointCelsiusUpperBound.value = dewPointCelsiusUpperBound
+            if let upperBound = alertService.upperDewPointCelsius(for: webTag.uuid) {
+                view.viewModel.dewPointUpperBound.value = Temperature(value: upperBound, unit: .celsius)
             }
         }
 
         let pressureAlertType: AlertType = .pressure(lower: 0, upper: 0)
         if case .pressure(let lower, let upper) = alertService.alert(for: webTag.uuid, of: pressureAlertType) {
             view.viewModel.isPressureAlertOn.value = true
-            view.viewModel.pressureLowerBound.value = lower
-            view.viewModel.pressureUpperBound.value = upper
+            view.viewModel.pressureLowerBound.value = Pressure(lower, unit: .hectopascals)
+            view.viewModel.pressureUpperBound.value =  Pressure(upper, unit: .hectopascals)
         } else {
             view.viewModel.isPressureAlertOn.value = false
             if let pressureLowerBound = alertService.lowerPressure(for: webTag.uuid) {
-                view.viewModel.pressureLowerBound.value = pressureLowerBound
+                view.viewModel.pressureLowerBound.value = Pressure(pressureLowerBound, unit: .hectopascals)
             }
             if let pressureUpperBound = alertService.upperPressure(for: webTag.uuid) {
-                view.viewModel.pressureUpperBound.value = pressureUpperBound
+                view.viewModel.pressureUpperBound.value = Pressure(pressureUpperBound, unit: .hectopascals)
             }
         }
     }
@@ -506,10 +490,8 @@ extension WebTagSettingsPresenter {
         switch type {
         case .temperature:
             observable = view.viewModel.isTemperatureAlertOn
-        case .relativeHumidity:
-            observable = view.viewModel.isRelativeHumidityAlertOn
-        case .absoluteHumidity:
-            observable = view.viewModel.isAbsoluteHumidityAlertOn
+        case .humidity:
+            observable = view.viewModel.isHumidityAlertOn
         case .dewPoint:
             observable = view.viewModel.isDewPointAlertOn
         case .pressure:
