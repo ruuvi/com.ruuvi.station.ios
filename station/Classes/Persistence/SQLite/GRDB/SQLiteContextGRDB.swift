@@ -68,6 +68,10 @@ extension SQLiteGRDBDatabase {
 
         // v2
         migrator.registerMigration("Add networkProvider column") { (db) in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                    .contains(where: {$0.name == RuuviTagSQLite.networkProviderColumn.name}) == false else {
+                return
+            }
             try db.alter(table: RuuviTagSQLite.databaseTableName) { (t) in
                 t.add(column: RuuviTagSQLite.networkProviderColumn.name, .integer)
             }
