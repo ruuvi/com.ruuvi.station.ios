@@ -1,6 +1,5 @@
 import Foundation
 import GRDB
-import RxGRDB
 import RxSwift
 import RealmSwift
 
@@ -14,11 +13,9 @@ class RuuviTagLastRecordSubjectRxSwift {
 
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataTransactionObserver: TransactionObserver?
-    private var observation: DatabaseCancellable?
 
     deinit {
         ruuviTagDataRealmToken?.invalidate()
-        observation?.cancel()
         subject.onCompleted()
     }
 
@@ -32,11 +29,7 @@ class RuuviTagLastRecordSubjectRxSwift {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn.desc)
                                         .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
-        let observation = ValueObservation.tracking({ db in
-            try RuuviTagDataSQLite.fetchOne(db)
-        })
-        observation.publisher(in: <#T##DatabaseReader#>)
-
+        let observation = request.observationForFirst()
 
         self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
             [weak self] record in
@@ -44,15 +37,6 @@ class RuuviTagLastRecordSubjectRxSwift {
                 self?.subject.onNext(lastRecord)
             }
         }
-        self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool,
-                                                                      scheduling: .immediate,
-                                                                      onError: { (error) in
-                                                                        debugPrint(error)
-                                                                      }, onChange: { [weak self] record in
-                                                                        if let lastRecord = record?.any {
-                                                                            self?.subject.onNext(lastRecord)
-                                                                        }
-                                                                      })
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
             .filter("ruuviTag.uuid == %@", ruuviTagId)
             .sorted(byKeyPath: "date")

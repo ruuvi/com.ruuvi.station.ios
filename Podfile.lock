@@ -101,10 +101,10 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
-  - GRDB.swift (5.0.1):
-    - GRDB.swift/standard (= 5.0.1)
-  - GRDB.swift/standard (5.0.1)
-  - Humidity (0.1.0)
+  - GRDB.swift (4.14.0):
+    - GRDB.swift/standard (= 4.14.0)
+  - GRDB.swift/standard (4.14.0)
+  - Humidity (0.1.3)
   - KeychainAccess (4.2.1)
   - LightRoute (2.2.2)
   - Localize-Swift (3.2.0):
@@ -129,12 +129,6 @@ PODS:
   - Realm/Headers (5.4.7)
   - RealmSwift (5.4.7):
     - Realm (= 5.4.7)
-  - RxGRDB (1.0.0):
-    - RxGRDB/default (= 1.0.0)
-    - RxSwift (~> 5.0)
-  - RxGRDB/default (1.0.0):
-    - GRDB.swift (~> 5.0)
-    - RxSwift (~> 5.0)
   - RxSwift (5.1.1)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
@@ -152,7 +146,7 @@ DEPENDENCIES:
   - FutureX
   - GestureInstructions
   - GRDB.swift
-  - Humidity (from `https://github.com/viikufa/Humidity.git`)
+  - Humidity
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -161,7 +155,6 @@ DEPENDENCIES:
   - Quick
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
-  - RxGRDB
   - RxSwift
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
@@ -187,6 +180,7 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - GRDB.swift
+    - Humidity
     - KeychainAccess
     - Localize-Swift
     - nanopb
@@ -197,13 +191,10 @@ SPEC REPOS:
     - Quick
     - Realm
     - RealmSwift
-    - RxGRDB
     - RxSwift
     - Swinject
 
 EXTERNAL SOURCES:
-  Humidity:
-    :git: https://github.com/viikufa/Humidity.git
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
   RangeSeekSlider:
@@ -212,9 +203,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 CHECKOUT OPTIONS:
-  Humidity:
-    :commit: 0b7e28f1ddab3e572c48dec992656fe47569fce3
-    :git: https://github.com/viikufa/Humidity.git
   LightRoute:
     :commit: fcea1b3808b75be92d983316742bf186e21981ec
     :git: https://github.com/rinat-enikeev/LightRoute.git
@@ -244,8 +232,8 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 966e88df9d19c15715137bb2ddaf52373f111436
   GoogleDataTransport: b7f406340a291370045a270c599e53c6fa6ec20f
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
-  GRDB.swift: 04965b2db24aa24d5a70b50755a0f559c0ec84de
-  Humidity: e5c892e442ccd5f8ad09c4cbc741f6489b8a95e9
+  GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
+  Humidity: c2863bc4867806e5197a74d3e32eec5b3b5187ec
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 6f4475136bdb0d7b2882ea3d4ea919d70142b232
@@ -258,11 +246,10 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 4bfc08e376b2e30c84ec3200ebe715574da05cc0
   RealmSwift: ed40f371b62e8677141939e05b44a0c1a0a2d965
-  RxGRDB: 39ead922d410a96c5a5883b1695cba48fe7818e2
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: ce4af31e9031356a2b4ecee99b3c04add51c6d9d
+PODFILE CHECKSUM: ced6fa62529fc0d64c866f4e1d4dbddce26bb001
 
 COCOAPODS: 1.9.3
