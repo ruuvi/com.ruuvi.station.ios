@@ -10,13 +10,26 @@ extension AlertServiceImpl {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                isTriggered = isTriggered || process(temperature: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered
+                    || process(temperature: ruuviTag.temperature,
+                               alertType: type,
+                               identifier: ruuviTag.ruuviTagId.luid)
             case .humidity:
-                isTriggered = isTriggered || process(humidity: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered
+                    || process(humidity: ruuviTag.humidity,
+                               temperature: ruuviTag.temperature,
+                               alertType: type,
+                               identifier: ruuviTag.ruuviTagId.luid)
             case .dewPoint:
-                isTriggered = isTriggered || process(dewPoint: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered
+                    || processDewPoint(humidity: ruuviTag.humidity,
+                                       temperature: ruuviTag.temperature,
+                                       alertType: type, identifier: ruuviTag.ruuviTagId.luid)
             case .pressure:
-                isTriggered = isTriggered || process(pressure: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered
+                    || process(pressure: ruuviTag.pressure,
+                               alertType: type,
+                               identifier: ruuviTag.ruuviTagId.luid)
             case .movement:
                 isTriggered = isTriggered || process(movement: type, ruuviTag: ruuviTag)
             case .connection:
@@ -34,21 +47,122 @@ extension AlertServiceImpl {
             notify(uuid: uuid, isTriggered: isTriggered)
         }
     }
+}
 
-    private func process(temperature: AlertType, ruuviTag: RuuviTagSensorRecord) -> Bool {
-        if case .temperature(let lower, let upper) = alert(for: ruuviTag.ruuviTagId, of: temperature),
+// MARK: - Process Virtual Sensors
+extension AlertServiceImpl {
+
+    func process(data: WPSData, for uuid: String) {
+        var isTriggered = false
+        AlertType.allCases.forEach { (type) in
+            switch type {
+            case .temperature:
+                isTriggered = process(temperature: data.temperature,
+                                      alertType: type,
+                                      identifier: uuid.luid)
+                    || isTriggered
+            case .humidity:
+                isTriggered = process(humidity: data.humidity,
+                                      temperature: data.temperature,
+                                      alertType: type,
+                                      identifier: uuid.luid)
+                    || isTriggered
+            case .dewPoint:
+                isTriggered = processDewPoint(humidity: data.humidity,
+                                              temperature: data.temperature,
+                                              alertType: type,
+                                              identifier: uuid.luid)
+                    || isTriggered
+            case .pressure:
+                isTriggered = process(pressure: data.pressure,
+                                      alertType: type,
+                                      identifier: uuid.luid)
+            default:
+                break
+            }
+        }
+
+        if hasRegistrations(for: uuid) {
+            notify(uuid: uuid, isTriggered: isTriggered)
+        }
+    }
+
+}
+// MARK: - Process Network Sensors
+extension AlertServiceImpl {
+    func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier) {
+        var isTriggered = false
+        AlertType.allCases.forEach { (type) in
+            switch type {
+            case .temperature:
+                isTriggered = process(temperature: record.temperature,
+                                      alertType: type,
+                                      identifier: identifier)
+                    || isTriggered
+            case .humidity:
+                isTriggered = process(humidity: record.humidity,
+                                      temperature: record.temperature,
+                                      alertType: type,
+                                      identifier: identifier)
+                    || isTriggered
+            case .dewPoint:
+                isTriggered = processDewPoint(humidity: record.humidity,
+                                              temperature: record.temperature,
+                                              alertType: type,
+                                              identifier: identifier)
+                    || isTriggered
+            case .pressure:
+                isTriggered = process(pressure: record.pressure,
+                                      alertType: type,
+                                      identifier: identifier)
+                    || isTriggered
+            default:
+                break
+            }
+        }
+
+        if hasRegistrations(for: identifier.value) {
+            notify(uuid: identifier.value, isTriggered: isTriggered)
+        }
+    }
+}
+// MARK: - Notify
+extension AlertServiceImpl {
+    private func notify(uuid: String, isTriggered: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
+            if let observers = sSelf.observations[uuid] {
+                for i in 0..<observers.count {
+                    if let pointer = observers.pointer(at: i),
+                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                            as? AlertServiceObserver {
+                        observer.alert(service: sSelf,
+                                       isTriggered: isTriggered,
+                                       for: uuid)
+                    }
+                }
+            }
+        }
+    }
+}
+// MARK: - Private
+extension AlertServiceImpl {
+    private func process(temperature: Temperature?,
+                         alertType: AlertType,
+                         identifier: Identifier) -> Bool {
+        if case .temperature(let lower, let upper) = alert(for: identifier.value, of: alertType),
            let l = Temperature(lower),
            let u = Temperature(upper),
-           let t = ruuviTag.temperature {
+           let t = temperature {
             let isLower = t < l
             let isUpper = t > u
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .temperature, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.low, .temperature, for: identifier.value)
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .temperature, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.high, .temperature, for: identifier.value)
                 }
             }
             return isLower || isUpper
@@ -57,20 +171,23 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(humidity: AlertType, ruuviTag: RuuviTagSensorRecord) -> Bool {
-         let ho = calibrationService.humidityOffset(for: ruuviTag.ruuviTagId.luid).0
-        if case .humidity(let lower, let upper) = alert(for: ruuviTag.ruuviTagId, of: humidity),
-           let rh = ruuviTag.humidity,
-           let sh = rh.offseted(by: ho, temperature: ruuviTag.temperature) {
+    private func process(humidity: Humidity?,
+                         temperature: Temperature?,
+                         alertType: AlertType,
+                         identifier: Identifier) -> Bool {
+        let ho = calibrationService.humidityOffset(for: identifier).0
+        if case .humidity(let lower, let upper) = alert(for: identifier.value, of: alertType),
+           let rh = humidity,
+           let sh = rh.offseted(by: ho, temperature: temperature) {
             let isLower = sh < lower
             let isUpper = sh > upper
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .humidity, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.low, .humidity, for: identifier.value)
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .humidity, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.high, .humidity, for: identifier.value)
                 }
             }
             return isLower || isUpper
@@ -79,45 +196,49 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(dewPoint: AlertType, ruuviTag: RuuviTagSensorRecord) -> Bool {
-        let ho = calibrationService.humidityOffset(for: ruuviTag.ruuviTagId.luid).0
-        if case .dewPoint(let lower, let upper) = alert(for: ruuviTag.ruuviTagId, of: dewPoint),
-           let rh = ruuviTag.humidity,
-           let t = ruuviTag.temperature,
-            let sh = rh.offseted(by: ho, temperature: ruuviTag.temperature),
+    private func processDewPoint(humidity: Humidity?,
+                                 temperature: Temperature?,
+                                 alertType: AlertType,
+                                 identifier: Identifier) -> Bool {
+        let ho = calibrationService.humidityOffset(for: identifier).0
+        if case .dewPoint(let lower, let upper) = alert(for: identifier.value, of: alertType),
+           let t = temperature,
+           let rh = humidity?.converted(to: .relative(temperature: t)),
+            let sh = rh.offseted(by: ho, temperature: t),
             let dp = try? sh.dewPoint(temperature: t) {
             let isLower = dp < Temperature(value: lower, unit: .celsius)
             let isUpper = dp > Temperature(value: upper, unit: .celsius)
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .dewPoint, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.low, .dewPoint, for: identifier.value)
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .dewPoint, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.high, .dewPoint, for: identifier.value)
                 }
             }
-
             return isLower || isUpper
         } else {
             return false
         }
     }
 
-    private func process(pressure: AlertType, ruuviTag: RuuviTagSensorRecord) -> Bool {
-        if case .pressure(let lower, let upper) = alert(for: ruuviTag.ruuviTagId, of: pressure),
+    private func process(pressure: Pressure?,
+                         alertType: AlertType,
+                         identifier: Identifier) -> Bool {
+        if case .pressure(let lower, let upper) = alert(for: identifier.value, of: alertType),
            let l = Pressure(lower),
            let u = Pressure(upper),
-           let pressure = ruuviTag.pressure {
+           let pressure = pressure {
             let isLower = pressure < l
             let isUpper = pressure > u
             if isLower {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .pressure, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.low, .pressure, for: identifier.value)
                 }
             } else if isUpper {
                 DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .pressure, for: ruuviTag.ruuviTagId)
+                    self?.localNotificationsManager.notify(.high, .pressure, for: identifier.value)
                 }
             }
             return isLower || isUpper
@@ -139,110 +260,6 @@ extension AlertServiceImpl {
             return isGreater
         } else {
             return false
-        }
-    }
-}
-
-// MARK: - Process Virtual Sensors
-extension AlertServiceImpl {
-
-    func process(data: WPSData, for uuid: String) {
-        var isTriggered = false
-        AlertType.allCases.forEach { (type) in
-            switch type {
-            case .temperature:
-                isTriggered = process(temperature: type, uuid: uuid, data: data) || isTriggered
-            case .humidity:
-                isTriggered = process(humidity: type, uuid: uuid, data: data) || isTriggered
-            case .pressure:
-                isTriggered = process(pressure: type, uuid: uuid, data: data) || isTriggered
-            default:
-                break
-            }
-        }
-
-        if hasRegistrations(for: uuid) {
-            notify(uuid: uuid, isTriggered: isTriggered)
-        }
-    }
-
-    private func process(temperature: AlertType, uuid: String, data: WPSData) -> Bool {
-        if case .temperature(let lower, let upper) = alert(for: uuid, of: temperature),
-            let celsius = data.celsius {
-            let isLower = celsius < lower
-            let isUpper = celsius > upper
-            if isLower {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .temperature, for: uuid)
-                }
-            } else if isUpper {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .temperature, for: uuid)
-                }
-            }
-            return isLower || isUpper
-        } else {
-            return false
-        }
-    }
-
-    private func process(humidity: AlertType, uuid: String, data: WPSData) -> Bool {
-        if case .humidity(let lower, let upper) = alert(for: uuid, of: humidity),
-           let humidity = data.humidity {
-            let isLower = humidity < lower
-            let isUpper = humidity > upper
-            if isLower {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .humidity, for: uuid)
-                }
-            } else if isUpper {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .humidity, for: uuid)
-                }
-            }
-            return isLower || isUpper
-        } else {
-            return false
-        }
-    }
-
-    private func process(pressure: AlertType, uuid: String, data: WPSData) -> Bool {
-        if case .pressure(let lower, let upper) = alert(for: uuid, of: pressure),
-            let pressure = data.hPa {
-            let isLower = pressure < lower
-            let isUpper = pressure > upper
-            if isLower {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.low, .pressure, for: uuid)
-                }
-            } else if isUpper {
-                DispatchQueue.main.async { [weak self] in
-                    self?.localNotificationsManager.notify(.high, .pressure, for: uuid)
-                }
-            }
-            return isLower || isUpper
-        } else {
-            return false
-        }
-    }
-}
-
-// MARK: - Notify
-extension AlertServiceImpl {
-    private func notify(uuid: String, isTriggered: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let sSelf = self else { return }
-            if let observers = sSelf.observations[uuid] {
-                for i in 0..<observers.count {
-                    if let pointer = observers.pointer(at: i),
-                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                            as? AlertServiceObserver {
-                        observer.alert(service: sSelf,
-                                       isTriggered: isTriggered,
-                                       for: uuid)
-                    }
-                }
-            }
         }
     }
 }
