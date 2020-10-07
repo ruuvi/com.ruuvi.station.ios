@@ -1194,6 +1194,11 @@
 		0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */; };
 		0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215F22BA61430015F9E0 /* MigrationManager.swift */; };
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
+		0EEB3E942526F03B008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E932526F03B008CE97B /* RxSwift */; };
+		0EEB3E962526F03B008CE97B /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E952526F03B008CE97B /* RxRelay */; };
+		0EEB3E982526F03B008CE97B /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E972526F03B008CE97B /* RxCocoa */; };
+		0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E992526F03B008CE97B /* RxBlocking */; };
+		0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3ED32526F148008CE97B /* RxSwift */; };
 		0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */; };
 		0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */; };
 		0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */; };
@@ -2249,7 +2254,8 @@
 				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
 				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
 				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
-				A917CD052528E7F500BE4B06 /* Humidity in Frameworks */,
+				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
+				0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */,
 				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
 				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
 			);
@@ -2267,7 +2273,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFB58CB32CE11F0A92596D6D /* Pods_station.framework in Frameworks */,
+				0EEB3E962526F03B008CE97B /* RxRelay in Frameworks */,
+				0EEB3E942526F03B008CE97B /* RxSwift in Frameworks */,
+				0EEB3E982526F03B008CE97B /* RxCocoa in Frameworks */,
+				5314AC3CEE87724772A783AE /* Pods_station.framework in Frameworks */,
+				0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5812,7 +5822,7 @@
 				0E03B7C523866CDC00949713 /* Nantes */,
 				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
 				0E8BAC49245C393000D380FB /* GRDB */,
-				A917CD042528E7F500BE4B06 /* Humidity */,
+				0EEB3ED32526F148008CE97B /* RxSwift */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -5859,6 +5869,10 @@
 			);
 			name = station;
 			packageProductDependencies = (
+				0EEB3E932526F03B008CE97B /* RxSwift */,
+				0EEB3E952526F03B008CE97B /* RxRelay */,
+				0EEB3E972526F03B008CE97B /* RxCocoa */,
+				0EEB3E992526F03B008CE97B /* RxBlocking */,
 			);
 			productName = station;
 			productReference = 64333D2520B0C45900CDF4B6 /* station.app */;
@@ -5957,7 +5971,7 @@
 				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
 				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
 				0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */,
-				A917CCFC2528E7D100BE4B06 /* XCRemoteSwiftPackageReference "Humidity" */,
+				0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -8536,6 +8550,14 @@
 				minimumVersion = 2.2.0;
 			};
 		};
+		0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
@@ -8582,6 +8604,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.3;
+			};
+		};
+		0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -8652,10 +8682,30 @@
 			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
 			productName = GRDB;
 		};
-		A917CD042528E7F500BE4B06 /* Humidity */ = {
+		0EEB3E932526F03B008CE97B /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A917CCFC2528E7D100BE4B06 /* XCRemoteSwiftPackageReference "Humidity" */;
-			productName = Humidity;
+			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		0EEB3E952526F03B008CE97B /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		0EEB3E972526F03B008CE97B /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		0EEB3E992526F03B008CE97B /* RxBlocking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxBlocking;
+		};
+		0EEB3ED32526F148008CE97B /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
