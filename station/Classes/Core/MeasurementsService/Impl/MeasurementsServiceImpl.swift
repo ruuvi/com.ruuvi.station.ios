@@ -34,7 +34,6 @@ class MeasurementsServiceImpl: NSObject {
     }(NumberFormatter())
 
     private lazy var measurementFormatter: MeasurementFormatter = {
-        $0.unitStyle = .short
         $0.unitOptions = .providedUnit
         return $0
     }(MeasurementFormatter())
@@ -72,7 +71,13 @@ extension MeasurementsServiceImpl: MeasurementsService {
         guard let temperature = temperature else {
             return "N/A".localized()
         }
-        return formatter.string(from: temperature.converted(to: units.temperatureUnit))
+        if formatter.unitStyle == .medium {
+            return String(format: "%.2f %@",
+                          temperature.converted(to: units.temperatureUnit).value,
+                          units.temperatureUnit.symbol)
+        } else {
+            return formatter.string(from: temperature.converted(to: units.temperatureUnit))
+        }
     }
 
     func double(for pressure: Pressure) -> Double {
@@ -156,9 +161,11 @@ extension MeasurementsServiceImpl: MeasurementsService {
 // MARK: - Localizable
 extension MeasurementsServiceImpl: Localizable {
     func localize() {
+        numberFormatter.locale = self.settings.language.locale
         formatter.locale = self.settings.language.locale
-        HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
+        measurementFormatter.locale = self.settings.language.locale
         humidityFormatter = HumidityFormatter()
+        HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
         notifyListeners()
     }
 }
