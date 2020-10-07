@@ -2,7 +2,9 @@ import RealmSwift
 import Future
 import BTKit
 import Foundation
+#if canImport(FirebaseCrashlytics)
 import FirebaseCrashlytics
+#endif
 
 // swiftlint:disable:next type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
@@ -311,7 +313,9 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
 // MARK: - Private
 extension RuuviTagPersistenceRealm {
     func reportToCrashlytics(error: Error, method: String = #function, line: Int = #line) {
+        #if canImport(FirebaseCrashlytics)
         Crashlytics.crashlytics().log("\(method)(line: \(line)")
         Crashlytics.crashlytics().record(error: error)
+        #endif
     }
 }
