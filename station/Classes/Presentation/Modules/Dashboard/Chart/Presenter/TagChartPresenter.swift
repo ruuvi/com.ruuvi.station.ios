@@ -1,5 +1,6 @@
 import Foundation
 import Charts
+import UIKit
 
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
@@ -11,7 +12,11 @@ class TagChartPresenter: NSObject {
     }
     weak var ouptut: TagChartModuleOutput!
     var calibrationService: CalibrationService!
-    var measurementService: MeasurementsService!
+    var measurementService: MeasurementsService! {
+        didSet {
+            measurementService.add(self)
+        }
+    }
 
     private var humidityOffset: Double = 0.0
     private var luid: LocalIdentifier? {
@@ -46,8 +51,7 @@ extension TagChartPresenter: TagChartModuleInput {
         return view.chartView
     }
 
-    fileprivate func configureViewModel(_ viewModel: TagChartViewModel) {
-        viewModel.isDownsamplingOn.value = settings.chartDownsamplingOn
+    fileprivate func updateUnits(_ viewModel: TagChartViewModel) {
         switch viewModel.type {
         case .temperature:
             viewModel.unit.value = settings.temperatureUnit.unitTemperature
@@ -65,6 +69,11 @@ extension TagChartPresenter: TagChartModuleInput {
         default:
             viewModel.unit.value = Unit(symbol: "N/A".localized())
         }
+    }
+
+    fileprivate func configureViewModel(_ viewModel: TagChartViewModel) {
+        viewModel.isDownsamplingOn.value = settings.chartDownsamplingOn
+        updateUnits(viewModel)
         self.viewModel = viewModel
     }
 
@@ -99,7 +108,11 @@ extension TagChartPresenter: TagChartViewOutput {
                            stop: range.max)
     }
 }
-
+extension TagChartPresenter: MeasurementsServiceDelegate {
+    func measurementServiceDidUpdateUnit() {
+        self.updateUnits(viewModel)
+    }
+}
 extension TagChartPresenter {
     private func getHumityCalibration(for luid: LocalIdentifier?) {
         guard let luid = luid else {
