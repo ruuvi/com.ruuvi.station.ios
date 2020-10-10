@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol TagChartsRouterInput {
     func dismiss(completion: (() -> Void)?)
@@ -13,6 +13,7 @@ protocol TagChartsRouterInput {
                          output: TagSettingsModuleOutput)
     func openWebTagSettings(webTag: WebTagRealm,
                             temperature: Temperature?)
+    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?)
 }
 extension TagChartsRouterInput {
     func dismiss() {

@@ -214,9 +214,10 @@
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Tämä ominaisuus vaatii oikeuden palveluilmoitusten näyttämiseen.";
 
 // PhotoPicker
-"PhotoPicker.Sheet.message" = "Valitse kuva";
+"PhotoPicker.Sheet.title" = "Valitse kuva";
 "PhotoPicker.Sheet.library" = "Valitse kirjastosta";
 "PhotoPicker.Sheet.camera" = "Ota kuva";
+"PhotoPicker.Sheet.files" = "Pick from files";
 
 // Settings
 "Settings.navigationItem.title" = "Asetukset";
@@ -236,6 +237,9 @@
 "Settings.Label.Defaults" = "Oletusasetukset";
 "Settings.Label.Heartbeat" = "Taustaprosessit";
 "Settings.Label.Advanced" = "Lisäasetukset";
+
+// MailComposerPresenterMessageUI
+"MailComposerPresenterMessageUI.AppFeedback" = "App Feedback <%@>";
 
 // Network settings
 "NetworkSettings.title" = "Network Configuration";

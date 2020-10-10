@@ -14,7 +14,7 @@ def shared_pods
   pod 'Firebase/InAppMessaging'
   pod 'FutureX'
   pod 'GestureInstructions'
-  pod 'GRDB.swift'
+  pod 'GRDB.swift', '4.14.0'
   pod 'Humidity'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'

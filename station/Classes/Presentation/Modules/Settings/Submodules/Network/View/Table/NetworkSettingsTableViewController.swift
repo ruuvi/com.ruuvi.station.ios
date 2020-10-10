@@ -130,9 +130,6 @@ extension NetworkSettingsTableViewController {
         tableView.reloadSections(IndexSet(arrayLiteral: NetworkSettingsSection.kaltiot.rawValue), with: .automatic)
         tableView.endUpdates()
     }
-    @objc func didEndEditingApiKey(_ sender: UITextField) {
-        output.viewDidEnterApiKey(sender.text)
-    }
 }
 
 extension NetworkSettingsTableViewController: NetworkSettingsStepperTableViewCellDelegate {
@@ -190,9 +187,12 @@ extension NetworkSettingsTableViewController {
         let cell = tableView.dequeueReusableCell(with: KaltiotApiKeyTableViewCell.self, for: indexPath)
         cell.apiKeyTextField.text = viewModel.kaltiotApiKey.value
         cell.apiKeyTextField.placeholder = "KaltiotSettings.ApiKeyTextField.placeholder".localized()
-        cell.apiKeyTextField.addTarget(self,
-                                       action: #selector(didEndEditingApiKey(_:)),
-                                       for: .editingDidEndOnExit)
+        cell.apiKeyTextField.delegate = self
         return cell
+    }
+}
+extension NetworkSettingsTableViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        output.viewDidEnterApiKey(textField.text)
     }
 }
