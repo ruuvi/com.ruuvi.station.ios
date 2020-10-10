@@ -77,4 +77,10 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(webTag: webTag, temperature: temperature)
             })
     }
+
+    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
+        let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
+        controller.delegate = delegate
+        transitionHandler.present(controller, animated: true)
+    }
 }

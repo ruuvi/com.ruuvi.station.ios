@@ -145,7 +145,7 @@ DEPENDENCIES:
   - FLEX
   - FutureX
   - GestureInstructions
-  - GRDB.swift
+  - GRDB.swift (= 4.14.0)
   - Humidity
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
@@ -250,6 +250,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: ced6fa62529fc0d64c866f4e1d4dbddce26bb001
+PODFILE CHECKSUM: 871c495b948c173fe6053337dc8f42ec35456814
 
 COCOAPODS: 1.9.3

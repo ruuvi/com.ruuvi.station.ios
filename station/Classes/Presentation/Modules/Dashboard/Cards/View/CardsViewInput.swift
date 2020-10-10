@@ -4,7 +4,7 @@ import BTKit
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
     var currentPage: Int { get }
-    func scroll(to index: Int, immediately: Bool)
+    func scroll(to index: Int, immediately: Bool, animated: Bool)
     func showBluetoothDisabled()
     func showSwipeLeftRightHint()
     func showWebTagAPILimitExceededError()
@@ -14,6 +14,6 @@ protocol CardsViewInput: ViewInput {
 
 extension CardsViewInput {
     func scroll(to index: Int) {
-        scroll(to: index, immediately: false)
+        scroll(to: index, immediately: false, animated: true)
     }
 }

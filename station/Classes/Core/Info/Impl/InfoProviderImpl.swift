@@ -43,7 +43,6 @@ class InfoProviderImpl: InfoProvider {
         @unknown default:
             result += "unknown"
         }
-        result += "\n"
         return result
     }
 
@@ -61,7 +60,6 @@ class InfoProviderImpl: InfoProvider {
         @unknown default:
             result += "unknown"
         }
-        result += "\n"
         return result
     }
 
@@ -79,7 +77,6 @@ class InfoProviderImpl: InfoProvider {
         @unknown default:
             result += "unknown"
         }
-        result += "\n"
         return result
     }
 
@@ -87,14 +84,18 @@ class InfoProviderImpl: InfoProvider {
 
     func summary(completion: @escaping (String) -> Void) {
         var result = ""
-        result += "Device: " + deviceModel + "\n"
-        result += "OS: " + systemName + " " + systemVersion + "\n"
-        result += "App: " + appName + " " + appVersion + "\n"
-        result += locationPermission
-        result += photoLibraryPermission
-        result += cameraPermission
+        #if targetEnvironment(macCatalyst)
+            result += "<p>MacCatalyst</p>"
+        #else
+            result += "<p>Device: " + deviceModel + "</p>"
+        #endif
+        result += "<p>OS: " + systemName + " " + systemVersion + "</p>"
+        result += "<p>App: " + appName + " " + appVersion + "</p>"
+        result += "<p>" + locationPermission + "</p>"
+        result += "<p>" + photoLibraryPermission + "</p>"
+        result += "<p>" + cameraPermission + "</p>"
 
-        result += "Notifications: "
+        result += "<p>Notifications: "
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
@@ -109,6 +110,7 @@ class InfoProviderImpl: InfoProvider {
                 @unknown default:
                     result += "unknown"
                 }
+                result += "</p>"
                 completion(result)
             }
         }

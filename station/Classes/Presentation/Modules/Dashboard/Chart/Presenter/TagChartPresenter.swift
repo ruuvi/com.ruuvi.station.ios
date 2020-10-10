@@ -140,13 +140,13 @@ extension TagChartPresenter {
     private func newDataSet() -> LineChartDataSet {
         let lineChartDataSet = LineChartDataSet()
         lineChartDataSet.axisDependency = .left
-        lineChartDataSet.setColor(UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
+        lineChartDataSet.setColor(NSUIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1))
         lineChartDataSet.lineWidth = 1.5
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.drawValuesEnabled = false
         lineChartDataSet.fillAlpha = 0.26
-        lineChartDataSet.fillColor = UIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
-        lineChartDataSet.highlightColor = UIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
+        lineChartDataSet.fillColor = NSUIColor(red: 51/255, green: 181/255, blue: 229/255, alpha: 1)
+        lineChartDataSet.highlightColor = NSUIColor(red: 244/255, green: 117/255, blue: 117/255, alpha: 1)
         lineChartDataSet.drawCircleHoleEnabled = false
         lineChartDataSet.drawFilledEnabled = true
         lineChartDataSet.highlightEnabled = false

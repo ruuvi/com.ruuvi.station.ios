@@ -213,9 +213,10 @@
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station needs Push Notifications permission to enable this feature";
 
 // PhotoPicker
-"PhotoPicker.Sheet.message" = "Pick a photo";
+"PhotoPicker.Sheet.title" = "Pick a photo";
 "PhotoPicker.Sheet.library" = "Choose from library";
 "PhotoPicker.Sheet.camera" = "Take Picture";
+"PhotoPicker.Sheet.files" = "Pick from files";
 
 // Settings
 "Settings.navigationItem.title" = "Settings";
@@ -235,6 +236,9 @@
 "Settings.Label.Defaults" = "Defaults";
 "Settings.Label.Heartbeat" = "Background";
 "Settings.Label.Advanced" = "Advanced";
+
+// MailComposerPresenterMessageUI
+"MailComposerPresenterMessageUI.AppFeedback" = "App Feedback <%@>";
 
 // Network settings
 "NetworkSettings.title" = "Network Configuration";
