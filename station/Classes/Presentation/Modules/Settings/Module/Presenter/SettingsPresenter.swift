@@ -6,10 +6,12 @@ class SettingsPresenter: SettingsModuleInput {
     var settings: Settings!
     var errorPresenter: ErrorPresenter!
     var ruuviTagReactor: RuuviTagReactor!
+    var alertService: AlertService!
+    var realmContext: RealmContext!
 
     private var languageToken: NSObjectProtocol?
     private var ruuviTagsToken: RUObservationToken?
-
+    private var sensors: [AnyRuuviTagSensor] = []
     deinit {
         ruuviTagsToken?.invalidate()
         languageToken?.invalidate()
@@ -38,10 +40,12 @@ extension SettingsPresenter: SettingsViewOutput {
             guard let sSelf = self else { return }
             switch change {
             case .initial(let sensors):
+                sSelf.sensors = sensors
                 let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
                 sSelf.view.isBackgroundVisible = containsConnectable
                 sSelf.view.isAdvancedVisible = containsConnectable
             case .insert(let sensor):
+                sSelf.sensors.append(sensor)
                 sSelf.view.isBackgroundVisible = sSelf.view.isBackgroundVisible || sensor.isConnectable
                 sSelf.view.isAdvancedVisible = sSelf.view.isAdvancedVisible || sensor.isConnectable
             case .error(let error):
@@ -119,6 +123,7 @@ extension SettingsPresenter: SelectionModuleOutput {
             settings.temperatureUnit = temperatureUnit
             view.temperatureUnit = temperatureUnit
         case let humidityUnit as HumidityUnit:
+            unregisterHumidityAlertsIfNeeded(humidityUnit)
             settings.humidityUnit = humidityUnit
             view.humidityUnit = humidityUnit
         case let pressureUnit as UnitPressure:
@@ -128,5 +133,40 @@ extension SettingsPresenter: SelectionModuleOutput {
             break
         }
         module.dismiss()
+    }
+
+    private func unregisterHumidityAlertsIfNeeded(_ newValue: HumidityUnit) {
+        sensors.forEach({
+            let id = $0.luid?.value ?? $0.id
+            disableAlertsIfNeeded(newValue, for: id)
+        })
+        realmContext.main.objects(WebTagRealm.self).forEach({
+            disableAlertsIfNeeded(newValue, for: $0.id)
+        })
+    }
+
+    private func disableAlertsIfNeeded(_ newValue: HumidityUnit, for uuid: String) {
+        disableHumidityAlertIfNeeded(newValue, for: uuid)
+        disableDewPointAlertIfNeeded(newValue, for: uuid)
+    }
+
+    private func disableHumidityAlertIfNeeded(_ newValue: HumidityUnit, for uuid: String) {
+        let type: AlertType = .humidity(lower: Humidity.zeroAbsolute, upper: Humidity.zeroAbsolute)
+        guard view.humidityUnit != .dew
+                && newValue == .dew,
+              alertService.isOn(type: type, for: uuid) else {
+            return
+        }
+        alertService.unregister(type: type, for: uuid)
+    }
+
+    private func disableDewPointAlertIfNeeded(_ newValue: HumidityUnit, for uuid: String) {
+        let type: AlertType = .dewPoint(lower: 0, upper: 0)
+        guard view.humidityUnit == .dew
+                && newValue != .dew,
+              alertService.isOn(type: type, for: uuid) else {
+            return
+        }
+        alertService.unregister(type: type, for: uuid)
     }
 }
