@@ -107,22 +107,22 @@
 // ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
-"ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
+"ExpectedError.failedToDeleteTag" = "Anturia ei voitu poistaa. Odota anturin yhdistämistä tai yhteyden katkaisua.";
 
 // ExportService
-"ExportService.Date" = "Date";
+"ExportService.Date" = "Päivämäärä";
 "ExportService.ISO8601" = "ISO8601";
-"ExportService.Temperature" = "Temperature (%@)";
-"ExportService.Humidity" = "Humidity (%@)";
-"ExportService.DewPoint" = "Dew point (%@)";
-"ExportService.Pressure" = "Pressure (%@)";
-"ExportService.AccelerationX" = "Acceleration X";
-"ExportService.AccelerationY" = "Acceleration Y";
-"ExportService.AccelerationZ" = "Acceleration Z";
-"ExportService.Voltage" = "Voltage (V)";
-"ExportService.MovementCounter" = "Movement Counter";
-"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
-"ExportService.TXPower" = "TX Power";
+"ExportService.Temperature" = "Lämpötila (%@)";
+"ExportService.Humidity" = "Kosteus (%@)";
+"ExportService.DewPoint" = "Kastepiste (%@)";
+"ExportService.Pressure" = "Ilmanpaine (%@)";
+"ExportService.AccelerationX" = "Kiihtyvyys X";
+"ExportService.AccelerationY" = "Kiihtyvyys Y";
+"ExportService.AccelerationZ" = "Kiihtyvyys Z";
+"ExportService.Voltage" = "Jännite (V)";
+"ExportService.MovementCounter" = "Liikelaskuri";
+"ExportService.MeasurementSequenceNumber" = "Mittajärjestysnumero";
+"ExportService.TXPower" = "Lähetysteho";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "LAITEILMOITUKSET";
@@ -199,13 +199,13 @@
 
 // Settings
 "Settings.navigationItem.title" = "Asetukset";
-"Settings.ChooseTemperatureUnit.text" = "Choose the temperature unit you want to be displayed";
-"Settings.ChooseHumidityUnit.text" = "Choose the humidity unit you want to be displayed";
-"Settings.ChoosePressureUnit.text" = "Choose the pressure unit you want to be displayed";
+"Settings.ChooseTemperatureUnit.text" = "Valitse sovelluksessa käytettävä lämpötilayksikkö";
+"Settings.ChooseHumidityUnit.text" = "Valitse sovelluksessa käytettävä kosteusyksikkö";
+"Settings.ChoosePressureUnit.text" = "Valitse sovelluksessa käytettävä paineyksikkö";
 "Settings.SectionHeader.General.title" = "YLEISET";
 "Settings.Label.TemperatureUnit.text" = "Lämpötilayksikkö";
 "Settings.Label.HumidityUnit.text" = "Kosteusyksikkö";
-"Settings.Label.PressureUnit.text" = "Pressure Unit";
+"Settings.Label.PressureUnit.text" = "Paineyksikkö";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Suht.";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs.";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Kast.";
@@ -290,8 +290,8 @@
 "TagSettings.ConnectStatus.Connecting" = "Yhdistetään...";
 "TagSettings.ConnectStatus.Disconnected" = "Ei yhteyttä";
 "TagSettings.Alert.CustomDescription.placeholder" = "Muokkaa kuvausta...";
-"TagSettings.Alerts.Humidity.description" = "Alert when less than %.0f or more than %.0f";
-"TagSettings.AirHumidityAlert.title" = "Air Humidity";
+"TagSettings.Alerts.Humidity.description" = "Hälytä, mikäli alle %.0f tai yli %.0f";
+"TagSettings.AirHumidityAlert.title" = "Ilmankosteus";
 "TagSettings.PressureAlert.title" = "Ilmanpaine";
 "TagSettings.Alerts.DewPoint.description" = "Hälytä, mikäli kastepiste alle %.0f tai yli %.0f";
 "TagSettings.dewPointAlertTitleLabel.text" = "Kastepiste";
@@ -308,8 +308,8 @@
 "UnexpectedError.failedToFindRuuviTag" = "Anturia ei löydetty";
 "UnexpectedError.failedToFindLogsForTheTag" = "Anturin lokitietoja ei löydetty";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID:n näyttömalli on nolla";
-"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
-"UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
+"UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Realmin tietoja yritettiin lukea ilman LUID:tä";
+"UnexpectedError.failedToFindVirtualTag" = "Virtuaalisen anturin haku epäonnistui";
 
 // TemperatureUnit
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
@@ -317,14 +317,14 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 
 // HumidityUnit
-"HumidityUnit.Percent.title" = "Relative (%)";
-"HumidityUnit.gm3.title" = "Absolute (gr/m³)";
-"HumidityUnit.Dew.title" = "Dew point (%@)";
+"HumidityUnit.Percent.title" = "Suhteellinen (%)";
+"HumidityUnit.gm3.title" = "Absoluuttinen (gr/m³)";
+"HumidityUnit.Dew.title" = "Kastepiste (%@)";
 
 // UnitPressure
-"UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
-"UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
-"UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
+"UnitPressure.hectopascal.title" = "Hehtopascal (hPa)";
+"UnitPressure.inchOfMercury.title" = "Elohopeatuuma (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Elohopeamillimetri (mmHg)";
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Nykyinen sijaintisi";
 "WebTagLocationSource.manual" = "Valitse kartalta";
