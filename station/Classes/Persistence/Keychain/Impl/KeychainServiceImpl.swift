@@ -10,6 +10,7 @@ class KeychainServiceImpl {
 
     private enum Account: String {
         case kaltiot
+        case ruuviNetwork
     }
 }
 // MARK: - Public
@@ -29,7 +30,20 @@ extension KeychainServiceImpl: KeychainService {
             }
         }
     }
-    var hasKaltiotApiKey: Bool {
-        return !((keychain[Account.kaltiot.rawValue] ?? "").isEmpty)
+
+    var ruuviNetworkApiKey: String? {
+        get {
+            return keychain[Account.ruuviNetwork.rawValue]
+        }
+        set {
+            if let value = newValue {
+                keychain[Account.ruuviNetwork.rawValue] = value
+            } else {
+                try? keychain.remove(
+                    Account.ruuviNetwork.rawValue,
+                    ignoringAttributeSynchronizable: true
+                )
+            }
+        }
     }
 }
