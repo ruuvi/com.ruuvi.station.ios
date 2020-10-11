@@ -155,12 +155,16 @@ extension UnexpectedError: LocalizedError {
         }
     }
 }
+
 enum RuuviNetworkError: Error {
     case noSavedApiKeyValue
     case failedToLogIn
     case doesNotHaveSensors
     case noStoredData
     case tagAlreadyExists
+
+    case emptyResponse
+    case userApiError(String)
 }
 extension RuuviNetworkError: LocalizedError {
     public var errorDescription: String? {
@@ -175,6 +179,10 @@ extension RuuviNetworkError: LocalizedError {
             return "RuuviNetworkError.NoStoredData".localized()
         case .tagAlreadyExists:
             return "RuuviNetworkError.TagAlreadyExists".localized()
+        case .emptyResponse:
+            return String()
+        case .userApiError(let description):
+            return description
         }
     }
 }

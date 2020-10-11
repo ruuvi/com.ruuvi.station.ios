@@ -114,7 +114,9 @@ extension PhotoPickerPresenterSheet {
         guard let viewController = UIApplication.shared.topViewController() else { return }
         let vc = UIDocumentPickerViewController(documentTypes: [String(kUTTypeImage)],
                                                 in: .open)
-        vc.allowsMultipleSelection = false
+        if #available(iOS 11.0, *) {
+            vc.allowsMultipleSelection = false
+        }
         vc.delegate = self
         viewController.present(vc, animated: true)
     }
