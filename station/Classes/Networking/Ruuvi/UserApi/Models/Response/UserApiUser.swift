@@ -1,6 +1,6 @@
 import Foundation
 
-struct UserApiUser: Decodable {
+struct UserApiUserResponse: Decodable {
     let email: String
     let sensors: [UserApiUserSensor]
 }

@@ -10,7 +10,7 @@ class KeychainServiceImpl {
 
     private enum Account: String {
         case kaltiot
-        case ruuviNetwork
+        case ruuviUserApi
     }
 }
 // MARK: - Public
@@ -31,16 +31,16 @@ extension KeychainServiceImpl: KeychainService {
         }
     }
 
-    var ruuviNetworkApiKey: String? {
+    var ruuviUserApiKey: String? {
         get {
-            return keychain[Account.ruuviNetwork.rawValue]
+            return keychain[Account.ruuviUserApi.rawValue]
         }
         set {
             if let value = newValue {
-                keychain[Account.ruuviNetwork.rawValue] = value
+                keychain[Account.ruuviUserApi.rawValue] = value
             } else {
                 try? keychain.remove(
-                    Account.ruuviNetwork.rawValue,
+                    Account.ruuviUserApi.rawValue,
                     ignoringAttributeSynchronizable: true
                 )
             }
