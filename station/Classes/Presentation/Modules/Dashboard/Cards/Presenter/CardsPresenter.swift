@@ -774,6 +774,8 @@ extension CardsPresenter {
                         isTriggered = isTriggered || isTriggering(temperature: type, for: viewModel)
                     case .humidity:
                         isTriggered = isTriggered || isTriggering(humidity: type, for: viewModel)
+                    case .dewPoint:
+                        isTriggered = isTriggered || isTriggering(dewPoint: type, for: viewModel)
                     case .pressure:
                         isTriggered = isTriggered || isTriggering(pressure: type, for: viewModel)
                     default:
@@ -807,9 +809,27 @@ extension CardsPresenter {
             case .humidity(let lower, let upper) = alertService.alert(for: luid.value, of: humidity),
             let humidity = viewModel.humidity.value,
             let temperature = viewModel.temperature.value,
-            let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0, temperature: temperature) {
+            let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0,
+                                                     temperature: temperature) {
             let isLower = offsetedHumidity < lower
             let isUpper = offsetedHumidity > upper
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func isTriggering(dewPoint: AlertType, for viewModel: CardsViewModel) -> Bool {
+
+        if let luid = viewModel.luid.value,
+           case .dewPoint(let lower, let upper) = alertService.alert(for: luid.value, of: dewPoint),
+           let humidity = viewModel.humidity.value,
+           let temperature = viewModel.temperature.value,
+           let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0,
+                                                    temperature: temperature),
+           let dp = try? offsetedHumidity.dewPoint(temperature: temperature).converted(to: .celsius).value {
+            let isLower = dp < lower
+            let isUpper = dp > upper
             return isLower || isUpper
         } else {
             return false
