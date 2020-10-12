@@ -13,6 +13,7 @@ enum RUError: Error {
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
+    case userApi(UserApiError)
 }
 
 extension RUError: LocalizedError {
@@ -162,9 +163,6 @@ enum RuuviNetworkError: Error {
     case doesNotHaveSensors
     case noStoredData
     case tagAlreadyExists
-
-    case emptyResponse
-    case userApiError(String)
 }
 extension RuuviNetworkError: LocalizedError {
     public var errorDescription: String? {
@@ -179,10 +177,16 @@ extension RuuviNetworkError: LocalizedError {
             return "RuuviNetworkError.NoStoredData".localized()
         case .tagAlreadyExists:
             return "RuuviNetworkError.TagAlreadyExists".localized()
-        case .emptyResponse:
-            return String()
-        case .userApiError(let description):
-            return description
         }
+    }
+}
+
+struct UserApiError: Error {
+    static let emptyResponse: UserApiError = UserApiError(description: "Empty response")
+    let description: String
+}
+extension UserApiError: LocalizedError {
+    public var errorDescription: String? {
+        return "UserApiError.\(description)".localized()
     }
 }
