@@ -1,5 +1,5 @@
 import Foundation
 
-struct UserApiClaimResponse: Decodable {
+struct UserApiShareResponse: Decodable {
     let sensor: String
 }

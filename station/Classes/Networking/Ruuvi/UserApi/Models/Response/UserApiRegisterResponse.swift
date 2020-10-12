@@ -1,5 +1,5 @@
 import Foundation
 
-struct UserApiRegisterRequest: Encodable {
+struct UserApiRegisterRequest: Decodable {
     let email: String
 }
