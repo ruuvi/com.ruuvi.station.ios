@@ -372,6 +372,21 @@
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
 
+// UserApiError
+"UserApiError.Empty response" = "Empty response";
+"UserApiError.E-mail already exists." = "E-mail already exists";
+"UserApiError.Unknown error occurred." = "Unknown error occurred";
+"UserApiError.Forbidden." = "Forbidden";
+"UserApiError.Provided token is invalid or expired." = "Provided token is invalid or expired";
+"UserApiError.Unauthorized request." = "Unauthorized request";
+"UserApiError.Sensor already claimed." = "Sensor already claimed";
+"UserApiError.Invalid E-mail given." = "Invalid E-mail given";
+"UserApiError.Unauthorized request." = "Unauthorized request";
+"UserApiError.User not found." = "User not found";
+"UserApiError.Sensor already shared to user." = "Sensor already shared to user";
+"UserApiError.Not found." = "Not found";
+"UserApiError.Sensor not claimed or found. Data not updated." = "Sensor not claimed or found. Data not updated";
+
 // WebTagLocationSource
 "WebTagLocationSource.current" = "Your location";
 "WebTagLocationSource.manual" = "Pick from the map";
