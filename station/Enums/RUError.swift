@@ -41,6 +41,8 @@ extension RUError: LocalizedError {
             return error.localizedDescription
         case .ruuviNetwork(let error):
             return error.localizedDescription
+        case .userApi(let error):
+            return error.localizedDescription
         }
     }
 }
