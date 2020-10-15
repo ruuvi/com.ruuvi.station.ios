@@ -97,7 +97,6 @@ extension AlertServiceImpl {
                     self?.localNotificationsManager.notify(.high, .dewPoint, for: ruuviTag.ruuviTagId)
                 }
             }
-
             return isLower || isUpper
         } else {
             return false
