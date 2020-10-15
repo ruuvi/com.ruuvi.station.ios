@@ -262,6 +262,7 @@ extension TagSettingsPresenter {
             viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
             viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: luid.value)
+            viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: luid.value)
             viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: luid.value)
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
