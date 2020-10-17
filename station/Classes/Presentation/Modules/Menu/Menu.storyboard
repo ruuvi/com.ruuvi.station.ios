@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="JPa-wO-DcD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="JPa-wO-DcD">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -26,7 +27,7 @@
         <!--Menu Table View Controller-->
         <scene sceneID="E1R-d2-lMw">
             <objects>
-                <viewController storyboardIdentifier="MenuTableViewController" id="Ta4-x1-hx1" customClass="MenuTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MenuTableViewController" id="Ta4-x1-hx1" customClass="MenuTableViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hoE-CN-rWB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -45,7 +46,7 @@
                                         </constraints>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="3oT-2A-fV9" secondAttribute="bottom" constant="8" id="63r-Hd-Ilv"/>
                                     <constraint firstItem="3oT-2A-fV9" firstAttribute="leading" secondItem="uaL-Iv-OL5" secondAttribute="leading" constant="52" id="JSe-aZ-X4e"/>
@@ -81,7 +82,8 @@
                                 </connections>
                             </containerView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="O77-q7-b35"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="3oT-2A-fV9" firstAttribute="leading" secondItem="O77-q7-b35" secondAttribute="leading" constant="8" id="O0F-oD-ess"/>
                             <constraint firstItem="uaL-Iv-OL5" firstAttribute="trailing" secondItem="hoE-CN-rWB" secondAttribute="trailing" id="QKK-EV-mjA"/>
@@ -92,7 +94,6 @@
                             <constraint firstItem="bEW-LA-DOE" firstAttribute="trailing" secondItem="hoE-CN-rWB" secondAttribute="trailing" id="kxP-yP-8gu"/>
                             <constraint firstAttribute="bottom" secondItem="bEW-LA-DOE" secondAttribute="bottom" id="wZZ-mo-dOU"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="O77-q7-b35"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="O0F-oD-ess"/>
@@ -107,7 +108,7 @@
                     <navigationItem key="navigationItem" id="3SK-i2-Y7s"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="INW-hX-gVH" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="88o-5U-I22" customClass="MenuTableInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="88o-5U-I22" customClass="MenuTableInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="Ta4-x1-hx1" id="1VR-Sx-ZEF"/>
                     </connections>
@@ -118,13 +119,13 @@
         <!--Menu Table Embeded View Controller-->
         <scene sceneID="NdS-tr-bZD">
             <objects>
-                <tableViewController storyboardIdentifier="MenuTableEmbededViewController" id="Idp-Td-ufs" customClass="MenuTableEmbededViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MenuTableEmbededViewController" id="Idp-Td-ufs" customClass="MenuTableEmbededViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="G1s-tm-ya2">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="746"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="8Xc-fI-6Xn">
-                            <rect key="frame" x="0.0" y="276" width="414" height="0.0"/>
+                            <rect key="frame" x="0.0" y="320" width="414" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
@@ -216,6 +217,23 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="dqn-ka-IQ9" style="IBUITableViewCellStyleDefault" id="4pY-bW-sTg" userLabel="SignIn">
+                                        <rect key="frame" x="0.0" y="248" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4pY-bW-sTg" id="LWZ-nI-0bk">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Sign In" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dqn-ka-IQ9">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -227,6 +245,8 @@
                     <connections>
                         <outlet property="aboutCell" destination="5jP-lL-ZsG" id="Fn2-zH-noK"/>
                         <outlet property="aboutHelpLabel" destination="vBO-sF-6UM" id="UOa-EJ-On5"/>
+                        <outlet property="accountAuthLabel" destination="dqn-ka-IQ9" id="ZUt-dk-rMe"/>
+                        <outlet property="accountCell" destination="4pY-bW-sTg" id="sb2-GB-Myo"/>
                         <outlet property="addANewSensorLabel" destination="nMq-BK-yrq" id="ypm-F4-8KI"/>
                         <outlet property="addRuuviTagCell" destination="7M8-AE-dVG" id="XHE-LM-utr"/>
                         <outlet property="appSettingsLabel" destination="Zj9-0b-xPj" id="mnX-OE-YGf"/>
@@ -245,5 +265,8 @@
     <resources>
         <image name="gradient_layer" width="359" height="641"/>
         <image name="logo" width="721" height="101"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

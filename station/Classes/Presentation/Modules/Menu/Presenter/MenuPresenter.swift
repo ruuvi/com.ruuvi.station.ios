@@ -3,6 +3,7 @@ import Foundation
 class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
     var router: MenuRouterInput!
+    var userApi: RuuviNetworkUserApi!
 
     private weak var output: MenuModuleOutput?
 
@@ -38,5 +39,14 @@ extension MenuPresenter: MenuViewOutput {
 
     func viewDidSelectFeedback() {
         output?.menu(module: self, didSelectFeedback: nil)
+    }
+
+    func viewDidSelectAccountCell() {
+        let request = UserApiRegisterRequest(email: "viik.ufa@gmail.com")
+        userApi.register(request).on { (response) in
+            dump(response)
+        } failure: { (error) in
+            debugPrint(error)
+        }
     }
 }

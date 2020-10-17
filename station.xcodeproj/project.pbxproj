@@ -1650,6 +1650,9 @@
 		A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
 		A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
 		A9A67BFC24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */; };
+		A9B573E3253B557C00DB7353 /* UserApiUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */; };
+		A9B573E4253B557C00DB7353 /* UserApiUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */; };
+		A9B573E5253B557C00DB7353 /* UserApiUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */; };
 		A9BB445524E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
 		A9BB445624E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
 		A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
@@ -2277,6 +2280,7 @@
 		A9944F6F24A3C6A300EC37C1 /* RuuviNetworkTagOperationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkTagOperationsManager.swift; sourceTree = "<group>"; };
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
+		A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUserRequest.swift; sourceTree = "<group>"; };
 		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
 		A9BD38B924F6108300904BBE /* Humidity+Offset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Humidity+Offset.swift"; sourceTree = "<group>"; };
 		A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceImpl.swift; sourceTree = "<group>"; };
@@ -5607,6 +5611,7 @@
 				A9F0F2472534D25C00DE9F70 /* UserApiGetSensorRequest.swift */,
 				A9F0F2592534D34B00DE9F70 /* UserApiSensorUpdateRequest.swift */,
 				A9F0F26B2534D3E700DE9F70 /* UserApiSensorImageUploadRequest.swift */,
+				A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -7002,6 +7007,7 @@
 				0EAD33EF2399273E00EC5BAA /* HeartbeatViewInput.swift in Sources */,
 				0E6BAE7323856A01003A2D4C /* ForegroundConfigurator.swift in Sources */,
 				0E6BAE7423856A01003A2D4C /* AppDelegate.swift in Sources */,
+				A9B573E5253B557C00DB7353 /* UserApiUserRequest.swift in Sources */,
 				0E6BAE7523856A01003A2D4C /* TagSettingsTableInitializer.swift in Sources */,
 				0E6BAE7623856A01003A2D4C /* MigrationManagerToVIPER.swift in Sources */,
 				0E6BAE7723856A01003A2D4C /* RUError.swift in Sources */,
@@ -7265,6 +7271,7 @@
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
 				0E8BACBC245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				A9828E0E24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
+				A9B573E4253B557C00DB7353 /* UserApiUserRequest.swift in Sources */,
 				0E8BD313238566AB008B31EF /* LanguageTableViewController.swift in Sources */,
 				A9646470247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
 				A9828E0524792C4500E7E9D4 /* NetworkSettingsViewModel.swift in Sources */,
@@ -8041,6 +8048,7 @@
 				A90E169C24606ABF00631E6C /* TagChartsInteractor.swift in Sources */,
 				A907BB1124AE620A009DA3DB /* UIWindow+Orientation.swift in Sources */,
 				A976CA7124A5E5FE0099BDC1 /* PullRuuviNetworkDaemon.swift in Sources */,
+				A9B573E3253B557C00DB7353 /* UserApiUserRequest.swift in Sources */,
 				64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */,
 				0EF2864022CBB1340026C7A5 /* TagSettingsTableInitializer.swift in Sources */,
 				0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */,

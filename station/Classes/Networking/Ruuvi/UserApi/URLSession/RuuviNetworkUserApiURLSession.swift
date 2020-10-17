@@ -27,65 +27,70 @@ extension RuuviNetworkUserApiURLSession {
 class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
     var keychainService: KeychainService!
 
-    func register(_ request: UserApiRegisterRequest) -> Future<UserApiRegisterResponse, RUError> {
-
+    func register(_ requestModel: UserApiRegisterRequest) -> Future<UserApiRegisterResponse, RUError> {
+        return request(endpoint: Routes.register, with: requestModel, method: .post)
     }
 
-    func verify(_ request: UserApiVerifyRequest) -> Future<UserApiVerifyResponse, RUError> {
-
+    func verify(_ requestModel: UserApiVerifyRequest) -> Future<UserApiVerifyResponse, RUError> {
+        return request(endpoint: Routes.verify, with: requestModel)
     }
 
-    func claim(_ request: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError> {
-
+    func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError> {
+        return request(endpoint: Routes.claim, with: requestModel, method: .post)
     }
 
-    func share(_ request: UserApiShareRequest) -> Future<UserApiShareResponse, RUError> {
-
+    func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError> {
+        return request(endpoint: Routes.share, with: requestModel, method: .post)
     }
 
     func user() -> Future<UserApiUserResponse, RUError> {
-
+        let requestModel = UserApiUserRequest()
+        return request(endpoint: Routes.user, with: requestModel)
     }
 
-    func getSensorData(_ request: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError> {
-
+    func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError> {
+        return request(endpoint: Routes.getSensorData, with: requestModel)
     }
 
-    func update(_ request: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError> {
-
+    func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError> {
+        return request(endpoint: Routes.update, with: requestModel, method: .post)
     }
 
-    func uploadImage(_ request: UserApiSensorImageUploadRequest, imageData: Data) -> Future<UserApiSensorImageUploadResponse, RUError> {
-
+    func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
+                     imageData: Data) -> Future<UserApiSensorImageUploadResponse, RUError> {
+        return Promise<UserApiSensorImageUploadResponse, RUError>().future
     }
 }
 
 // MARK: - Private
 extension RuuviNetworkUserApiURLSession {
-    private func request<Request:Encodable, Response: Decodable>(endpoint: Routes,
-                                                                 with model: Request.Type,
-                                                                 handledType: Response.Type,
-                                                                 method: HttpMethod = .get,
-                                                                 authorizationRequered: Bool = false) -> Future<Response.Type, RUError> {
-        let promise = Promise<Response.Type, RUError>()
+    private func request<Request: Encodable, Response: Decodable>(
+        endpoint: Routes,
+        with model: Request,
+        method: HttpMethod = .get,
+        authorizationRequered: Bool = false
+    ) -> Future<Response, RUError> {
+        let promise = Promise<Response, RUError>()
         var request = URLRequest(url: endpoint.url)
         request.httpMethod = method.rawValue
-        request.httpBody = try? JSONEncoder().encode(Request.self)
+        request.httpBody = try? JSONEncoder().encode(model)
         if authorizationRequered {
             request.setValue(keychainService.ruuviUserApiKey, forHTTPHeaderField: "Authorization")
         }
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
             if let error = error {
                 promise.fail(error: .networking(error))
             } else {
                 if let data = data {
                     let decoder = JSONDecoder()
                     do {
-                        let result = try decoder.decode(UserApiBaseResponse<Response>.self, from: data)
-                        if let responseTyped = result.data as? Response.Type {
-                            promise.succeed(value: responseTyped.self)
-                        } else {
-                            promise.fail(error: .parse(error))
+                        let baseResponse = try decoder.decode(UserApiBaseResponse<Response>.self, from: data)
+                        switch baseResponse.result {
+                        case .success(let model):
+                            promise.succeed(value: model)
+                        case .failure(let userApiError):
+                            promise.fail(error: userApiError)
                         }
                     } catch let error {
                         promise.fail(error: .parse(error))

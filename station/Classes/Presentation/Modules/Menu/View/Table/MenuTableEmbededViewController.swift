@@ -13,6 +13,8 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     @IBOutlet weak var appSettingsLabel: UILabel!
     @IBOutlet weak var aboutHelpLabel: UILabel!
     @IBOutlet weak var getMoreSensorsLabel: UILabel!
+    @IBOutlet weak var accountCell: UITableViewCell!
+    @IBOutlet weak var accountAuthLabel: UILabel!
 }
 
 // MARK: - MenuViewInput
@@ -50,6 +52,8 @@ extension MenuTableEmbededViewController {
                 output.viewDidSelectSettings()
             case feedbackCell:
                 output.viewDidSelectFeedback()
+            case accountCell:
+                output.viewDidSelectAccountCell()
             default:
                 break
             }

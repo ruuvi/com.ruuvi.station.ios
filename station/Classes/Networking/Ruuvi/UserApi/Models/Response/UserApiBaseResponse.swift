@@ -1,13 +1,13 @@
 import Foundation
 
-struct UserApiBaseResponse<T: Decodable>: Decodable {
+struct UserApiBaseResponse<T: Any>: Decodable where T: Decodable {
     enum Status: String, Decodable {
         case success
         case error
     }
-    let status: Status
-    let data: T?
-    let errorDescription: String?
+    private let status: Status
+    private let data: T?
+    private let errorDescription: String?
 
     enum CodingKeys: String, CodingKey {
         case status = "result"
