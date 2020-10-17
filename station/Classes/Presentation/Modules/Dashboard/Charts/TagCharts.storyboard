@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zl9-xI-Y92">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +16,7 @@
         <!--Ruuvi Station-->
         <scene sceneID="5Ri-Gw-eZL">
             <objects>
-                <viewController storyboardIdentifier="TagChartsScrollViewController" id="Zl9-xI-Y92" customClass="TagChartsScrollViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TagChartsScrollViewController" id="Zl9-xI-Y92" customClass="TagChartsScrollViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ceB-eX-jxA">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
                                 </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" indicatorStyle="white" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbe-Ju-Xdg">
-                                <rect key="frame" x="0.0" y="90.5" width="320" height="417.5"/>
+                                <rect key="frame" x="0.0" y="89.5" width="320" height="418.5"/>
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -110,7 +110,7 @@
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hho-MY-BeM">
-                                <rect key="frame" x="8" y="58" width="304" height="24.5"/>
+                                <rect key="frame" x="8" y="58" width="304" height="23.5"/>
                                 <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -118,8 +118,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Acs-0n-bAk">
                                 <rect key="frame" x="0.0" y="508" width="320" height="60"/>
                                 <subviews>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTf-aB-Wg1">
-                                        <rect key="frame" x="132" y="9" width="56" height="42"/>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZTf-aB-Wg1">
+                                        <rect key="frame" x="132.5" y="9.5" width="55" height="41"/>
                                         <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
                                         <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
@@ -135,8 +135,8 @@
                                             <action selector="didTriggerSync:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="CSk-zR-pDS"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLP-G9-4YF">
-                                        <rect key="frame" x="58" y="9" width="66" height="42"/>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLP-G9-4YF">
+                                        <rect key="frame" x="62.5" y="9.5" width="62" height="41"/>
                                         <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
                                         <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
@@ -152,8 +152,8 @@
                                             <action selector="didTriggerClear:" destination="Zl9-xI-Y92" eventType="touchUpInside" id="9I9-83-xuT"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Thd-OX-VMR">
-                                        <rect key="frame" x="196" y="9" width="76" height="42"/>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Thd-OX-VMR">
+                                        <rect key="frame" x="195.5" y="9.5" width="71" height="41"/>
                                         <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
                                         <inset key="contentEdgeInsets" minX="8" minY="12" maxX="8" maxY="12"/>
@@ -170,7 +170,7 @@
                                         </connections>
                                     </button>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y7c-rI-TRU">
-                                        <rect key="frame" x="128.5" y="19.5" width="63.5" height="21"/>
+                                        <rect key="frame" x="128.5" y="19.5" width="63" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -192,6 +192,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="7JW-Bt-vav"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="BaO-7f-YjR" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="08g-Zc-g8k"/>
@@ -237,7 +238,6 @@
                             <constraint firstItem="HDU-IT-z0E" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="xht-Av-Kdt"/>
                             <constraint firstItem="cpa-Qi-Dhz" firstAttribute="top" secondItem="ceB-eX-jxA" secondAttribute="top" id="yXK-px-bhV"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="7JW-Bt-vav"/>
                     </view>
                     <navigationItem key="navigationItem" title="Ruuvi Station" id="Jh2-HP-UF6">
                         <barButtonItem key="leftBarButtonItem" title="Menu" id="Vi8-bi-nR6">
@@ -260,7 +260,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lM4-Y1-4JR" sceneMemberID="firstResponder"/>
-                <customObject id="vzF-KX-20C" customClass="TagChartsScrollInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="vzF-KX-20C" customClass="TagChartsScrollInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="Zl9-xI-Y92" id="P7n-9U-kKD"/>
                     </connections>

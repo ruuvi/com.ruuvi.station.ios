@@ -263,6 +263,11 @@ extension TagChartsPresenter: MenuModuleOutput {
                                                 body: "\n\n" + summary)
         }
     }
+
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn()
+    }
 }
 
 // MARK: - AlertServiceObserver

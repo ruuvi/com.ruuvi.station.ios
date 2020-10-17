@@ -9,6 +9,7 @@ class MenuTableConfigurator {
 
         let presenter = MenuPresenter()
         presenter.userApi = r.resolve(RuuviNetworkUserApi.self)
+        presenter.keychainService = r.resolve(KeychainService.self)
         presenter.view = view
         presenter.router = router
 

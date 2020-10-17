@@ -38,6 +38,13 @@ extension MenuTableEmbededViewController {
 
 // MARK: - UITableViewDelegate
 extension MenuTableEmbededViewController {
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if tableView.cellForRow(at: indexPath) == accountCell {
+            accountAuthLabel.text = output.userIsAuthorized
+                ? "Sign out".localized()
+                : "Sign in".localized()
+        }
+    }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         if let cell = tableView.cellForRow(at: indexPath) {
