@@ -78,6 +78,13 @@ class TagChartsRouter: TagChartsRouterInput {
             })
     }
 
+    func openSignIn() {
+        let factory = StoryboardFactory(storyboardName: "SignIn")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: SignInViewInput.self)
+            .perform()
+    }
+
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
         let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
         controller.delegate = delegate

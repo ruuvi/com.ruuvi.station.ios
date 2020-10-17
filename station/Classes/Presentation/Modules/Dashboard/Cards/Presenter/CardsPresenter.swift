@@ -244,6 +244,11 @@ extension CardsPresenter: MenuModuleOutput {
                                                 body: "<br><br>" + summary)
         }
     }
+
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn()
+    }
 }
 
 // MARK: - TagChartsModuleOutput

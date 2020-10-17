@@ -7,4 +7,8 @@ extension KeychainService {
     var hasKaltiotApiKey: Bool {
         return !((kaltiotApiKey ?? "").isEmpty)
     }
+
+    var isAuthorized: Bool {
+        return !((ruuviUserApiKey ?? "").isEmpty)
+    }
 }

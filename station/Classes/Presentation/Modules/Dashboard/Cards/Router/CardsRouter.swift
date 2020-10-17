@@ -90,6 +90,12 @@ class CardsRouter: NSObject, CardsRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
 
+    func openSignIn() {
+        let factory = StoryboardFactory(storyboardName: "SignIn")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: SignInViewInput.self)
+            .perform()
+    }
 }
 
 extension CardsRouter: UIAdaptivePresentationControllerDelegate {
