@@ -28,5 +28,11 @@ class NetworkingAssembly: Assembly {
         container.register(RuuviNetworkWhereOS.self) { _ in
             return RuuviNetworkWhereOSURLSession()
         }.inObjectScope(.container)
+
+        container.register(RuuviNetworkUserApi.self) { r in
+            let service = RuuviNetworkUserApiURLSession()
+            service.keychainService = r.resolve(KeychainService.self)
+            return service
+        }
     }
 }

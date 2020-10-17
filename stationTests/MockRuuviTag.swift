@@ -2,6 +2,9 @@ import Foundation
 @testable import station
 
 struct MockRuuviTag: RuuviTagProtocol {
+    var relativeHumidity: Double?
+    var hectopascals: Double?
+    var volts: Double?
     var uuid: String
     var version: Int = 5
     var isConnectable: Bool = true
