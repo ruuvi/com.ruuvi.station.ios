@@ -65,8 +65,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                 if self?.ruuviTagSensor.id == sensor.id,
                    let index = self?.sensors.firstIndex(where: {$0.id == sensor.id}) {
                     self?.ruuviTagSensor = sensor
-                    self?.sensors.remove(at: index)
-                    self?.sensors.insert(sensor, at: index)
+                    self?.sensors[index] = sensor
                     self?.presenter.interactorDidUpdate(sensor: sensor)
                 }
             default:
