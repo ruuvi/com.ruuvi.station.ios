@@ -5110,9 +5110,9 @@
 				64333D2220B0C45900CDF4B6 /* Frameworks */,
 				64333D2320B0C45900CDF4B6 /* Resources */,
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
-				A986147C248CD47A0030F197 /* Crashlytics */,
 				60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */,
 				82C78A12877EA9F22D4D34ED /* [CP] Copy Pods Resources */,
+				A986147C248CD47A0030F197 /* Crashlytics */,
 			);
 			buildRules = (
 			);
