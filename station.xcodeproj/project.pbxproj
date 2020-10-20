@@ -14,8 +14,8 @@
 		0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC42375A6CE00ED4629 /* AlertType.swift */; };
 		0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABC72375A77000ED4629 /* AlertPersistenceUserDefaults.swift */; };
 		0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E03B7C623866CDC00949713 /* Nantes in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* Nantes */; };
-		0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwinjectPropertyLoader */; };
+		0E03B7C623866CDC00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */; };
+		0E03B8052386741B00949713 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E03B8042386741B00949713 /* SwiftPackageProductDependency */; };
 		0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E046F2622F04A0300BD4E9C /* WebTagSettings.storyboard */; };
 		0E046F2922F0561B00BD4E9C /* WebTagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2822F0561B00BD4E9C /* WebTagSettingsViewInput.swift */; };
 		0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F2A22F0563100BD4E9C /* WebTagSettingsViewOutput.swift */; };
@@ -206,17 +206,17 @@
 		0E45580E23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
 		0E45580F23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
 		0E45581023E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E45580D23E935400025AEBF /* BackgroundProcessServiceiOS12.swift */; };
-		0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* Realm */; };
-		0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* RealmSwift */; };
-		0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* Localize_Swift */; };
-		0E4EAE4823863D4100BBDFBD /* Future in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* Future */; };
-		0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* BTKit */; };
-		0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* LightRoute */; };
-		0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* Humidity */; };
-		0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* Swinject */; };
-		0E4EAECA238656B100BBDFBD /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* Charts */; };
-		0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* GestureInstructions */; };
-		0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* RangeSeekSlider */; };
+		0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */; };
+		0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */; };
 		0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FB922B27D4800E8A6CC /* TemperatureUnit.swift */; };
 		0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E502FC022B2819B00E8A6CC /* DiscoverRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBF22B2819B00E8A6CC /* DiscoverRouter.swift */; };
@@ -588,7 +588,7 @@
 		0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
 		0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10212384637F00A9CBA6 /* DefaultsList.swift */; };
 		0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A102423846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift */; };
-		0E8BAC4A245C393000D380FB /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 0E8BAC49245C393000D380FB /* GRDB */; };
+		0E8BAC4A245C393000D380FB /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0E8BAC49245C393000D380FB /* SwiftPackageProductDependency */; };
 		0E8BAC4C245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BAC4B245C396B00D380FB /* RuuviTagPersistenceSQLite.swift */; };
 		0E8BAC4D245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BAC4B245C396B00D380FB /* RuuviTagPersistenceSQLite.swift */; };
 		0E8BAC4E245C396B00D380FB /* RuuviTagPersistenceSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BAC4B245C396B00D380FB /* RuuviTagPersistenceSQLite.swift */; };
@@ -1174,11 +1174,11 @@
 		0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */; };
 		0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215F22BA61430015F9E0 /* MigrationManager.swift */; };
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
-		0EEB3E942526F03B008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E932526F03B008CE97B /* RxSwift */; };
-		0EEB3E962526F03B008CE97B /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E952526F03B008CE97B /* RxRelay */; };
-		0EEB3E982526F03B008CE97B /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E972526F03B008CE97B /* RxCocoa */; };
-		0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E992526F03B008CE97B /* RxBlocking */; };
-		0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3ED32526F148008CE97B /* RxSwift */; };
+		0EEB3E942526F03B008CE97B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E932526F03B008CE97B /* SwiftPackageProductDependency */; };
+		0EEB3E962526F03B008CE97B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E952526F03B008CE97B /* SwiftPackageProductDependency */; };
+		0EEB3E982526F03B008CE97B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E972526F03B008CE97B /* SwiftPackageProductDependency */; };
+		0EEB3E9A2526F03B008CE97B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E992526F03B008CE97B /* SwiftPackageProductDependency */; };
+		0EEB3ED42526F148008CE97B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3ED32526F148008CE97B /* SwiftPackageProductDependency */; };
 		0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */; };
 		0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */; };
 		0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */; };
@@ -1945,21 +1945,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E03B7C623866CDC00949713 /* Nantes in Frameworks */,
-				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
-				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
-				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
-				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
-				0E8BAC4A245C393000D380FB /* GRDB in Frameworks */,
-				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
-				0E4EAECA238656B100BBDFBD /* Charts in Frameworks */,
-				0E4EAEC7238655FA00BBDFBD /* Swinject in Frameworks */,
-				0E4EAED723865CB500BBDFBD /* RangeSeekSlider in Frameworks */,
-				0E03B8052386741B00949713 /* SwinjectPropertyLoader in Frameworks */,
-				0E4EAEC4238654AE00BBDFBD /* Humidity in Frameworks */,
-				0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */,
-				0E4EAECD2386586C00BBDFBD /* GestureInstructions in Frameworks */,
-				0E4EAEB92386534B00BBDFBD /* LightRoute in Frameworks */,
+				0E03B7C623866CDC00949713 /* BuildFile in Frameworks */,
+				0E4EAE4823863D4100BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE4223863BA600BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE4523863CBC00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAE99238646FF00BBDFBD /* BuildFile in Frameworks */,
+				0E8BAC4A245C393000D380FB /* BuildFile in Frameworks */,
+				0E4EAE4023863BA600BBDFBD /* BuildFile in Frameworks */,
+				0E4EAECA238656B100BBDFBD /* BuildFile in Frameworks */,
+				0E4EAEC7238655FA00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAED723865CB500BBDFBD /* BuildFile in Frameworks */,
+				0E03B8052386741B00949713 /* BuildFile in Frameworks */,
+				0E4EAEC4238654AE00BBDFBD /* BuildFile in Frameworks */,
+				0EEB3ED42526F148008CE97B /* BuildFile in Frameworks */,
+				0E4EAECD2386586C00BBDFBD /* BuildFile in Frameworks */,
+				0E4EAEB92386534B00BBDFBD /* BuildFile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1975,11 +1975,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EEB3E962526F03B008CE97B /* RxRelay in Frameworks */,
-				0EEB3E942526F03B008CE97B /* RxSwift in Frameworks */,
-				0EEB3E982526F03B008CE97B /* RxCocoa in Frameworks */,
+				0EEB3E962526F03B008CE97B /* BuildFile in Frameworks */,
+				0EEB3E942526F03B008CE97B /* BuildFile in Frameworks */,
+				0EEB3E982526F03B008CE97B /* BuildFile in Frameworks */,
 				5314AC3CEE87724772A783AE /* Pods_station.framework in Frameworks */,
-				0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */,
+				0EEB3E9A2526F03B008CE97B /* BuildFile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5059,21 +5059,21 @@
 			);
 			name = station_mac;
 			packageProductDependencies = (
-				0E4EAE3F23863BA600BBDFBD /* Realm */,
-				0E4EAE4123863BA600BBDFBD /* RealmSwift */,
-				0E4EAE4423863CBC00BBDFBD /* Localize_Swift */,
-				0E4EAE4723863D4100BBDFBD /* Future */,
-				0E4EAE98238646FF00BBDFBD /* BTKit */,
-				0E4EAEB82386534B00BBDFBD /* LightRoute */,
-				0E4EAEC3238654AE00BBDFBD /* Humidity */,
-				0E4EAEC6238655FA00BBDFBD /* Swinject */,
-				0E4EAEC9238656B100BBDFBD /* Charts */,
-				0E4EAECC2386586C00BBDFBD /* GestureInstructions */,
-				0E4EAED623865CB500BBDFBD /* RangeSeekSlider */,
-				0E03B7C523866CDC00949713 /* Nantes */,
-				0E03B8042386741B00949713 /* SwinjectPropertyLoader */,
-				0E8BAC49245C393000D380FB /* GRDB */,
-				0EEB3ED32526F148008CE97B /* RxSwift */,
+				0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */,
+				0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */,
+				0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */,
+				0E03B8042386741B00949713 /* SwiftPackageProductDependency */,
+				0E8BAC49245C393000D380FB /* SwiftPackageProductDependency */,
+				0EEB3ED32526F148008CE97B /* SwiftPackageProductDependency */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* station_mac.app */;
@@ -5090,6 +5090,7 @@
 				A9AB575A2413CCEC006FD3D2 /* Fetch secrets */,
 				0E8301592393FC2B0003F2EF /* Swiftlint */,
 				A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */,
+				2677C1037EC3D09E968C139F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5111,6 +5112,7 @@
 				A9AB57592413CCAB006FD3D2 /* Fetch secrets */,
 				A986147C248CD47A0030F197 /* Crashlytics */,
 				60666212F80D3A3EAC265637 /* [CP] Embed Pods Frameworks */,
+				82C78A12877EA9F22D4D34ED /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5118,10 +5120,10 @@
 			);
 			name = station;
 			packageProductDependencies = (
-				0EEB3E932526F03B008CE97B /* RxSwift */,
-				0EEB3E952526F03B008CE97B /* RxRelay */,
-				0EEB3E972526F03B008CE97B /* RxCocoa */,
-				0EEB3E992526F03B008CE97B /* RxBlocking */,
+				0EEB3E932526F03B008CE97B /* SwiftPackageProductDependency */,
+				0EEB3E952526F03B008CE97B /* SwiftPackageProductDependency */,
+				0EEB3E972526F03B008CE97B /* SwiftPackageProductDependency */,
+				0EEB3E992526F03B008CE97B /* SwiftPackageProductDependency */,
 			);
 			productName = station;
 			productReference = 64333D2520B0C45900CDF4B6 /* station.app */;
@@ -5136,6 +5138,7 @@
 				64333D3620B0C45A00CDF4B6 /* Frameworks */,
 				64333D3720B0C45A00CDF4B6 /* Resources */,
 				C666573F024793E0F5A3DF60 /* [CP] Embed Pods Frameworks */,
+				8BBA424823EFFBB654E49320 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5207,20 +5210,20 @@
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
-				0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */,
-				0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */,
-				0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */,
-				0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */,
-				0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */,
-				0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */,
-				0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */,
-				0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */,
-				0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */,
-				0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */,
-				0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */,
-				0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */,
-				0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */,
-				0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */,
+				0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */,
+				0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */,
+				0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */,
+				0E03B8032386741B00949713 /* RemoteSwiftPackageReference */,
+				0E8BAC48245C393000D380FB /* RemoteSwiftPackageReference */,
+				0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -5424,6 +5427,21 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
+		2677C1037EC3D09E968C139F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station_dev/Pods-station_dev-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3B795AA21A4595A8AEAE7172 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5481,6 +5499,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		82C78A12877EA9F22D4D34ED /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-station/Pods-station-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8BBA424823EFFBB654E49320 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */ = {
@@ -7475,7 +7523,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */ = {
+		0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Nantes";
 			requirement = {
@@ -7483,7 +7531,7 @@
 				minimumVersion = 0.0.10;
 			};
 		};
-		0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */ = {
+		0E03B8032386741B00949713 /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/SwinjectPropertyLoader";
 			requirement = {
@@ -7491,7 +7539,7 @@
 				minimumVersion = 1.0.2;
 			};
 		};
-		0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa";
 			requirement = {
@@ -7499,7 +7547,7 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */ = {
+		0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Localize-Swift";
 			requirement = {
@@ -7507,7 +7555,7 @@
 				minimumVersion = 3.1.0;
 			};
 		};
-		0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */ = {
+		0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Future";
 			requirement = {
@@ -7515,7 +7563,7 @@
 				minimumVersion = 1.3.0;
 			};
 		};
-		0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */ = {
+		0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/BTKit";
 			requirement = {
@@ -7524,7 +7572,7 @@
 				minimumVersion = 0.1.7;
 			};
 		};
-		0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */ = {
+		0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/LightRoute";
 			requirement = {
@@ -7532,7 +7580,7 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */ = {
+		0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/Humidity";
 			requirement = {
@@ -7540,7 +7588,7 @@
 				minimumVersion = 0.1.0;
 			};
 		};
-		0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */ = {
+		0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
 			requirement = {
@@ -7548,7 +7596,7 @@
 				minimumVersion = 2.7.1;
 			};
 		};
-		0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */ = {
+		0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
@@ -7556,7 +7604,7 @@
 				minimumVersion = 3.4.0;
 			};
 		};
-		0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */ = {
+		0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/GestureInstructions";
 			requirement = {
@@ -7564,7 +7612,7 @@
 				minimumVersion = 0.0.2;
 			};
 		};
-		0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */ = {
+		0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rinat-enikeev/RangeSeekSlider";
 			requirement = {
@@ -7572,7 +7620,7 @@
 				minimumVersion = 1.8.2;
 			};
 		};
-		0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */ = {
+		0E8BAC48245C393000D380FB /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/groue/GRDB.swift";
 			requirement = {
@@ -7580,7 +7628,7 @@
 				minimumVersion = 4.14.0;
 			};
 		};
-		0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
@@ -7591,99 +7639,99 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E03B7C523866CDC00949713 /* Nantes */ = {
+		0E03B7C523866CDC00949713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B7C423866CDC00949713 /* XCRemoteSwiftPackageReference "Nantes" */;
+			package = 0E03B7C423866CDC00949713 /* RemoteSwiftPackageReference */;
 			productName = Nantes;
 		};
-		0E03B8042386741B00949713 /* SwinjectPropertyLoader */ = {
+		0E03B8042386741B00949713 /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E03B8032386741B00949713 /* XCRemoteSwiftPackageReference "SwinjectPropertyLoader" */;
+			package = 0E03B8032386741B00949713 /* RemoteSwiftPackageReference */;
 			productName = SwinjectPropertyLoader;
 		};
-		0E4EAE3F23863BA600BBDFBD /* Realm */ = {
+		0E4EAE3F23863BA600BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Realm;
 		};
-		0E4EAE4123863BA600BBDFBD /* RealmSwift */ = {
+		0E4EAE4123863BA600BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE3E23863BA600BBDFBD /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0E4EAE3E23863BA600BBDFBD /* RemoteSwiftPackageReference */;
 			productName = RealmSwift;
 		};
-		0E4EAE4423863CBC00BBDFBD /* Localize_Swift */ = {
+		0E4EAE4423863CBC00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4323863CBC00BBDFBD /* XCRemoteSwiftPackageReference "Localize-Swift" */;
+			package = 0E4EAE4323863CBC00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Localize_Swift;
 		};
-		0E4EAE4723863D4100BBDFBD /* Future */ = {
+		0E4EAE4723863D4100BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE4623863D4100BBDFBD /* XCRemoteSwiftPackageReference "Future" */;
+			package = 0E4EAE4623863D4100BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Future;
 		};
-		0E4EAE98238646FF00BBDFBD /* BTKit */ = {
+		0E4EAE98238646FF00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAE97238646FF00BBDFBD /* XCRemoteSwiftPackageReference "BTKit" */;
+			package = 0E4EAE97238646FF00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = BTKit;
 		};
-		0E4EAEB82386534B00BBDFBD /* LightRoute */ = {
+		0E4EAEB82386534B00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEB72386534B00BBDFBD /* XCRemoteSwiftPackageReference "LightRoute" */;
+			package = 0E4EAEB72386534B00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = LightRoute;
 		};
-		0E4EAEC3238654AE00BBDFBD /* Humidity */ = {
+		0E4EAEC3238654AE00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC2238654AE00BBDFBD /* XCRemoteSwiftPackageReference "Humidity" */;
+			package = 0E4EAEC2238654AE00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Humidity;
 		};
-		0E4EAEC6238655FA00BBDFBD /* Swinject */ = {
+		0E4EAEC6238655FA00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC5238655FA00BBDFBD /* XCRemoteSwiftPackageReference "Swinject" */;
+			package = 0E4EAEC5238655FA00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Swinject;
 		};
-		0E4EAEC9238656B100BBDFBD /* Charts */ = {
+		0E4EAEC9238656B100BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAEC8238656B100BBDFBD /* XCRemoteSwiftPackageReference "Charts" */;
+			package = 0E4EAEC8238656B100BBDFBD /* RemoteSwiftPackageReference */;
 			productName = Charts;
 		};
-		0E4EAECC2386586C00BBDFBD /* GestureInstructions */ = {
+		0E4EAECC2386586C00BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAECB2386586C00BBDFBD /* XCRemoteSwiftPackageReference "GestureInstructions" */;
+			package = 0E4EAECB2386586C00BBDFBD /* RemoteSwiftPackageReference */;
 			productName = GestureInstructions;
 		};
-		0E4EAED623865CB500BBDFBD /* RangeSeekSlider */ = {
+		0E4EAED623865CB500BBDFBD /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
+			package = 0E4EAED523865CB500BBDFBD /* RemoteSwiftPackageReference */;
 			productName = RangeSeekSlider;
 		};
-		0E8BAC49245C393000D380FB /* GRDB */ = {
+		0E8BAC49245C393000D380FB /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
+			package = 0E8BAC48245C393000D380FB /* RemoteSwiftPackageReference */;
 			productName = GRDB;
 		};
-		0EEB3E932526F03B008CE97B /* RxSwift */ = {
+		0EEB3E932526F03B008CE97B /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */;
 			productName = RxSwift;
 		};
-		0EEB3E952526F03B008CE97B /* RxRelay */ = {
+		0EEB3E952526F03B008CE97B /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */;
 			productName = RxRelay;
 		};
-		0EEB3E972526F03B008CE97B /* RxCocoa */ = {
+		0EEB3E972526F03B008CE97B /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */;
 			productName = RxCocoa;
 		};
-		0EEB3E992526F03B008CE97B /* RxBlocking */ = {
+		0EEB3E992526F03B008CE97B /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */;
 			productName = RxBlocking;
 		};
-		0EEB3ED32526F148008CE97B /* RxSwift */ = {
+		0EEB3ED32526F148008CE97B /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = 0EEB3E922526F03B008CE97B /* RemoteSwiftPackageReference */;
 			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
