@@ -144,7 +144,7 @@ DEPENDENCIES:
   - FLEX
   - FutureX
   - GestureInstructions
-  - GRDB.swift (= 4.14.0)
+  - GRDB.swift
   - Humidity (from `https://github.com/viikufa/Humidity.git`)
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -250,6 +250,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 27c1d224a7ac37b653cc74d75e8bc1eed0d4016e
+PODFILE CHECKSUM: 1e77c27977577d8b90a3d446da379298e9beaf32
 
 COCOAPODS: 1.9.3
