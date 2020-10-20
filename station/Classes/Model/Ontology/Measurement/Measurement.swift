@@ -60,4 +60,8 @@ extension Humidity {
         let offseted = min(relative + offset, 1.0)
         return Humidity(value: offseted, unit: .relative(temperature: temperature))
     }
+
+    static var zeroAbsolute: Humidity {
+        return Humidity(value: 0, unit: .absolute)
+    }
 }
