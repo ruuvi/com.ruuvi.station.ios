@@ -530,9 +530,10 @@ extension CardsPresenter {
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
+                let isInitialLoad = (self?.ruuviTags.count ?? 0) == 0
                 self?.didLoadInitialRuuviTags = true
                 self?.ruuviTags = ruuviTags.map({ $0.any })
-                if let firstTag = ruuviTags.first {
+                if isInitialLoad, let firstTag = ruuviTags.first {
                     self?.tagCharts?.configure(ruuviTag: firstTag)
                     self?.restartObservingRuuviTagNetwork(for: firstTag)
                 }
@@ -579,7 +580,7 @@ extension CardsPresenter {
                 self?.errorPresenter.present(error: error)
             case .update(let sensor):
                 guard let sSelf = self else { return }
-                if let index = sSelf.ruuviTags.firstIndex(of: sensor) {
+                if let index = sSelf.ruuviTags.firstIndex(where: {$0.id == sensor.id}) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
                 }
@@ -792,6 +793,8 @@ extension CardsPresenter {
                         isTriggered = isTriggered || isTriggering(temperature: type, for: viewModel)
                     case .humidity:
                         isTriggered = isTriggered || isTriggering(humidity: type, for: viewModel)
+                    case .dewPoint:
+                        isTriggered = isTriggered || isTriggering(dewPoint: type, for: viewModel)
                     case .pressure:
                         isTriggered = isTriggered || isTriggering(pressure: type, for: viewModel)
                     default:
@@ -825,9 +828,27 @@ extension CardsPresenter {
             case .humidity(let lower, let upper) = alertService.alert(for: luid.value, of: humidity),
             let humidity = viewModel.humidity.value,
             let temperature = viewModel.temperature.value,
-            let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0, temperature: temperature) {
+            let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0,
+                                                     temperature: temperature) {
             let isLower = offsetedHumidity < lower
             let isUpper = offsetedHumidity > upper
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func isTriggering(dewPoint: AlertType, for viewModel: CardsViewModel) -> Bool {
+
+        if let luid = viewModel.luid.value,
+           case .dewPoint(let lower, let upper) = alertService.alert(for: luid.value, of: dewPoint),
+           let humidity = viewModel.humidity.value,
+           let temperature = viewModel.temperature.value,
+           let offsetedHumidity = humidity.offseted(by: calibrationService.humidityOffset(for: luid).0,
+                                                    temperature: temperature),
+           let dp = try? offsetedHumidity.dewPoint(temperature: temperature).converted(to: .celsius).value {
+            let isLower = dp < lower
+            let isUpper = dp > upper
             return isLower || isUpper
         } else {
             return false
