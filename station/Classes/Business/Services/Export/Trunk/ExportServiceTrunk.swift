@@ -91,7 +91,7 @@ extension ExportServiceTrunk {
                 let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
                 let headersString = self.getHeaders(units)
                     .joined(separator: ",")
-                    .dropLast()
+
                 var csvText = "\(ruuviTag.name)\n" + headersString + "\n"
 
                 func toString(_ value: Double?, format: String) -> String {

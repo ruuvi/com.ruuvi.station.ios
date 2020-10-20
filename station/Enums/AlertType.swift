@@ -11,8 +11,8 @@ enum AlertType: CaseIterable {
 
     static var allCases: [AlertType] {
         return [.temperature(lower: 0, upper: 0),
-                .humidity(lower: Humidity(value: 0, unit: .absolute),
-                          upper: Humidity(value: 0, unit: .absolute)),
+                .humidity(lower: Humidity.zeroAbsolute,
+                          upper: Humidity.zeroAbsolute),
                 .dewPoint(lower: 0, upper: 0),
                 .pressure(lower: 0, upper: 0),
                 .connection,
