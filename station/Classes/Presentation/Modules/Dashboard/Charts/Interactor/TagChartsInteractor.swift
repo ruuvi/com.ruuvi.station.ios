@@ -56,8 +56,20 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             switch change {
             case .initial(let sensors):
                 self?.sensors = sensors
+                if let id = self?.ruuviTagSensor.id,
+                   let sensor = sensors.first(where: {$0.id == id}) {
+                    self?.ruuviTagSensor = sensor
+                    self?.presenter.interactorDidUpdate(sensor: sensor)
+                }
             case .insert(let sensor):
                 self?.sensors.append(sensor)
+            case .update(let sensor):
+                if self?.ruuviTagSensor.id == sensor.id,
+                   let index = self?.sensors.firstIndex(where: {$0.id == sensor.id}) {
+                    self?.ruuviTagSensor = sensor
+                    self?.sensors[index] = sensor
+                    self?.presenter.interactorDidUpdate(sensor: sensor)
+                }
             default:
                 return
             }

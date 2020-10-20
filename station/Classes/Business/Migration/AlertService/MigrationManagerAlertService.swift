@@ -115,6 +115,12 @@ extension MigrationManagerAlertService {
         } else {
             debugPrint("do nothing")
         }
+        
+        // pick one description, relative preffered
+        let humidityDescription = prefs.string(forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + id)
+            ?? prefs.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + id) 
+        alertService.setHumidity(description: humidityDescription, for: id)
+        
         completion()
     }
 
