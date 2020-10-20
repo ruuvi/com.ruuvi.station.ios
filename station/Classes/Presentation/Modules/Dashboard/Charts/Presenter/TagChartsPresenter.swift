@@ -204,6 +204,10 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidError(_ error: RUError) {
         errorPresenter.present(error: error)
     }
+
+    func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
+        self.ruuviTag = sensor
+    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
