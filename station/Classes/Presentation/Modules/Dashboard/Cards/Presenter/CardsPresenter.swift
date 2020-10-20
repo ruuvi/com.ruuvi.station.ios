@@ -565,7 +565,7 @@ extension CardsPresenter {
                 self?.errorPresenter.present(error: error)
             case .update(let sensor):
                 guard let sSelf = self else { return }
-                if let index = sSelf.ruuviTags.firstIndex(of: sensor) {
+                if let index = sSelf.ruuviTags.firstIndex(where: {$0.id == sensor.id}) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
                 }
