@@ -93,6 +93,11 @@ extension SignInViewController {
                 textField.textContentType = textContentType
             }
         }
+        textTextField.bind(viewModel.inputText) { (textField, text) in
+            if textField.text != text {
+                textField.text = text
+            }
+        }
         navigationItem.leftBarButtonItem?.bind(viewModel.canPopViewController,
                                                block: { (buttonItem, canPopViewController) in
             buttonItem.image = canPopViewController ?? false ? #imageLiteral(resourceName: "icon_back_arrow") : #imageLiteral(resourceName: "dismiss-modal-icon")

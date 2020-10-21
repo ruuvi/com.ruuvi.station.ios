@@ -79,6 +79,7 @@ extension SignInPresenter {
             viewModel.enterCodeManuallyButtonIsHidden.value = false
             viewModel.canPopViewController.value = false
             viewModel.textContentType.value = .emailAddress
+            viewModel.inputText.value = keychainService.userApiEmail
         case .enterVerificationCode:
             viewModel.titleLabelText.value = "SignIn.EmailSent".localized()
             viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
@@ -127,6 +128,7 @@ extension SignInPresenter {
                 guard let sSelf = self else {
                     return
                 }
+                sSelf.keychainService.userApiEmail = email
                 sSelf.router.openEmailConfirmation(output: sSelf)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
