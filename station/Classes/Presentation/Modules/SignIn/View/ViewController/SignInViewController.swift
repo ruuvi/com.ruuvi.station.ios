@@ -1,14 +1,40 @@
 import UIKit
 
 class SignInViewController: UIViewController {
+
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subTitleLabel: UILabel!
+    @IBOutlet weak var textTextField: UITextField!
+    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var enterCodeManuallyButton: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
+
     var output: SignInViewOutput!
-    var viewModel: SignInViewModel!
+    var viewModel: SignInViewModel! {
+        didSet {
+            bindViewModel()
+        }
+    }
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
+        addTapGesture()
         output.viewDidLoad()
+    }
+
+    @IBAction func didTapCloseButton(_ sender: Any) {
+        output.viewDidClose()
+    }
+
+    @IBAction func didTapSubmit(_ sender: UIButton) {
+        output.viewDidTapSubmitButton()
+    }
+
+    @IBAction func viewDidTapEnterCodeManually(_ sender: UIButton) {
+        output.viewDidTapEnterCodeManually()
     }
 }
 
@@ -19,6 +45,57 @@ extension SignInViewController: SignInViewInput {
     }
 }
 
+// MARK: - UITextFieldDelegate
+extension SignInViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let email = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        textField.text = email
+        viewModel.inputText.value = email
+    }
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        viewModel.errorLabelText.value = nil
+    }
+}
+
 // MARK: - Private
 extension SignInViewController {
+    private func addTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func didTapView(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
+
+    private func bindViewModel() {
+        guard isViewLoaded else {
+            return
+        }
+        titleLabel.bind(viewModel.titleLabelText) { (label, value) in
+            label.text = value
+        }
+        subTitleLabel.bind(viewModel.subTitleLabelText) { (label, value) in
+            label.text = value
+        }
+        errorLabel.bind(viewModel.errorLabelText) { (label, value) in
+            label.text = value
+        }
+        enterCodeManuallyButton.bind(viewModel.enterCodeManuallyButtonIsHidden) { (button, isHidden) in
+            button.isHidden = isHidden ?? false
+        }
+        textTextField.bind(viewModel.placeholder) { (textField, placeholder) in
+            textField.placeholder = placeholder
+        }
+        textTextField.bind(viewModel.textContentType) { (textField, textContentType) in
+            if let textContentType = textContentType {
+                textField.textContentType = textContentType
+            }
+        }
+        navigationItem.leftBarButtonItem?.bind(viewModel.canPopViewController,
+                                               block: { (buttonItem, canPopViewController) in
+            buttonItem.image = canPopViewController ?? false ? #imageLiteral(resourceName: "icon_back_arrow") : #imageLiteral(resourceName: "dismiss-modal-icon")
+        })
+    }
 }

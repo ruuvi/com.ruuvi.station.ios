@@ -71,9 +71,20 @@ extension RuuviNetworkUserApiURLSession {
         authorizationRequered: Bool = false
     ) -> Future<Response, RUError> {
         let promise = Promise<Response, RUError>()
-        var request = URLRequest(url: endpoint.url)
+        var url: URL = endpoint.url
+        if method == .get {
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            urlComponents?.queryItems = try? URLQueryItemEncoder().encode(model)
+            guard let urlFromComponents = urlComponents?.url else {
+                fatalError()
+            }
+            url = urlFromComponents
+        }
+        var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        request.httpBody = try? JSONEncoder().encode(model)
+        if method != .get {
+            request.httpBody = try? JSONEncoder().encode(model)
+        }
         if authorizationRequered {
             request.setValue(keychainService.ruuviUserApiKey, forHTTPHeaderField: "Authorization")
         }
@@ -93,6 +104,9 @@ extension RuuviNetworkUserApiURLSession {
                             promise.fail(error: userApiError)
                         }
                     } catch let error {
+                        #if DEBUG
+                        debugPrint("❌ Parsing Error", dump(error))
+                        #endif
                         promise.fail(error: .parse(error))
                     }
                 } else {

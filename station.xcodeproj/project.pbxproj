@@ -1384,6 +1384,9 @@
 		A93052B8242BFCC000FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
 		A93052B9242BFCF800FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
 		A93052BA242BFCF900FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
+		A933E037253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */; };
+		A933E038253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */; };
+		A933E039253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */; };
 		A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
 		A93DB9E624731C65007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
 		A93DB9E724731C66007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
@@ -2254,6 +2257,7 @@
 		A92E3C592426415100D981D5 /* TagChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartView.swift; sourceTree = "<group>"; };
 		A92E3C62242644B800D981D5 /* TagChartViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewInput.swift; sourceTree = "<group>"; };
 		A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewOutput.swift; sourceTree = "<group>"; };
+		A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLQueryItemEncoder.swift; sourceTree = "<group>"; };
 		A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectRxSwift.swift; sourceTree = "<group>"; };
 		A93DB9E824732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectCombine.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
@@ -5553,6 +5557,14 @@
 			path = ChartView;
 			sourceTree = "<group>";
 		};
+		A933E035253FF7950007A49C /* URLQueryItemEncoder */ = {
+			isa = PBXGroup;
+			children = (
+				A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */,
+			);
+			path = URLQueryItemEncoder;
+			sourceTree = "<group>";
+		};
 		A94A87F224D432E500D2CBA4 /* AddMac */ = {
 			isa = PBXGroup;
 			children = (
@@ -5616,6 +5628,7 @@
 		A94A882024D437AB00D2CBA4 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				A933E035253FF7950007A49C /* URLQueryItemEncoder */,
 				A94A882224D4386D00D2CBA4 /* HexadecimalKeyboard */,
 				A94A882A24D4386D00D2CBA4 /* LICENSE */,
 			);
@@ -6721,6 +6734,7 @@
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
 				0EAD33EC2399273E00EC5BAA /* HeartbeatList.swift in Sources */,
 				A9B57451253B994900DB7353 /* SignInModuleOutput.swift in Sources */,
+				A933E039253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				A9828E1524792CBB00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */,
 				0E6BAD8823856A01003A2D4C /* DefaultsViewOutput.swift in Sources */,
 				0E6BAD8923856A01003A2D4C /* MenuPresenter.swift in Sources */,
@@ -7685,6 +7699,7 @@
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
 				A9828E3024792D4400E7E9D4 /* KaltiotPickerViewInput.swift in Sources */,
 				0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */,
+				A933E038253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */,
 				0E8BD3BE238566AB008B31EF /* HumidityCalibrationViewOutput.swift in Sources */,
@@ -7784,6 +7799,7 @@
 				A94A881F24D4374500D2CBA4 /* AddMacViewModel.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
 				A9B57447253B994700DB7353 /* SignInModuleOutput.swift in Sources */,
+				A933E037253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				0EF6F5BE235E01170052BA25 /* ForegroundRouter.swift in Sources */,

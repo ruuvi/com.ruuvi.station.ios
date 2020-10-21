@@ -11,6 +11,9 @@ class SignInConfigurator {
 
         presenter.view = view
         presenter.router = router
+        presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.keychainService = r.resolve(KeychainService.self)
+        presenter.userApi = r.resolve(RuuviNetworkUserApi.self)
 
         view.output = presenter
     }

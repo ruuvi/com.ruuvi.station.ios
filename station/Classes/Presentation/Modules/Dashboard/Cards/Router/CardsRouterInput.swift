@@ -6,7 +6,7 @@ protocol CardsRouterInput {
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
-    func openSignIn()
+    func openSignIn(output: SignInModuleOutput)
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
