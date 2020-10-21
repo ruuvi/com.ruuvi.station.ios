@@ -22,6 +22,10 @@ extension MenuPresenter: MenuViewOutput {
         return keychainService.userApiIsAuthorized
     }
 
+    var userEmail: String? {
+        return keychainService.userApiEmail
+    }
+
     func viewDidTapOnDimmingView() {
         router.dismiss()
     }
