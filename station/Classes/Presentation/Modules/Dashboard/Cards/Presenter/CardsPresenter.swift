@@ -249,10 +249,24 @@ extension CardsPresenter: MenuModuleOutput {
         module.dismiss()
         router.openSignIn(output: self)
     }
+
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+        router.openUserApiConfig(output: self)
+    }
 }
 
+// MARK: - SignInModuleOutput
 extension CardsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+        router.openUserApiConfig(output: self)
+    }
 }
+
+// MARK: - UserApiConfigModuleOutput
+extension CardsPresenter: UserApiConfigModuleOutput {}
+
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {

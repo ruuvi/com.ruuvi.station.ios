@@ -13,4 +13,9 @@ extension KeychainService {
         return !((ruuviUserApiKey ?? "").isEmpty)
             && !((userApiEmail ?? "").isEmpty)
     }
+
+    mutating func userApiLogOut() {
+        ruuviUserApiKey = nil
+        userApiEmail = nil
+    }
 }
