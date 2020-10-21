@@ -1,6 +1,6 @@
 import UIKit
 
-struct UserApiConfigAlertViewModel {
+struct TagsManagerAlertViewModel {
     let title: String?
     let message: String?
     let style: UIAlertController.Style

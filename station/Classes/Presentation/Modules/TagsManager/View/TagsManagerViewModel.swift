@@ -1,5 +1,5 @@
 import Foundation
 
-struct UserApiConfigViewModel {
+struct TagsManagerViewModel {
     var title: Observable<String?> = .init()
 }

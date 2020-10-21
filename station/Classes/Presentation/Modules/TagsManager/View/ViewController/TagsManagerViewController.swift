@@ -1,8 +1,8 @@
 import UIKit
 
-class UserApiConfigViewController: UIViewController {
-    var output: UserApiConfigViewOutput!
-    var viewModel: UserApiConfigViewModel! {
+class TagsManagerViewController: UIViewController {
+    var output: TagsManagerViewOutput!
+    var viewModel: TagsManagerViewModel! {
         didSet {
             bindViewModel()
         }
@@ -25,15 +25,15 @@ class UserApiConfigViewController: UIViewController {
     }
 }
 
-// MARK: - UserApiConfigViewInput
-extension UserApiConfigViewController: UserApiConfigViewInput {
+// MARK: - TagsManagerViewInput
+extension TagsManagerViewController: TagsManagerViewInput {
     func localize() {
-        signOutBarButtonItem.title = "UserApiConfig.SignOutButton".localized()
+        signOutBarButtonItem.title = "TagsManager.SignOutButton".localized()
     }
 }
 
 // MARK: - Private
-extension UserApiConfigViewController {
+extension TagsManagerViewController {
     private func bindViewModel() {
         bind(viewModel.title) { (viewController, title) in
             viewController.title = title

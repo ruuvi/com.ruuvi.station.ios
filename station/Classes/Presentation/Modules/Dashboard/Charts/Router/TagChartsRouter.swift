@@ -87,10 +87,10 @@ class TagChartsRouter: TagChartsRouterInput {
             })
     }
 
-    func openUserApiConfig(output: UserApiConfigModuleOutput) {
-        let factory = StoryboardFactory(storyboardName: "UserApiConfig")
+    func openTagsManager(output: TagsManagerModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "TagsManager")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: UserApiConfigModuleInput.self)
+            .forStoryboard(factory: factory, to: TagsManagerModuleInput.self)
             .then({ (module) -> Any? in
                 module.configure(output: output)
             })

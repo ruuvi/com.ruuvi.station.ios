@@ -1,6 +1,6 @@
 import Foundation
 
-protocol UserApiConfigViewOutput {
+protocol TagsManagerViewOutput {
     func viewDidLoad()
     func viewDidSignOutButtonTap()
     func viewDidCloseButtonTap()

@@ -28,7 +28,7 @@
         <!--email-->
         <scene sceneID="d6b-d3-DcN">
             <objects>
-                <viewController id="fub-5F-KbL" customClass="UserApiConfigViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="fub-5F-KbL" customClass="TagsManagerViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="R88-os-Y9d">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -53,7 +53,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iw8-V0-QEk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="hdY-zf-dMO" customClass="UserApiConfigInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                <customObject id="hdY-zf-dMO" customClass="TagsManagerInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="fub-5F-KbL" id="jnc-M4-gd2"/>
                     </connections>

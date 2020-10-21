@@ -36,24 +36,24 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
     }
 
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError> {
-        return request(endpoint: Routes.claim, with: requestModel, method: .post)
+        return request(endpoint: Routes.claim, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError> {
-        return request(endpoint: Routes.share, with: requestModel, method: .post)
+        return request(endpoint: Routes.share, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func user() -> Future<UserApiUserResponse, RUError> {
         let requestModel = UserApiUserRequest()
-        return request(endpoint: Routes.user, with: requestModel)
+        return request(endpoint: Routes.user, with: requestModel, authorizationRequered: true)
     }
 
     func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError> {
-        return request(endpoint: Routes.getSensorData, with: requestModel)
+        return request(endpoint: Routes.getSensorData, with: requestModel, authorizationRequered: true)
     }
 
     func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError> {
-        return request(endpoint: Routes.update, with: requestModel, method: .post)
+        return request(endpoint: Routes.update, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,

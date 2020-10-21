@@ -252,7 +252,7 @@ extension CardsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
         module.dismiss()
-        router.openUserApiConfig(output: self)
+        router.openTagsManager(output: self)
     }
 }
 
@@ -260,12 +260,12 @@ extension CardsPresenter: MenuModuleOutput {
 extension CardsPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         module.dismiss()
-        router.openUserApiConfig(output: self)
+        router.openTagsManager(output: self)
     }
 }
 
-// MARK: - UserApiConfigModuleOutput
-extension CardsPresenter: UserApiConfigModuleOutput {}
+// MARK: - TagsManagerModuleOutput
+extension CardsPresenter: TagsManagerModuleOutput {}
 
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {

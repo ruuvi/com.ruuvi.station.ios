@@ -384,8 +384,12 @@
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
 
-// UserApiConfig
-"UserApiConfig.SignOutButton" = "Sign out";
+// TagsManager
+"TagsManager.SignOutButton" = "Sign out";
+"TagsManagerPresenter.SignOutConfirmAlert.Title" = "Sing out";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Are you sure you want to sign out?";
+"TagsManagerPresenter.SignOutConfirmAlert.ConfirmAction" = "Confirm";
+"TagsManagerPresenter.SignOutConfirmAlert.CancelAction" = "Cancel";
 
 // UserApiError
 "UserApiError.Empty response" = "Empty response";

@@ -56,8 +56,8 @@ extension SignInPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - UserApiConfigModuleOutput
-extension SignInPresenter: UserApiConfigModuleOutput {}
+// MARK: - TagsManagerModuleOutput
+extension SignInPresenter: TagsManagerModuleOutput {}
 
 // MARK: - SignInModuleInput
 extension SignInPresenter: SignInModuleInput {
