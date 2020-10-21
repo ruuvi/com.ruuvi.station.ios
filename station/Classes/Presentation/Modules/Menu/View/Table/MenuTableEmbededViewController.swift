@@ -38,7 +38,9 @@ extension MenuTableEmbededViewController {
 
 // MARK: - UITableViewDelegate
 extension MenuTableEmbededViewController {
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView,
+                            willDisplay cell: UITableViewCell,
+                            forRowAt indexPath: IndexPath) {
         if tableView.cellForRow(at: indexPath) == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
                 ? "Sign out".localized()

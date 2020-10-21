@@ -19,7 +19,7 @@ class MenuPresenter: MenuModuleInput {
 
 extension MenuPresenter: MenuViewOutput {
     var userIsAuthorized: Bool {
-        return keychainService.isAuthorized
+        return keychainService.userApiIsAuthorized
     }
 
     func viewDidTapOnDimmingView() {

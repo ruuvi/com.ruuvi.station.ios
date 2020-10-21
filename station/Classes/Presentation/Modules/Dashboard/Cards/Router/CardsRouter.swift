@@ -90,11 +90,13 @@ class CardsRouter: NSObject, CardsRouterInput {
         UIApplication.shared.open(URL(string: "https://ruuvi.com")!, options: [:], completionHandler: nil)
     }
 
-    func openSignIn() {
+    func openSignIn(output: SignInModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "SignIn")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: SignInViewInput.self)
-            .perform()
+            .forStoryboard(factory: factory, to: SignInModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(with: .enterEmail, output: output)
+            })
     }
 }
 

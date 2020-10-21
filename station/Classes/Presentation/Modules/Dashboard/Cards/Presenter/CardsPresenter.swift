@@ -247,10 +247,12 @@ extension CardsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
         module.dismiss()
-        router.openSignIn()
+        router.openSignIn(output: self)
     }
 }
 
+extension CardsPresenter: SignInModuleOutput {
+}
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
