@@ -1,2 +1,0 @@
-protocol UserApiConfigModuleOutput: class {
-}

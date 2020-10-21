@@ -1,11 +1,11 @@
 import Foundation
 
-class UserApiConfigConfigurator {
-    func configure(view: UserApiConfigViewController) {
+class TagsManagerConfigurator {
+    func configure(view: TagsManagerViewController) {
         let r = AppAssembly.shared.assembler.resolver
 
-        let router = UserApiConfigRouter()
-        let presenter = UserApiConfigPresenter()
+        let router = TagsManagerRouter()
+        let presenter = TagsManagerPresenter()
 
         router.transitionHandler = view
 

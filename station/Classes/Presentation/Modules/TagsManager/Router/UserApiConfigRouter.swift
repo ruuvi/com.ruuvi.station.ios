@@ -1,6 +1,6 @@
 import UIKit
 
-class UserApiConfigRouter: UserApiConfigRouterInput {
+class TagsManagerRouter: TagsManagerRouterInput {
     weak var transitionHandler: UIViewController!
 
     func dismiss(completion: (() -> Void)?) {
