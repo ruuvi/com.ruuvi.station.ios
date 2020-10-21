@@ -48,7 +48,16 @@ extension SignInPresenter: SignInViewOutput {
 }
 
 // MARK: - SignInModuleOutput
-extension SignInPresenter: SignInModuleOutput {}
+extension SignInPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        router.dismiss { [weak self] in
+            self?.output.signIn(module: module, didSuccessfulyLogin: sender)
+        }
+    }
+}
+
+// MARK: - UserApiConfigModuleOutput
+extension SignInPresenter: UserApiConfigModuleOutput {}
 
 // MARK: - SignInModuleInput
 extension SignInPresenter: SignInModuleInput {
@@ -66,6 +75,7 @@ extension SignInPresenter: SignInModuleInput {
         }
     }
 }
+
 // MARK: - Private
 extension SignInPresenter {
     private func syncViewModel() {
@@ -99,7 +109,7 @@ extension SignInPresenter {
                     presenter.viewModel.errorLabelText.value = "SignIn.EnterCorrectEmail".localized()
                 }
             case .enterVerificationCode:
-                if text?.isEmpty == false {
+                if text?.isEmpty == true {
                     presenter.viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
                 }
             }
@@ -147,7 +157,7 @@ extension SignInPresenter {
                     return
                 }
                 sSelf.keychainService.ruuviUserApiKey = response.accessToken
-                // TODO open scene with sensors managing
+                sSelf.output.signIn(module: sSelf, didSuccessfulyLogin: nil)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })

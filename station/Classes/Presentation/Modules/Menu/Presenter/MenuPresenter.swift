@@ -52,7 +52,7 @@ extension MenuPresenter: MenuViewOutput {
 
     func viewDidSelectAccountCell() {
         if userIsAuthorized {
-// TODO open signed in scene
+            output?.menu(module: self, didSelectOpenConfig: nil)
         } else {
             output?.menu(module: self, didSelectSignIn: nil)
         }

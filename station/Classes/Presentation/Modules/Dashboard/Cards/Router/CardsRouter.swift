@@ -98,6 +98,15 @@ class CardsRouter: NSObject, CardsRouterInput {
                 module.configure(with: .enterEmail, output: output)
             })
     }
+
+    func openUserApiConfig(output: UserApiConfigModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "UserApiConfig")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: UserApiConfigModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(output: output)
+            })
+    }
 }
 
 extension CardsRouter: UIAdaptivePresentationControllerDelegate {

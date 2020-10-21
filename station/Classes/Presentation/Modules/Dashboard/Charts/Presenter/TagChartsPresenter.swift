@@ -270,9 +270,25 @@ extension TagChartsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
         module.dismiss()
-        router.openSignIn()
+        router.openSignIn(output: self)
+    }
+
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+        router.openUserApiConfig(output: self)
     }
 }
+
+// MARK: - SignInModuleOutput
+extension TagChartsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+        router.openUserApiConfig(output: self)
+    }
+}
+
+// MARK: - UserApiConfigModuleOutput
+extension TagChartsPresenter: UserApiConfigModuleOutput {}
 
 // MARK: - AlertServiceObserver
 extension TagChartsPresenter: AlertServiceObserver {

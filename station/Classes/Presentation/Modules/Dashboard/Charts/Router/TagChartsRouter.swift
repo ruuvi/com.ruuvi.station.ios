@@ -78,11 +78,22 @@ class TagChartsRouter: TagChartsRouterInput {
             })
     }
 
-    func openSignIn() {
+    func openSignIn(output: SignInModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "SignIn")
         try! transitionHandler
-            .forStoryboard(factory: factory, to: SignInViewInput.self)
-            .perform()
+            .forStoryboard(factory: factory, to: SignInModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(with: .enterEmail, output: output)
+            })
+    }
+
+    func openUserApiConfig(output: UserApiConfigModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "UserApiConfig")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: UserApiConfigModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(output: output)
+            })
     }
 
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {

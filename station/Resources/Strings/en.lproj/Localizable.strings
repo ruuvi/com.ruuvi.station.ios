@@ -384,6 +384,9 @@
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
 
+// UserApiConfig
+"UserApiConfig.SignOutButton" = "Sign out";
+
 // UserApiError
 "UserApiError.Empty response" = "Empty response";
 "UserApiError.E-mail already exists." = "E-mail already exists";

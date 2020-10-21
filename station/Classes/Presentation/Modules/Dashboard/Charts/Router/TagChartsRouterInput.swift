@@ -6,7 +6,8 @@ protocol TagChartsRouterInput {
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
-    func openSignIn()
+    func openSignIn(output: SignInModuleOutput)
+    func openUserApiConfig(output: UserApiConfigModuleOutput)
     func openMenu(output: MenuModuleOutput)
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,

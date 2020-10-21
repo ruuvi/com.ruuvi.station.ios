@@ -18,14 +18,6 @@ class SignInRouter: SignInRouterInput {
         try! transitionHandler
             .forStoryboard(factory: factory, to: SignInModuleInput.self)
             .to(preferred: .navigation(style: .push))
-//            .apply(to: { (viewController) in
-//                viewController.navigationItem.leftBarButtonItem = nil
-//                if #available(iOS 11.0, *) {
-//                    viewController.navigationItem.backButtonTitle = nil
-//                } else {
-//                    viewController.navigationItem.backBarButtonItem = UIBarButtonItem()
-//                }
-//            })
             .then({ (module) -> Any? in
                 module.configure(with: .enterVerificationCode, output: output)
             })
