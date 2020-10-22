@@ -369,6 +369,11 @@
 "SignIn.VerificationCodePlaceholder" = "verification code in format: CJSMVOW";
 "SignIn.EnterVerificationCode" = "Enter verification code";
 
+// TagsManager
+"TagsManager.SharedTags" = "Shared tags";
+"TagsManager.Actions" = "Actions";
+"TagManagerActionCellViewModel.AddMissingTag.Title" = "Add missing tags";
+
 // TemperatureUnit
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";

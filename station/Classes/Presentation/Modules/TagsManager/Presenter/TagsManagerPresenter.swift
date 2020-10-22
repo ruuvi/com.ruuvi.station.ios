@@ -42,12 +42,20 @@ extension TagsManagerPresenter: TagsManagerModuleInput {
     func dismiss() {
         router.dismiss(completion: nil)
     }
+
+    func viewDidTapAction(_ action: TagManagerActionType) {
+        switch action {
+        case .addMissingTag:
+            break
+        }
+    }
 }
 // MARK: - Private
 extension TagsManagerPresenter {
     private func syncViewModel() {
         viewModel = TagsManagerViewModel()
         viewModel.title.value = keychainService.userApiEmail
+        viewModel.actions.value = TagManagerActionType.allCases
     }
 
     private func bindViewModel() {
@@ -78,7 +86,7 @@ extension TagsManagerPresenter {
         activityPresenter.increment()
         userApiService.user()
             .on(success: { [weak self] (response) in
-                debugPrint(response)
+                self?.viewModel.items.value = response.sensors.map({ TagManagerCellViewModel(sensor: $0) })
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
