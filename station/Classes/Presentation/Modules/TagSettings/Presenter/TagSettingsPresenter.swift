@@ -473,7 +473,7 @@ extension TagSettingsPresenter {
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
-        if viewModel.isConnectable.value != device.isConnectable {
+        if !device.isConnected, viewModel.isConnectable.value != device.isConnectable {
             viewModel.isConnectable.value = device.isConnectable
         }
         if viewModel.isConnected.value != device.isConnected {

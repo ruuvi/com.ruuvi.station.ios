@@ -136,7 +136,8 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                         self?.post(error: error)
                     })
             }
-            if pair.device.isConnectable != pair.ruuviTag.isConnectable {
+            if !pair.device.isConnected,
+               pair.device.isConnectable != pair.ruuviTag.isConnectable {
                 ruuviTagTank.update(pair.ruuviTag.with(isConnectable: pair.device.isConnectable).with(macId: mac))
                     .on(failure: { [weak self] error in
                         self?.post(error: error)
