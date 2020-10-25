@@ -98,7 +98,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                                                     options: [.callbackQueue(.untouch)]) {
                                                         [weak self] (_, device) in
                 guard let sSelf = self else { return }
-                if let tag = device.ruuvi?.tag {
+                if let tag = device.ruuvi?.tag, !tag.isConnected {
                     sSelf.perform(#selector(RuuviTagAdvertisementDaemonBTKit.persist(wrapper:)),
                             on: sSelf.thread,
                             with: RuuviTagWrapper(device: tag),
