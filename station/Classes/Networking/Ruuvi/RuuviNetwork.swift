@@ -15,6 +15,8 @@ class RuuviNetworkFactory {
             return kaltiot
         case .whereOS:
             return whereOS
+        default:
+            fatalError()
         }
     }
 }

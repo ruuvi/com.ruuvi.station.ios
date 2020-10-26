@@ -188,6 +188,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
             openAddUsingMac(for: .whereOS)
         case .kaltiot:
             startKaltiotAddingFlow()
+        default:
+            break
         }
     }
 }
@@ -226,6 +228,8 @@ extension DiscoverPresenter: AddMacModuleOutput {
                 self?.searchWhereOSTag(with: mac)
             case .kaltiot:
                 self?.searchKaltiotTag(with: mac)
+            default:
+                break
             }
         }
     }
