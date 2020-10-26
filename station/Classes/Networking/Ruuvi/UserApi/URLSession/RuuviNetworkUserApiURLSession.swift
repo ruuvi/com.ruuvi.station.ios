@@ -49,7 +49,7 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
     }
 
     func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError> {
-        return request(endpoint: Routes.getSensorData, with: requestModel, authorizationRequered: true)
+        return request(endpoint: Routes.getSensorData, with: requestModel, method: .get, authorizationRequered: true)
     }
 
     func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError> {

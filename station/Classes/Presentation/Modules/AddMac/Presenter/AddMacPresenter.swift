@@ -94,6 +94,8 @@ extension AddMacPresenter {
             viewModel.title.value = "AddMacViewController.EnterKaltiotMacAddress".localized()
         case .whereOS:
             viewModel.title.value = "AddMacViewController.EnterWhereOsMacAddress".localized()
+        default:
+            break
         }
     }
 

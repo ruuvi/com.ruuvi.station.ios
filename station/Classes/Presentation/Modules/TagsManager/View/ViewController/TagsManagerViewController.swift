@@ -110,8 +110,14 @@ extension TagsManagerViewController: TagManagerButtonTableViewCellOutput {
 // MARK: - UITableViewDelegate
 extension TagsManagerViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.section == Sections.actions.rawValue else {
-            return
+        switch Sections(indexPath.section) {
+        case .actions:
+            guard let action = viewModel.actions.value?[indexPath.row] else {
+                return
+            }
+            output?.viewDidTapAction(action)
+        default:
+            break
         }
     }
 }
