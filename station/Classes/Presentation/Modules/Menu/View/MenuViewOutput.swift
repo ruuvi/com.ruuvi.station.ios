@@ -7,4 +7,5 @@ protocol MenuViewOutput {
     func viewDidSelectGetMoreSensors()
     func viewDidSelectSettings()
     func viewDidSelectFeedback()
+    func viewDidSelectAccountCell()
 }

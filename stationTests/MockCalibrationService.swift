@@ -3,16 +3,16 @@ import Future
 @testable import station
 
 class MockCalibrationService: CalibrationService {
-    func calibrateHumiditySaltTest(currentValue: Double, for ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
-        return .init(value: true)
+    func calibrateHumiditySaltTest(currentValue: Double, for ruuviTag: RuuviTagSensor) {
     }
-    func cleanHumidityCalibration(for ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
-        return .init(value: true)
+
+    func cleanHumidityCalibration(for ruuviTag: RuuviTagSensor) {
     }
-    func humidityOffset(for uuid: String) -> (Double, Date?) {
+
+    func humidityOffset(for identifier: Identifier) -> (Double, Date?) {
         return (0, Date())
     }
-    func calibrateHumidityTo100Percent(currentValue: Double, for ruuviTag: RuuviTagRealmProtocol) -> Future<Bool, RUError> {
-        return .init(value: false)
+
+    func calibrateHumidityTo100Percent(currentValue: Double, for ruuviTag: RuuviTagSensor) {
     }
 }

@@ -13,6 +13,7 @@ enum RUError: Error {
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
+    case userApi(UserApiError)
 }
 
 extension RUError: LocalizedError {
@@ -39,6 +40,8 @@ extension RUError: LocalizedError {
         case .writeToDisk(let error):
             return error.localizedDescription
         case .ruuviNetwork(let error):
+            return error.localizedDescription
+        case .userApi(let error):
             return error.localizedDescription
         }
     }
@@ -155,6 +158,7 @@ extension UnexpectedError: LocalizedError {
         }
     }
 }
+
 enum RuuviNetworkError: Error {
     case noSavedApiKeyValue
     case failedToLogIn
@@ -176,5 +180,15 @@ extension RuuviNetworkError: LocalizedError {
         case .tagAlreadyExists:
             return "RuuviNetworkError.TagAlreadyExists".localized()
         }
+    }
+}
+
+struct UserApiError: Error {
+    static let emptyResponse: UserApiError = UserApiError(description: "Empty response")
+    let description: String
+}
+extension UserApiError: LocalizedError {
+    public var errorDescription: String? {
+        return "UserApiError.\(description)".localized()
     }
 }

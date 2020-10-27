@@ -28,6 +28,8 @@ class ErrorPresenterAlert: ErrorPresenter {
                 presentAlert(error: error)
             case .writeToDisk(let error):
                 presentAlert(error: error)
+            case .userApi(let error):
+                presentAlert(error: error)
             }
         } else {
             presentAlert(error: error)
