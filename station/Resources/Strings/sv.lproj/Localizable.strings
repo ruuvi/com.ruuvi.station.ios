@@ -92,11 +92,6 @@
 "Advanced.RuuviNetwork.title" = "Network Configuration";
 "Advanced.Charts.title" = "CHARTS";
 
-// AddMacViewController
-"AddMacViewController.Send" = "Send";
-"AddMacViewController.EnterKaltiotMacAddress" = "Enter Kaltiot mac-address";
-"AddMacViewController.EnterWhereOsMacAddress" = "Enter WhereOS mac-address";
-
 // DiscoverTable
 "DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
@@ -111,14 +106,6 @@
 "DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
 "DiscoverTable.NetworkChoiseDialog.title" = "Choise network provider";
-"DiscoverTable.KaltiotNetwork" = "Kaltiot";
-"DiscoverTable.WhereOSNetwork" = "WhereOS";
-"DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
-
-// KaltiotPicker
-"KaltiotPicker.Title.text" = "Add Kaltiot tag";
-"RuuviNetworkKaltiot.Name.prefix" = "Kaltiot";
-"RuuviNetworkWhereOS.Name.prefix" = "WhereOS";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Fel";
@@ -243,12 +230,6 @@
 // Network settings
 "NetworkSettings.title" = "Network Configuration";
 "NetworkSettings.NetworkFeature" = "Network Is Enabled";
-"NetworkSettings.WhereOS" = "WhereOS";
-"NetworkSettings.Kaltiot" = "Kaltiot";
-
-// Kaltiot settings
-"KaltiotSettings.ApiKeyTextField.placeholder" = "Enter ApiKey";
-"KaltiotSettings.FooterTextView.text" = "You can get the API Key at https://console.torqhub.io/ in section \"Tracker - Credentials\" -> \"HTTP API\"";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";

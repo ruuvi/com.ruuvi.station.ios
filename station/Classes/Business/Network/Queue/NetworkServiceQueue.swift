@@ -17,10 +17,12 @@ class NetworkServiceQueue: NetworkService {
     func loadData(for ruuviTagId: String, mac: String, from provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         let operation = ruuviTagTrunk.readOne(ruuviTagId)
+        // TODO: Add zip for fetching last record date and add sync for shared tags
         operation.on(success: { [weak self] sensor in
             if let strongSelf = self {
                 strongSelf.loadDataOperation(for: sensor,
                                              mac: mac,
+                                             since: Date(),
                                              from: provider).on(success: { (result) in
                                                 promise.succeed(value: result)
                                              }, failure: { (error) in
@@ -37,12 +39,13 @@ class NetworkServiceQueue: NetworkService {
 
     private func loadDataOperation(for sensor: AnyRuuviTagSensor,
                                    mac: String,
+                                   since: Date,
                                    from provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         let network = ruuviNetworkFactory.network(for: provider)
         let operation = RuuviTagLoadDataOperation(ruuviTagId: sensor.id,
                                                   mac: mac,
-                                                  isConnectable: sensor.isConnectable,
+                                                  since: since,
                                                   network: network,
                                                   ruuviTagTank: ruuviTagTank)
         operation.completionBlock = { [unowned operation] in

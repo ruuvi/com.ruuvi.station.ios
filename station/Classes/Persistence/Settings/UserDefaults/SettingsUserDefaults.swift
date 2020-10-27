@@ -219,12 +219,6 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.networkFeatureEnabled", defaultValue: false)
     var networkFeatureEnabled: Bool
 
-    @UserDefault("SettingsUserDefaults.kaltiotNetworkEnabled", defaultValue: false)
-    var kaltiotNetworkEnabled: Bool
-
-    @UserDefault("SettingsUserDefaults.whereOSNetworkEnabled", defaultValue: false)
-    var whereOSNetworkEnabled: Bool
-
     @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
     var networkPullIntervalSeconds: Int
 

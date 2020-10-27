@@ -8,12 +8,6 @@ protocol DiscoverViewInput: ViewInput {
     var isBluetoothEnabled: Bool { get set }
     var isCloseEnabled: Bool { get set }
 
-    var networkFeatureEnabled: Bool { get set }
-    var networkKaltiotEnabled: Bool { get set }
-    var networkWhereOsEnabled: Bool { get set }
-
     func showBluetoothDisabled()
     func showWebTagInfoDialog()
-    func showAddKaltiotApiKey()
-    func showChoiseDialog()
 }

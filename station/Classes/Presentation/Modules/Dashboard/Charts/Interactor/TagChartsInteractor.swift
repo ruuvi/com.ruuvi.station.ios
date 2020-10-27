@@ -124,14 +124,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             operations.append(syncLocalTag(luid: luid.value, progress: progress))
         }
         if let macId = ruuviTagSensor.macId {
-            if settings.kaltiotNetworkEnabled && keychainService.hasKaltiotApiKey {
-                operations.append(syncNetworkRecords(for: macId, with: .kaltiot))
-                progress?(.serving)
-            }
-            if settings.whereOSNetworkEnabled {
-                operations.append(syncNetworkRecords(for: macId, with: .whereOS))
-                progress?(.serving)
-            }
+            // TODO add check to shared tags and add sync for userApi
         }
         Future.zip(operations).on(success: { [weak self] (_) in
             self?.clearChartsAndRestartObserving()
