@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import BTKit
+
 class RuuviNetworkKaltiotURLSession: RuuviNetworkKaltiot {
 
     var keychainService: KeychainService!
