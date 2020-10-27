@@ -22,20 +22,14 @@ class RuuviNetworkTagOperationsManager {
                     let ruuviTagTank = self?.ruuviTagTank else {
                     return
                 }
-                if self?.settings.kaltiotNetworkEnabled == true {
-                    operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
-                                                                mac: mac,
-                                                                isConnectable: $0.isConnectable,
-                                                                network: ruuviNetworkFactory.network(for: .kaltiot),
-                                                                ruuviTagTank: ruuviTagTank))
-                }
-                if self?.settings.whereOSNetworkEnabled == true {
-                    operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
-                                                                mac: mac,
-                                                                isConnectable: $0.isConnectable,
-                                                                network: ruuviNetworkFactory.network(for: .whereOS),
-                                                                ruuviTagTank: ruuviTagTank))
-                }
+                // TODO: Add check sensor to userApiType and create operation for synk shared tags
+//                if self?.settings.whereOSNetworkEnabled == true {
+//                    operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
+//                                                                mac: mac,
+//                                                                isConnectable: $0.isConnectable,
+//                                                                network: ruuviNetworkFactory.network(for: .whereOS),
+//                                                                ruuviTagTank: ruuviTagTank))
+//                }
             })
             promise.succeed(value: operations)
         }
