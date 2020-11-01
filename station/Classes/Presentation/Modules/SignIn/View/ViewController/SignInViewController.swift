@@ -47,10 +47,9 @@ extension SignInViewController: SignInViewInput {
 
 // MARK: - UITextFieldDelegate
 extension SignInViewController: UITextFieldDelegate {
+
     func textFieldDidEndEditing(_ textField: UITextField) {
-        let email = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        textField.text = email
-        viewModel.inputText.value = email
+        updateTextFieldText()
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -60,6 +59,13 @@ extension SignInViewController: UITextFieldDelegate {
 
 // MARK: - Private
 extension SignInViewController {
+
+    func updateTextFieldText() {
+        let email = textTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        textTextField.text = email
+        viewModel.inputText.value = email
+    }
+
     private func addTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         view.addGestureRecognizer(tapGesture)
