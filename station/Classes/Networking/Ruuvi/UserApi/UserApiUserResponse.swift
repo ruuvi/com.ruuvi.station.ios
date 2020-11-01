@@ -18,12 +18,12 @@ protocol RuuviNetworkUserApi: RuuviNetwork {
 extension RuuviNetworkUserApi {
     func load(ruuviTagId: String,
               mac: String,
-              since: Date,
-              until: Date = Date()) -> Future<[RuuviTagSensorRecord], RUError> {
+              since: Date?,
+              until: Date?) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         let requestModel = UserApiGetSensorRequest(sensor: mac,
-                                                   until: until.timeIntervalSince1970,
-                                                   since: since.timeIntervalSince1970,
+                                                   until: until?.timeIntervalSince1970,
+                                                   since: since?.timeIntervalSince1970,
                                                    limit: nil,
                                                    sort: nil)
         getSensorData(requestModel).on(success: { (response) in

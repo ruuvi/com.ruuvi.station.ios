@@ -4,8 +4,8 @@ import Future
 protocol RuuviNetwork {
     func load(ruuviTagId: String,
               mac: String,
-              since: Date,
-              until: Date) -> Future<[RuuviTagSensorRecord], RUError>
+              since: Date?,
+              until: Date?) -> Future<[RuuviTagSensorRecord], RUError>
 }
 
 class RuuviNetworkFactory {

@@ -38,6 +38,7 @@ extension SignInPresenter: SignInViewOutput {
         case .enterEmail:
             sendVerificationCode()
         case .enterVerificationCode:
+            view.updateTextFieldText()
             verifyCode()
         }
     }

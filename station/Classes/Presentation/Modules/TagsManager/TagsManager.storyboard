@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rwY-q3-uN6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rwY-q3-uN6">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -41,6 +41,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4S7-AX-g2G">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="sectionIndexBackgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TagManagerTableViewCell" textLabel="4Q4-ka-6dh" detailTextLabel="Lvj-at-yW1" imageView="Re5-tj-V7L" rowHeight="58" style="IBUITableViewCellStyleSubtitle" id="4Uo-hb-i3k" customClass="TagManagerTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="58"/>
@@ -76,14 +77,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TagManagerButtonTableViewCell" id="Ud1-GA-EJ9" customClass="TagManagerButtonTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="86" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="86" width="414" height="75.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ud1-GA-EJ9" id="0RB-0S-dCA">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="75.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0h1-vf-6Hm">
-                                                    <rect key="frame" x="147.5" y="0.5" width="119" height="43"/>
+                                                    <rect key="frame" x="147.5" y="16" width="119" height="43.5"/>
                                                     <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
                                                     <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
@@ -98,14 +99,16 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
+                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="centerX" secondItem="0RB-0S-dCA" secondAttribute="centerX" id="2aq-TM-wtd"/>
+                                                <constraint firstAttribute="bottom" secondItem="0h1-vf-6Hm" secondAttribute="bottom" constant="16" id="9my-r9-UrY"/>
+                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="top" secondItem="0RB-0S-dCA" secondAttribute="top" constant="16" id="EWS-W4-vcE"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0h1-vf-6Hm" secondAttribute="trailing" constant="20" id="Im6-Vb-Myg"/>
-                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="height" secondItem="0RB-0S-dCA" secondAttribute="height" multiplier="0.988506" id="Nuh-W4-OEz"/>
-                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="centerX" secondItem="0RB-0S-dCA" secondAttribute="centerX" id="Siy-CF-udQ"/>
-                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="centerY" secondItem="0RB-0S-dCA" secondAttribute="centerY" id="ewb-BZ-hvI"/>
                                                 <constraint firstItem="0h1-vf-6Hm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0RB-0S-dCA" secondAttribute="leading" constant="20" id="uDD-s0-OcA"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="button" destination="0h1-vf-6Hm" id="wrp-VC-cFB"/>
                                         </connections>
@@ -118,12 +121,12 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="i1a-sB-Wsk"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="4S7-AX-g2G" firstAttribute="leading" secondItem="i1a-sB-Wsk" secondAttribute="leading" id="0zQ-QH-MPI"/>
-                            <constraint firstItem="i1a-sB-Wsk" firstAttribute="bottom" secondItem="4S7-AX-g2G" secondAttribute="bottom" id="5Nb-QR-4YS"/>
                             <constraint firstItem="i1a-sB-Wsk" firstAttribute="trailing" secondItem="4S7-AX-g2G" secondAttribute="trailing" id="cUq-C2-ctX"/>
-                            <constraint firstItem="4S7-AX-g2G" firstAttribute="top" secondItem="i1a-sB-Wsk" secondAttribute="top" id="zOK-6A-9B1"/>
+                            <constraint firstItem="4S7-AX-g2G" firstAttribute="top" secondItem="i1a-sB-Wsk" secondAttribute="top" id="gvm-IO-72A"/>
+                            <constraint firstItem="4S7-AX-g2G" firstAttribute="bottom" secondItem="i1a-sB-Wsk" secondAttribute="bottom" id="s74-SL-yz2"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="email" id="cJq-PJ-HAu">
@@ -157,6 +160,9 @@
     <resources>
         <image name="dismiss-modal-icon" width="17" height="17"/>
         <image name="no-image" width="50" height="50"/>
+        <systemColor name="secondarySystemGroupedBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

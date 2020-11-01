@@ -5,15 +5,15 @@ class RuuviTagLoadDataOperation: AsyncOperation {
     var ruuviTagId: String
     var mac: String
     var error: RUError?
-    private var since: Date
-    private var until: Date
+    private var since: Date?
+    private var until: Date?
     private var network: RuuviNetwork
     private var ruuviTagTank: RuuviTagTank
 
     init(ruuviTagId: String,
          mac: String,
-         since: Date,
-         until: Date = Date(),
+         since: Date? = nil,
+         until: Date? = nil,
          network: RuuviNetwork,
          ruuviTagTank: RuuviTagTank) {
         self.ruuviTagId = ruuviTagId
