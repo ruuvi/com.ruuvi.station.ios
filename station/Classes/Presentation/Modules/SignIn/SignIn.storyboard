@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="k6d-bS-0dj">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="cbS-Ew-9uE">
+            <objects>
+                <navigationController id="k6d-bS-0dj" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1wh-Tm-wzm">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="oSZ-yy-qSu" kind="relationship" relationship="rootViewController" id="r7u-wn-VXa"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gSj-P9-SwH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1023" y="-112"/>
+        </scene>
+        <!--Sign in-->
+        <scene sceneID="LxA-sZ-lQl">
+            <objects>
+                <viewController storyboardIdentifier="SignInViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oSZ-yy-qSu" customClass="SignInViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jyk-P3-W77">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dBp-sa-Q5t">
+                                <rect key="frame" x="16" y="120" width="382" height="122"/>
+                                <string key="text">Sign in benefits, the information is saved in the cloud:
+- ruuvitag data
+- sensor name
+- sensor data
+- bg images</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Register or request new sing in link" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCm-oJ-nPu">
+                                <rect key="frame" x="16" y="274" width="382" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c4U-9j-8pJ">
+                                <rect key="frame" x="16" y="310.5" width="382" height="42"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="Nrf-dh-2TM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="oSZ-yy-qSu" id="a4R-Y6-Fdf"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pNT-Eq-mH2">
+                                <rect key="frame" x="162" y="410.5" width="90" height="42"/>
+                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
+                                <inset key="contentEdgeInsets" minX="16" minY="12" maxX="16" maxY="12"/>
+                                <state key="normal" title="SUBMIT">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="21"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="didTapSubmit:" destination="oSZ-yy-qSu" eventType="touchUpInside" id="ZqG-n2-gkN"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WoL-iB-NEb">
+                                <rect key="frame" x="99.5" y="484.5" width="215" height="42"/>
+                                <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="Vgn-Vg-DVC"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="14"/>
+                                <inset key="contentEdgeInsets" minX="16" minY="12" maxX="16" maxY="12"/>
+                                <state key="normal" title="ENTER CODE MANUALLY">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="21"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="viewDidTapEnterCodeManually:" destination="oSZ-yy-qSu" eventType="touchUpInside" id="yXW-Nl-pDa"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="error" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e42-RB-fNh">
+                                <rect key="frame" x="20" y="360.5" width="374" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" systemColor="systemRedColor"/>
+                                <color key="highlightedColor" systemColor="labelColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vAn-ao-A2u"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="zCm-oJ-nPu" firstAttribute="leading" secondItem="vAn-ao-A2u" secondAttribute="leading" constant="16" id="7B9-Vc-hAA"/>
+                            <constraint firstItem="vAn-ao-A2u" firstAttribute="trailing" secondItem="dBp-sa-Q5t" secondAttribute="trailing" constant="16" id="9Md-Xt-f6P"/>
+                            <constraint firstItem="vAn-ao-A2u" firstAttribute="trailing" secondItem="zCm-oJ-nPu" secondAttribute="trailing" constant="16" id="9aD-Jz-Wm5"/>
+                            <constraint firstItem="pNT-Eq-mH2" firstAttribute="centerX" secondItem="vAn-ao-A2u" secondAttribute="centerX" id="D8k-xv-L9r"/>
+                            <constraint firstItem="dBp-sa-Q5t" firstAttribute="top" secondItem="vAn-ao-A2u" secondAttribute="top" constant="32" id="Rwl-eZ-UTp"/>
+                            <constraint firstItem="pNT-Eq-mH2" firstAttribute="top" secondItem="e42-RB-fNh" secondAttribute="bottom" constant="32" id="S5P-Cw-Dhj"/>
+                            <constraint firstItem="vAn-ao-A2u" firstAttribute="trailing" secondItem="e42-RB-fNh" secondAttribute="trailing" constant="20" id="bbR-zZ-EUE"/>
+                            <constraint firstItem="vAn-ao-A2u" firstAttribute="trailing" secondItem="c4U-9j-8pJ" secondAttribute="trailing" constant="16" id="dNW-ko-dzu"/>
+                            <constraint firstItem="WoL-iB-NEb" firstAttribute="top" secondItem="pNT-Eq-mH2" secondAttribute="bottom" constant="32" id="ilF-E1-blG"/>
+                            <constraint firstItem="dBp-sa-Q5t" firstAttribute="leading" secondItem="vAn-ao-A2u" secondAttribute="leading" constant="16" id="om8-e8-pQZ"/>
+                            <constraint firstItem="c4U-9j-8pJ" firstAttribute="top" secondItem="zCm-oJ-nPu" secondAttribute="bottom" constant="16" id="oz5-o8-sQW"/>
+                            <constraint firstItem="WoL-iB-NEb" firstAttribute="centerX" secondItem="vAn-ao-A2u" secondAttribute="centerX" id="pv1-Nb-dbR"/>
+                            <constraint firstItem="zCm-oJ-nPu" firstAttribute="top" secondItem="dBp-sa-Q5t" secondAttribute="bottom" constant="32" id="rKD-fO-c6U"/>
+                            <constraint firstItem="e42-RB-fNh" firstAttribute="leading" secondItem="vAn-ao-A2u" secondAttribute="leading" constant="20" id="xHS-n1-OKT"/>
+                            <constraint firstItem="c4U-9j-8pJ" firstAttribute="leading" secondItem="vAn-ao-A2u" secondAttribute="leading" constant="16" id="yJw-Hu-38m"/>
+                            <constraint firstItem="e42-RB-fNh" firstAttribute="top" secondItem="c4U-9j-8pJ" secondAttribute="bottom" constant="8" id="zw8-Wm-KUD"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Sign in" id="LAA-Ka-wRV">
+                        <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="cc4-dQ-UOV">
+                            <connections>
+                                <action selector="didTapCloseButton:" destination="oSZ-yy-qSu" id="ppK-8s-0vy"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="enterCodeManuallyButton" destination="WoL-iB-NEb" id="Ck6-8Z-yUS"/>
+                        <outlet property="errorLabel" destination="e42-RB-fNh" id="4yH-KV-nzJ"/>
+                        <outlet property="subTitleLabel" destination="zCm-oJ-nPu" id="ZEr-ru-s2R"/>
+                        <outlet property="submitButton" destination="pNT-Eq-mH2" id="kNn-G9-Wop"/>
+                        <outlet property="textTextField" destination="c4U-9j-8pJ" id="3Mc-L5-7Pe"/>
+                        <outlet property="titleLabel" destination="dBp-sa-Q5t" id="AH4-c4-Mgl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gP2-FS-Vmy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="yTB-lz-s2E" customClass="SignInInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="oSZ-yy-qSu" id="oEU-Ry-cgr"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-217.39130434782609" y="-113.16964285714285"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

@@ -267,7 +267,28 @@ extension TagChartsPresenter: MenuModuleOutput {
                                                 body: "\n\n" + summary)
         }
     }
+
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn(output: self)
+    }
+
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+        router.openTagsManager(output: self)
+    }
 }
+
+// MARK: - SignInModuleOutput
+extension TagChartsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+        router.openTagsManager(output: self)
+    }
+}
+
+// MARK: - TagsManagerModuleOutput
+extension TagChartsPresenter: TagsManagerModuleOutput {}
 
 // MARK: - AlertServiceObserver
 extension TagChartsPresenter: AlertServiceObserver {

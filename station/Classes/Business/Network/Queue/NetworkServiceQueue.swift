@@ -18,17 +18,31 @@ class NetworkServiceQueue: NetworkService {
         let promise = Promise<Bool, RUError>()
         let operation = ruuviTagTrunk.readOne(ruuviTagId)
         operation.on(success: { [weak self] sensor in
-            if let strongSelf = self {
-                strongSelf.loadDataOperation(for: sensor,
-                                             mac: mac,
-                                             from: provider).on(success: { (result) in
-                                                promise.succeed(value: result)
-                                             }, failure: { (error) in
-                                                promise.fail(error: error)
-                                             })
-            } else {
-                promise.fail(error: .unexpected(.failedToFindLogsForTheTag))
+            guard let strongSelf = self else {
+                return
             }
+            let lastRecord = strongSelf.ruuviTagTrunk.readLast(sensor)
+            lastRecord.on(success: { (record) in
+                let since: Date? = record?.date
+                let loadDataOperation = strongSelf.loadDataOperation(for: sensor,
+                                                                     mac: mac,
+                                                                     since: since,
+                                                                     from: provider)
+                loadDataOperation.on(success: { (result) in
+                    promise.succeed(value: result)
+                 }, failure: { (error) in
+                    promise.fail(error: error)
+                 })
+            }, failure: { _ in
+                let loadDataOperation = strongSelf.loadDataOperation(for: sensor,
+                                                                     mac: mac,
+                                                                     from: provider)
+                loadDataOperation.on(success: { (result) in
+                    promise.succeed(value: result)
+                 }, failure: { (error) in
+                    promise.fail(error: error)
+                 })
+            })
         }, failure: { _ in
             promise.fail(error: .unexpected(.failedToFindRuuviTag))
         })
@@ -37,12 +51,13 @@ class NetworkServiceQueue: NetworkService {
 
     private func loadDataOperation(for sensor: AnyRuuviTagSensor,
                                    mac: String,
+                                   since: Date? = nil,
                                    from provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         let network = ruuviNetworkFactory.network(for: provider)
         let operation = RuuviTagLoadDataOperation(ruuviTagId: sensor.id,
                                                   mac: mac,
-                                                  isConnectable: sensor.isConnectable,
+                                                  since: since,
                                                   network: network,
                                                   ruuviTagTank: ruuviTagTank)
         operation.completionBlock = { [unowned operation] in

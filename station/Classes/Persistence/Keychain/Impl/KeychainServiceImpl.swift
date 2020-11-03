@@ -9,28 +9,12 @@ class KeychainServiceImpl {
         .accessibility(.whenPasscodeSetThisDeviceOnly)
 
     private enum Account: String {
-        case kaltiot
         case ruuviUserApi
+        case userApiEmail
     }
 }
 // MARK: - Public
 extension KeychainServiceImpl: KeychainService {
-    var kaltiotApiKey: String? {
-        get {
-            return keychain[Account.kaltiot.rawValue]
-        }
-        set {
-            if let value = newValue {
-                keychain[Account.kaltiot.rawValue] = value
-            } else {
-                try? keychain.remove(
-                    Account.kaltiot.rawValue,
-                    ignoringAttributeSynchronizable: true
-                )
-            }
-        }
-    }
-
     var ruuviUserApiKey: String? {
         get {
             return keychain[Account.ruuviUserApi.rawValue]
@@ -41,6 +25,22 @@ extension KeychainServiceImpl: KeychainService {
             } else {
                 try? keychain.remove(
                     Account.ruuviUserApi.rawValue,
+                    ignoringAttributeSynchronizable: true
+                )
+            }
+        }
+    }
+
+    var userApiEmail: String? {
+        get {
+            return keychain[Account.userApiEmail.rawValue]
+        }
+        set {
+            if let value = newValue {
+                keychain[Account.userApiEmail.rawValue] = value
+            } else {
+                try? keychain.remove(
+                    Account.userApiEmail.rawValue,
                     ignoringAttributeSynchronizable: true
                 )
             }

@@ -1,54 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pwK-mi-m51">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="pwK-mi-m51">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Network Settings Table View Controller-->
         <scene sceneID="bX8-V8-HbC">
             <objects>
-                <tableViewController storyboardIdentifier="KaltiotSettingsTableViewController" id="pwK-mi-m51" customClass="NetworkSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="NetworkSettingsTableViewController" id="pwK-mi-m51" customClass="NetworkSettingsTableViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="CVK-dw-nrw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="KaltiotApiKeyTableViewCell" rowHeight="64" id="g4f-E7-Ggx" customClass="KaltiotApiKeyTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="55.333332061767578" width="414" height="64"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="g4f-E7-Ggx" id="aZO-4f-slU">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter ApiKey" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="1x8-yv-4OY">
-                                            <rect key="frame" x="20" y="11" width="374" height="42"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="yes" smartQuotesType="no" textContentType="password"/>
-                                        </textField>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="1x8-yv-4OY" secondAttribute="bottom" id="5fn-k4-b4b"/>
-                                        <constraint firstItem="1x8-yv-4OY" firstAttribute="top" secondItem="aZO-4f-slU" secondAttribute="topMargin" id="gM8-uu-KKB"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="1x8-yv-4OY" secondAttribute="trailing" id="mSL-Ew-Sej"/>
-                                        <constraint firstItem="1x8-yv-4OY" firstAttribute="leading" secondItem="aZO-4f-slU" secondAttribute="leadingMargin" id="xcc-dU-aU0"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="apiKeyTextField" destination="1x8-yv-4OY" id="Zqd-Je-Fuy"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="NetworkSettingsSwitchTableViewCell" id="bim-4a-9Ui" customClass="NetworkSettingsSwitchTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="119.33333206176758" width="414" height="42.333332061767578"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="NetworkSettingsSwitchTableViewCell" id="bim-4a-9Ui" customClass="NetworkSettingsSwitchTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="55.333332061767578" width="414" height="42.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bim-4a-9Ui" id="zxx-bd-Ca0">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="42.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ps-n7-Ulf">
-                                            <rect key="frame" x="20.000000000000004" y="10.999999999999998" width="33.333333333333343" height="20.333333333333329"/>
+                                            <rect key="frame" x="20" y="10.999999999999998" width="33" height="20.333333333333329"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -71,15 +47,15 @@
                                     <outlet property="settingsTitleLabel" destination="2Ps-n7-Ulf" id="fdk-dt-heG"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="NetworkSettingsTextTableViewCell" id="fbA-K4-FKt" customClass="NetworkSettingsTextTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="161.66666412353516" width="414" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="NetworkSettingsTextTableViewCell" id="fbA-K4-FKt" customClass="NetworkSettingsTextTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="97.666664123535156" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fbA-K4-FKt" id="hJB-3s-uMG">
-                                    <rect key="frame" x="0.0" y="0.0" width="383" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="382.66666666666669" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWL-ta-UCS">
-                                            <rect key="frame" x="20.000000000000004" y="11.666666666666664" width="33.333333333333343" height="21"/>
+                                            <rect key="frame" x="20" y="11.666666666666664" width="33" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -94,15 +70,15 @@
                                     <outlet property="settingsTitleLabel" destination="wWL-ta-UCS" id="Jbl-S8-IA2"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="NetworkSettingsStepperTableViewCell" id="OQ8-Fm-NoH" userLabel="NetworkStepperTableViewCellReuseIdentifier" customClass="NetworkSettingsStepperTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="205.66666412353516" width="414" height="42.333332061767578"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="NetworkSettingsStepperTableViewCell" id="OQ8-Fm-NoH" userLabel="NetworkStepperTableViewCellReuseIdentifier" customClass="NetworkSettingsStepperTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="141.66666412353516" width="414" height="42.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OQ8-Fm-NoH" id="9pm-5Q-WvX">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="42.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" text="Every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TLh-vj-v0g">
-                                            <rect key="frame" x="19.999999999999993" y="10.999999999999998" width="89.333333333333314" height="20.333333333333329"/>
+                                            <rect key="frame" x="20.000000000000007" y="10.999999999999998" width="88.666666666666686" height="20.333333333333329"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -137,7 +113,7 @@
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sj2-HX-gJ5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="tsf-jX-8yG" customClass="NetworkSettingsTableInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="tsf-jX-8yG" customClass="NetworkSettingsTableInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="pwK-mi-m51" id="YVS-mi-tkn"/>
                     </connections>
@@ -146,4 +122,9 @@
             <point key="canvasLocation" x="-334.78260869565219" y="210.9375"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="groupTableViewBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

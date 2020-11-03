@@ -7,7 +7,7 @@ struct UserApiVerifyResponse: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case email
-        case accessToken = "access_token"
-        case isNewUser = "new_user"
+        case accessToken
+        case isNewUser = "newUser"
     }
 }

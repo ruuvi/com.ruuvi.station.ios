@@ -31,11 +31,6 @@
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 
-// AddMacViewController
-"AddMacViewController.Send" = "Отправить";
-"AddMacViewController.EnterKaltiotMacAddress" = "Введите mac-адрес Kaltiot";
-"AddMacViewController.EnterWhereOsMacAddress" = "Введите mac-адрес WhereOS";
-
 // Background
 "Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
@@ -110,14 +105,6 @@
 "DiscoverTable.AddWithMACSection.text" = "Добавить по MAC адресу";
 "DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
 "DiscoverTable.NetworkChoiseDialog.title" = "Выберите провайдер";
-"DiscoverTable.KaltiotNetwork" = "Kaltiot";
-"DiscoverTable.WhereOSNetwork" = "WhereOS";
-"DiscoverTable.AddKaltiotApiKeyDialog.title" = "Enter Kaltiot ApiKey";
-
-// KaltiotPicker
-"KaltiotPicker.Title.text" = "Добавление тега Kaltiot";
-"RuuviNetworkKaltiot.Name.prefix" = "Kaltiot";
-"RuuviNetworkWhereOS.Name.prefix" = "WhereOS";
 
 // ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
@@ -242,12 +229,6 @@
 // Network settings
 "NetworkSettings.title" = "Network settings";
 "NetworkSettings.NetworkFeature" = "Network feature";
-"NetworkSettings.WhereOS" = "WhereOS";
-"NetworkSettings.Kaltiot" = "Kaltiot";
-
-// Kaltiot settings
-"KaltiotSettings.ApiKeyTextField.placeholder" = "Введите ApiKey";
-"KaltiotSettings.FooterTextView.text" = "Получить ApiKey можно после регистрации на\nhttps://console.torqhub.io/\nв разделе \"Tracker - Credentials\" -> \"HTTP API\"";
 
 // OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";

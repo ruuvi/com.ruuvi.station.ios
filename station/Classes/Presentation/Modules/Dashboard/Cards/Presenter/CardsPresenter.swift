@@ -244,7 +244,28 @@ extension CardsPresenter: MenuModuleOutput {
                                                 body: "<br><br>" + summary)
         }
     }
+
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn(output: self)
+    }
+
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+        router.openTagsManager(output: self)
+    }
 }
+
+// MARK: - SignInModuleOutput
+extension CardsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+        router.openTagsManager(output: self)
+    }
+}
+
+// MARK: - TagsManagerModuleOutput
+extension CardsPresenter: TagsManagerModuleOutput {}
 
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
