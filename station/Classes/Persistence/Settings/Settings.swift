@@ -40,8 +40,6 @@ protocol Settings {
     var chartDownsamplingOn: Bool { get set }
     var tagsSorting: [String] { get set }
     var networkFeatureEnabled: Bool { get set }
-    var kaltiotNetworkEnabled: Bool { get set }
-    var whereOSNetworkEnabled: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool

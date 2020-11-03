@@ -30,6 +30,11 @@ class TagChartsInteractor {
             }
         }
     }
+    private lazy var queue: OperationQueue = {
+        var queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        return queue
+    }()
     private var sensors: [AnyRuuviTagSensor] = []
 
     deinit {
@@ -124,14 +129,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
             operations.append(syncLocalTag(luid: luid.value, progress: progress))
         }
         if let macId = ruuviTagSensor.macId {
-            if settings.kaltiotNetworkEnabled && keychainService.hasKaltiotApiKey {
-                operations.append(syncNetworkRecords(for: macId, with: .kaltiot))
-                progress?(.serving)
-            }
-            if settings.whereOSNetworkEnabled {
-                operations.append(syncNetworkRecords(for: macId, with: .whereOS))
-                progress?(.serving)
-            }
+            operations.append(syncNetworkRecords(for: ruuviTagSensor.id, macId: macId))
         }
         Future.zip(operations).on(success: { [weak self] (_) in
             self?.clearChartsAndRestartObserving()
@@ -264,10 +262,9 @@ extension TagChartsInteractor {
         return promise.future
     }
 
-    private func syncNetworkRecords(for macId: MACIdentifier,
-                                    with provider: RuuviNetworkProvider) -> Future<Void, RUError> {
+    private func syncNetworkRecords(for ruuviTagId: String, macId: MACIdentifier) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        let op = networkService.loadData(for: macId.value, mac: macId.mac, from: provider)
+        let op = networkService.loadData(for: ruuviTagId, mac: macId.value, from: .userApi)
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: { error in

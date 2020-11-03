@@ -9,7 +9,4 @@ protocol DiscoverViewOutput {
     func viewDidTapOnGetMoreSensors()
     func viewDidTriggerClose()
     func viewDidTapOnWebTagInfo()
-    func viewDidAskToAddTagWithMACAddress()
-    func viewDidSelectProvider(_ provider: RuuviNetworkProvider)
-    func viewDidEnterKaltiotApiKey(apiKey: String)
 }

@@ -4,18 +4,15 @@ import BTKit
 
 enum DiscoverTableSection {
     case webTag
-    case network
     case device
     case noDevices
 
-    static var count = 3 // displayed simultaneously
+    static var count = 2 // displayed simultaneously
 
     static func section(for index: Int, deviceCount: Int) -> DiscoverTableSection {
         switch index {
         case 0:
             return .webTag
-        case 1:
-            return .network
         default:
             return deviceCount > 0 ? .device : .noDevices
         }
@@ -89,24 +86,6 @@ class DiscoverTableViewController: UITableViewController {
         }
     }
 
-    var networkFeatureEnabled: Bool = false {
-        didSet {
-            updateTableView()
-        }
-    }
-
-    var networkKaltiotEnabled: Bool = false {
-        didSet {
-            updateTableView()
-        }
-    }
-
-    var networkWhereOsEnabled: Bool = false {
-        didSet {
-            updateTableView()
-        }
-    }
-
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
@@ -119,10 +98,6 @@ class DiscoverTableViewController: UITableViewController {
         didSet {
             updateTableView()
         }
-    }
-    private var networkSectionIsVisible: Bool {
-        return networkFeatureEnabled
-            && (networkKaltiotEnabled || networkWhereOsEnabled)
     }
 }
 
@@ -148,48 +123,6 @@ extension DiscoverTableViewController: DiscoverViewInput {
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
         present(alertVC, animated: true)
-    }
-
-    func showAddKaltiotApiKey() {
-        let title = "DiscoverTable.AddKaltiotApiKeyDialog.title".localized()
-        let alertVC = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        alertVC.addTextField()
-        let submitAction = UIAlertAction(title: "OK".localized(), style: .default) {
-            [weak self,
-            unowned alertVC] _ in
-            if let apiKey = alertVC.textFields?[0].text {
-                self?.output.viewDidEnterKaltiotApiKey(apiKey: apiKey)
-            }
-        }
-        alertVC.addAction(submitAction)
-        alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
-    }
-
-    func showChoiseDialog() {
-        let title = "DiscoverTable.NetworkChoiseDialog.title".localized()
-        let actionSheetVC = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        if networkKaltiotEnabled {
-            let kaltiotNetworkAction = UIAlertAction(title: "DiscoverTable.KaltiotNetwork".localized(),
-                                                     style: .default) { [weak self] (_) in
-                self?.output.viewDidSelectProvider(.kaltiot)
-            }
-            actionSheetVC.addAction(kaltiotNetworkAction)
-        }
-        if networkWhereOsEnabled {
-            let whereOSNetworkAction = UIAlertAction(title: "DiscoverTable.WhereOSNetwork".localized(),
-                                                     style: .default) { [weak self] (_) in
-                self?.output.viewDidSelectProvider(.whereOS)
-            }
-            actionSheetVC.addAction(whereOSNetworkAction)
-        }
-        actionSheetVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        if UIDevice.current.userInterfaceIdiom == .pad,
-            let cell = tableView.cellForRow(at: IndexPath(item: 0, section: 1)) {
-            actionSheetVC.popoverPresentationController?.sourceView = view
-            actionSheetVC.popoverPresentationController?.sourceRect = cell.frame
-        }
-        present(actionSheetVC, animated: true)
     }
 }
 
@@ -244,8 +177,6 @@ extension DiscoverTableViewController {
             return shownDevices.count
         case .noDevices:
             return 1
-        case .network:
-            return networkSectionIsVisible ? 1 : 0
         }
     }
 
@@ -268,10 +199,6 @@ extension DiscoverTableViewController {
                 ? "DiscoverTable.NoDevicesSection.NotFound.text".localized()
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
             return cell
-        case .network:
-            let cell = tableView.dequeueReusableCell(with: DiscoverAddWithMACTableViewCell.self, for: indexPath)
-            cell.descriptionLabel.text = "DiscoverTable.AddWithMACSection.text".localized()
-            return cell
         }
     }
 }
@@ -291,8 +218,6 @@ extension DiscoverTableViewController {
                 let device = shownDevices[indexPath.row]
                 output.viewDidChoose(device: device, displayName: displayName(for: device))
             }
-        case .network:
-            output.viewDidAskToAddTagWithMACAddress()
         default:
             break
         }
@@ -300,10 +225,7 @@ extension DiscoverTableViewController {
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if !networkSectionIsVisible,
-            sectionType == .network {
-            return .leastNonzeroMagnitude
-        } else if sectionType == .webTag {
+        if sectionType == .webTag {
             return 60
         } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
@@ -311,13 +233,7 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if !networkSectionIsVisible,
-            sectionType == .network {
-            return .leastNonzeroMagnitude
-        } else {
-            return 40
-        }
+        return 40
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -338,8 +254,6 @@ extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
         switch sectionType {
-        case .network:
-            return networkSectionIsVisible ? "DiscoverTable.SectionTitle.Network".localized() : nil
         case .device:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:

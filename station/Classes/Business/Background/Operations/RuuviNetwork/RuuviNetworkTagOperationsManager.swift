@@ -6,12 +6,12 @@ class RuuviNetworkTagOperationsManager {
     var ruuviNetworkFactory: RuuviNetworkFactory!
     var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagTank: RuuviTagTank!
-    var settings: Settings!
+    var keychainService: KeychainService!
 
     func pullNetworkTagOperations() -> Future<[Operation], RUError> {
         let promise: Promise<[Operation], RUError> = .init()
         var operations: [Operation] = [Operation]()
-        guard settings.networkFeatureEnabled else {
+        guard keychainService.userApiIsAuthorized else {
             promise.fail(error: .ruuviNetwork(.doesNotHaveSensors))
             return promise.future
         }
@@ -22,20 +22,10 @@ class RuuviNetworkTagOperationsManager {
                     let ruuviTagTank = self?.ruuviTagTank else {
                     return
                 }
-                if self?.settings.kaltiotNetworkEnabled == true {
-                    operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
-                                                                mac: mac,
-                                                                isConnectable: $0.isConnectable,
-                                                                network: ruuviNetworkFactory.network(for: .kaltiot),
-                                                                ruuviTagTank: ruuviTagTank))
-                }
-                if self?.settings.whereOSNetworkEnabled == true {
-                    operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
-                                                                mac: mac,
-                                                                isConnectable: $0.isConnectable,
-                                                                network: ruuviNetworkFactory.network(for: .whereOS),
-                                                                ruuviTagTank: ruuviTagTank))
-                }
+                operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
+                                                            mac: mac,
+                                                            network: ruuviNetworkFactory.userApi,
+                                                            ruuviTagTank: ruuviTagTank))
             })
             promise.succeed(value: operations)
         }

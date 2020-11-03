@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		053BD1EF1443171286509626 /* TagsManagerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A2418BB26C6E7BDBDE8CCF /* TagsManagerModuleOutput.swift */; };
+		08E830207D43DAF06076D647 /* SignInModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */; };
 		0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABB9237598C600ED4629 /* RURangeSeekSlider.swift */; };
 		0E02ABBD2375A1CF00ED4629 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABBC2375A1CF00ED4629 /* AlertService.swift */; };
 		0E02ABC02375A5D000ED4629 /* AlertServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABBF2375A5D000ED4629 /* AlertServiceImpl.swift */; };
@@ -560,13 +562,6 @@
 		0E79F25A2441ACBA0048BF86 /* RuuviNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2592441ACBA0048BF86 /* RuuviNetwork.swift */; };
 		0E79F25B2441ACBA0048BF86 /* RuuviNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2592441ACBA0048BF86 /* RuuviNetwork.swift */; };
 		0E79F25C2441ACBA0048BF86 /* RuuviNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2592441ACBA0048BF86 /* RuuviNetwork.swift */; };
-		0E79F25E2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */; };
-		0E79F25F2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */; };
-		0E79F2602441AE5E0048BF86 /* RuuviNetworkWhereOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */; };
-		0E79F2632441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */; };
-		0E79F2642441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */; };
-		0E79F2652441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */; };
-		0E79F26A2441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2692441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift */; };
 		0E79F279244201540048BF86 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F278244201540048BF86 /* NetworkService.swift */; };
 		0E79F27A244201540048BF86 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F278244201540048BF86 /* NetworkService.swift */; };
 		0E79F27B244201540048BF86 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F278244201540048BF86 /* NetworkService.swift */; };
@@ -1227,6 +1222,11 @@
 		0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
 		0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
+		1F3C224646FB9B196464E9DD /* SignInConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */; };
+		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		3E33EBD2303E22F3E8131CE1 /* TagsManagerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */; };
+		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
+		45F8BB13B8F60B722A0AF64C /* TagsManagerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -1239,7 +1239,14 @@
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
 		706E22795B6DE254AF39BB12 /* Pods_stationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */; };
+		7350803A8D6DD23F1057994F /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B5190CB557178D11AB2CE /* SignInPresenter.swift */; };
 		73949279A33A1BF08159FE0E /* Pods_station_dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7097B76856D5F01896F963EC /* Pods_station_dev.framework */; };
+		74E67721EFA7BF9397D52B1F /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */; };
+		76E82538BA4F7E8761E07EC7 /* TagsManagerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */; };
+		795133998B4A61A60C49DB52 /* TagsManagerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */; };
+		887CBE2377960FB6AA615CA9 /* TagsManagerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */; };
+		8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
+		9BB9617F40599EF964AA6A6C /* TagsManagerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */; };
 		A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
 		A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
 		A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
@@ -1322,11 +1329,6 @@
 		A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91D031925113EAA00694733 /* UnitPressure+Extension.swift */; };
 		A91D031B25113EAA00694733 /* UnitPressure+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91D031925113EAA00694733 /* UnitPressure+Extension.swift */; };
 		A91D031C25113EAA00694733 /* UnitPressure+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91D031925113EAA00694733 /* UnitPressure+Extension.swift */; };
-		A9227B58245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */; };
-		A9227B59245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */; };
-		A9227B5A245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */; };
-		A9227B60245C43A100466B23 /* RuuviNetworkKaltiot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */; };
-		A9227B61245C43A200466B23 /* RuuviNetworkKaltiot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */; };
 		A9227BB1245C86FA00466B23 /* NetworkSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9227BA0245C86FA00466B23 /* NetworkSettings.storyboard */; };
 		A9227BB2245C86FA00466B23 /* NetworkSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9227BA0245C86FA00466B23 /* NetworkSettings.storyboard */; };
 		A9227BB3245C86FA00466B23 /* NetworkSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9227BA0245C86FA00466B23 /* NetworkSettings.storyboard */; };
@@ -1357,7 +1359,6 @@
 		A9227BCF245C86FB00466B23 /* NetworkSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9227BB0245C86FA00466B23 /* NetworkSettingsRouterInput.swift */; };
 		A9227BD0245C86FB00466B23 /* NetworkSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9227BB0245C86FA00466B23 /* NetworkSettingsRouterInput.swift */; };
 		A9227BD1245C86FB00466B23 /* NetworkSettingsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9227BB0245C86FA00466B23 /* NetworkSettingsRouterInput.swift */; };
-		A92A66BB2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
 		A92A66BD2450C640002918E7 /* UITableViewCell+ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */; };
 		A92A66BE2450C64A002918E7 /* UITableViewCell+ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */; };
 		A92A66BF2450C64B002918E7 /* UITableViewCell+ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */; };
@@ -1377,6 +1378,9 @@
 		A93052B8242BFCC000FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
 		A93052B9242BFCF800FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
 		A93052BA242BFCF900FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
+		A933E037253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */; };
+		A933E038253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */; };
+		A933E039253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */; };
 		A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
 		A93DB9E624731C65007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
 		A93DB9E724731C66007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
@@ -1386,51 +1390,12 @@
 		A949A83B24707FD0006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
 		A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A949A83A24707FD0006B7F4F /* LocalizedCache.swift */; };
-		A94A87F824D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */; };
-		A94A87F924D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */; };
-		A94A87FA24D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */; };
-		A94A880524D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */; };
-		A94A880624D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */; };
-		A94A880724D4373700D2CBA4 /* AddMacModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */; };
-		A94A880824D4373900D2CBA4 /* AddMacModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */; };
-		A94A880924D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */; };
-		A94A880A24D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */; };
-		A94A880B24D4374300D2CBA4 /* AddMacPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */; };
-		A94A880C24D4374300D2CBA4 /* AddMacRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */; };
-		A94A880D24D4374300D2CBA4 /* AddMacRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */; };
-		A94A880E24D4374300D2CBA4 /* AddMacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */; };
-		A94A880F24D4374300D2CBA4 /* AddMacViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */; };
-		A94A881024D4374300D2CBA4 /* AddMacViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */; };
-		A94A881124D4374300D2CBA4 /* AddMacViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */; };
-		A94A881224D4374400D2CBA4 /* AddMacPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */; };
-		A94A881324D4374400D2CBA4 /* AddMacRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */; };
-		A94A881424D4374400D2CBA4 /* AddMacRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */; };
-		A94A881524D4374400D2CBA4 /* AddMacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */; };
-		A94A881624D4374400D2CBA4 /* AddMacViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */; };
-		A94A881724D4374400D2CBA4 /* AddMacViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */; };
-		A94A881824D4374400D2CBA4 /* AddMacViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */; };
-		A94A881924D4374500D2CBA4 /* AddMacPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */; };
-		A94A881A24D4374500D2CBA4 /* AddMacRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */; };
-		A94A881B24D4374500D2CBA4 /* AddMacRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */; };
-		A94A881C24D4374500D2CBA4 /* AddMacViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */; };
-		A94A881D24D4374500D2CBA4 /* AddMacViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */; };
-		A94A881E24D4374500D2CBA4 /* AddMacViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */; };
-		A94A881F24D4374500D2CBA4 /* AddMacViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */; };
 		A94A883A24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */; };
 		A94A883B24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */; };
 		A94A883C24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */; };
 		A94A884C24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */; };
 		A94A884D24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */; };
 		A94A884E24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */; };
-		A94A885424D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */; };
-		A94A885524D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */; };
-		A94A885624D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */; };
-		A94A885724D44C1300D2CBA4 /* AddMac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A94A885224D4492700D2CBA4 /* AddMac.storyboard */; };
-		A94A885824D44C1400D2CBA4 /* AddMac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A94A885224D4492700D2CBA4 /* AddMac.storyboard */; };
-		A94A885924D44C1400D2CBA4 /* AddMac.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A94A885224D4492700D2CBA4 /* AddMac.storyboard */; };
-		A94A886624D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
-		A94A886724D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
-		A94A886824D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */; };
 		A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
 		A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
 		A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */; };
@@ -1456,16 +1421,12 @@
 		A952CAB72532597E00BBDA9D /* UserApiBaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CAB62532597E00BBDA9D /* UserApiBaseResponse.swift */; };
 		A952CAB82532597E00BBDA9D /* UserApiBaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CAB62532597E00BBDA9D /* UserApiBaseResponse.swift */; };
 		A952CAB92532597E00BBDA9D /* UserApiBaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CAB62532597E00BBDA9D /* UserApiBaseResponse.swift */; };
-		A95518AB24573DF5005592FD /* RuuviNetworkKaltiot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */; };
-		A95518AD245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
 		A95BA3E52451ECB000EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
 		A95BA3E72451ED7000EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
 		A95BA3E82451EE3A00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
 		A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */; };
 		A95BA3EA2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
 		A95BA3EB2451EE3F00EF923D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95BA3E42451ECB000EF923D /* KeychainService.swift */; };
-		A95BA3EF245200FA00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
-		A95BA3F0245200FC00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */; };
 		A9627BF424802FA5004BBF22 /* ReloadableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3197245CBEB800041559 /* ReloadableCell.swift */; };
 		A9646466247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
 		A9646467247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */; };
@@ -1533,9 +1494,6 @@
 		A97FDD762519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
 		A97FDD772519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
 		A97FDD782519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
-		A980CC6C2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */; };
-		A980CC742468193C00C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */; };
-		A980CC752468193C00C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */; };
 		A980CC7924681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */; };
 		A980CC7A24681A5800C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */; };
 		A980CC7B24681A5900C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */; };
@@ -1545,59 +1503,12 @@
 		A9828E0424792C4400E7E9D4 /* NetworkSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3180245C916800041559 /* NetworkSettingsViewModel.swift */; };
 		A9828E0524792C4500E7E9D4 /* NetworkSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3180245C916800041559 /* NetworkSettingsViewModel.swift */; };
 		A9828E0624792C4600E7E9D4 /* NetworkSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3180245C916800041559 /* NetworkSettingsViewModel.swift */; };
-		A9828E0724792C5900E7E9D4 /* KaltiotBeacons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351BF245382C7004696BD /* KaltiotBeacons.swift */; };
-		A9828E0824792C5900E7E9D4 /* KaltiotBeacons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351BF245382C7004696BD /* KaltiotBeacons.swift */; };
-		A9828E0924792C5A00E7E9D4 /* KaltiotBeacons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351BF245382C7004696BD /* KaltiotBeacons.swift */; };
-		A9828E0A24792C6F00E7E9D4 /* WhereOSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B924538230004696BD /* WhereOSData.swift */; };
-		A9828E0B24792C7000E7E9D4 /* WhereOSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B924538230004696BD /* WhereOSData.swift */; };
-		A9828E0C24792C7000E7E9D4 /* WhereOSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B924538230004696BD /* WhereOSData.swift */; };
 		A9828E0D24792CAC00E7E9D4 /* DiffCalculatorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */; };
 		A9828E0E24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */; };
 		A9828E0F24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */; };
 		A9828E1024792CB200E7E9D4 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3186245CBDB700041559 /* DiffCalculator.swift */; };
 		A9828E1124792CB200E7E9D4 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3186245CBDB700041559 /* DiffCalculator.swift */; };
 		A9828E1224792CB300E7E9D4 /* DiffCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3186245CBDB700041559 /* DiffCalculator.swift */; };
-		A9828E1324792CBA00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519C24535E07004696BD /* KaltiotPickerTableConfigurator.swift */; };
-		A9828E1424792CBA00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519C24535E07004696BD /* KaltiotPickerTableConfigurator.swift */; };
-		A9828E1524792CBB00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519C24535E07004696BD /* KaltiotPickerTableConfigurator.swift */; };
-		A9828E1624792CC100E7E9D4 /* KaltiotPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351A824535F46004696BD /* KaltiotPickerPresenter.swift */; };
-		A9828E1724792CC100E7E9D4 /* KaltiotPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351A824535F46004696BD /* KaltiotPickerPresenter.swift */; };
-		A9828E1824792CC200E7E9D4 /* KaltiotPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351A824535F46004696BD /* KaltiotPickerPresenter.swift */; };
-		A9828E1924792CD300E7E9D4 /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
-		A9828E1A24792CD400E7E9D4 /* RuuviNetworkKaltiotURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */; };
-		A9828E1B24792D2400E7E9D4 /* KaltiotPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C351B42453672B004696BD /* KaltiotPicker.storyboard */; };
-		A9828E1C24792D2500E7E9D4 /* KaltiotPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C351B42453672B004696BD /* KaltiotPicker.storyboard */; };
-		A9828E1D24792D2600E7E9D4 /* KaltiotPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9C351B42453672B004696BD /* KaltiotPicker.storyboard */; };
-		A9828E1E24792D3000E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519824535DAD004696BD /* KaltiotPickerTableInitializer.swift */; };
-		A9828E1F24792D3100E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519824535DAD004696BD /* KaltiotPickerTableInitializer.swift */; };
-		A9828E2024792D3200E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519824535DAD004696BD /* KaltiotPickerTableInitializer.swift */; };
-		A9828E2124792D4400E7E9D4 /* KaltiotPickerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */; };
-		A9828E2224792D4400E7E9D4 /* KaltiotPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */; };
-		A9828E2324792D4400E7E9D4 /* KaltiotPickerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519E24535E45004696BD /* KaltiotPickerRouter.swift */; };
-		A9828E2424792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351A024535E68004696BD /* KaltiotPickerRouterInput.swift */; };
-		A9828E2524792D4400E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */; };
-		A9828E2624792D4400E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */; };
-		A9828E2724792D4400E7E9D4 /* KaltiotPickerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351AC24535FA5004696BD /* KaltiotPickerViewInput.swift */; };
-		A9828E2824792D4400E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B0245360AA004696BD /* KaltiotPickerViewOutput.swift */; };
-		A9828E2924792D4400E7E9D4 /* KaltiotPicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF32459EC59000C38DA /* KaltiotPicketViewModel.swift */; };
-		A9828E2A24792D4400E7E9D4 /* KaltiotPickerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */; };
-		A9828E2B24792D4400E7E9D4 /* KaltiotPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */; };
-		A9828E2C24792D4400E7E9D4 /* KaltiotPickerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519E24535E45004696BD /* KaltiotPickerRouter.swift */; };
-		A9828E2D24792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351A024535E68004696BD /* KaltiotPickerRouterInput.swift */; };
-		A9828E2E24792D4400E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */; };
-		A9828E2F24792D4400E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */; };
-		A9828E3024792D4400E7E9D4 /* KaltiotPickerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351AC24535FA5004696BD /* KaltiotPickerViewInput.swift */; };
-		A9828E3124792D4400E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B0245360AA004696BD /* KaltiotPickerViewOutput.swift */; };
-		A9828E3224792D4400E7E9D4 /* KaltiotPicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF32459EC59000C38DA /* KaltiotPicketViewModel.swift */; };
-		A9828E3324792D4500E7E9D4 /* KaltiotPickerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */; };
-		A9828E3424792D4500E7E9D4 /* KaltiotPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */; };
-		A9828E3524792D4500E7E9D4 /* KaltiotPickerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3519E24535E45004696BD /* KaltiotPickerRouter.swift */; };
-		A9828E3624792D4500E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351A024535E68004696BD /* KaltiotPickerRouterInput.swift */; };
-		A9828E3724792D4500E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */; };
-		A9828E3824792D4500E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */; };
-		A9828E3924792D4500E7E9D4 /* KaltiotPickerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351AC24535FA5004696BD /* KaltiotPickerViewInput.swift */; };
-		A9828E3A24792D4500E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C351B0245360AA004696BD /* KaltiotPickerViewOutput.swift */; };
-		A9828E3B24792D4500E7E9D4 /* KaltiotPicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E58CF32459EC59000C38DA /* KaltiotPicketViewModel.swift */; };
 		A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318B245CBE3F00041559 /* SectionChanges.swift */; };
 		A9828E3D24792D6B00E7E9D4 /* CellChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA318F245CBE6500041559 /* CellChanges.swift */; };
 		A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA3193245CBEA200041559 /* ReloadableSection.swift */; };
@@ -1621,6 +1532,9 @@
 		A9828E5124792E0500E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
 		A9828E5224792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
 		A9828E5324792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79F2862442082A0048BF86 /* RuuviTagLoadDataOperations.swift */; };
+		A985B0A72541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A985B0A62541FE1E0050D744 /* TagManagerButtonTableViewCell.swift */; };
+		A985B0A82541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A985B0A62541FE1E0050D744 /* TagManagerButtonTableViewCell.swift */; };
+		A985B0A92541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A985B0A62541FE1E0050D744 /* TagManagerButtonTableViewCell.swift */; };
 		A989A3082532612C00D092DB /* UserApiRegisterRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A989A3072532612C00D092DB /* UserApiRegisterRequest.swift */; };
 		A989A3092532612F00D092DB /* UserApiRegisterRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A989A3072532612C00D092DB /* UserApiRegisterRequest.swift */; };
 		A989A30F2532613000D092DB /* UserApiRegisterRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A989A3072532612C00D092DB /* UserApiRegisterRequest.swift */; };
@@ -1653,9 +1567,65 @@
 		A9B573E3253B557C00DB7353 /* UserApiUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */; };
 		A9B573E4253B557C00DB7353 /* UserApiUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */; };
 		A9B573E5253B557C00DB7353 /* UserApiUserRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */; };
+		A9B5742D253B978D00DB7353 /* SignIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9B5742C253B978D00DB7353 /* SignIn.storyboard */; };
+		A9B57438253B992A00DB7353 /* SignIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9B5742C253B978D00DB7353 /* SignIn.storyboard */; };
+		A9B5743E253B992B00DB7353 /* SignIn.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9B5742C253B978D00DB7353 /* SignIn.storyboard */; };
+		A9B5743F253B993100DB7353 /* SignInConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */; };
+		A9B57440253B993200DB7353 /* SignInConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */; };
+		A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
+		A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */; };
+		A9B57443253B994700DB7353 /* SignInViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */; };
+		A9B57444253B994700DB7353 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB40883B83C652584EBB9A /* SignInViewController.swift */; };
+		A9B57445253B994700DB7353 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B5190CB557178D11AB2CE /* SignInPresenter.swift */; };
+		A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */; };
+		A9B57447253B994700DB7353 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
+		A9B57448253B994700DB7353 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */; };
+		A9B57449253B994700DB7353 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
+		A9B5744A253B994700DB7353 /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		A9B5744B253B994900DB7353 /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
+		A9B5744C253B994900DB7353 /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */; };
+		A9B5744D253B994900DB7353 /* SignInViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */; };
+		A9B5744E253B994900DB7353 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB40883B83C652584EBB9A /* SignInViewController.swift */; };
+		A9B5744F253B994900DB7353 /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B5190CB557178D11AB2CE /* SignInPresenter.swift */; };
+		A9B57450253B994900DB7353 /* SignInModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */; };
+		A9B57451253B994900DB7353 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
+		A9B57452253B994900DB7353 /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */; };
+		A9B57453253B994900DB7353 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
+		A9B57454253B994900DB7353 /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
 		A9BB445524E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
 		A9BB445624E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
 		A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */; };
+		A9BB949D25409B060042B190 /* TagsManagerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */; };
+		A9BB949E25409B060042B190 /* TagsManagerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */; };
+		A9BB949F25409B060042B190 /* TagsManagerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */; };
+		A9BB94A025409B060042B190 /* TagsManagerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3B734E63D6233A5C29D31 /* TagsManagerInitializer.swift */; };
+		A9BB94A125409B060042B190 /* TagsManagerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */; };
+		A9BB94A225409B060042B190 /* TagsManagerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */; };
+		A9BB94A325409B060042B190 /* TagsManagerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A2418BB26C6E7BDBDE8CCF /* TagsManagerModuleOutput.swift */; };
+		A9BB94A425409B060042B190 /* TagsManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */; };
+		A9BB94A525409B060042B190 /* TagsManagerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */; };
+		A9BB94A625409B060042B190 /* TagsManagerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */; };
+		A9BB94A725409B060042B190 /* TagsManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */; };
+		A9BB94A825409B060042B190 /* TagsManagerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */; };
+		A9BB94A925409B060042B190 /* TagsManagerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */; };
+		A9BB94AA25409B060042B190 /* TagsManagerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */; };
+		A9BB94AB25409B060042B190 /* TagsManagerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3B734E63D6233A5C29D31 /* TagsManagerInitializer.swift */; };
+		A9BB94AC25409B060042B190 /* TagsManagerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */; };
+		A9BB94AD25409B060042B190 /* TagsManagerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */; };
+		A9BB94AE25409B060042B190 /* TagsManagerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A2418BB26C6E7BDBDE8CCF /* TagsManagerModuleOutput.swift */; };
+		A9BB94AF25409B060042B190 /* TagsManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */; };
+		A9BB94B025409B060042B190 /* TagsManagerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */; };
+		A9BB94B125409B060042B190 /* TagsManagerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */; };
+		A9BB94B225409B060042B190 /* TagsManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */; };
+		A9BB94B925409C030042B190 /* TagsManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BB94B825409C030042B190 /* TagsManager.storyboard */; };
+		A9BB94BA25409C030042B190 /* TagsManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BB94B825409C030042B190 /* TagsManager.storyboard */; };
+		A9BB94BB25409C030042B190 /* TagsManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BB94B825409C030042B190 /* TagsManager.storyboard */; };
+		A9BB94CC2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */; };
+		A9BB94CD2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */; };
+		A9BB94CE2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */; };
+		A9BB95172540C6170042B190 /* TagManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */; };
+		A9BB95182540C6170042B190 /* TagManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */; };
+		A9BB95192540C6170042B190 /* TagManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */; };
 		A9BD38BA24F6108300904BBE /* Humidity+Offset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BD38B924F6108300904BBE /* Humidity+Offset.swift */; };
 		A9BD38BB24F6108300904BBE /* Humidity+Offset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BD38B924F6108300904BBE /* Humidity+Offset.swift */; };
 		A9BD38BC24F6108300904BBE /* Humidity+Offset.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BD38B924F6108300904BBE /* Humidity+Offset.swift */; };
@@ -1703,6 +1673,14 @@
 		A9F4471624B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471724B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471824B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
+		ABCA915676F9A8C975D9F2A3 /* SignInViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */; };
+		B2730766B77F848D7F4B105A /* TagsManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */; };
+		B6000D9CEB00ECD1C0C35154 /* TagsManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */; };
+		BA272B6F6FEBAA303AD47138 /* TagsManagerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3B734E63D6233A5C29D31 /* TagsManagerInitializer.swift */; };
+		C8D6714C7E0237B74676EA08 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB40883B83C652584EBB9A /* SignInViewController.swift */; };
+		C9675DA6BC516DE916FAC3F2 /* TagsManagerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */; };
+		D037B55274A07756F884696B /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */; };
+		E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1888,9 +1866,6 @@
 		0E70A47C22AF9BFE006CB87C /* DiscoverTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverTableConfigurator.swift; sourceTree = "<group>"; };
 		0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagReadLogsOperation.swift; sourceTree = "<group>"; };
 		0E79F2592441ACBA0048BF86 /* RuuviNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetwork.swift; sourceTree = "<group>"; };
-		0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkWhereOS.swift; sourceTree = "<group>"; };
-		0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkWhereOSURLSession.swift; sourceTree = "<group>"; };
-		0E79F2692441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkWhereOSSpec.swift; sourceTree = "<group>"; };
 		0E79F278244201540048BF86 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		0E79F27E2442020E0048BF86 /* NetworkServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceQueue.swift; sourceTree = "<group>"; };
 		0E79F282244202940048BF86 /* RuuviNetworkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkProvider.swift; sourceTree = "<group>"; };
@@ -2132,9 +2107,16 @@
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
+		1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerRouterInput.swift; sourceTree = "<group>"; };
+		28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInConfigurator.swift; sourceTree = "<group>"; };
 		2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
+		4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewInput.swift; sourceTree = "<group>"; };
+		4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewOutput.swift; sourceTree = "<group>"; };
+		4E816312622E83E3B42001DC /* SignInRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouterInput.swift; sourceTree = "<group>"; };
 		50760BEF3DF7F0DC671A0D42 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
+		52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerRouter.swift; sourceTree = "<group>"; };
+		5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerPresenter.swift; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64333D2D20B0C45900CDF4B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -2154,11 +2136,17 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouter.swift; sourceTree = "<group>"; };
 		7097B76856D5F01896F963EC /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8018B7836CF8C748718825DD /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85B8587156E1062D613B8960 /* SignInInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInInitializer.swift; sourceTree = "<group>"; };
+		85D3B734E63D6233A5C29D31 /* TagsManagerInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerInitializer.swift; sourceTree = "<group>"; };
 		85F06A44D8D006FBFB90ABE0 /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
+		87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleInput.swift; sourceTree = "<group>"; };
 		8825D89E1A7CB4BDC6D12038 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
 		9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleOutput.swift; sourceTree = "<group>"; };
+		A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewOutput.swift; sourceTree = "<group>"; };
 		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
 		A904833324E30DF200EAE76F /* MeasurementsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsService.swift; sourceTree = "<group>"; };
 		A907A1D2245F7C6600041F6E /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
@@ -2187,7 +2175,6 @@
 		A91D0310251123B400694733 /* SelectionModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionModuleOutput.swift; sourceTree = "<group>"; };
 		A91D0315251124F900694733 /* SelectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionItem.swift; sourceTree = "<group>"; };
 		A91D031925113EAA00694733 /* UnitPressure+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnitPressure+Extension.swift"; sourceTree = "<group>"; };
-		A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotBeaconLogs.swift; sourceTree = "<group>"; };
 		A9227BA0245C86FA00466B23 /* NetworkSettings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NetworkSettings.storyboard; sourceTree = "<group>"; };
 		A9227BA3245C86FA00466B23 /* NetworkSettingsTableInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTableInitializer.swift; sourceTree = "<group>"; };
 		A9227BA4245C86FA00466B23 /* NetworkSettingsTableConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTableConfigurator.swift; sourceTree = "<group>"; };
@@ -2198,7 +2185,6 @@
 		A9227BAD245C86FA00466B23 /* NetworkSettingsViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsViewInput.swift; sourceTree = "<group>"; };
 		A9227BAF245C86FA00466B23 /* NetworkSettingsRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsRouter.swift; sourceTree = "<group>"; };
 		A9227BB0245C86FA00466B23 /* NetworkSettingsRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettingsRouterInput.swift; sourceTree = "<group>"; };
-		A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverKaltiotTableViewCell.swift; sourceTree = "<group>"; };
 		A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+ReusableView.swift"; sourceTree = "<group>"; };
 		A92C75DF24896BA100E332FE /* Appfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Appfile; sourceTree = "<group>"; };
 		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Fastfile; sourceTree = "<group>"; };
@@ -2210,25 +2196,13 @@
 		A92E3C592426415100D981D5 /* TagChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartView.swift; sourceTree = "<group>"; };
 		A92E3C62242644B800D981D5 /* TagChartViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewInput.swift; sourceTree = "<group>"; };
 		A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewOutput.swift; sourceTree = "<group>"; };
+		A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLQueryItemEncoder.swift; sourceTree = "<group>"; };
 		A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectRxSwift.swift; sourceTree = "<group>"; };
 		A93DB9E824732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectCombine.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
-		A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacConfigurator.swift; sourceTree = "<group>"; };
-		A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModuleInput.swift; sourceTree = "<group>"; };
-		A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacModuleOutput.swift; sourceTree = "<group>"; };
-		A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacPresenter.swift; sourceTree = "<group>"; };
-		A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacRouterInput.swift; sourceTree = "<group>"; };
-		A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacRouter.swift; sourceTree = "<group>"; };
-		A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewController.swift; sourceTree = "<group>"; };
-		A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewInput.swift; sourceTree = "<group>"; };
-		A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewOutput.swift; sourceTree = "<group>"; };
-		A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacViewModel.swift; sourceTree = "<group>"; };
 		A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Ext-UIButton-CommonFormat.swift"; path = "Extension/Ext-UIButton-CommonFormat.swift"; sourceTree = "<group>"; };
 		A94A882A24D4386D00D2CBA4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = HexadecimalKeyboard/LICENSE; sourceTree = "<group>"; };
 		A94A883124D4386D00D2CBA4 /* HexadecimalKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalKeyboard.swift; path = Controllers/HexadecimalKeyboard.swift; sourceTree = "<group>"; };
-		A94A885224D4492700D2CBA4 /* AddMac.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddMac.storyboard; sourceTree = "<group>"; };
-		A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMacInitializer.swift; sourceTree = "<group>"; };
-		A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPasteboardAccessoryView.swift; sourceTree = "<group>"; };
 		A94A886C24D6B5CE00D2CBA4 /* RUColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RUColor.swift; sourceTree = "<group>"; };
 		A94FFD2F241C173D00888017 /* RuuviTagRealmProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagRealmProtocol.swift; sourceTree = "<group>"; };
 		A94FFD36241C189000888017 /* RuuviTagProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagProtocol.swift; sourceTree = "<group>"; };
@@ -2240,8 +2214,6 @@
 		A952CA8D2532578200BBDA9D /* UserApiUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUserResponse.swift; sourceTree = "<group>"; };
 		A952CAA1253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkUserApiURLSession.swift; sourceTree = "<group>"; };
 		A952CAB62532597E00BBDA9D /* UserApiBaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiBaseResponse.swift; sourceTree = "<group>"; };
-		A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiot.swift; sourceTree = "<group>"; };
-		A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkKaltiotURLSession.swift; sourceTree = "<group>"; };
 		A95BA3E42451ECB000EF923D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		A95BA3E62451ED7000EF923D /* KeychainServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceImpl.swift; sourceTree = "<group>"; };
 		A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedViewInput.swift; sourceTree = "<group>"; };
@@ -2266,9 +2238,9 @@
 		A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		A976CA7D24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedDisclosureTableViewCell.swift; sourceTree = "<group>"; };
 		A97FDD752519343A00B12820 /* KeyedArchiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedArchiver.swift; sourceTree = "<group>"; };
-		A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotApiKeyTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTextTableViewCell.swift; sourceTree = "<group>"; };
+		A985B0A62541FE1E0050D744 /* TagManagerButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagerButtonTableViewCell.swift; sourceTree = "<group>"; };
 		A986147A248C49B00030F197 /* Matchfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matchfile; sourceTree = "<group>"; };
 		A989A3072532612C00D092DB /* UserApiRegisterRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiRegisterRequest.swift; sourceTree = "<group>"; };
 		A989A31F253261EB00D092DB /* UserApiVerifyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiVerifyRequest.swift; sourceTree = "<group>"; };
@@ -2281,22 +2253,13 @@
 		A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Shake.swift"; sourceTree = "<group>"; };
 		A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObjectProtocol+Invalidation.swift"; sourceTree = "<group>"; };
 		A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUserRequest.swift; sourceTree = "<group>"; };
+		A9B5742C253B978D00DB7353 /* SignIn.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SignIn.storyboard; sourceTree = "<group>"; };
 		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
+		A9BB94B825409C030042B190 /* TagsManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagsManager.storyboard; sourceTree = "<group>"; };
+		A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsManagerAlertViewModel.swift; sourceTree = "<group>"; };
+		A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagerTableViewCell.swift; sourceTree = "<group>"; };
 		A9BD38B924F6108300904BBE /* Humidity+Offset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Humidity+Offset.swift"; sourceTree = "<group>"; };
 		A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceImpl.swift; sourceTree = "<group>"; };
-		A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewController.swift; sourceTree = "<group>"; };
-		A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleOutput.swift; sourceTree = "<group>"; };
-		A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerModuleInput.swift; sourceTree = "<group>"; };
-		A9C3519824535DAD004696BD /* KaltiotPickerTableInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableInitializer.swift; sourceTree = "<group>"; };
-		A9C3519C24535E07004696BD /* KaltiotPickerTableConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableConfigurator.swift; sourceTree = "<group>"; };
-		A9C3519E24535E45004696BD /* KaltiotPickerRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerRouter.swift; sourceTree = "<group>"; };
-		A9C351A024535E68004696BD /* KaltiotPickerRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerRouterInput.swift; sourceTree = "<group>"; };
-		A9C351A824535F46004696BD /* KaltiotPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerPresenter.swift; sourceTree = "<group>"; };
-		A9C351AC24535FA5004696BD /* KaltiotPickerViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerViewInput.swift; sourceTree = "<group>"; };
-		A9C351B0245360AA004696BD /* KaltiotPickerViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerViewOutput.swift; sourceTree = "<group>"; };
-		A9C351B42453672B004696BD /* KaltiotPicker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = KaltiotPicker.storyboard; sourceTree = "<group>"; };
-		A9C351B924538230004696BD /* WhereOSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereOSData.swift; sourceTree = "<group>"; };
-		A9C351BF245382C7004696BD /* KaltiotBeacons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotBeacons.swift; sourceTree = "<group>"; };
 		A9DA3180245C916800041559 /* NetworkSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsViewModel.swift; sourceTree = "<group>"; };
 		A9DA3186245CBDB700041559 /* DiffCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculator.swift; sourceTree = "<group>"; };
 		A9DA318B245CBE3F00041559 /* SectionChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionChanges.swift; sourceTree = "<group>"; };
@@ -2305,10 +2268,8 @@
 		A9DA3197245CBEB800041559 /* ReloadableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableCell.swift; sourceTree = "<group>"; };
 		A9DA319B245CBEDA00041559 /* ReloadableSectionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableSectionData.swift; sourceTree = "<group>"; };
 		A9DA319F245CBEF200041559 /* ReloadableCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableCellData.swift; sourceTree = "<group>"; };
-		A9E58CF32459EC59000C38DA /* KaltiotPicketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPicketViewModel.swift; sourceTree = "<group>"; };
 		A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculatorImpl.swift; sourceTree = "<group>"; };
 		A9E58CF72459F7A7000C38DA /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
-		A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaltiotPickerTableViewCell.swift; sourceTree = "<group>"; };
 		A9F0F2272534CFDC00DE9F70 /* UserApiShareRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiShareRequest.swift; sourceTree = "<group>"; };
 		A9F0F2302534D0ED00DE9F70 /* UserApiShareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiShareResponse.swift; sourceTree = "<group>"; };
 		A9F0F23E2534D16E00DE9F70 /* UserApiUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUser.swift; sourceTree = "<group>"; };
@@ -2322,6 +2283,15 @@
 		A9F0F29A2534EF3700DE9F70 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		B3426764B50E4E9CA2A27704 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
+		BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerConfigurator.swift; sourceTree = "<group>"; };
+		C7A2418BB26C6E7BDBDE8CCF /* TagsManagerModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerModuleOutput.swift; sourceTree = "<group>"; };
+		CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewInput.swift; sourceTree = "<group>"; };
+		D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerModuleInput.swift; sourceTree = "<group>"; };
+		E29B5190CB557178D11AB2CE /* SignInPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
+		E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewController.swift; sourceTree = "<group>"; };
+		E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewModel.swift; sourceTree = "<group>"; };
+		E6DB40883B83C652584EBB9A /* SignInViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2685,12 +2655,10 @@
 		0E09671C22AE76CC00E85F48 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				A94A87F224D432E500D2CBA4 /* AddMac */,
 				0EEB20E922B7D1350015F9E0 /* About */,
 				0EEC3F4422C5E13800C51D81 /* Calibration */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
 				0E09672622AE8D6A00E85F48 /* Discover */,
-				A9C35185245355A5004696BD /* Kaltiot */,
 				0E046F4022F17EC600BD4E9C /* LocationPicker */,
 				0E09671D22AE76D800E85F48 /* Main */,
 				0E1C1DEB22B3FDB40032F6CA /* Menu */,
@@ -2698,6 +2666,8 @@
 				0EF2862522CBAF280026C7A5 /* TagSettings */,
 				0E046F2022F049C500BD4E9C /* WebTagSettings */,
 				0E09671E22AE7F2600E85F48 /* Welcome */,
+				71A3760FF84549A5FB45C805 /* SignIn */,
+				1D38DC92F34CB2DC284090A9 /* TagsManager */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -3572,29 +3542,9 @@
 			isa = PBXGroup;
 			children = (
 				A952CA8A2532574800BBDA9D /* UserApi */,
-				A9C351BD245382A0004696BD /* Kaltiot */,
-				0E79F2582441AC990048BF86 /* WhereOS */,
 				0E79F2592441ACBA0048BF86 /* RuuviNetwork.swift */,
 			);
 			path = Ruuvi;
-			sourceTree = "<group>";
-		};
-		0E79F2582441AC990048BF86 /* WhereOS */ = {
-			isa = PBXGroup;
-			children = (
-				A9C351B824538212004696BD /* Models */,
-				0E79F2612441BA140048BF86 /* URLSession */,
-				0E79F25D2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift */,
-			);
-			path = WhereOS;
-			sourceTree = "<group>";
-		};
-		0E79F2612441BA140048BF86 /* URLSession */ = {
-			isa = PBXGroup;
-			children = (
-				0E79F2622441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift */,
-			);
-			path = URLSession;
 			sourceTree = "<group>";
 		};
 		0E79F2662441C3A30048BF86 /* Networking */ = {
@@ -3608,17 +3558,8 @@
 		0E79F2672441C3BF0048BF86 /* Ruuvi */ = {
 			isa = PBXGroup;
 			children = (
-				0E79F2682441C3C50048BF86 /* WhereOS */,
 			);
 			path = Ruuvi;
-			sourceTree = "<group>";
-		};
-		0E79F2682441C3C50048BF86 /* WhereOS */ = {
-			isa = PBXGroup;
-			children = (
-				0E79F2692441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift */,
-			);
-			path = WhereOS;
 			sourceTree = "<group>";
 		};
 		0E79F277244201370048BF86 /* Network */ = {
@@ -4939,7 +4880,6 @@
 				0E53A3FA232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift */,
 				0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */,
 				0E79F28A244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift */,
-				A92A66BA2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -5072,6 +5012,48 @@
 			path = Impl;
 			sourceTree = "<group>";
 		};
+		11629D6C45208918E104E77F /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */,
+				85B8587156E1062D613B8960 /* SignInInitializer.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		16A314E913B260872A01B09F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A9BB95152540C5EC0042B190 /* Cells */,
+				CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */,
+				A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */,
+				E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */,
+				A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */,
+				EE1408E0FB774808AFB4513D /* ViewController */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1D38DC92F34CB2DC284090A9 /* TagsManager */ = {
+			isa = PBXGroup;
+			children = (
+				A9BB94B825409C030042B190 /* TagsManager.storyboard */,
+				F28E9E8891CE0B586DA4DB3C /* Assembly */,
+				432A6647074CE89E605C6DF1 /* Presenter */,
+				EFDED19244225A0015CB4C1A /* Router */,
+				16A314E913B260872A01B09F /* View */,
+			);
+			path = TagsManager;
+			sourceTree = "<group>";
+		};
+		31017308C4E5B3282DF4AAF9 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E6DB40883B83C652584EBB9A /* SignInViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		321CE77F6EB26F685032F835 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -5082,6 +5064,16 @@
 				7097B76856D5F01896F963EC /* Pods_station_dev.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		432A6647074CE89E605C6DF1 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */,
+				C7A2418BB26C6E7BDBDE8CCF /* TagsManagerModuleOutput.swift */,
+				5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */,
+			);
+			path = Presenter;
 			sourceTree = "<group>";
 		};
 		62FD66A56B206724C5DE9CFE /* Pods */ = {
@@ -5167,6 +5159,48 @@
 				643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		6C62E43912ACBCF757914A64 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				4E816312622E83E3B42001DC /* SignInRouterInput.swift */,
+				6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		71A3760FF84549A5FB45C805 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				A9B5742C253B978D00DB7353 /* SignIn.storyboard */,
+				11629D6C45208918E104E77F /* Assembly */,
+				9430BF42054B093449B0B9FB /* Presenter */,
+				6C62E43912ACBCF757914A64 /* Router */,
+				975CCF09FE9E0AEF7A6CEEF8 /* View */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		9430BF42054B093449B0B9FB /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */,
+				9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */,
+				E29B5190CB557178D11AB2CE /* SignInPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		975CCF09FE9E0AEF7A6CEEF8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */,
+				4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */,
+				FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */,
+				31017308C4E5B3282DF4AAF9 /* ViewController */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		A902003A244E1304001882C3 /* Charts */ = {
@@ -5329,14 +5363,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		A9227B5F245C41A900466B23 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				A9E58CFF245A0140000C38DA /* KaltiotPickerTableViewCell.swift */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
 		A9227B9F245C86FA00466B23 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -5444,69 +5470,18 @@
 			path = ChartView;
 			sourceTree = "<group>";
 		};
-		A94A87F224D432E500D2CBA4 /* AddMac */ = {
+		A933E035253FF7950007A49C /* URLQueryItemEncoder */ = {
 			isa = PBXGroup;
 			children = (
-				A94A885224D4492700D2CBA4 /* AddMac.storyboard */,
-				A94A87F324D432F200D2CBA4 /* Assembly */,
-				A94A87F424D432FC00D2CBA4 /* Presenter */,
-				A94A87F524D4331000D2CBA4 /* Router */,
-				A94A87F624D4331A00D2CBA4 /* View */,
+				A933E036253FF7B70007A49C /* URLQueryItemEncoder.swift */,
 			);
-			path = AddMac;
-			sourceTree = "<group>";
-		};
-		A94A87F324D432F200D2CBA4 /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				A94A87F724D4334200D2CBA4 /* AddMacConfigurator.swift */,
-				A94A885324D4498B00D2CBA4 /* AddMacInitializer.swift */,
-			);
-			path = Assembly;
-			sourceTree = "<group>";
-		};
-		A94A87F424D432FC00D2CBA4 /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				A94A87FC24D433E800D2CBA4 /* AddMacModuleOutput.swift */,
-				A94A87FB24D433E800D2CBA4 /* AddMacModuleInput.swift */,
-				A94A87FD24D433E800D2CBA4 /* AddMacPresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		A94A87F524D4331000D2CBA4 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-				A94A87FF24D434E800D2CBA4 /* AddMacRouter.swift */,
-				A94A87FE24D434E700D2CBA4 /* AddMacRouterInput.swift */,
-			);
-			path = Router;
-			sourceTree = "<group>";
-		};
-		A94A87F624D4331A00D2CBA4 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				A94A886324D5BACB00D2CBA4 /* InputAccessoryView */,
-				A94A880424D4352E00D2CBA4 /* ViewController */,
-				A94A880124D4352400D2CBA4 /* AddMacViewInput.swift */,
-				A94A880224D4352400D2CBA4 /* AddMacViewOutput.swift */,
-				A94A880324D4352400D2CBA4 /* AddMacViewModel.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		A94A880424D4352E00D2CBA4 /* ViewController */ = {
-			isa = PBXGroup;
-			children = (
-				A94A880024D4351D00D2CBA4 /* AddMacViewController.swift */,
-			);
-			path = ViewController;
+			path = URLQueryItemEncoder;
 			sourceTree = "<group>";
 		};
 		A94A882024D437AB00D2CBA4 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				A933E035253FF7950007A49C /* URLQueryItemEncoder */,
 				A94A882224D4386D00D2CBA4 /* HexadecimalKeyboard */,
 				A94A882A24D4386D00D2CBA4 /* LICENSE */,
 			);
@@ -5520,14 +5495,6 @@
 				A94A882924D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift */,
 			);
 			path = HexadecimalKeyboard;
-			sourceTree = "<group>";
-		};
-		A94A886324D5BACB00D2CBA4 /* InputAccessoryView */ = {
-			isa = PBXGroup;
-			children = (
-				A94A886424D5BACB00D2CBA4 /* MacPasteboardAccessoryView.swift */,
-			);
-			path = InputAccessoryView;
 			sourceTree = "<group>";
 		};
 		A94FFD25241C0F8000888017 /* Services */ = {
@@ -5760,7 +5727,6 @@
 		A980CC6D246812D000C9A14C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				A980CC6B2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift */,
 				A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */,
 				A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */,
 				A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */,
@@ -5796,115 +5762,21 @@
 			path = RuuviNetwork;
 			sourceTree = "<group>";
 		};
+		A9BB95152540C5EC0042B190 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */,
+				A985B0A62541FE1E0050D744 /* TagManagerButtonTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		A9C03F7D24E708A800BC046F /* Impl */ = {
 			isa = PBXGroup;
 			children = (
 				A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */,
 			);
 			path = Impl;
-			sourceTree = "<group>";
-		};
-		A9C35185245355A5004696BD /* Kaltiot */ = {
-			isa = PBXGroup;
-			children = (
-				A9C351B42453672B004696BD /* KaltiotPicker.storyboard */,
-				A9C35186245355C5004696BD /* Assembly */,
-				A9C35187245355CE004696BD /* Presenter */,
-				A9C35188245355D7004696BD /* Router */,
-				A9C35189245355DE004696BD /* View */,
-			);
-			path = Kaltiot;
-			sourceTree = "<group>";
-		};
-		A9C35186245355C5004696BD /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				A9C3518A245355FA004696BD /* Table */,
-			);
-			path = Assembly;
-			sourceTree = "<group>";
-		};
-		A9C35187245355CE004696BD /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				A9C35190245358E6004696BD /* KaltiotPickerModuleOutput.swift */,
-				A9C3519424535985004696BD /* KaltiotPickerModuleInput.swift */,
-				A9C351A824535F46004696BD /* KaltiotPickerPresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		A9C35188245355D7004696BD /* Router */ = {
-			isa = PBXGroup;
-			children = (
-				A9C3519E24535E45004696BD /* KaltiotPickerRouter.swift */,
-				A9C351A024535E68004696BD /* KaltiotPickerRouterInput.swift */,
-			);
-			path = Router;
-			sourceTree = "<group>";
-		};
-		A9C35189245355DE004696BD /* View */ = {
-			isa = PBXGroup;
-			children = (
-				A9C3518B24535694004696BD /* Table */,
-				A9C351AC24535FA5004696BD /* KaltiotPickerViewInput.swift */,
-				A9C351B0245360AA004696BD /* KaltiotPickerViewOutput.swift */,
-				A9E58CF32459EC59000C38DA /* KaltiotPicketViewModel.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		A9C3518A245355FA004696BD /* Table */ = {
-			isa = PBXGroup;
-			children = (
-				A9C3519824535DAD004696BD /* KaltiotPickerTableInitializer.swift */,
-				A9C3519C24535E07004696BD /* KaltiotPickerTableConfigurator.swift */,
-			);
-			path = Table;
-			sourceTree = "<group>";
-		};
-		A9C3518B24535694004696BD /* Table */ = {
-			isa = PBXGroup;
-			children = (
-				A9227B5F245C41A900466B23 /* Cells */,
-				A9C3518C245356D9004696BD /* KaltiotPickerTableViewController.swift */,
-			);
-			path = Table;
-			sourceTree = "<group>";
-		};
-		A9C351B824538212004696BD /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A9C351B924538230004696BD /* WhereOSData.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		A9C351BD245382A0004696BD /* Kaltiot */ = {
-			isa = PBXGroup;
-			children = (
-				A9C351BE245382AF004696BD /* Models */,
-				A9C351C724538E8F004696BD /* URLSession */,
-				A95518AA24573DF5005592FD /* RuuviNetworkKaltiot.swift */,
-			);
-			path = Kaltiot;
-			sourceTree = "<group>";
-		};
-		A9C351BE245382AF004696BD /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A9C351BF245382C7004696BD /* KaltiotBeacons.swift */,
-				A9227B57245B335500466B23 /* KaltiotBeaconLogs.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		A9C351C724538E8F004696BD /* URLSession */ = {
-			isa = PBXGroup;
-			children = (
-				A95518AC245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift */,
-			);
-			path = URLSession;
 			sourceTree = "<group>";
 		};
 		A9DA3184245CBD7800041559 /* DiffCalculator */ = {
@@ -5936,6 +5808,32 @@
 				A9DA319F245CBEF200041559 /* ReloadableCellData.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		EE1408E0FB774808AFB4513D /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		EFDED19244225A0015CB4C1A /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */,
+				52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		F28E9E8891CE0B586DA4DB3C /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */,
+				85D3B734E63D6233A5C29D31 /* TagsManagerInitializer.swift */,
+			);
+			path = Assembly;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -6148,13 +6046,13 @@
 				0E6BAEAB23856A01003A2D4C /* GoogleService-Info.plist in Resources */,
 				0E197C7123C4A7D00074015B /* Presentation.plist in Resources */,
 				0E31B04823BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
+				A9BB94BB25409C030042B190 /* TagsManager.storyboard in Resources */,
 				0E6BAEAC23856A01003A2D4C /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E6BAEAD23856A01003A2D4C /* Networking.plist in Resources */,
 				0E6BAEAE23856A01003A2D4C /* Foreground.storyboard in Resources */,
 				0E6BAEAF23856A01003A2D4C /* LocationPicker.storyboard in Resources */,
 				0E6BAEB023856A01003A2D4C /* Defaults.storyboard in Resources */,
 				0E6BAEB123856A01003A2D4C /* Cards.storyboard in Resources */,
-				A9828E1D24792D2600E7E9D4 /* KaltiotPicker.storyboard in Resources */,
 				0E6BAEB223856A01003A2D4C /* LaunchScreen.storyboard in Resources */,
 				0E6BAEB323856A01003A2D4C /* HumidityCalibration.storyboard in Resources */,
 				0E6BAEB423856A01003A2D4C /* Oswald-Bold.ttf in Resources */,
@@ -6163,7 +6061,6 @@
 				0E6BAEB723856A01003A2D4C /* TagSettings.storyboard in Resources */,
 				0E6BAEB823856A01003A2D4C /* TagCharts.storyboard in Resources */,
 				0E6BAEB923856A01003A2D4C /* Muli-Regular.ttf in Resources */,
-				A94A885924D44C1400D2CBA4 /* AddMac.storyboard in Resources */,
 				0EA92FE12387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E6BAEBA23856A01003A2D4C /* Oswald-ExtraLight.ttf in Resources */,
 				0E6BAEBB23856A01003A2D4C /* Language.storyboard in Resources */,
@@ -6183,6 +6080,7 @@
 				0E197C8323C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				0E6BAEC723856A01003A2D4C /* Montserrat-Bold.ttf in Resources */,
 				A9227BB3245C86FA00466B23 /* NetworkSettings.storyboard in Resources */,
+				A9B57438253B992A00DB7353 /* SignIn.storyboard in Resources */,
 				0E6BAEC823856A01003A2D4C /* WebTagSettings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6196,13 +6094,13 @@
 				0E8BD3E1238566AB008B31EF /* GoogleService-Info.plist in Resources */,
 				0E197C7023C4A7D00074015B /* Presentation.plist in Resources */,
 				0E31B04723BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
+				A9BB94BA25409C030042B190 /* TagsManager.storyboard in Resources */,
 				0E8BD3E2238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E8BD3E3238566AB008B31EF /* Networking.plist in Resources */,
 				0E8BD3E4238566AB008B31EF /* Foreground.storyboard in Resources */,
 				0E8BD3E5238566AB008B31EF /* LocationPicker.storyboard in Resources */,
 				0E8BD3E6238566AB008B31EF /* Defaults.storyboard in Resources */,
 				0E8BD3E7238566AB008B31EF /* Cards.storyboard in Resources */,
-				A9828E1C24792D2500E7E9D4 /* KaltiotPicker.storyboard in Resources */,
 				0E8BD3E8238566AB008B31EF /* LaunchScreen.storyboard in Resources */,
 				0E8BD3E9238566AB008B31EF /* HumidityCalibration.storyboard in Resources */,
 				0E8BD3EA238566AB008B31EF /* Oswald-Bold.ttf in Resources */,
@@ -6211,7 +6109,6 @@
 				0E8BD3ED238566AB008B31EF /* TagSettings.storyboard in Resources */,
 				0E8BD3EE238566AB008B31EF /* TagCharts.storyboard in Resources */,
 				0E8BD3EF238566AB008B31EF /* Muli-Regular.ttf in Resources */,
-				A94A885824D44C1400D2CBA4 /* AddMac.storyboard in Resources */,
 				0EA92FE02387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				0E8BD3F0238566AB008B31EF /* Oswald-ExtraLight.ttf in Resources */,
 				0E8BD3F1238566AB008B31EF /* Language.storyboard in Resources */,
@@ -6231,6 +6128,7 @@
 				0E197C8223C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				0E8BD3FD238566AB008B31EF /* Montserrat-Bold.ttf in Resources */,
 				A9227BB2245C86FA00466B23 /* NetworkSettings.storyboard in Resources */,
+				A9B5742D253B978D00DB7353 /* SignIn.storyboard in Resources */,
 				0E8BD3FE238566AB008B31EF /* WebTagSettings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6244,13 +6142,13 @@
 				0ECDF1B52313D65500A09ACA /* GoogleService-Info.plist in Resources */,
 				0E197C6F23C4A7D00074015B /* Presentation.plist in Resources */,
 				0E31B04623BBA3F900660412 /* WebTagSettingsAlertsHeaderFooterView.xib in Resources */,
+				A9BB94B925409C030042B190 /* TagsManager.storyboard in Resources */,
 				0E3FF735238157B700EB98F9 /* DiscoverWebTagsInfoHeaderFooterView.xib in Resources */,
 				0E9F97B522EC44930015ADE2 /* Networking.plist in Resources */,
 				0ECFF35723505F8D0061D11B /* Foreground.storyboard in Resources */,
 				0E046F4622F17EF400BD4E9C /* LocationPicker.storyboard in Resources */,
 				0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Cards.storyboard in Resources */,
-				A9828E1B24792D2400E7E9D4 /* KaltiotPicker.storyboard in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
 				0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */,
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
@@ -6259,7 +6157,6 @@
 				0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */,
 				0E8FD0BF23335D6900FFA577 /* TagCharts.storyboard in Resources */,
 				64678192225D03330072856A /* Muli-Regular.ttf in Resources */,
-				A94A885724D44C1300D2CBA4 /* AddMac.storyboard in Resources */,
 				0EA92FDF2387E74C008F1558 /* TagSettingsAlertsHeaderFooterView.xib in Resources */,
 				643EEC2B2266435100D4E837 /* Oswald-ExtraLight.ttf in Resources */,
 				0EBAF06C232006E00025A191 /* Language.storyboard in Resources */,
@@ -6279,6 +6176,7 @@
 				0E197C8123C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
 				643C651F21C38F490037BE5B /* Montserrat-Bold.ttf in Resources */,
 				A9227BB1245C86FA00466B23 /* NetworkSettings.storyboard in Resources */,
+				A9B5743E253B992B00DB7353 /* SignIn.storyboard in Resources */,
 				0E046F2722F04A0300BD4E9C /* WebTagSettings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6581,11 +6479,11 @@
 			files = (
 				0E6BAD7923856A01003A2D4C /* BackgroundWorker.swift in Sources */,
 				0E6BAD7A23856A01003A2D4C /* CardView.swift in Sources */,
-				A9828E3924792D4500E7E9D4 /* KaltiotPickerViewInput.swift in Sources */,
+				A9B5744F253B994900DB7353 /* SignInPresenter.swift in Sources */,
 				A92E3C5C2426428E00D981D5 /* TagChartView.swift in Sources */,
 				0E6BAD7B23856A01003A2D4C /* LocationServiceApple.swift in Sources */,
 				0E6BAD7C23856A01003A2D4C /* DiscoverTableViewController.swift in Sources */,
-				A9828E1824792CC200E7E9D4 /* KaltiotPickerPresenter.swift in Sources */,
+				A9B5744C253B994900DB7353 /* SignInRouter.swift in Sources */,
 				0E8BACE1245F015D00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift in Sources */,
 				0E6BAD7D23856A01003A2D4C /* Optional.swift in Sources */,
 				0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */,
@@ -6596,10 +6494,11 @@
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				A9646474247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				A9227BCB245C86FB00466B23 /* NetworkSettingsViewInput.swift in Sources */,
-				A9828E3824792D4500E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */,
+				A9BB94A425409B060042B190 /* TagsManagerViewModel.swift in Sources */,
 				0E6BAD8723856A01003A2D4C /* TagSettingsViewInput.swift in Sources */,
 				0EAD33EC2399273E00EC5BAA /* HeartbeatList.swift in Sources */,
-				A9828E1524792CBB00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */,
+				A9B57451253B994900DB7353 /* SignInModuleOutput.swift in Sources */,
+				A933E039253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				0E6BAD8823856A01003A2D4C /* DefaultsViewOutput.swift in Sources */,
 				0E6BAD8923856A01003A2D4C /* MenuPresenter.swift in Sources */,
 				A91D03082511207300694733 /* SelectionRouter.swift in Sources */,
@@ -6632,12 +6531,10 @@
 				0E8BACAA245C84BE00D380FB /* TankAssembly.swift in Sources */,
 				0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E6BAD9723856A01003A2D4C /* LocationPickerRouterInput.swift in Sources */,
-				A9828E3424792D4500E7E9D4 /* KaltiotPickerModuleInput.swift in Sources */,
 				0E8BAC8B245C517800D380FB /* RuuviTagSensorRecord.swift in Sources */,
-				A95BA3F0245200FC00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */,
 				0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				A9227BC8245C86FA00466B23 /* NetworkSettingsViewOutput.swift in Sources */,
-				A9828E0C24792C7000E7E9D4 /* WhereOSData.swift in Sources */,
+				A9BB949F25409B060042B190 /* TagsManagerPresenter.swift in Sources */,
 				0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E6BAD9823856A01003A2D4C /* Language.swift in Sources */,
 				0E8BACFB245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
@@ -6649,8 +6546,10 @@
 				A975817B249F471900BC150A /* LocationPersistence.swift in Sources */,
 				0E6BAD9C23856A01003A2D4C /* WelcomeViewInput.swift in Sources */,
 				0E8BACD9245EE72500D380FB /* TrunkAssembly.swift in Sources */,
+				A9B57450253B994900DB7353 /* SignInModuleInput.swift in Sources */,
 				A91D02F92511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0E6BAD9D23856A01003A2D4C /* ForegroundList.swift in Sources */,
+				A9BB94CE2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
 				0E6BAD9E23856A01003A2D4C /* SettingsPresenter.swift in Sources */,
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
@@ -6679,7 +6578,6 @@
 				A91D02F32511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				0E8BACDD245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
-				A94A880D24D4374300D2CBA4 /* AddMacRouterInput.swift in Sources */,
 				0E8BAC5E245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E6BADAC23856A01003A2D4C /* WelcomePresenter.swift in Sources */,
 				A9828E5324792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */,
@@ -6699,7 +6597,6 @@
 				0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */,
 				0E6BADB623856A01003A2D4C /* HumidityCalibrationPresenter.swift in Sources */,
 				0E6BADB723856A01003A2D4C /* DefaultsStepperTableViewCell.swift in Sources */,
-				A94A885424D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */,
 				A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */,
 				0E6BADB823856A01003A2D4C /* RealmContext.swift in Sources */,
 				0E6BADB923856A01003A2D4C /* RealmContextImpl.swift in Sources */,
@@ -6707,16 +6604,18 @@
 				0E6BADBA23856A01003A2D4C /* SettingsRouter.swift in Sources */,
 				0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
-				0E79F2652441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */,
 				0E6BADBC23856A01003A2D4C /* WeatherProviderServiceImpl.swift in Sources */,
+				A9B57440253B993200DB7353 /* SignInConfigurator.swift in Sources */,
 				0E4557F923E820920025AEBF /* BackgroundProcessService.swift in Sources */,
 				0E6BADBD23856A01003A2D4C /* SwipeDownToDismissNavigationController.swift in Sources */,
 				0E6BADBE23856A01003A2D4C /* DefaultsRouterInput.swift in Sources */,
 				0E8BACD4245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E6BADBF23856A01003A2D4C /* AboutPresenter.swift in Sources */,
+				A9B57452253B994900DB7353 /* SignInViewModel.swift in Sources */,
 				A964648C247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
 				0E6BADC023856A01003A2D4C /* TagChartsPresentTransitionAnimation.swift in Sources */,
 				0E6BADC123856A01003A2D4C /* TagSettingsViewModel.swift in Sources */,
+				A9B5744E253B994900DB7353 /* SignInViewController.swift in Sources */,
 				0E6BADC223856A01003A2D4C /* CardsPresenter.swift in Sources */,
 				0E6BADC323856A01003A2D4C /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
 				0E6BADC423856A01003A2D4C /* CoreAssembly.swift in Sources */,
@@ -6728,7 +6627,6 @@
 				0E6BADCA23856A01003A2D4C /* TagSettingsViewOutput.swift in Sources */,
 				0E6BADCB23856A01003A2D4C /* ForegroundViewModel.swift in Sources */,
 				0E6BADCC23856A01003A2D4C /* CardsViewModel.swift in Sources */,
-				A9828E3624792D4500E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */,
 				0E6BADCD23856A01003A2D4C /* UIApplication+ViewController.swift in Sources */,
 				0E6BADCE23856A01003A2D4C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E6BADCF23856A01003A2D4C /* DiscoverDeviceViewModel.swift in Sources */,
@@ -6744,6 +6642,7 @@
 				A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */,
 				0E6BADD723856A01003A2D4C /* TagChartsScrollViewController.swift in Sources */,
 				0E6BADD823856A01003A2D4C /* HumidityCalibrationConfigurator.swift in Sources */,
+				A9BB949D25409B060042B190 /* TagsManagerRouterInput.swift in Sources */,
 				0E6BADD923856A01003A2D4C /* PhotoPickerPresenterSheet.swift in Sources */,
 				0E6BADDA23856A01003A2D4C /* AboutConfigurator.swift in Sources */,
 				0E6BADDB23856A01003A2D4C /* AboutViewInput.swift in Sources */,
@@ -6758,7 +6657,6 @@
 				0E6BADE023856A01003A2D4C /* DefaultsViewModel.swift in Sources */,
 				0E6BADE123856A01003A2D4C /* TagChartsScrollConfigurator.swift in Sources */,
 				A9227BBF245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
-				A94A881024D4374300D2CBA4 /* AddMacViewOutput.swift in Sources */,
 				0E79F27B244201540048BF86 /* NetworkService.swift in Sources */,
 				0E45580323E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8BAC77245C4C8E00D380FB /* RuuviTagTank.swift in Sources */,
@@ -6768,6 +6666,7 @@
 				0E6BADE423856A01003A2D4C /* DefaultsConfigurator.swift in Sources */,
 				0E6BADE523856A01003A2D4C /* MenuRouter.swift in Sources */,
 				0E6BADE623856A01003A2D4C /* ForegroundRouterInput.swift in Sources */,
+				A985B0A92541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */,
 				0EAD33E72399273E00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				0EE49BB823B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E6BADE723856A01003A2D4C /* GATTServiceQueue.swift in Sources */,
@@ -6778,6 +6677,7 @@
 				A9828E4A24792D6C00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E6BADEA23856A01003A2D4C /* DefaultsInitializer.swift in Sources */,
 				0E6BADEB23856A01003A2D4C /* HumidityCalibrationInitializer.swift in Sources */,
+				A9BB94A625409B060042B190 /* TagsManagerViewOutput.swift in Sources */,
 				A9227BC2245C86FA00466B23 /* NetworkSettingsTableViewController.swift in Sources */,
 				A907BB0F24AE60AB009DA3DB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
 				A9F0F25C2534D34B00DE9F70 /* UserApiSensorUpdateRequest.swift in Sources */,
@@ -6805,12 +6705,10 @@
 				0E6BADF823856A01003A2D4C /* TagSettingsRouter.swift in Sources */,
 				0E6BADF923856A01003A2D4C /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0E6BADFA23856A01003A2D4C /* AboutInitializer.swift in Sources */,
-				A9828E1A24792CD400E7E9D4 /* RuuviNetworkKaltiotURLSession.swift in Sources */,
 				0E6BADFB23856A01003A2D4C /* ForegroundEnvironmentObject.swift in Sources */,
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
 				A94A884E24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0E6BADFD23856A01003A2D4C /* AlertService.swift in Sources */,
-				A94A886824D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */,
 				A975817F249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */,
 				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
@@ -6820,7 +6718,6 @@
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
 				A92E3C56242636DF00D981D5 /* RuuviMeasurement.swift in Sources */,
 				A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
-				A9828E0924792C5A00E7E9D4 /* KaltiotBeacons.swift in Sources */,
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A93DB9EB24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
 				A976CA7324A5E5FE0099BDC1 /* PullRuuviNetworkDaemon.swift in Sources */,
@@ -6835,6 +6732,7 @@
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
 				0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */,
 				0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */,
+				A9B5744B253B994900DB7353 /* SignInRouterInput.swift in Sources */,
 				A976CA8024A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
 				A9758183249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E6BAE0923856A01003A2D4C /* RuuviTagDataRealm.swift in Sources */,
@@ -6844,6 +6742,7 @@
 				0E8BAC63245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
 				A9C03F8124E708DD00BC046F /* MeasurementsServiceImpl.swift in Sources */,
 				0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
+				A9BB94A525409B060042B190 /* TagsManagerViewInput.swift in Sources */,
 				0E6BAE0C23856A01003A2D4C /* ImagePersistence.swift in Sources */,
 				0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */,
 				0EAD33EA2399273E00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
@@ -6855,7 +6754,6 @@
 				A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
-				A94A880724D4373700D2CBA4 /* AddMacModuleOutput.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
 				0E8BAC7C245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0E6BAE1223856A01003A2D4C /* SettingsRouterInput.swift in Sources */,
@@ -6865,7 +6763,6 @@
 				0E6BAE1423856A01003A2D4C /* MenuTableTransitionManager.swift in Sources */,
 				A976CA7C24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0E6BAE1523856A01003A2D4C /* TagChartsViewOutput.swift in Sources */,
-				A9828E3724792D4500E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */,
 				A9828E1024792CB200E7E9D4 /* DiffCalculator.swift in Sources */,
 				0E6BAE1623856A01003A2D4C /* DefaultsRouter.swift in Sources */,
 				A95BA3EA2451EE3F00EF923D /* KeychainService.swift in Sources */,
@@ -6878,7 +6775,6 @@
 				A91D02FC2511207300694733 /* SelectionViewInput.swift in Sources */,
 				0E6BAE1F23856A01003A2D4C /* CardsModuleInput.swift in Sources */,
 				0E6BAE2023856A01003A2D4C /* LanguageRouterInput.swift in Sources */,
-				A9227B5A245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */,
 				0E6BAE2123856A01003A2D4C /* UserDefault.swift in Sources */,
 				0E6BAE2223856A01003A2D4C /* PushNotificationsManagerImpl.swift in Sources */,
 				0E6BAE2323856A01003A2D4C /* ForegroundViewOutput.swift in Sources */,
@@ -6887,9 +6783,8 @@
 				0E1B2F38239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E6BAE2423856A01003A2D4C /* LanguageModuleInput.swift in Sources */,
 				A980CC7F24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
-				A9828E2024792D3200E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */,
+				A9BB94A325409B060042B190 /* TagsManagerModuleOutput.swift in Sources */,
 				0E6BAE2523856A01003A2D4C /* PresentationAssembly.swift in Sources */,
-				A94A880E24D4374300D2CBA4 /* AddMacViewController.swift in Sources */,
 				0E6BAE2623856A01003A2D4C /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0E6BAE2723856A01003A2D4C /* AboutModuleInput.swift in Sources */,
 				0E6BAE2823856A01003A2D4C /* WelcomeViewOutput.swift in Sources */,
@@ -6897,13 +6792,14 @@
 				A9227BB9245C86FA00466B23 /* NetworkSettingsTableConfigurator.swift in Sources */,
 				0EAD33E82399273E00EC5BAA /* HeartbeatModuleInput.swift in Sources */,
 				A989A322253261EB00D092DB /* UserApiVerifyRequest.swift in Sources */,
+				A9B5744D253B994900DB7353 /* SignInViewInput.swift in Sources */,
 				A9227BCE245C86FB00466B23 /* NetworkSettingsRouter.swift in Sources */,
+				A9B57453253B994900DB7353 /* SignInInitializer.swift in Sources */,
 				0E6BAE2923856A01003A2D4C /* MainNavigationDelegate.swift in Sources */,
 				0E6BAE2B23856A01003A2D4C /* RuuviTagPersistence.swift in Sources */,
 				0E6BAE2C23856A01003A2D4C /* PermissionsManagerImpl.swift in Sources */,
 				0E6BAE2D23856A01003A2D4C /* WebTagSettingsTableInitializer.swift in Sources */,
 				0E6BAE2E23856A01003A2D4C /* MenuRouterInput.swift in Sources */,
-				A94A880824D4373900D2CBA4 /* AddMacModuleInput.swift in Sources */,
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
 				0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */,
 				0E28642D2460687200363DCB /* VirtualTagTank.swift in Sources */,
@@ -6918,14 +6814,13 @@
 				0E6BAE3923856A01003A2D4C /* LocationPickerAppleViewController.swift in Sources */,
 				0E6BAE3A23856A01003A2D4C /* TagSettingsTableConfigurator.swift in Sources */,
 				0E6BAE3B23856A01003A2D4C /* WebTagServiceImpl.swift in Sources */,
+				A9BB94A225409B060042B190 /* TagsManagerConfigurator.swift in Sources */,
 				0E6BAE3C23856A01003A2D4C /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E6BAE3D23856A01003A2D4C /* MenuViewInput.swift in Sources */,
-				A980CC752468193C00C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */,
 				0E6BAE3E23856A01003A2D4C /* ActivitySpinnerView.swift in Sources */,
 				A9F0F2332534D0ED00DE9F70 /* UserApiShareResponse.swift in Sources */,
 				A9227BBC245C86FA00466B23 /* NetworkSettingsModuleInput.swift in Sources */,
 				A952CA902532578200BBDA9D /* UserApiUserResponse.swift in Sources */,
-				0E79F2602441AE5E0048BF86 /* RuuviNetworkWhereOS.swift in Sources */,
 				0E6BAE3F23856A01003A2D4C /* ImagePersistenceDocuments.swift in Sources */,
 				0E6BAE4023856A01003A2D4C /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */,
@@ -6940,7 +6835,9 @@
 				0E8BAC59245C3DE300D380FB /* RuuviTagSQLite.swift in Sources */,
 				0E6BAE4723856A01003A2D4C /* UserDefaults+Optional.swift in Sources */,
 				0E6BAE4823856A01003A2D4C /* TagChartsRouterInput.swift in Sources */,
+				A9BB94A025409B060042B190 /* TagsManagerInitializer.swift in Sources */,
 				0E6BAE4923856A01003A2D4C /* CardsViewInput.swift in Sources */,
+				A9BB95192540C6170042B190 /* TagManagerTableViewCell.swift in Sources */,
 				0E6BAE4A23856A01003A2D4C /* DiscoverPresenter.swift in Sources */,
 				0E8BACF6245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E6BAE4B23856A01003A2D4C /* LanguageViewInput.swift in Sources */,
@@ -6979,7 +6876,6 @@
 				0E6BAE6323856A01003A2D4C /* AppAssembly.swift in Sources */,
 				0E6BAE6423856A01003A2D4C /* AppStateService.swift in Sources */,
 				0E6BAE6523856A01003A2D4C /* MenuTableDismissTransitionAnimation.swift in Sources */,
-				A9227B61245C43A200466B23 /* RuuviNetworkKaltiot.swift in Sources */,
 				0E6BAE6623856A01003A2D4C /* DiscoverModuleInput.swift in Sources */,
 				0E6BAE6823856A01003A2D4C /* SettingsTableConfigurator.swift in Sources */,
 				A9F0F24A2534D25C00DE9F70 /* UserApiGetSensorRequest.swift in Sources */,
@@ -6991,12 +6887,10 @@
 				A964647D247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				0E6BAE6B23856A01003A2D4C /* LocationPickerModuleOutput.swift in Sources */,
 				0E6BAE6C23856A01003A2D4C /* DiscoverTableConfigurator.swift in Sources */,
-				A94A87FA24D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */,
 				0E6BAE6D23856A01003A2D4C /* AlertServiceImpl.swift in Sources */,
 				0E8BACED245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E6BAE6E23856A01003A2D4C /* LocationPickerViewInput.swift in Sources */,
 				0E6BAE6F23856A01003A2D4C /* SettingsTableInitializer.swift in Sources */,
-				A9828E3A24792D4500E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */,
 				0E6BAE7023856A01003A2D4C /* TagChartsTransitionManager.swift in Sources */,
 				0E6BAE7123856A01003A2D4C /* ActivityRuuviLogoViewController.swift in Sources */,
 				0E6BAE7223856A01003A2D4C /* TagChartsScrollInitializer.swift in Sources */,
@@ -7021,7 +6915,6 @@
 				0E6BAE7D23856A01003A2D4C /* WebTagSettingsPresenter.swift in Sources */,
 				A9F0F22A2534CFDC00DE9F70 /* UserApiShareRequest.swift in Sources */,
 				0E6BAE7E23856A01003A2D4C /* MenuModuleInput.swift in Sources */,
-				A9828E3B24792D4500E7E9D4 /* KaltiotPicketViewModel.swift in Sources */,
 				0E6BAE7F23856A01003A2D4C /* BackgroundPersistence.swift in Sources */,
 				0E6BAE8023856A01003A2D4C /* CardsScrollInitializer.swift in Sources */,
 				0E6BAE8123856A01003A2D4C /* DefaultsTableViewController.swift in Sources */,
@@ -7031,22 +6924,20 @@
 				0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E6BAE8423856A01003A2D4C /* MenuTableTransitioningDelegate.swift in Sources */,
-				A94A881124D4374300D2CBA4 /* AddMacViewModel.swift in Sources */,
-				A9828E3524792D4500E7E9D4 /* KaltiotPickerRouter.swift in Sources */,
 				0E6BAE8523856A01003A2D4C /* ErrorPresenter.swift in Sources */,
 				0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */,
-				A94A880B24D4374300D2CBA4 /* AddMacPresenter.swift in Sources */,
 				0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */,
 				0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */,
 				0E31B04423BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E6BAE8A23856A01003A2D4C /* CalibrationPersistenceUserDefaults.swift in Sources */,
+				A9BB94A125409B060042B190 /* TagsManagerRouter.swift in Sources */,
 				A91D0313251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				A989A334253262CF00D092DB /* UserApiClaimRequest.swift in Sources */,
 				0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */,
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
-				A94A880C24D4374300D2CBA4 /* AddMacRouter.swift in Sources */,
+				A9B57454253B994900DB7353 /* SignInViewOutput.swift in Sources */,
 				0E8BACB9245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				A989A32B2532621C00D092DB /* UserApiVerifyResponse.swift in Sources */,
 				0E79F2812442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
@@ -7056,6 +6947,7 @@
 				0E6BAE9023856A01003A2D4C /* CardsScrollConfigurator.swift in Sources */,
 				0E6BAE9223856A01003A2D4C /* RuuviTagHeartbeatDaemon.swift in Sources */,
 				0E6BAE9323856A01003A2D4C /* WebTagSettingsViewOutput.swift in Sources */,
+				A9BB949E25409B060042B190 /* TagsManagerModuleInput.swift in Sources */,
 				0E197C7B23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E6BAE9423856A01003A2D4C /* CardsRouter.swift in Sources */,
 				A94FFD32241C17E200888017 /* RuuviTagRealmProtocol.swift in Sources */,
@@ -7075,14 +6967,13 @@
 				0E45580B23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E6BAE9C23856A01003A2D4C /* CardsRouterDelegate.swift in Sources */,
 				A90E169524604FD100631E6C /* TagChartModuleInput.swift in Sources */,
-				A9828E3324792D4500E7E9D4 /* KaltiotPickerModuleOutput.swift in Sources */,
 				0E6BAE9D23856A01003A2D4C /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				A9020044244E1501001882C3 /* ChartFilterOperation.swift in Sources */,
 				A9F0F2652534D38A00DE9F70 /* UserApiSensorUpdateResponse.swift in Sources */,
 				A9646477247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
 				A9F0F26E2534D3E700DE9F70 /* UserApiSensorImageUploadRequest.swift in Sources */,
-				A94A880F24D4374300D2CBA4 /* AddMacViewInput.swift in Sources */,
 				0E6BAE9E23856A01003A2D4C /* Worker.swift in Sources */,
+				A9BB94A725409B060042B190 /* TagsManagerViewController.swift in Sources */,
 				0E6BAE9F23856A01003A2D4C /* ErrorPresenterAlert.swift in Sources */,
 				A91D03022511207300694733 /* SelectionTableViewController.swift in Sources */,
 				0E6BAEA023856A01003A2D4C /* ForegroundViewController.swift in Sources */,
@@ -7143,7 +7034,6 @@
 				0E0C19BF23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0EAD33D82399273D00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E8BAC8A245C517800D380FB /* RuuviTagSensorRecord.swift in Sources */,
-				A95BA3EF245200FA00EF923D /* DiscoverKaltiotTableViewCell.swift in Sources */,
 				0E8BD2CD238566AB008B31EF /* LocationPickerRouterInput.swift in Sources */,
 				A9F4471724B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */,
 				A9227BC7245C86FA00466B23 /* NetworkSettingsViewOutput.swift in Sources */,
@@ -7155,7 +7045,6 @@
 				0E8BD2CE238566AB008B31EF /* Language.swift in Sources */,
 				A91D02F82511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0E8BD2CF238566AB008B31EF /* TagChartsTransitioningDelegate.swift in Sources */,
-				A9828E1F24792D3100E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */,
 				0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */,
 				A92A66BE2450C64A002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
@@ -7167,10 +7056,8 @@
 				A91D02F52511207300694733 /* SelectionPresenter.swift in Sources */,
 				0E8BD2D5238566AB008B31EF /* LanguageTableConfigurator.swift in Sources */,
 				0E2864362460741500363DCB /* ExportServiceTrunk.swift in Sources */,
-				A94A880924D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */,
 				A976CA7724A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */,
 				0E197C6C23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
-				A9828E0824792C5900E7E9D4 /* KaltiotBeacons.swift in Sources */,
 				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */,
 				0E8BACC0245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
@@ -7186,7 +7073,6 @@
 				0E8BD2DA238566AB008B31EF /* MenuModuleOutput.swift in Sources */,
 				0E8BD2DB238566AB008B31EF /* CalibrationServiceImpl.swift in Sources */,
 				A94A884D24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
-				A9828E2D24792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */,
 				A980CC7A24681A5800C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */,
 				A9828E5224792E0600E7E9D4 /* RuuviTagLoadDataOperations.swift in Sources */,
 				0E8BD2DC238566AB008B31EF /* RuuviTagRealm.swift in Sources */,
@@ -7197,7 +7083,6 @@
 				A90E16A524606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
 				0E8BACCE245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				0E8BACDC245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
-				A9828E1424792CBA00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */,
 				0E8BD2E0238566AB008B31EF /* DefaultsList.swift in Sources */,
 				0E8BAC5D245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E8BD2E1238566AB008B31EF /* LocalNotificationsManager.swift in Sources */,
@@ -7222,14 +7107,12 @@
 				A91D0317251124F900694733 /* SelectionItem.swift in Sources */,
 				0E8BD2EE238566AB008B31EF /* RealmContext.swift in Sources */,
 				0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */,
+				A9BB95182540C6170042B190 /* TagManagerTableViewCell.swift in Sources */,
 				0E8BAC9F245C755400D380FB /* RuuviTagReactorImpl.swift in Sources */,
 				0E8BD2F0238566AB008B31EF /* SettingsRouter.swift in Sources */,
-				A94A881724D4374400D2CBA4 /* AddMacViewOutput.swift in Sources */,
 				0EE49B9A23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				A9F0F2292534CFDC00DE9F70 /* UserApiShareRequest.swift in Sources */,
 				0EA92FDC2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
-				A9828E1724792CC100E7E9D4 /* KaltiotPickerPresenter.swift in Sources */,
-				0E79F2642441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */,
 				0E8BD2F2238566AB008B31EF /* WeatherProviderServiceImpl.swift in Sources */,
 				0E4557F823E820920025AEBF /* BackgroundProcessService.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
@@ -7266,7 +7149,6 @@
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
 				A980CC7E24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
-				A94A881224D4374400D2CBA4 /* AddMacPresenter.swift in Sources */,
 				0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */,
 				0E8BD312238566AB008B31EF /* TagChartsViewInput.swift in Sources */,
 				0E8BACBC245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
@@ -7283,7 +7165,6 @@
 				0E8BD317238566AB008B31EF /* TagChartsScrollConfigurator.swift in Sources */,
 				A9227BBE245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
 				0E79F27A244201540048BF86 /* NetworkService.swift in Sources */,
-				A9828E3224792D4400E7E9D4 /* KaltiotPicketViewModel.swift in Sources */,
 				0E45580223E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8BAC76245C4C8E00D380FB /* RuuviTagTank.swift in Sources */,
 				0E8BD318238566AB008B31EF /* TemperatureUnit.swift in Sources */,
@@ -7337,7 +7218,6 @@
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0E8BD337238566AB008B31EF /* ExportServiceTemp.swift in Sources */,
-				A94A881624D4374400D2CBA4 /* AddMacViewInput.swift in Sources */,
 				0E8BD338238566AB008B31EF /* DateValueFormatter.swift in Sources */,
 				A92E3C55242636DE00D981D5 /* RuuviMeasurement.swift in Sources */,
 				0E8BD339238566AB008B31EF /* CardsScrollViewController.swift in Sources */,
@@ -7345,7 +7225,6 @@
 				A94FFD38241C1B0900888017 /* RuuviTagProtocol.swift in Sources */,
 				0E286419246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				0E8BD33B238566AB008B31EF /* ConnectionPersistence.swift in Sources */,
-				A94A880624D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */,
 				0E8BD33C238566AB008B31EF /* TagSettingsTableViewController.swift in Sources */,
 				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
@@ -7356,13 +7235,10 @@
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
 				0E8BAC62245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
 				0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
-				A94A885624D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */,
 				0E8BD342238566AB008B31EF /* ImagePersistence.swift in Sources */,
-				A94A87F924D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */,
 				0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */,
 				0EAD33DC2399273D00EC5BAA /* HeartbeatRouterInput.swift in Sources */,
 				0E8BD344238566AB008B31EF /* RuuviTagPersistenceRealm.swift in Sources */,
-				A980CC742468193C00C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */,
 				0EE49BBC23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
@@ -7370,6 +7246,7 @@
 				0E8BD346238566AB008B31EF /* LocationManager.swift in Sources */,
 				0E8BAC7B245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0E8BD348238566AB008B31EF /* SettingsRouterInput.swift in Sources */,
+				A985B0A82541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */,
 				0EAD33E32399273D00EC5BAA /* HeartbeatViewOutput.swift in Sources */,
 				A9758182249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E8BD349238566AB008B31EF /* ForegroundStepperTableViewCell.swift in Sources */,
@@ -7390,16 +7267,13 @@
 				0E8BD352238566AB008B31EF /* WebTagRealm.swift in Sources */,
 				0E8BD353238566AB008B31EF /* LocalizationService.swift in Sources */,
 				0E8BD354238566AB008B31EF /* RURangeSeekSlider.swift in Sources */,
-				A94A886724D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */,
 				A989A333253262CF00D092DB /* UserApiClaimRequest.swift in Sources */,
 				0E8BD355238566AB008B31EF /* CardsModuleInput.swift in Sources */,
 				0E8BD356238566AB008B31EF /* LanguageRouterInput.swift in Sources */,
-				A9227B59245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */,
 				0E8BD357238566AB008B31EF /* UserDefault.swift in Sources */,
 				0E8BD358238566AB008B31EF /* PushNotificationsManagerImpl.swift in Sources */,
 				0E8BD359238566AB008B31EF /* ForegroundViewOutput.swift in Sources */,
 				0EE49BC123B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
-				A9828E2F24792D4400E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */,
 				0E1B2F37239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				0E8BD35A238566AB008B31EF /* LanguageModuleInput.swift in Sources */,
 				0E8BD35B238566AB008B31EF /* PresentationAssembly.swift in Sources */,
@@ -7430,16 +7304,13 @@
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0E8BD36E238566AB008B31EF /* DiscoverViewInput.swift in Sources */,
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
-				A9828E1924792CD300E7E9D4 /* RuuviNetworkKaltiotURLSession.swift in Sources */,
 				0E8BD36F238566AB008B31EF /* LocationPickerAppleViewController.swift in Sources */,
-				A9828E2A24792D4400E7E9D4 /* KaltiotPickerModuleOutput.swift in Sources */,
 				0E8BD370238566AB008B31EF /* TagSettingsTableConfigurator.swift in Sources */,
 				0E8BD371238566AB008B31EF /* WebTagServiceImpl.swift in Sources */,
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
 				0E8BD374238566AB008B31EF /* ActivitySpinnerView.swift in Sources */,
 				A9227BBB245C86FA00466B23 /* NetworkSettingsModuleInput.swift in Sources */,
-				0E79F25F2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift in Sources */,
 				A91D030A2511207300694733 /* SelectionRouterInput.swift in Sources */,
 				0E8BD375238566AB008B31EF /* ImagePersistenceDocuments.swift in Sources */,
 				0E8BD376238566AB008B31EF /* ActivityPresenterRuuviLogo.swift in Sources */,
@@ -7458,14 +7329,12 @@
 				0E8BAC58245C3DE300D380FB /* RuuviTagSQLite.swift in Sources */,
 				0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */,
 				0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */,
-				A9828E2C24792D4400E7E9D4 /* KaltiotPickerRouter.swift in Sources */,
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD380238566AB008B31EF /* DiscoverPresenter.swift in Sources */,
 				0E8BACF5245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD383238566AB008B31EF /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
-				A94A881524D4374400D2CBA4 /* AddMacViewController.swift in Sources */,
 				0E8BD384238566AB008B31EF /* TagChartsRouter.swift in Sources */,
 				0E8BD385238566AB008B31EF /* DiscoverTableInitializer.swift in Sources */,
 				0E8BD386238566AB008B31EF /* DiscoverViewOutput.swift in Sources */,
@@ -7490,7 +7359,6 @@
 				0E8BD390238566AB008B31EF /* TagSettingsPresenter.swift in Sources */,
 				0E8BD391238566AB008B31EF /* TagChartsModuleOutput.swift in Sources */,
 				0E8BD392238566AB008B31EF /* HumidityUnit.swift in Sources */,
-				A94A881424D4374400D2CBA4 /* AddMacRouterInput.swift in Sources */,
 				0E8BD393238566AB008B31EF /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0E8BD394238566AB008B31EF /* TagSettingsRouterInput.swift in Sources */,
 				0E8BD395238566AB008B31EF /* NSObject+Observable.swift in Sources */,
@@ -7502,7 +7370,6 @@
 				A9646467247BAE6B0001D55D /* AdvancedViewInput.swift in Sources */,
 				A93DB9EA24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
-				A9227B60245C43A100466B23 /* RuuviNetworkKaltiot.swift in Sources */,
 				0E8BD39C238566AB008B31EF /* DiscoverModuleInput.swift in Sources */,
 				0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */,
 				0E8BD39F238566AB008B31EF /* RuuviTagPropertiesDaemon.swift in Sources */,
@@ -7512,7 +7379,6 @@
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
 				A9828E4724792D6B00E7E9D4 /* ReloadableCellData.swift in Sources */,
-				A94A881824D4374400D2CBA4 /* AddMacViewModel.swift in Sources */,
 				0E8BD3A3238566AB008B31EF /* AlertServiceImpl.swift in Sources */,
 				0E8BACEC245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
@@ -7541,7 +7407,6 @@
 				A90E16AA24609B9B00631E6C /* TagChartAssembler.swift in Sources */,
 				0E8BD3B3238566AB008B31EF /* WebTagSettingsPresenter.swift in Sources */,
 				0E8BD3B4238566AB008B31EF /* MenuModuleInput.swift in Sources */,
-				A9828E3124792D4400E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */,
 				0E8BD3B5238566AB008B31EF /* BackgroundPersistence.swift in Sources */,
 				0E8BD3B6238566AB008B31EF /* CardsScrollInitializer.swift in Sources */,
 				0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */,
@@ -7553,8 +7418,8 @@
 				A93DB9E624731C65007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */,
 				0E28644F2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
-				A9828E3024792D4400E7E9D4 /* KaltiotPickerViewInput.swift in Sources */,
 				0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */,
+				A933E038253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */,
 				0E8BD3BE238566AB008B31EF /* HumidityCalibrationViewOutput.swift in Sources */,
@@ -7577,7 +7442,6 @@
 				0E8BD3C9238566AB008B31EF /* WebTagSettingsViewOutput.swift in Sources */,
 				0E197C7A23C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0E8BD3CA238566AB008B31EF /* CardsRouter.swift in Sources */,
-				A9828E2B24792D4400E7E9D4 /* KaltiotPickerModuleInput.swift in Sources */,
 				A94FFD31241C17E100888017 /* RuuviTagRealmProtocol.swift in Sources */,
 				0E8BACFF2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */,
 				0E8BD3CB238566AB008B31EF /* WelcomeViewController.swift in Sources */,
@@ -7592,7 +7456,6 @@
 				A90E169024604F7400631E6C /* TagChartPresenter.swift in Sources */,
 				0E2864402461B9FD00363DCB /* VirtualTagReactor.swift in Sources */,
 				A907A1D4245F7C6600041F6E /* ProgressBarView.swift in Sources */,
-				A9828E2E24792D4400E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */,
 				A9F0F2492534D25C00DE9F70 /* UserApiGetSensorRequest.swift in Sources */,
 				0E8BD3CF238566AB008B31EF /* SettingsViewInput.swift in Sources */,
 				0E8BD3D0238566AB008B31EF /* AlertPersistence.swift in Sources */,
@@ -7607,12 +7470,33 @@
 				0E8BD3D5238566AB008B31EF /* ErrorPresenterAlert.swift in Sources */,
 				A989A321253261EB00D092DB /* UserApiVerifyRequest.swift in Sources */,
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
-				A9828E0B24792C7000E7E9D4 /* WhereOSData.swift in Sources */,
-				A94A881324D4374400D2CBA4 /* AddMacRouter.swift in Sources */,
 				0E8BD3D7238566AB008B31EF /* Settings.swift in Sources */,
 				0E8BD3D8238566AB008B31EF /* ForegroundInitializer.swift in Sources */,
 				0E8BD3DA238566AB008B31EF /* WebTagPersistence.swift in Sources */,
 				0E8BD3DB238566AB008B31EF /* AlertPersistenceUserDefaults.swift in Sources */,
+				1F3C224646FB9B196464E9DD /* SignInConfigurator.swift in Sources */,
+				3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */,
+				08E830207D43DAF06076D647 /* SignInModuleInput.swift in Sources */,
+				8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */,
+				7350803A8D6DD23F1057994F /* SignInPresenter.swift in Sources */,
+				E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */,
+				D037B55274A07756F884696B /* SignInRouter.swift in Sources */,
+				ABCA915676F9A8C975D9F2A3 /* SignInViewInput.swift in Sources */,
+				34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */,
+				74E67721EFA7BF9397D52B1F /* SignInViewModel.swift in Sources */,
+				C8D6714C7E0237B74676EA08 /* SignInViewController.swift in Sources */,
+				C9675DA6BC516DE916FAC3F2 /* TagsManagerConfigurator.swift in Sources */,
+				BA272B6F6FEBAA303AD47138 /* TagsManagerInitializer.swift in Sources */,
+				45F8BB13B8F60B722A0AF64C /* TagsManagerModuleInput.swift in Sources */,
+				053BD1EF1443171286509626 /* TagsManagerModuleOutput.swift in Sources */,
+				3E33EBD2303E22F3E8131CE1 /* TagsManagerPresenter.swift in Sources */,
+				887CBE2377960FB6AA615CA9 /* TagsManagerRouterInput.swift in Sources */,
+				76E82538BA4F7E8761E07EC7 /* TagsManagerRouter.swift in Sources */,
+				9BB9617F40599EF964AA6A6C /* TagsManagerViewInput.swift in Sources */,
+				795133998B4A61A60C49DB52 /* TagsManagerViewOutput.swift in Sources */,
+				A9BB94CD2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
+				B2730766B77F848D7F4B105A /* TagsManagerViewModel.swift in Sources */,
+				B6000D9CEB00ECD1C0C35154 /* TagsManagerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7622,10 +7506,11 @@
 			files = (
 				0EEB211022B7E1D90015F9E0 /* BackgroundWorker.swift in Sources */,
 				0E1C1E1122B756B40032F6CA /* CardView.swift in Sources */,
-				A9828E2724792D4400E7E9D4 /* KaltiotPickerViewInput.swift in Sources */,
+				A9B57445253B994700DB7353 /* SignInPresenter.swift in Sources */,
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
+				A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */,
 				0E8BACDF245F015D00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift in Sources */,
 				0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
@@ -7637,9 +7522,10 @@
 				0E28643A246198BB00363DCB /* Identifier.swift in Sources */,
 				0EC61FD82374000C00A654C8 /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
 				A9646472247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
-				A9828E2624792D4400E7E9D4 /* KaltiotPickerTableViewController.swift in Sources */,
-				A94A881F24D4374500D2CBA4 /* AddMacViewModel.swift in Sources */,
+				A9BB94AF25409B060042B190 /* TagsManagerViewModel.swift in Sources */,
 				0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */,
+				A9B57447253B994700DB7353 /* SignInModuleOutput.swift in Sources */,
+				A933E037253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				0E8A100E23845F8C00A9CBA6 /* DefaultsViewOutput.swift in Sources */,
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				0EF6F5BE235E01170052BA25 /* ForegroundRouter.swift in Sources */,
@@ -7652,7 +7538,6 @@
 				0EEB215822B8FD800015F9E0 /* WelcomeConfigurator.swift in Sources */,
 				0E84BF572397F33E00A37E1A /* HeartbeatViewInput.swift in Sources */,
 				0ECFF35B2350618E0061D11B /* ForegroundModuleInput.swift in Sources */,
-				A94A881E24D4374500D2CBA4 /* AddMacViewOutput.swift in Sources */,
 				0E31B05023BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
 				A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0316251124F900694733 /* SelectionItem.swift in Sources */,
@@ -7661,7 +7546,6 @@
 				0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				A92E3C63242644B800D981D5 /* TagChartViewInput.swift in Sources */,
 				0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
-				A980CC6C2468126000C9A14C /* KaltiotApiKeyTableViewCell.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				A94A883A24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */,
 				A91D03092511207300694733 /* SelectionRouterInput.swift in Sources */,
@@ -7669,15 +7553,14 @@
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
 				A964647E247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
-				A95518AB24573DF5005592FD /* RuuviNetworkKaltiot.swift in Sources */,
 				0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E8BACA8245C84BE00D380FB /* TankAssembly.swift in Sources */,
 				A976CA7E24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
 				0E0C19BE23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
-				A9828E2224792D4400E7E9D4 /* KaltiotPickerModuleInput.swift in Sources */,
 				0E8BAC89245C517800D380FB /* RuuviTagSensorRecord.swift in Sources */,
+				A9BB94AA25409B060042B190 /* TagsManagerPresenter.swift in Sources */,
 				A9227BC6245C86FA00466B23 /* NetworkSettingsViewOutput.swift in Sources */,
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
@@ -7690,13 +7573,14 @@
 				A9758179249F471900BC150A /* LocationPersistence.swift in Sources */,
 				0E8A101A2384615400A9CBA6 /* DefaultsPresenter.swift in Sources */,
 				0E8BACD7245EE72500D380FB /* TrunkAssembly.swift in Sources */,
+				A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */,
 				A91D02F72511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
+				A9BB94CC2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
 				0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
 				0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */,
-				A9828E0724792C5900E7E9D4 /* KaltiotBeacons.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E8BACBF245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
@@ -7708,10 +7592,8 @@
 				0E31B03D23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				A907A1D72460376600041F6E /* TagChartViewModel.swift in Sources */,
 				0EEB214C22B8FCC70015F9E0 /* WelcomeRouterInput.swift in Sources */,
-				A94A87F824D4334200D2CBA4 /* AddMacConfigurator.swift in Sources */,
 				0E8BAC8F245C522D00D380FB /* Measurement.swift in Sources */,
 				A9828E3C24792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
-				A94A881C24D4374500D2CBA4 /* AddMacViewController.swift in Sources */,
 				0EEB20CD22B7BD6C0015F9E0 /* MenuModuleOutput.swift in Sources */,
 				A976CA7A24A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift in Sources */,
 				0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */,
@@ -7721,11 +7603,9 @@
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
 				A90E16A424606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
-				A94A881924D4374500D2CBA4 /* AddMacPresenter.swift in Sources */,
 				0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				A91D02F12511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				0E8BACDB245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
-				A9828E1324792CBA00E7E9D4 /* KaltiotPickerTableConfigurator.swift in Sources */,
 				0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */,
 				0E8BAC5C245C420E00D380FB /* SQLiteContext.swift in Sources */,
 				0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */,
@@ -7740,7 +7620,6 @@
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				A9828E4024792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
 				A9227BCF245C86FB00466B23 /* NetworkSettingsRouterInput.swift in Sources */,
-				A92A66BB2450C4C1002918E7 /* DiscoverKaltiotTableViewCell.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0E8BACE3245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
@@ -7750,14 +7629,15 @@
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
+				A9B5743F253B993100DB7353 /* SignInConfigurator.swift in Sources */,
 				0EA92FDB2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BAC9E245C755400D380FB /* RuuviTagReactorImpl.swift in Sources */,
 				0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */,
 				0E53DA6722CC964200BC6D64 /* SwipeDownToDismissNavigationController.swift in Sources */,
-				A9828E1624792CC100E7E9D4 /* KaltiotPickerPresenter.swift in Sources */,
-				0E79F2632441BA2C0048BF86 /* RuuviNetworkWhereOSURLSession.swift in Sources */,
+				A9B57448253B994700DB7353 /* SignInViewModel.swift in Sources */,
 				0E4557F723E820920025AEBF /* BackgroundProcessService.swift in Sources */,
+				A9B57444253B994700DB7353 /* SignInViewController.swift in Sources */,
 				0E8A10162384612300A9CBA6 /* DefaultsRouterInput.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
 				0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */,
@@ -7774,9 +7654,7 @@
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0E28641D2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0EF2863322CBB0250026C7A5 /* TagSettingsViewOutput.swift in Sources */,
-				A94A881D24D4374500D2CBA4 /* AddMacViewInput.swift in Sources */,
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
-				A9828E2424792D4400E7E9D4 /* KaltiotPickerRouterInput.swift in Sources */,
 				A94A884C24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
@@ -7785,6 +7663,7 @@
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
+				A9BB94A825409B060042B190 /* TagsManagerRouterInput.swift in Sources */,
 				A9BB445524E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
 				0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
@@ -7802,13 +7681,12 @@
 				0E8BACBB245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
 				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
-				A94A880524D4373600D2CBA4 /* AddMacModuleOutput.swift in Sources */,
 				A9828E0D24792CAC00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E79F28B244328D50048BF86 /* DiscoverAddWithMACTableViewCell.swift in Sources */,
-				A94A881B24D4374500D2CBA4 /* AddMacRouterInput.swift in Sources */,
 				A9828E0424792C4400E7E9D4 /* NetworkSettingsViewModel.swift in Sources */,
 				A91D02EE2511207200694733 /* SelectionTableConfigurator.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
+				A985B0A72541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */,
 				A9227BBD245C86FA00466B23 /* NetworkSettingsPresenter.swift in Sources */,
 				0E45580123E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,
@@ -7819,6 +7697,7 @@
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
 				0E1C1DFC22B3FFD90032F6CA /* MenuRouter.swift in Sources */,
 				0ECFF36823507A1A0061D11B /* ForegroundRouterInput.swift in Sources */,
+				A9BB94B125409B060042B190 /* TagsManagerViewOutput.swift in Sources */,
 				0EE49BB623B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */,
 				A9F0F25A2534D34B00DE9F70 /* UserApiSensorUpdateRequest.swift in Sources */,
@@ -7842,7 +7721,6 @@
 				0EEB214E22B8FCDC0015F9E0 /* WelcomeRouter.swift in Sources */,
 				0EEB20C422B78F000015F9E0 /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */,
-				A94A880A24D4373A00D2CBA4 /* AddMacModuleInput.swift in Sources */,
 				A9100D6C241AC741004007FD /* WPSData.swift in Sources */,
 				A9646487247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				0E45580523E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
@@ -7876,6 +7754,7 @@
 				A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
+				A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */,
 				A9646484247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */,
 				0EA3106B232B760100BC8CF5 /* RUObservationToken.swift in Sources */,
@@ -7885,6 +7764,7 @@
 				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				A90E16972460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
+				A9BB94B025409B060042B190 /* TagsManagerViewInput.swift in Sources */,
 				0E8BAC61245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
 				A9C03F7F24E708BF00BC046F /* MeasurementsServiceImpl.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
@@ -7908,7 +7788,6 @@
 				0E8FD0C523335DBF00FFA577 /* TagChartsViewOutput.swift in Sources */,
 				0E8A10142384610400A9CBA6 /* DefaultsRouter.swift in Sources */,
 				0ECFF36023506BD60061D11B /* ForegroundViewInput.swift in Sources */,
-				A9828E2524792D4400E7E9D4 /* KaltiotPickerTableViewCell.swift in Sources */,
 				0E046F3022F057CC00BD4E9C /* WebTagSettingsRouterInput.swift in Sources */,
 				A95BA3E52451ECB000EF923D /* KeychainService.swift in Sources */,
 				0E197C7423C5C7A20074015B /* InfoProvider.swift in Sources */,
@@ -7925,20 +7804,21 @@
 				0ECFF35E23506BC40061D11B /* ForegroundViewOutput.swift in Sources */,
 				A989A3082532612C00D092DB /* UserApiRegisterRequest.swift in Sources */,
 				0EBAF079232008140025A191 /* LanguageModuleInput.swift in Sources */,
-				A94A886624D5BACC00D2CBA4 /* MacPasteboardAccessoryView.swift in Sources */,
 				0EE49BC023B8CC35003012C2 /* WebTagRefreshDataOperation.swift in Sources */,
 				0E1B2F36239DF0120060C469 /* TagSettingsAlertControlsCell.swift in Sources */,
 				A980CC7D24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift in Sources */,
+				A9BB94AE25409B060042B190 /* TagsManagerModuleOutput.swift in Sources */,
 				0E1C1DBE22B3921E0032F6CA /* PresentationAssembly.swift in Sources */,
 				A90E16A92460975600631E6C /* TagChartAssembler.swift in Sources */,
-				A9828E1E24792D3000E7E9D4 /* KaltiotPickerTableInitializer.swift in Sources */,
 				0E9F979622EAFC820015ADE2 /* DiscoverWebTagTableViewCell.swift in Sources */,
 				0EEB20FD22B7D2C90015F9E0 /* AboutModuleInput.swift in Sources */,
 				0EEB214922B8FC570015F9E0 /* WelcomeViewOutput.swift in Sources */,
 				0E2864302460697100363DCB /* VirtualTagTankCoordinator.swift in Sources */,
 				A9227BB7245C86FA00466B23 /* NetworkSettingsTableConfigurator.swift in Sources */,
 				A989A320253261EB00D092DB /* UserApiVerifyRequest.swift in Sources */,
+				A9B57443253B994700DB7353 /* SignInViewInput.swift in Sources */,
 				0EEB213F22B8FB840015F9E0 /* MainNavigationDelegate.swift in Sources */,
+				A9B57449253B994700DB7353 /* SignInInitializer.swift in Sources */,
 				A9227BCC245C86FB00466B23 /* NetworkSettingsRouter.swift in Sources */,
 				0E1C1D9B22B365A60032F6CA /* RuuviTagPersistence.swift in Sources */,
 				0E5C301222CF636500B52E39 /* PermissionsManagerImpl.swift in Sources */,
@@ -7949,7 +7829,6 @@
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
 				0E28642B2460687200363DCB /* VirtualTagTank.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
-				A9227B58245B335500466B23 /* KaltiotBeaconLogs.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
@@ -7959,12 +7838,12 @@
 				0EF2864222CBB13F0026C7A5 /* TagSettingsTableConfigurator.swift in Sources */,
 				0E9F979C22EB0A3F0015ADE2 /* WebTagServiceImpl.swift in Sources */,
 				0E53DA6022CC93A700BC6D64 /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
+				A9BB94AD25409B060042B190 /* TagsManagerConfigurator.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				A9F0F2312534D0ED00DE9F70 /* UserApiShareResponse.swift in Sources */,
-				0E79F25E2441AE5E0048BF86 /* RuuviNetworkWhereOS.swift in Sources */,
 				A952CA8E2532578200BBDA9D /* UserApiUserResponse.swift in Sources */,
 				A9227BBA245C86FA00466B23 /* NetworkSettingsModuleInput.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
@@ -7981,8 +7860,9 @@
 				0E8BAC57245C3DE300D380FB /* RuuviTagSQLite.swift in Sources */,
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
+				A9BB94AB25409B060042B190 /* TagsManagerInitializer.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
-				A95518AD245741AA005592FD /* RuuviNetworkKaltiotURLSession.swift in Sources */,
+				A9BB95172540C6170042B190 /* TagManagerTableViewCell.swift in Sources */,
 				0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
 				0E8BACF4245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
@@ -8037,11 +7917,8 @@
 				0E046F4822F181DA00BD4E9C /* LocationPickerViewInput.swift in Sources */,
 				0E8BACEB245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0EEB20E622B7C8F20015F9E0 /* SettingsTableInitializer.swift in Sources */,
-				A94A885524D4498B00D2CBA4 /* AddMacInitializer.swift in Sources */,
 				0E341BBD2372E75C0085BB54 /* TagChartsTransitionManager.swift in Sources */,
-				A9828E2824792D4400E7E9D4 /* KaltiotPickerViewOutput.swift in Sources */,
 				0E1C1DB722B390BC0032F6CA /* ActivityRuuviLogoViewController.swift in Sources */,
-				A94A881A24D4374500D2CBA4 /* AddMacRouter.swift in Sources */,
 				0E8FD0CF2333676C00FFA577 /* TagChartsScrollInitializer.swift in Sources */,
 				0ECFF36E23507BF00061D11B /* ForegroundConfigurator.swift in Sources */,
 				0E8BAC6D245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift in Sources */,
@@ -8065,7 +7942,6 @@
 				0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */,
 				0E1C1DE822B3C2B60032F6CA /* CardsScrollInitializer.swift in Sources */,
 				0E8A10122384605A00A9CBA6 /* DefaultsTableViewController.swift in Sources */,
-				A9828E2924792D4400E7E9D4 /* KaltiotPicketViewModel.swift in Sources */,
 				0EEC3F5322C5E21300C51D81 /* HumidityCalibrationRouterInput.swift in Sources */,
 				0E75661B2361C16100FCA977 /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
@@ -8075,18 +7951,19 @@
 				0E28644E2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
-				A9828E2324792D4400E7E9D4 /* KaltiotPickerRouter.swift in Sources */,
 				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				0E31B04223BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
+				A9BB94AC25409B060042B190 /* TagsManagerRouter.swift in Sources */,
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				A989A332253262CF00D092DB /* UserApiClaimRequest.swift in Sources */,
 				0ECFF366235079F50061D11B /* ForegroundPresenter.swift in Sources */,
 				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
+				A9B5744A253B994700DB7353 /* SignInViewOutput.swift in Sources */,
 				0E8BACB7245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				0E79F27F2442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				A989A3292532621C00D092DB /* UserApiVerifyResponse.swift in Sources */,
@@ -8097,6 +7974,7 @@
 				A976CA7624A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */,
 				0E1C1DE422B3C2710032F6CA /* CardsRouter.swift in Sources */,
 				0E09672222AE7FCF00E85F48 /* WelcomeViewController.swift in Sources */,
+				A9BB94A925409B060042B190 /* TagsManagerModuleInput.swift in Sources */,
 				0E1C1DE222B3C25F0032F6CA /* CardsRouterInput.swift in Sources */,
 				0E197C7923C5CCBC0074015B /* InfoProviderImpl.swift in Sources */,
 				0EEB215622B8FD590015F9E0 /* WelcomeInitializer.swift in Sources */,
@@ -8117,16 +7995,15 @@
 				0E84BF6B239802A400A37E1A /* HeartbeatModuleInput.swift in Sources */,
 				A90E169324604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				0E1C1D9122B35D6A0032F6CA /* Worker.swift in Sources */,
-				A9828E2124792D4400E7E9D4 /* KaltiotPickerModuleOutput.swift in Sources */,
 				A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */,
 				A9F0F2632534D38A00DE9F70 /* UserApiSensorUpdateResponse.swift in Sources */,
 				A9646475247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
 				A9F0F26C2534D3E700DE9F70 /* UserApiSensorImageUploadRequest.swift in Sources */,
 				0E1C1DC422B395C00032F6CA /* ErrorPresenterAlert.swift in Sources */,
 				0ECFF359235060EF0061D11B /* ForegroundViewController.swift in Sources */,
+				A9BB94B225409B060042B190 /* TagsManagerViewController.swift in Sources */,
 				A91D03002511207300694733 /* SelectionTableViewController.swift in Sources */,
 				0EEB20BB22B76FB70015F9E0 /* Settings.swift in Sources */,
-				A9828E0A24792C6F00E7E9D4 /* WhereOSData.swift in Sources */,
 				0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
 				A964646F247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
@@ -8145,7 +8022,6 @@
 				A94FFD4A241D45C600888017 /* MockRuuviTag.swift in Sources */,
 				A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */,
 				A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */,
-				0E79F26A2441C4360048BF86 /* RuuviNetworkWhereOSSpec.swift in Sources */,
 				A94FFD3C241C1D0D00888017 /* AlertServiceSpec.swift in Sources */,
 				A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */,
 				64333D3E20B0C45A00CDF4B6 /* StationTests.swift in Sources */,

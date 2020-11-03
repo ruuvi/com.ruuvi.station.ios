@@ -23,7 +23,8 @@ extension RuuviTagSensor {
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
-                                    name: name)
+                                    name: name,
+                                    networkProvider: networkProvider)
     }
 
     func with(version: Int) -> RuuviTagSensor {

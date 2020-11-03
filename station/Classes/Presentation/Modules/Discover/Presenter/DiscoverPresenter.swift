@@ -16,9 +16,6 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagReactor: RuuviTagReactor!
-    var keychainService: KeychainService!
-    var ruuviNetworkKaltiot: RuuviNetworkKaltiot!
-    var ruuviNetworkWhereOS: RuuviNetworkWhereOS!
     var settings: Settings!
 
     private var ruuviTags = Set<RuuviTag>()
@@ -85,9 +82,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
             && foreground.bluetoothState != .unknown {
             view.showBluetoothDisabled()
         }
-        view.networkFeatureEnabled = settings.networkFeatureEnabled
-        view.networkKaltiotEnabled = settings.kaltiotNetworkEnabled
-        view.networkWhereOsEnabled = settings.whereOSNetworkEnabled
 
         startObservingPersistedRuuviSensors()
         startObservingPersistedWebTags()
@@ -164,32 +158,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidTapOnWebTagInfo() {
         view.showWebTagInfoDialog()
     }
-
-    func viewDidAskToAddTagWithMACAddress() {
-        switch (settings.kaltiotNetworkEnabled, settings.whereOSNetworkEnabled) {
-        case (true, true):
-            view.showChoiseDialog()
-        case (true, false):
-            startKaltiotAddingFlow()
-        case (false, true):
-            openAddUsingMac(for: .whereOS)
-        default:
-            assert(false)
-        }
-    }
-
-    func viewDidEnterKaltiotApiKey(apiKey: String) {
-        validateApiKey(apiKey: apiKey)
-    }
-
-    func viewDidSelectProvider(_ provider: RuuviNetworkProvider) {
-        switch provider {
-        case .whereOS:
-            openAddUsingMac(for: .whereOS)
-        case .kaltiot:
-            startKaltiotAddingFlow()
-        }
-    }
 }
 
 // MARK: - LocationPickerModuleOutput
@@ -211,22 +179,6 @@ extension DiscoverPresenter: LocationPickerModuleOutput {
                 self?.errorPresenter.present(error: error)
             })
             self?.lastSelectedWebTag = nil
-        }
-    }
-}
-// MARK: - AddMacModuleOutput
-extension DiscoverPresenter: AddMacModuleOutput {
-    func addMac(module: AddMacModuleInput,
-                didEnter mac: String,
-                for provider: RuuviNetworkProvider) {
-        module.dismiss { [weak self] in
-            self?.activityPresenter.increment()
-            switch provider {
-            case .whereOS:
-                self?.searchWhereOSTag(with: mac)
-            case .kaltiot:
-                self?.searchKaltiotTag(with: mac)
-            }
         }
     }
 }
@@ -360,28 +312,6 @@ extension DiscoverPresenter {
         }
     }
 
-    private func validateApiKey(apiKey: String) {
-        let op = ruuviNetworkKaltiot.validateApiKey(apiKey: apiKey)
-        op.on(success: {[weak self] in
-            self?.keychainService.kaltiotApiKey = apiKey
-            self?.openAddUsingMac(for: .kaltiot)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func startKaltiotAddingFlow() {
-        if keychainService.hasKaltiotApiKey {
-            openAddUsingMac(for: .kaltiot)
-        } else {
-            view.showAddKaltiotApiKey()
-        }
-    }
-
-    private func openAddUsingMac(for provider: RuuviNetworkProvider) {
-        router.openAddUsingMac(output: self, for: provider)
-    }
-
     private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {
         guard !persistedSensors.contains(where: {$0.any == sensor}) else {
             activityPresenter.decrement()
@@ -397,33 +327,6 @@ extension DiscoverPresenter {
             } else {
                 sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
             }
-        }, failure: { [weak self] (error) in
-            self?.activityPresenter.decrement()
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func searchWhereOSTag(with mac: String) {
-        ruuviNetworkWhereOS.getSensor(mac: mac).on(success: {[weak self] (sensor) in
-            self?.saveSensor(sensor: sensor, mac: mac)
-        }, failure: { [weak self] (error) in
-            self?.activityPresenter.decrement()
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func searchKaltiotTag(with mac: String) {
-        ruuviNetworkKaltiot.getBeacon(mac: mac).on(success: { [weak self] (beacon) in
-            self?.saveKaltiotBeacon(beacon, mac: mac)
-        }, failure: { [weak self] (error) in
-            self?.activityPresenter.decrement()
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func saveKaltiotBeacon(_ beacon: KaltiotBeacon, mac: String) {
-        ruuviNetworkKaltiot.getSensor(for: beacon).on(success: { [weak self] (sensor) in
-            self?.saveSensor(sensor: sensor, mac: mac)
         }, failure: { [weak self] (error) in
             self?.activityPresenter.decrement()
             self?.errorPresenter.present(error: error)

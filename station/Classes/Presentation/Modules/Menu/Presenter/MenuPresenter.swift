@@ -4,6 +4,7 @@ class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
     var router: MenuRouterInput!
     var userApi: RuuviNetworkUserApi!
+    var keychainService: KeychainService!
 
     private weak var output: MenuModuleOutput?
 
@@ -17,6 +18,14 @@ class MenuPresenter: MenuModuleInput {
 }
 
 extension MenuPresenter: MenuViewOutput {
+    var userIsAuthorized: Bool {
+        return keychainService.userApiIsAuthorized
+    }
+
+    var userEmail: String? {
+        return keychainService.userApiEmail
+    }
+
     func viewDidTapOnDimmingView() {
         router.dismiss()
     }
@@ -42,11 +51,10 @@ extension MenuPresenter: MenuViewOutput {
     }
 
     func viewDidSelectAccountCell() {
-        let request = UserApiRegisterRequest(email: "viik.ufa@gmail.com")
-        userApi.register(request).on { (response) in
-            dump(response)
-        } failure: { (error) in
-            debugPrint(error)
+        if userIsAuthorized {
+            output?.menu(module: self, didSelectOpenConfig: nil)
+        } else {
+            output?.menu(module: self, didSelectSignIn: nil)
         }
     }
 }

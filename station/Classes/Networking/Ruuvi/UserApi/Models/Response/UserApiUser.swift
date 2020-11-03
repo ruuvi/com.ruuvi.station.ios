@@ -6,12 +6,12 @@ struct UserApiUserResponse: Decodable {
 }
 
 struct UserApiUserSensor: Decodable {
-    let sensor: String
+    let sensorId: String
     let isOwner: Bool
     let pictureUrl: String
 
     enum CodingKeys: String, CodingKey {
-        case sensor
+        case sensorId = "sensor"
         case isOwner = "owner"
         case pictureUrl = "picture"
     }

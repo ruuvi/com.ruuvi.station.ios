@@ -161,6 +161,16 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
+        container.register(NetworkService.self) { r in
+            let service = NetworkServiceQueue()
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            let factory = RuuviNetworkFactory()
+            factory.userApi = r.resolve(RuuviNetworkUserApi.self)
+            service.ruuviNetworkFactory = factory
+            return service
+        }.inObjectScope(.container)
+
         container.register(RuuviTagPropertiesDaemon.self) { r in
             let daemon = RuuviTagPropertiesDaemonBTKit()
             daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
@@ -208,7 +218,7 @@ class BusinessAssembly: Assembly {
             service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
-            service.settings = r.resolve(Settings.self)
+            service.keychainService = r.resolve(KeychainService.self)
             return service
         }
     }

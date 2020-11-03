@@ -36,24 +36,24 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
     }
 
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError> {
-        return request(endpoint: Routes.claim, with: requestModel, method: .post)
+        return request(endpoint: Routes.claim, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError> {
-        return request(endpoint: Routes.share, with: requestModel, method: .post)
+        return request(endpoint: Routes.share, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func user() -> Future<UserApiUserResponse, RUError> {
         let requestModel = UserApiUserRequest()
-        return request(endpoint: Routes.user, with: requestModel)
+        return request(endpoint: Routes.user, with: requestModel, authorizationRequered: true)
     }
 
     func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError> {
-        return request(endpoint: Routes.getSensorData, with: requestModel)
+        return request(endpoint: Routes.getSensorData, with: requestModel, method: .get, authorizationRequered: true)
     }
 
     func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError> {
-        return request(endpoint: Routes.update, with: requestModel, method: .post)
+        return request(endpoint: Routes.update, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
@@ -71,9 +71,20 @@ extension RuuviNetworkUserApiURLSession {
         authorizationRequered: Bool = false
     ) -> Future<Response, RUError> {
         let promise = Promise<Response, RUError>()
-        var request = URLRequest(url: endpoint.url)
+        var url: URL = endpoint.url
+        if method == .get {
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            urlComponents?.queryItems = try? URLQueryItemEncoder().encode(model)
+            guard let urlFromComponents = urlComponents?.url else {
+                fatalError()
+            }
+            url = urlFromComponents
+        }
+        var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        request.httpBody = try? JSONEncoder().encode(model)
+        if method != .get {
+            request.httpBody = try? JSONEncoder().encode(model)
+        }
         if authorizationRequered {
             request.setValue(keychainService.ruuviUserApiKey, forHTTPHeaderField: "Authorization")
         }
@@ -93,6 +104,9 @@ extension RuuviNetworkUserApiURLSession {
                             promise.fail(error: userApiError)
                         }
                     } catch let error {
+                        #if DEBUG
+                        debugPrint("❌ Parsing Error", dump(error))
+                        #endif
                         promise.fail(error: .parse(error))
                     }
                 } else {
