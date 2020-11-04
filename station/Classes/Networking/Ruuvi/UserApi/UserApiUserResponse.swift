@@ -7,6 +7,7 @@ protocol RuuviNetworkUserApi: RuuviNetwork {
     func register(_ requestModel: UserApiRegisterRequest) -> Future<UserApiRegisterResponse, RUError>
     func verify(_ requestModel: UserApiVerifyRequest) -> Future<UserApiVerifyResponse, RUError>
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError>
+    func unclaim(_ requestModel: UserApiClaimRequest) -> Future<UserApiUnclaimResponse, RUError>
     func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError>
     func user() -> Future<UserApiUserResponse, RUError>
     func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError>
@@ -70,12 +71,15 @@ extension RuuviNetworkUserApi {
                                                   isConnectable: true,
                                                   payload: log.data),
                let tag = device.ruuvi?.tag {
+                let name = $0.name.isEmpty ? $0.sensor : $0.name
                 let sensor = RuuviTagSensorStruct(version: tag.version,
                                               luid: nil,
                                               macId: $0.sensor.mac,
                                               isConnectable: true,
-                                              name: $0.name,
-                                              networkProvider: .userApi)
+                                              name: name,
+                                              networkProvider: .userApi,
+                                              isClaimed: false,
+                                              isOwner: false)
                 let record = RuuviTagSensorRecordStruct(ruuviTagId: sensor.id,
                                                         date: log.date,
                                                         macId: $0.sensor.mac,

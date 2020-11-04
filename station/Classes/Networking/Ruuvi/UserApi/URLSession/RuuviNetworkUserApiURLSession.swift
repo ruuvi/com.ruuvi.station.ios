@@ -6,6 +6,7 @@ extension RuuviNetworkUserApiURLSession {
         case register
         case verify
         case claim
+        case unclaim
         case share
         case user
         case getSensorData = "get"
@@ -37,6 +38,10 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
 
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError> {
         return request(endpoint: Routes.claim, with: requestModel, method: .post, authorizationRequered: true)
+    }
+
+    func unclaim(_ requestModel: UserApiClaimRequest) -> Future<UserApiUnclaimResponse, RUError> {
+        return request(endpoint: Routes.unclaim, with: requestModel, method: .post, authorizationRequered: true)
     }
 
     func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError> {

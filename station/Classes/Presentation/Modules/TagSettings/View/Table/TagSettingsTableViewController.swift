@@ -44,6 +44,10 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var humidityAlertControlsCell: TagSettingsAlertControlsCell!
 
+    @IBOutlet weak var networkTagActionsStackView: UIStackView!
+    @IBOutlet weak var claimTagButton: UIButton!
+    @IBOutlet weak var shareTagButton: UIButton!
+
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
@@ -281,6 +285,14 @@ extension TagSettingsTableViewController {
             viewModel?.isPressureAlertOn.value = false
             viewModel?.isMovementAlertOn.value = false
         }
+    }
+
+    @IBAction func didTapClaimButton(_ sender: UIButton) {
+        output.viewDidTapClaimButton()
+    }
+
+    @IBAction func didTapShareButton(_ sender: UIButton) {
+        output.viewDidTapShareButton()
     }
 }
 
@@ -621,6 +633,8 @@ extension TagSettingsTableViewController {
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
+        bindTagNetworkActions()
+
         guard isViewLoaded, let viewModel = viewModel else { return }
 
         dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
@@ -1231,6 +1245,34 @@ extension TagSettingsTableViewController {
                 tableView.beginUpdates()
                 tableView.endUpdates()
             }
+        }
+    }
+
+// MARK: - bind tag network actions
+    func bindTagNetworkActions() {
+        guard isViewLoaded, let viewModel = viewModel else {
+            return
+        }
+        let enabledColor = UIColor(red: 21/255, green: 141/255, blue: 165/255, alpha: 1.0)
+        let disabledColor = UIColor.gray
+        networkTagActionsStackView.bind(viewModel.isAuthorized) { (stack, isAuthorized) in
+            stack.isHidden = !(isAuthorized ?? false)
+        }
+        claimTagButton.bind(viewModel.canClaimTag) { (button, canClaimTag) in
+            let canClaimTag: Bool = canClaimTag ?? false
+            button.isEnabled = canClaimTag
+            button.backgroundColor = canClaimTag ? enabledColor : disabledColor
+        }
+        shareTagButton.bind(viewModel.canShareTag) { (button, canShareTag) in
+            let canShareTag: Bool = canShareTag ?? false
+            button.isEnabled = canShareTag
+            button.backgroundColor = canShareTag ? enabledColor : disabledColor
+        }
+        claimTagButton.bind(viewModel.isClaimedTag) { (button, isClaimedTag) in
+                let title = isClaimedTag ?? false
+                    ? "TagSettings.ClaimTagButton.Unclaim".localized()
+                    : "TagSettings.ClaimTagButton.Claim".localized()
+                button.setTitle(title, for: .normal)
         }
     }
 }
