@@ -22,6 +22,8 @@ protocol Locateable {
 
 protocol Networkable {
     var networkProvider: RuuviNetworkProvider? { get }
+    var isClaimed: Bool { get }
+    var isOwner: Bool { get }
 }
 
 protocol Sensor: StringIdentifieable {}

@@ -26,6 +26,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
+    var keychainService: KeychainService!
+    var ruuviNetwork: RuuviNetworkUserApi!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -225,6 +227,52 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidAskToConnectFromAlertsDisabledDialog() {
         viewModel?.keepConnection.value = true
     }
+
+    func viewDidTapClaimButton() {
+        guard let mac = ruuviTag.macId?.value else {
+            return
+        }
+        if viewModel.canClaimTag.value == true {
+            ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
+                .on(success: { [weak self] _ in
+                    guard let self = self else {
+                        return
+                    }
+                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                                      luid: self.ruuviTag.luid,
+                                                      macId: self.ruuviTag.macId,
+                                                      isConnectable: self.ruuviTag.isConnectable,
+                                                      name: self.ruuviTag.name,
+                                                      networkProvider: self.ruuviTag.networkProvider,
+                                                      isClaimed: true,
+                                                      isOwner: self.ruuviTag.isOwner)
+                    self.ruuviTagTank.update(sensor).on()
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        } else {
+            ruuviNetwork.unclaim(.init(name: ruuviTag.name, sensor: mac))
+                .on(success: { [weak self] _ in
+                    guard let self = self else {
+                        return
+                    }
+                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                                      luid: self.ruuviTag.luid,
+                                                      macId: self.ruuviTag.macId,
+                                                      isConnectable: self.ruuviTag.isConnectable,
+                                                      name: self.ruuviTag.name,
+                                                      networkProvider: self.ruuviTag.networkProvider,
+                                                      isClaimed: false,
+                                                      isOwner: self.ruuviTag.isOwner)
+                    self.ruuviTagTank.update(sensor).on()
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        }
+    }
+
+    func viewDidTapShareButton() {
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -276,7 +324,14 @@ extension TagSettingsPresenter {
             assertionFailure()
         }
 
-        if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.macId?.value {
+        viewModel.isAuthorized.value = keychainService.userApiIsAuthorized
+        viewModel.canShareTag.value = ruuviTag.isOwner
+        viewModel.canClaimTag.value = ruuviTag.isOwner
+        viewModel.isClaimedTag.value = ruuviTag.isClaimed
+
+        if (ruuviTag.name == ruuviTag.luid?.value
+            || ruuviTag.name == ruuviTag.macId?.value)
+            && !ruuviTag.isNetworkConnectable {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
@@ -409,6 +464,10 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
+            case .update(let sensor):
+                if sensor.id == self?.ruuviTag.id {
+                    self?.ruuviTag = sensor
+                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             default:

@@ -14,9 +14,17 @@ extension RuuviTagRealm: RuuviTagSensor {
                                                               luid: luid,
                                                               macId: macId,
                                                               isConnectable: isConnectable,
-                                                              name: name))
+                                                              name: name,
+                                                              isClaimed: isClaimed,
+                                                              isOwner: isOwner))
     }
     var networkProvider: RuuviNetworkProvider? {
         return nil
+    }
+    var isClaimed: Bool {
+        return false
+    }
+    var isOwner: Bool {
+        return true
     }
 }

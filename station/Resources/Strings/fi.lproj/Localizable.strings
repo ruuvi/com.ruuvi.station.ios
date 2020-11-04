@@ -300,6 +300,17 @@
 "TagSettings.ConnectionAlert.title" = "Yhteys";
 "TagSettings.MovementAlert.title" = "Liike";
 "TagSettings.Alerts.Movement.description" = "Hälytä, mikäli liike havaittu";
+"TagSettings.ClaimTagButton.Claim" = "Claim";
+"TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
+
+//TagsManager
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing tags successfully added";
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Ok" = "Ok";
+"TagsManagerPresenter.SignOutConfirmAlert.Title" = "Sign out";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
+"TagsManagerPresenter.SignOutConfirmAlert.ConfirmAction" = "Confirm";
+"TagsManagerPresenter.SignOutConfirmAlert.CancelAction" = "Cancel";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Vastakutsun ja virheen tulos on nolla";

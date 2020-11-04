@@ -317,6 +317,17 @@
 "TagSettings.ConnectionAlert.title" = "Anslutning";
 "TagSettings.MovementAlert.title" = "Rörelse";
 "TagSettings.Alerts.Movement.description" = "Alarmera om rörelse upptäcks";
+"TagSettings.ClaimTagButton.Claim" = "Claim";
+"TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
+
+//TagsManager
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing tags successfully added";
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Ok" = "Ok";
+"TagsManagerPresenter.SignOutConfirmAlert.Title" = "Sign out";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
+"TagsManagerPresenter.SignOutConfirmAlert.ConfirmAction" = "Confirm";
+"TagsManagerPresenter.SignOutConfirmAlert.CancelAction" = "Cancel";
 
 // UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Både resultatet och felmeddelande är nil";

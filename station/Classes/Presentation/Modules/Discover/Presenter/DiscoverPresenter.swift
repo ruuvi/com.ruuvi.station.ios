@@ -107,7 +107,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
                                               luid: ruuviTag.uuid.luid,
                                               macId: ruuviTag.mac?.mac,
                                               isConnectable: ruuviTag.isConnectable,
-                                              name: displayName)
+                                              name: displayName,
+                                              isClaimed: false,
+                                              isOwner: false)
             let entity = ruuviTagTank.create(sensor)
             let record = ruuviTagTank.create(ruuviTag)
             Future.zip(entity, record).on(success: { [weak self] _ in
