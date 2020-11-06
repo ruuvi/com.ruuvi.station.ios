@@ -304,6 +304,12 @@
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
 
 //TagsManager
+"TagsManager.SignOutButton" = "Sign out";
+"TagsManager.SharedTags" = "Network tags";
+"TagsManager.Actions" = "Actions";
+"TagManagerCellViewModel.Owner" = "Owner";
+"TagManagerCellViewModel.Shared" = "Shared";
+"TagManagerActionCellViewModel.AddMissingTag.Title" = "Add missing tag";
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing tags successfully added";
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Ok" = "Ok";

@@ -151,6 +151,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+        guard keychainService.userApiIsAuthorized,
+              let mac = ruuviTag.macId?.value else {
+            return
+        }
+        let requestModel = UserApiSensorUpdateRequest(sensor: mac, name: finalName)
+        let networkOperation = ruuviNetwork.update(requestModel)
+        networkOperation.on()
     }
 
     func viewDidAskToCalibrateHumidity() {
@@ -228,11 +235,40 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         viewModel?.keepConnection.value = true
     }
 
+    private func updateTag(with sensor: RuuviTagSensorStruct) {
+        self.ruuviTagTank.update(sensor).on(success: { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.ruuviTag = sensor
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+
     func viewDidTapClaimButton() {
         guard let mac = ruuviTag.macId?.value else {
             return
         }
-        if viewModel.canClaimTag.value == true {
+        if viewModel.isClaimedTag.value == true {
+            ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
+                .on(success: { [weak self] _ in
+                    guard let self = self else {
+                        return
+                    }
+                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                                      luid: self.ruuviTag.luid,
+                                                      macId: self.ruuviTag.macId,
+                                                      isConnectable: self.ruuviTag.isConnectable,
+                                                      name: self.ruuviTag.name,
+                                                      networkProvider: self.ruuviTag.networkProvider,
+                                                      isClaimed: false,
+                                                      isOwner: true)
+                    self.updateTag(with: sensor)
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        } else {
             ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
                 .on(success: { [weak self] _ in
                     guard let self = self else {
@@ -245,26 +281,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
                                                       name: self.ruuviTag.name,
                                                       networkProvider: self.ruuviTag.networkProvider,
                                                       isClaimed: true,
-                                                      isOwner: self.ruuviTag.isOwner)
-                    self.ruuviTagTank.update(sensor).on()
-                }, failure: { [weak self] (error) in
-                    self?.errorPresenter.present(error: error)
-                })
-        } else {
-            ruuviNetwork.unclaim(.init(name: ruuviTag.name, sensor: mac))
-                .on(success: { [weak self] _ in
-                    guard let self = self else {
-                        return
-                    }
-                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
-                                                      luid: self.ruuviTag.luid,
-                                                      macId: self.ruuviTag.macId,
-                                                      isConnectable: self.ruuviTag.isConnectable,
-                                                      name: self.ruuviTag.name,
-                                                      networkProvider: self.ruuviTag.networkProvider,
-                                                      isClaimed: false,
-                                                      isOwner: self.ruuviTag.isOwner)
-                    self.ruuviTagTank.update(sensor).on()
+                                                      isOwner: true)
+                    self.updateTag(with: sensor)
                 }, failure: { [weak self] (error) in
                     self?.errorPresenter.present(error: error)
                 })
@@ -325,7 +343,7 @@ extension TagSettingsPresenter {
         }
 
         viewModel.isAuthorized.value = keychainService.userApiIsAuthorized
-        viewModel.canShareTag.value = ruuviTag.isOwner
+        viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
         viewModel.isClaimedTag.value = ruuviTag.isClaimed
 

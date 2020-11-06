@@ -154,7 +154,7 @@ extension TagsManagerPresenter {
                          luid: sensor.0.luid,
                          macId: sensor.0.macId,
                          isConnectable: sensor.0.isConnectable,
-                         name: sensor.0.name,
+                         name: userApiSensor.name,
                          networkProvider: .userApi,
                          isClaimed: sensor.0.isClaimed,
                          isOwner: userApiSensor.isOwner)

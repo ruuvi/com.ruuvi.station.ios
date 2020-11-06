@@ -66,6 +66,7 @@ class TagsManagerViewController: UIViewController {
 extension TagsManagerViewController: TagsManagerViewInput {
     func localize() {
         signOutBarButtonItem.title = "TagsManager.SignOutButton".localized()
+        
     }
 }
 

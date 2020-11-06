@@ -99,6 +99,13 @@ extension RuuviNetworkUserApiURLSession {
                 promise.fail(error: .networking(error))
             } else {
                 if let data = data {
+                    #if DEBUG
+                    if let object = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
+                    let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
+                        debugPrint("📬 Response of request", dump(request), prettyPrintedString)
+                    }
+                    #endif
                     let decoder = JSONDecoder()
                     do {
                         let baseResponse = try decoder.decode(UserApiBaseResponse<Response>.self, from: data)
