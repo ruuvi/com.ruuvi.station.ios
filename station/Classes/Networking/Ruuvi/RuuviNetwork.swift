@@ -6,6 +6,7 @@ protocol RuuviNetwork {
               mac: String,
               since: Date?,
               until: Date?) -> Future<[RuuviTagSensorRecord], RUError>
+    func user() -> Future<UserApiUserResponse, RUError>
 }
 
 class RuuviNetworkFactory {
