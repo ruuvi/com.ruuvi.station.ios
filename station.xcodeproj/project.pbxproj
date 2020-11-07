@@ -1223,10 +1223,16 @@
 		0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
 		0EFDD6D922BBDBD600EADFC6 /* CalibrationServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */; };
 		1F3C224646FB9B196464E9DD /* SignInConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */; };
+		248444E4B7F8C3D6454D4D1B /* ShareModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */; };
+		26BA929FDA200CCAC9964651 /* SharePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */; };
+		2BB81E4733D8EC40BECC68EF /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */; };
 		34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */; };
+		3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		3E33EBD2303E22F3E8131CE1 /* TagsManagerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */; };
 		3E9E7B1756AB4F6867DD3634 /* SignInInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B8587156E1062D613B8960 /* SignInInitializer.swift */; };
 		45F8BB13B8F60B722A0AF64C /* TagsManagerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */; };
+		4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
+		6204554EB76ED0EFDE0DC290 /* ShareRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */; };
 		64333D2920B0C45900CDF4B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64333D2820B0C45900CDF4B6 /* AppDelegate.swift */; };
 		64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2C20B0C45900CDF4B6 /* Main.storyboard */; };
 		64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64333D2F20B0C45A00CDF4B6 /* Assets.xcassets */; };
@@ -1245,6 +1251,7 @@
 		76E82538BA4F7E8761E07EC7 /* TagsManagerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */; };
 		795133998B4A61A60C49DB52 /* TagsManagerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */; };
 		887CBE2377960FB6AA615CA9 /* TagsManagerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */; };
+		898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
 		8A37F49EA3B84BB415491B03 /* SignInModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */; };
 		9BB9617F40599EF964AA6A6C /* TagsManagerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */; };
 		A9020042244E14F8001882C3 /* ChartFilterOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9020041244E14F8001882C3 /* ChartFilterOperation.swift */; };
@@ -1637,6 +1644,21 @@
 		A9DDC7112531163B00FA4704 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E972526F03B008CE97B /* RxCocoa */; };
 		A9DDC7142531169200FA4704 /* Humidity in Frameworks */ = {isa = PBXBuildFile; productRef = A9DDC7132531169200FA4704 /* Humidity */; };
 		A9DDC7212531191E00FA4704 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = A9DDC7202531191E00FA4704 /* KeychainAccess */; };
+		A9E5994025572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
+		A9E5994125572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
+		A9E5994225572CF700F9E5CC /* Share.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E5993F25572CF700F9E5CC /* Share.storyboard */; };
+		A9E5994A2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */; };
+		A9E5994B2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */; };
+		A9E5994C2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */; };
+		A9E599582557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */; };
+		A9E599592557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */; };
+		A9E5995A2557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */; };
+		A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599602557346600F9E5CC /* ShareSendButtonTableViewCell.swift */; };
+		A9E599622557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599602557346600F9E5CC /* ShareSendButtonTableViewCell.swift */; };
+		A9E599632557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E599602557346600F9E5CC /* ShareSendButtonTableViewCell.swift */; };
+		A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E59969255734A000F9E5CC /* ShareEmailTableViewCell.swift */; };
+		A9E5996B255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E59969255734A000F9E5CC /* ShareEmailTableViewCell.swift */; };
+		A9E5996C255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E59969255734A000F9E5CC /* ShareEmailTableViewCell.swift */; };
 		A9F0F2282534CFDC00DE9F70 /* UserApiShareRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F0F2272534CFDC00DE9F70 /* UserApiShareRequest.swift */; };
 		A9F0F2292534CFDC00DE9F70 /* UserApiShareRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F0F2272534CFDC00DE9F70 /* UserApiShareRequest.swift */; };
 		A9F0F22A2534CFDC00DE9F70 /* UserApiShareRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F0F2272534CFDC00DE9F70 /* UserApiShareRequest.swift */; };
@@ -1673,12 +1695,25 @@
 		A9F4471624B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471724B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471824B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
+		A9F668062557501A006E2B7D /* UserApiSharedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F668052557501A006E2B7D /* UserApiSharedRequest.swift */; };
+		A9F668072557501A006E2B7D /* UserApiSharedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F668052557501A006E2B7D /* UserApiSharedRequest.swift */; };
+		A9F668082557501A006E2B7D /* UserApiSharedRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F668052557501A006E2B7D /* UserApiSharedRequest.swift */; };
+		A9F6680F2557504E006E2B7D /* UserApiSharedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6680E2557504E006E2B7D /* UserApiSharedResponse.swift */; };
+		A9F668102557504E006E2B7D /* UserApiSharedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6680E2557504E006E2B7D /* UserApiSharedResponse.swift */; };
+		A9F668112557504E006E2B7D /* UserApiSharedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6680E2557504E006E2B7D /* UserApiSharedResponse.swift */; };
+		A9F6681825575151006E2B7D /* UserApiUnshareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6681725575151006E2B7D /* UserApiUnshareResponse.swift */; };
+		A9F6681925575151006E2B7D /* UserApiUnshareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6681725575151006E2B7D /* UserApiUnshareResponse.swift */; };
+		A9F6681A25575151006E2B7D /* UserApiUnshareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6681725575151006E2B7D /* UserApiUnshareResponse.swift */; };
 		ABCA915676F9A8C975D9F2A3 /* SignInViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */; };
+		B198F488C89E6DFFD1EECAF3 /* ShareRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */; };
 		B2730766B77F848D7F4B105A /* TagsManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */; };
+		B2A3FB2578B246F6CBBF0CA9 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC417B8977A47FFAE71585F0 /* ShareViewController.swift */; };
 		B6000D9CEB00ECD1C0C35154 /* TagsManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */; };
+		B6FA27492FB1F63393783EFC /* ShareViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F75FD2FDAD002C10686FA /* ShareViewInput.swift */; };
 		BA272B6F6FEBAA303AD47138 /* TagsManagerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D3B734E63D6233A5C29D31 /* TagsManagerInitializer.swift */; };
 		C8D6714C7E0237B74676EA08 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB40883B83C652584EBB9A /* SignInViewController.swift */; };
 		C9675DA6BC516DE916FAC3F2 /* TagsManagerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */; };
+		C9D6ACA6CB9694F6C33414CE /* ShareModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */; };
 		D037B55274A07756F884696B /* SignInRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */; };
 		E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E816312622E83E3B42001DC /* SignInRouterInput.swift */; };
 /* End PBXBuildFile section */
@@ -2107,15 +2142,19 @@
 		0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationService.swift; sourceTree = "<group>"; };
 		0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
+		167F75FD2FDAD002C10686FA /* ShareViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewInput.swift; sourceTree = "<group>"; };
 		1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerRouterInput.swift; sourceTree = "<group>"; };
 		28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInConfigurator.swift; sourceTree = "<group>"; };
 		2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
+		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
+		392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareInitializer.swift; sourceTree = "<group>"; };
 		3BC7A7F074761C1B58F7F946 /* Pods-station_dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.debug.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.debug.xcconfig"; sourceTree = "<group>"; };
 		4A7D6325DFC865D2D11BD1D1 /* SignInViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewInput.swift; sourceTree = "<group>"; };
 		4BD498E7491E278B4EF4919C /* SignInViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewOutput.swift; sourceTree = "<group>"; };
 		4E816312622E83E3B42001DC /* SignInRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouterInput.swift; sourceTree = "<group>"; };
 		50760BEF3DF7F0DC671A0D42 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		52202AC59F8AF7CF544E470C /* TagsManagerRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerRouter.swift; sourceTree = "<group>"; };
+		5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareModuleOutput.swift; sourceTree = "<group>"; };
 		5E727C684F96F2EE0D0BF37A /* TagsManagerPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerPresenter.swift; sourceTree = "<group>"; };
 		64333D2520B0C45900CDF4B6 /* station.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64333D2820B0C45900CDF4B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -2136,6 +2175,7 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareModuleInput.swift; sourceTree = "<group>"; };
 		6F0552F1D17F403B7DE508B5 /* SignInRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInRouter.swift; sourceTree = "<group>"; };
 		7097B76856D5F01896F963EC /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8018B7836CF8C748718825DD /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2145,6 +2185,7 @@
 		87EFB230083D471777FBE5D0 /* SignInModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleInput.swift; sourceTree = "<group>"; };
 		8825D89E1A7CB4BDC6D12038 /* Pods-stationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.release.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.release.xcconfig"; sourceTree = "<group>"; };
 		9174E0B0C8F457647FEE639C /* Pods_stationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_stationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareRouterInput.swift; sourceTree = "<group>"; };
 		9B3006A5FB2173EC6AA2728D /* SignInModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInModuleOutput.swift; sourceTree = "<group>"; };
 		A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewOutput.swift; sourceTree = "<group>"; };
 		A9020041244E14F8001882C3 /* ChartFilterOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFilterOperation.swift; sourceTree = "<group>"; };
@@ -2270,6 +2311,11 @@
 		A9DA319F245CBEF200041559 /* ReloadableCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadableCellData.swift; sourceTree = "<group>"; };
 		A9E58CF52459F761000C38DA /* DiffCalculatorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffCalculatorImpl.swift; sourceTree = "<group>"; };
 		A9E58CF72459F7A7000C38DA /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
+		A9E5993F25572CF700F9E5CC /* Share.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Share.storyboard; sourceTree = "<group>"; };
+		A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDescriptionTableViewCell.swift; sourceTree = "<group>"; };
+		A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareEmailInputTableViewCell.swift; sourceTree = "<group>"; };
+		A9E599602557346600F9E5CC /* ShareSendButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSendButtonTableViewCell.swift; sourceTree = "<group>"; };
+		A9E59969255734A000F9E5CC /* ShareEmailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareEmailTableViewCell.swift; sourceTree = "<group>"; };
 		A9F0F2272534CFDC00DE9F70 /* UserApiShareRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiShareRequest.swift; sourceTree = "<group>"; };
 		A9F0F2302534D0ED00DE9F70 /* UserApiShareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiShareResponse.swift; sourceTree = "<group>"; };
 		A9F0F23E2534D16E00DE9F70 /* UserApiUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUser.swift; sourceTree = "<group>"; };
@@ -2282,15 +2328,23 @@
 		A9F0F2822534D53800DE9F70 /* UserApiRegisterResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiRegisterResponse.swift; sourceTree = "<group>"; };
 		A9F0F29A2534EF3700DE9F70 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
+		A9F668052557501A006E2B7D /* UserApiSharedRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiSharedRequest.swift; sourceTree = "<group>"; };
+		A9F6680E2557504E006E2B7D /* UserApiSharedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiSharedResponse.swift; sourceTree = "<group>"; };
+		A9F6681725575151006E2B7D /* UserApiUnshareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUnshareResponse.swift; sourceTree = "<group>"; };
+		AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareConfigurator.swift; sourceTree = "<group>"; };
 		B3426764B50E4E9CA2A27704 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
+		BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareRouter.swift; sourceTree = "<group>"; };
 		BE6BF0C04A8C8C7D551104E4 /* TagsManagerConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerConfigurator.swift; sourceTree = "<group>"; };
 		C7A2418BB26C6E7BDBDE8CCF /* TagsManagerModuleOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerModuleOutput.swift; sourceTree = "<group>"; };
 		CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewInput.swift; sourceTree = "<group>"; };
+		CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharePresenter.swift; sourceTree = "<group>"; };
+		CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewOutput.swift; sourceTree = "<group>"; };
 		D70194F67D20E2190C99A51C /* TagsManagerModuleInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerModuleInput.swift; sourceTree = "<group>"; };
 		E29B5190CB557178D11AB2CE /* SignInPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
 		E488CC4222C8A75F4EA90171 /* TagsManagerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewController.swift; sourceTree = "<group>"; };
 		E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerViewModel.swift; sourceTree = "<group>"; };
 		E6DB40883B83C652584EBB9A /* SignInViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		FC417B8977A47FFAE71585F0 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		FC59D3B5AD8926DBDD79AA1C /* SignInViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2668,6 +2722,7 @@
 				0E09671E22AE7F2600E85F48 /* Welcome */,
 				71A3760FF84549A5FB45C805 /* SignIn */,
 				1D38DC92F34CB2DC284090A9 /* TagsManager */,
+				DB47D7C8D6149FEA8DD05FDC /* Share */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -5066,6 +5121,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3D930628B855379BB9A9B1FF /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */,
+				392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
 		432A6647074CE89E605C6DF1 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
@@ -5182,6 +5246,27 @@
 			path = SignIn;
 			sourceTree = "<group>";
 		};
+		89F27275323C3CBC88A9180D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A9E599482557340200F9E5CC /* Cells */,
+				167F75FD2FDAD002C10686FA /* ShareViewInput.swift */,
+				CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */,
+				354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */,
+				9607EC149920F19A54BE896D /* ViewController */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		910C826026E94BD80C07FBD2 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */,
+				BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		9430BF42054B093449B0B9FB /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
@@ -5190,6 +5275,14 @@
 				E29B5190CB557178D11AB2CE /* SignInPresenter.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		9607EC149920F19A54BE896D /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				FC417B8977A47FFAE71585F0 /* ShareViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		975CCF09FE9E0AEF7A6CEEF8 /* View */ = {
@@ -5579,6 +5672,7 @@
 				A9F0F2592534D34B00DE9F70 /* UserApiSensorUpdateRequest.swift */,
 				A9F0F26B2534D3E700DE9F70 /* UserApiSensorImageUploadRequest.swift */,
 				A9B573E2253B557C00DB7353 /* UserApiUserRequest.swift */,
+				A9F668052557501A006E2B7D /* UserApiSharedRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -5595,6 +5689,8 @@
 				A9F0F2622534D38A00DE9F70 /* UserApiSensorUpdateResponse.swift */,
 				A9F0F2792534D4B200DE9F70 /* UserApiSensorImageUploadResponse.swift */,
 				A9F0F2822534D53800DE9F70 /* UserApiRegisterResponse.swift */,
+				A9F6680E2557504E006E2B7D /* UserApiSharedResponse.swift */,
+				A9F6681725575151006E2B7D /* UserApiUnshareResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -5808,6 +5904,39 @@
 				A9DA319F245CBEF200041559 /* ReloadableCellData.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A9E599482557340200F9E5CC /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9E599492557341F00F9E5CC /* ShareDescriptionTableViewCell.swift */,
+				A9E599572557345200F9E5CC /* ShareEmailInputTableViewCell.swift */,
+				A9E599602557346600F9E5CC /* ShareSendButtonTableViewCell.swift */,
+				A9E59969255734A000F9E5CC /* ShareEmailTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		C11DEEB04EEFF836E529DA0B /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */,
+				5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */,
+				CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		DB47D7C8D6149FEA8DD05FDC /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				A9E5993F25572CF700F9E5CC /* Share.storyboard */,
+				3D930628B855379BB9A9B1FF /* Assembly */,
+				C11DEEB04EEFF836E529DA0B /* Presenter */,
+				910C826026E94BD80C07FBD2 /* Router */,
+				89F27275323C3CBC88A9180D /* View */,
+			);
+			path = Share;
 			sourceTree = "<group>";
 		};
 		EE1408E0FB774808AFB4513D /* ViewController */ = {
@@ -6067,6 +6196,7 @@
 				0E6BAEBC23856A01003A2D4C /* Welcome.storyboard in Resources */,
 				0EAD33E52399273E00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E6BAEBD23856A01003A2D4C /* InfoPlist.strings in Resources */,
+				A9E5994225572CF700F9E5CC /* Share.storyboard in Resources */,
 				0E6BAEBE23856A01003A2D4C /* ActivityRuuviLogo.storyboard in Resources */,
 				0E6BAEBF23856A01003A2D4C /* Assets.xcassets in Resources */,
 				A91D030F251121C800694733 /* Selection.storyboard in Resources */,
@@ -6115,6 +6245,7 @@
 				0E8BD3F2238566AB008B31EF /* Welcome.storyboard in Resources */,
 				0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E8BD3F3238566AB008B31EF /* InfoPlist.strings in Resources */,
+				A9E5994125572CF700F9E5CC /* Share.storyboard in Resources */,
 				0E8BD3F4238566AB008B31EF /* ActivityRuuviLogo.storyboard in Resources */,
 				0E8BD3F5238566AB008B31EF /* Assets.xcassets in Resources */,
 				A91D030E251121C800694733 /* Selection.storyboard in Resources */,
@@ -6163,6 +6294,7 @@
 				0E09672022AE7F5C00E85F48 /* Welcome.storyboard in Resources */,
 				0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */,
 				0E84BF552397F29800A37E1A /* Heartbeat.storyboard in Resources */,
+				A9E5994025572CF700F9E5CC /* Share.storyboard in Resources */,
 				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				A91D030D251121C800694733 /* Selection.storyboard in Resources */,
@@ -6521,6 +6653,7 @@
 				0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E2864282460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0E6BAD9223856A01003A2D4C /* AsyncOperation.swift in Sources */,
+				A9E5994C2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
 				A91D030B2511207300694733 /* SelectionRouterInput.swift in Sources */,
 				0E6BAD9323856A01003A2D4C /* TagChartsViewModel.swift in Sources */,
 				0E6BAD9423856A01003A2D4C /* WebTagPersistenceRealm.swift in Sources */,
@@ -6575,6 +6708,7 @@
 				0E6BADAA23856A01003A2D4C /* DefaultsList.swift in Sources */,
 				A90E16A624606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
 				0E8BACCF245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
+				A9E5995A2557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
 				A91D02F32511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				0E8BACDD245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
@@ -6633,6 +6767,7 @@
 				0E6BADD023856A01003A2D4C /* HumidityCalibrationRouter.swift in Sources */,
 				0E6BADD123856A01003A2D4C /* WebTagService.swift in Sources */,
 				A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
+				A9E599632557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0E6BADD223856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A92E3C6D2426767F00D981D5 /* MeasurementType.swift in Sources */,
 				0E6BADD323856A01003A2D4C /* WeatherProviderService.swift in Sources */,
@@ -6680,6 +6815,7 @@
 				A9BB94A625409B060042B190 /* TagsManagerViewOutput.swift in Sources */,
 				A9227BC2245C86FA00466B23 /* NetworkSettingsTableViewController.swift in Sources */,
 				A907BB0F24AE60AB009DA3DB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
+				A9E5996C255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				A9F0F25C2534D34B00DE9F70 /* UserApiSensorUpdateRequest.swift in Sources */,
 				0E6BADEC23856A01003A2D4C /* MainInitializer.swift in Sources */,
 				0E6BADED23856A01003A2D4C /* WebTagDaemon.swift in Sources */,
@@ -6720,6 +6856,7 @@
 				A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A93DB9EB24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
+				A9F6681A25575151006E2B7D /* UserApiUnshareResponse.swift in Sources */,
 				A976CA7324A5E5FE0099BDC1 /* PullRuuviNetworkDaemon.swift in Sources */,
 				0E6BAE0423856A01003A2D4C /* LanguagePresenter.swift in Sources */,
 				A94FFD39241C1B0A00888017 /* RuuviTagProtocol.swift in Sources */,
@@ -6751,6 +6888,7 @@
 				0EE49BBD23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				A98BC877250E4265001CEFDC /* Double+Round.swift in Sources */,
 				A952CAA4253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift in Sources */,
+				A9F668082557501A006E2B7D /* UserApiSharedRequest.swift in Sources */,
 				A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
@@ -6941,6 +7079,7 @@
 				0E8BACB9245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift in Sources */,
 				A989A32B2532621C00D092DB /* UserApiVerifyResponse.swift in Sources */,
 				0E79F2812442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
+				A9F668112557504E006E2B7D /* UserApiSharedResponse.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D62399272000EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				0E6BAE8F23856A01003A2D4C /* SettingsModuleInput.swift in Sources */,
@@ -7009,6 +7148,7 @@
 				0EAD33DE2399273D00EC5BAA /* HeartbeatList.swift in Sources */,
 				A952CAA3253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift in Sources */,
 				0E8BD2BE238566AB008B31EF /* DefaultsViewOutput.swift in Sources */,
+				A9F6681925575151006E2B7D /* UserApiUnshareResponse.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
 				0E8BD2C0238566AB008B31EF /* ForegroundRouter.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
@@ -7027,6 +7167,7 @@
 				0E8BD2C8238566AB008B31EF /* AsyncOperation.swift in Sources */,
 				0E8BD2C9238566AB008B31EF /* TagChartsViewModel.swift in Sources */,
 				A9646485247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
+				A9F668102557504E006E2B7D /* UserApiSharedResponse.swift in Sources */,
 				0E8BD2CA238566AB008B31EF /* WebTagPersistenceRealm.swift in Sources */,
 				0E8BD2CB238566AB008B31EF /* LocalNotificationsManagerImpl.swift in Sources */,
 				0E8BD2CC238566AB008B31EF /* PermissionPresenter.swift in Sources */,
@@ -7116,6 +7257,7 @@
 				0E8BD2F2238566AB008B31EF /* WeatherProviderServiceImpl.swift in Sources */,
 				0E4557F823E820920025AEBF /* BackgroundProcessService.swift in Sources */,
 				0E8BD2F3238566AB008B31EF /* SwipeDownToDismissNavigationController.swift in Sources */,
+				A9F668072557501A006E2B7D /* UserApiSharedRequest.swift in Sources */,
 				0E8BD2F4238566AB008B31EF /* DefaultsRouterInput.swift in Sources */,
 				0E8BACD3245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E8BD2F5238566AB008B31EF /* AboutPresenter.swift in Sources */,
@@ -7173,6 +7315,7 @@
 				0E8BD31B238566AB008B31EF /* MenuRouter.swift in Sources */,
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
+				A9E599592557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
@@ -7196,6 +7339,7 @@
 				0E8BD329238566AB008B31EF /* WelcomeRouter.swift in Sources */,
 				0E8BD32A238566AB008B31EF /* BackgroundPersistenceUserDefaults.swift in Sources */,
 				A9100D6D241AC751004007FD /* WPSData.swift in Sources */,
+				A9E5994B2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
 				0E45580623E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				A94A886E24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				0E8BD32B238566AB008B31EF /* AlertType.swift in Sources */,
@@ -7242,6 +7386,7 @@
 				0EE49BBC23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
+				A9E5996B255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				A9F0F29C2534EF3700DE9F70 /* HTTPMethod.swift in Sources */,
 				0E8BD346238566AB008B31EF /* LocationManager.swift in Sources */,
 				0E8BAC7B245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
@@ -7449,6 +7594,7 @@
 				0E8BD3CC238566AB008B31EF /* CardsRouterInput.swift in Sources */,
 				A91D031B25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
 				0E8BD3CD238566AB008B31EF /* WelcomeInitializer.swift in Sources */,
+				A9E599622557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				A9646479247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A9828E4524792D6B00E7E9D4 /* ReloadableCell.swift in Sources */,
 				A92E3C64242644B800D981D5 /* TagChartViewInput.swift in Sources */,
@@ -7497,6 +7643,17 @@
 				A9BB94CD2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
 				B2730766B77F848D7F4B105A /* TagsManagerViewModel.swift in Sources */,
 				B6000D9CEB00ECD1C0C35154 /* TagsManagerViewController.swift in Sources */,
+				4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */,
+				898D45D0BF0ABBCB2E68FBE9 /* ShareInitializer.swift in Sources */,
+				C9D6ACA6CB9694F6C33414CE /* ShareModuleInput.swift in Sources */,
+				248444E4B7F8C3D6454D4D1B /* ShareModuleOutput.swift in Sources */,
+				26BA929FDA200CCAC9964651 /* SharePresenter.swift in Sources */,
+				B198F488C89E6DFFD1EECAF3 /* ShareRouterInput.swift in Sources */,
+				6204554EB76ED0EFDE0DC290 /* ShareRouter.swift in Sources */,
+				B6FA27492FB1F63393783EFC /* ShareViewInput.swift in Sources */,
+				3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */,
+				2BB81E4733D8EC40BECC68EF /* ShareViewModel.swift in Sources */,
+				B2A3FB2578B246F6CBBF0CA9 /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7548,6 +7705,7 @@
 				0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				A94A883A24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */,
+				A9E5994A2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
 				A91D03092511207300694733 /* SelectionRouterInput.swift in Sources */,
 				0ED2364F234F2EB000CE6AA3 /* AsyncOperation.swift in Sources */,
 				0E8FD0DD2333714C00FFA577 /* TagChartsViewModel.swift in Sources */,
@@ -7602,6 +7760,7 @@
 				0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E046F5822F182F500BD4E9C /* LocationPickerAppleInitializer.swift in Sources */,
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
+				A9E599582557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
 				A90E16A424606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
 				0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */,
 				A91D02F12511207200694733 /* SelectionTableInitializer.swift in Sources */,
@@ -7660,6 +7819,7 @@
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
+				A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
 				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
@@ -7707,6 +7867,7 @@
 				A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
 				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
+				A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				A9227BC0245C86FA00466B23 /* NetworkSettingsTableViewController.swift in Sources */,
 				0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */,
@@ -7747,6 +7908,7 @@
 				0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */,
 				A93DB9E924732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
+				A9F6681825575151006E2B7D /* UserApiUnshareResponse.swift in Sources */,
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
@@ -7778,6 +7940,7 @@
 				A98BC875250E4265001CEFDC /* Double+Round.swift in Sources */,
 				A9646481247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */,
+				A9F668062557501A006E2B7D /* UserApiSharedRequest.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				A9944F7024A3C6A300EC37C1 /* RuuviNetworkTagOperationsManager.swift in Sources */,
@@ -7968,6 +8131,7 @@
 				0E79F27F2442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				A989A3292532621C00D092DB /* UserApiVerifyResponse.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* CardsScrollConfigurator.swift in Sources */,
+				A9F6680F2557504E006E2B7D /* UserApiSharedResponse.swift in Sources */,
 				0E84BF652397F9DC00A37E1A /* HeartbeatTableViewController.swift in Sources */,
 				0E9959B8235EF24D001C37D8 /* RuuviTagHeartbeatDaemon.swift in Sources */,
 				0E046F2B22F0563100BD4E9C /* WebTagSettingsViewOutput.swift in Sources */,

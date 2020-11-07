@@ -350,6 +350,13 @@
 "RuuviNetworkError.NoStoredData" = "No stored data. The tag will not be added";
 "RuuviNetworkError.TagAlreadyExists" = "Tag already exists";
 
+// Share
+"ShareViewController.Title" = "Share Ruuvi sensor";
+"ShareViewController.addFriend.Title" = "Add friend";
+"ShareViewController.sharedEmails.Title" = "Already shared %@";
+"ShareViewController.emailTextField.placeholder" = "Type email";
+"ShareViewController.Description" = "Share your Ruuvi sensor. Add your friend email address. Max 10";
+
 //Sign in
 "SignIn.Title.text" = "Sign in";
 "SignIn.SignInBenefits" = "Sign in benefits, the information is saved in the cloud:\n- ruuvitag data\n- sensor name\n- sensor data\n- bg images";
