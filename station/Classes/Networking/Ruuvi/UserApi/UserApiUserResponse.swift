@@ -9,6 +9,8 @@ protocol RuuviNetworkUserApi: RuuviNetwork {
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError>
     func unclaim(_ requestModel: UserApiClaimRequest) -> Future<UserApiUnclaimResponse, RUError>
     func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError>
+    func unshare(_ requestModel: UserApiShareRequest) -> Future<UserApiUnshareResponse, RUError>
+    func shared(_ requestModel: UserApiSharedRequest) -> Future<UserApiSharedResponse, RUError>
     func user() -> Future<UserApiUserResponse, RUError>
     func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError>
     func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError>

@@ -328,6 +328,25 @@
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Realmin tietoja yritettiin lukea ilman LUID:tä";
 "UnexpectedError.failedToFindVirtualTag" = "Virtuaalisen anturin haku epäonnistui";
 
+// Share
+"ShareViewController.Title" = "Share Ruuvi sensor";
+"ShareViewController.addFriend.Title" = "Add friend";
+"ShareViewController.sharedEmails.Title" = "Already shared %@";
+"ShareViewController.emailTextField.placeholder" = "Type email";
+"ShareViewController.Description" = "Share your Ruuvi sensor. Add your friend email address. Max 10";
+
+
+//Sign in
+"SignIn.Title.text" = "Sign in";
+"SignIn.SignInBenefits" = "Sign in benefits, the information is saved in the cloud:\n- ruuvitag data\n- sensor name\n- sensor data\n- bg images";
+"SignIn.RequestSignLink" = "Register or request new sign in link";
+"SignIn.EmailSent" = "Email sent";
+"SignIn.CheckMailbox" = "Please check your email inbox for further instructions";
+"SignIn.EnterCorrectEmail" = "Please enter correct email";
+"SignIn.EmailPlaceholder" = "Email";
+"SignIn.VerificationCodePlaceholder" = "verification code in format: CJSMVOW";
+"SignIn.EnterVerificationCode" = "Enter verification code";
+
 // TemperatureUnit
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
