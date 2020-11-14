@@ -133,7 +133,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
-        Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
+        var operations = [deleteTagOperation, deleteRecordsOperation]
+        if let mac = ruuviTag.macId?.value {
+            let unclaimOperation = ruuviNetwork.unclaim(mac)
+            operations.append(unclaimOperation)
+        }
+        Future.zip(operations).on(success: { [weak self] _ in
             guard let sSelf = self else {
                 return
             }
