@@ -92,6 +92,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var mcTitleLabel: UILabel!
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
+    @IBOutlet weak var footerView: UIView!
 
     var viewModel: TagSettingsViewModel? {
         didSet {
@@ -636,6 +637,26 @@ extension TagSettingsTableViewController {
         bindTagNetworkActions()
 
         guard isViewLoaded, let viewModel = viewModel else { return }
+
+        networkTagActionsStackView.bind(viewModel.isHiddenActions,
+                                        block: { (stackView, isHiddenActions) in
+            stackView.isHidden = (isHiddenActions == true)
+        })
+
+        footerView.bind(viewModel.isHiddenActions,
+                        block: { (footerView, isHiddenActions) in
+            if isHiddenActions == false {
+                let size: CGSize = CGSize(width: footerView.frame.width,
+                                          height: 145)
+                footerView.frame = CGRect(origin: footerView.frame.origin,
+                                          size: size)
+            } else {
+                let size: CGSize = CGSize(width: footerView.frame.width,
+                                          height: 82)
+                footerView.frame = CGRect(origin: footerView.frame.origin,
+                                          size: size)
+            }
+        })
 
         dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
             if let isConnected = isConnected, isConnected {
