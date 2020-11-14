@@ -71,11 +71,15 @@ class ShareViewController: UITableViewController {
                let title = section.title {
                 return String(format: title, "\(count)/10")
             } else {
-                fallthrough
+                return nil
             }
         default:
             return section.title
         }
+    }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section > 0 ? 44 : 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

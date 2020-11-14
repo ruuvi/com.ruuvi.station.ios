@@ -1419,9 +1419,9 @@
 		A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */; };
 		A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4D241D57E700888017 /* MockCalibrationService.swift */; };
 		A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */; };
-		A952CA8E2532578200BBDA9D /* UserApiUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CA8D2532578200BBDA9D /* UserApiUserResponse.swift */; };
-		A952CA8F2532578200BBDA9D /* UserApiUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CA8D2532578200BBDA9D /* UserApiUserResponse.swift */; };
-		A952CA902532578200BBDA9D /* UserApiUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CA8D2532578200BBDA9D /* UserApiUserResponse.swift */; };
+		A952CA8E2532578200BBDA9D /* RuuviNetworkUserApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CA8D2532578200BBDA9D /* RuuviNetworkUserApi.swift */; };
+		A952CA8F2532578200BBDA9D /* RuuviNetworkUserApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CA8D2532578200BBDA9D /* RuuviNetworkUserApi.swift */; };
+		A952CA902532578200BBDA9D /* RuuviNetworkUserApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CA8D2532578200BBDA9D /* RuuviNetworkUserApi.swift */; };
 		A952CAA2253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CAA1253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift */; };
 		A952CAA3253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CAA1253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift */; };
 		A952CAA4253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A952CAA1253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift */; };
@@ -2252,7 +2252,7 @@
 		A94FFD4B241D512900888017 /* MockLocalNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalNotificationsManager.swift; sourceTree = "<group>"; };
 		A94FFD4D241D57E700888017 /* MockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCalibrationService.swift; sourceTree = "<group>"; };
 		A94FFD4F241D6BA300888017 /* MockAlertServiceObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlertServiceObserver.swift; sourceTree = "<group>"; };
-		A952CA8D2532578200BBDA9D /* UserApiUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiUserResponse.swift; sourceTree = "<group>"; };
+		A952CA8D2532578200BBDA9D /* RuuviNetworkUserApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkUserApi.swift; sourceTree = "<group>"; };
 		A952CAA1253257AB00BBDA9D /* RuuviNetworkUserApiURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviNetworkUserApiURLSession.swift; sourceTree = "<group>"; };
 		A952CAB62532597E00BBDA9D /* UserApiBaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserApiBaseResponse.swift; sourceTree = "<group>"; };
 		A95BA3E42451ECB000EF923D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
@@ -5639,7 +5639,7 @@
 			children = (
 				A952CA8C2532575A00BBDA9D /* URLSession */,
 				A952CA8B2532575200BBDA9D /* Models */,
-				A952CA8D2532578200BBDA9D /* UserApiUserResponse.swift */,
+				A952CA8D2532578200BBDA9D /* RuuviNetworkUserApi.swift */,
 			);
 			path = UserApi;
 			sourceTree = "<group>";
@@ -6958,7 +6958,7 @@
 				0E6BAE3E23856A01003A2D4C /* ActivitySpinnerView.swift in Sources */,
 				A9F0F2332534D0ED00DE9F70 /* UserApiShareResponse.swift in Sources */,
 				A9227BBC245C86FA00466B23 /* NetworkSettingsModuleInput.swift in Sources */,
-				A952CA902532578200BBDA9D /* UserApiUserResponse.swift in Sources */,
+				A952CA902532578200BBDA9D /* RuuviNetworkUserApi.swift in Sources */,
 				0E6BAE3F23856A01003A2D4C /* ImagePersistenceDocuments.swift in Sources */,
 				0E6BAE4023856A01003A2D4C /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */,
@@ -7398,7 +7398,7 @@
 				0E8BD34A238566AB008B31EF /* MenuTableTransitionManager.swift in Sources */,
 				A9F0F27B2534D4B200DE9F70 /* UserApiSensorImageUploadResponse.swift in Sources */,
 				0E8BD34B238566AB008B31EF /* TagChartsViewOutput.swift in Sources */,
-				A952CA8F2532578200BBDA9D /* UserApiUserResponse.swift in Sources */,
+				A952CA8F2532578200BBDA9D /* RuuviNetworkUserApi.swift in Sources */,
 				A976CA7F24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
 				0E8BD34C238566AB008B31EF /* DefaultsRouter.swift in Sources */,
 				A9F0F2522534D28100DE9F70 /* UserApiGetSensorResponse.swift in Sources */,
@@ -8007,7 +8007,7 @@
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				A9F0F2312534D0ED00DE9F70 /* UserApiShareResponse.swift in Sources */,
-				A952CA8E2532578200BBDA9D /* UserApiUserResponse.swift in Sources */,
+				A952CA8E2532578200BBDA9D /* RuuviNetworkUserApi.swift in Sources */,
 				A9227BBA245C86FA00466B23 /* NetworkSettingsModuleInput.swift in Sources */,
 				0EEB20F722B7D2090015F9E0 /* AboutViewController.swift in Sources */,
 				0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */,

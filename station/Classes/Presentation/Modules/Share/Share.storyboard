@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17503.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -145,33 +145,36 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email@email.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrW-d2-ghU">
-                                            <rect key="frame" x="20" y="15.5" width="342" height="21"/>
+                                            <rect key="frame" x="20" y="15.5" width="334" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OhF-9r-eYZ">
-                                            <rect key="frame" x="362" y="4" width="44" height="44"/>
+                                            <rect key="frame" x="354" y="0.0" width="52" height="52"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="5yx-y4-gXw"/>
-                                                <constraint firstAttribute="width" constant="44" id="rTE-Hy-w4n"/>
+                                                <constraint firstAttribute="width" secondItem="OhF-9r-eYZ" secondAttribute="height" id="HOV-7I-P4Y"/>
                                             </constraints>
-                                            <state key="normal" image="ic_close"/>
+                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                            <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                                            <state key="normal" image="small-cross-clear-icon"/>
                                             <connections>
                                                 <action selector="didTapUnshareButton:" destination="wxH-bv-pTT" eventType="touchUpInside" id="rZe-WS-Kpl"/>
                                             </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="height" secondItem="3ef-wz-tkh" secondAttribute="height" id="4aC-To-RAH"/>
+                                        <constraint firstAttribute="bottom" secondItem="OhF-9r-eYZ" secondAttribute="bottom" id="9fA-6B-Fzo"/>
                                         <constraint firstItem="OhF-9r-eYZ" firstAttribute="leading" secondItem="KrW-d2-ghU" secondAttribute="trailing" id="PTJ-S6-w5M"/>
+                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="centerY" secondItem="OhF-9r-eYZ" secondAttribute="centerY" id="TcR-wo-eXZ"/>
                                         <constraint firstAttribute="trailing" secondItem="OhF-9r-eYZ" secondAttribute="trailing" constant="8" id="ijq-gi-HDU"/>
-                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="top" secondItem="3ef-wz-tkh" secondAttribute="top" constant="4" id="nD7-BB-Mi1"/>
                                         <constraint firstItem="50c-ak-ZNd" firstAttribute="trailing" secondItem="3ef-wz-tkh" secondAttribute="trailingMargin" id="pIz-QF-PGR"/>
-                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="centerY" secondItem="OhF-9r-eYZ" secondAttribute="centerY" id="pS0-YX-B1O"/>
                                         <constraint firstItem="KrW-d2-ghU" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leadingMargin" id="r7u-dR-5sf"/>
+                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="top" secondItem="3ef-wz-tkh" secondAttribute="top" id="rC9-N8-CnK"/>
                                         <constraint firstAttribute="bottom" secondItem="50c-ak-ZNd" secondAttribute="bottom" constant="8" id="tAu-1J-qwa"/>
                                         <constraint firstItem="50c-ak-ZNd" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leading" constant="20" id="xGI-Fi-EPc"/>
-                                        <constraint firstAttribute="bottom" secondItem="OhF-9r-eYZ" secondAttribute="bottom" constant="4" id="xx3-ik-cc4"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -185,7 +188,9 @@
                             <outlet property="delegate" destination="vpJ-wk-EwZ" id="IaX-HS-N8j"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Share Ruuvi sensor" id="Ctd-2f-lxb"/>
+                    <navigationItem key="navigationItem" title="Share Ruuvi sensor" id="Ctd-2f-lxb">
+                        <barButtonItem key="backBarButtonItem" title=" " id="UTU-o7-TrR"/>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXr-2N-9WP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <customObject id="KFR-KG-W1n" customClass="ShareInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
@@ -214,7 +219,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_close" width="16" height="28"/>
+        <image name="small-cross-clear-icon" width="36" height="36"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
