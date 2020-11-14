@@ -79,7 +79,7 @@ extension TagsManagerPresenter {
                                          style: .cancel,
                                          handler: nil)
         let actions = [ confirmAction, cancleAction ]
-        let alertViewModel = TagsManagerAlertViewModel(title: title,
+        let alertViewModel = AlertViewModel(title: title,
                                                          message: message,
                                                          style: .alert,
                                                          actions: actions)
@@ -93,7 +93,7 @@ extension TagsManagerPresenter {
         let okAction = UIAlertAction(title: okActionTitle,
                                      style: .default,
                                      handler: nil)
-        let alertViewModel = TagsManagerAlertViewModel(title: title,
+        let alertViewModel = AlertViewModel(title: title,
                                                          message: message,
                                                          style: .alert,
                                                          actions: [okAction])
