@@ -37,6 +37,18 @@ extension RuuviNetworkUserApi {
         })
         return promise.future
     }
+
+    func unclaim(_ mac: String) -> Future<Bool, RUError> {
+        let requestModel = UserApiClaimRequest(name: nil, sensor: mac)
+        let promise = Promise<Bool, RUError>()
+        unclaim(requestModel)
+            .on(success: {_ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        return promise.future
+    }
 }
 
 extension RuuviNetworkUserApi {
