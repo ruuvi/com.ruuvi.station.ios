@@ -42,11 +42,7 @@ extension SharePresenter: ShareViewOutput {
         })
     }
 
-    func viewDidTapUnshareEmail(_ email: String?) {
-        guard let email = email,
-              !email.isEmpty else {
-            return
-        }
+    private func unshareTag(_ email: String) {
         let requestModel = UserApiShareRequest(user: email, sensor: ruuviTagId)
         activityPresenter.increment()
         networkService.unshare(requestModel).on(success: { [weak self] _ in
@@ -59,6 +55,32 @@ extension SharePresenter: ShareViewOutput {
         }, completion: { [weak self] in
             self?.activityPresenter.decrement()
         })
+    }
+
+    func viewDidTapUnshareEmail(_ email: String?) {
+        guard let email = email,
+              !email.isEmpty else {
+            return
+        }
+        let title = "SharePresenter.UnshareSensor.Title".localized()
+        let message = String(format: "SharePresenter.UnshareSensor.Message".localized(), email)
+
+        let confirmActionTitle = "SharePresenter.UnshareSensor.ConfirmAction".localized()
+        let cancelActionTitle = "SharePresenter.UnshareSensor.CancelAction".localized()
+        let confirmAction = UIAlertAction(title: confirmActionTitle,
+                                          style: .default) { [weak self] (_) in
+            self?.unshareTag(email)
+        }
+
+        let cancleAction = UIAlertAction(title: cancelActionTitle,
+                                         style: .cancel,
+                                         handler: nil)
+        let actions = [ confirmAction, cancleAction ]
+        let alertViewModel = AlertViewModel(title: title,
+                                            message: message,
+                                            style: .alert,
+                                            actions: actions)
+        router.showAlert(alertViewModel)
     }
 }
 // MARK: - ShareModuleInput
@@ -82,6 +104,7 @@ extension SharePresenter {
                     return
                 }
                 self.filterEmails(response.sensors)
+                self.view.clearInput()
             }, failure: { [weak self] error in
                 guard let self = self else {
                     return

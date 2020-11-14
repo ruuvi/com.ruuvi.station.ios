@@ -356,6 +356,10 @@
 "ShareViewController.sharedEmails.Title" = "Already shared %@";
 "ShareViewController.emailTextField.placeholder" = "Type email";
 "ShareViewController.Description" = "Share your Ruuvi sensor. Add your friend email address. Max 10";
+"SharePresenter.UnshareSensor.Title" = "Unshare sensor";
+"SharePresenter.UnshareSensor.Message" = "Did you want unsare sensor for %@?";
+"SharePresenter.UnshareSensor.ConfirmAction" = "Yes";
+"SharePresenter.UnshareSensor.CancelAction" = "Cancel";
 
 //Sign in
 "SignIn.Title.text" = "Sign in";

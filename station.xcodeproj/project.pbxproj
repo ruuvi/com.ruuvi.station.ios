@@ -1627,9 +1627,9 @@
 		A9BB94B925409C030042B190 /* TagsManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BB94B825409C030042B190 /* TagsManager.storyboard */; };
 		A9BB94BA25409C030042B190 /* TagsManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BB94B825409C030042B190 /* TagsManager.storyboard */; };
 		A9BB94BB25409C030042B190 /* TagsManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BB94B825409C030042B190 /* TagsManager.storyboard */; };
-		A9BB94CC2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */; };
-		A9BB94CD2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */; };
-		A9BB94CE2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */; };
+		A9BB94CC2540AB610042B190 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* AlertViewModel.swift */; };
+		A9BB94CD2540AB610042B190 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* AlertViewModel.swift */; };
+		A9BB94CE2540AB610042B190 /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB94CB2540AB610042B190 /* AlertViewModel.swift */; };
 		A9BB95172540C6170042B190 /* TagManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */; };
 		A9BB95182540C6170042B190 /* TagManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */; };
 		A9BB95192540C6170042B190 /* TagManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */; };
@@ -2297,7 +2297,7 @@
 		A9B5742C253B978D00DB7353 /* SignIn.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SignIn.storyboard; sourceTree = "<group>"; };
 		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
 		A9BB94B825409C030042B190 /* TagsManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagsManager.storyboard; sourceTree = "<group>"; };
-		A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsManagerAlertViewModel.swift; sourceTree = "<group>"; };
+		A9BB94CB2540AB610042B190 /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		A9BB95162540C6170042B190 /* TagManagerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagerTableViewCell.swift; sourceTree = "<group>"; };
 		A9BD38B924F6108300904BBE /* Humidity+Offset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Humidity+Offset.swift"; sourceTree = "<group>"; };
 		A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceImpl.swift; sourceTree = "<group>"; };
@@ -5083,7 +5083,7 @@
 				CA286E02E3946EA64C3B4B01 /* TagsManagerViewInput.swift */,
 				A8D497C1F21634AD6FAE407D /* TagsManagerViewOutput.swift */,
 				E4C13FEF5C9B07755A8031EE /* TagsManagerViewModel.swift */,
-				A9BB94CB2540AB610042B190 /* TagsManagerAlertViewModel.swift */,
+				A9BB94CB2540AB610042B190 /* AlertViewModel.swift */,
 				EE1408E0FB774808AFB4513D /* ViewController */,
 			);
 			path = View;
@@ -6682,7 +6682,7 @@
 				A9B57450253B994900DB7353 /* SignInModuleInput.swift in Sources */,
 				A91D02F92511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0E6BAD9D23856A01003A2D4C /* ForegroundList.swift in Sources */,
-				A9BB94CE2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
+				A9BB94CE2540AB610042B190 /* AlertViewModel.swift in Sources */,
 				0E6BAD9E23856A01003A2D4C /* SettingsPresenter.swift in Sources */,
 				0E6BAD9F23856A01003A2D4C /* LanguageTableConfigurator.swift in Sources */,
 				0E197C6D23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
@@ -7640,7 +7640,7 @@
 				76E82538BA4F7E8761E07EC7 /* TagsManagerRouter.swift in Sources */,
 				9BB9617F40599EF964AA6A6C /* TagsManagerViewInput.swift in Sources */,
 				795133998B4A61A60C49DB52 /* TagsManagerViewOutput.swift in Sources */,
-				A9BB94CD2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
+				A9BB94CD2540AB610042B190 /* AlertViewModel.swift in Sources */,
 				B2730766B77F848D7F4B105A /* TagsManagerViewModel.swift in Sources */,
 				B6000D9CEB00ECD1C0C35154 /* TagsManagerViewController.swift in Sources */,
 				4F8FB6FCCB69D64B47FF440B /* ShareConfigurator.swift in Sources */,
@@ -7734,7 +7734,7 @@
 				A9B57446253B994700DB7353 /* SignInModuleInput.swift in Sources */,
 				A91D02F72511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0EEB214722B8FC3E0015F9E0 /* WelcomeViewInput.swift in Sources */,
-				A9BB94CC2540AB610042B190 /* TagsManagerAlertViewModel.swift in Sources */,
+				A9BB94CC2540AB610042B190 /* AlertViewModel.swift in Sources */,
 				0ECFF355235056DC0061D11B /* ForegroundList.swift in Sources */,
 				0EEB20E322B7C8C10015F9E0 /* SettingsPresenter.swift in Sources */,
 				0EBAF0802320089A0025A191 /* LanguageTableConfigurator.swift in Sources */,
