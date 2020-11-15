@@ -86,7 +86,7 @@ struct CardsViewModel {
     }
 
     func update(with ruuviTag: RuuviTag) {
-        if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable {
+        if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable, ruuviTag.isConnectable {
             isConnectable.value = ruuviTag.isConnectable
         }
         temperature.value = ruuviTag.temperature
