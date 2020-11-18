@@ -33,7 +33,7 @@
                                             <rect key="frame" x="20" y="11" width="374" height="86"/>
                                             <color key="tintColor" systemColor="secondaryLabelColor"/>
                                             <attributedString key="attributedText">
-                                                <fragment content="Share your Ruuvi sensor. Add your friend email address. Max 10">
+                                                <fragment content="Share your Ruuvi sensor. Add your friend email address. Max 3">
                                                     <attributes>
                                                         <font key="NSFont" metaFont="system" size="20"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="10" tighteningFactorForTruncation="0.0"/>
@@ -101,9 +101,10 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evc-gX-tbY">
-                                            <rect key="frame" x="285" y="11" width="109" height="44.5"/>
+                                            <rect key="frame" x="107" y="11" width="200" height="44.5"/>
                                             <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
+                                                <constraint firstAttribute="width" constant="200" id="F4C-0w-w3r"/>
                                                 <constraint firstAttribute="height" constant="44" id="Tbj-Pb-d81"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
@@ -120,8 +121,7 @@
                                     <constraints>
                                         <constraint firstItem="evc-gX-tbY" firstAttribute="top" secondItem="0Ss-IZ-OAV" secondAttribute="topMargin" id="3jL-2a-Rrn"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="evc-gX-tbY" secondAttribute="bottom" id="4Id-zU-Fz2"/>
-                                        <constraint firstItem="evc-gX-tbY" firstAttribute="trailing" secondItem="0Ss-IZ-OAV" secondAttribute="trailingMargin" id="DMH-qg-eIc"/>
-                                        <constraint firstItem="evc-gX-tbY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0Ss-IZ-OAV" secondAttribute="leading" constant="20" id="jhs-24-YLR"/>
+                                        <constraint firstItem="evc-gX-tbY" firstAttribute="centerX" secondItem="0Ss-IZ-OAV" secondAttribute="centerX" id="FVa-e5-25n"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

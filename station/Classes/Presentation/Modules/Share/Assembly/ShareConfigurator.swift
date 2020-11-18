@@ -7,6 +7,7 @@ class ShareConfigurator {
         let router = ShareRouter()
         let presenter = SharePresenter()
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
+        presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.networkService = r.resolve(RuuviNetworkUserApi.self)
 
