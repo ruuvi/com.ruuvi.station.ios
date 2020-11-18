@@ -7,6 +7,7 @@ class TagsManagerPresenter {
     var router: TagsManagerRouterInput!
 
     var activityPresenter: ActivityPresenter!
+    var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
     var ruuviTagTank: RuuviTagTank!
@@ -83,7 +84,7 @@ extension TagsManagerPresenter {
                                                          message: message,
                                                          style: .alert,
                                                          actions: actions)
-        router.showAlert(alertViewModel)
+        alertPresenter.showAlert(alertViewModel)
     }
 
     private func createSuccessAddMissingTagAlert() {
@@ -97,7 +98,7 @@ extension TagsManagerPresenter {
                                                          message: message,
                                                          style: .alert,
                                                          actions: [okAction])
-        router.showAlert(alertViewModel)
+        alertPresenter.showAlert(alertViewModel)
     }
 
     private func fetchUserData() {

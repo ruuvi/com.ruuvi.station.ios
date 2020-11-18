@@ -6,6 +6,7 @@ class NetworkServiceQueue: NetworkService {
     var ruuviNetworkFactory: RuuviNetworkFactory!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrunk: RuuviTagTrunk!
+    var networkPersistence: NetworkPersistence!
 
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -30,6 +31,7 @@ class NetworkServiceQueue: NetworkService {
                                                                      from: provider)
                 loadDataOperation.on(success: { (result) in
                     promise.succeed(value: result)
+                    self?.networkPersistence.lastSyncDate = Date()
                  }, failure: { (error) in
                     promise.fail(error: error)
                  })
@@ -39,6 +41,7 @@ class NetworkServiceQueue: NetworkService {
                                                                      from: provider)
                 loadDataOperation.on(success: { (result) in
                     promise.succeed(value: result)
+                    self?.networkPersistence.lastSyncDate = Date()
                  }, failure: { (error) in
                     promise.fail(error: error)
                  })
@@ -63,12 +66,22 @@ class NetworkServiceQueue: NetworkService {
                             && $0.isOwner
                     })
                 })
+
                 ruuviTagSensors.forEach({ sensor in
                     if let userApiSensor = filteredUserApiSensors.first(where: {$0.sensorId == sensor.macId?.value}) {
                         self.updateTag(sensor, with: userApiSensor)
                     } else {
                         self.removeClaimedFlag(for: sensor)
                     }
+                })
+                filteredUserApiSensors.forEach({ sensor in
+                    if !ruuviTagSensors.contains(where: {$0.macId?.value == sensor.sensorId}) {
+                        self.createTag(for: sensor)
+                    }
+                    self.loadData(for: sensor.sensorId, mac: sensor.sensorId, from: .userApi)
+                        .on(completion: {
+                            promise.succeed(value: true)
+                        })
                 })
         }, failure: { (error) in
             promise.fail(error: error)
@@ -122,5 +135,18 @@ extension NetworkServiceQueue {
                                                  isClaimed: false,
                                                  isOwner: true)
         ruuviTagTank.update(updatedSensor)
+    }
+
+    private func createTag(for sensor: UserApiUserSensor) {
+        let name = !sensor.name.isEmpty ? sensor.name : sensor.sensorId
+        let sensorStruct = RuuviTagSensorStruct(version: 5,
+                                                 luid: nil,
+                                                 macId: sensor.sensorId.mac,
+                                                 isConnectable: true,
+                                                 name: name,
+                                                 networkProvider: .userApi,
+                                                 isClaimed: sensor.isOwner,
+                                                 isOwner: sensor.isOwner)
+        ruuviTagTank.create(sensorStruct)
     }
 }

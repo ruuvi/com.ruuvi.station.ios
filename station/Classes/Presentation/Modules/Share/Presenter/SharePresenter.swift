@@ -6,11 +6,12 @@ class SharePresenter {
     var router: ShareRouterInput!
 
     var activityPresenter: ActivityPresenter!
+    var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
     var networkService: RuuviNetworkUserApi!
 
     private var ruuviTagId: String!
-
+    private let maxShareCount: Int = 3
     private var viewModel: ShareViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -80,14 +81,14 @@ extension SharePresenter: ShareViewOutput {
                                             message: message,
                                             style: .alert,
                                             actions: actions)
-        router.showAlert(alertViewModel)
+        alertPresenter.showAlert(alertViewModel)
     }
 }
 // MARK: - ShareModuleInput
 extension SharePresenter: ShareModuleInput {
     func configure(ruuviTagId: String) {
         self.ruuviTagId = ruuviTagId
-        viewModel = ShareViewModel()
+        viewModel = ShareViewModel(maxCount: self.maxShareCount)
     }
 
     func dismiss() {

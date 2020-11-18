@@ -30,6 +30,7 @@ class SignInViewController: UIViewController {
     }
 
     @IBAction func didTapSubmit(_ sender: UIButton) {
+        updateTextFieldText()
         output.viewDidTapSubmitButton()
     }
 

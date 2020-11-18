@@ -168,6 +168,7 @@ class BusinessAssembly: Assembly {
             let factory = RuuviNetworkFactory()
             factory.userApi = r.resolve(RuuviNetworkUserApi.self)
             service.ruuviNetworkFactory = factory
+            service.networkPersistence = r.resolve(NetworkPersistence.self)
             return service
         }.inObjectScope(.container)
 

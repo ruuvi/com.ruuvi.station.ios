@@ -39,6 +39,11 @@ class PersistenceAssembly: Assembly {
             return persistence
         }.inObjectScope(.container)
 
+        container.register(NetworkPersistence.self) { _ in
+            let persistence = NetworkPersistenceImpl()
+            return persistence
+        }
+
         container.register(RealmContext.self) { _ in
             let context = RealmContextImpl()
             return context
