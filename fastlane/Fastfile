@@ -61,7 +61,7 @@ platform :ios do
       export_options: {
         method: "ad-hoc",
         provisioningProfiles: {
-          "com.ruuvi.station" => "match AdHoc com.ruuvi.station.mobileprovision"
+          "com.ruuvi.station" => "match AdHoc com.ruuvi.station"
         }
       }
     )
