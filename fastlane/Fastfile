@@ -4,6 +4,7 @@ before_all do
   sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
   sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
   ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist", key: "GOOGLE_APP_ID")
+  ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
 end
 
 def remove_artifacts
@@ -67,6 +68,7 @@ platform :ios do
     )
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
+      firebase_cli_token: ENV["FIREBASE_REFRESH_TOKEN"],
       release_notes: "Release notes",
       ipa_path: "./Build/station.ipa",
       groups: options[:group]
