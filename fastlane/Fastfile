@@ -68,7 +68,7 @@ platform :ios do
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
       release_notes: "Release notes",
-      ipa_path: "",
+      ipa_path: "./Build/station.ipa",
       groups: options[:group]
     )
     upload_symbols_to_crashlytics(
