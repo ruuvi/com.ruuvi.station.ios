@@ -52,7 +52,7 @@ platform :ios do
   """
   lane :upload_to_firebase do |options|
     configuration = options[:scheme] == "station" ? "Release" : "Debug"
-#    match(type: "adhoc", app_identifier: "com.ruuvi.station")
+    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
     build_app(
       scheme: options[:scheme],
       export_xcargs: "-allowProvisioningUpdates",
@@ -61,7 +61,7 @@ platform :ios do
       export_options: {
         method: "ad-hoc",
         provisioningProfiles: {
-          "com.ruuvi.station" => "PAKKVQG4X9.mobileprovision"
+          "com.ruuvi.station" => "match AdHoc com.ruuvi.station.mobileprovision"
         }
       }
     )
