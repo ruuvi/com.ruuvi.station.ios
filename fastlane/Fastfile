@@ -3,7 +3,8 @@ default_platform(:ios)
 before_all do
   sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
   sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
-  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist", key: "GOOGLE_APP_ID")
+  ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
+  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
   ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
 end
 
@@ -75,8 +76,9 @@ platform :ios do
     )
     upload_symbols_to_crashlytics(
       dsym_path: "./Build/station.app.dSYM.zip",
-      gsp_path: "./fastlane/com.ruuvi.station.ios.keystore/Firebase/GoogleService-Info.plist"
+      gsp_path: ENV["GSP_PATH"]
     )
+    skip_docs
   end
 
   error do |lane, exception|

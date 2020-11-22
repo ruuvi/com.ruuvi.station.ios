@@ -1890,7 +1890,7 @@
 		A91D0315251124F900694733 /* SelectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionItem.swift; sourceTree = "<group>"; };
 		A91D031925113EAA00694733 /* UnitPressure+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnitPressure+Extension.swift"; sourceTree = "<group>"; };
 		A92C75DF24896BA100E332FE /* Appfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Appfile; sourceTree = "<group>"; };
-		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Fastfile; sourceTree = "<group>"; };
+		A92C75E024896BA100E332FE /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; indentWidth = 2; path = Fastfile; sourceTree = "<group>"; tabWidth = 2; };
 		A92C75E124896BA100E332FE /* Gemfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Gemfile; sourceTree = "<group>"; };
 		A92C75E2248982A000E332FE /* Pluginfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Pluginfile; sourceTree = "<group>"; };
 		A92E3C4B24261CF900D981D5 /* MeasurementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementType.swift; sourceTree = "<group>"; };
