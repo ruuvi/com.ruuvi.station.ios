@@ -69,7 +69,7 @@ class ShareViewController: UITableViewController {
         case .sharedEmails:
             if let count = viewModel.sharedEmails.value?.count,
                let title = section.title {
-                return String(format: title, "\(count)/10")
+                return String(format: title, count, viewModel.maxCount)
             } else {
                 return nil
             }
@@ -135,7 +135,8 @@ extension ShareViewController {
 
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareDescriptionTableViewCell.self, for: indexPath)
-        cell.descriptionLabel.text = "ShareViewController.Description".localized()
+        let description = String(format: "ShareViewController.Description".localized(), viewModel.maxCount)
+        cell.descriptionLabel.text = description
         if #available(iOS 13.0, *) {
             cell.descriptionLabel.textColor = .secondaryLabel
         } else {

@@ -58,6 +58,8 @@ struct TagSettingsViewModel {
     let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
     let isHiddenActions: Observable<Bool?> = Observable<Bool?>(true)
 
+    let owner: Observable<String?> = Observable<String?>()
+
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity
         temperature.value = record.temperature

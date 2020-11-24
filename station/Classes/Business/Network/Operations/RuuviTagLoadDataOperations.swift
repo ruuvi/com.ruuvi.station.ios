@@ -27,6 +27,10 @@ class RuuviTagLoadDataOperation: AsyncOperation {
     override func main() {
         let op = network.load(ruuviTagId: ruuviTagId, mac: mac, since: since, until: until)
         op.on(success: { [weak self] records in
+            guard !records.isEmpty else {
+                self?.state = .finished
+                return
+            }
             let persist = self?.ruuviTagTank.create(records)
             persist?.on(success: { _ in
                 self?.state = .finished

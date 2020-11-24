@@ -11,6 +11,7 @@ struct RuuviTagSQLite: RuuviTagSensor {
     var networkProvider: RuuviNetworkProvider?
     var isClaimed: Bool
     var isOwner: Bool
+    var owner: String?
 }
 
 extension RuuviTagSQLite {
@@ -23,6 +24,7 @@ extension RuuviTagSQLite {
     static let networkProviderColumn = Column("networkProvider")
     static let isClaimedColumn = Column("isClaimed")
     static let isOwnerColumn = Column("isOwner")
+    static let owner = Column("owner")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -42,6 +44,7 @@ extension RuuviTagSQLite: FetchableRecord {
         }
         isClaimed = row[RuuviTagSQLite.isClaimedColumn]
         isOwner = row[RuuviTagSQLite.isOwnerColumn]
+        owner = row[RuuviTagSQLite.owner]
     }
 }
 
@@ -60,6 +63,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.networkProviderColumn] = networkProvider?.rawValue
         container[RuuviTagSQLite.isClaimedColumn] = isClaimed
         container[RuuviTagSQLite.isOwnerColumn] = isOwner
+        container[RuuviTagSQLite.owner] = owner
     }
 }
 
@@ -75,6 +79,7 @@ extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.networkProviderColumn.name, .integer)
             table.column(RuuviTagSQLite.isClaimedColumn.name, .boolean).notNull()
             table.column(RuuviTagSQLite.isOwnerColumn.name, .boolean).notNull()
+            table.column(RuuviTagSQLite.owner.name, .text)
         })
     }
 }

@@ -367,10 +367,10 @@ extension CardsScrollViewController {
 
         view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
             if let isConnected = isConnected, isConnected, let date = date?.value {
-                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo()
             } else {
                 if let date = date?.value {
-                    label.text = date.ruuviAgo
+                    label.text = date.ruuviAgo()
                 } else {
                     label.text = CardsScrollViewController.localizedCache.notAvailable
                 }
@@ -381,10 +381,10 @@ extension CardsScrollViewController {
 
         view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
             if let isConnected = isConnected, isConnected.value.bound, let date = date {
-                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo()
             } else {
                 if let date = date {
-                    label.text = date.ruuviAgo
+                    label.text = date.ruuviAgo()
                 } else {
                     label.text = CardsScrollViewController.localizedCache.notAvailable
                 }

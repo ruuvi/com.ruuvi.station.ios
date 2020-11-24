@@ -275,7 +275,6 @@ extension TagChartsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
         module.dismiss()
-        router.openTagsManager(output: self)
     }
 }
 
@@ -283,7 +282,6 @@ extension TagChartsPresenter: MenuModuleOutput {
 extension TagChartsPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         module.dismiss()
-        router.openTagsManager(output: self)
     }
 }
 

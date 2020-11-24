@@ -12,6 +12,7 @@ class TagsManagerConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
+        presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.keychainService = r.resolve(KeychainService.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)

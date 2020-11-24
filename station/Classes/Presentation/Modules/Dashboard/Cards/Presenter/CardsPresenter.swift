@@ -259,7 +259,6 @@ extension CardsPresenter: MenuModuleOutput {
 
     func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
         module.dismiss()
-        router.openTagsManager(output: self)
     }
 }
 
@@ -267,7 +266,6 @@ extension CardsPresenter: MenuModuleOutput {
 extension CardsPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         module.dismiss()
-        router.openTagsManager(output: self)
     }
 }
 

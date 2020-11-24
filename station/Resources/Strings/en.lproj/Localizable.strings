@@ -12,6 +12,7 @@
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Updated"; // time ago string
+"Synchronized" = "Synchronized:"; // time ago string
 "h" = "h"; // time ago string, hours
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
@@ -193,6 +194,10 @@
 "Menu.Label.GetMoreSensors.text" = "Get More Sensors";
 "Menu.Label.Feedback.text" = "Send Feedback";
 
+// MenuTableViewController
+"MenuTableViewController.User" = "User: %@";
+"MenuTableViewController.None" = "none";
+
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station needs to access your camera to enable this feature.";
@@ -320,6 +325,8 @@
 "TagSettings.Alerts.Movement.description" = "Alert when tag is moved";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
+"TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
+"TagSettings.NetworkInfo.Owner" = "Owner";
 
 //TagsManager
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
@@ -353,9 +360,9 @@
 // Share
 "ShareViewController.Title" = "Share Ruuvi sensor";
 "ShareViewController.addFriend.Title" = "Add friend";
-"ShareViewController.sharedEmails.Title" = "Already shared %@";
+"ShareViewController.sharedEmails.Title" = "Already shared %d/%d";
 "ShareViewController.emailTextField.placeholder" = "Type email";
-"ShareViewController.Description" = "Share your Ruuvi sensor. Add your friend email address. Max 10";
+"ShareViewController.Description" = "Share your Ruuvi sensor. Add your friend email address. Max %d";
 "SharePresenter.UnshareSensor.Title" = "Unshare sensor";
 "SharePresenter.UnshareSensor.Message" = "Did you want unsare sensor for %@?";
 "SharePresenter.UnshareSensor.ConfirmAction" = "Yes";

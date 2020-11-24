@@ -154,7 +154,7 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="2425.5" width="414" height="145"/>
+                            <rect key="frame" x="0.0" y="2525.5" width="414" height="145"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Cy9-GG-Tpy">
@@ -1270,6 +1270,39 @@ IMAGE</string>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="NETWORK INFO" id="7xY-NH-UvA">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="uaJ-tK-9dE">
+                                        <rect key="frame" x="0.0" y="2463.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uaJ-tK-9dE" id="jvp-Sm-L2g">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Owner" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MkW-gb-yNU">
+                                                    <rect key="frame" x="20" y="11.5" width="50.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unu-ZE-wgc">
+                                                    <rect key="frame" x="398" y="22" width="0.0" height="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="MkW-gb-yNU" firstAttribute="leading" secondItem="jvp-Sm-L2g" secondAttribute="leading" constant="20" id="Kpb-x9-1vf"/>
+                                                <constraint firstAttribute="trailing" secondItem="unu-ZE-wgc" secondAttribute="trailing" constant="16" id="QBX-3e-Ti7"/>
+                                                <constraint firstItem="unu-ZE-wgc" firstAttribute="centerY" secondItem="jvp-Sm-L2g" secondAttribute="centerY" id="Zim-6f-r4f"/>
+                                                <constraint firstItem="MkW-gb-yNU" firstAttribute="centerY" secondItem="jvp-Sm-L2g" secondAttribute="centerY" id="qvM-Lg-c9y"/>
+                                                <constraint firstItem="unu-ZE-wgc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="MkW-gb-yNU" secondAttribute="trailing" constant="8" id="u1C-0I-LFd"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="JXe-xp-HbB" id="ACm-2h-12K"/>
@@ -1327,6 +1360,9 @@ IMAGE</string>
                         <outlet property="msnTitleLabel" destination="40B-Fr-4YX" id="uEB-T5-6P0"/>
                         <outlet property="msnValueLabel" destination="BDV-Du-PWf" id="I1g-0z-NB5"/>
                         <outlet property="msnValueLabelTrailing" destination="plZ-be-5zU" id="r03-dP-4ih"/>
+                        <outlet property="networkOwnerCell" destination="uaJ-tK-9dE" id="1ui-bY-IQt"/>
+                        <outlet property="networkOwnerLabel" destination="MkW-gb-yNU" id="0A3-3t-Hyh"/>
+                        <outlet property="networkOwnerValueLabel" destination="unu-ZE-wgc" id="VqC-Vc-2CM"/>
                         <outlet property="networkTagActionsStackView" destination="sUo-Yp-ntD" id="xDU-GU-T8T"/>
                         <outlet property="pressureAlertControlsCell" destination="iu5-8h-FfM" id="8O1-Jh-XUC"/>
                         <outlet property="pressureAlertHeaderCell" destination="wNV-cm-93s" id="JJH-kL-bVA"/>
