@@ -87,15 +87,6 @@ class TagChartsRouter: TagChartsRouterInput {
             })
     }
 
-    func openTagsManager(output: TagsManagerModuleOutput) {
-        let factory = StoryboardFactory(storyboardName: "TagsManager")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: TagsManagerModuleInput.self)
-            .then({ (module) -> Any? in
-                module.configure(output: output)
-            })
-    }
-
     func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
         let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
         controller.delegate = delegate

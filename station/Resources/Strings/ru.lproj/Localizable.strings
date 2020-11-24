@@ -323,6 +323,8 @@
 "TagSettings.Alerts.Movement.description" = "Уведомить при движении";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
+"TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
+"TagSettings.NetworkInfo.Owner" = "Владелец";
 
 //TagsManager
 "TagsManager.SignOutButton" = "Sign out";

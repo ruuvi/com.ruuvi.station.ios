@@ -9,6 +9,7 @@ enum TagSettingsTableSection: Int {
     case alerts = 3
     case calibration = 4
     case moreInfo = 5
+    case networkInfo = 6
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -20,6 +21,11 @@ enum TagSettingsTableSection: Int {
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
         return TagSettingsTableSection(rawValue: sectionIndex) ?? .name
+    }
+
+    static func showNetworkInfo(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isAuthorized.value == true
+            && viewModel?.owner.value?.isEmpty == false
     }
 }
 
@@ -43,6 +49,10 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var humidityAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var humidityAlertControlsCell: TagSettingsAlertControlsCell!
+
+    @IBOutlet weak var networkOwnerCell: UITableViewCell!
+    @IBOutlet weak var networkOwnerLabel: UILabel!
+    @IBOutlet weak var networkOwnerValueLabel: UILabel!
 
     @IBOutlet weak var networkTagActionsStackView: UIStackView!
     @IBOutlet weak var claimTagButton: UIButton!
@@ -93,6 +103,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var msnTitleLabel: UILabel!
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
+
 
     var viewModel: TagSettingsViewModel? {
         didSet {
@@ -150,6 +161,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
         movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
 
+        networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
         tableView.reloadData()
     }
 
@@ -334,6 +346,9 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
+        case .networkInfo:
+            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+                ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
         default:
             return nil
         }
@@ -387,6 +402,9 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+        case .networkInfo:
+            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+                ? 44 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -414,6 +432,10 @@ extension TagSettingsTableViewController {
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
+                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+
+        case .networkInfo:
+            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         default:
             return super.tableView(tableView, numberOfRowsInSection: section)
@@ -763,6 +785,10 @@ extension TagSettingsTableViewController {
             } else {
                 label.text = emptyValueString.localized()
             }
+        }
+
+        networkOwnerValueLabel.bind(viewModel.owner) { (label, owner) in
+            label.text = owner
         }
 
         tableView.bind(viewModel.isConnectable) { (tableView, _) in

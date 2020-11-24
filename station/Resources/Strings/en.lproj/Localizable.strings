@@ -325,6 +325,8 @@
 "TagSettings.Alerts.Movement.description" = "Alert when tag is moved";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
+"TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
+"TagSettings.NetworkInfo.Owner" = "Owner";
 
 //TagsManager
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
