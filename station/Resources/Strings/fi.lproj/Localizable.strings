@@ -307,6 +307,8 @@
 "TagSettings.Alerts.Movement.description" = "Hälytä, mikäli liike havaittu";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
+"TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
+"TagSettings.NetworkInfo.Owner" = "Owner";
 
 //TagsManager
 "TagsManager.SignOutButton" = "Sign out";

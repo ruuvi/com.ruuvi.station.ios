@@ -359,6 +359,7 @@ extension TagSettingsPresenter {
         viewModel.isAuthorized.value = keychainService.userApiIsAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
+        viewModel.owner.value = ruuviTag.owner
         viewModel.isClaimedTag.value = ruuviTag.isClaimed
 
         if (ruuviTag.name == ruuviTag.luid?.value
