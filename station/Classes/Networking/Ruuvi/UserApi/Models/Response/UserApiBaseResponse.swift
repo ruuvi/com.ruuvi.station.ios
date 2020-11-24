@@ -32,10 +32,6 @@ extension UserApiBaseResponse {
             guard let error = errorDescription else {
                 return .failure(RUError.userApi(.emptyResponse))
             }
-            if error == "Sensor already claimed.",
-               let emptyModel = T.emptyModel {
-                return .success(emptyModel)
-            }
             let userApiError = UserApiError(description: error)
             return .failure(RUError.userApi(userApiError))
         }
@@ -46,7 +42,7 @@ extension Decodable {
     static var emptyModel: Self? {
         let emptyString = "{}"
         if let emptyData = emptyString.data(using: .utf8),
-           let emptyModel = try? JSONDecoder().decode(Self.self, from: emptyData) {
+           let emptyModel = try? JSONDecoder().decode(self, from: emptyData) {
             return emptyModel
         } else {
             return nil

@@ -83,6 +83,7 @@ struct RuuviTagSensorStruct: RuuviTagSensor {
     var networkProvider: RuuviNetworkProvider?
     var isClaimed: Bool
     var isOwner: Bool
+    var owner: String?
 }
 
 struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
@@ -115,6 +116,9 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
     }
     var isOwner: Bool {
         return object.isOwner
+    }
+    var owner: String? {
+        return object.owner
     }
 
     static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
