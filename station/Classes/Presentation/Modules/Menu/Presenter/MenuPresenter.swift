@@ -98,10 +98,11 @@ extension MenuPresenter {
 
     private func createLastUpdateTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
-            if let date = self?.networkPersistence.lastSyncDate?.ruuviAgo {
+            let prefix = "Synchronized".localized()
+            if let date = self?.networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) {
                 self?.viewModel?.status.value = date
             } else {
-                self?.viewModel?.status.value = self?.networkPersistence.lastSyncDate?.ruuviAgo ?? "N/A".localized()
+                self?.viewModel?.status.value = self?.networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
             }
         })
     }

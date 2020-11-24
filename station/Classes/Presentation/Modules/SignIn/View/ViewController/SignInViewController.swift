@@ -86,8 +86,13 @@ extension SignInViewController {
         subTitleLabel.bind(viewModel.subTitleLabelText) { (label, value) in
             label.text = value
         }
-        errorLabel.bind(viewModel.errorLabelText) { (label, value) in
-            label.text = value
+        errorLabel.bind(viewModel.errorLabelText) { [weak self] (label, value) in
+            if let errorText = value,
+               self?.textTextField.text?.isEmpty == false {
+                label.text = errorText
+            } else {
+                label.text = nil
+            }
         }
         enterCodeManuallyButton.bind(viewModel.enterCodeManuallyButtonIsHidden) { (button, isHidden) in
             button.isHidden = isHidden ?? false

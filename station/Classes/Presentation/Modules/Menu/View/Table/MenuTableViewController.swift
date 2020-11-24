@@ -3,9 +3,9 @@ import UIKit
 class MenuTableViewController: UIViewController {
     @IBOutlet weak var usernameLabel: UILabel!
     var output: MenuViewOutput!
-    @IBOutlet weak var syncButton: UIButton!
     @IBOutlet weak var refreshIcon: UIImageView!
     @IBOutlet weak var syncStatusLabel: UILabel!
+    @IBOutlet weak var syncContainer: UIView!
 
     @IBAction func didPressSyncButton(_ sender: Any) {
         output.viewDidTapSyncButton()
@@ -46,10 +46,7 @@ extension MenuTableViewController {
 
 extension MenuTableViewController {
     private func configureViews() {
-        usernameLabel.isHidden = !output.userIsAuthorized
-        syncButton.isHidden = !output.userIsAuthorized
-        refreshIcon.isHidden = !output.userIsAuthorized
-        syncStatusLabel.isHidden = !output.userIsAuthorized
+        syncContainer.isHidden = !output.userIsAuthorized
         configurePanToDismissGesture()
     }
 
@@ -87,7 +84,8 @@ extension MenuTableViewController {
             return
         }
         usernameLabel.bind(viewModel.username) { (label, username) in
-            label.text = username
+            label.text = String(format: "MenuTableViewController.User".localized(),
+                                username ?? "MenuTableViewController.None".localized())
         }
 
         syncStatusLabel.bind(viewModel.status) { (label, syncStatus) in

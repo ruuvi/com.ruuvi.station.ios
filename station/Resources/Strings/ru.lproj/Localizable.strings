@@ -11,6 +11,7 @@
 "g/m³" = "г/м³";
 "g" = "g"; // acceleration
 "Updated" = "Обновлено"; // time ago string
+"Synchronized" = "Synchronized:"; // time ago string
 "h" = "ч"; // time ago string, hours
 "min" = "мин"; // time ago string, minutes
 "s" = "с"; // time ago string, seconds
@@ -190,6 +191,10 @@
 "Menu.Label.AboutHelp.text" = "О Приложении";
 "Menu.Label.GetMoreSensors.text" = "Больше Сенсоров";
 "Menu.Label.Feedback.text" = "Отправить Отзыв";
+
+// MenuTableViewController
+"MenuTableViewController.User" = "User: %@";
+"MenuTableViewController.None" = "none";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";

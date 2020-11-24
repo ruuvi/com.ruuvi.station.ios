@@ -37,10 +37,10 @@ class CardView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
-            if let isConnected = self?.isConnected, isConnected, let date = self?.updatedAt?.ruuviAgo {
+            if let isConnected = self?.isConnected, isConnected, let date = self?.updatedAt?.ruuviAgo() {
                 self?.updatedLabel.text = "Cards.Connected.title".localized() + " " + "|" + " " + date
             } else {
-                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo ?? "N/A".localized()
+                self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "N/A".localized()
             }
         })
 
