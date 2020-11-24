@@ -12,6 +12,7 @@
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Updated"; // time ago string
+"Synchronized" = "Synchronized:"; // time ago string
 "h" = "h"; // time ago string, hours
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
@@ -192,6 +193,10 @@
 "Menu.Label.AboutHelp.text" = "About / Help";
 "Menu.Label.GetMoreSensors.text" = "Get More Sensors";
 "Menu.Label.Feedback.text" = "Send Feedback";
+
+// MenuTableViewController
+"MenuTableViewController.User" = "User: %@";
+"MenuTableViewController.None" = "none";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station needs to access your camera roll to enable this feature.";

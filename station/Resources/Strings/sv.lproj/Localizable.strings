@@ -11,6 +11,7 @@
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Uppdaterad"; // time ago string
+"Synchronized" = "Synchronized:"; // time ago string
 "h" = "h"; // time ago string, hours
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
@@ -191,6 +192,10 @@
 "Menu.Label.AboutHelp.text" = "Om / Hjälp";
 "Menu.Label.GetMoreSensors.text" = "Köp fler Sensorer";
 "Menu.Label.Feedback.text" = "Skicka Feedback";
+
+// MenuTableViewController
+"MenuTableViewController.User" = "User: %@";
+"MenuTableViewController.None" = "none";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station behöver tillgång till dina bilder för att använda den här funktionen.";

@@ -2,19 +2,20 @@ import Foundation
 
 struct UserApiUserResponse: Decodable {
     let email: String
-    let sensors: [UserApiUserSensor]
+    var sensors: [UserApiUserSensor]
 }
 
-struct UserApiUserSensor: Decodable {
+class UserApiUserSensor: Decodable {
     let sensorId: String
-    let isOwner: Bool
+    let owner: String
     let pictureUrl: String
     let name: String
     let isPublic: Bool
+    var isOwner: Bool = false
 
     enum CodingKeys: String, CodingKey {
         case sensorId = "sensor"
-        case isOwner = "owner"
+        case owner
         case name
         case pictureUrl = "picture"
         case isPublic = "public"

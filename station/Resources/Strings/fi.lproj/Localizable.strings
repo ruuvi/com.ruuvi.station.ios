@@ -11,6 +11,7 @@
 "g/m³" = "g/m³";
 "g" = "g"; // acceleration
 "Updated" = "Päivitetty"; // time ago string
+"Synchronized" = "Synchronized:"; // time ago string
 "h" = "h"; // time ago string, hours
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
@@ -184,6 +185,10 @@
 "Menu.Label.AboutHelp.text" = "Tietoa / Apua";
 "Menu.Label.GetMoreSensors.text" = "Osta lisää antureita";
 "Menu.Label.Feedback.text" = "Lähetä palautetta";
+
+// MenuTableViewController
+"MenuTableViewController.User" = "User: %@";
+"MenuTableViewController.None" = "none";
 
 // PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Tämä ominaisuus vaatii oikeuden gallerian käyttöön.";
