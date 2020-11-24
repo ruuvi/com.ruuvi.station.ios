@@ -167,7 +167,9 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                   luid: ruuviTagRealm.uuid.luid,
                                                   macId: ruuviTagRealm.mac?.mac,
                                                   isConnectable: ruuviTagRealm.isConnectable,
-                                                  name: ruuviTagRealm.name).any
+                                                  name: ruuviTagRealm.name,
+                                                  isClaimed: false,
+                                                  isOwner: false).any
                 promise.succeed(value: result)
             } else {
                 promise.fail(error: .unexpected(.failedToFindRuuviTag))
@@ -185,7 +187,9 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                             luid: ruuviTagRealm.uuid.luid,
                                             macId: ruuviTagRealm.mac?.mac,
                                             isConnectable: ruuviTagRealm.isConnectable,
-                                            name: ruuviTagRealm.name).any
+                                            name: ruuviTagRealm.name,
+                                            isClaimed: false,
+                                            isOwner: false).any
             }
             promise.succeed(value: result)
         }

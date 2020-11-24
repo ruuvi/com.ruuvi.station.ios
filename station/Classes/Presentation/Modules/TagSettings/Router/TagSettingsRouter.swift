@@ -24,4 +24,16 @@ class TagSettingsRouter: TagSettingsRouterInput {
                 module.configure(ruuviTag: ruuviTag, humidity: humidity)
             })
     }
+
+    func openShare(for ruuviTagId: String) {
+        let restorationId = "ShareViewController"
+        let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
+        try! transitionHandler
+            .forStoryboard(factory: factory,
+                           to: ShareModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(ruuviTagId: ruuviTagId)
+            })
+    }
 }

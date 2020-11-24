@@ -1,6 +1,6 @@
 import UIKit
 
-class TagsManagerRouter: TagsManagerRouterInput {
+class ShareRouter: ShareRouterInput {
     weak var transitionHandler: UIViewController!
 
     func dismiss(completion: (() -> Void)?) {

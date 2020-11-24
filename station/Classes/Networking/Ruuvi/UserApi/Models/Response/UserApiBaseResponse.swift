@@ -21,15 +21,35 @@ extension UserApiBaseResponse {
         switch status {
         case .success:
             guard let data = data else {
-                return .failure(RUError.userApi(.emptyResponse))
+                if let emptyModel = T.emptyModel {
+                    return .success(emptyModel)
+                } else {
+                    return .failure(RUError.userApi(.emptyResponse))
+                }
             }
             return .success(data)
         case .error:
             guard let error = errorDescription else {
                 return .failure(RUError.userApi(.emptyResponse))
             }
+            if error == "Sensor already claimed.",
+               let emptyModel = T.emptyModel {
+                return .success(emptyModel)
+            }
             let userApiError = UserApiError(description: error)
             return .failure(RUError.userApi(userApiError))
+        }
+    }
+}
+
+extension Decodable {
+    static var emptyModel: Self? {
+        let emptyString = "{}"
+        if let emptyData = emptyString.data(using: .utf8),
+           let emptyModel = try? JSONDecoder().decode(Self.self, from: emptyData) {
+            return emptyModel
+        } else {
+            return nil
         }
     }
 }

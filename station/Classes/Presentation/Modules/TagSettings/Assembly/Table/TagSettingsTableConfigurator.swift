@@ -25,6 +25,8 @@ class TagSettingsTableConfigurator {
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
         presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        presenter.keychainService = r.resolve(KeychainService.self)
+        presenter.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
 
         view.measurementService = r.resolve(MeasurementsService.self)
 

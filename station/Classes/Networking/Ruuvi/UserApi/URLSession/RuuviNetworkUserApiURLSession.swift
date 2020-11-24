@@ -6,7 +6,10 @@ extension RuuviNetworkUserApiURLSession {
         case register
         case verify
         case claim
+        case unclaim
         case share
+        case unshare
+        case shared
         case user
         case getSensorData = "get"
         case update
@@ -28,32 +31,70 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
     var keychainService: KeychainService!
 
     func register(_ requestModel: UserApiRegisterRequest) -> Future<UserApiRegisterResponse, RUError> {
-        return request(endpoint: Routes.register, with: requestModel, method: .post)
+        return request(endpoint: Routes.register,
+                       with: requestModel,
+                       method: .post)
     }
 
     func verify(_ requestModel: UserApiVerifyRequest) -> Future<UserApiVerifyResponse, RUError> {
-        return request(endpoint: Routes.verify, with: requestModel)
+        return request(endpoint: Routes.verify,
+                       with: requestModel)
     }
 
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError> {
-        return request(endpoint: Routes.claim, with: requestModel, method: .post, authorizationRequered: true)
+        return request(endpoint: Routes.claim,
+                       with: requestModel,
+                       method: .post,
+                       authorizationRequered: true)
+    }
+
+    func unclaim(_ requestModel: UserApiClaimRequest) -> Future<UserApiUnclaimResponse, RUError> {
+        return request(endpoint: Routes.unclaim,
+                       with: requestModel,
+                       method: .post,
+                       authorizationRequered: true)
     }
 
     func share(_ requestModel: UserApiShareRequest) -> Future<UserApiShareResponse, RUError> {
-        return request(endpoint: Routes.share, with: requestModel, method: .post, authorizationRequered: true)
+        return request(endpoint: Routes.share,
+                       with: requestModel,
+                       method: .post,
+                       authorizationRequered: true)
+    }
+
+    func unshare(_ requestModel: UserApiShareRequest) -> Future<UserApiUnshareResponse, RUError> {
+        return request(endpoint: Routes.unshare,
+                       with: requestModel,
+                       method: .post,
+                       authorizationRequered: true)
+    }
+
+    func shared(_ requestModel: UserApiSharedRequest) -> Future<UserApiSharedResponse, RUError> {
+        return request(endpoint: Routes.shared,
+                       with: requestModel,
+                       method: .get,
+                       authorizationRequered: true)
     }
 
     func user() -> Future<UserApiUserResponse, RUError> {
         let requestModel = UserApiUserRequest()
-        return request(endpoint: Routes.user, with: requestModel, authorizationRequered: true)
+        return request(endpoint: Routes.user,
+                       with: requestModel,
+                       authorizationRequered: true)
     }
 
     func getSensorData(_ requestModel: UserApiGetSensorRequest) -> Future<UserApiGetSensorResponse, RUError> {
-        return request(endpoint: Routes.getSensorData, with: requestModel, method: .get, authorizationRequered: true)
+        return request(endpoint: Routes.getSensorData,
+                       with: requestModel,
+                       method: .get,
+                       authorizationRequered: true)
     }
 
     func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError> {
-        return request(endpoint: Routes.update, with: requestModel, method: .post, authorizationRequered: true)
+        return request(endpoint: Routes.update,
+                       with: requestModel,
+                       method: .post,
+                       authorizationRequered: true)
     }
 
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
@@ -94,6 +135,13 @@ extension RuuviNetworkUserApiURLSession {
                 promise.fail(error: .networking(error))
             } else {
                 if let data = data {
+                    #if DEBUG
+                    if let object = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
+                    let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
+                        debugPrint("📬 Response of request", dump(request), prettyPrintedString)
+                    }
+                    #endif
                     let decoder = JSONDecoder()
                     do {
                         let baseResponse = try decoder.decode(UserApiBaseResponse<Response>.self, from: data)
