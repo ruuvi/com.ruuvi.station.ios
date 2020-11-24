@@ -99,14 +99,6 @@ class CardsRouter: NSObject, CardsRouterInput {
             })
     }
 
-    func openTagsManager(output: TagsManagerModuleOutput) {
-        let factory = StoryboardFactory(storyboardName: "TagsManager")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: TagsManagerModuleInput.self)
-            .then({ (module) -> Any? in
-                module.configure(output: output)
-            })
-    }
 }
 
 extension CardsRouter: UIAdaptivePresentationControllerDelegate {

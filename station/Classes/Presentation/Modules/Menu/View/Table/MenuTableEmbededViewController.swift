@@ -1,6 +1,9 @@
 import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
+
+    var viewModel: MenuViewModel?
+
     var output: MenuViewOutput!
 
     @IBOutlet weak var feedbackCell: UITableViewCell!
@@ -43,7 +46,7 @@ extension MenuTableEmbededViewController {
                             forRowAt indexPath: IndexPath) {
         if cell == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
-                ? output.userEmail
+                ? "Sign out".localized()
                 : "Sign in".localized()
         }
     }

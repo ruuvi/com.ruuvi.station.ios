@@ -8,7 +8,9 @@ class MenuTableConfigurator {
         router.transitionHandler = view
 
         let presenter = MenuPresenter()
-        presenter.userApi = r.resolve(RuuviNetworkUserApi.self)
+        presenter.alertPresenter = r.resolve(AlertPresenter.self)
+        presenter.networkService = r.resolve(NetworkService.self)
+        presenter.networkPersistence = r.resolve(NetworkPersistence.self)
         presenter.keychainService = r.resolve(KeychainService.self)
         presenter.view = view
         presenter.router = router
