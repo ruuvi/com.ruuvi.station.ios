@@ -3,36 +3,36 @@ PODS:
   - Charts (3.6.0):
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
-  - Firebase (6.33.0):
-    - Firebase/Core (= 6.33.0)
-  - Firebase/Analytics (6.33.0):
+  - Firebase (6.34.0):
+    - Firebase/Core (= 6.34.0)
+  - Firebase/Analytics (6.34.0):
     - Firebase/Core
-  - Firebase/Core (6.33.0):
+  - Firebase/Core (6.34.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.8.3)
-  - Firebase/CoreOnly (6.33.0):
-    - FirebaseCore (= 6.10.3)
-  - Firebase/Crashlytics (6.33.0):
+    - FirebaseAnalytics (= 6.9.0)
+  - Firebase/CoreOnly (6.34.0):
+    - FirebaseCore (= 6.10.4)
+  - Firebase/Crashlytics (6.34.0):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 4.6.1)
-  - Firebase/InAppMessaging (6.33.0):
+    - FirebaseCrashlytics (~> 4.6.2)
+  - Firebase/InAppMessaging (6.34.0):
     - Firebase/CoreOnly
     - FirebaseInAppMessaging (~> 0.24.0)
-  - Firebase/Messaging (6.33.0):
+  - Firebase/Messaging (6.34.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 4.7.0)
+    - FirebaseMessaging (~> 4.7.1)
   - FirebaseABTesting (4.2.0):
     - FirebaseCore (~> 6.10)
-  - FirebaseAnalytics (6.8.3):
+  - FirebaseAnalytics (6.9.0):
     - FirebaseCore (~> 6.10)
-    - FirebaseInstallations (~> 1.6)
-    - GoogleAppMeasurement (= 6.8.3)
+    - FirebaseInstallations (~> 1.7)
+    - GoogleAppMeasurement (= 6.9.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
     - GoogleUtilities/Network (~> 6.7)
     - "GoogleUtilities/NSData+zlib (~> 6.7)"
     - nanopb (~> 1.30906.0)
-  - FirebaseCore (6.10.3):
+  - FirebaseCore (6.10.4):
     - FirebaseCoreDiagnostics (~> 1.6)
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
@@ -41,7 +41,7 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
     - nanopb (~> 1.30906.0)
-  - FirebaseCrashlytics (4.6.1):
+  - FirebaseCrashlytics (4.6.2):
     - FirebaseCore (~> 6.10)
     - FirebaseInstallations (~> 1.6)
     - GoogleDataTransport (~> 7.2)
@@ -58,12 +58,12 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
     - PromisesObjC (~> 1.2)
-  - FirebaseInstanceID (4.7.0):
+  - FirebaseInstanceID (4.8.0):
     - FirebaseCore (~> 6.10)
     - FirebaseInstallations (~> 1.6)
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
-  - FirebaseMessaging (4.7.0):
+  - FirebaseMessaging (4.7.1):
     - FirebaseCore (~> 6.10)
     - FirebaseInstanceID (~> 4.7)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
@@ -74,13 +74,13 @@ PODS:
   - FLEX (4.1.1)
   - FutureX (1.1.1)
   - GestureInstructions (0.0.2)
-  - GoogleAppMeasurement (6.8.3):
+  - GoogleAppMeasurement (6.9.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
     - GoogleUtilities/Network (~> 6.7)
     - "GoogleUtilities/NSData+zlib (~> 6.7)"
     - nanopb (~> 1.30906.0)
-  - GoogleDataTransport (7.4.0):
+  - GoogleDataTransport (7.5.1):
     - nanopb (~> 1.30906.0)
   - GoogleUtilities/AppDelegateSwizzler (6.7.2):
     - GoogleUtilities/Environment
@@ -119,16 +119,16 @@ PODS:
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
   - Nantes (0.1.1)
-  - Nimble (8.1.2)
-  - PromisesObjC (1.2.10)
+  - Nimble (9.0.0)
+  - PromisesObjC (1.2.11)
   - Protobuf (3.13.0)
   - Quick (3.0.0)
   - RangeSeekSlider (1.8.2)
-  - Realm (5.4.7):
-    - Realm/Headers (= 5.4.7)
-  - Realm/Headers (5.4.7)
-  - RealmSwift (5.4.7):
-    - Realm (= 5.4.7)
+  - Realm (10.0.0):
+    - Realm/Headers (= 10.0.0)
+  - Realm/Headers (10.0.0)
+  - RealmSwift (10.0.0):
+    - Realm (= 10.0.0)
   - RxSwift (5.1.1)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
@@ -216,21 +216,21 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   BTKit: ea4207739e19fdcfbcbb75ed243fb7800d5a9c16
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
-  Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
+  Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
   FirebaseABTesting: 8a9d8df3acc2b43f4a22014ddf9f601bca6af699
-  FirebaseAnalytics: 5dd088bd2e67bb9d13dbf792d1164ceaf3052193
-  FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
+  FirebaseAnalytics: 3bb096873ee0d7fa4b6c70f5e9166b6da413cc7f
+  FirebaseCore: d3a978a3cfa3240bf7e4ba7d137fdf5b22b628ec
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
-  FirebaseCrashlytics: 5777d3462fb8c3ab9e80a2473bd7d667a2e8411c
+  FirebaseCrashlytics: 1a747c9cc084a24dc6d9511c991db1cd078154eb
   FirebaseInAppMessaging: 9da48721c6ad1b5bdc2b1108f2d3d561eb2245ca
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
-  FirebaseInstanceID: ac5a82fcd21f804dbfc8f318eff9e1d7a9916e49
-  FirebaseMessaging: fc1f98b4592f8f2ea538169b1c317c6e76f81300
+  FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
+  FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   FLEX: 81096107977a09836eb440173010ceeef01105d6
   FutureX: 85faeccb370f5a4286ae8540849095adb0bd7b2d
   GestureInstructions: acbd12854a5c7658365a11eaae2652dcbe623038
-  GoogleAppMeasurement: 966e88df9d19c15715137bb2ddaf52373f111436
-  GoogleDataTransport: b7f406340a291370045a270c599e53c6fa6ec20f
+  GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
+  GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
   Humidity: c2863bc4867806e5197a74d3e32eec5b3b5187ec
@@ -239,13 +239,13 @@ SPEC CHECKSUMS:
   Localize-Swift: 6f4475136bdb0d7b2882ea3d4ea919d70142b232
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   Nantes: e11fbe0b6214de8c09cc8b763dbf61f70fbbf885
-  Nimble: 3864815b4703c7ebffba875973c70e854489fbae
-  PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  Nimble: 3b4ec3fd40f1dc178058e0981107721c615643d8
+  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: 4bfc08e376b2e30c84ec3200ebe715574da05cc0
-  RealmSwift: ed40f371b62e8677141939e05b44a0c1a0a2d965
+  Realm: 5654b8e5e45034d07b219e089034be2ef7d1e7bf
+  RealmSwift: 5b4c8c85be4c14ff52054a4d80a8d338167dd79c
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
