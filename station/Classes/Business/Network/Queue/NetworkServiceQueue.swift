@@ -124,7 +124,8 @@ extension NetworkServiceQueue {
                                                  name: networkTag.name.isEmpty ? networkTag.sensorId : networkTag.name,
                                                  networkProvider: .userApi,
                                                  isClaimed: networkTag.isOwner,
-                                                 isOwner: networkTag.isOwner)
+                                                 isOwner: networkTag.isOwner,
+                                                 owner: networkTag.owner)
         ruuviTagTank.update(updatedSensor)
     }
 
@@ -136,7 +137,8 @@ extension NetworkServiceQueue {
                                                  name: sensor.name,
                                                  networkProvider: nil,
                                                  isClaimed: false,
-                                                 isOwner: true)
+                                                 isOwner: true,
+                                                 owner: sensor.owner)
         ruuviTagTank.update(updatedSensor)
     }
 
@@ -149,7 +151,8 @@ extension NetworkServiceQueue {
                                                  name: name,
                                                  networkProvider: .userApi,
                                                  isClaimed: sensor.isOwner,
-                                                 isOwner: sensor.isOwner)
+                                                 isOwner: sensor.isOwner,
+                                                 owner: sensor.owner)
         ruuviTagTank.create(sensorStruct)
     }
 }

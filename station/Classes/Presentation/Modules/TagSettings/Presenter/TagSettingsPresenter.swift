@@ -251,6 +251,18 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         })
     }
 
+    private func updateTagInDB() {
+        let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                          luid: self.ruuviTag.luid,
+                                          macId: self.ruuviTag.macId,
+                                          isConnectable: self.ruuviTag.isConnectable,
+                                          name: self.ruuviTag.name,
+                                          networkProvider: self.ruuviTag.networkProvider,
+                                          isClaimed: true,
+                                          isOwner: true)
+        self.updateTag(with: sensor)
+    }
+
     func viewDidTapClaimButton() {
         guard let mac = ruuviTag.macId?.value else {
             return
@@ -276,20 +288,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         } else {
             ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
                 .on(success: { [weak self] _ in
-                    guard let self = self else {
-                        return
-                    }
-                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
-                                                      luid: self.ruuviTag.luid,
-                                                      macId: self.ruuviTag.macId,
-                                                      isConnectable: self.ruuviTag.isConnectable,
-                                                      name: self.ruuviTag.name,
-                                                      networkProvider: self.ruuviTag.networkProvider,
-                                                      isClaimed: true,
-                                                      isOwner: true)
-                    self.updateTag(with: sensor)
+                    self?.updateTagInDB()
                 }, failure: { [weak self] (error) in
-                    self?.errorPresenter.present(error: error)
+                    if error.errorDescription == "Sensor already claimed" {
+                        self?.updateTagInDB()
+                    } else {
+                        self?.errorPresenter.present(error: error)
+                    }
                 })
         }
     }
@@ -373,7 +378,7 @@ extension TagSettingsPresenter {
             viewModel.isConnected.value = false
             viewModel.keepConnection.value = false
         }
-        viewModel.mac.value = ruuviTag.macId?.mac
+        viewModel.mac.value = ruuviTag.macId?.value
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         syncAlerts()

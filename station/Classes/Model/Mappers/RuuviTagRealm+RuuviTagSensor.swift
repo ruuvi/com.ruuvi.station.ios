@@ -27,4 +27,7 @@ extension RuuviTagRealm: RuuviTagSensor {
     var isOwner: Bool {
         return true
     }
+    var owner: String? {
+        return nil
+    }
 }

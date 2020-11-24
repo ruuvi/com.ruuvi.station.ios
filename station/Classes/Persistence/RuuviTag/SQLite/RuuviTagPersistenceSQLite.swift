@@ -27,7 +27,8 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             isConnectable: ruuviTag.isConnectable,
                             networkProvider: ruuviTag.networkProvider,
                             isClaimed: ruuviTag.isClaimed,
-                            isOwner: ruuviTag.isOwner)
+                            isOwner: ruuviTag.isOwner,
+                            owner: ruuviTag.owner)
 
         do {
             try database.dbPool.write { db in
