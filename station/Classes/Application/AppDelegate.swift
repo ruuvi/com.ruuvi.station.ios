@@ -11,13 +11,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateService: AppStateService!
     var localNotificationsManager: LocalNotificationsManager!
     var webTagOperationsManager: WebTagOperationsManager!
-    var ruuviTagNetworkOperationManager: RuuviNetworkTagOperationsManager!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let r = AppAssembly.shared.assembler.resolver
         webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
-        ruuviTagNetworkOperationManager = r.resolve(RuuviNetworkTagOperationsManager.self)
         if #available(iOS 13, *) {
             // no need to setup background fetch, @see BackgroundTaskServiceiOS13
         } else {
@@ -79,12 +77,8 @@ extension AppDelegate {
         if #available(iOS 13, *) {
             completionHandler(.noData)
         } else {
-            var operations = webTagOperationsManager.alertsPullOperations()
-            ruuviTagNetworkOperationManager.pullNetworkTagOperations()
-                .on {[weak self] (networkTagOperations) in
-                operations.append(contentsOf: networkTagOperations)
-                    self?.enqueueOperations(operations, completionHandler: completionHandler)
-            }
+            let operations = webTagOperationsManager.alertsPullOperations()
+            enqueueOperations(operations, completionHandler: completionHandler)
         }
     }
 

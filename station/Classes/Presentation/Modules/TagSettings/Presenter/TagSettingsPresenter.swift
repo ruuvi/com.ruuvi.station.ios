@@ -26,6 +26,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
+    var keychainService: KeychainService!
+    var ruuviNetwork: RuuviNetworkUserApi!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -131,7 +133,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
-        Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
+        var operations = [deleteTagOperation, deleteRecordsOperation]
+        if let mac = ruuviTag.macId?.value {
+            let unclaimOperation = ruuviNetwork.unclaim(mac)
+            operations.append(unclaimOperation)
+        }
+        Future.zip(operations).on(success: { [weak self] _ in
             guard let sSelf = self else {
                 return
             }
@@ -149,6 +156,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+        guard keychainService.userApiIsAuthorized,
+              let mac = ruuviTag.macId?.value else {
+            return
+        }
+        let requestModel = UserApiSensorUpdateRequest(sensor: mac, name: finalName)
+        let networkOperation = ruuviNetwork.update(requestModel)
+        networkOperation.on()
     }
 
     func viewDidAskToCalibrateHumidity() {
@@ -225,6 +239,67 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidAskToConnectFromAlertsDisabledDialog() {
         viewModel?.keepConnection.value = true
     }
+
+    private func updateTag(with sensor: RuuviTagSensorStruct) {
+        self.ruuviTagTank.update(sensor).on(success: { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.ruuviTag = sensor
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+
+    func viewDidTapClaimButton() {
+        guard let mac = ruuviTag.macId?.value else {
+            return
+        }
+        if viewModel.isClaimedTag.value == true {
+            ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
+                .on(success: { [weak self] _ in
+                    guard let self = self else {
+                        return
+                    }
+                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                                      luid: self.ruuviTag.luid,
+                                                      macId: self.ruuviTag.macId,
+                                                      isConnectable: self.ruuviTag.isConnectable,
+                                                      name: self.ruuviTag.name,
+                                                      networkProvider: self.ruuviTag.networkProvider,
+                                                      isClaimed: false,
+                                                      isOwner: true)
+                    self.updateTag(with: sensor)
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        } else {
+            ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
+                .on(success: { [weak self] _ in
+                    guard let self = self else {
+                        return
+                    }
+                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                                      luid: self.ruuviTag.luid,
+                                                      macId: self.ruuviTag.macId,
+                                                      isConnectable: self.ruuviTag.isConnectable,
+                                                      name: self.ruuviTag.name,
+                                                      networkProvider: self.ruuviTag.networkProvider,
+                                                      isClaimed: true,
+                                                      isOwner: true)
+                    self.updateTag(with: sensor)
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        }
+    }
+
+    func viewDidTapShareButton() {
+        guard let mac = ruuviTag.macId?.value else {
+            return
+        }
+        router.openShare(for: mac)
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -276,7 +351,14 @@ extension TagSettingsPresenter {
             assertionFailure()
         }
 
-        if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.macId?.value {
+        viewModel.isAuthorized.value = keychainService.userApiIsAuthorized
+        viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
+        viewModel.canClaimTag.value = ruuviTag.isOwner
+        viewModel.isClaimedTag.value = ruuviTag.isClaimed
+
+        if (ruuviTag.name == ruuviTag.luid?.value
+            || ruuviTag.name == ruuviTag.macId?.value)
+            && !ruuviTag.isNetworkConnectable {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
@@ -409,6 +491,10 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
+            case .update(let sensor):
+                if sensor.id == self?.ruuviTag.id {
+                    self?.ruuviTag = sensor
+                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             default:
@@ -494,6 +580,7 @@ extension TagSettingsPresenter {
             bindMovementAlert(uuid: identifier.value)
             viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
             viewModel.isNetworkConnected.value = ruuviTag.isNetworkConnectable
+            viewModel.isHiddenActions.value = ruuviTag.isOwner == false || ruuviTag.macId == nil
         }
     }
 

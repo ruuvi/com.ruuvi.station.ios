@@ -14,6 +14,7 @@ class TagsManagerPresenter {
     var userApiService: RuuviNetworkUserApi!
 
     private var userApiSensorIds: [AnyMACIdentifier] = []
+    private var userApiSensors: [UserApiUserSensor] = []
     private var viewModel: TagsManagerViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -78,7 +79,7 @@ extension TagsManagerPresenter {
                                          style: .cancel,
                                          handler: nil)
         let actions = [ confirmAction, cancleAction ]
-        let alertViewModel = TagsManagerAlertViewModel(title: title,
+        let alertViewModel = AlertViewModel(title: title,
                                                          message: message,
                                                          style: .alert,
                                                          actions: actions)
@@ -92,7 +93,7 @@ extension TagsManagerPresenter {
         let okAction = UIAlertAction(title: okActionTitle,
                                      style: .default,
                                      handler: nil)
-        let alertViewModel = TagsManagerAlertViewModel(title: title,
+        let alertViewModel = AlertViewModel(title: title,
                                                          message: message,
                                                          style: .alert,
                                                          actions: [okAction])
@@ -103,6 +104,7 @@ extension TagsManagerPresenter {
         activityPresenter.increment()
         userApiService.user()
             .on(success: { [weak self] (response) in
+                self?.userApiSensors = response.sensors
                 self?.userApiSensorIds = response.sensors.map({MACIdentifierStruct(value: $0.sensorId).any})
                 self?.viewModel.items.value = response.sensors.map({ TagManagerCellViewModel(sensor: $0) })
             }, failure: { [weak self] (error) in
@@ -144,7 +146,20 @@ extension TagsManagerPresenter {
     }
 
     private func addMissingSensors(_ sensors: [(AnyRuuviTagSensor, RuuviTagSensorRecord)]) {
-        let futures = sensors.map({ruuviTagTank.create($0.0.struct)})
+        let sensorsToSave: [RuuviTagSensorStruct] = sensors.compactMap({ sensor in
+            guard let userApiSensor = self.userApiSensors.first(where: { $0.sensorId == sensor.0.id }) else {
+                return nil
+            }
+            return .init(version: sensor.0.version,
+                         luid: sensor.0.luid,
+                         macId: sensor.0.macId,
+                         isConnectable: sensor.0.isConnectable,
+                         name: userApiSensor.name,
+                         networkProvider: .userApi,
+                         isClaimed: sensor.0.isClaimed,
+                         isOwner: userApiSensor.isOwner)
+        })
+        let futures = sensorsToSave.map({ruuviTagTank.create($0)})
         activityPresenter.increment()
         Future.zip(futures).on(success: { [weak self]  (results) in
             if results.allSatisfy({$0 == true}) {

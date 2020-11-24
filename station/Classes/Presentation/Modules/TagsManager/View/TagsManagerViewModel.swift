@@ -14,9 +14,11 @@ struct TagManagerCellViewModel {
 
     init(sensor: UserApiUserSensor) {
         imageUrl = URL(string: sensor.pictureUrl)
-        title = sensor.sensorId
+        title = sensor.name.isEmpty ? sensor.sensorId : sensor.name
         isOwner = sensor.isOwner
-        subTitle = isOwner ? "Owner" : "Shared tag"
+        let isOwnerTitle = isOwner ? "TagManagerCellViewModel.Owner".localized()
+            : "TagManagerCellViewModel.Shared".localized()
+        subTitle = sensor.sensorId + " (" + isOwnerTitle + ")"
     }
 }
 

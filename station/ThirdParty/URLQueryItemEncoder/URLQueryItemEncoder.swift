@@ -1,3 +1,4 @@
+// swiftlint:disable:all
 //
 //  URLQueryItemEncoder.swift
 //  URLQueryItemEncoder
@@ -488,3 +489,4 @@ fileprivate class UnkeyedURLQueryItemReferencingEncoder: URLQueryItemReferencing
     referencedUnkeyedContainer.encodedItemsCount += items.count
   }
 }
+// swiftlint:enable:all

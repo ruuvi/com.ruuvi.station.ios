@@ -52,6 +52,12 @@ struct TagSettingsViewModel {
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
 
+    let isAuthorized: Observable<Bool?> = Observable<Bool?>(true)
+    let canClaimTag: Observable<Bool?> = Observable<Bool?>(false)
+    let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
+    let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
+    let isHiddenActions: Observable<Bool?> = Observable<Bool?>(true)
+
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity
         temperature.value = record.temperature

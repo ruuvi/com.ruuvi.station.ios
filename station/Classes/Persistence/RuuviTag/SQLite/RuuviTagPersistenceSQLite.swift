@@ -25,7 +25,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             name: ruuviTag.name,
                             version: ruuviTag.version,
                             isConnectable: ruuviTag.isConnectable,
-                            networkProvider: ruuviTag.networkProvider)
+                            networkProvider: ruuviTag.networkProvider,
+                            isClaimed: ruuviTag.isClaimed,
+                            isOwner: ruuviTag.isOwner)
 
         do {
             try database.dbPool.write { db in
@@ -201,7 +203,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable)
+                            isConnectable: ruuviTag.isConnectable,
+                            isClaimed: ruuviTag.isClaimed,
+                            isOwner: ruuviTag.isOwner)
 
         do {
             try database.dbPool.write { db in
@@ -223,7 +227,9 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable)
+                            isConnectable: ruuviTag.isConnectable,
+                            isClaimed: ruuviTag.isClaimed,
+                            isOwner: ruuviTag.isOwner)
 
         do {
             var success = false
