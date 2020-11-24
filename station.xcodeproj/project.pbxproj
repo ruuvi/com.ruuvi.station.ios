@@ -1576,6 +1576,28 @@
 		A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98BC877250E4265001CEFDC /* Double+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98BC874250E4265001CEFDC /* Double+Round.swift */; };
 		A98CCBB3BAF61A33CE4A2D1B /* Pods_station.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8018B7836CF8C748718825DD /* Pods_station.framework */; };
+		A98D3F00256CBD400066588B /* ShareModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */; };
+		A98D3F06256CBD410066588B /* ShareModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2284D927021C0BEA560B0 /* ShareModuleInput.swift */; };
+		A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
+		A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
+		A98D3F0E256CBD600066588B /* ShareRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */; };
+		A98D3F0F256CBD600066588B /* ShareViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F75FD2FDAD002C10686FA /* ShareViewInput.swift */; };
+		A98D3F10256CBD600066588B /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */; };
+		A98D3F11256CBD600066588B /* ShareRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */; };
+		A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC417B8977A47FFAE71585F0 /* ShareViewController.swift */; };
+		A98D3F13256CBD600066588B /* SharePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */; };
+		A98D3F14256CBD600066588B /* ShareModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */; };
+		A98D3F15256CBD600066588B /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
+		A98D3F16256CBD610066588B /* ShareConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB681E62A66E5924A87859B1 /* ShareConfigurator.swift */; };
+		A98D3F17256CBD610066588B /* ShareInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392F0E992BEAA3382C2CF709 /* ShareInitializer.swift */; };
+		A98D3F18256CBD610066588B /* ShareRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546F1EFEE8F8CFC22377BB4 /* ShareRouterInput.swift */; };
+		A98D3F19256CBD610066588B /* ShareViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167F75FD2FDAD002C10686FA /* ShareViewInput.swift */; };
+		A98D3F1A256CBD610066588B /* ShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */; };
+		A98D3F1B256CBD610066588B /* ShareRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7AE39C23B8C52BB202BB5E /* ShareRouter.swift */; };
+		A98D3F1C256CBD610066588B /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC417B8977A47FFAE71585F0 /* ShareViewController.swift */; };
+		A98D3F1D256CBD610066588B /* SharePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1D67615D6DBA9E2FC5B402 /* SharePresenter.swift */; };
+		A98D3F1E256CBD610066588B /* ShareModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5710E4EF18D419D01D60405E /* ShareModuleOutput.swift */; };
+		A98D3F1F256CBD610066588B /* ShareViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5C4AD5C54EF024669EAF47 /* ShareViewOutput.swift */; };
 		A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
 		A98D998225175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
 		A98D998325175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D998025175C9200ED3760 /* MigrationManagerAlertService.swift */; };
@@ -6713,6 +6735,7 @@
 				A98D998325175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0318251124F900694733 /* SelectionItem.swift in Sources */,
 				0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */,
+				A98D3F1F256CBD610066588B /* ShareViewOutput.swift in Sources */,
 				A976CA7824A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */,
 				0E8BAC82245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
@@ -6726,6 +6749,7 @@
 				0E6BAD9523856A01003A2D4C /* LocalNotificationsManagerImpl.swift in Sources */,
 				A9646480247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
 				0E6BAD9623856A01003A2D4C /* PermissionPresenter.swift in Sources */,
+				A98D3F1B256CBD610066588B /* ShareRouter.swift in Sources */,
 				0E0C19C023D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0E8BACAA245C84BE00D380FB /* TankAssembly.swift in Sources */,
 				0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */,
@@ -6831,6 +6855,7 @@
 				0E6BADCD23856A01003A2D4C /* UIApplication+ViewController.swift in Sources */,
 				0E6BADCE23856A01003A2D4C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E6BADCF23856A01003A2D4C /* DiscoverDeviceViewModel.swift in Sources */,
+				A98D3F1D256CBD610066588B /* SharePresenter.swift in Sources */,
 				0E6BADD023856A01003A2D4C /* HumidityCalibrationRouter.swift in Sources */,
 				0E6BADD123856A01003A2D4C /* WebTagService.swift in Sources */,
 				A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
@@ -6839,6 +6864,7 @@
 				A92E3C6D2426767F00D981D5 /* MeasurementType.swift in Sources */,
 				0E6BADD323856A01003A2D4C /* WeatherProviderService.swift in Sources */,
 				0E6BADD423856A01003A2D4C /* PermissionPresenterAlert.swift in Sources */,
+				A98D3F18256CBD610066588B /* ShareRouterInput.swift in Sources */,
 				0E6BADD523856A01003A2D4C /* LocationManagerImpl.swift in Sources */,
 				0E6BADD623856A01003A2D4C /* MainRouter.swift in Sources */,
 				A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */,
@@ -6914,6 +6940,7 @@
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
 				A94A884E24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0E6BADFD23856A01003A2D4C /* AlertService.swift in Sources */,
+				A98D3F00256CBD400066588B /* ShareModuleInput.swift in Sources */,
 				A975817F249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				A949A83D24707FDE006B7F4F /* LocalizedCache.swift in Sources */,
 				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
@@ -6921,6 +6948,7 @@
 				0E6BADFF23856A01003A2D4C /* Date+Ruuvi.swift in Sources */,
 				0E6BAE0123856A01003A2D4C /* ExportServiceTemp.swift in Sources */,
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
+				A98D3F19256CBD610066588B /* ShareViewInput.swift in Sources */,
 				A92E3C56242636DF00D981D5 /* RuuviMeasurement.swift in Sources */,
 				A94A886F24D6B5CF00D2CBA4 /* RUColor.swift in Sources */,
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
@@ -6977,6 +7005,7 @@
 				0E197C7623C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E6BAE1823856A01003A2D4C /* WebTagSettingsRouterInput.swift in Sources */,
 				0E6BAE1C23856A01003A2D4C /* WebTagRealm.swift in Sources */,
+				A98D3F16256CBD610066588B /* ShareConfigurator.swift in Sources */,
 				0E6BAE1D23856A01003A2D4C /* LocalizationService.swift in Sources */,
 				0E6BAE1E23856A01003A2D4C /* RURangeSeekSlider.swift in Sources */,
 				A91D02FC2511207300694733 /* SelectionViewInput.swift in Sources */,
@@ -7032,6 +7061,8 @@
 				0E6BAE4023856A01003A2D4C /* ActivityPresenterRuuviLogo.swift in Sources */,
 				0EAD33F22399273E00EC5BAA /* HeartbeatViewController.swift in Sources */,
 				0E6BAE4123856A01003A2D4C /* AboutViewController.swift in Sources */,
+				A98D3F1E256CBD610066588B /* ShareModuleOutput.swift in Sources */,
+				A98D3F1A256CBD610066588B /* ShareViewModel.swift in Sources */,
 				0E6BAE4223856A01003A2D4C /* DiscoverRouterInput.swift in Sources */,
 				0E8BAC86245C4F0900D380FB /* Sensor.swift in Sources */,
 				0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */,
@@ -7134,6 +7165,7 @@
 				0E6BAE8423856A01003A2D4C /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E6BAE8523856A01003A2D4C /* ErrorPresenter.swift in Sources */,
 				0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */,
+				A98D3F1C256CBD610066588B /* ShareViewController.swift in Sources */,
 				0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */,
 				0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */,
@@ -7189,6 +7221,7 @@
 				0E6BAEA123856A01003A2D4C /* Settings.swift in Sources */,
 				0E6BAEA223856A01003A2D4C /* ForegroundInitializer.swift in Sources */,
 				A9646471247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
+				A98D3F17256CBD610066588B /* ShareInitializer.swift in Sources */,
 				0E6BAEA423856A01003A2D4C /* WebTagPersistence.swift in Sources */,
 				0E6BAEA523856A01003A2D4C /* AlertPersistenceUserDefaults.swift in Sources */,
 				A91D02F62511207300694733 /* SelectionPresenter.swift in Sources */,
@@ -7775,6 +7808,7 @@
 				A98D998125175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
 				A91D0316251124F900694733 /* SelectionItem.swift in Sources */,
 				0EEB20F522B7D1A40015F9E0 /* AboutViewOutput.swift in Sources */,
+				A98D3F15256CBD600066588B /* ShareViewOutput.swift in Sources */,
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				A92E3C63242644B800D981D5 /* TagChartViewInput.swift in Sources */,
@@ -7788,6 +7822,7 @@
 				0E9F97A222EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift in Sources */,
 				A964647E247BAE6B0001D55D /* AdvancedInitializer.swift in Sources */,
 				0E390FE5236021FE00D600DB /* LocalNotificationsManagerImpl.swift in Sources */,
+				A98D3F11256CBD600066588B /* ShareRouter.swift in Sources */,
 				0E5C301A22CF644900B52E39 /* PermissionPresenter.swift in Sources */,
 				0E8BACA8245C84BE00D380FB /* TankAssembly.swift in Sources */,
 				A976CA7E24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
@@ -7893,6 +7928,7 @@
 				0ECFF37023507CE80061D11B /* ForegroundViewModel.swift in Sources */,
 				A94A884C24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0EEB20C622B7915C0015F9E0 /* CardsViewModel.swift in Sources */,
+				A98D3F13256CBD600066588B /* SharePresenter.swift in Sources */,
 				0E1C1DBB22B3919F0032F6CA /* UIApplication+ViewController.swift in Sources */,
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
@@ -7901,6 +7937,7 @@
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A9BB94A825409B060042B190 /* TagsManagerRouterInput.swift in Sources */,
+				A98D3F0E256CBD600066588B /* ShareRouterInput.swift in Sources */,
 				A9BB445524E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
 				0EDAC96822F2FF8C00D0F6F2 /* WeatherProviderService.swift in Sources */,
 				0E5C301C22CF646B00B52E39 /* PermissionPresenterAlert.swift in Sources */,
@@ -7976,6 +8013,7 @@
 				0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
 				0E02ABBD2375A1CF00ED4629 /* AlertService.swift in Sources */,
+				A98D3F06256CBD410066588B /* ShareModuleInput.swift in Sources */,
 				A975817D249F476700BC150A /* LocationPersistenceImpl.swift in Sources */,
 				A949A83B24707FD0006B7F4F /* LocalizedCache.swift in Sources */,
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
@@ -7983,6 +8021,7 @@
 				0E84BF67239801AF00A37E1A /* HeartbeatRouterInput.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0E538367236AEE400007956D /* ExportServiceTemp.swift in Sources */,
+				A98D3F0F256CBD600066588B /* ShareViewInput.swift in Sources */,
 				0EE1D2CC2338AFCC0071CE16 /* DateValueFormatter.swift in Sources */,
 				0ECB5A8E2381807500E78757 /* CardsScrollViewController.swift in Sources */,
 				A93DB9E924732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
@@ -8039,6 +8078,7 @@
 				0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* CardsModuleInput.swift in Sources */,
 				A91D02FA2511207300694733 /* SelectionViewInput.swift in Sources */,
+				A98D3F0C256CBD600066588B /* ShareConfigurator.swift in Sources */,
 				0EBAF075232007CC0025A191 /* LanguageRouterInput.swift in Sources */,
 				A92E3C542426346B00D981D5 /* RuuviMeasurement.swift in Sources */,
 				0EE5B47F2351865300D5ED32 /* UserDefault.swift in Sources */,
@@ -8094,6 +8134,8 @@
 				0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */,
 				0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */,
 				0E8BAC84245C4F0900D380FB /* Sensor.swift in Sources */,
+				A98D3F14256CBD600066588B /* ShareModuleOutput.swift in Sources */,
+				A98D3F10256CBD600066588B /* ShareViewModel.swift in Sources */,
 				0E70A46022AF9567006CB87C /* ViewInput.swift in Sources */,
 				0E0A381923616AC3003A0364 /* UserDefaults+Optional.swift in Sources */,
 				0E8BAC68245C4AE400D380FB /* RuuviTagReactor.swift in Sources */,
@@ -8196,6 +8238,7 @@
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
 				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
+				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
@@ -8251,6 +8294,7 @@
 				0ECFF36C23507BC00061D11B /* ForegroundInitializer.swift in Sources */,
 				0E9F979F22EB0B0E0015ADE2 /* WebTagPersistence.swift in Sources */,
 				A964646F247BAE6B0001D55D /* AdvancedSwitchTableViewCell.swift in Sources */,
+				A98D3F0D256CBD600066588B /* ShareInitializer.swift in Sources */,
 				0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
 				A91D02F42511207300694733 /* SelectionPresenter.swift in Sources */,
@@ -8345,7 +8389,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -8390,7 +8434,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -8435,7 +8479,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -8463,7 +8507,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -8607,7 +8651,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -8667,7 +8711,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
