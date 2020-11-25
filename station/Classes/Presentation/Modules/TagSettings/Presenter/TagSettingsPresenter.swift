@@ -139,7 +139,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             if ruuviTag.isOwner {
                 let unclaimOperation = ruuviNetwork.unclaim(mac)
                 operations.append(unclaimOperation)
-            } else if let email = keychainService.userApiEmail{
+            } else if let email = keychainService.userApiEmail {
                 let unshareOperation = ruuviNetwork.unshare(mac, for: email)
                 operations.append(unshareOperation)
             }
