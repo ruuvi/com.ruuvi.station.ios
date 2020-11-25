@@ -49,6 +49,18 @@ extension RuuviNetworkUserApi {
             })
         return promise.future
     }
+
+    func unshare(_ mac: String, for user: String) -> Future<Bool, RUError> {
+        let requestModel = UserApiShareRequest(user: user, sensor: mac)
+        let promise = Promise<Bool, RUError>()
+        unshare(requestModel)
+            .on(success: {_ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        return promise.future
+    }
 }
 
 extension RuuviNetworkUserApi {
