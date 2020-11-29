@@ -1,8 +1,8 @@
 import UIKit
 
 class MenuTableViewController: UIViewController {
-    @IBOutlet weak var usernameLabel: UILabel!
     var output: MenuViewOutput!
+    @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var refreshIcon: UIImageView!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var syncContainer: UIView!
@@ -98,7 +98,6 @@ extension MenuTableViewController {
                 viewController.syncStatusLabel.text = "Syncing...".localized()
             } else {
                 viewController.stopAnimating()
-                viewController.syncStatusLabel.text = "".localized()
             }
         }
     }
