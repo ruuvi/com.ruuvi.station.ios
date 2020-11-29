@@ -98,36 +98,8 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                                       modes: [RunLoop.Mode.default.rawValue])
                     }
                 })
-            } else {
-                guard let mac = ruuviTag.macId,
-                      ruuviTag.luid == nil else {
-                    return
-                }
-                let scanToken = foreground.scan(self, closure: { [weak self] (_, device) in
-                    guard let self = self,
-                          let tag = device.ruuvi?.tag,
-                          mac.any == tag.macId?.any,
-                          ruuviTag.luid == nil else {
-                        return
-                    }
-                    let ruuviSensor = RuuviTagSensorStruct(
-                        version: tag.version,
-                        luid: device.uuid.luid,
-                        macId: mac,
-                        isConnectable: device.isConnectable,
-                        name: ruuviTag.name,
-                        networkProvider: ruuviTag.networkProvider,
-                        isClaimed: ruuviTag.isClaimed,
-                        isOwner: ruuviTag.isClaimed,
-                        owner: ruuviTag.owner)
-                    self.ruuviTagTank.update(ruuviSensor)
-                        .on(failure: { [weak self] error in
-                            self?.post(error: error)
-                        }, completion: { [weak self] in
-                            self?.restartObserving()
-                        })
-                })
-                scanTokens.append(scanToken)
+            } else if ruuviTag.networkProvider != nil {
+                scanRemoteSensor(ruuviTag: ruuviTag)
             }
         }
     }
@@ -185,6 +157,38 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                     })
             }
         }
+    }
+
+    private func scanRemoteSensor(ruuviTag: AnyRuuviTagSensor) {
+        guard let mac = ruuviTag.macId,
+              ruuviTag.luid == nil else {
+            return
+        }
+        let scanToken = foreground.scan(self, closure: { [weak self] (_, device) in
+            guard let self = self,
+                  let tag = device.ruuvi?.tag,
+                  mac.any == tag.macId?.any,
+                  ruuviTag.luid == nil else {
+                return
+            }
+            let ruuviSensor = RuuviTagSensorStruct(
+                version: tag.version,
+                luid: device.uuid.luid,
+                macId: mac,
+                isConnectable: device.isConnectable,
+                name: ruuviTag.name,
+                networkProvider: ruuviTag.networkProvider,
+                isClaimed: ruuviTag.isClaimed,
+                isOwner: ruuviTag.isClaimed,
+                owner: ruuviTag.owner)
+            self.ruuviTagTank.update(ruuviSensor)
+                .on(failure: { [weak self] error in
+                    self?.post(error: error)
+                }, completion: { [weak self] in
+                    self?.restartObserving()
+                })
+        })
+        scanTokens.append(scanToken)
     }
 
     private func post(error: Error) {

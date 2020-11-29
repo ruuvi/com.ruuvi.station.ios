@@ -112,7 +112,9 @@ extension RuuviNetworkUserApi {
         return sensors
     }
 
-    private func decodeSensorRecords(_ ruuviTagId: String, mac: String, response: UserApiGetSensorResponse) -> [RuuviTagSensorRecord] {
+    private func decodeSensorRecords(_ ruuviTagId: String,
+                                     mac: String,
+                                     response: UserApiGetSensorResponse) -> [RuuviTagSensorRecord] {
         let decoder = Ruuvi.decoder
         return response.measurements.compactMap({
             guard let device = decoder.decodeNetwork(uuid: mac,
