@@ -19,7 +19,7 @@ class SignInRouter: SignInRouterInput {
             .forStoryboard(factory: factory, to: SignInModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ (module) -> Any? in
-                module.configure(with: .enterVerificationCode, output: output)
+                module.configure(with: .enterVerificationCode(nil), output: output)
             })
     }
 }

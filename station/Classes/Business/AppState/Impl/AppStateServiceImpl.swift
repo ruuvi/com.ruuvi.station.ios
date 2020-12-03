@@ -11,6 +11,7 @@ class AppStateServiceImpl: AppStateService {
     var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
+    var universalLinkCoordinator: UniversalLinkCoordinator!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -70,18 +71,6 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
-        guard let urlComponents = URLComponents(url: url,
-                                                resolvingAgainstBaseURL: false) else {
-            return
-        }
-        var userInfo: [String: Any] = [
-            "path": urlComponents.path
-        ]
-        urlComponents.queryItems?.forEach({
-            userInfo[$0.name] = $0.value
-        })
-        NotificationCenter.default.post(name: .ApplicationDidOpenWithUniversalLink,
-                                        object: nil,
-                                        userInfo: userInfo)
+        universalLinkCoordinator.processUniversalLink(url: url)
     }
 }

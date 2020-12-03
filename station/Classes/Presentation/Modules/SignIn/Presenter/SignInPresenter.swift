@@ -4,15 +4,17 @@ import Future
 class SignInPresenter: NSObject {
     enum State {
         case enterEmail
-        case enterVerificationCode
+        case enterVerificationCode(_ code: String?)
     }
 
     weak var view: SignInViewInput!
-    var output: SignInModuleOutput!
+    var output: SignInModuleOutput?
     var router: SignInRouterInput!
+
+    var activityPresenter: ActivityPresenter!
+    var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
     var userApi: RuuviNetworkUserApi!
-    var errorPresenter: ErrorPresenter!
 
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -30,7 +32,6 @@ class SignInPresenter: NSObject {
 extension SignInPresenter: SignInViewOutput {
     func viewDidLoad() {
         syncViewModel()
-        bindViewModel()
         startObservingUniversalLinks()
     }
 
@@ -61,7 +62,7 @@ extension SignInPresenter: SignInViewOutput {
 extension SignInPresenter: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
         router.dismiss { [weak self] in
-            self?.output.signIn(module: module, didSuccessfulyLogin: sender)
+            self?.output?.signIn(module: module, didSuccessfulyLogin: sender)
         }
     }
 }
@@ -71,17 +72,16 @@ extension SignInPresenter: TagsManagerModuleOutput {}
 
 // MARK: - SignInModuleInput
 extension SignInPresenter: SignInModuleInput {
-    func configure(with state: SignInPresenter.State, output: SignInModuleOutput) {
+    func configure(with state: SignInPresenter.State, output: SignInModuleOutput?) {
         self.output = output
         self.state = state
     }
 
     func dismiss() {
-        switch state {
-        case .enterEmail:
-            router.dismiss(completion: nil)
-        case .enterVerificationCode:
+        if viewModel.canPopViewController.value == true {
             router.popViewController(animated: true)
+        } else {
+            router.dismiss(completion: nil)
         }
     }
 }
@@ -100,15 +100,19 @@ extension SignInPresenter {
             viewModel.canPopViewController.value = false
             viewModel.textContentType.value = .emailAddress
             viewModel.inputText.value = keychainService.userApiEmail
-        case .enterVerificationCode:
+        case .enterVerificationCode(let code):
             viewModel.titleLabelText.value = "SignIn.EmailSent".localized()
             viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
             viewModel.placeholder.value = "SignIn.VerificationCodePlaceholder".localized()
             viewModel.errorLabelText.value = nil
             viewModel.enterCodeManuallyButtonIsHidden.value = true
-            viewModel.canPopViewController.value = true
             viewModel.textContentType.value = .name
+            if let code = code {
+                viewModel.canPopViewController.value = false
+                processCode(code)
+            }
         }
+        bindViewModel()
     }
 
     private func bindViewModel() {
@@ -143,6 +147,7 @@ extension SignInPresenter {
             return
         }
         let requestModel = UserApiRegisterRequest(email: email)
+        activityPresenter.increment()
         userApi.register(requestModel)
             .on(success: { [weak self] (_) in
                 guard let sSelf = self else {
@@ -152,39 +157,62 @@ extension SignInPresenter {
                 sSelf.router.openEmailConfirmation(output: sSelf)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.activityPresenter.decrement()
             })
     }
 
     private func verify(_ code: String) {
         let requestModel = UserApiVerifyRequest(token: code)
+        activityPresenter.increment()
         userApi.verify(requestModel)
             .on(success: { [weak self] (response) in
                 guard let sSelf = self else {
                     return
                 }
                 sSelf.keychainService.ruuviUserApiKey = response.accessToken
-                sSelf.output.signIn(module: sSelf, didSuccessfulyLogin: nil)
+                sSelf.output?.signIn(module: sSelf, didSuccessfulyLogin: nil)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.activityPresenter.decrement()
             })
     }
 
     private func startObservingUniversalLinks() {
         universalLinkObservationToken = NotificationCenter
             .default
-            .addObserver(forName: .ApplicationDidOpenWithUniversalLink,
+            .addObserver(forName: .DidOpenWithUniversalLink,
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
             guard let self = self,
-                let userInfo = notification.userInfo,
-                let path = userInfo["path"] as? String,
-                path == "/verify",
-                let code = userInfo["token"] as? String,
-                !code.isEmpty else {
+                let userInfo = notification.userInfo else {
                 return
             }
-            self.verify(code)
+            self.processLink(userInfo)
+        })
+    }
+
+    private func processLink(_ userInfo: [AnyHashable: Any]) {
+        switch state {
+        case .enterVerificationCode:
+            guard let path = userInfo["path"] as? UniversalLinkType,
+                  path == .verify,
+                  let code = userInfo["token"] as? String,
+                  !code.isEmpty else {
+                return
+            }
+            self.processCode(code)
+        default:
+            break
+        }
+    }
+
+    private func processCode(_ code: String) {
+        viewModel.inputText.value = code
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750), execute: { [weak self] in
+            self?.verify(code)
         })
     }
 }
