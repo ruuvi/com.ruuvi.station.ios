@@ -97,3 +97,17 @@ extension AppDelegate {
         }
     }
 }
+
+// MARK: - UniversalLins
+extension AppDelegate {
+    func application(_ application: UIApplication,
+                     continue userActivity: NSUserActivity,
+                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+              let url = userActivity.webpageURL else {
+           return false
+        }
+        appStateService.applicationDidOpenWithUniversalLink(application, url: url)
+        return true
+    }
+}

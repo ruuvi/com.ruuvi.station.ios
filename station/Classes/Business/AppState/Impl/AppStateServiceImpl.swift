@@ -68,4 +68,20 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.start()
         backgroundProcessService.launch()
     }
+
+    func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
+        guard let urlComponents = URLComponents(url: url,
+                                                resolvingAgainstBaseURL: false) else {
+            return
+        }
+        var userInfo: [String: Any] = [
+            "path": urlComponents.path
+        ]
+        urlComponents.queryItems?.forEach({
+            userInfo[$0.name] = $0.value
+        })
+        NotificationCenter.default.post(name: .ApplicationDidOpenWithUniversalLink,
+                                        object: nil,
+                                        userInfo: userInfo)
+    }
 }

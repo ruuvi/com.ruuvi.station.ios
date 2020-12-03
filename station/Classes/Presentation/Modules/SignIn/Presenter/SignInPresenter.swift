@@ -15,11 +15,15 @@ class SignInPresenter: NSObject {
     var errorPresenter: ErrorPresenter!
 
     private var state: State = .enterEmail
-
+    private var universalLinkObservationToken: NSObjectProtocol?
     private var viewModel: SignInViewModel! {
         didSet {
             view.viewModel = viewModel
         }
+    }
+
+    deinit {
+        universalLinkObservationToken?.invalidate()
     }
 }
 // MARK: - SignInViewOutput
@@ -27,6 +31,7 @@ extension SignInPresenter: SignInViewOutput {
     func viewDidLoad() {
         syncViewModel()
         bindViewModel()
+        startObservingUniversalLinks()
     }
 
     func viewDidClose() {
@@ -38,7 +43,12 @@ extension SignInPresenter: SignInViewOutput {
         case .enterEmail:
             sendVerificationCode()
         case .enterVerificationCode:
-            verifyCode()
+            guard let code = viewModel.inputText.value,
+                  !code.isEmpty else {
+                viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
+                return
+            }
+            verify(code)
         }
     }
 
@@ -144,12 +154,8 @@ extension SignInPresenter {
                 self?.errorPresenter.present(error: error)
             })
     }
-    private func verifyCode() {
-        guard let code = viewModel.inputText.value,
-              !code.isEmpty else {
-            viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
-            return
-        }
+
+    private func verify(_ code: String) {
         let requestModel = UserApiVerifyRequest(token: code)
         userApi.verify(requestModel)
             .on(success: { [weak self] (response) in
@@ -161,5 +167,24 @@ extension SignInPresenter {
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
+    }
+
+    private func startObservingUniversalLinks() {
+        universalLinkObservationToken = NotificationCenter
+            .default
+            .addObserver(forName: .ApplicationDidOpenWithUniversalLink,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] (notification) in
+            guard let self = self,
+                let userInfo = notification.userInfo,
+                let path = userInfo["path"] as? String,
+                path == "/verify",
+                let code = userInfo["token"] as? String,
+                !code.isEmpty else {
+                return
+            }
+            self.verify(code)
+        })
     }
 }
