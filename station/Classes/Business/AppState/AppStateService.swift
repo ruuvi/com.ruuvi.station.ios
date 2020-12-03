@@ -1,9 +1,5 @@
 import UIKit
 
-extension Notification.Name {
-    static let ApplicationDidOpenWithUniversalLink = Notification.Name("ApplicationDidOpenWithUniversalLink")
-}
-
 protocol AppStateService {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)
