@@ -104,7 +104,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
 
-
     var viewModel: TagSettingsViewModel? {
         didSet {
             bindViewModel()
