@@ -15,6 +15,7 @@ class MenuPresenter: MenuModuleInput {
     }
 
     private var timer: Timer?
+    private var lastSyncDate: CFAbsoluteTime!
 
     private weak var output: MenuModuleOutput?
 
@@ -81,9 +82,18 @@ extension MenuPresenter: MenuViewOutput {
     func viewDidTapSyncButton() {
         timer?.invalidate()
         viewModel?.isSyncing.value = true
+        lastSyncDate = CFAbsoluteTimeGetCurrent()
         networkService.updateTagsInfo(for: .userApi)
             .on(completion: { [weak self] in
-                self?.viewModel?.isSyncing.value = false
+                if let lastSyncDate = self?.lastSyncDate {
+                    let syncLength: CFAbsoluteTime = CFAbsoluteTimeGetCurrent() - lastSyncDate
+                    let deadline = max(2.0 - syncLength, 0.0)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Int(deadline * 1000))) {
+                        self?.viewModel?.isSyncing.value = false
+                    }
+                } else {
+                    self?.viewModel?.isSyncing.value = false
+                }
                 self?.createLastUpdateTimer()
             })
     }
@@ -94,16 +104,21 @@ extension MenuPresenter {
         let viewModel = MenuViewModel()
         viewModel.username.value = keychainService.userApiEmail
         self.viewModel = viewModel
+        setSyncStatus()
+    }
+
+    private func setSyncStatus() {
+        let prefix = "Synchronized".localized()
+        if let date = networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) {
+            viewModel?.status.value = date
+        } else {
+            viewModel?.status.value = networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
+        }
     }
 
     private func createLastUpdateTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
-            let prefix = "Synchronized".localized()
-            if let date = self?.networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) {
-                self?.viewModel?.status.value = date
-            } else {
-                self?.viewModel?.status.value = self?.networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
-            }
+            self?.setSyncStatus()
         })
     }
 

@@ -49,6 +49,18 @@ extension RuuviNetworkUserApi {
             })
         return promise.future
     }
+
+    func unshare(_ mac: String, for user: String) -> Future<Bool, RUError> {
+        let requestModel = UserApiShareRequest(user: user, sensor: mac)
+        let promise = Promise<Bool, RUError>()
+        unshare(requestModel)
+            .on(success: {_ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        return promise.future
+    }
 }
 
 extension RuuviNetworkUserApi {
@@ -112,7 +124,9 @@ extension RuuviNetworkUserApi {
         return sensors
     }
 
-    private func decodeSensorRecords(_ ruuviTagId: String, mac: String, response: UserApiGetSensorResponse) -> [RuuviTagSensorRecord] {
+    private func decodeSensorRecords(_ ruuviTagId: String,
+                                     mac: String,
+                                     response: UserApiGetSensorResponse) -> [RuuviTagSensorRecord] {
         let decoder = Ruuvi.decoder
         return response.measurements.compactMap({
             guard let device = decoder.decodeNetwork(uuid: mac,
