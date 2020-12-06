@@ -73,7 +73,7 @@ platform :ios do
     )
     upload_symbols_to_crashlytics(
       dsym_path: "./Build/station.app.dSYM.zip",
-      gsp_path: "./fastlane/com.ruuvi.station.ios.keystore/Firebase/GoogleService-Info.plist"
+      gsp_path: "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
     )
   end
 

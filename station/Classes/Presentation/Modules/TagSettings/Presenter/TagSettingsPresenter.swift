@@ -134,9 +134,15 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
         var operations = [deleteTagOperation, deleteRecordsOperation]
-        if let mac = ruuviTag.macId?.value {
-            let unclaimOperation = ruuviNetwork.unclaim(mac)
-            operations.append(unclaimOperation)
+        if let mac = ruuviTag.macId?.value,
+           ruuviTag.isNetworkConnectable {
+            if ruuviTag.isOwner {
+                let unclaimOperation = ruuviNetwork.unclaim(mac)
+                operations.append(unclaimOperation)
+            } else if let email = keychainService.userApiEmail {
+                let unshareOperation = ruuviNetwork.unshare(mac, for: email)
+                operations.append(unshareOperation)
+            }
         }
         Future.zip(operations).on(success: { [weak self] _ in
             guard let sSelf = self else {

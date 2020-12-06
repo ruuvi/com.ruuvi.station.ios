@@ -74,7 +74,13 @@ extension SQLiteGRDBDatabase {
             }
             try db.alter(table: RuuviTagSQLite.databaseTableName) { (t) in
                 t.add(column: RuuviTagSQLite.networkProviderColumn.name, .integer)
+                t.add(column: RuuviTagSQLite.isClaimedColumn.name, .boolean)
+                    .notNull()
+                    .defaults(to: false)
                 t.add(column: RuuviTagSQLite.isOwnerColumn.name, .boolean)
+                    .notNull()
+                    .defaults(to: false)
+                t.add(column: RuuviTagSQLite.owner.name, .text)
             }
         }
 
