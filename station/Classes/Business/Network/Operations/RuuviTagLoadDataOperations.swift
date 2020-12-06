@@ -5,6 +5,7 @@ class RuuviTagLoadDataOperation: AsyncOperation {
     var ruuviTagId: String
     var mac: String
     var error: RUError?
+    var recordsCount: Int = 0
     private var since: Date?
     private var until: Date?
     private var network: RuuviNetwork
@@ -33,6 +34,7 @@ class RuuviTagLoadDataOperation: AsyncOperation {
             }
             let persist = self?.ruuviTagTank.create(records)
             persist?.on(success: { _ in
+                self?.recordsCount = records.count
                 self?.state = .finished
             }, failure: { error in
                 self?.error = error
