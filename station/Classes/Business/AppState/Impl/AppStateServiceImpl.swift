@@ -11,6 +11,7 @@ class AppStateServiceImpl: AppStateService {
     var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
+    var universalLinkCoordinator: UniversalLinkCoordinator!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -67,5 +68,9 @@ class AppStateServiceImpl: AppStateService {
         propertiesDaemon.start()
         pullWebDaemon.start()
         backgroundProcessService.launch()
+    }
+
+    func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL) {
+        universalLinkCoordinator.processUniversalLink(url: url)
     }
 }
