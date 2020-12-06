@@ -29,6 +29,7 @@ class BusinessAssembly: Assembly {
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
+            service.universalLinkCoordinator = r.resolve(UniversalLinkCoordinator.self)
             return service
         }.inObjectScope(.container)
 
@@ -222,5 +223,13 @@ class BusinessAssembly: Assembly {
             service.keychainService = r.resolve(KeychainService.self)
             return service
         }
+
+        container.register(UniversalLinkCoordinator.self, factory: { r in
+            let coordinator = UniversalLinkCoordinatorImpl()
+            let router = UniversalLinkRouterImpl()
+            coordinator.keychainService = r.resolve(KeychainService.self)
+            coordinator.router = router
+            return coordinator
+        })
     }
 }

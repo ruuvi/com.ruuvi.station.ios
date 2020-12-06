@@ -7,4 +7,5 @@ protocol AppStateService {
     func applicationDidBecomeActive(_ application: UIApplication)
     func applicationDidEnterBackground(_ application: UIApplication)
     func applicationWillEnterForeground(_ application: UIApplication)
+    func applicationDidOpenWithUniversalLink(_ application: UIApplication, url: URL)
 }
