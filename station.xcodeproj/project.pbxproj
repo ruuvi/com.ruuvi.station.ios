@@ -1516,6 +1516,9 @@
 		A97FDD762519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
 		A97FDD772519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
 		A97FDD782519343A00B12820 /* KeyedArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97FDD752519343A00B12820 /* KeyedArchiver.swift */; };
+		A980573825807118000D03AB /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980573725807118000D03AB /* AboutViewModel.swift */; };
+		A980573925807118000D03AB /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980573725807118000D03AB /* AboutViewModel.swift */; };
+		A980573A25807118000D03AB /* AboutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980573725807118000D03AB /* AboutViewModel.swift */; };
 		A980CC7924681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */; };
 		A980CC7A24681A5800C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */; };
 		A980CC7B24681A5900C9A14C /* NetworkSettingsSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */; };
@@ -2333,6 +2336,7 @@
 		A976CA7924A7C1A30099BDC1 /* NetworkSettingsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		A976CA7D24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedDisclosureTableViewCell.swift; sourceTree = "<group>"; };
 		A97FDD752519343A00B12820 /* KeyedArchiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedArchiver.swift; sourceTree = "<group>"; };
+		A980573725807118000D03AB /* AboutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewModel.swift; sourceTree = "<group>"; };
 		A980CC7824681A0900C9A14C /* NetworkSettingsSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A980CC7C24681AC300C9A14C /* NetworkSettingsTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsTextTableViewCell.swift; sourceTree = "<group>"; };
 		A985B0A62541FE1E0050D744 /* TagManagerButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagerButtonTableViewCell.swift; sourceTree = "<group>"; };
@@ -4769,6 +4773,7 @@
 				0EEB20F222B7D1900015F9E0 /* AboutViewInput.swift */,
 				0EEB20F422B7D1A40015F9E0 /* AboutViewOutput.swift */,
 				0EEB20F622B7D2090015F9E0 /* AboutViewController.swift */,
+				A980573725807118000D03AB /* AboutViewModel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -7016,6 +7021,7 @@
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A93DB9EB24732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
 				A9F6681A25575151006E2B7D /* UserApiUnshareResponse.swift in Sources */,
+				A980573A25807118000D03AB /* AboutViewModel.swift in Sources */,
 				A976CA7324A5E5FE0099BDC1 /* PullRuuviNetworkDaemon.swift in Sources */,
 				0E6BAE0423856A01003A2D4C /* LanguagePresenter.swift in Sources */,
 				A94FFD39241C1B0A00888017 /* RuuviTagProtocol.swift in Sources */,
@@ -7618,6 +7624,7 @@
 				0E8BD369238566AB008B31EF /* HumidityCalibrationViewInput.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */,
+				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
 				0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */,
 				0E8BD36E238566AB008B31EF /* DiscoverViewInput.swift in Sources */,
 				0EAD33DB2399273D00EC5BAA /* HeartbeatPresenter.swift in Sources */,
@@ -8097,6 +8104,7 @@
 				A93DB9E924732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift in Sources */,
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				A9F6681825575151006E2B7D /* UserApiUnshareResponse.swift in Sources */,
+				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
 				0E390FE823602E2500D600DB /* ConnectionPersistence.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
