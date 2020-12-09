@@ -73,6 +73,30 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
             return realm.readLast(ruuviTag)
         }
     }
+
+    func getStoredTagsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        let sqliteOperation = sqlite.getStoredTagsCount()
+        let realmOperation = realm.getStoredTagsCount()
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
+    func getStoredMeasurementsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        let sqliteOperation = sqlite.getStoredMeasurementsCount()
+        let realmOperation = realm.getStoredMeasurementsCount()
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
 }
 
 extension RuuviTagTrunkCoordinator {

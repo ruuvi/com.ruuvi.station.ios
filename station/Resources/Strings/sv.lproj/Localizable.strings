@@ -31,7 +31,9 @@
 "About.OpenSource.contents" = "Likt RuuviTag är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
 "About.More.header" = "LÄS MER";
 "About.More.contents" = "Ruuvis hemsida: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
-
+"About.TagsCount.text" = "Added tags: %d";
+"About.MeasurementsCount.text" = "Stored measurements: %d";
+"About.DatabaseSize.text" = "Database size: %@";
 
 // Background
 "Background.navigationItem.title" = "Bakgrund";

@@ -313,6 +313,22 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
+    func getStoredTagsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        context.bgWorker.enqueue {
+            let tagsCount = self.context.bg.objects(RuuviTagRealm.self).count
+            promise.succeed(value: tagsCount)
+        }
+        return promise.future
+    }
+    func getStoredMeasurementsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        context.bgWorker.enqueue {
+            let tagsCount = self.context.bg.objects(RuuviTagDataRealm.self).count
+            promise.succeed(value: tagsCount)
+        }
+        return promise.future
+    }
 }
 // MARK: - Private
 extension RuuviTagPersistenceRealm {
