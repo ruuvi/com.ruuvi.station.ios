@@ -29,13 +29,9 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
         let sqliteOperation = sqlite.readAll()
         let realmOperation = realm.readAll()
         Future.zip(sqliteOperation, realmOperation)
-            .on(success: { [weak self] sqliteEntities, realmEntities in
+            .on(success: { sqliteEntities, realmEntities in
             let combinedValues = sqliteEntities + realmEntities
-            if let strongSelf = self {
-                promise.succeed(value: strongSelf.reorder(combinedValues))
-            } else {
-                promise.succeed(value: combinedValues)
-            }
+            promise.succeed(value: combinedValues)
         }, failure: { error in
             promise.fail(error: error)
         })
@@ -71,18 +67,6 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
             return sqlite.readLast(ruuviTag)
         } else {
             return realm.readLast(ruuviTag)
-        }
-    }
-}
-
-extension RuuviTagTrunkCoordinator {
-    private func reorder(_ sensors: [RuuviTagSensor]) -> [RuuviTagSensor] {
-        let anySensors = sensors.map({$0.any})
-        if settings.tagsSorting.isEmpty {
-            settings.tagsSorting = sensors.map({$0.id})
-            return sensors
-        } else {
-            return anySensors.reorder(by: settings.tagsSorting).map({$0.struct})
         }
     }
 }
