@@ -119,7 +119,19 @@ extension CardsViewModel: Hashable {
 
 extension CardsViewModel: Equatable {
     public static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool {
-        return lhs.luid.value?.value == rhs.luid.value?.value
+        var idIsEqual = false
+        if let lhsId = lhs.luid.value, let rhsId = rhs.luid.value {
+            idIsEqual = lhsId == rhsId
+        }
+        var luidIsEqual = false
+        if let lhsLuid = lhs.luid.value, let rhsLuid = rhs.luid.value {
+            luidIsEqual = lhsLuid == rhsLuid
+        }
+        var macIsEqual = false
+        if let lhsMac = lhs.mac.value, let rhsMac = rhs.mac.value {
+            macIsEqual = lhsMac == rhsMac
+        }
+        return idIsEqual || luidIsEqual || macIsEqual
     }
 }
 
@@ -130,5 +142,11 @@ extension CardsViewModel {
             || temperature.value == nil
             || humidity.value == nil
             || pressure.value == nil
+    }
+}
+
+extension CardsViewModel: Reorderable {
+    var orderElement: String {
+        return id.value ?? UUID().uuidString
     }
 }
