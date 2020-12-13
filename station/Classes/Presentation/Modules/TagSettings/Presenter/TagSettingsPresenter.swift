@@ -592,7 +592,6 @@ extension TagSettingsPresenter {
             bindMovementAlert(uuid: identifier.value)
             viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
             viewModel.isNetworkConnected.value = ruuviTag.isNetworkConnectable
-            viewModel.isHiddenActions.value = ruuviTag.isOwner == false || ruuviTag.macId == nil
         }
     }
 
