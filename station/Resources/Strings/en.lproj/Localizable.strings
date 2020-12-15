@@ -32,6 +32,9 @@
 "About.OpenSource.contents" = "Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi";
 "About.More.header" = "MORE TO READ";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
+"About.TagsCount.text" = "Added tags: %d";
+"About.MeasurementsCount.text" = "Stored measurements: %d";
+"About.DatabaseSize.text" = "Database size: %@";
 
 // Background
 "Background.navigationItem.title" = "Background";

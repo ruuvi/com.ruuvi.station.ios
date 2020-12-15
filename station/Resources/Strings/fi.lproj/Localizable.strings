@@ -31,7 +31,10 @@
 "About.OpenSource.contents" = "Kuten muutkin Ruuvin tuotteet, myös Ruuvi Station perustuu avoimeen lähdekoodiin: github.com/ruuvi";
 "About.More.header" = "LUE LISÄÄ";
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
- 
+"About.TagsCount.text" = "Added tags: %d";
+"About.MeasurementsCount.text" = "Stored measurements: %d";
+"About.DatabaseSize.text" = "Database size: %@";
+
 // Background
 "Background.navigationItem.title" = "Taustaprosessit";
 "Background.PresentNotifications.title" = "Näytä ilmoituksia";

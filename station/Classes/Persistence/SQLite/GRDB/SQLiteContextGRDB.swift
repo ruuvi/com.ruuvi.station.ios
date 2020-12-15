@@ -24,7 +24,7 @@ class SQLiteGRDBDatabase: GRDBDatabase {
         return instance
     }()
 
-    private static var databasePath: String {
+    static var databasePath: String {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,
                                                                 .userDomainMask, true).first! as NSString
         let databasePath = documentsPath.appendingPathComponent("grdb.sqlite")

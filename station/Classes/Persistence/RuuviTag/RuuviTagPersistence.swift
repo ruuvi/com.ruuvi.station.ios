@@ -15,4 +15,6 @@ protocol RuuviTagPersistence {
     func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError>
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError>
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError>
+    func getStoredTagsCount() -> Future<Int, RUError>
+    func getStoredMeasurementsCount() -> Future<Int, RUError>
 }
