@@ -10,14 +10,18 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
     var router: TagChartsRouterInput!
     var interactor: TagChartsInteractorInput!
+
+    var activityPresenter: ActivityPresenter!
+    var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
+    var mailComposerPresenter: MailComposerPresenter!
+
+    var alertService: AlertService!
+    var foreground: BTForeground!
+    var background: BTBackground!
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
-    var foreground: BTForeground!
-    var activityPresenter: ActivityPresenter!
-    var alertService: AlertService!
-    var background: BTBackground!
-    var mailComposerPresenter: MailComposerPresenter!
+
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
@@ -207,6 +211,20 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.ruuviTag = sensor
+    }
+
+    func interactorDidSyncComplete(_ recordsCount: Int) {
+        let okAction = UIAlertAction(title: "OK".localized(),
+                                     style: .default,
+                                     handler: nil)
+        let message = String(format: "TagChartsPresenter.NumberOfPointsSynchronized".localized(),
+                             recordsCount)
+        let alertViewModel: AlertViewModel = AlertViewModel(
+            title: "TagCharts.Status.Success".localized(),
+            message: message,
+            style: .alert,
+            actions: [okAction])
+        alertPresenter.showAlert(alertViewModel)
     }
 }
 // MARK: - DiscoverModuleOutput

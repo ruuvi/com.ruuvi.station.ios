@@ -250,6 +250,8 @@
 "TagCharts.FailedToSyncDialog.message" = "Yhteys aikakatkaistiin. Synkronointi peruutettiin.";
 "TagCharts.FailedToServeDialog.message" = "Synkronointi aikakatkaistiin. Synkronointi peruutettiin.";
 
+"TagChartsPresenter.NumberOfPointsSynchronized" = "Synchronized %d points";
+
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
 "TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän anturin?";
