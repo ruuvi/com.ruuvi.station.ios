@@ -32,7 +32,7 @@
 "About.OpenSource.contents" = "Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi";
 "About.More.header" = "MORE TO READ";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
-"About.TagsCount.text" = "Added tags: %d";
+"About.TagsCount.text" = "Added sensors: %d";
 "About.MeasurementsCount.text" = "Stored measurements: %d";
 "About.DatabaseSize.text" = "Database size: %@";
 
@@ -281,9 +281,9 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
-"TagSettings.navigationItem.title" = "Tag Settings";
+"TagSettings.navigationItem.title" = "Sensor Settings";
 "TagSettings.backgroundImageLabel.text" = "BACKGROUND\nIMAGE";
-"TagSettings.tagNameTitleLabel.text" = "Tag Name";
+"TagSettings.tagNameTitleLabel.text" = "Sensor Name";
 "TagSettings.humidityTitleLabel.text" = "Humidity";
 "TagSettings.uuidTitleLabel.text" = "UUID";
 "TagSettings.macAddressTitleLabel.text" = "MAC Address";
@@ -327,7 +327,7 @@
 "TagSettings.Alerts.Connection.description" = "Alert when connected/disconnected";
 "TagSettings.ConnectionAlert.title" = "Connection";
 "TagSettings.MovementAlert.title" = "Movement";
-"TagSettings.Alerts.Movement.description" = "Alert when tag is moved";
+"TagSettings.Alerts.Movement.description" = "Alert when sensor is moved";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
 "TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
@@ -335,7 +335,7 @@
 
 //TagsManager
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
-"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing tags successfully added";
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing sensorss successfully added";
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Ok" = "Ok";
 "TagsManagerPresenter.SignOutConfirmAlert.Title" = "Sign out";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
@@ -359,8 +359,8 @@
 "RuuviNetworkError.NoSavedApiKeyValue" = "No saved ApiKey value";
 "RuuviNetworkError.FailedToLogIn" = "Failed to log in";
 "RuuviNetworkError.DoesNotHaveSensors" = "The beacon does not have sensors";
-"RuuviNetworkError.NoStoredData" = "No stored data. The tag will not be added";
-"RuuviNetworkError.TagAlreadyExists" = "Tag already exists";
+"RuuviNetworkError.NoStoredData" = "No stored data. The sensor will not be added";
+"RuuviNetworkError.TagAlreadyExists" = "Sensor already exists";
 
 // Share
 "ShareViewController.Title" = "Share Ruuvi sensor";
@@ -384,11 +384,6 @@
 "SignIn.VerificationCodePlaceholder" = "verification code in format: CJSMVOW";
 "SignIn.EnterVerificationCode" = "Enter verification code";
 
-// TagsManager
-"TagsManager.SharedTags" = "Shared tags";
-"TagsManager.Actions" = "Actions";
-"TagManagerActionCellViewModel.AddMissingTag.Title" = "Add missing tags";
-
 // TemperatureUnit
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
@@ -406,13 +401,13 @@
 
 // TagsManager
 "TagsManager.SignOutButton" = "Sign out";
-"TagsManager.SharedTags" = "Network tags";
+"TagsManager.SharedTags" = "Network sensors";
 "TagsManager.Actions" = "Actions";
 "TagManagerCellViewModel.Owner" = "Owner";
 "TagManagerCellViewModel.Shared" = "Shared";
-"TagManagerActionCellViewModel.AddMissingTag.Title" = "Add missing tag";
+"TagManagerActionCellViewModel.AddMissingTag.Title" = "Add missing sensor";
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
-"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing tags successfully added";
+"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing sensors successfully added";
 "TagsManagerPresenter.SuccessAddMissingTagAlert.Ok" = "Ok";
 "TagsManagerPresenter.SignOutConfirmAlert.Title" = "Sign out";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
