@@ -265,6 +265,8 @@
 "TagCharts.FailedToSyncDialog.message" = "Det gick inte att upprätta anslutning efter %.0f sekunder. Synkronisering avbröts.";
 "TagCharts.FailedToServeDialog.message" = "Synkroniseringen avbröts efter %.0f sekunder. Synkronisering avbruten";
 
+"TagChartsPresenter.NumberOfPointsSynchronized" = "Synchronized %d points";
+
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";
 "TagSettings.confirmTagRemovalDialog.message" = "Är du säker på att du vill ta bort den här sensorn?";
