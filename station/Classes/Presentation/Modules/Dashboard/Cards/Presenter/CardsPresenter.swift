@@ -359,14 +359,20 @@ extension CardsPresenter {
                 return viewModel
             }) ?? []
         }
-        viewModels = ruuviViewModels + virtualViewModels
-
+        viewModels = reorder(ruuviViewModels + virtualViewModels)
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
             && viewModels.isEmpty {
             self.router.openDiscover(output: self)
         }
+    }
+
+    private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
+        guard !settings.tagsSorting.isEmpty else {
+            return viewModels
+        }
+        return viewModels.reorder(by: settings.tagsSorting)
     }
 
     private func startObservingBluetoothState() {
