@@ -80,6 +80,7 @@ class PersistenceAssembly: Assembly {
         container.register(WebTagPersistence.self) { r in
             let persistence = WebTagPersistenceRealm()
             persistence.context = r.resolve(RealmContext.self)
+            persistence.settings = r.resolve(Settings.self)
             return persistence
         }
 
