@@ -217,10 +217,18 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
         let okAction = UIAlertAction(title: "OK".localized(),
                                      style: .default,
                                      handler: nil)
-        let message = String(format: "TagChartsPresenter.NumberOfPointsSynchronized".localized(),
+        let title, message: String
+        if recordsCount > 0 {
+            title = "TagCharts.Status.Success".localized()
+            message = String(format: "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork".localized(),
                              recordsCount)
+        } else {
+            title = "TagChartsPresenter.NetworkSync".localized()
+            message = "TagChartsPresenter.NoNewMeasurementsFromNetwork".localized()
+        }
+
         let alertViewModel: AlertViewModel = AlertViewModel(
-            title: "TagCharts.Status.Success".localized(),
+            title: title,
             message: message,
             style: .alert,
             actions: [okAction])

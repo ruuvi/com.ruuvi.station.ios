@@ -267,7 +267,9 @@
 "TagCharts.FailedToSyncDialog.message" = "Failed to establish connection in %.0f seconds. Sync aborted.";
 "TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
 
-"TagChartsPresenter.NumberOfPointsSynchronized" = "Synchronized %d points";
+"TagChartsPresenter.NetworkSync" = "Network sync";
+"TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synchronized %d points over network";
+"TagChartsPresenter.NoNewMeasurementsFromNetwork" = "No new measurements from network";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
