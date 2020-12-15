@@ -5,6 +5,9 @@ class AboutViewController: UIViewController {
 
     @IBOutlet weak var aboutTextView: UITextView!
     @IBOutlet weak var versionLabel: UILabel!
+    @IBOutlet weak var addedTagsLabel: UILabel!
+    @IBOutlet weak var storedMeasurementsLabel: UILabel!
+    @IBOutlet weak var databaseSizeLable: UILabel!
 
     private let twoNewlines = "\n\n"
     private let fourNewlines = "\n\n\n\n"
@@ -12,13 +15,15 @@ class AboutViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
     }
+
+    var viewModel: AboutViewModel = AboutViewModel()
 }
 
 // MARK: - AboutViewInput
 extension AboutViewController: AboutViewInput {
     func localize() {
         configureTextView()
-        configureVersionLabel()
+        bindViewModel()
     }
 }
 
@@ -37,6 +42,7 @@ extension AboutViewController {
         super.viewDidLoad()
         setupLocalization()
         configureViews()
+        output.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -78,16 +84,22 @@ extension AboutViewController: UITextViewDelegate {
 extension AboutViewController {
     private func configureViews() {
         configureTextView()
-        configureVersionLabel()
+        bindViewModel()
     }
 
-    private func configureVersionLabel() {
-        if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-            let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            versionLabel.text = "About.Version.text".localized() + " " + appVersion + "(" + buildVersion + ")"
-        } else {
-            versionLabel.text = nil
-        }
+    private func bindViewModel() {
+        versionLabel.bind(viewModel.version, block: { label, value in
+            label.text = value
+        })
+        addedTagsLabel.bind(viewModel.addedTags, block: { label, value in
+            label.text = value
+        })
+        storedMeasurementsLabel.bind(viewModel.storedMeasurements, block: { label, value in
+            label.text = value
+        })
+        databaseSizeLable.bind(viewModel.databaseSize, block: { label, value in
+            label.text = value
+        })
     }
 
     private func configureTextView() {

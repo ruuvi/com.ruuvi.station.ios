@@ -278,6 +278,38 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
+    func getStoredTagsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        readQueue.async { [weak self] in
+            do {
+                var count = 0
+                try self?.database.dbPool.read { db in
+                    count = try Entity.fetchCount(db)
+                }
+                promise.succeed(value: count)
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    func getStoredMeasurementsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        readQueue.async { [weak self] in
+            do {
+                var count = 0
+                try self?.database.dbPool.read { db in
+                    count = try Record.fetchCount(db)
+                }
+                promise.succeed(value: count)
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
 }
 // MARK: - Private
 extension RuuviTagPersistenceSQLite {
