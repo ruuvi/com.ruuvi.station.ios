@@ -265,7 +265,9 @@
 "TagCharts.FailedToSyncDialog.message" = "Det gick inte att upprätta anslutning efter %.0f sekunder. Synkronisering avbröts.";
 "TagCharts.FailedToServeDialog.message" = "Synkroniseringen avbröts efter %.0f sekunder. Synkronisering avbruten";
 
-"TagChartsPresenter.NumberOfPointsSynchronized" = "Synchronized %d points";
+"TagChartsPresenter.NetworkSync" = "Network sync";
+"TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synchronized %d points over network";
+"TagChartsPresenter.NoNewMeasurementsFromNetwork" = "No new measurements from network";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";

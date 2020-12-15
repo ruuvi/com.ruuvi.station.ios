@@ -145,10 +145,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             }
         }
         Future.zip(operations).on(success: { [weak self] _ in
-            guard let sSelf = self else {
+            guard let self = self else {
                 return
             }
-            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
+            self.output.tagSettingsDidDeleteTag(module: self, ruuviTag: self.ruuviTag)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
@@ -257,14 +257,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         })
     }
 
-    private func updateTagInDB() {
+    private func updateTagInDB(with networkProvider: RuuviNetworkProvider?, isClaimed: Bool) {
         let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
                                           luid: self.ruuviTag.luid,
                                           macId: self.ruuviTag.macId,
                                           isConnectable: self.ruuviTag.isConnectable,
                                           name: self.ruuviTag.name,
-                                          networkProvider: self.ruuviTag.networkProvider,
-                                          isClaimed: true,
+                                          networkProvider: networkProvider,
+                                          isClaimed: isClaimed,
                                           isOwner: true)
         self.updateTag(with: sensor)
     }
@@ -276,28 +276,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.isClaimedTag.value == true {
             ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
                 .on(success: { [weak self] _ in
-                    guard let self = self else {
-                        return
-                    }
-                    let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
-                                                      luid: self.ruuviTag.luid,
-                                                      macId: self.ruuviTag.macId,
-                                                      isConnectable: self.ruuviTag.isConnectable,
-                                                      name: self.ruuviTag.name,
-                                                      networkProvider: self.ruuviTag.networkProvider,
-                                                      isClaimed: false,
-                                                      isOwner: true)
-                    self.updateTag(with: sensor)
+                    self?.updateTagInDB(with: nil, isClaimed: false)
                 }, failure: { [weak self] (error) in
                     self?.errorPresenter.present(error: error)
                 })
         } else {
             ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
                 .on(success: { [weak self] _ in
-                    self?.updateTagInDB()
+                    self?.updateTagInDB(with: .userApi, isClaimed: true)
                 }, failure: { [weak self] (error) in
                     if error.errorDescription == "Sensor already claimed" {
-                        self?.updateTagInDB()
+                        self?.updateTagInDB(with: .userApi, isClaimed: true)
                     } else {
                         self?.errorPresenter.present(error: error)
                     }

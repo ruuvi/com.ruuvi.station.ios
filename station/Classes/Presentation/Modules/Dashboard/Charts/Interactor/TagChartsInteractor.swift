@@ -128,7 +128,8 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         if let luid = ruuviTagSensor.luid {
             operations.append(syncLocalTag(luid: luid.value, progress: progress))
         }
-        if let macId = ruuviTagSensor.macId {
+        if let macId = ruuviTagSensor.macId,
+           ruuviTagSensor.isNetworkConnectable {
             operations.append(syncNetworkRecords(for: ruuviTagSensor.id, macId: macId))
         }
         Future.zip(operations).on(success: { [weak self] (_) in

@@ -205,6 +205,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             name: ruuviTag.name,
                             version: ruuviTag.version,
                             isConnectable: ruuviTag.isConnectable,
+                            networkProvider: ruuviTag.networkProvider,
                             isClaimed: ruuviTag.isClaimed,
                             isOwner: ruuviTag.isOwner,
                             owner: ruuviTag.owner)
@@ -230,6 +231,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             name: ruuviTag.name,
                             version: ruuviTag.version,
                             isConnectable: ruuviTag.isConnectable,
+                            networkProvider: ruuviTag.networkProvider,
                             isClaimed: ruuviTag.isClaimed,
                             isOwner: ruuviTag.isOwner,
                             owner: ruuviTag.owner)

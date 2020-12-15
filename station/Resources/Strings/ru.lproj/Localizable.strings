@@ -265,7 +265,9 @@
 "TagCharts.FailedToSyncDialog.message" = "Не удалось установить соединение за %.0f сек. Синхронизация отменена.";
 "TagCharts.FailedToServeDialog.message" = "Не удалось обменяться данными за %.0f сек. Обмен данными отменен.";
 
-"TagChartsPresenter.NumberOfPointsSynchronized" = "Синхронизированно %d точек";
+"TagChartsPresenter.NetworkSync" = "Синхронизация по сети";
+"TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Синхронизированно %d точек из сети";
+"TagChartsPresenter.NoDataInNetwork" = "Нет новых данных из сети";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
