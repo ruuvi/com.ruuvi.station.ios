@@ -56,7 +56,6 @@ struct TagSettingsViewModel {
     let canClaimTag: Observable<Bool?> = Observable<Bool?>(false)
     let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
     let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
-    let isHiddenActions: Observable<Bool?> = Observable<Bool?>(true)
 
     let owner: Observable<String?> = Observable<String?>()
 

@@ -48,7 +48,7 @@ extension ExportServiceTrunk {
         let pressureFormat = "ExportService.Pressure".localized()
         let dewPointFormat = "ExportService.DewPoint".localized()
         return [
-            "Date".localized(),
+            "ExportService.Date".localized(),
             "ISO8601".localized(),
             String(format: tempFormat, units.temperatureUnit.symbol),
             units.humidityUnit == .dew

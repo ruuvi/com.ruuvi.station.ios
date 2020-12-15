@@ -272,6 +272,7 @@ extension TagSettingsTableViewController {
     }
 
     @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
+        playImpact()
         output.viewDidAskToRemoveRuuviTag()
     }
 
@@ -301,11 +302,17 @@ extension TagSettingsTableViewController {
     }
 
     @IBAction func didTapClaimButton(_ sender: UIButton) {
+        playImpact()
         output.viewDidTapClaimButton()
     }
 
     @IBAction func didTapShareButton(_ sender: UIButton) {
+        playImpact()
         output.viewDidTapShareButton()
+    }
+
+    private func playImpact() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 }
 
@@ -660,14 +667,9 @@ extension TagSettingsTableViewController {
 
         guard isViewLoaded, let viewModel = viewModel else { return }
 
-        networkTagActionsStackView.bind(viewModel.isHiddenActions,
-                                        block: { (stackView, isHiddenActions) in
-            stackView.isHidden = (isHiddenActions == true)
-        })
-
-        footerView.bind(viewModel.isHiddenActions,
-                        block: { (footerView, isHiddenActions) in
-            if isHiddenActions == false {
+        footerView.bind(viewModel.isAuthorized,
+                        block: { (footerView, isAuthorized) in
+            if isAuthorized == true {
                 let size: CGSize = CGSize(width: footerView.frame.width,
                                           height: 145)
                 footerView.frame = CGRect(origin: footerView.frame.origin,
