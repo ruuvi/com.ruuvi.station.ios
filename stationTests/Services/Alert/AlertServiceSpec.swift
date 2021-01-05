@@ -5,7 +5,7 @@ import Humidity
 
 @testable import station
 class AlertServiceSpec: QuickSpec {
-    let notificationWaitTimeout: TimeInterval = 0.2
+    let notificationWaitTimeout: DispatchTimeInterval = .milliseconds(200)
     override func spec() {
         let alertService = AlertServiceImpl()
         alertService.alertPersistence = AlertPersistenceUserDefaults()
@@ -118,8 +118,8 @@ class AlertServiceSpec: QuickSpec {
         describe("Relative Humidity") {
             context("when set lower") {
                 it("must return lower") {
-                    alertService.setLower(relativeHumidity: randomDouble, for: uuid)
-                    expect(alertService.lowerRelativeHumidity(for: uuid)).to(equal(randomDouble))
+                    alertService.setLower(humidity: Humidity(randomDouble), for: uuid)
+                    expect(alertService.lowerHumidity(for: uuid)?.value.isEqual(to: randomDouble))
                 }
                 it("if upper is set must send notification AlertServiceAlertDidChange with type .relativeHumidity(lower: l, upper: u)") {
                     alertService.alertPersistence.setUpper(relativeHumidity: randomDouble, for: uuid)
