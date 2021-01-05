@@ -57,7 +57,7 @@ extension Humidity {
         if offset > 1.0 {
             offset /= 100
         }
-        let offseted = min(relative + offset, 1.0)
+        let offseted = max(min(relative + offset, 1.0), 0.0)
         return Humidity(value: offseted, unit: .relative(temperature: temperature))
     }
 

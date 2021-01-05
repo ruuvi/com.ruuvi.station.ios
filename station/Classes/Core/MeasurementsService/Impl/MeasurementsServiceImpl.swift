@@ -29,7 +29,7 @@ class MeasurementsServiceImpl: NSObject {
         $0.numberStyle = .decimal
         $0.minimumFractionDigits = 0
         $0.maximumFractionDigits = 2
-        $0.decimalSeparator = ","
+        $0.locale = settings.language.locale
         return $0
     }(NumberFormatter())
 
@@ -71,9 +71,14 @@ extension MeasurementsServiceImpl: MeasurementsService {
         guard let temperature = temperature else {
             return "N/A".localized()
         }
-        if formatter.unitStyle == .medium {
-            return String(format: "%.2f %@",
-                          temperature.converted(to: units.temperatureUnit).value,
+        localizeIfNeeded()
+        let value = temperature.converted(to: units.temperatureUnit).value
+        let number = NSNumber(value: value)
+        if formatter.unitStyle == .medium,
+           settings.language == .english,
+           let valueString = numberFormatter.string(from: number) {
+            return String(format: "%@\(String.nbsp)%@",
+                          valueString,
                           units.temperatureUnit.symbol)
         } else {
             return formatter.string(from: temperature.converted(to: units.temperatureUnit))
@@ -95,6 +100,7 @@ extension MeasurementsServiceImpl: MeasurementsService {
         guard let pressure = pressure else {
             return "N/A".localized()
         }
+        localizeIfNeeded()
         return formatter.string(from: pressure.converted(to: units.pressureUnit))
     }
 
@@ -109,6 +115,7 @@ extension MeasurementsServiceImpl: MeasurementsService {
         guard let voltage = voltage else {
             return "N/A".localized()
         }
+        localizeIfNeeded()
         return formatter.string(from: voltage.converted(to: .volts))
     }
 
@@ -146,6 +153,7 @@ extension MeasurementsServiceImpl: MeasurementsService {
             let temperature = temperature else {
                 return "N/A".localized()
         }
+        localizeIfNeeded()
         let offsetedHumidity = humidity.withRelativeOffset(by: offset ?? 0.0, withTemperature: temperature)
         switch units.humidityUnit {
         case .percent:
@@ -159,8 +167,14 @@ extension MeasurementsServiceImpl: MeasurementsService {
     }
 }
 // MARK: - Localizable
-extension MeasurementsServiceImpl: Localizable {
-    func localize() {
+extension MeasurementsServiceImpl {
+    func localizeIfNeeded() {
+        guard numberFormatter.locale != self.settings.language.locale
+                || formatter.locale != self.settings.language.locale
+                || measurementFormatter.locale != self.settings.language.locale
+                || humidityFormatter.locale != self.settings.language.locale else {
+            return
+        }
         numberFormatter.locale = self.settings.language.locale
         formatter.locale = self.settings.language.locale
         measurementFormatter.locale = self.settings.language.locale
@@ -182,10 +196,14 @@ extension MeasurementsServiceImpl {
     }
 
     private func updateCache() {
-        units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
-                                                         humidityUnit: settings.humidityUnit,
-                                                         pressureUnit: settings.pressureUnit)
+        updateUnits()
         notifyListeners()
+    }
+
+    func updateUnits() {
+        units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
+                                               humidityUnit: settings.humidityUnit,
+                                               pressureUnit: settings.pressureUnit)
     }
 
     private func startSettingsObserving() {

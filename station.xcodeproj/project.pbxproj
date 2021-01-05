@@ -1317,6 +1317,8 @@
 		A93052B8242BFCC000FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
 		A93052B9242BFCF800FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
 		A93052BA242BFCF900FB62B1 /* TagChartViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */; };
+		A935E47625A49E8F009538C4 /* MeasurementsServiceFiSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A935E47525A49E8F009538C4 /* MeasurementsServiceFiSpec.swift */; };
+		A935E47D25A49E9E009538C4 /* MeasurementsServiceRuSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A935E47C25A49E9E009538C4 /* MeasurementsServiceRuSpec.swift */; };
 		A93DB9E524731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
 		A93DB9E624731C65007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
 		A93DB9E724731C66007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */; };
@@ -1332,7 +1334,6 @@
 		A94FFD37241C189000888017 /* RuuviTagProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD36241C189000888017 /* RuuviTagProtocol.swift */; };
 		A94FFD38241C1B0900888017 /* RuuviTagProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD36241C189000888017 /* RuuviTagProtocol.swift */; };
 		A94FFD39241C1B0A00888017 /* RuuviTagProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD36241C189000888017 /* RuuviTagProtocol.swift */; };
-		A94FFD3C241C1D0D00888017 /* AlertServiceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD3B241C1D0D00888017 /* AlertServiceSpec.swift */; };
 		A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D322BBD9D600EADFC6 /* CalibrationService.swift */; };
 		A94FFD48241C34EA00888017 /* MockAlertPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9100D82241AD1E4004007FD /* MockAlertPersistence.swift */; };
 		A94FFD4A241D45C600888017 /* MockRuuviTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94FFD49241D45C600888017 /* MockRuuviTag.swift */; };
@@ -1412,6 +1413,12 @@
 		A9C03F7F24E708BF00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
 		A9C03F8024E708DC00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
 		A9C03F8124E708DD00BC046F /* MeasurementsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */; };
+		A9E6774825A33081000B75A3 /* String+Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E6774725A33081000B75A3 /* String+Characters.swift */; };
+		A9E6774925A33081000B75A3 /* String+Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E6774725A33081000B75A3 /* String+Characters.swift */; };
+		A9E6774A25A33081000B75A3 /* String+Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E6774725A33081000B75A3 /* String+Characters.swift */; };
+		A9E6774B25A33081000B75A3 /* String+Characters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E6774725A33081000B75A3 /* String+Characters.swift */; };
+		A9E6775125A331D6000B75A3 /* MeasurementsServiceEnSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E6770D25A30D0A000B75A3 /* MeasurementsServiceEnSpec.swift */; };
+		A9E6775C25A331E1000B75A3 /* MeasurementsServiceSvSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E6771925A31556000B75A3 /* MeasurementsServiceSvSpec.swift */; };
 		A9F4471624B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471724B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
 		A9F4471824B79959001E63AF /* TagSettingsModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */; };
@@ -1899,6 +1906,8 @@
 		A92E3C592426415100D981D5 /* TagChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartView.swift; sourceTree = "<group>"; };
 		A92E3C62242644B800D981D5 /* TagChartViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewInput.swift; sourceTree = "<group>"; };
 		A93052B7242BFCC000FB62B1 /* TagChartViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChartViewOutput.swift; sourceTree = "<group>"; };
+		A935E47525A49E8F009538C4 /* MeasurementsServiceFiSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceFiSpec.swift; sourceTree = "<group>"; };
+		A935E47C25A49E9E009538C4 /* MeasurementsServiceRuSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceRuSpec.swift; sourceTree = "<group>"; };
 		A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectRxSwift.swift; sourceTree = "<group>"; };
 		A93DB9E824732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagLastRecordSubjectCombine.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
@@ -1935,6 +1944,9 @@
 		A9BB445424E1D44300E8DE03 /* Array+Reorderable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Reorderable.swift"; sourceTree = "<group>"; };
 		A9BD38B924F6108300904BBE /* Humidity+Offset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Humidity+Offset.swift"; sourceTree = "<group>"; };
 		A9C03F7E24E708BF00BC046F /* MeasurementsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceImpl.swift; sourceTree = "<group>"; };
+		A9E6770D25A30D0A000B75A3 /* MeasurementsServiceEnSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceEnSpec.swift; sourceTree = "<group>"; };
+		A9E6771925A31556000B75A3 /* MeasurementsServiceSvSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceSvSpec.swift; sourceTree = "<group>"; };
+		A9E6774725A33081000B75A3 /* String+Characters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Characters.swift"; sourceTree = "<group>"; };
 		A9F4471524B79959001E63AF /* TagSettingsModuleOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsModuleOutput.swift; sourceTree = "<group>"; };
 		B416C89D22AB8D595DF3E610 /* Pods-station.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.release.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.release.xcconfig"; sourceTree = "<group>"; };
 		B4759CCF445F83E277741112 /* Pods_station.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2355,6 +2367,7 @@
 				A9BD38B924F6108300904BBE /* Humidity+Offset.swift */,
 				A98BC874250E4265001CEFDC /* Double+Round.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
+				A9E6774725A33081000B75A3 /* String+Characters.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -4889,6 +4902,7 @@
 		A94FFD25241C0F8000888017 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A97B06482593B817003EE069 /* MeasurementsService */,
 				A94FFD27241C0FA400888017 /* Alert */,
 			);
 			path = Services;
@@ -5010,6 +5024,17 @@
 				A9758180249F4C9600BC150A /* LocationAppleClass.swift */,
 			);
 			path = LocationPersistence;
+			sourceTree = "<group>";
+		};
+		A97B06482593B817003EE069 /* MeasurementsService */ = {
+			isa = PBXGroup;
+			children = (
+				A9E6770D25A30D0A000B75A3 /* MeasurementsServiceEnSpec.swift */,
+				A9E6771925A31556000B75A3 /* MeasurementsServiceSvSpec.swift */,
+				A935E47525A49E8F009538C4 /* MeasurementsServiceFiSpec.swift */,
+				A935E47C25A49E9E009538C4 /* MeasurementsServiceRuSpec.swift */,
+			);
+			path = MeasurementsService;
 			sourceTree = "<group>";
 		};
 		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
@@ -5898,6 +5923,7 @@
 				A9646483247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0EAD33ED2399273E00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
 				0E6BAE0F23856A01003A2D4C /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
+				A9E6774A25A33081000B75A3 /* String+Characters.swift in Sources */,
 				0E6BAE1023856A01003A2D4C /* LocationManager.swift in Sources */,
 				0E8BAC7C245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0E6BAE1223856A01003A2D4C /* SettingsRouterInput.swift in Sources */,
@@ -6373,6 +6399,7 @@
 				0E8BD372238566AB008B31EF /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E8BD373238566AB008B31EF /* MenuViewInput.swift in Sources */,
 				0E8BD374238566AB008B31EF /* ActivitySpinnerView.swift in Sources */,
+				A9E6774925A33081000B75A3 /* String+Characters.swift in Sources */,
 				A91D030A2511207300694733 /* SelectionRouterInput.swift in Sources */,
 				0E8BD375238566AB008B31EF /* ImagePersistenceDocuments.swift in Sources */,
 				0E8BD376238566AB008B31EF /* ActivityPresenterRuuviLogo.swift in Sources */,
@@ -6755,6 +6782,7 @@
 				A9646481247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */,
 				0E9F97AB22EB1CCB0015ADE2 /* LocationManager.swift in Sources */,
+				A9E6774825A33081000B75A3 /* String+Characters.swift in Sources */,
 				0EEB20DD22B7C8650015F9E0 /* SettingsRouterInput.swift in Sources */,
 				0E8BAC7A245C4CC900D380FB /* RuuviTagTankCoordinator.swift in Sources */,
 				0EF6F5C0235E01CD0052BA25 /* ForegroundStepperTableViewCell.swift in Sources */,
@@ -6955,12 +6983,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9E6775125A331D6000B75A3 /* MeasurementsServiceEnSpec.swift in Sources */,
 				A94FFD4C241D512900888017 /* MockLocalNotificationsManager.swift in Sources */,
+				A935E47625A49E8F009538C4 /* MeasurementsServiceFiSpec.swift in Sources */,
 				A94FFD48241C34EA00888017 /* MockAlertPersistence.swift in Sources */,
 				A94FFD4A241D45C600888017 /* MockRuuviTag.swift in Sources */,
+				A9E6775C25A331E1000B75A3 /* MeasurementsServiceSvSpec.swift in Sources */,
+				A935E47D25A49E9E009538C4 /* MeasurementsServiceRuSpec.swift in Sources */,
 				A94FFD50241D6BA300888017 /* MockAlertServiceObserver.swift in Sources */,
+				A9E6774B25A33081000B75A3 /* String+Characters.swift in Sources */,
 				A971B0DC24215334008EF50D /* XCTest+Extension.swift in Sources */,
-				A94FFD3C241C1D0D00888017 /* AlertServiceSpec.swift in Sources */,
 				A94FFD4E241D57E700888017 /* MockCalibrationService.swift in Sources */,
 				64333D3E20B0C45A00CDF4B6 /* StationTests.swift in Sources */,
 			);
