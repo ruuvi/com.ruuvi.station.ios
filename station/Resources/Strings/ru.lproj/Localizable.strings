@@ -267,7 +267,7 @@
 
 "TagChartsPresenter.NetworkSync" = "Синхронизация по сети";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Синхронизированно %d точек из сети";
-"TagChartsPresenter.NoDataInNetwork" = "Нет новых данных из сети";
+"TagChartsPresenter.NoNewMeasurementsFromNetwork" = "Нет новых данных из сети";
 
 // TagSettings
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";

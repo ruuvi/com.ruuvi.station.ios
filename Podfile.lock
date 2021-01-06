@@ -104,7 +104,7 @@ PODS:
   - GRDB.swift (4.14.0):
     - GRDB.swift/standard (= 4.14.0)
   - GRDB.swift/standard (4.14.0)
-  - Humidity (0.1.3)
+  - Humidity (0.1.5)
   - KeychainAccess (4.2.1)
   - LightRoute (2.2.2)
   - Localize-Swift (3.2.0):
@@ -233,7 +233,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
-  Humidity: c2863bc4867806e5197a74d3e32eec5b3b5187ec
+  Humidity: fb16fe2430b7a8aa979821ede5b5164519fca6d1
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   LightRoute: 771c97d6f2b160f9f345465804c0399f9580723d
   Localize-Swift: 6f4475136bdb0d7b2882ea3d4ea919d70142b232

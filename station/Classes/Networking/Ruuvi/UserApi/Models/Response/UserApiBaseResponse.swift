@@ -8,11 +8,13 @@ struct UserApiBaseResponse<T: Any>: Decodable where T: Decodable {
     private let status: Status
     private let data: T?
     private let errorDescription: String?
+    private let code: String?
 
     enum CodingKeys: String, CodingKey {
         case status = "result"
         case data
         case errorDescription = "error"
+        case code
     }
 }
 
@@ -29,10 +31,15 @@ extension UserApiBaseResponse {
             }
             return .success(data)
         case .error:
-            guard let error = errorDescription else {
-                return .failure(RUError.userApi(.emptyResponse))
+            guard let code = code else {
+                if let description = errorDescription {
+                    let userApiError = UserApiError(description: description)
+                    return .failure(RUError.userApi(userApiError))
+                } else {
+                    return .failure(RUError.userApi(.emptyResponse))
+                }
             }
-            let userApiError = UserApiError(description: error)
+            let userApiError = UserApiError(description: "UserApiError." + code)
             return .failure(RUError.userApi(userApiError))
         }
     }
