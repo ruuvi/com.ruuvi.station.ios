@@ -189,6 +189,6 @@ struct UserApiError: Error {
 }
 extension UserApiError: LocalizedError {
     public var errorDescription: String? {
-        return "UserApiError.\(description)".localized()
+        return description.localized()
     }
 }

@@ -3667,21 +3667,6 @@
 			path = Ruuvi;
 			sourceTree = "<group>";
 		};
-		0E79F2662441C3A30048BF86 /* Networking */ = {
-			isa = PBXGroup;
-			children = (
-				0E79F2672441C3BF0048BF86 /* Ruuvi */,
-			);
-			path = Networking;
-			sourceTree = "<group>";
-		};
-		0E79F2672441C3BF0048BF86 /* Ruuvi */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Ruuvi;
-			sourceTree = "<group>";
-		};
 		0E79F277244201370048BF86 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -5261,7 +5246,6 @@
 			isa = PBXGroup;
 			children = (
 				A971B0DA2421531C008EF50D /* Extensions */,
-				0E79F2662441C3A30048BF86 /* Networking */,
 				A94FFD25241C0F8000888017 /* Services */,
 				64333D3D20B0C45A00CDF4B6 /* StationTests.swift */,
 				64333D3F20B0C45B00CDF4B6 /* Info.plist */,
