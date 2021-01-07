@@ -15,7 +15,7 @@ def shared_pods
   pod 'FutureX'
   pod 'GestureInstructions'
   pod 'GRDB.swift'
-  pod 'Humidity', :git => 'https://github.com/viikufa/Humidity.git'
+  pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'Nantes'

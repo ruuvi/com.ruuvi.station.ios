@@ -8,6 +8,8 @@ protocol MeasurementsServiceDelegate: class {
 protocol MeasurementsService {
     var units: MeasurementsServiceSettigsUnit! { get }
     func add(_ listener: MeasurementsServiceDelegate)
+    /// update units cache without notify listeners
+    func updateUnits()
 
     func double(for temperature: Temperature) -> Double
     func string(for temperature: Temperature?) -> String
@@ -59,3 +61,4 @@ extension MeasurementsService {
         return double(for: voltage)
     }
 }
+

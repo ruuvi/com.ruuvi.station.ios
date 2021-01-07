@@ -110,9 +110,9 @@ extension ExportServiceTrunk {
                         let temperature: String = toString(t, format: "%.2f")
 
                         let h = self.measurementService.double(for: log.humidity,
-                                                                  withOffset: offset,
-                                                                  temperature: log.temperature,
-                                                                  isDecimal: false)
+                                                               withOffset: offset,
+                                                               temperature: log.temperature,
+                                                               isDecimal: false)
                         let humidity: String = toString(h, format: "%.2f")
 
                         let p = self.measurementService.double(for: log.pressure)
