@@ -262,7 +262,7 @@
 "About.Privacy.header" = "PRIVACY POLICY";
 "About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "TROUBLESHOOTING";
-"TagSettings.AirHumidityAlert.title" = "Air Humidity";
+"TagSettings.AirHumidityAlert.title" = "Air Humidity (%@)";
 "HumidityUnit.gm3.title" = "Absolute (gr/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Relative (%)";
@@ -277,7 +277,7 @@
 "TagSettings.Label.moreInfo.text" = "MORE INFO";
 "TagSettings.SectionHeader.Name.title" = "NAME";
 "OK" = "OK";
-"TagSettings.PressureAlert.title" = "Air Pressure";
+"TagSettings.PressureAlert.title" = "Air Pressure (%@)";
 "UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
@@ -299,7 +299,7 @@
 "WebTagSettings.Label.TagName.text" = "Sensor Name";
 "TagSettings.confirmTagRemovalDialog.title" = "Remove sensor";
 "TagSettings.confirmTagRemovalDialog.message" = "Are you sure you want to remove this sensor?";
-"TagSettings.temperatureAlertTitleLabel.text" = "Temperature";
+"TagSettings.temperatureAlertTitleLabel.text" = "Temperature (%@)";
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
