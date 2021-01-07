@@ -262,7 +262,7 @@
 "About.Privacy.header" = "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ";
 "About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
-"TagSettings.AirHumidityAlert.title" = "Влажность воздуха";
+"TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
 "HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
 "g/m³" = "г/м³";
 "HumidityUnit.Percent.title" = "Относительная влажность (%)";
@@ -277,7 +277,7 @@
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "OK" = "OK";
-"TagSettings.PressureAlert.title" = "Атмосферное Давление";
+"TagSettings.PressureAlert.title" = "Атмосферное Давление (%@)";
 "UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
 "hPa" = "гПа";
 "UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
@@ -299,7 +299,7 @@
 "WebTagSettings.Label.TagName.text" = "Имя";
 "TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
 "TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот RuuviTag?";
-"TagSettings.temperatureAlertTitleLabel.text" = "Температура";
+"TagSettings.temperatureAlertTitleLabel.text" = "Температура (%@)";
 "TemperatureUnit.Celsius.title" = "Цельсий (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
 "TemperatureUnit.Kelvin.title" = "Кельвин (K)";

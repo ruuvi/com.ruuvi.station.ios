@@ -262,7 +262,7 @@
 "About.Privacy.header" = "TIETOSUOJAKÄYTÄNTÖ";
 "About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset:  ruuvi.com/troubles";
 "About.Troubleshooting.header" = "VIANETSINTÄ";
-"TagSettings.AirHumidityAlert.title" = "Ilmankosteus";
+"TagSettings.AirHumidityAlert.title" = "Ilmankosteus (%@)";
 "HumidityUnit.gm3.title" = "Absoluuttinen (gr/m³)";
 "g/m³" = "g/m³";
 "HumidityUnit.Percent.title" = "Suhteellinen (%)";
@@ -277,7 +277,7 @@
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
 "OK" = "OK";
-"TagSettings.PressureAlert.title" = "Ilmanpaine";
+"TagSettings.PressureAlert.title" = "Ilmanpaine (%@)";
 "UnitPressure.hectopascal.title" = "Hehtopascal (hPa)";
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Elohopeatuuma (inHg)";
@@ -299,7 +299,7 @@
 "WebTagSettings.Label.TagName.text" = "Anturin nimi";
 "TagSettings.confirmTagRemovalDialog.title" = "Poista";
 "TagSettings.confirmTagRemovalDialog.message" = "Haluatko varmasti poistaa tämän anturin?";
-"TagSettings.temperatureAlertTitleLabel.text" = "Lämpötila";
+"TagSettings.temperatureAlertTitleLabel.text" = "Lämpötila (%@)";
 "TemperatureUnit.Celsius.title" = "Celsius (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";

@@ -688,9 +688,7 @@ extension WebTagSettingsTableViewController {
 
         pressureAlertHeaderCell.titleLabel.bind(viewModel.pressureUnit) { (label, pressureUnit) in
             let title = "TagSettings.PressureAlert.title"
-            label.text = title.localized()
-                + " "
-                + (pressureUnit?.symbol ?? "N/A".localized())
+            label.text = String(format: title.localized(), pressureUnit?.symbol ?? "N/A".localized())
         }
 
         pressureAlertControlsCell.slider.bind(viewModel.pressureUnit) { (slider, pressureUnit) in
@@ -820,9 +818,7 @@ extension WebTagSettingsTableViewController {
         humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
             let title = "TagSettings.AirHumidityAlert.title"
             let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
-            label.text = title.localized()
-                + " "
-                + (symbol ?? "N/A".localized())
+            label.text = String(format: title.localized(), symbol ?? "N/A".localized())
         }
 
         humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in
@@ -951,12 +947,8 @@ extension WebTagSettingsTableViewController {
         }
 
         temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
-            if let tu = temperatureUnit {
-                let title = "WebTagSettings.temperatureAlertTitleLabel.text"
-                label.text = title.localized() + " " + tu.symbol
-            } else {
-                label.text = "N/A".localized()
-            }
+            let title = "WebTagSettings.temperatureAlertTitleLabel.text"
+            label.text = String(format: title.localized(), temperatureUnit?.symbol ?? "N/A".localized())
         }
         temperatureAlertHeaderCell.descriptionLabel.bind(viewModel.isTemperatureAlertOn) { [weak self] (_, _) in
             self?.updateUITemperatureAlertDescription()
