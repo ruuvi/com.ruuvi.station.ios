@@ -1931,6 +1931,11 @@
 		A9646464247BAE6A0001D55D /* AdvancedRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouterInput.swift; sourceTree = "<group>"; };
 		A9646465247BAE6A0001D55D /* AdvancedRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedRouter.swift; sourceTree = "<group>"; };
 		A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AdvancedSettings.storyboard; sourceTree = "<group>"; };
+		A96B1EFD25A7479400D3ED9C /* station.localization.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = station.localization.json; path = station.localization/station.localization.json; sourceTree = SOURCE_ROOT; };
+		A96B1F1125A76DDA00D3ED9C /* Localizable_fi.strings.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Localizable_fi.strings.stencil; sourceTree = "<group>"; };
+		A96B1F1225A76DDA00D3ED9C /* Localizable_ru.strings.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Localizable_ru.strings.stencil; sourceTree = "<group>"; };
+		A96B1F1325A76DDA00D3ED9C /* Localizable_sv.strings.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Localizable_sv.strings.stencil; sourceTree = "<group>"; };
+		A96B1F1425A76DDA00D3ED9C /* Localizable_en.strings.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Localizable_en.strings.stencil; sourceTree = "<group>"; };
 		A971B0DB24215334008EF50D /* XCTest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+Extension.swift"; sourceTree = "<group>"; };
 		A9758178249F471900BC150A /* LocationPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistence.swift; sourceTree = "<group>"; };
 		A975817C249F476700BC150A /* LocationPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPersistenceImpl.swift; sourceTree = "<group>"; };
@@ -2258,6 +2263,7 @@
 		0E09671722AE762900E85F48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A96B1EFD25A7479400D3ED9C /* station.localization.json */,
 				0E1C1DC722B396180032F6CA /* Strings */,
 				0E09671A22AE769F00E85F48 /* Plists */,
 				0E09671822AE763500E85F48 /* Images */,
@@ -4632,6 +4638,7 @@
 		64333D1C20B0C45900CDF4B6 = {
 			isa = PBXGroup;
 			children = (
+				A96B1F1025A76DDA00D3ED9C /* templates */,
 				A92C75DD24896B7400E332FE /* Fastlane */,
 				64333D2720B0C45900CDF4B6 /* station */,
 				64333D3C20B0C45A00CDF4B6 /* stationTests */,
@@ -5000,6 +5007,17 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
+		A96B1F1025A76DDA00D3ED9C /* templates */ = {
+			isa = PBXGroup;
+			children = (
+				A96B1F1125A76DDA00D3ED9C /* Localizable_fi.strings.stencil */,
+				A96B1F1225A76DDA00D3ED9C /* Localizable_ru.strings.stencil */,
+				A96B1F1325A76DDA00D3ED9C /* Localizable_sv.strings.stencil */,
+				A96B1F1425A76DDA00D3ED9C /* Localizable_en.strings.stencil */,
+			);
+			path = templates;
+			sourceTree = "<group>";
+		};
 		A971B0DA2421531C008EF50D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -5108,6 +5126,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0E8BD401238566AB008B31EF /* Build configuration list for PBXNativeTarget "station_dev" */;
 			buildPhases = (
+				A96B1EF925A7208900D3ED9C /* SwiftGen */,
 				F70A5D63CCAB86BD72C548BA /* [CP] Check Pods Manifest.lock */,
 				0E8BD2AE238566AB008B31EF /* Sources */,
 				0E8BD3DC238566AB008B31EF /* Frameworks */,
@@ -5555,6 +5574,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-stationTests/Pods-stationTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A96B1EF925A7208900D3ED9C /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ -f \"${PODS_ROOT}/SwiftGen/bin/swiftgen\" ]]; then\n  \"${PODS_ROOT}/SwiftGen/bin/swiftgen\"\nelse\n  echo \"warning: SwiftGen is not installed. Run 'pod install --repo-update' to install it.\"\nfi\n";
 		};
 		A97B187EBF9FA48C611A8416 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

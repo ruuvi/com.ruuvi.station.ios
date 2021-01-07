@@ -47,8 +47,8 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## How to use
 
-1. Clone the repo
-2. ```cd``` into repo and run: ```pod install```
+1. Clone the repo with the recursive parameter  ```git clone --recursive https://github.com/ruuvi/com.ruuvi.station.ios.git```
+2. ```cd``` into repo and run: ```pod install --repo-update```
 3. Open ```station.xcworkspace```
 4. Configure Signing  
 Optional: 
