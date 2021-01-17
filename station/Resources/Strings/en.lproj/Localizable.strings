@@ -16,8 +16,6 @@
 "min" = "min"; // time ago string, minutes
 "s" = "s"; // time ago string, seconds
 "ago" = "ago"; // time ago string
-"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n"; // export header (RuuviTag)
-"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n"; // export header (WebTag)
 
 // About
 "About.Version.text" = "Version";
@@ -111,19 +109,19 @@
 "ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
 
 // ExportService
-"ExportService.Date" = "Date";
-"ExportService.ISO8601" = "ISO8601";
-"ExportService.Temperature" = "Temperature (%@)";
-"ExportService.Humidity" = "Humidity (%@)";
-"ExportService.DewPoint" = "Dew point (%@)";
-"ExportService.Pressure" = "Pressure (%@)";
-"ExportService.AccelerationX" = "Acceleration X";
-"ExportService.AccelerationY" = "Acceleration Y";
-"ExportService.AccelerationZ" = "Acceleration Z";
-"ExportService.Voltage" = "Voltage (V)";
-"ExportService.MovementCounter" = "Movement Counter";
-"ExportService.MeasurementSequenceNumber" = "Measurement Sequence Number";
-"ExportService.TXPower" = "TX Power";
+"ExportService.Date" = "\"Date\"";
+"ExportService.ISO8601" = "\"ISO8601\"";
+"ExportService.Temperature" = "\"Temperature (%@)\"";
+"ExportService.Humidity" = "\"Humidity (%@)\"";
+"ExportService.DewPoint" = "\"Dew point (%@)\"";
+"ExportService.Pressure" = "\"Pressure (%@)\"";
+"ExportService.AccelerationX" = "\"Acceleration X\"";
+"ExportService.AccelerationY" = "\"Acceleration Y\"";
+"ExportService.AccelerationZ" = "\"Acceleration Z\"";
+"ExportService.Voltage" = "\"Voltage (V)\"";
+"ExportService.MovementCounter" = "\"Movement Counter\"";
+"ExportService.MeasurementSequenceNumber" = "\"Measurement Sequence Number\"";
+"ExportService.TXPower" = "\"TX Power\"";
 
 // Foreground
 "ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
