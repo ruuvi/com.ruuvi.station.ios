@@ -75,6 +75,7 @@ extension MeasurementsServiceImpl: MeasurementsService {
         localizeIfNeeded()
         let value = temperature.converted(to: units.temperatureUnit).value
         let number = NSNumber(value: value)
+        numberFormatter.numberStyle = .decimal
         if formatter.unitStyle == .medium,
            settings.language == .english,
            let valueString = numberFormatter.string(from: number) {
