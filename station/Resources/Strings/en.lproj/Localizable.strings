@@ -465,3 +465,32 @@
 // Welcome
 "Welcome.description.text" = "To find nearby sensors and receive live sensor data, press scan.";
 "Welcome.scan.title" = "SCAN";
+
+// UserApiErrorCodes General
+"UserApiError.ER_FORBIDDEN" = "Forbiden";
+"UserApiError.ER_UNAUTHORIZED" = "Unauthorized";
+"UserApiError.ER_INTERNAL" = "InternalError";
+"UserApiError.ER_INVALID_FORMAT" = "Invalid format";
+"UserApiError.ER_USER_NOT_FOUND" = "User not found";
+"UserApiError.ER_SENSOR_NOT_FOUND" = "Sensor not found";
+"UserApiError.ER_TOKEN_EXPIRED" = "Token is expired";
+
+// UserApiErrorCodes Subscriptions and Sharing
+"UserApiError.ER_SUBSCRIPTION_NOT_FOUND" = "Subscription is not found";
+"UserApiError.ER_SHARE_COUNT_REACHED" = "Share count is reached";
+"UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Sensor share count is reached";
+"UserApiError.ER_NO_DATA_TO_SHARE" = "Nothing to share";
+"UserApiError.ER_SENSOR_ALREADY_SHARED" = "This sensor already is shared";
+"UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Unable to send email";
+
+// UserApiErrorCodes Argument errors
+"UserApiError.ER_MISSING_ARGUMENT" = "Missing argument";
+"UserApiError.ER_INVALID_DENSITY_MODE" = "Invalid density_mode";
+"UserApiError.ER_INVALID_SORT_MODE" = "Invalid sort mode";
+"UserApiError.ER_INVALID_TIME_RANGE" = "Invalid time range";
+"UserApiError.ER_INVALID_EMAIL_ADDRESS" = "Invalid email address";
+"UserApiError.ER_INVALID_MAC_ADDRESS" = "Invalid mac address";
+
+// UserApiErrorCodes Sub-codes
+"UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Data storage error";
+"UserApiError.ER_SUB_NO_USER" = "No user";
