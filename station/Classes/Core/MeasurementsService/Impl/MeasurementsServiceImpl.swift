@@ -13,6 +13,7 @@ class MeasurementsServiceImpl: NSObject {
             units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
                                                    humidityUnit: settings.humidityUnit,
                                                    pressureUnit: settings.pressureUnit)
+            localizeIfNeeded()
         }
     }
     var units: MeasurementsServiceSettigsUnit!
@@ -26,10 +27,10 @@ class MeasurementsServiceImpl: NSObject {
     private var observers: [NSObjectProtocol] = []
 
     private lazy var numberFormatter: NumberFormatter = {
-        $0.numberStyle = .decimal
-        $0.minimumFractionDigits = 0
-        $0.maximumFractionDigits = 2
         $0.locale = settings.language.locale
+        $0.numberStyle = .decimal
+        $0.minimumFractionDigits = 2
+        $0.maximumFractionDigits = 2
         return $0
     }(NumberFormatter())
 
@@ -176,9 +177,13 @@ extension MeasurementsServiceImpl {
             return
         }
         numberFormatter.locale = self.settings.language.locale
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.maximumFractionDigits = 2
         formatter.locale = self.settings.language.locale
         measurementFormatter.locale = self.settings.language.locale
         humidityFormatter = HumidityFormatter()
+        humidityFormatter.numberFormatter = numberFormatter
         HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
         notifyListeners()
     }
