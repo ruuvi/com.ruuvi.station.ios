@@ -240,4 +240,10 @@ extension TagChartsInteractor {
             $0.notifySettingsChanged()
         })
     }
+
+    func notifyDidLocalized() {
+        chartModules.forEach({
+            $0.localize()
+        })
+    }
 }

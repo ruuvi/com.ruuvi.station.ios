@@ -31,12 +31,12 @@ class MeasurementsServiceRuSpec: QuickSpec {
                 it("intTemp string") {
                     let temp = Temperature(value: 10.00, unit: .celsius)
                     expect(service.string(for: temp))
-                        .to(equal("10\(String.nbsp)°C"))
+                        .to(equal("10,00\(String.nbsp)°C"))
                 }
                 it("decimalTemp string") {
                     let temp = Temperature(value: 0.10, unit: .celsius)
                     expect(service.string(for: temp))
-                        .to(equal("0,1\(String.nbsp)°C"))
+                        .to(equal("0,10\(String.nbsp)°C"))
                 }
             }
         }
@@ -51,31 +51,31 @@ class MeasurementsServiceRuSpec: QuickSpec {
                     let humidity = Humidity(relative: 0.5, temperature: temp)
                     let offset: Double? = nil
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("50\(String.nbsp)%"))
+                        .to(equal("50,00\(String.nbsp)%"))
                 }
                 it("with offset 0.2") {
                     let humidity = Humidity(relative: 0.5, temperature: temp)
                     let offset: Double? = 0.2
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("70\(String.nbsp)%"))
+                        .to(equal("70,00\(String.nbsp)%"))
                 }
                 it("with offset -0.13") {
                     let humidity = Humidity(relative: 0.9, temperature: temp)
                     let offset: Double? = -0.13
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("77\(String.nbsp)%"))
+                        .to(equal("77,00\(String.nbsp)%"))
                 }
                 it("with offset greather than 100 %") {
                     let humidity = Humidity(relative: 0.9, temperature: temp)
                     let offset: Double? = 0.2
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("100\(String.nbsp)%"))
+                        .to(equal("100,00\(String.nbsp)%"))
                 }
                 it("with offset less than 0 %") {
                     let humidity = Humidity(relative: 0.1, temperature: temp)
                     let offset: Double? = -0.2
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("0\(String.nbsp)%"))
+                        .to(equal("0,00\(String.nbsp)%"))
                 }
                 it("double without offset") {
                     let humidity = Humidity(relative: 0.5, temperature: temp)
@@ -145,7 +145,7 @@ class MeasurementsServiceRuSpec: QuickSpec {
                     let humidity = Humidity(relative: 0.1, temperature: temp)
                     let offset: Double? = -0.2
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("0\(String.nbsp)гр/м³"))
+                        .to(equal("0,00\(String.nbsp)гр/м³"))
                 }
                 it("double without offset") {
                     let humidity = Humidity(relative: 0.5, temperature: temp)
@@ -197,7 +197,7 @@ class MeasurementsServiceRuSpec: QuickSpec {
                     let humidity = Humidity(relative: 0.5, temperature: temp)
                     let offset: Double? = 0.2
                     expect(service.string(for: humidity, withOffset: offset, temperature: temp))
-                        .to(equal("18,2\(String.nbsp)°C"))
+                        .to(equal("18,20\(String.nbsp)°C"))
                 }
                 it("with offset -0.13") {
                     let humidity = Humidity(relative: 0.9, temperature: temp)
@@ -240,7 +240,7 @@ class MeasurementsServiceRuSpec: QuickSpec {
                     settings.pressureUnit = .millimetersOfMercury
                     service.updateUnits()
                     expect(service.string(for: pressure))
-                        .to(equal("765,2 мм рт. ст."))
+                        .to(equal("765,20 мм рт. ст."))
                 }
             }
         }
