@@ -4,9 +4,12 @@ import Charts
 public class DateValueFormatter: NSObject, IAxisValueFormatter {
     private let dateFormatter = DateFormatter()
 
-    override init() {
-        super.init()
-        dateFormatter.dateFormat = "dd/MM"
+    init(with locale: Locale) {
+        if locale == Language.english.locale {
+            dateFormatter.dateFormat = "MM/dd"
+        } else {
+            dateFormatter.dateFormat = "dd/MM"
+        }
     }
 
     public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
