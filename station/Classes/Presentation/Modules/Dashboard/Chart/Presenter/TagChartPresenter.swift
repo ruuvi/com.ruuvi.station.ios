@@ -84,6 +84,11 @@ extension TagChartPresenter: TagChartModuleInput {
         startObservingCalibrationHumidityChanges()
     }
 
+    func localize() {
+        view.localize()
+        reloadChart()
+    }
+
     func reloadChart() {
         if ouptut.dataSource.count == 0 {
             handleEmptyResults()

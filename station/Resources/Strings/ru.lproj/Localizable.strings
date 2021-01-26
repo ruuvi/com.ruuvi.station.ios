@@ -6,8 +6,8 @@
 "Remove" = "Удалить";
 "N/A" = "-";
 "g" = "g";
-"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Дата,ISO8601,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (г/м³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (гПа),Ускорение по X,Ускорение по Y,Ускорение по Z,Напряжение Батареи,Счетчик Движения,Порядковый Номер Измерения,Мощность Передачи\n";
-"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Дата,ISO8601,Цельсий,Фаренгейт,Кельвин,Относительная Влажность (%),Абсолютная Влажность (g/m³),Точка Росы (°C),Точка Росы (°F),Точка Росы (K),Давление (hPa),Локация\n";
+
+// About
 "About.Version.text" = "Версия";
 "Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
@@ -66,16 +66,23 @@
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 "ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
-"ExportService.Date" = "Дата";
-"ExportService.ISO8601" = "ISO8601";
-"ExportService.Temperature" = "Температура (%@)";
-"ExportService.Humidity" = "Влажность (%@)";
-"ExportService.DewPoint" = "Точка росы (%@)";
-"ExportService.Pressure" = "Давление (%@)";
-"ExportService.Voltage" = "Напряжение (В)";
-"ExportService.MovementCounter" = "Счетчик Движения";
-"ExportService.MeasurementSequenceNumber" = "Порядковый Номер Измерения";
-"ExportService.TXPower" = "Мощность Передачи";
+
+// ExportService
+"ExportService.Date" = "\"Дата\"";
+"ExportService.ISO8601" = "\"ISO8601\"";
+"ExportService.Temperature" = "\"Температура (%@)\"";
+"ExportService.Humidity" = "\"Влажность (%@)\"";
+"ExportService.DewPoint" = "\"Точка росы (%@)\"";
+"ExportService.Pressure" = "\"Давление (%@)\"";
+"ExportService.AccelerationX" = "\"Ускорение по X\"";
+"ExportService.AccelerationY" = "\"Ускорение по Y\"";
+"ExportService.AccelerationZ" = "\"Ускорение по Z\"";
+"ExportService.Voltage" = "\"Напряжение (В)\"";
+"ExportService.MovementCounter" = "\"Счетчик Движения\"";
+"ExportService.MeasurementSequenceNumber" = "\"Порядковый Номер Измерения\"";
+"ExportService.TXPower" = "\"Мощность Передачи\"";
+
+// Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
 "ForegroundRow.advertisement.title" = "Сохранять данные";
 "ForegroundRow.connection.section" = "ЛОГИ";
@@ -302,6 +309,6 @@
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура (%@)";
 "TemperatureUnit.Celsius.title" = "Цельсий (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
-"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
+"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
 "Updated" = "Обновлено";
 "V" = "В";

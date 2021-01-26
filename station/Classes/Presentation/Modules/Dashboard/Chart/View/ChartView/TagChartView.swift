@@ -2,6 +2,9 @@ import UIKit
 import Charts
 
 class TagChartView: LineChartView {
+
+    var settings: Settings!
+
     lazy var unitLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +37,7 @@ class TagChartView: LineChartView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
 // MARK: - Layout
     private func addSubviews() {
         self.addSubview(unitLabel)
@@ -125,7 +129,7 @@ class TagChartView: LineChartView {
         xAxis.drawGridLinesEnabled = true
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 59.9
-        xAxis.valueFormatter = DateValueFormatter()
+        xAxis.valueFormatter = DateValueFormatter(with: settings?.language.locale ?? Locale.current)
         xAxis.granularityEnabled = true
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelFont = .systemFont(ofSize: 10, weight: .light)
@@ -168,6 +172,7 @@ extension TagChartView: TagChartViewInput {
 
     func localize() {
         noDataText = "TagCharts.NoChartData.text".localized()
+        xAxis.valueFormatter = DateValueFormatter(with: settings.language.locale)
     }
 
     func clearChartData() {
