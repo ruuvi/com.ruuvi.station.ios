@@ -223,9 +223,8 @@ extension CardsScrollViewController {
         let temperatureBlock: ((UILabel, Temperature?) -> Void) = {
             [weak self,
             weak temperatureUnitLabel] label, _ in
-            //todo add format for numbers in measurement
-            if let temp = self?.measurementService.double(for: viewModel.temperature.value) {
-                label.text = String(temp).replacingOccurrences(of: ".", with: ",")
+            if let temp = self?.measurementService.string(for: viewModel.temperature.value) {
+                label.text = temp.components(separatedBy: String.nbsp).first
             } else {
                 label.text = "N/A".localized()
             }

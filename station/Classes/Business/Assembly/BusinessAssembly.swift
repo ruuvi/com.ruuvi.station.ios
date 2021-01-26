@@ -28,6 +28,7 @@ class BusinessAssembly: Assembly {
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
+            service.userPropertiesService = r.resolve(UserPropertiesService.self)
             return service
         }.inObjectScope(.container)
 
@@ -191,6 +192,13 @@ class BusinessAssembly: Assembly {
             let service = WebTagServiceImpl()
             service.webTagPersistence = r.resolve(WebTagPersistence.self)
             service.weatherProviderService = r.resolve(WeatherProviderService.self)
+            return service
+        }
+
+        container.register(UserPropertiesService.self) { r in
+            let service = UserPropertiesServiceImpl()
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.settings = r.resolve(Settings.self)
             return service
         }
     }
