@@ -6,5 +6,6 @@ protocol TagChartModuleInput: class {
     func insertMeasurements(_ newValues: [RuuviMeasurement])
     func setProgress(_ value: Float)
     func reloadChart()
+    func localize()
     func notifySettingsChanged()
 }

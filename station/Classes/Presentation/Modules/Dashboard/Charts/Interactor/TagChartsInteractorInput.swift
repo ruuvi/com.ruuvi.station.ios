@@ -15,4 +15,5 @@ protocol TagChartsInteractorInput: class {
     func deleteAllRecords(ruuviTagId: String) -> Future<Void, RUError>
     func notifySettingsChanged()
     func notifyDownsamleOnDidChange()
+    func notifyDidLocalized()
 }

@@ -10,6 +10,7 @@ class AppStateServiceImpl: AppStateService {
     var pullWebDaemon: PullWebDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
+    var userPropertiesService: UserPropertiesService!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -24,6 +25,9 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.start()
         backgroundTaskService.register()
         backgroundProcessService.register()
+        DispatchQueue.main.async {
+            self.userPropertiesService.update()
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
