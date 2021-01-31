@@ -6,8 +6,6 @@
 "Remove" = "Remove";
 "N/A" = "-";
 "g" = "g";
-
-// About
 "About.Version.text" = "Version";
 "Background.navigationItem.title" = "Background";
 "Background.PresentNotifications.title" = "Show Notifications";
@@ -66,23 +64,16 @@
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this sensor";
 "ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
-
-// ExportService
 "ExportService.Date" = "\"Date\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Temperature (%@)\"";
 "ExportService.Humidity" = "\"Humidity (%@)\"";
 "ExportService.DewPoint" = "\"Dew point (%@)\"";
 "ExportService.Pressure" = "\"Pressure (%@)\"";
-"ExportService.AccelerationX" = "\"Acceleration X\"";
-"ExportService.AccelerationY" = "\"Acceleration Y\"";
-"ExportService.AccelerationZ" = "\"Acceleration Z\"";
 "ExportService.Voltage" = "\"Voltage (V)\"";
 "ExportService.MovementCounter" = "\"Movement Counter\"";
 "ExportService.MeasurementSequenceNumber" = "\"Measurement Sequence Number\"";
 "ExportService.TXPower" = "\"TX Power\"";
-
-// Foreground
 "ForegroundRow.advertisement.section" = "ADVERTISEMENTS";
 "ForegroundRow.advertisement.title" = "Save advertisements";
 "ForegroundRow.connection.section" = "LOGS";
