@@ -6,8 +6,6 @@
 "Remove" = "Poista";
 "N/A" = "-";
 "g" = "g";
-
-// About
 "About.Version.text" = "Versio";
 "Background.navigationItem.title" = "Taustaprosessit";
 "Background.PresentNotifications.title" = "Näytä ilmoituksia";
@@ -66,23 +64,16 @@
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
 "ExpectedError.failedToDeleteTag" = "Anturia ei voitu poistaa. Odota anturin yhdistämistä tai yhteyden katkaisua.";
-
-// ExportService
 "ExportService.Date" = "\"Päivämäärä\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Lämpötila (%@)\"";
 "ExportService.Humidity" = "\"Kosteus (%@)\"";
 "ExportService.DewPoint" = "\"Kastepiste (%@)\"";
 "ExportService.Pressure" = "\"Ilmanpaine (%@)\"";
-"ExportService.AccelerationX" = "\"Kiihtyvyys X\"";
-"ExportService.AccelerationY" = "\"Kiihtyvyys Y\"";
-"ExportService.AccelerationZ" = "\"Kiihtyvyys Z\"";
 "ExportService.Voltage" = "\"Jännite (V)\"";
 "ExportService.MovementCounter" = "\"Liikelaskuri\"";
 "ExportService.MeasurementSequenceNumber" = "\"Mittajärjestysnumero\"";
 "ExportService.TXPower" = "\"Lähetysteho\"";
-
-// Foreground
 "ForegroundRow.advertisement.section" = "LAITEILMOITUKSET";
 "ForegroundRow.advertisement.title" = "Tallenna laiteilmoitukset";
 "ForegroundRow.connection.section" = "LOKITIEDOT";

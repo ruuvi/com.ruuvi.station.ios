@@ -6,8 +6,6 @@
 "Remove" = "Ta bort";
 "N/A" = "-";
 "g" = "g";
-
-// About
 "About.Version.text" = "Version";
 "Background.navigationItem.title" = "Bakgrund";
 "Background.PresentNotifications.title" = "Visa Notifikationer";
@@ -66,23 +64,16 @@
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API Key saknas. Du kan få en från openweathermap.org website och sätt den sedan i filen station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
 "ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
-
-// ExportService
 "ExportService.Date" = "\"Tidpunkt\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Temperatur (%@)\"";
 "ExportService.Humidity" = "\"Luftfuktighet (%@)\"";
 "ExportService.DewPoint" = "\"Daggpunkt (%@)\"";
 "ExportService.Pressure" = "\"Lufttryck (%@)\"";
-"ExportService.AccelerationX" = "\"Acceleration X\"";
-"ExportService.AccelerationY" = "\"Acceleration Y\"";
-"ExportService.AccelerationZ" = "\"Acceleration Z\"";
 "ExportService.Voltage" = "\"Spänning (V)\"";
 "ExportService.MovementCounter" = "\"Rörelseräknare\"";
 "ExportService.MeasurementSequenceNumber" = "\"Mätningssekvensnummer\"";
 "ExportService.TXPower" = "\"Sändningseffekt\"";
-
-// Foreground
 "ForegroundRow.advertisement.section" = "ENHETSMEDDELANDEN";
 "ForegroundRow.advertisement.title" = "Spara enhetsmeddelanden";
 "ForegroundRow.connection.section" = "LOGS";
@@ -247,7 +238,7 @@
 "HumidityCalibration.lastCalibrationDate.format" = "Kalibrerad: %@";
 "HumidityCalibration.Description.text" = "För att mäta relativ luftfuktighet så exakt som möjligt rekommenderar vi att kalibrera sensorn med natriumklorid (salt). Se videor om hur du enkelt gör det hemma.";
 "HumidityCalibration.Label.note.text" = "Observera att kalibreringsdata lagras lokalt i din mobila enhet. Om du tar bort Ruuvi Station appen och installerar den igen behöver du kalibrera på nytt.";
-"HumidityCalibration.VideoTutorials.link" = "Videohandledning";
+"HumidityCalibration.VideoTutorials.link" = "Se videor";
 "Cancel" = "Avbryt";
 "HumidityCalibration.Button.Clear.title" = "Rensa";
 "TagCharts.DeleteHistoryConfirmationDialog.message" = "Radera historisk data från appen?";

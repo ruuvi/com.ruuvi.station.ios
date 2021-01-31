@@ -6,8 +6,6 @@
 "Remove" = "Удалить";
 "N/A" = "-";
 "g" = "g";
-
-// About
 "About.Version.text" = "Версия";
 "Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
@@ -66,23 +64,16 @@
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 "ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
-
-// ExportService
 "ExportService.Date" = "\"Дата\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Температура (%@)\"";
 "ExportService.Humidity" = "\"Влажность (%@)\"";
 "ExportService.DewPoint" = "\"Точка росы (%@)\"";
 "ExportService.Pressure" = "\"Давление (%@)\"";
-"ExportService.AccelerationX" = "\"Ускорение по X\"";
-"ExportService.AccelerationY" = "\"Ускорение по Y\"";
-"ExportService.AccelerationZ" = "\"Ускорение по Z\"";
 "ExportService.Voltage" = "\"Напряжение (В)\"";
 "ExportService.MovementCounter" = "\"Счетчик Движения\"";
 "ExportService.MeasurementSequenceNumber" = "\"Порядковый Номер Измерения\"";
 "ExportService.TXPower" = "\"Мощность Передачи\"";
-
-// Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
 "ForegroundRow.advertisement.title" = "Сохранять данные";
 "ForegroundRow.connection.section" = "ЛОГИ";
