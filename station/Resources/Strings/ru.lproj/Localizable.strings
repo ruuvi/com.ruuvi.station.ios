@@ -1,35 +1,12 @@
-"Cancel" = "Отмена";
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
 "Done" = "Готово";
-"OK" = "OK";
 "Copy" = "Копировать";
 "Confirm" = "Подтвердить";
 "Remove" = "Удалить";
 "N/A" = "-";
-"hPa" = "гПа";
-"dBm" = "дБм";
-"V" = "В"; // voltage
-"g/m³" = "г/м³";
-"g" = "g"; // acceleration
-"Updated" = "Обновлено"; // time ago string
-"h" = "ч"; // time ago string, hours
-"min" = "мин"; // time ago string, minutes
-"s" = "с"; // time ago string, seconds
-"ago" = "назад"; // time ago string
-
-// About
+"g" = "g";
 "About.Version.text" = "Версия";
-"About.AboutHelp.header" = "О ПРИЛОЖЕНИИ";
-"About.AboutHelp.contents" = "Ruuvi Station - простой в использовании, но мощный инструмент для работы с вашими Ruuvi сенсорами.";
-"About.OperationsManual.header" = "РУКОВОДСТВО";
-"About.OperationsManual.contents" = "Мы разработали приложение так, чтобы оно было интуитивно понятным. В то же время, руководства доступны здесь: ruuvi.com/manuals";
-"About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
-"About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/troubles";
-"About.OpenSource.header" = "ОТКРЫТЫЙ ИСХОДНЫЙ КОД";
-"About.OpenSource.contents" = "Как и RuuviTag, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
-"About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
-"About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
-
-// Background
 "Background.navigationItem.title" = "Фоновый Режим";
 "Background.PresentNotifications.title" = "Показывать Уведомления";
 "Background.KeepConnection.title" = "Держать Соединение";
@@ -37,12 +14,7 @@
 "Background.Interval.Every.string" = "каждые";
 "Background.Interval.Min.string" = "мин";
 "Background.readRSSITitle.title" = "Считывать RSSI";
-"Background.Interval.Sec.string" = "сек";
-
-// Bluetooth Error
 "BluetoothError.disconnected" = "Соединение разорвано";
-
-// Cards
 "Cards.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
@@ -52,8 +24,6 @@
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Установить Соединение";
 "Cards.Connected.title" = "Соединен";
 "Cards.Error.ReverseGeocodingFailed.message" = "Не удалось загрузить данные для виртуального сенсора. Превышен лимит операций обратного геокодирования.";
-
-// CoreError
 "CoreError.failedToGetPngRepresentation" = "Не удалось получить данные в формате PNG";
 "CoreError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
 "CoreError.failedToGetCurrentLocation" = "Не удалось получить текущее месторасположение";
@@ -63,8 +33,6 @@
 "CoreError.objectNotFound" = "Объект не найден";
 "CoreError.objectInvalidated" = "Объект инвалидирован";
 "CoreError.unableToSendEmail" = "Невозможно отправить электронное письмо";
-
-// Defaults
 "Defaults.navigationItem.title" = "Значения";
 "Defaults.WelcomeShown.title" = "Приветствие Показано";
 "Defaults.ChartsSwipeInstructionWasShown.title" = "Свайп на Графиках";
@@ -77,17 +45,11 @@
 "Defaults.WebPullInterval.title" = "Интервал Уведомления для Виртуальных Сенсоров";
 "Defaults.PruningOffsetHours.title" = "Смещение Очистки в Часах";
 "Defaults.Interval.Hour.string" = "ч";
-"Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
 "Defaults.ChartDurationHours.title" = "Размер Графиков";
-
-// Advanced settings
 "Advanced.title" = "Расширенные настройки";
 "Advanced.ChartIntervalMinutes.title" = "Интервал графиков";
 "Advanced.Downsampling.title" = "Downsampling";
 "Advanced.Interval.Min.string" = "мин";
-
-// DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
@@ -97,32 +59,21 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth отключен)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Виртуальные сенсоры показывают публичную информацию о погоде, предоставленную локальными станциями.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
-
-// ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Ошибка";
 "ErrorPresenterAlert.OK" = "OK";
-
-// ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
 "ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
-
-// ExportService
 "ExportService.Date" = "\"Дата\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Температура (%@)\"";
 "ExportService.Humidity" = "\"Влажность (%@)\"";
 "ExportService.DewPoint" = "\"Точка росы (%@)\"";
 "ExportService.Pressure" = "\"Давление (%@)\"";
-"ExportService.AccelerationX" = "\"Ускорение по X\"";
-"ExportService.AccelerationY" = "\"Ускорение по Y\"";
-"ExportService.AccelerationZ" = "\"Ускорение по Z\"";
 "ExportService.Voltage" = "\"Напряжение (В)\"";
 "ExportService.MovementCounter" = "\"Счетчик Движения\"";
 "ExportService.MeasurementSequenceNumber" = "\"Порядковый Номер Измерения\"";
 "ExportService.TXPower" = "\"Мощность Передачи\"";
-
-// Foreground
 "ForegroundRow.advertisement.section" = "СООБЩЕНИЯ";
 "ForegroundRow.advertisement.title" = "Сохранять данные";
 "ForegroundRow.connection.section" = "ЛОГИ";
@@ -133,8 +84,6 @@
 "ForegroundRow.webTags.title" = "Загружать из интернета";
 "ForegroundRow.webTags.section" = "ВИРТУАЛЬНЫЕ СЕНСОРЫ";
 "Foreground.Interval.All.string" = "Все";
-
-// Heartbeat
 "Heartbeat.navigationItem.title" = "Фоновый Режим";
 "Heartbeat.SaveHeartbeats.title" = "Сохранять Данные";
 "Heartbeat.Interval.Every.string" = "каждые";
@@ -142,68 +91,28 @@
 "Heartbeat.readRSSITitle.title" = "Считывать RSSI";
 "Heartbeat.Interval.Sec.string" = "сек";
 "Heartbeat.Interval.All.string" = "Все";
-
-// HumidityCalibration
-"HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с поваренной солью. Посмотрите обучающие видео о том, как легко сделать это дома. ";
-"HumidityCalibration.VideoTutorials.link" = "обучающие видео";
-"HumidityCalibration.lastCalibrationDate.format" = "Откалибровано: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Вы уверены?";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Вы собираетесь очистить смещение для влажности. Вы не сможете откатить изменения. Нажмите \"Подтвердить\" для продолжения";
 "HumidityCalibration.CalibrationConfirmationAlert.title" = "Вы уверены?";
 "HumidityCalibration.CalibrationConfirmationAlert.message" = "Вы собираетесь откалибровать смещение для влажности. Нажмите \"Подтвердить\" для продолжения";
-"HumidityCalibration.Button.Clear.title" = "Очистить";
-"HumidityCalibration.Button.Calibrate.title" = "Калибровать";
-"HumidityCalibration.Button.Close.title" = "Закрыть";
-"HumidityCalibration.Label.note.text" = "Данные для калибровки будут сохранены локально. Если вы переустановите приложение будет нужно произвести калибровку заново.";
-
-// Language
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
 "Language.Swedish" = "Svenska";
-
-// LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Соединился";
 "LocalNotificationsManager.DidDisconnect.title" = "Отсоединился";
-"LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
-"LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
 "LocalNotificationsManager.Disable.button" = "Отключить";
-"LocalNotificationsManager.LowHumidity.title" = "Низкая Влажность!";
-"LocalNotificationsManager.HighHumidity.title" = "Высокая Влажность!";
 "LocalNotificationsManager.LowDewPoint.title" = "Ниже Точки Росы!";
 "LocalNotificationsManager.HighDewPoint.title" = "Выше Точки Росы!";
-"LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
-"LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
-"LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
-
-// Menu
-"Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
-"Menu.Label.AppSettings.text" = "Настройки";
-"Menu.Label.AboutHelp.text" = "О Приложении";
-"Menu.Label.GetMoreSensors.text" = "Больше Сенсоров";
-"Menu.Label.Feedback.text" = "Отправить Отзыв";
-
-// PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station необходим доступ к вашей библиотеке фотографий для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station нужен доступ к камере для того, чтобы использовать эту функцию.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station необходим доступ к геолокационным сервисам для того, чтобы использовать эту функцию.";
 "PermissionPresenter.settings" = "Настройки";
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station необходим доступ к уведомлениям для того, чтобы использовать эту функцию";
-
-// PhotoPicker
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
 "PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
 "PhotoPicker.Sheet.camera" = "Сделать фото";
-
-// Settings
-"Settings.navigationItem.title" = "Настройки";
-"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения";
-"Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
-"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
-"Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
-"Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
-"Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "ТР";
@@ -213,37 +122,22 @@
 "Settings.Label.Defaults" = "Значения";
 "Settings.Label.Heartbeat" = "Фоновый Режим";
 "Settings.Label.Advanced" = "Дополнительно";
-
-// OWMError
 "OWMError.failedToParseOpenWeatherMapResponse" = "Не удалось распарсить ответ от OpenWeatherMap.";
 "OWMError.apiLimitExceeded" = "Превышен лимит запросов к API OpenWeatherMap";
 "OWMError.notAHttpResponse" = "Не HTTP ответ";
 "OWMError.invalidApiKey" = "Некорректный API-ключ";
-
-// TagCharts
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
-"TagCharts.Export.title" = "ЭКСПОРТ";
-"TagCharts.Sync.title" = "СКАЧАТЬ";
 "TagCharts.Clear.title" = "ОЧИСТИТЬ";
 "TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
-"TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
-"TagCharts.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Вы уверены?";
-"TagCharts.Status.Connecting" = "Соединение...";
-"TagCharts.Status.Serving" = "Обмениваюсь...";
 "TagCharts.Status.Disconnecting" = "Разрываю соединение...";
 "TagCharts.Status.Success" = "Успех";
 "TagCharts.Status.Error" = "Ошибка";
 "TagCharts.FailedToSyncDialog.message" = "Не удалось установить соединение за %.0f сек. Синхронизация отменена.";
 "TagCharts.FailedToServeDialog.message" = "Не удалось обменяться данными за %.0f сек. Обмен данными отменен.";
-
-// TagSettings
-"TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
-"TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот RuuviTag?";
-"TagSettings.Mac.Alert.title" = "MAC адрес";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "Необходим Режим RAWv2";
 "TagSettings.UpdateFirmware.Alert.message" = "Для того, чтобы увидеть отсутствующие значения:\nЕсли вы используете последнюю прошивку, включите RAWv2 режим нажатием кнопки \"B\" на вашем RuuviTag.\nИли обновите ваш RuuviTag с последней прошивкой.";
@@ -253,13 +147,11 @@
 "TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Исправить";
 "TagSettings.navigationItem.title" = "Настройки";
-"TagSettings.backgroundImageLabel.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
 "TagSettings.tagNameTitleLabel.text" = "Имя";
 "TagSettings.humidityTitleLabel.text" = "Влажность";
 "TagSettings.uuidTitleLabel.text" = "UUID";
 "TagSettings.macAddressTitleLabel.text" = "MAC Адрес";
 "TagSettings.dataFormatTitleLabel.text" = "Формат Данных";
-"TagSettings.batteryVoltageTitleLabel.text" = "Напряжение Батареи";
 "TagSettings.accelerationXTitleLabel.text" = "Ускорение по X";
 "TagSettings.accelerationYTitleLabel.text" = "Ускорение по Y";
 "TagSettings.accelerationZTitleLabel.text" = "Ускорение по Z";
@@ -268,38 +160,25 @@
 "TagSettings.msnTitleLabel.text" = "Порядковый Номер Измерения";
 "TagSettings.removeThisRuuviTagButton.text" = "УДАЛИТЬ";
 "TagSettings.Label.noValues.text" = "НЕТ ЗНАЧЕНИЙ?";
-"TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
-"TagSettings.SectionHeader.Name.title" = "ИМЯ";
 "TagSettings.SectionHeader.Calibration.title" = "КАЛИБРОВКА";
-"TagSettings.temperatureAlertTitleLabel.text" = "Температура";
-"TagSettings.Alerts.Temperature.description" = "Уведомление если меньше %.0f или больше %.0f";
-"TagSettings.Alerts.Off" = "Отключено";
 "TagSettings.SectionHeader.Connection.title" = "СОЕДИНЕНИЕ";
 "TagSettings.KeepConnection.title" = "Держать Соединение";
 "TagSettings.dataSourceTitleLabel.text" = "Данные Получены Из";
 "TagSettings.DataSource.Heartbeat.title" = "Соединение";
 "TagSettings.DataSource.Advertisement.title" = "Вещания";
 "TagSettings.Label.disabled.text" = "НЕДОСТУПНО?";
-"TagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Уведомления недоступны поскольку девайс не подсоединен и нет разрешения на показ уведомлений. Пожалуйста, сперва соединитесь с устройством.";
 "TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Соединиться";
 "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Уведомления недоступны поскольку вы не подсоединены к устройству.";
 "TagSettings.ConnectStatus.Connected" = "Соединен";
 "TagSettings.ConnectStatus.Connecting" = "Соединяюсь...";
-"TagSettings.ConnectStatus.Disconnected" = "Отсоединен";
 "TagSettings.Alert.CustomDescription.placeholder" = "Введите описание...";
 "TagSettings.Alerts.Humidity.description" = "Уведомить если меньше %.0f или больше %.0f";
-"TagSettings.AirHumidityAlert.title" = "Влажность воздуха";
 "TagSettings.Alerts.DewPoint.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
-"TagSettings.PressureAlert.title" = "Атмосферное Давление";
 "TagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
 "TagSettings.Alerts.Connection.description" = "Уведомить при установке/разрыве соединения";
 "TagSettings.ConnectionAlert.title" = "Соединение";
-"TagSettings.MovementAlert.title" = "Движение";
-"TagSettings.Alerts.Movement.description" = "Уведомить при движении";
-
-// UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
@@ -308,27 +187,9 @@
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
-
-// TemperatureUnit
-"TemperatureUnit.Celsius.title" = "Цельсий (℃)";
-"TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
-"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
-
-// HumidityUnit
-"HumidityUnit.Percent.title" = "Относительная влажность (%)";
-"HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
 "HumidityUnit.Dew.title" = "Точка росы (%@)";
-
-// UnitPressure
-"UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
-"UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
-"UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
-
-// WebTagLocationSource
 "WebTagLocationSource.current" = "Ваше текущее месторасположение";
 "WebTagLocationSource.manual" = "Месторасположение на карте";
-
-// WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Удалить";
 "WebTagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить?";
 "WebTagSettings.Location.Current" = "Ваше текущее месторасположение";
@@ -336,7 +197,6 @@
 "WebTagSettings.confirmClearLocationDialog.message" = "Вы уверены, что хотите очистить месторасположение? Будет использовано текущее месторасположение.";
 "WebTagSettings.navigationItem.title" = "Настройки";
 "WebTagSettings.Label.BackgroundImage.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
-"WebTagSettings.Label.TagName.text" = "Имя";
 "WebTagSettings.Label.Location.text" = "Месторасположение";
 "WebTagSettings.Button.Remove.title" = "УДАЛИТЬ";
 "WebTagSettings.SectionHeader.Name.title" = "ИМЯ";
@@ -354,7 +214,92 @@
 "WebTagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
 "WebTagSettings.PressureAlert.title" = "Атмосферное Давление";
 "WebTagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
-
-// Welcome
 "Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";
+"ExportService.AccelerationX" = "Ускорение по X";
+"ExportService.AccelerationY" = "Ускорение по Y";
+"ExportService.AccelerationZ" = "Ускорение по Z";
+"DiscoverTable.SectionTitle.Devices" = "Ближайшие Сенсоры";
+"ago" = "назад";
+"TagSettings.MovementAlert.title" = "Движение";
+"TagSettings.Alerts.Movement.description" = "Уведомить при движении";
+"LocalNotificationsManager.HighHumidity.title" = "Высокая Влажность!";
+"LocalNotificationsManager.LowHumidity.title" = "Низкая Влажность!";
+"LocalNotificationsManager.DidMove.title" = "Сработал Датчик Движения!";
+"LocalNotificationsManager.HighPressure.title" = "Высокое Атмосферное Давление!";
+"LocalNotificationsManager.LowPressure.title" = "Низкое Атмосферное Давление!";
+"LocalNotificationsManager.HighTemperature.title" = "Высокая температура!";
+"LocalNotificationsManager.LowTemperature.title" = "Низкая температура!";
+"TagSettings.Alerts.Off" = "Отключено";
+"TagSettings.Alerts.Temperature.description" = "Уведомление если меньше %.0f или больше %.0f";
+"TagSettings.Label.alerts.text" = "УВЕДОМЛЕНИЯ";
+"TagSettings.backgroundImageLabel.text" = "ФОНОВОЕ\nИЗОБРАЖЕНИЕ";
+"TagSettings.batteryVoltageTitleLabel.text" = "Напряжение Батареи";
+"HumidityCalibration.Button.Calibrate.title" = "Калибровать";
+"HumidityCalibration.lastCalibrationDate.format" = "Откалибровано: %@";
+"HumidityCalibration.Description.text" = "Чтобы измерять относительную влажность наиболее точно, рекомендуется провести тест с поваренной солью. Посмотрите обучающие видео о том, как легко сделать это дома. ";
+"HumidityCalibration.Label.note.text" = "Данные для калибровки будут сохранены локально. Если вы переустановите приложение будет нужно произвести калибровку заново.";
+"HumidityCalibration.VideoTutorials.link" = "обучающие видео";
+"Cancel" = "Отмена";
+"HumidityCalibration.Button.Clear.title" = "Очистить";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Вы уверены что хотите удалить всю историю наблюдений? Данное действие невозможно отменить.";
+"HumidityCalibration.Button.Close.title" = "Закрыть";
+"TagCharts.Status.Serving" = "Обмениваюсь...";
+"TagCharts.Status.Connecting" = "Соединение...";
+"TagSettings.ConnectStatus.Disconnected" = "Отсоединен";
+"TagCharts.Export.title" = "ЭКСПОРТ";
+"h" = "ч";
+"About.AboutHelp.contents" = "Ruuvi Station - простой в использовании, но мощный инструмент для работы с вашими Ruuvi сенсорами.";
+"About.AboutHelp.header" = "О ПРИЛОЖЕНИИ";
+"About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
+"About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
+"About.OpenSource.contents" = "Как и RuuviTag, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
+"About.OpenSource.header" = "ОТКРЫТЫЙ ИСХОДНЫЙ КОД";
+"About.OperationsManual.contents" = "Мы разработали приложение так, чтобы оно было интуитивно понятным. В то же время, руководства доступны здесь: ruuvi.com/manuals";
+"About.OperationsManual.header" = "РУКОВОДСТВО";
+"About.Privacy.contents" = "Используя это приложение, вы соглашаетесь со стандартными условиями и положениями Ruuvi\nruuvi.com/terms";
+"About.Privacy.header" = "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ";
+"About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/troubles";
+"About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
+"TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
+"HumidityUnit.gm3.title" = "Абсолютная влажность (гр/м³)";
+"g/m³" = "г/м³";
+"HumidityUnit.Percent.title" = "Относительная влажность (%)";
+"%" = "%";
+"TagSettings.Mac.Alert.title" = "MAC адрес";
+"Menu.Label.AboutHelp.text" = "О Приложении";
+"Menu.Label.AddAnNewSensor.text" = "Добавить Сенсор";
+"Menu.Label.AppSettings.text" = "Настройки";
+"Menu.Label.GetMoreSensors.text" = "Больше Сенсоров";
+"Menu.Label.Feedback.text" = "Отправить Отзыв";
+"min" = "мин";
+"TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
+"TagSettings.SectionHeader.Name.title" = "ИМЯ";
+"OK" = "OK";
+"TagSettings.PressureAlert.title" = "Атмосферное Давление (%@)";
+"UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
+"hPa" = "гПа";
+"UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
+"s" = "с";
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
+"Background.Interval.Sec.string" = "сек";
+"Settings.navigationItem.title" = "Настройки";
+"Defaults.ChartIntervalSeconds.title" = "Интервал Графиков";
+"Settings.Label.HumidityUnit.text" = "Ед. изм. Влажности";
+"Settings.ChooseHumidityUnit.text" = "Выберите единицу измерения влажности для отображения";
+"Settings.Label.PressureUnit.text" = "Ед. изм. Давления";
+"Settings.ChoosePressureUnit.text" = "Выберите единицу измерения давления для отображения";
+"Settings.Label.TemperatureUnit.text" = "Ед. изм. Температуры";
+"Settings.ChooseTemperatureUnit.text" = "Выберите единицу измерения температуры для отображения";
+"dBm" = "дБм";
+"TagCharts.Sync.title" = "СКАЧАТЬ";
+"TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
+"WebTagSettings.Label.TagName.text" = "Имя";
+"TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
+"TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот RuuviTag?";
+"TagSettings.temperatureAlertTitleLabel.text" = "Температура (%@)";
+"TemperatureUnit.Celsius.title" = "Цельсий (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
+"TemperatureUnit.Kelvin.title" = "Кельвин (K)";
+"Updated" = "Обновлено";
+"V" = "В";

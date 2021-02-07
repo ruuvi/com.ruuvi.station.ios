@@ -129,6 +129,7 @@ PODS:
   - RealmSwift (10.0.0):
     - Realm (= 10.0.0)
   - RxSwift (5.1.1)
+  - SwiftGen (6.4.0)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
@@ -154,6 +155,7 @@ DEPENDENCIES:
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
   - RxSwift
+  - SwiftGen (~> 6.0)
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
 
@@ -188,6 +190,7 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - RxSwift
+    - SwiftGen
     - Swinject
 
 EXTERNAL SOURCES:
@@ -247,9 +250,10 @@ SPEC CHECKSUMS:
   Realm: 5654b8e5e45034d07b219e089034be2ef7d1e7bf
   RealmSwift: 5b4c8c85be4c14ff52054a4d80a8d338167dd79c
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 5abba7c17ed30a716fef41f70e4f72b56521914b
+PODFILE CHECKSUM: e8196ae8eb618edcb8a66d3ee5735bb5f5f12236
 
 COCOAPODS: 1.10.1

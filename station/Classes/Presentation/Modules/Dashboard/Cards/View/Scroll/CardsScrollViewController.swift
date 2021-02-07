@@ -223,7 +223,7 @@ extension CardsScrollViewController {
         let temperatureBlock: ((UILabel, Temperature?) -> Void) = {
             [weak self,
             weak temperatureUnitLabel] label, _ in
-            if let temp = self?.measurementService.string(for: viewModel.temperature.value) {
+            if let temp = self?.measurementService.stringWithoutSign(for: viewModel.temperature.value) {
                 label.text = temp.components(separatedBy: String.nbsp).first
             } else {
                 label.text = "N/A".localized()
@@ -596,6 +596,9 @@ extension CardsScrollViewController {
 }
 extension CardsScrollViewController: MeasurementsServiceDelegate {
     func measurementServiceDidUpdateUnit() {
+        guard isViewLoaded else {
+            return
+        }
         updateUI()
     }
 }
