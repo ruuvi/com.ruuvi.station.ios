@@ -828,9 +828,7 @@ extension TagSettingsTableViewController {
 
         temperatureAlertHeaderCell.titleLabel.bind(viewModel.temperatureUnit) { (label, temperatureUnit) in
             let title = "TagSettings.temperatureAlertTitleLabel.text"
-            label.text = title.localized()
-                + " "
-                + (temperatureUnit?.symbol ?? "N/A".localized())
+            label.text = String(format: title.localized(), temperatureUnit?.symbol ?? "N/A".localized())
         }
 
         temperatureAlertControlsCell.slider.bind(viewModel.temperatureUnit) { (slider, temperatureUnit) in
@@ -988,9 +986,7 @@ extension TagSettingsTableViewController {
 
         pressureAlertHeaderCell.titleLabel.bind(viewModel.pressureUnit) { (label, pressureUnit) in
             let title = "TagSettings.PressureAlert.title"
-            label.text = title.localized()
-                + " "
-                + (pressureUnit?.symbol ?? "N/A".localized())
+            label.text = String(format: title.localized(), pressureUnit?.symbol ?? "N/A".localized())
         }
 
         pressureAlertControlsCell.slider.bind(viewModel.pressureUnit) { (slider, pressureUnit) in
@@ -1075,9 +1071,7 @@ extension TagSettingsTableViewController {
         humidityAlertHeaderCell.titleLabel.bind(viewModel.humidityUnit) { (label, humidityUnit) in
             let title = "TagSettings.AirHumidityAlert.title"
             let symbol = humidityUnit == .dew ? HumidityUnit.percent.symbol : humidityUnit?.symbol
-            label.text = title.localized()
-                + " "
-                + (symbol ?? "N/A".localized())
+            label.text = String(format: title.localized(), symbol ?? "N/A".localized())
         }
 
         humidityAlertControlsCell.slider.bind(viewModel.humidityUnit) { (slider, humidityUnit) in

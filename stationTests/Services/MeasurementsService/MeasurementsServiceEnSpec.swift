@@ -9,7 +9,7 @@ class MeasurementsServiceEnSpec: QuickSpec {
 
     override func spec() {
         let r = AppAssembly.shared.assembler.resolver
-        let service: MeasurementsService! = r.resolve(MeasurementsService.self)
+        var service: MeasurementsService! = r.resolve(MeasurementsService.self)
         var settings: Settings! = r.resolve(Settings.self)
         settings.temperatureUnit = .celsius
         beforeEach {
@@ -37,6 +37,28 @@ class MeasurementsServiceEnSpec: QuickSpec {
                     let temp = Temperature(value: 0.10, unit: .celsius)
                     expect(service.string(for: temp))
                         .to(equal("0.10\(String.nbsp)°C"))
+                }
+                it("string without sign celsius") {
+                    let temp = Temperature(value: 0.10, unit: .celsius)
+                    expect(service.stringWithoutSign(for: temp))
+                        .to(equal("0.10"))
+                }
+                it("string without sign kelvin") {
+                    let temp = Temperature(value: 250.10, unit: .kelvin)
+                    service.units = MeasurementsServiceSettigsUnit(temperatureUnit: .kelvin,
+                                                                   humidityUnit: settings.humidityUnit,
+                                                                   pressureUnit: settings.pressureUnit)
+                    expect(service.stringWithoutSign(for: temp))
+                        .to(equal("250.10"))
+                }
+                it("string without sign fahrenheit") {
+                    let temp = Temperature(value: 73.10, unit: .fahrenheit)
+                    service.units = MeasurementsServiceSettigsUnit(temperatureUnit: .fahrenheit,
+                                                                   humidityUnit: settings.humidityUnit,
+                                                                   pressureUnit: settings.pressureUnit)
+                    settings.temperatureUnit = .fahrenheit
+                    expect(service.stringWithoutSign(for: temp))
+                        .to(equal("73.10"))
                 }
             }
         }
