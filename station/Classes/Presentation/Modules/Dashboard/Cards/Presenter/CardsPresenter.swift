@@ -131,17 +131,20 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
-        let temperature = viewModel.temperature.value
         if viewModel.type == .ruuvi,
             let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
-            let humidity: Humidity? = viewModel.humidity.value?.converted(to: .relative(temperature: temperature))
+            var humidity: Humidity?
+            if let temperature = viewModel.temperature.value {
+                humidity = viewModel.humidity.value?
+                    .converted(to: .relative(temperature: temperature))
+            }
             router.openTagSettings(ruuviTag: ruuviTag,
-                                   temperature: temperature,
+                                   temperature: viewModel.temperature.value,
                                    humidity: humidity,
                                    output: self)
         } else if viewModel.type == .web,
             let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
-            router.openWebTagSettings(webTag: webTag, temperature: temperature)
+            router.openWebTagSettings(webTag: webTag, temperature: viewModel.temperature.value)
         }
     }
 
