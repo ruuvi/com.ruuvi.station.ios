@@ -41,7 +41,7 @@ extension UserApiBaseResponse {
                     return .failure(RUError.userApi(.emptyResponse))
                 }
             }
-            let userApiError = UserApiError(description: "UserApiError." + subCode ?? code)
+            let userApiError = UserApiError(description: "UserApiError." + (subCode ?? code))
             return .failure(RUError.userApi(userApiError))
         }
     }
