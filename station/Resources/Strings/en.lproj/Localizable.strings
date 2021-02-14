@@ -63,7 +63,7 @@
 "ErrorPresenterAlert.OK" = "OK";
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Missing OpenWeatherMap API Key. Please get one from openweathermap.org website and put it into station/Classes/Networking/Assembly/Networking.plist file";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "App is already in process of syncing logs with this sensor";
-"ExpectedError.failedToDeleteTag" = "The RuuviTag could not be deleted. Wait for the RuuviTag to be connected or disconnected";
+"ExpectedError.failedToDeleteTag" = "Unable to remove a connected device that is not reachable. Please check your Bluetooth connection.";
 "ExportService.Date" = "\"Date\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Temperature (%@)\"";
@@ -140,14 +140,14 @@
 "TagCharts.FailedToServeDialog.message" = "Failed to serve in %.0f seconds. Serve aborted.";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2 mode is required";
-"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on a RuuviTag.\nOr update your sensor with the latest firmware.";
+"TagSettings.UpdateFirmware.Alert.message" = "In order to see missing values:\nIf you are using the latest firmware, set RAWv2 mode by pressing \"B\" on a sensor.\nOr update your sensor with the latest firmware.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Learn more";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
-"TagSettings.navigationItem.title" = "Tag Settings";
-"TagSettings.tagNameTitleLabel.text" = "Tag Name";
+"TagSettings.navigationItem.title" = "Sensor Settings";
+"TagSettings.tagNameTitleLabel.text" = "Sensor Name";
 "TagSettings.humidityTitleLabel.text" = "Humidity";
 "TagSettings.uuidTitleLabel.text" = "UUID";
 "TagSettings.macAddressTitleLabel.text" = "MAC Address";
@@ -252,7 +252,7 @@
 "About.AboutHelp.header" = "ABOUT / HELP";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
 "About.More.header" = "MORE TO READ";
-"About.OpenSource.contents" = "Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi";
+"About.OpenSource.contents" = "Just like Ruuvi sensor, Ruuvi Station is also open-source: github.com/ruuvi";
 "About.OpenSource.header" = "OPEN-SOURCE";
 "About.OperationsManual.contents" = "We've designed the app to be self-explanatory but also comprehensive manuals are available for both Ruuvi sensors and Ruuvi Station: ruuvi.com/manuals";
 "About.OperationsManual.header" = "OPERATIONS MANUAL";
