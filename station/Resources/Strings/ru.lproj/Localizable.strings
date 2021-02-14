@@ -16,7 +16,7 @@
 "Background.readRSSITitle.title" = "Считывать RSSI";
 "BluetoothError.disconnected" = "Соединение разорвано";
 "Cards.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
+"Cards.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "Слишком много запросов";
 "Cards.WebTagAPILimitExcededError.Alert.message" = "Пожалуйста, попробуйте через 5 минут";
 "Cards.KeepConnectionDialog.message" = "На вашем устройстве установлена прошивка, поддерживающая соединение. Хотите поддерживать соединение активным для этого устройства в фоновом режиме? Это позволит использовать графики и уведомления даже когда приложение закрыто.";
@@ -52,7 +52,7 @@
 "Advanced.Interval.Min.string" = "мин";
 "DiscoverTable.SectionTitle.WebTags" = "Виртуальные";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
+"DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station необходим bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
 "DiscoverTable.NavigationItem.title" = "Добавить Сенсор";
 "DiscoverTable.GetMoreSensors.button.title" = "КУПИТЬ СЕНСОРЫ";
 "DiscoverTable.NoDevicesSection.NotFound.text" = "(Bluetooth устройства не найдены)";
@@ -62,8 +62,8 @@
 "ErrorPresenterAlert.Error" = "Ошибка";
 "ErrorPresenterAlert.OK" = "OK";
 "ExpectedError.missingOpenWeatherMapAPIKey" = "Не указан API-ключ для OpenWeatherMap. Пожалуйста, получите его на сайте openweathermap.org и поместите в файл station/Classes/Networking/Assembly/Networking.plist";
-"ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным RuuviTag";
-"ExpectedError.failedToDeleteTag" = "RuuviTag не удалось удалить. Подождите, пока RuuviTag будет подключен или отключен";
+"ExpectedError.isAlreadySyncingLogsWithThisTag" = "Приложение уже в процессе синхронизации логов с данным сенсором";
+"ExpectedError.failedToDeleteTag" = "Не удалось удалить подключенный сенсор, так как он недоступен. Пожалуйста, проверьте соединение по Bluetooth.";
 "ExportService.Date" = "\"Дата\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Температура (%@)\"";
@@ -128,7 +128,7 @@
 "OWMError.invalidApiKey" = "Некорректный API-ключ";
 "TagCharts.NoChartData.text" = "Нет данных для построения графика";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth выключен";
-"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать RuuviTag-и. Откройте Настройки и включите Bluetooth.";
+"TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station необходим Bluetooth чтобы слушать сенсоры. Откройте Настройки и включите Bluetooth.";
 "TagCharts.Clear.title" = "ОЧИСТИТЬ";
 "TagCharts.SyncConfirmationDialog.title" = "Вы уверены?";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Удалить";
@@ -140,7 +140,7 @@
 "TagCharts.FailedToServeDialog.message" = "Не удалось обменяться данными за %.0f сек. Обмен данными отменен.";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "Необходим Режим RAWv2";
-"TagSettings.UpdateFirmware.Alert.message" = "Для того, чтобы увидеть отсутствующие значения:\nЕсли вы используете последнюю прошивку, включите RAWv2 режим нажатием кнопки \"B\" на вашем RuuviTag.\nИли обновите ваш RuuviTag с последней прошивкой.";
+"TagSettings.UpdateFirmware.Alert.message" = "Для того, чтобы увидеть отсутствующие значения:\nЕсли вы используете последнюю прошивку, включите RAWv2 режим нажатием кнопки \"B\" на вашем сенсоре.\nИли обновите ваш сенсор с последней прошивкой.";
 "TagSettings.UpdateFirmware.Alert.Buttons.LearnMore.title" = "Узнать больше";
 "TagSettings.EmptyValue.sign" = "-";
 "TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
@@ -182,8 +182,8 @@
 "UnexpectedError.callbackErrorAndResultAreNil" = "И коллбэк и ошибка nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Вызывающий объект был деаллоцирован во время операции";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Не удалось определить локацию по координатам";
-"UnexpectedError.failedToFindRuuviTag" = "Не удалось найти RuuviTag";
-"UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи для RuuviTag";
+"UnexpectedError.failedToFindRuuviTag" = "Не удалось найти сенсор";
+"UnexpectedError.failedToFindLogsForTheTag" = "Не удалось найти логи сенсора";
 "UnexpectedError.viewModelUUIDIsNil" = "UUID модели пустое";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Attempt to read data from Realm without LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Failed to find virtual sensor";
@@ -214,7 +214,7 @@
 "WebTagSettings.dewPointAlertTitleLabel.text" = "Точка Росы";
 "WebTagSettings.PressureAlert.title" = "Атмосферное Давление";
 "WebTagSettings.Alerts.Pressure.description" = "Уведомить если меньше %.0f или больше %.0f";
-"Welcome.description.text" = "Чтобы найти RuuviTags рядом и получать текущие данные с сенсоров, нажмите сканировать.";
+"Welcome.description.text" = "Чтобы найти сенсор рядом и получать текущие данные, нажмите сканировать.";
 "ExportService.AccelerationX" = "Ускорение по X";
 "ExportService.AccelerationY" = "Ускорение по Y";
 "ExportService.AccelerationZ" = "Ускорение по Z";
@@ -252,7 +252,7 @@
 "About.AboutHelp.header" = "О ПРИЛОЖЕНИИ";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
-"About.OpenSource.contents" = "Как и RuuviTag, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
+"About.OpenSource.contents" = "Как и сенсоры Ruuvi, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
 "About.OpenSource.header" = "ОТКРЫТЫЙ ИСХОДНЫЙ КОД";
 "About.OperationsManual.contents" = "Мы разработали приложение так, чтобы оно было интуитивно понятным. В то же время, руководства доступны здесь: ruuvi.com/manuals";
 "About.OperationsManual.header" = "РУКОВОДСТВО";
@@ -295,8 +295,8 @@
 "TagCharts.Sync.title" = "СКАЧАТЬ";
 "TagCharts.SyncConfirmationDialog.message" = "Вы уверены что хотите синхронизировать данные с устройством?";
 "WebTagSettings.Label.TagName.text" = "Имя";
-"TagSettings.confirmTagRemovalDialog.title" = "Удалить RuuviTag";
-"TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот RuuviTag?";
+"TagSettings.confirmTagRemovalDialog.title" = "Удалить сенсор";
+"TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот сенсор?";
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура (%@)";
 "TemperatureUnit.Celsius.title" = "Цельсий (℃)";
 "TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";

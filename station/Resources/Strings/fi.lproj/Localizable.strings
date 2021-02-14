@@ -63,7 +63,7 @@
 "ErrorPresenterAlert.OK" = "OK";
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API-avain puuttuu. Hanki avain openweathermap.org -sivustolta ja lisää saamasi avain station/Classes/Networking/Assembly/Networking.plist -tiedostoon";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Sovellus on jo määritetty synkronoimaan lokitietoja tämän anturin kanssa";
-"ExpectedError.failedToDeleteTag" = "Anturia ei voitu poistaa. Odota anturin yhdistämistä tai yhteyden katkaisua.";
+"ExpectedError.failedToDeleteTag" = "Aiemmin yhdistettyä laitetta ei voida poistaa ilman Bluetooth-yhteyttä. Tarkasta Bluetooth-yhteyden tila.";
 "ExportService.Date" = "\"Päivämäärä\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Lämpötila (%@)\"";
@@ -230,7 +230,7 @@
 "LocalNotificationsManager.HighTemperature.title" = "Lämpötila liian korkea!";
 "LocalNotificationsManager.LowTemperature.title" = "Lämpötila liian alhainen!";
 "TagSettings.Alerts.Off" = "Pois käytöstä";
-"TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli lämpötila alle %.0f tai yli %.0f";
+"TagSettings.Alerts.Temperature.description" = "Hälytä, mikäli alle %.0f tai yli %.0f";
 "TagSettings.Label.alerts.text" = "HÄLYTYKSET";
 "TagSettings.backgroundImageLabel.text" = "TAUSTAKUVA";
 "TagSettings.batteryVoltageTitleLabel.text" = "Paristojännite";

@@ -63,7 +63,7 @@
 "ErrorPresenterAlert.OK" = "OK";
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API Key saknas. Du kan få en från openweathermap.org website och sätt den sedan i filen station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
-"ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
+"ExpectedError.failedToDeleteTag" = "Det går inte att ta bort en ansluten enhet som inte kan nås. Kontrollera Bluetooth-anslutningen.";
 "ExportService.Date" = "\"Tidpunkt\"";
 "ExportService.ISO8601" = "\"ISO8601\"";
 "ExportService.Temperature" = "\"Temperatur (%@)\"";
@@ -252,7 +252,7 @@
 "About.AboutHelp.header" = "OM / HJÄLP";
 "About.More.contents" = "Ruuvis hemsida: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
 "About.More.header" = "LÄS MER";
-"About.OpenSource.contents" = "Likt RuuviTag är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
+"About.OpenSource.contents" = "Likt Ruuvi sensor är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
 "About.OpenSource.header" = "ÖPPEN KÄLLKOD";
 "About.OperationsManual.contents" = "Vi har designat appen så att den ska vara självförklarande men det finns också heltäckande manualer för både Ruuvi sensorer och Ruuvi Station: ruuvi.com/manuals";
 "About.OperationsManual.header" = "BRUKSANVISNING";
