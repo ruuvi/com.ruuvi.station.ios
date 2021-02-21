@@ -225,7 +225,7 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
         if recordsCount > 0 {
             title = "TagCharts.Status.Success".localized()
             message = String(format: "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork".localized(),
-                             recordsCount)
+                             String(recordsCount))
         } else {
             title = "TagChartsPresenter.NetworkSync".localized()
             message = "TagChartsPresenter.NoNewMeasurementsFromNetwork".localized()

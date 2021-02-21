@@ -67,10 +67,10 @@ extension TagsManagerPresenter {
     }
 
     private func createSignOutAlert() {
-        let title = "TagsManagerPresenter.SignOutConfirmAlert.Title".localized()
+        let title = "TagsManager.SignOutButton".localized()
         let message = "TagsManagerPresenter.SignOutConfirmAlert.Message".localized()
-        let confirmActionTitle = "TagsManagerPresenter.SignOutConfirmAlert.ConfirmAction".localized()
-        let cancelActionTitle = "TagsManagerPresenter.SignOutConfirmAlert.CancelAction".localized()
+        let confirmActionTitle = "Confirm".localized()
+        let cancelActionTitle = "Cancel".localized()
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             self?.keychainService.userApiLogOut()
