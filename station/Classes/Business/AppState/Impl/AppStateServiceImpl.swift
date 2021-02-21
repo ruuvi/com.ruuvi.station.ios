@@ -11,6 +11,7 @@ class AppStateServiceImpl: AppStateService {
     var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
+    var userPropertiesService: UserPropertiesService!
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
     func application(_ application: UIApplication,
@@ -29,6 +30,9 @@ class AppStateServiceImpl: AppStateService {
         pullWebDaemon.start()
         backgroundTaskService.register()
         backgroundProcessService.register()
+        DispatchQueue.main.async {
+            self.userPropertiesService.update()
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

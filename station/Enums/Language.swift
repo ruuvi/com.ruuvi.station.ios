@@ -39,7 +39,11 @@ extension Language {
         switch self {
         case .russian:
             return .ru
-        default:
+        case .finnish:
+            return .fi
+        case .swedish:
+            return .sv
+        case .english:
             return .en
         }
     }

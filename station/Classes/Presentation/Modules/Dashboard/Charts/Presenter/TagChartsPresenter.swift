@@ -202,6 +202,10 @@ extension TagChartsPresenter: TagChartsViewOutput {
              self?.isLoading = false
         })
     }
+
+    func viewDidLocalized() {
+        interactor.notifyDidLocalized()
+    }
 }
 // MARK: - TagChartsInteractorOutput
 extension TagChartsPresenter: TagChartsInteractorOutput {

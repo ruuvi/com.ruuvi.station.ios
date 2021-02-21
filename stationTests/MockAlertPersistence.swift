@@ -5,22 +5,19 @@ class MockAlertPersistense: AlertPersistence {
         return nil
     }
 
-    func setLower(humidity: Humidity?, for uuid: String) {
-    }
+    func setLower(humidity: Humidity?, for uuid: String) {}
 
     func upperHumidity(for uuid: String) -> Humidity? {
         return nil
     }
 
-    func setUpper(humidity: Humidity?, for uuid: String) {
-    }
+    func setUpper(humidity: Humidity?, for uuid: String) {}
 
     func humidityDescription(for uuid: String) -> String? {
         return nil
     }
 
-    func setHumidity(description: String?, for uuid: String) {
-    }
+    func setHumidity(description: String?, for uuid: String) {}
 
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         return .none
