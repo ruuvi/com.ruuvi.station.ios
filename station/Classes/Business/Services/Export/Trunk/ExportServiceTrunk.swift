@@ -47,13 +47,14 @@ extension ExportServiceTrunk {
         let tempFormat = "ExportService.Temperature".localized()
         let pressureFormat = "ExportService.Pressure".localized()
         let dewPointFormat = "ExportService.DewPoint".localized()
+        let humidityFormat = "ExportService.Humidity".localized()
         return [
             "ExportService.Date".localized(),
-            "ISO8601".localized(),
+            "ExportService.ISO8601".localized(),
             String(format: tempFormat, units.temperatureUnit.symbol),
             units.humidityUnit == .dew
                 ? String(format: dewPointFormat, units.temperatureUnit.symbol)
-                : units.humidityUnit.title,
+                : String(format: humidityFormat, units.humidityUnit.symbol),
             String(format: pressureFormat, units.pressureUnit.symbol),
             "ExportService.AccelerationX".localized(),
             "ExportService.AccelerationY".localized(),
@@ -71,7 +72,7 @@ extension ExportServiceTrunk {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd-HHmm"
         let date = dateFormatter.string(from: Date())
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "\"yyyy-MM-dd HH:mm:ss\""
         let group = DispatchGroup()
         let units = measurementService.units
         let offset: Double
@@ -110,9 +111,9 @@ extension ExportServiceTrunk {
                         let temperature: String = toString(t, format: "%.2f")
 
                         let h = self.measurementService.double(for: log.humidity,
-                                                                  withOffset: offset,
-                                                                  temperature: log.temperature,
-                                                                  isDecimal: false)
+                                                               withOffset: offset,
+                                                               temperature: log.temperature,
+                                                               isDecimal: false)
                         let humidity: String = toString(h, format: "%.2f")
 
                         let p = self.measurementService.double(for: log.pressure)

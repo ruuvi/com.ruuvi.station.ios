@@ -14,6 +14,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     private var observeTokens = [ObservationToken]()
     private var scanTokens = [ObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
+    private var isTransitioningFromRealmToSQLite = false
 
     @objc private class RuuviTagPropertiesDaemonPair: NSObject {
        var ruuviTag: AnyRuuviTagSensor
@@ -115,14 +116,20 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                         self?.post(error: error)
                     })
             } else {
+                isTransitioningFromRealmToSQLite = true
                 idPersistence.set(mac: mac.mac, for: pair.device.uuid.luid)
                 // now we need to remove the tag from Realm and add it to SQLite
                 sqiltePersistence.create(pair.ruuviTag.with(macId: mac.mac)).on(success: { [weak self] _ in
-                    self?.realmPersistence.delete(pair.ruuviTag.withoutMac()).on(failure: { error in
+                    self?.realmPersistence.delete(pair.ruuviTag.withoutMac()).on(success: { [weak self] _ in
+                        self?.isTransitioningFromRealmToSQLite = false
+                    },
+                    failure: { error in
                         self?.post(error: error)
+                        self?.isTransitioningFromRealmToSQLite = false
                     })
                 }, failure: { [weak self] (error) in
                     self?.post(error: error)
+                    self?.isTransitioningFromRealmToSQLite = false
                 })
             }
         } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
@@ -137,6 +144,9 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 assertionFailure("Should never be there")
             }
         }
+
+        // while transitioning tag from realm to sqlite - stop operating
+        guard !isTransitioningFromRealmToSQLite else { return }
 
         // version and isConnectable change is allowed only when
         // the tag is in SQLite and has MAC

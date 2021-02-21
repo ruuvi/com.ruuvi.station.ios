@@ -130,6 +130,7 @@ PODS:
   - RealmSwift (10.0.0):
     - Realm (= 10.0.0)
   - RxSwift (5.1.1)
+  - SwiftGen (6.4.0)
   - Swinject (2.6.2)
   - SwinjectPropertyLoader (1.0.2):
     - Swinject (~> 2.6.0)
@@ -145,8 +146,8 @@ DEPENDENCIES:
   - FLEX
   - FutureX
   - GestureInstructions
-  - GRDB.swift (= 4.14.0)
-  - Humidity
+  - GRDB.swift
+  - Humidity (from `https://github.com/rinat-enikeev/Humidity.git`)
   - KeychainAccess
   - LightRoute (from `https://github.com/rinat-enikeev/LightRoute.git`)
   - Localize-Swift
@@ -156,6 +157,7 @@ DEPENDENCIES:
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
   - RxSwift
+  - SwiftGen (~> 6.0)
   - Swinject
   - SwinjectPropertyLoader (from `https://github.com/rinat-enikeev/SwinjectPropertyLoader`)
 
@@ -180,7 +182,6 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - GRDB.swift
-    - Humidity
     - KeychainAccess
     - Localize-Swift
     - nanopb
@@ -192,9 +193,12 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - RxSwift
+    - SwiftGen
     - Swinject
 
 EXTERNAL SOURCES:
+  Humidity:
+    :git: https://github.com/rinat-enikeev/Humidity.git
   LightRoute:
     :git: https://github.com/rinat-enikeev/LightRoute.git
   RangeSeekSlider:
@@ -203,6 +207,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
 CHECKOUT OPTIONS:
+  Humidity:
+    :commit: fb909b332a1f17a6453587dbeaebcfe7c6712a72
+    :git: https://github.com/rinat-enikeev/Humidity.git
   LightRoute:
     :commit: fcea1b3808b75be92d983316742bf186e21981ec
     :git: https://github.com/rinat-enikeev/LightRoute.git
@@ -247,9 +254,10 @@ SPEC CHECKSUMS:
   Realm: 5654b8e5e45034d07b219e089034be2ef7d1e7bf
   RealmSwift: 5b4c8c85be4c14ff52054a4d80a8d338167dd79c
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 871c495b948c173fe6053337dc8f42ec35456814
+PODFILE CHECKSUM: b18176070ce02ccfbb79d186aef9020671ef37b1
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1

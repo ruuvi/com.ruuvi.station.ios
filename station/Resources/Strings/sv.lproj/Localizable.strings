@@ -1,41 +1,12 @@
-"Cancel" = "Avbryt";
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
 "Done" = "Klar";
-"OK" = "OK";
 "Copy" = "Kopiera";
 "Confirm" = "Bekräfta";
 "Remove" = "Ta bort";
 "N/A" = "-";
-"hPa" = "hPa";
-"dBm" = "dBm";
-"V" = "V"; // voltage
-"g/m³" = "g/m³";
-"g" = "g"; // acceleration
-"Updated" = "Uppdaterad"; // time ago string
-"Synchronized" = "Synchronized:"; // time ago string
-"h" = "h"; // time ago string, hours
-"min" = "min"; // time ago string, minutes
-"s" = "s"; // time ago string, seconds
-"ago" = "sedan"; // time ago string
-"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Acceleration X,Acceleration Y,Acceleration Z,Voltage,Movement Counter,Measurement Sequence Number,TX Power\n" = "Datum,ISO8601,Celsius,Fahrenheit,Kelvin,Relativ Luftfuktighet (%),Absolut Luftfuktighet (g/m³),Daggpunkt (°C),Daggpunkt (°F),Daggpunkt (K),Lufttryck (hPa),Acceleration X,Acceleration Y,Acceleration Z,Spänning,Rörelseräknare,Mätningssekvensnummer,Sändningseffekt\n"; // export header (RuuviTag)
-"Date,ISO8601,Celsius,Fahrenheit,Kelvin,Relative Humidity (%),Absolute Humidity (g/m³),Dew point (°C),Dew point (°F),Dew point (K),Pressure (hPa),Location\n" = "Datum,ISO8601,Celsius,Fahrenheit,Kelvin,Relativ Luftfuktighet (%),Absolut Luftfuktighet (g/m³),Daggpunkt (°C),Daggpunkt (°F),Daggpunkt (K),Lufttryck (hPa),Plats\n"; // export header (WebTag)
-
-// About
+"g" = "g";
 "About.Version.text" = "Version";
-"About.AboutHelp.header" = "OM / HJÄLP";
-"About.AboutHelp.contents" = "Ruuvi State är en lättanvänt och kraftfullt program för Ruuvi sensorer. Sätt igång genom att lägga till sensorer.";
-"About.OperationsManual.header" = "BRUKSANVISNING";
-"About.OperationsManual.contents" = "Vi har designat appen så att den ska vara självförklarande men det finns också heltäckande manualer för både Ruuvi sensorer och Ruuvi Station: ruuvi.com/manuals";
-"About.Troubleshooting.header" = "FELSÖKNING";
-"About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/troubles";
-"About.OpenSource.header" = "ÖPPEN KÄLLKOD";
-"About.OpenSource.contents" = "Likt RuuviTag är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
-"About.More.header" = "LÄS MER";
-"About.More.contents" = "Ruuvis hemsida: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
-"About.TagsCount.text" = "Added sensors: %d";
-"About.MeasurementsCount.text" = "Stored measurements: %d";
-"About.DatabaseSize.text" = "Database size: %@";
-
-// Background
 "Background.navigationItem.title" = "Bakgrund";
 "Background.PresentNotifications.title" = "Visa Notifikationer";
 "Background.KeepConnection.title" = "Håll Anslutningen";
@@ -43,12 +14,7 @@
 "Background.Interval.Every.string" = "varje";
 "Background.Interval.Min.string" = "min";
 "Background.readRSSITitle.title" = "Läs RSSI";
-"Background.Interval.Sec.string" = "sek";
-
-// Bluetooth Error
 "BluetoothError.disconnected" = "Frånkopplad";
-
-// Cards
 "Cards.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "Cards.BluetoothDisabledAlert.message" = "Ruuvi Station behöver bluetooth för att fungera. Gå till Inställningar och aktivera Bluetooth.";
 "Cards.WebTagAPILimitExcededError.Alert.title" = "För många förfrågningar";
@@ -58,8 +24,6 @@
 "Cards.KeepConnectionDialog.KeepConnection.title" = "Håll Anslutningen";
 "Cards.Connected.title" = "Ansluten";
 "Cards.Error.ReverseGeocodingFailed.message" = "Det gick inte att ladda data för Virtual Sensor. Gränsen för geokodöverföring överskriden.";
-
-// CoreError
 "CoreError.failedToGetPngRepresentation" = "Det gick inte att få PNG-representation";
 "CoreError.failedToGetDocumentsDirectory" = "Det gick inte att hämta bakgrundskatalog";
 "CoreError.failedToGetCurrentLocation" = "Det gick inte att få aktuell plats";
@@ -69,8 +33,6 @@
 "CoreError.objectNotFound" = "Inget objekt hittades";
 "CoreError.objectInvalidated" = "Objekt ogiltigt";
 "CoreError.unableToSendEmail" = "Kunde inte skicka email";
-
-// Defaults
 "Defaults.navigationItem.title" = "Standardinställningar";
 "Defaults.WelcomeShown.title" = "Välkomst Visad";
 "Defaults.ChartsSwipeInstructionWasShown.title" = "Histogram Swipe Tips Har Visats";
@@ -83,20 +45,11 @@
 "Defaults.WebPullInterval.title" = "Alarmintervall för Virtuella Sensorer";
 "Defaults.PruningOffsetHours.title" = "Beskärning av förskjutningstider";
 "Defaults.Interval.Hour.string" = "h";
-"Defaults.ChartIntervalSeconds.title" = "Historikens noggrannhet";
 "Defaults.ChartDurationHours.title" = "Historikens längd";
-
-// Advanced settings
 "Advanced.title" = "Avancerade inställningar";
 "Advanced.ChartIntervalMinutes.title" = "Historikens noggrannhet";
 "Advanced.Downsampling.title" = "Nedsampling";
 "Advanced.Interval.Min.string" = "min";
-"Advanced.RuuviNetwork.Section.title" = "RUUVI NETWORK";
-"Advanced.RuuviNetwork.title" = "Network Configuration";
-"Advanced.Charts.title" = "CHARTS";
-
-// DiscoverTable
-"DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
 "DiscoverTable.SectionTitle.WebTags" = "Virtuella sensorer";
 "DiscoverTable.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "DiscoverTable.BluetoothDisabledAlert.message" = "Ruuvi Station behöver bluetooth för att fungera. Gå till Inställningar och aktivera Bluetooth.";
@@ -106,35 +59,21 @@
 "DiscoverTable.NoDevicesSection.BluetoothDisabled.text" = "(Bluetooth är avaktiverat)";
 "DiscoverTable.WebTagsInfoDialog.message" = "Virtuella Sensorer visar offentlig väder data som upprätthålls av lokala väderstationer.";
 "DiscoverTable.RuuviDevice.prefix" = "Ruuvi";
-"DiscoverTable.AddWithMACSection.text" = "Add with MAC address";
-"DiscoverTable.SectionTitle.Network" = "RUUVI NETWORK";
-"DiscoverTable.NetworkChoiseDialog.title" = "Choise network provider";
-
-// ErrorPresenterAlert
 "ErrorPresenterAlert.Error" = "Fel";
 "ErrorPresenterAlert.OK" = "OK";
-
-// ExpectedError
 "ExpectedError.missingOpenWeatherMapAPIKey" = "OpenWeatherMap API Key saknas. Du kan få en från openweathermap.org website och sätt den sedan i filen station/Classes/Networking/Assembly/Networking.plist";
 "ExpectedError.isAlreadySyncingLogsWithThisTag" = "Applikationen håller redan på att synkronisera logginformation med denna sensor";
-"ExpectedError.failedToDeleteTag" = "Kunde inte ta bort RuuviTagen. Vänta tills den är ansluten eller frånkopplad";
-
-// ExportService
-"ExportService.Date" = "Tidpunkt";
-"ExportService.ISO8601" = "ISO8601";
-"ExportService.Temperature" = "Temperatur (%@)";
-"ExportService.Humidity" = "Luftfuktighet (%@)";
-"ExportService.DewPoint" = "Daggpunkt (%@)";
-"ExportService.Pressure" = "Lufttryck (%@)";
-"ExportService.AccelerationX" = "Acceleration X";
-"ExportService.AccelerationY" = "Acceleration Y";
-"ExportService.AccelerationZ" = "Acceleration Z";
-"ExportService.Voltage" = "Spänning (V)";
-"ExportService.MovementCounter" = "Rörelseräknare";
-"ExportService.MeasurementSequenceNumber" = "Mätningssekvensnummer";
-"ExportService.TXPower" = "Sändningseffekt";
-
-// Foreground
+"ExpectedError.failedToDeleteTag" = "Det går inte att ta bort en ansluten enhet som inte kan nås. Kontrollera Bluetooth-anslutningen.";
+"ExportService.Date" = "\"Tidpunkt\"";
+"ExportService.ISO8601" = "\"ISO8601\"";
+"ExportService.Temperature" = "\"Temperatur (%@)\"";
+"ExportService.Humidity" = "\"Luftfuktighet (%@)\"";
+"ExportService.DewPoint" = "\"Daggpunkt (%@)\"";
+"ExportService.Pressure" = "\"Lufttryck (%@)\"";
+"ExportService.Voltage" = "\"Spänning (V)\"";
+"ExportService.MovementCounter" = "\"Rörelseräknare\"";
+"ExportService.MeasurementSequenceNumber" = "\"Mätningssekvensnummer\"";
+"ExportService.TXPower" = "\"Sändningseffekt\"";
 "ForegroundRow.advertisement.section" = "ENHETSMEDDELANDEN";
 "ForegroundRow.advertisement.title" = "Spara enhetsmeddelanden";
 "ForegroundRow.connection.section" = "LOGS";
@@ -145,8 +84,6 @@
 "ForegroundRow.webTags.title" = "Ladda och spara från webben";
 "ForegroundRow.webTags.section" = "VIRTUELLA SENSORER";
 "Foreground.Interval.All.string" = "Alla";
-
-// Heartbeat
 "Heartbeat.navigationItem.title" = "Bakgrund";
 "Heartbeat.SaveHeartbeats.title" = "Dataloggningsintervall";
 "Heartbeat.Interval.Every.string" = "varje";
@@ -154,73 +91,28 @@
 "Heartbeat.readRSSITitle.title" = "Läs RSSI";
 "Heartbeat.Interval.Sec.string" = "sek";
 "Heartbeat.Interval.All.string" = "Alla";
-
-// HumidityCalibration
-"HumidityCalibration.Description.text" = "För att mäta relativ luftfuktighet så exakt som möjligt rekommenderar vi att kalibrera sensorn med natriumklorid (salt). Se videor om hur du enkelt gör det hemma.";
-"HumidityCalibration.VideoTutorials.link" = "Videohandledning";
-"HumidityCalibration.lastCalibrationDate.format" = "Kalibrerad: %@";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.title" = "Är du säker?";
 "HumidityCalibration.ClearCalibrationConfirmationAlert.message" = "Du kommer att rensa luftfuktighetskalibreringen. Det går inte att ångra detta. Tryck på \"Bekräfta\" för att fortsätta";
 "HumidityCalibration.CalibrationConfirmationAlert.title" = "Är du säker?";
 "HumidityCalibration.CalibrationConfirmationAlert.message" = "Du kommer att kalibrera luftfuktighetssensorn. Tryck på \"Bekräfta\" för att fortsätta";
-"HumidityCalibration.Button.Clear.title" = "Rensa";
-"HumidityCalibration.Button.Calibrate.title" = "Kalibrera";
-"HumidityCalibration.Button.Close.title" = "Stäng";
-"HumidityCalibration.Label.note.text" = "Observera att kalibreringsdata lagras lokalt i din mobila enhet. Om du tar bort Ruuvi Station appen och installerar den igen behöver du kalibrera på nytt.";
-
-// Language
 "Language.English" = "English";
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
 "Language.Swedish" = "Svenska";
-
-// LocalNotificationsManager
 "LocalNotificationsManager.DidConnect.title" = "Ansluten";
 "LocalNotificationsManager.DidDisconnect.title" = "Frånkopplad";
-"LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
-"LocalNotificationsManager.HighTemperature.title" = "För hög temperatur!";
 "LocalNotificationsManager.Disable.button" = "Stäng av";
-"LocalNotificationsManager.LowHumidity.title" = "För låg Luftfuktighet!";
-"LocalNotificationsManager.HighHumidity.title" = "För hög Luftfuktighet!";
-"LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
 "LocalNotificationsManager.LowDewPoint.title" = "För låg Daggpunkt!";
 "LocalNotificationsManager.HighDewPoint.title" = "För hög Daggpunkt!";
-"LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
-"LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";
-
-// Menu
-"Menu.Label.AddAnNewSensor.text" = "Lägg till en ny Sensor";
-"Menu.Label.AppSettings.text" = "App Inställningar";
-"Menu.Label.AboutHelp.text" = "Om / Hjälp";
-"Menu.Label.GetMoreSensors.text" = "Köp fler Sensorer";
-"Menu.Label.Feedback.text" = "Skicka Feedback";
-
-// MenuTableViewController
-"MenuTableViewController.User" = "User: %@";
-"MenuTableViewController.None" = "none";
-
-// PermissionPresenter
 "PermissionPresenter.NoPhotoLibraryAccess.message" = "Ruuvi Station behöver tillgång till dina bilder för att använda den här funktionen.";
 "PermissionPresenter.NoCameraAccess.message" = "Ruuvi Station behöver tillgång kameran för att använda den här funktionen.";
 "PermissionPresenter.NoLocationAccess.message" = "Ruuvi Station behöver tillgång till din plats för att använda den här funktionen.";
 "PermissionPresenter.settings" = "Inställningar";
 "PermissionPresenter.NoPushNotificationsPermission.message" = "Ruuvi Station behöver behörighett ill Push-meddelanden för att aktivera den här funktionen.";
-
-// PhotoPicker
-"PhotoPicker.Sheet.title" = "Välj ett foto";
+"PhotoPicker.Sheet.message" = "Välj ett foto";
 "PhotoPicker.Sheet.library" = "Välj från bilder";
 "PhotoPicker.Sheet.camera" = "Ta ett foto";
-"PhotoPicker.Sheet.files" = "Pick from files";
-
-// Settings
-"Settings.navigationItem.title" = "Inställningar";
-"Settings.ChooseTemperatureUnit.text" = "Välj den temperaturenhet som du vill ska visas";
-"Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas";
-"Settings.ChoosePressureUnit.text" = "Välj den tryckenhet du vill ska visas";
 "Settings.SectionHeader.General.title" = "ALLMÄNT";
-"Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
-"Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
-"Settings.Label.PressureUnit.text" = "Tryckenhet";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
 "Settings.SegmentedControl.Humidity.DewPoint.title" = "Dew";
@@ -229,50 +121,23 @@
 "Settings.Label.Foreground" = "Processer";
 "Settings.Label.Defaults" = "Standardinställningar";
 "Settings.Label.Heartbeat" = "Bakgrundsprocesser";
-"Settings.Label.Advanced" = "Advanced";
-
-// MailComposerPresenterMessageUI
-"MailComposerPresenterMessageUI.AppFeedback" = "App Feedback <%@>";
-
-// Network settings
-"NetworkSettings.title" = "Network Configuration";
-"NetworkSettings.NetworkFeature" = "Network Is Enabled";
-
-// OWMError
+"Settings.Label.Advanced" = "Avancerat";
 "OWMError.failedToParseOpenWeatherMapResponse" = "Det gick inte att tolka Open Weather Map data.";
 "OWMError.apiLimitExceeded" = "API gräns överskriden";
 "OWMError.notAHttpResponse" = "Ingen HTTP respons";
 "OWMError.invalidApiKey" = "Ogiltig API Key";
-
-// TagCharts
 "TagCharts.NoChartData.text" = "Ingen histogram data";
 "TagCharts.BluetoothDisabledAlert.title" = "Bluetooth är inte aktiverat";
 "TagCharts.BluetoothDisabledAlert.message" = "Ruuvi Station behöver Bluetooth för att lyssna efter sensorer. Gå till Inställningar och aktivera Bluetooth.";
-"TagCharts.Export.title" = "EXPORT";
-"TagCharts.Sync.title" = "SYNK";
 "TagCharts.Clear.title" = "RENSA";
 "TagCharts.SyncConfirmationDialog.title" = "Är du säker?";
-"TagCharts.SyncConfirmationDialog.message" = "Ladda ner historik-data från sensorn?";
-"TagCharts.SyncConfirmationDialog.Ok" = "Ok";
 "TagCharts.DeleteHistoryConfirmationDialog.button.delete.title" = "Radera";
-"TagCharts.DeleteHistoryConfirmationDialog.message" = "Radera historisk data från appen?";
 "TagCharts.DeleteHistoryConfirmationDialog.title" = "Är du säker?";
-"TagCharts.Status.Connecting" = "Ansluter...";
-"TagCharts.Status.Serving" = "Synkroniserar...";
 "TagCharts.Status.Disconnecting" = "Avbryter anslutning...";
 "TagCharts.Status.Success" = "Lyckades";
 "TagCharts.Status.Error" = "Fel";
 "TagCharts.FailedToSyncDialog.message" = "Det gick inte att upprätta anslutning efter %.0f sekunder. Synkronisering avbröts.";
 "TagCharts.FailedToServeDialog.message" = "Synkroniseringen avbröts efter %.0f sekunder. Synkronisering avbruten";
-
-"TagChartsPresenter.NetworkSync" = "Network sync";
-"TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synchronized %d points over network";
-"TagChartsPresenter.NoNewMeasurementsFromNetwork" = "No new measurements from network";
-
-// TagSettings
-"TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";
-"TagSettings.confirmTagRemovalDialog.message" = "Är du säker på att du vill ta bort den här sensorn?";
-"TagSettings.Mac.Alert.title" = "MAC Adress";
 "TagSettings.UUID.Alert.title" = "UUID";
 "TagSettings.UpdateFirmware.Alert.title" = "RAWv2-format krävs";
 "TagSettings.UpdateFirmware.Alert.message" = "Värden som saknas kan bara visas i nyare enhetsmjukvara med RAWv2-format.";
@@ -282,13 +147,11 @@
 "TagSettings.HumidityIsClipped.Alert.message" = "Fuktighetsvärdet efter kalibreringen är större än 100%. Detta är inte rimligt, så det maximala värdet visas som 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fixa";
 "TagSettings.navigationItem.title" = "Inställningar";
-"TagSettings.backgroundImageLabel.text" = "BAKGRUNDSBILD";
 "TagSettings.tagNameTitleLabel.text" = "Sensornamn";
 "TagSettings.humidityTitleLabel.text" = "Luftfuktighet";
 "TagSettings.uuidTitleLabel.text" = "UUID";
 "TagSettings.macAddressTitleLabel.text" = "MAC Adress";
 "TagSettings.dataFormatTitleLabel.text" = "Dataformat";
-"TagSettings.batteryVoltageTitleLabel.text" = "Batterispänning";
 "TagSettings.accelerationXTitleLabel.text" = "Acceleration X";
 "TagSettings.accelerationYTitleLabel.text" = "Acceleration Y";
 "TagSettings.accelerationZTitleLabel.text" = "Acceleration Z";
@@ -297,58 +160,25 @@
 "TagSettings.msnTitleLabel.text" = "Mätningssekvensnummer";
 "TagSettings.removeThisRuuviTagButton.text" = "TA BORT";
 "TagSettings.Label.noValues.text" = "INGA VÄRDEN?";
-"TagSettings.Label.moreInfo.text" = "MER INFO";
-"TagSettings.SectionHeader.Name.title" = "NAMN";
 "TagSettings.SectionHeader.Calibration.title" = "KALIBRERING";
-"TagSettings.temperatureAlertTitleLabel.text" = "Temperatur";
-"TagSettings.Alerts.Temperature.description" = "Alarmera när mindre än %.0f eller mer än %.0f";
-"TagSettings.Alerts.Off" = "Av";
 "TagSettings.SectionHeader.Connection.title" = "ANSLUTNING";
 "TagSettings.KeepConnection.title" = "Behåll Anslutningen";
 "TagSettings.dataSourceTitleLabel.text" = "Data Mottagen Via";
 "TagSettings.DataSource.Heartbeat.title" = "Hjärtslag";
 "TagSettings.DataSource.Advertisement.title" = "Advertisement";
-"TagSettings.DataSource.Network.title" = "Network";
 "TagSettings.Label.disabled.text" = "INAKTIVERAD?";
-"TagSettings.Label.alerts.text" = "ALARM";
 "TagSettings.AlertsAreDisabled.Dialog.BothNotConnectedAndNoPNPermission.message" = "Alarm är inaktiverade eftersom enheten inte är ansluten och behörigheten att se Push-meddelanden saknas. Anslut först till enheten.";
 "TagSettings.AlertsAreDisabled.Dialog.Connect.title" = "Anslut";
 "TagSettings.AlertsAreDisabled.Dialog.NotConnected.message" = "Alarm är inaktiverade eftersom du inte är ansluten till enheten.";
 "TagSettings.ConnectStatus.Connected" = "Ansluten";
 "TagSettings.ConnectStatus.Connecting" = "Ansluter...";
-"TagSettings.ConnectStatus.Disconnected" = "Frånkopplad";
 "TagSettings.Alert.CustomDescription.placeholder" = "Redigera beskrivningen...";
 "TagSettings.Alerts.Humidity.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-"TagSettings.AirHumidityAlert.title" = "Luftfuktighet";
-"TagSettings.PressureAlert.title" = "Lufttryck";
 "TagSettings.Alerts.DewPoint.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "TagSettings.dewPointAlertTitleLabel.text" = "Daggpunkt";
 "TagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "TagSettings.Alerts.Connection.description" = "Alarmera vid anslutning/frånkoppling";
 "TagSettings.ConnectionAlert.title" = "Anslutning";
-"TagSettings.MovementAlert.title" = "Rörelse";
-"TagSettings.Alerts.Movement.description" = "Alarmera om rörelse upptäcks";
-"TagSettings.ClaimTagButton.Claim" = "Claim";
-"TagSettings.ClaimTagButton.Unclaim" = "Unclaim";
-"TagSettings.SectionHeader.NetworkInfo.title" = "NETWORK INFO";
-"TagSettings.NetworkInfo.Owner" = "Owner";
-
-//TagsManager
-"TagsManager.SignOutButton" = "Sign out";
-"TagsManager.SharedTags" = "Network tags";
-"TagsManager.Actions" = "Actions";
-"TagManagerCellViewModel.Owner" = "Owner";
-"TagManagerCellViewModel.Shared" = "Shared";
-"TagManagerActionCellViewModel.AddMissingTag.Title" = "Add missing tag";
-"TagsManagerPresenter.SuccessAddMissingTagAlert.Title" = "Success!";
-"TagsManagerPresenter.SuccessAddMissingTagAlert.Message" = "Missing tags successfully added";
-"TagsManagerPresenter.SuccessAddMissingTagAlert.Ok" = "Ok";
-"TagsManagerPresenter.SignOutConfirmAlert.Title" = "Sign out";
-"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
-"TagsManagerPresenter.SignOutConfirmAlert.ConfirmAction" = "Confirm";
-"TagsManagerPresenter.SignOutConfirmAlert.CancelAction" = "Cancel";
-
-// UnexpectedError
 "UnexpectedError.callbackErrorAndResultAreNil" = "Både resultatet och felmeddelande är nil";
 "UnexpectedError.callerDeinitedDuringOperation" = "Uppringare avallokerad under operation";
 "UnexpectedError.failedToReverseGeocodeCoordinate" = "Det gick inte att få geokoordinaterna för platsen";
@@ -357,60 +187,9 @@
 "UnexpectedError.viewModelUUIDIsNil" = "View Model UUID är nil";
 "UnexpectedError.attemptToReadDataFromRealmWithoutLUID" = "Försökte läsa data från Realm utan LUID";
 "UnexpectedError.failedToFindVirtualTag" = "Hittade inte den virtuella sensorn";
-"UnexpectedError.failedToConstructURL" = "Failed to construct URL";
-"UnexpectedError.notAHttpResponse" = "Not a HTTP response";
-"UnexpectedError.failedToParseHttpResponse" = "Failed to parse HTTP response";
-
-// RuuviNetworkError
-"RuuviNetworkError.NoSavedApiKeyValue" = "No saved ApiKey value";
-"RuuviNetworkError.FailedToLogIn" = "Failed to log in";
-"RuuviNetworkError.DoesNotHaveSensors" = "The beacon does not have sensors";
-"RuuviNetworkError.NoStoredData" = "No stored data. The tag will not be added";
-"RuuviNetworkError.TagAlreadyExists" = "Tag already exists";
-
-// Share
-"ShareViewController.Title" = "Share Ruuvi sensor";
-"ShareViewController.addFriend.Title" = "Add friend";
-"ShareViewController.sharedEmails.Title" = "Already shared %d/%d";
-"ShareViewController.emailTextField.placeholder" = "Type email";
-"ShareViewController.Description" = "Share your Ruuvi sensor. Add your friend email address. Max %d";
-"SharePresenter.UnshareSensor.Title" = "Unshare sensor";
-"SharePresenter.UnshareSensor.Message" = "Did you want unsare sensor for %@?";
-"SharePresenter.UnshareSensor.ConfirmAction" = "Yes";
-"SharePresenter.UnshareSensor.CancelAction" = "Cancel";
-
-
-//Sign in
-"SignIn.Title.text" = "Sign in";
-"SignIn.SignInBenefits" = "Sign in benefits, the information is saved in the cloud:\n- ruuvitag data\n- sensor name\n- sensor data\n- bg images";
-"SignIn.RequestSignLink" = "Register or request new sign in link";
-"SignIn.EmailSent" = "Email sent";
-"SignIn.CheckMailbox" = "Please check your email inbox for further instructions";
-"SignIn.EnterCorrectEmail" = "Please enter correct email";
-"SignIn.EmailPlaceholder" = "Email";
-"SignIn.VerificationCodePlaceholder" = "verification code in format: CJSMVOW";
-"SignIn.EnterVerificationCode" = "Enter verification code";
-
-// TemperatureUnit
-"TemperatureUnit.Celsius.title" = "Celsius (℃)";
-"TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
-"TemperatureUnit.Kelvin.title" = "Kelvin (K)";
-
-// HumidityUnit
-"HumidityUnit.Percent.title" = "Relativ (%)";
-"HumidityUnit.gm3.title" = "Absolut (gr/m³)";
 "HumidityUnit.Dew.title" = "Daggpunkt (%@)";
-
-// UnitPressure
-"UnitPressure.hectopascal.title" = "Hektopascal (hPa)";
-"UnitPressure.inchOfMercury.title" = "Tum kvicksilver (inHg)";
-"UnitPressure.millimetreOfMercury.title" = "Millimeter kvicksilver (mmHg)";
-
-// WebTagLocationSource
 "WebTagLocationSource.current" = "Din plats";
 "WebTagLocationSource.manual" = "Välj från karta";
-
-// WebTagSettings
 "WebTagSettings.confirmTagRemovalDialog.title" = "Ta bort virtuell sensor";
 "WebTagSettings.confirmTagRemovalDialog.message" = "Är du säker på att du vill ta bort den här virtuella sensorn?";
 "WebTagSettings.Location.Current" = "Din plats";
@@ -418,7 +197,6 @@
 "WebTagSettings.confirmClearLocationDialog.message" = "Är du säker på att du vill rensa plats för den här virtuella sensorn? Nuvarande plats kommer att användas istället.";
 "WebTagSettings.navigationItem.title" = "Inställningar";
 "WebTagSettings.Label.BackgroundImage.text" = "BAKGRUNDSBILD";
-"WebTagSettings.Label.TagName.text" = "Sensornamn";
 "WebTagSettings.Label.Location.text" = "Plats";
 "WebTagSettings.Button.Remove.title" = "TA BORT";
 "WebTagSettings.SectionHeader.Name.title" = "NAMN";
@@ -432,40 +210,96 @@
 "WebTagSettings.AlertsAreDisabled.Dialog.Settings.title" = "Inställningar";
 "WebTagSettings.AirHumidityAlert.title" = "Luftfuktighet";
 "WebTagSettings.Alerts.Humidity.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-"WebTagSettings.PressureAlert.title" = "Luftfuktighet";
 "WebTagSettings.Alerts.DewPoint.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
 "WebTagSettings.dewPointAlertTitleLabel.text" = "Daggpunkt";
+"WebTagSettings.PressureAlert.title" = "Luftfuktighet";
 "WebTagSettings.Alerts.Pressure.description" = "Alarmera om mindre än %.0f eller mer än %.0f";
-
-// Welcome
 "Welcome.description.text" = "Klicka på Skanna för att hitta sensorer i närheten.";
+"ExportService.AccelerationX" = "Acceleration X";
+"ExportService.AccelerationY" = "Acceleration Y";
+"ExportService.AccelerationZ" = "Acceleration Z";
+"DiscoverTable.SectionTitle.Devices" = "Ruuvi sensorer i närheten";
+"ago" = "sedan";
+"TagSettings.MovementAlert.title" = "Rörelse";
+"TagSettings.Alerts.Movement.description" = "Alarmera om rörelse upptäcks";
+"LocalNotificationsManager.HighHumidity.title" = "För hög Luftfuktighet!";
+"LocalNotificationsManager.LowHumidity.title" = "För låg Luftfuktighet!";
+"LocalNotificationsManager.DidMove.title" = "Rörelse upptäckt!";
+"LocalNotificationsManager.HighPressure.title" = "För högt Lufttryck!";
+"LocalNotificationsManager.LowPressure.title" = "För lågt Lufttryck!";
+"LocalNotificationsManager.HighTemperature.title" = "För hög temperatur!";
+"LocalNotificationsManager.LowTemperature.title" = "För låg temperatur!";
+"TagSettings.Alerts.Off" = "Av";
+"TagSettings.Alerts.Temperature.description" = "Alarmera när mindre än %.0f eller mer än %.0f";
+"TagSettings.Label.alerts.text" = "ALARM";
+"TagSettings.backgroundImageLabel.text" = "BAKGRUNDSBILD";
+"TagSettings.batteryVoltageTitleLabel.text" = "Batterispänning";
+"HumidityCalibration.Button.Calibrate.title" = "Kalibrera";
+"HumidityCalibration.lastCalibrationDate.format" = "Kalibrerad: %@";
+"HumidityCalibration.Description.text" = "För att mäta relativ luftfuktighet så exakt som möjligt rekommenderar vi att kalibrera sensorn med natriumklorid (salt). Se videor om hur du enkelt gör det hemma.";
+"HumidityCalibration.Label.note.text" = "Observera att kalibreringsdata lagras lokalt i din mobila enhet. Om du tar bort Ruuvi Station appen och installerar den igen behöver du kalibrera på nytt.";
+"HumidityCalibration.VideoTutorials.link" = "Se videor";
+"Cancel" = "Avbryt";
+"HumidityCalibration.Button.Clear.title" = "Rensa";
+"TagCharts.DeleteHistoryConfirmationDialog.message" = "Radera historisk data från appen?";
+"HumidityCalibration.Button.Close.title" = "Stäng";
+"TagCharts.Status.Serving" = "Synkroniserar...";
+"TagCharts.Status.Connecting" = "Ansluter...";
+"TagSettings.ConnectStatus.Disconnected" = "Frånkopplad";
+"TagCharts.Export.title" = "EXPORT";
+"h" = "h";
+"About.AboutHelp.contents" = "Ruuvi State är en lättanvänt och kraftfullt program för Ruuvi sensorer. Sätt igång genom att lägga till sensorer.";
+"About.AboutHelp.header" = "OM / HJÄLP";
+"About.More.contents" = "Ruuvis hemsida: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
+"About.More.header" = "LÄS MER";
+"About.OpenSource.contents" = "Likt Ruuvi sensor är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
+"About.OpenSource.header" = "ÖPPEN KÄLLKOD";
+"About.OperationsManual.contents" = "Vi har designat appen så att den ska vara självförklarande men det finns också heltäckande manualer för både Ruuvi sensorer och Ruuvi Station: ruuvi.com/manuals";
+"About.OperationsManual.header" = "BRUKSANVISNING";
+"About.Privacy.contents" = "Användning av applikationen kräver godkännande av användarvillkoren\nruuvi.com/terms";
+"About.Privacy.header" = "INTEGRITETSPOLICY";
+"About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/troubles";
+"About.Troubleshooting.header" = "FELSÖKNING";
+"TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
+"HumidityUnit.gm3.title" = "Absolut (gr/m³)";
+"g/m³" = "g/m³";
+"HumidityUnit.Percent.title" = "Relativ (%)";
+"%" = "%";
+"TagSettings.Mac.Alert.title" = "MAC Adress";
+"Menu.Label.AboutHelp.text" = "Om / Hjälp";
+"Menu.Label.AddAnNewSensor.text" = "Lägg till en ny Sensor";
+"Menu.Label.AppSettings.text" = "App Inställningar";
+"Menu.Label.GetMoreSensors.text" = "Köp fler Sensorer";
+"Menu.Label.Feedback.text" = "Skicka Feedback";
+"min" = "min";
+"TagSettings.Label.moreInfo.text" = "MER INFO";
+"TagSettings.SectionHeader.Name.title" = "NAMN";
+"OK" = "OK";
+"TagSettings.PressureAlert.title" = "Lufttryck (%@)";
+"UnitPressure.hectopascal.title" = "Hektopascal (hPa)";
+"hPa" = "hPa";
+"UnitPressure.inchOfMercury.title" = "Tum kvicksilver (inHg)";
+"UnitPressure.millimetreOfMercury.title" = "Millimeter kvicksilver (mmHg)";
+"s" = "s";
 "Welcome.scan.title" = "SKANNA";
-
-// UserApiErrorCodes General
-"UserApiError.ER_FORBIDDEN" = "Forbiden";
-"UserApiError.ER_UNAUTHORIZED" = "Unauthorized";
-"UserApiError.ER_INTERNAL" = "InternalError";
-"UserApiError.ER_INVALID_FORMAT" = "Invalid format";
-"UserApiError.ER_USER_NOT_FOUND" = "User not found";
-"UserApiError.ER_SENSOR_NOT_FOUND" = "Sensor not found";
-"UserApiError.ER_TOKEN_EXPIRED" = "Token is expired";
-
-// UserApiErrorCodes Subscriptions and Sharing
-"UserApiError.ER_SUBSCRIPTION_NOT_FOUND" = "Subscription is not found";
-"UserApiError.ER_SHARE_COUNT_REACHED" = "Share count is reached";
-"UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Sensor share count is reached";
-"UserApiError.ER_NO_DATA_TO_SHARE" = "Nothing to share";
-"UserApiError.ER_SENSOR_ALREADY_SHARED" = "This sensor already is shared";
-"UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Unable to send email";
-
-// UserApiErrorCodes Argument errors
-"UserApiError.ER_MISSING_ARGUMENT" = "Missing argument";
-"UserApiError.ER_INVALID_DENSITY_MODE" = "Invalid density_mode";
-"UserApiError.ER_INVALID_SORT_MODE" = "Invalid sort mode";
-"UserApiError.ER_INVALID_TIME_RANGE" = "Invalid time range";
-"UserApiError.ER_INVALID_EMAIL_ADDRESS" = "Invalid email address";
-"UserApiError.ER_INVALID_MAC_ADDRESS" = "Invalid mac address";
-
-// UserApiErrorCodes Sub-codes
-"UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Data storage error";
-"UserApiError.ER_SUB_NO_USER" = "No user";
+"Background.Interval.Sec.string" = "sek";
+"Settings.navigationItem.title" = "Inställningar";
+"Defaults.ChartIntervalSeconds.title" = "Historikens noggrannhet";
+"Settings.Label.HumidityUnit.text" = "Luftfuktighetsenhet";
+"Settings.ChooseHumidityUnit.text" = "Välj den fuktighetsenhet som du vill ska visas";
+"Settings.Label.PressureUnit.text" = "Tryckenhet";
+"Settings.ChoosePressureUnit.text" = "Välj den tryckenhet du vill ska visas";
+"Settings.Label.TemperatureUnit.text" = "Temperaturenhet";
+"Settings.ChooseTemperatureUnit.text" = "Välj den temperaturenhet som du vill ska visas";
+"dBm" = "dBm";
+"TagCharts.Sync.title" = "SYNK";
+"TagCharts.SyncConfirmationDialog.message" = "Ladda ner historik-data från sensorn?";
+"WebTagSettings.Label.TagName.text" = "Sensornamn";
+"TagSettings.confirmTagRemovalDialog.title" = "Ta bort sensor";
+"TagSettings.confirmTagRemovalDialog.message" = "Är du säker på att du vill ta bort den här sensorn?";
+"TagSettings.temperatureAlertTitleLabel.text" = "Temperatur (%@)";
+"TemperatureUnit.Celsius.title" = "Celsius (℃)";
+"TemperatureUnit.Fahrenheit.title" = "Fahrenheit (℉)";
+"TemperatureUnit.Kelvin.title" = "Kelvin (K)";
+"Updated" = "Uppdaterad";
+"V" = "V";

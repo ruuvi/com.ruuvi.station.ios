@@ -14,8 +14,8 @@ def shared_pods
   pod 'Firebase/InAppMessaging'
   pod 'FutureX'
   pod 'GestureInstructions'
-  pod 'GRDB.swift', '4.14.0'
-  pod 'Humidity'
+  pod 'GRDB.swift'
+  pod 'Humidity', :git => 'https://github.com/rinat-enikeev/Humidity.git'
   pod 'LightRoute', :git => 'https://github.com/rinat-enikeev/LightRoute.git'
   pod 'Localize-Swift'
   pod 'Nantes'
@@ -24,6 +24,7 @@ def shared_pods
   pod 'RxSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
+  pod 'SwiftGen', '~> 6.0'
   pod 'KeychainAccess'
 end
 

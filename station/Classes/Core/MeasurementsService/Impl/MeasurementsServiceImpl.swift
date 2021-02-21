@@ -15,7 +15,11 @@ class MeasurementsServiceImpl: NSObject {
                                                    pressureUnit: settings.pressureUnit)
         }
     }
-    var units: MeasurementsServiceSettigsUnit!
+    var units: MeasurementsServiceSettigsUnit! {
+        didSet {
+            notifyListeners()
+        }
+    }
 
     private let notificationsNamesToObserve: [Notification.Name] = [
         .TemperatureUnitDidChange,
@@ -25,25 +29,29 @@ class MeasurementsServiceImpl: NSObject {
 
     private var observers: [NSObjectProtocol] = []
 
-    private lazy var numberFormatter: NumberFormatter = {
-        $0.numberStyle = .decimal
-        $0.minimumFractionDigits = 0
-        $0.maximumFractionDigits = 2
-        $0.decimalSeparator = ","
-        return $0
-    }(NumberFormatter())
-
-    private lazy var measurementFormatter: MeasurementFormatter = {
-        $0.unitOptions = .providedUnit
-        return $0
-    }(MeasurementFormatter())
+    private var numberFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = settings.language.locale
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
 
     private var formatter: MeasurementFormatter {
-        measurementFormatter.numberFormatter = numberFormatter
+        let measurementFormatter = MeasurementFormatter()
+        measurementFormatter.locale = settings.language.locale
+        measurementFormatter.unitOptions = .providedUnit
+        measurementFormatter.numberFormatter = self.numberFormatter
         return measurementFormatter
     }
 
-    private var humidityFormatter: HumidityFormatter = HumidityFormatter()
+    private var humidityFormatter: HumidityFormatter {
+        let humidityFormatter = HumidityFormatter()
+        humidityFormatter.numberFormatter = self.numberFormatter
+        HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
+        return humidityFormatter
+    }
 
     private var listeners = NSHashTable<AnyObject>.weakObjects()
 
@@ -71,13 +79,29 @@ extension MeasurementsServiceImpl: MeasurementsService {
         guard let temperature = temperature else {
             return "N/A".localized()
         }
-        if formatter.unitStyle == .medium {
-            return String(format: "%.2f %@",
-                          temperature.converted(to: units.temperatureUnit).value,
+        let value = temperature.converted(to: units.temperatureUnit).value
+        let number = NSNumber(value: value)
+        numberFormatter.numberStyle = .decimal
+        if formatter.unitStyle == .medium,
+           settings.language == .english,
+           let valueString = numberFormatter.string(from: number) {
+            return String(format: "%@\(String.nbsp)%@",
+                          valueString,
                           units.temperatureUnit.symbol)
         } else {
             return formatter.string(from: temperature.converted(to: units.temperatureUnit))
         }
+    }
+
+    func stringWithoutSign(for temperature: Temperature?) -> String {
+        guard let temperature = temperature else {
+            return "N/A".localized()
+        }
+        let value = temperature.converted(to: units.temperatureUnit).value
+        let number = NSNumber(value: value)
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.locale = settings.language.locale
+        return numberFormatter.string(from: number) ?? "N/A".localized()
     }
 
     func double(for pressure: Pressure) -> Double {
@@ -158,17 +182,6 @@ extension MeasurementsServiceImpl: MeasurementsService {
         }
     }
 }
-// MARK: - Localizable
-extension MeasurementsServiceImpl: Localizable {
-    func localize() {
-        numberFormatter.locale = self.settings.language.locale
-        formatter.locale = self.settings.language.locale
-        measurementFormatter.locale = self.settings.language.locale
-        humidityFormatter = HumidityFormatter()
-        HumiditySettings.setLanguage(self.settings.language.humidityLanguage)
-        notifyListeners()
-    }
-}
 // MARK: - Private
 extension MeasurementsServiceImpl {
     private func notifyListeners() {
@@ -182,10 +195,14 @@ extension MeasurementsServiceImpl {
     }
 
     private func updateCache() {
-        units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
-                                                         humidityUnit: settings.humidityUnit,
-                                                         pressureUnit: settings.pressureUnit)
+        updateUnits()
         notifyListeners()
+    }
+
+    func updateUnits() {
+        units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
+                                               humidityUnit: settings.humidityUnit,
+                                               pressureUnit: settings.pressureUnit)
     }
 
     private func startSettingsObserving() {

@@ -246,6 +246,12 @@ extension TagChartsInteractor {
         })
     }
 
+    func notifyDidLocalized() {
+        chartModules.forEach({
+            $0.localize()
+        })
+    }
+
     private func syncLocalTag(luid: String, progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         let connectionTimeout: TimeInterval = settings.connectionTimeout

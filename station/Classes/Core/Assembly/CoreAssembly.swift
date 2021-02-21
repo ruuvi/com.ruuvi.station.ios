@@ -53,7 +53,6 @@ class CoreAssembly: Assembly {
             let settings = r.resolve(Settings.self)
             let service = MeasurementsServiceImpl()
             service.settings = settings
-            service.setupLocalization()
             return service
         })
     }
