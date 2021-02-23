@@ -5,6 +5,7 @@ import UIKit
 struct LocalAlertCategory {
     var id: String
     var disable: String
+    var mute: String
     var uuidKey: String
     var typeKey: String
 }
@@ -44,14 +45,20 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var lowPressureAlerts = [String: Date]()
     var highPressureAlerts = [String: Date]()
 
-    private let lowHigh = LocalAlertCategory(id: "com.ruuvi.station.alerts.lh",
-                                             disable: "com.ruuvi.station.alerts.lh.disable",
-                                             uuidKey: "com.ruuvi.station.alerts.lh.uuid",
-                                             typeKey: "com.ruuvi.station.alerts.lh.type")
-    private let blast = LocalAlertCategory(id: "com.ruuvi.station.alerts.blast",
-                                           disable: "com.ruuvi.station.alerts.blast.disable",
-                                           uuidKey: "com.ruuvi.station.alerts.blast.uuid",
-                                           typeKey: "com.ruuvi.station.alerts.blast.type")
+    private let lowHigh = LocalAlertCategory(
+        id: "com.ruuvi.station.alerts.lh",
+        disable: "com.ruuvi.station.alerts.lh.disable",
+        mute: "com.ruuvi.station.alerts.lh.mute",
+        uuidKey: "com.ruuvi.station.alerts.lh.uuid",
+        typeKey: "com.ruuvi.station.alerts.lh.type"
+    )
+    private let blast = LocalAlertCategory(
+        id: "com.ruuvi.station.alerts.blast",
+        disable: "com.ruuvi.station.alerts.blast.disable",
+        mute: "com.ruuvi.station.alerts.blast.mute",
+        uuidKey: "com.ruuvi.station.alerts.blast.uuid",
+        typeKey: "com.ruuvi.station.alerts.blast.type"
+    )
 
     private var alertDidChangeToken: NSObjectProtocol?
 
@@ -168,7 +175,9 @@ extension LocalNotificationsManagerImpl {
 
         if let shownDate = cache[uuid] {
             needsToShow = Date().timeIntervalSince(shownDate) >
-                TimeInterval(settings.alertsRepeatingIntervalMinutes * 60)
+                TimeInterval(settings.alertsRepeatingIntervalSeconds)
+        } else if let mutedTill = alertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
+            needsToShow = Date() > mutedTill
         } else {
             needsToShow = true
         }
@@ -262,6 +271,30 @@ extension LocalNotificationsManagerImpl {
 
 // MARK: - Private
 extension LocalNotificationsManagerImpl {
+    private static func alertType(from type: LowHighNotificationType) -> AlertType {
+        switch type {
+        case .temperature:
+            return .temperature(lower: 0, upper: 0)
+        case .humidity:
+            return .humidity(
+                lower: Humidity(value: 0, unit: .absolute),
+                upper: Humidity(value: 0, unit: .absolute)
+            )
+        case .dewPoint:
+            return .dewPoint(lower: 0, upper: 0)
+        case .pressure:
+            return .pressure(lower: 0, upper: 0)
+        }
+    }
+
+    private static func alertType(from type: BlastNotificationType) -> AlertType {
+        switch type {
+        case .connection:
+            return .connection
+        case .movement:
+            return .movement(last: 0)
+        }
+    }
 
     // swiftlint:disable:next cyclomatic_complexity
     private func startObserving() {
@@ -319,21 +352,39 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.delegate = self
 
         // alerts actions and categories
-        let disableLowHighAction = UNNotificationAction(identifier: lowHigh.disable,
-                                                        title: "LocalNotificationsManager.Disable.button".localized(),
-                                                        options: UNNotificationActionOptions(rawValue: 0))
-        let lowHighCategory = UNNotificationCategory(identifier: lowHigh.id,
-                                                     actions: [disableLowHighAction],
-                                                     intentIdentifiers: [],
-                                                     options: .customDismissAction)
+        let disableLowHighAction = UNNotificationAction(
+            identifier: lowHigh.disable,
+            title: "LocalNotificationsManager.Disable.button".localized(),
+            options: UNNotificationActionOptions(rawValue: 0)
+        )
+        let muteLowHighAction = UNNotificationAction(
+            identifier: lowHigh.mute,
+            title: "LocalNotificationsManager.Mute.button".localized(),
+            options: UNNotificationActionOptions(rawValue: 0)
+        )
+        let lowHighCategory = UNNotificationCategory(
+            identifier: lowHigh.id,
+            actions: [muteLowHighAction, disableLowHighAction],
+            intentIdentifiers: [],
+            options: .customDismissAction
+        )
 
-        let disableBlastAction = UNNotificationAction(identifier: blast.disable,
-                                                      title: "LocalNotificationsManager.Disable.button".localized(),
-                                                      options: UNNotificationActionOptions(rawValue: 0))
-        let blastCategory = UNNotificationCategory(identifier: blast.id,
-                                                   actions: [disableBlastAction],
-                                                   intentIdentifiers: [],
-                                                   options: .customDismissAction)
+        let disableBlastAction = UNNotificationAction(
+            identifier: blast.disable,
+            title: "LocalNotificationsManager.Disable.button".localized(),
+            options: UNNotificationActionOptions(rawValue: 0)
+        )
+        let muteBlastAction = UNNotificationAction(
+            identifier: blast.mute,
+            title: "LocalNotificationsManager.Mute.button".localized(),
+            options: UNNotificationActionOptions(rawValue: 0)
+        )
+        let blastCategory = UNNotificationCategory(
+            identifier: blast.id,
+            actions: [muteBlastAction, disableBlastAction],
+            intentIdentifiers: [],
+            options: .customDismissAction
+        )
 
         nc.setNotificationCategories([lowHighCategory, blastCategory])
     }
@@ -351,30 +402,27 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
             let typeString = userInfo[lowHigh.typeKey] as? String,
-            let type = LowHighNotificationType(rawValue: typeString),
-            response.actionIdentifier == lowHigh.disable {
-            switch type {
-            case .temperature:
-                alertService.unregister(type: .temperature(lower: 0, upper: 0), for:
-                    uuid)
-            case .humidity:
-                alertService.unregister(type: .humidity(lower: Humidity(value: 0, unit: .absolute),
-                                                        upper: Humidity(value: 0, unit: .absolute)),
-                                        for: uuid)
-            case .dewPoint:
-                alertService.unregister(type: .dewPoint(lower: 0, upper: 0), for: uuid)
-            case .pressure:
-                alertService.unregister(type: .pressure(lower: 0, upper: 0), for: uuid)
+            let type = LowHighNotificationType(rawValue: typeString) {
+            switch response.actionIdentifier {
+            case lowHigh.disable:
+                alertService.unregister(type: Self.alertType(from: type), for: uuid)
+            case lowHigh.mute:
+                mute(type: type, uuid: uuid)
+            default:
+                break
             }
+
         } else if let uuid = userInfo[blast.uuidKey] as? String,
             let typeString = userInfo[blast.typeKey] as? String,
             let type = BlastNotificationType(rawValue: typeString),
             response.actionIdentifier == blast.disable {
-            switch type {
-            case .connection:
-                alertService.unregister(type: .connection, for: uuid)
-            case .movement:
-                alertService.unregister(type: .movement(last: 0), for: uuid)
+            switch response.actionIdentifier {
+            case blast.disable:
+                alertService.unregister(type: Self.alertType(from: type), for: uuid)
+            case blast.mute:
+                mute(type: type, uuid: uuid)
+            default:
+                break
             }
         }
 
@@ -392,5 +440,30 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
     }
 
+    private func mute(type: LowHighNotificationType, uuid: String) {
+        guard let date = muteOffset() else {
+            assertionFailure(); return
+        }
+        alertService.mute(
+            type: Self.alertType(from: type),
+            for: uuid,
+            till: date
+        )
+    }
+
+    private func mute(type: BlastNotificationType, uuid: String) {
+        guard let date = muteOffset() else {
+            assertionFailure(); return
+        }
+        alertService.mute(type: Self.alertType(from: type), for: uuid, till: date)
+    }
+
+    private func muteOffset() -> Date? {
+        return Calendar.current.date(
+            byAdding: .hour,
+            value: 1,
+            to: Date()
+        )
+    }
 }
 // swiftlint:enable file_length
