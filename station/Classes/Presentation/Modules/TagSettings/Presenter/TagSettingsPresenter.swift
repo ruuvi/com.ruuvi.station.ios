@@ -58,8 +58,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
+    private var mutedTillTimer: Timer?
 
     deinit {
+        mutedTillTimer?.invalidate()
         ruuviTagToken?.invalidate()
         ruuviTagSensorRecordToken?.invalidate()
         advertisementToken?.invalidate()
@@ -90,6 +92,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingConnectionStatus()
         startObservingApplicationState()
         startObservingAlertChanges()
+        startMutedTillTimer()
     }
 
     func dismiss(completion: (() -> Void)?) {
@@ -252,7 +255,16 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 
 // MARK: - Private
 extension TagSettingsPresenter {
-
+    private func startMutedTillTimer() {
+        self.mutedTillTimer = Timer
+            .scheduledTimer(
+                withTimeInterval: 5,
+                repeats: true
+            ) { [weak self] timer in
+                guard let sSelf = self else { timer.invalidate(); return }
+                sSelf.reloadMutedTill()
+        }
+    }
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -489,6 +501,7 @@ extension TagSettingsPresenter {
             viewModel.mac.value = mac
         }
         viewModel.updateRecord(record)
+        reloadMutedTill()
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
@@ -775,6 +788,38 @@ extension TagSettingsPresenter {
                 self?.updateMutedTill(of: type, for: uuid)
             }
         })
+    }
+
+    private func reloadMutedTill() {
+        if let mutedTill = viewModel.temperatureAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.temperatureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.humidityAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.humidityAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.dewPointAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.dewPointAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.pressureAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.pressureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.connectionAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.connectionAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.movementAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.movementAlertMutedTill.value = nil
+        }
     }
 
     private func updateMutedTill(of type: AlertType, for uuid: String) {
