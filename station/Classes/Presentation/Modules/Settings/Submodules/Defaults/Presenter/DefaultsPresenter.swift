@@ -89,7 +89,7 @@ extension DefaultsPresenter {
         let alertsInterval = DefaultsViewModel()
         alertsInterval.title = "Defaults.AlertsRepeatInterval.title".localized()
         alertsInterval.integer.value = settings.alertsRepeatingIntervalSeconds
-        alertsInterval.unit = .minutes
+        alertsInterval.unit = .seconds
 
         bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
             observer.settings.alertsRepeatingIntervalSeconds = alertsInterval.bound
