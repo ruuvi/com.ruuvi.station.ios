@@ -83,6 +83,11 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     func showDidConnect(uuid: String) {
+        if let mutedTill = alertService.mutedTill(type: .connection, for: uuid),
+           mutedTill > Date() {
+            return // muted
+        }
+
         let content = UNMutableNotificationContent()
         content.title = "LocalNotificationsManager.DidConnect.title".localized()
         content.sound = .default
@@ -102,6 +107,10 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     func showDidDisconnect(uuid: String) {
+        if let mutedTill = alertService.mutedTill(type: .connection, for: uuid),
+           mutedTill > Date() {
+            return // muted
+        }
         let content = UNMutableNotificationContent()
         content.sound = .default
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
@@ -121,6 +130,11 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     }
 
     func notifyDidMove(for uuid: String, counter: Int) {
+        if let mutedTill = alertService.mutedTill(type: .movement(last: 0), for: uuid),
+           mutedTill > Date() {
+            return // muted
+        }
+
         let content = UNMutableNotificationContent()
         content.sound = .default
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.movement.rawValue]
@@ -414,8 +428,7 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
 
         } else if let uuid = userInfo[blast.uuidKey] as? String,
             let typeString = userInfo[blast.typeKey] as? String,
-            let type = BlastNotificationType(rawValue: typeString),
-            response.actionIdentifier == blast.disable {
+            let type = BlastNotificationType(rawValue: typeString) {
             switch response.actionIdentifier {
             case blast.disable:
                 alertService.unregister(type: Self.alertType(from: type), for: uuid)
@@ -455,7 +468,10 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
         guard let date = muteOffset() else {
             assertionFailure(); return
         }
-        alertService.mute(type: Self.alertType(from: type), for: uuid, till: date)
+        alertService.mute(
+            type: Self.alertType(from: type),
+            for: uuid, till: date
+        )
     }
 
     private func muteOffset() -> Date? {
