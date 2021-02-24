@@ -11,7 +11,8 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
                            buildConnectionTimeout(),
                            buildServiceTimeout(),
                            buildCardsSwipeHint(),
-                           buildAlertsInterval(),
+                           buildAlertsRepeatingInterval(),
+                           buildAlertsMuteInterval(),
                            buildWebPullInterval(),
                            buildPruningOffsetHours(),
                            buildChartIntervalSeconds(),
@@ -85,7 +86,7 @@ extension DefaultsPresenter {
         return cardsSwipeHint
     }
 
-    private func buildAlertsInterval() -> DefaultsViewModel {
+    private func buildAlertsRepeatingInterval() -> DefaultsViewModel {
         let alertsInterval = DefaultsViewModel()
         alertsInterval.title = "Defaults.AlertsRepeatInterval.title".localized()
         alertsInterval.integer.value = settings.alertsRepeatingIntervalSeconds
@@ -93,6 +94,18 @@ extension DefaultsPresenter {
 
         bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
             observer.settings.alertsRepeatingIntervalSeconds = alertsInterval.bound
+        }
+        return alertsInterval
+    }
+
+    private func buildAlertsMuteInterval() -> DefaultsViewModel {
+        let alertsInterval = DefaultsViewModel()
+        alertsInterval.title = "Defaults.AlertsMuteInterval.title".localized()
+        alertsInterval.integer.value = settings.alertsMuteIntervalMinutes
+        alertsInterval.unit = .minutes
+
+        bind(alertsInterval.integer, fire: false) { observer, alertsInterval in
+            observer.settings.alertsMuteIntervalMinutes = alertsInterval.bound
         }
         return alertsInterval
     }
