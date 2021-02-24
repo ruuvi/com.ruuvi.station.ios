@@ -54,6 +54,11 @@ class AlertServiceImpl: AlertService {
         postAlertDidChange(with: uuid, of: type)
     }
 
+    func unmute(type: AlertType, for uuid: String) {
+        alertPersistence.unmute(type: type, for: uuid)
+        postAlertDidChange(with: uuid, of: type)
+    }
+
     private func postAlertDidChange(with uuid: String, of type: AlertType) {
         NotificationCenter
             .default

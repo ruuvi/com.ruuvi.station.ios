@@ -536,6 +536,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -569,6 +570,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -598,6 +600,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -631,6 +634,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -662,6 +666,7 @@ extension TagSettingsPresenter {
                 } else {
                     observer.alertService.unregister(type: type, for: uuid)
                 }
+                observer.alertService.unmute(type: type, for: uuid)
             }
         }
 
@@ -685,6 +690,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }, failure: { error in
                 observer.errorPresenter.present(error: error)

@@ -185,6 +185,23 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    func unmute(type: AlertType, for uuid: String) {
+        switch type {
+        case .temperature:
+            prefs.set(nil, forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .humidity:
+            prefs.set(nil, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(nil, forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid)
+        case .pressure:
+            prefs.set(nil, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .connection:
+            prefs.set(nil, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .movement:
+            prefs.set(nil, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
+        }
+    }
+
     func mutedTill(type: AlertType, for uuid: String) -> Date? {
         switch type {
         case .temperature:
