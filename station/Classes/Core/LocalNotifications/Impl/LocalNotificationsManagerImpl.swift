@@ -460,8 +460,8 @@ extension LocalNotificationsManagerImpl: UNUserNotificationCenterDelegate {
 
     private func muteOffset() -> Date? {
         return Calendar.current.date(
-            byAdding: .hour,
-            value: 1,
+            byAdding: .minute,
+            value: self.settings.alertsMuteIntervalMinutes,
             to: Date()
         )
     }
