@@ -303,3 +303,5 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Updated";
 "V" = "V";
+"LocalNotificationsManager.Mute.button" = "Mute for an hour";
+"Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
