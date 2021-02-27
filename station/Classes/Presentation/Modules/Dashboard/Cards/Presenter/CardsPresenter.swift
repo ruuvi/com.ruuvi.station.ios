@@ -295,6 +295,7 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
+                print(macId)
                 // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
                 // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
                 // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1

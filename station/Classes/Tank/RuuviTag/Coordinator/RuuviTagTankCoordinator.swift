@@ -51,6 +51,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
                     self?.backgroundPersistence.deleteCustomBackground(for: luid)
                     self?.connectionPersistence.setKeepConnection(false, for: luid)
                 } else if let macId = ruuviTag.macId {
+                    print(macId)
                     // FIXME:
 //                    self?.backgroundPersistence.deleteCustomBackground(for: macId)
 //                    self?.connectionPersistence.setKeepConnection(false, for: macId)
@@ -68,6 +69,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
                     self?.backgroundPersistence.deleteCustomBackground(for: luid)
                     self?.connectionPersistence.setKeepConnection(false, for: luid)
                 } else if let macId = ruuviTag.macId {
+                    print(macId)
                     // FIXME:
 //                    self?.backgroundPersistence.deleteCustomBackground(for: macId)
 //                    self?.connectionPersistence.setKeepConnection(false, for: macId)

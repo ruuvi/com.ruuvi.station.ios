@@ -115,6 +115,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
         } else if let macId = ruuviTag.macId {
+            print(macId)
 //            FIXME
 //            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
         } else {
@@ -238,6 +239,7 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
         if let luid = ruuviTag.luid {
             set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
         } else if let macId = ruuviTag.macId {
+            print(macId)
             // FIXME
             // set = backgroundPersistence.setCustomBackground(image: photo, for: mac)
             set = nil
@@ -279,6 +281,7 @@ extension TagSettingsPresenter {
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
         } else if let macId = ruuviTag.macId {
+            print(macId)
             // FIXME
             // viewModel.background.value = backgroundPersistence.background(for: mac)
 //            viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId)
