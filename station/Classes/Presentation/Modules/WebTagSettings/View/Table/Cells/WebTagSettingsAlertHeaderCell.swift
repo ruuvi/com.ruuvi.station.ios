@@ -10,6 +10,8 @@ class WebTagSettingsAlertHeaderCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var isOnSwitch: UISwitch!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var mutedTillLabel: UILabel!
+    @IBOutlet weak var mutedTillImageView: UIImageView!
 }
 
 // MARK: - IBActions

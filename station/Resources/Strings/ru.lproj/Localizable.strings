@@ -303,3 +303,5 @@
 "TemperatureUnit.Kelvin.title" = "Кельвин (K)";
 "Updated" = "Обновлено";
 "V" = "В";
+"LocalNotificationsManager.Mute.button" = "Отключить на час";
+"Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
