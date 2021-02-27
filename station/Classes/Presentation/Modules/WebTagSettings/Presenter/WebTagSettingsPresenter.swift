@@ -208,7 +208,7 @@ extension WebTagSettingsPresenter {
                 sSelf.reloadMutedTill()
         }
     }
-    
+
     private func bindViewModel(to webTag: WebTagRealm) {
         bindTemperatureAlert(webTag)
         bindHumidityAlert(webTag)
@@ -424,7 +424,8 @@ extension WebTagSettingsPresenter {
                 view.viewModel.temperatureUpperBound.value = Temperature(celsiusUpper, unit: .celsius)
             }
         }
-        view.viewModel.temperatureAlertMutedTill.value = alertService.mutedTill(type: temperatureAlertType, for: webTag.uuid)
+        view.viewModel.temperatureAlertMutedTill.value
+            = alertService.mutedTill(type: temperatureAlertType, for: webTag.uuid)
 
         let humidityAlertType: AlertType = .humidity(lower: .init(value: 0, unit: .absolute),
                                                      upper: .init(value: 0, unit: .absolute))

@@ -9,3 +9,4 @@ disabled_rules: # rule identifiers to exclude from running
   - identifier_name
   - force_try
   - closure_parameter_position
+  - todo

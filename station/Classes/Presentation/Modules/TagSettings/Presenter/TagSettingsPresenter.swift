@@ -516,7 +516,7 @@ extension TagSettingsPresenter {
             bindConnectionAlert(uuid: luid.value)
             bindMovementAlert(uuid: luid.value)
         } else {
-            //FIXME
+            // FIXME
         }
     }
 

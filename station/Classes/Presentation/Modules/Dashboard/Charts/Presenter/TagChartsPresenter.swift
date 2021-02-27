@@ -1,4 +1,4 @@
-//swiftlint:disable file_length
+// swiftlint:disable file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -456,4 +456,4 @@ extension TagChartsPresenter {
             })
     }
 }
-//swiftlint:enable file_length
+// swiftlint:enable file_length

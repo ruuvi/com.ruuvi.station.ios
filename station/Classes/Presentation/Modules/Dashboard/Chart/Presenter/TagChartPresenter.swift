@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import Charts
 import UIKit
@@ -301,7 +302,7 @@ extension TagChartPresenter {
         }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func setDownSampled(dataSet: [RuuviMeasurement], completion: (() -> Void)? = nil) {
         defer {
             completion?()
@@ -401,5 +402,5 @@ extension TagChartPresenter {
         addEntry(for: chartData, data: dataSet[dataSet.count - 2])
         addEntry(for: chartData, data: dataSet[dataSet.count - 1])
     }
-    // swiftlint:enable function_body_length
 }
+// swiftlint:enable file_length
