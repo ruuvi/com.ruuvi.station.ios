@@ -301,6 +301,7 @@ extension TagChartsPresenter {
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
                                                                 ? .registered : .empty
         } else if let macId = ruuviTag.macId {
+            print(macId)
             // FIXME
             // viewModel.background.value = backgroundPersistence.background(for: macId)
             // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
@@ -409,6 +410,7 @@ extension TagChartsPresenter {
             alertService.subscribe(self, to: luid.value)
         } else if let macId = ruuviTag.macId {
             // FIXME
+            print(macId)
         } else {
             assertionFailure()
         }

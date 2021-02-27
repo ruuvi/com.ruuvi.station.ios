@@ -58,6 +58,8 @@ class InfoProviderImpl: InfoProvider {
             result += notDetermined
         case .restricted:
             result += "restricted"
+        case .limited:
+            result += "limited"
         @unknown default:
             result += "unknown"
         }
@@ -106,6 +108,8 @@ class InfoProviderImpl: InfoProvider {
                     result += "denied"
                 case .notDetermined:
                     result += "notDetermined"
+                case .ephemeral:
+                    result += "ephemeral"
                 @unknown default:
                     result += "unknown"
                 }
