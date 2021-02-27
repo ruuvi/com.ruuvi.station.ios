@@ -303,3 +303,5 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Päivitetty";
 "V" = "V";
+"LocalNotificationsManager.Mute.button" = "Mykistä tunniksi";
+"Defaults.AlertsMuteInterval.title" = "TODO: Alerts Mute Interval";
