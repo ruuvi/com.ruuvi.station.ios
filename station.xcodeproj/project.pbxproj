@@ -1852,6 +1852,8 @@
 		0EFDD6D822BBDBD600EADFC6 /* CalibrationServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationServiceImpl.swift; sourceTree = "<group>"; };
 		293479501C6B154484B01175 /* Pods-station.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station.debug.xcconfig"; path = "Target Support Files/Pods-station/Pods-station.debug.xcconfig"; sourceTree = "<group>"; };
 		2C7E80C131BB9E8EDA0122BB /* Pods-station_dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-station_dev.release.xcconfig"; path = "Target Support Files/Pods-station_dev/Pods-station_dev.release.xcconfig"; sourceTree = "<group>"; };
+		3134DEBA25EA8ECE0048FBBB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3134DEBB25EA8ECE0048FBBB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		318592D925BB4D000093B8EB /* UserPropertiesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesService.swift; sourceTree = "<group>"; };
 		318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesServiceImpl.swift; sourceTree = "<group>"; };
 		3251ADAE51B505507BAED873 /* Pods_station_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_station_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5263,6 +5265,7 @@
 				ru,
 				fi,
 				sv,
+				fr,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
@@ -7120,6 +7123,7 @@
 				0E53A3F4232DFC6400ACED49 /* ru */,
 				0E53A3F5232DFC6500ACED49 /* fi */,
 				64A2DAE324310B2900DE6699 /* sv */,
+				3134DEBB25EA8ECE0048FBBB /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -7131,6 +7135,7 @@
 				0E9D0AAF231E9BD800C6BDA7 /* ru */,
 				0EBAF0832320120F0025A191 /* fi */,
 				64A2DAE224310B2900DE6699 /* sv */,
+				3134DEBA25EA8ECE0048FBBB /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

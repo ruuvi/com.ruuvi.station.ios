@@ -1,0 +1,8 @@
+NSBluetoothPeripheralUsageDescription = "L'application utilise Bluetooth LE pour lire les données des capteurs RuuviTag.";
+NSBluetoothAlwaysUsageDescription = "L'application utilise Bluetooth LE pour lire les données des capteurs RuuviTag.";
+NSCameraUsageDescription = "Ruuvi Station doit accéder à votre appareil photo pour pouvoir capturer des photos et les utiliser comme arrière-plan de balise.";
+NSLocationUsageDescription = "Ruuvi Station doit accéder à votre emplacement afin de déterminer votre position et afficher les paramètres météorologiques pour votre emplacement en direct.";
+NSLocationAlwaysUsageDescription = "Ruuvi Station doit accéder à votre emplacement en étant en arrière-plan afin d'extraire des données pour les capteurs virtuels de votre emplacement actuel et d'afficher des alertes.";
+NSLocationWhenInUseUsageDescription = "Ruuvi Station doit accéder à votre emplacement afin de déterminer votre position et afficher les paramètres météorologiques pour votre emplacement en direct.";
+NSLocationAlwaysAndWhenInUseUsageDescription = "Ruuvi Station doit accéder à votre emplacement afin de déterminer votre position et afficher les paramètres météorologiques pour votre emplacement en direct.";
+NSPhotoLibraryUsageDescription = "Ruuvi Station doit accéder à votre pellicule pour activer la sélection de l'arrière-plan du tag.";
