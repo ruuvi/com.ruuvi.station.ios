@@ -4,15 +4,16 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
 
     var settings: Settings!
     var ruuviTagNetworkOperationsManager: RuuviNetworkTagOperationsManager!
+    var networkPersistance: NetworkPersistence!
+    var needToRefreshImmediately: Bool = false
 
-    @UserDefault("PullRuuviNetworkDaemonOperation.ruuviNetworkTagLastPullDate", defaultValue: Date())
-    private var lastPullDate: Date
     private var pullTimer: Timer?
 
     @objc func wakeUp() {
-        if needsToPullNetworkTagData {
+        if needToRefreshImmediately || needsToPullNetworkTagData {
             pullNetworkTagData()
-            lastPullDate = Date()
+            networkPersistance.lastSyncDate = Date()
+            needToRefreshImmediately = false
         }
     }
 
@@ -26,10 +27,12 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
                                              repeats: true)
             RunLoop.current.add(timer, forMode: .common)
             sSelf.pullTimer = timer
+            sSelf.needToRefreshImmediately = false
         }
     }
 
     func stop() {
+        needToRefreshImmediately = true
         guard let thread = thread else {
             return
         }
@@ -46,6 +49,9 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
     }
 
     private var needsToPullNetworkTagData: Bool {
+        guard let lastPullDate = networkPersistance.lastSyncDate else {
+            return true
+        }
         let elapsed = Int(Date().timeIntervalSince(lastPullDate))
         return elapsed >= settings.networkPullIntervalSeconds
     }
