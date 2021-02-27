@@ -6,7 +6,7 @@ install! 'cocoapods', :disable_input_output_paths => true
 
 def shared_pods
   pod 'BTKit'
-  pod 'Charts'
+  pod 'Charts', :git => 'https://github.com/rinat-enikeev/Charts.git', :tag => 'v3.6.1'
   pod 'Firebase'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'

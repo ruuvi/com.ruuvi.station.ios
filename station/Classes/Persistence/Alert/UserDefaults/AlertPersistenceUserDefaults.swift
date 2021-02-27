@@ -13,6 +13,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
     private let temperatureAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
+    private let temperatureAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.temperatureAlertMuteTillDateUDKeyPrefix."
 
     // Humidity
     private let humidityLowerBoundUDKeyPrefix
@@ -23,6 +25,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.HumidityAlertIsOnUDKeyPrefix."
     private let humidityAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
+    private let humidityAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.humidityAlertMuteTillDateUDKeyPrefix."
 
     // dew point
     private let dewPointCelsiusLowerBoundUDKeyPrefix
@@ -33,6 +37,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.dewPointAlertIsOnUDKeyPrefix."
     private let dewPointAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.dewPointAlertDescriptionUDKeyPrefix."
+    private let dewPointAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertMuteTillDateUDKeyPrefix."
 
     // pressure
     private let pressureLowerBoundUDKeyPrefix
@@ -43,12 +49,16 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.pressureAlertIsOnUDKeyPrefix."
     private let pressureAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.pressureAlertDescriptionUDKeyPrefix."
+    private let pressureAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pressureAlertMuteTillDateUDKeyPrefix."
 
     // connection
     private let connectionAlertIsOnUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
     private let connectionAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertDescriptionUDKeyPrefix."
+    private let connectionAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.connectionAlertMuteTillDateUDKeyPrefix."
 
     // movement
     private let movementAlertIsOnUDKeyPrefix
@@ -57,6 +67,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.movementAlertCounterUDPrefix."
     private let movementAlertDescriptionUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
+    private let movementAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.movementAlertMuteTillDateUDKeyPrefix."
 
     // swiftlint:disable:next function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
@@ -153,6 +165,57 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         case .movement:
             prefs.set(false, forKey: movementAlertIsOnUDKeyPrefix + uuid)
+        }
+    }
+
+    func mute(type: AlertType, for uuid: String, till date: Date) {
+        switch type {
+        case .temperature:
+            prefs.set(date, forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .humidity:
+            prefs.set(date, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(date, forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid)
+        case .pressure:
+            prefs.set(date, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .connection:
+            prefs.set(date, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .movement:
+            prefs.set(date, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
+        }
+    }
+
+    func unmute(type: AlertType, for uuid: String) {
+        switch type {
+        case .temperature:
+            prefs.set(nil, forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .humidity:
+            prefs.set(nil, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(nil, forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid)
+        case .pressure:
+            prefs.set(nil, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
+        case .connection:
+            prefs.set(nil, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
+        case .movement:
+            prefs.set(nil, forKey: movementAlertMuteTillDateUDKeyPrefix + uuid)
+        }
+    }
+
+    func mutedTill(type: AlertType, for uuid: String) -> Date? {
+        switch type {
+        case .temperature:
+            return prefs.value(forKey: temperatureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .humidity:
+            return prefs.value(forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .dewPoint:
+            return prefs.value(forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .pressure:
+            return prefs.value(forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .connection:
+            return prefs.value(forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .movement:
+            return prefs.value(forKey: movementAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         }
     }
 }

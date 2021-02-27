@@ -10,15 +10,20 @@ extension AlertServiceImpl {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                isTriggered = isTriggered || process(temperature: type, ruuviTag: ruuviTag)
+                let isTemperature = process(temperature: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered || isTemperature
             case .humidity:
-                isTriggered = isTriggered || process(humidity: type, ruuviTag: ruuviTag)
+                let isHumidity = process(humidity: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered || isHumidity
             case .dewPoint:
-                isTriggered = isTriggered || process(dewPoint: type, ruuviTag: ruuviTag)
+                let isDewPoint = process(dewPoint: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered || isDewPoint
             case .pressure:
-                isTriggered = isTriggered || process(pressure: type, ruuviTag: ruuviTag)
+                let isPressure = process(pressure: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered || isPressure
             case .movement:
-                isTriggered = isTriggered || process(movement: type, ruuviTag: ruuviTag)
+                let isMovement = process(movement: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered || isMovement
             case .connection:
                 //do nothing, see RuuviTagHeartbeatDaemon
                 break
