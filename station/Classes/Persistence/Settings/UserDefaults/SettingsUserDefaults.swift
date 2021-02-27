@@ -222,6 +222,9 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
     var networkPullIntervalSeconds: Int
 
+    @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: 240)
+    var networkPruningIntervalHours: Int
+
 // MARK: - Private
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool

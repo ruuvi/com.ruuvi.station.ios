@@ -9,7 +9,7 @@ protocol KeychainService {
 }
 extension KeychainService {
 
-    var userApiIsAuthorized: Bool {
+    var userIsAuthorized: Bool {
         return !((ruuviUserApiKey ?? "").isEmpty)
             && !((userApiEmail ?? "").isEmpty)
     }

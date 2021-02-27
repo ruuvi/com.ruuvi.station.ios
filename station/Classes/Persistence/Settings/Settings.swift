@@ -41,6 +41,7 @@ protocol Settings {
     var tagsSorting: [String] { get set }
     var networkFeatureEnabled: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
+    var networkPruningIntervalHours: Int { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
