@@ -35,6 +35,10 @@ class AlertServiceImpl: AlertService {
         return alertPersistence.alert(for: uuid, of: type)
     }
 
+    func mutedTill(type: AlertType, for uuid: String) -> Date? {
+        alertPersistence.mutedTill(type: type, for: uuid)
+    }
+
     func register(type: AlertType, for uuid: String) {
         alertPersistence.register(type: type, for: uuid)
         postAlertDidChange(with: uuid, of: type)
@@ -42,6 +46,16 @@ class AlertServiceImpl: AlertService {
 
     func unregister(type: AlertType, for uuid: String) {
         alertPersistence.unregister(type: type, for: uuid)
+        postAlertDidChange(with: uuid, of: type)
+    }
+
+    func mute(type: AlertType, for uuid: String, till date: Date) {
+        alertPersistence.mute(type: type, for: uuid, till: date)
+        postAlertDidChange(with: uuid, of: type)
+    }
+
+    func unmute(type: AlertType, for uuid: String) {
+        alertPersistence.unmute(type: type, for: uuid)
         postAlertDidChange(with: uuid, of: type)
     }
 

@@ -177,6 +177,7 @@ class BusinessAssembly: Assembly {
             daemon.webTagService = r.resolve(WebTagService.self)
             daemon.settings = r.resolve(Settings.self)
             daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
+            daemon.alertService = r.resolve(AlertService.self)
             return daemon
         }.inObjectScope(.container)
 
