@@ -70,7 +70,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let movementAlertMuteTillDateUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertMuteTillDateUDKeyPrefix."
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
         case .temperature:

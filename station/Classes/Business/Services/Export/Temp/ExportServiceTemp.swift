@@ -215,7 +215,7 @@ extension ExportServiceTemp {
 
 // MARK: - Web Tag
 extension ExportServiceTemp {
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     private func csvLog(for webTag: WebTagRealm) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
         let dateFormatter = DateFormatter()

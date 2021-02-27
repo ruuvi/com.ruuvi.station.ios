@@ -71,7 +71,6 @@ class CardsPresenter: CardsModuleInput {
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
 
-    // swiftlint:disable:next cyclomatic_complexity,function_body_length
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
@@ -517,6 +516,7 @@ extension CardsPresenter {
         })
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
