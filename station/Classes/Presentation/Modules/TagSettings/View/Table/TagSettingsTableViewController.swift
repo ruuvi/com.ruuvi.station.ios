@@ -159,7 +159,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         pressureAlertControlsCell.textField.placeholder = alertPlaceholder
         connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
         movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
-
+        claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
+        shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
         tableView.reloadData()
     }
