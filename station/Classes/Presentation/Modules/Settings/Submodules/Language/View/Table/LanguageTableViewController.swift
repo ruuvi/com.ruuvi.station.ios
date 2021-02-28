@@ -15,6 +15,7 @@ class LanguageTableViewController: UITableViewController {
 // MARK: - LanguageViewInput
 extension LanguageTableViewController: LanguageViewInput {
     func localize() {
+        title = "Settings.Label.Language.text".localized()
         tableView.reloadData()
     }
 }
