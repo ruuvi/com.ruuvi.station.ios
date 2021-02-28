@@ -11,6 +11,7 @@ class CalibrationServiceImpl: CalibrationService {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
             postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
+            print(macId)
             // FIXME
 //            calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
         } else {
@@ -25,6 +26,7 @@ class CalibrationServiceImpl: CalibrationService {
             calibrationPersistence.setHumidity(date: date, offset: offset, for: luid)
             postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
+            print(macId)
             // FIXME
             // calibrationPersistence.setHumidity(date: date, offset: offset, for: macId)
         } else {
@@ -38,6 +40,7 @@ class CalibrationServiceImpl: CalibrationService {
             calibrationPersistence.setHumidity(date: nil, offset: 0, for: luid)
             postHumidityOffsetDidChange(with: luid)
         } else if let macId = ruuviTag.macId {
+            print(macId)
             // FIXME
             // calibrationPersistence.setHumidity(date: nil, offset: 0, for: macId)
         } else {

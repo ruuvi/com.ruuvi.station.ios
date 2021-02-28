@@ -596,6 +596,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell,
                                      didSlideTo minValue: CGFloat,
                                      maxValue: CGFloat) {
@@ -690,7 +691,7 @@ extension WebTagSettingsTableViewController {
                 imageView.isHidden = true
             }
         }
-        
+
         pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
             slider.isEnabled = isOn.bound
         }

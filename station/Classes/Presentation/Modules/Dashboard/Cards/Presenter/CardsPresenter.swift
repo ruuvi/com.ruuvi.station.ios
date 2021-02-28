@@ -71,7 +71,6 @@ class CardsPresenter: CardsModuleInput {
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
 
-    // swiftlint:disable:next cyclomatic_complexity,function_body_length
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
@@ -296,6 +295,7 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
+                print(macId)
                 // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
                 // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
                 // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
@@ -517,6 +517,7 @@ extension CardsPresenter {
         })
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
