@@ -15,7 +15,7 @@ protocol WeatherProviderService {
                                                   closure: @escaping (T, WPSData?, Location?, RUError?) -> Void)
         -> RUObservationToken
 
-    //swiftlint:disable function_parameter_count
+    // swiftlint:disable function_parameter_count
     @discardableResult
     func observeData<T: AnyObject>(_ observer: T,
                                    coordinate: CLLocationCoordinate2D,
@@ -24,5 +24,5 @@ protocol WeatherProviderService {
                                    fire: Bool,
                                    closure: @escaping (T, WPSData?, RUError?) -> Void)
         -> RUObservationToken
-    //swiftlint:enable function_parameter_count
+    // swiftlint:enable function_parameter_count
 }

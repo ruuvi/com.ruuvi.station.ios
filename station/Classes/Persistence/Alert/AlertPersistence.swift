@@ -8,7 +8,7 @@ protocol AlertPersistence {
     func mute(type: AlertType, for uuid: String, till date: Date)
     func unmute(type: AlertType, for uuid: String)
     func mutedTill(type: AlertType, for uuid: String) -> Date?
-    
+
     // temperature (celsius)
     func lowerCelsius(for uuid: String) -> Double?
     func setLower(celsius: Double?, for uuid: String)

@@ -22,7 +22,7 @@ class RuuviTagSubjectRxSwift {
         deleteSubject.onCompleted()
     }
 
-    //swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity
     init(sqlite: SQLiteContext, realm: RealmContext) {
         self.sqlite = sqlite
         self.realm = realm

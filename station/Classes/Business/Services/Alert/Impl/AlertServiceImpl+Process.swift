@@ -25,7 +25,7 @@ extension AlertServiceImpl {
                 let isMovement = process(movement: type, ruuviTag: ruuviTag)
                 isTriggered = isTriggered || isMovement
             case .connection:
-                //do nothing, see RuuviTagHeartbeatDaemon
+                // do nothing, see RuuviTagHeartbeatDaemon
                 break
             }
         }

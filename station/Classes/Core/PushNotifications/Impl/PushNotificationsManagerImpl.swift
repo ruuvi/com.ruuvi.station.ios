@@ -25,6 +25,8 @@ class PushNotificationsManagerImpl: NSObject, PushNotificationsManager {
                         completion(.denied)
                     case .notDetermined:
                         completion(.notDetermined)
+                    case .ephemeral:
+                        completion(.notDetermined)
                     @unknown default:
                         completion(.denied)
                     }

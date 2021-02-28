@@ -1174,10 +1174,6 @@
 		0EEB215A22BA28860015F9E0 /* MenuTableTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */; };
 		0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215F22BA61430015F9E0 /* MigrationManager.swift */; };
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
-		0EEB3E942526F03B008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E932526F03B008CE97B /* RxSwift */; };
-		0EEB3E962526F03B008CE97B /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E952526F03B008CE97B /* RxRelay */; };
-		0EEB3E982526F03B008CE97B /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E972526F03B008CE97B /* RxCocoa */; };
-		0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E992526F03B008CE97B /* RxBlocking */; };
 		0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3ED32526F148008CE97B /* RxSwift */; };
 		0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */; };
 		0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */; };
@@ -1996,11 +1992,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EEB3E962526F03B008CE97B /* RxRelay in Frameworks */,
-				0EEB3E942526F03B008CE97B /* RxSwift in Frameworks */,
-				0EEB3E982526F03B008CE97B /* RxCocoa in Frameworks */,
 				5314AC3CEE87724772A783AE /* Pods_station.framework in Frameworks */,
-				0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5176,10 +5168,6 @@
 			);
 			name = station;
 			packageProductDependencies = (
-				0EEB3E932526F03B008CE97B /* RxSwift */,
-				0EEB3E952526F03B008CE97B /* RxRelay */,
-				0EEB3E972526F03B008CE97B /* RxCocoa */,
-				0EEB3E992526F03B008CE97B /* RxBlocking */,
 			);
 			productName = station;
 			productReference = 64333D2520B0C45900CDF4B6 /* station.app */;
@@ -7830,26 +7818,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */;
 			productName = GRDB;
-		};
-		0EEB3E932526F03B008CE97B /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		0EEB3E952526F03B008CE97B /* RxRelay */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxRelay;
-		};
-		0EEB3E972526F03B008CE97B /* RxCocoa */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxCocoa;
-		};
-		0EEB3E992526F03B008CE97B /* RxBlocking */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxBlocking;
 		};
 		0EEB3ED32526F148008CE97B /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
