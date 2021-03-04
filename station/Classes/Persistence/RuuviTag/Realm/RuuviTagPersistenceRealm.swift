@@ -250,6 +250,45 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
+
+    func read(
+        _ ruuviTagId: String,
+        after date: Date,
+        with interval: TimeInterval
+    ) -> Future<[RuuviTagSensorRecord], RUError> {
+        let promise = Promise<[RuuviTagSensorRecord], RUError>()
+        context.bgWorker.enqueue {
+            let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
+                                   .filter("ruuviTag.uuid == %@ AND date > %@", ruuviTagId, date)
+                                   .sorted(byKeyPath: "date")
+            var result: [RuuviTagSensorRecord] = []
+            var previousDate = realmRecords.first?.date ?? Date()
+            for record in realmRecords {
+                autoreleasepool {
+                    guard record.date >= previousDate.addingTimeInterval(interval) else {
+                        return
+                    }
+                    previousDate = record.date
+                    result.append(
+                        RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
+                                                   date: record.date,
+                                                   macId: nil,
+                                                   rssi: record.rssi.value,
+                                                   temperature: record.unitTemperature,
+                                                   humidity: record.unitHumidity,
+                                                   pressure: record.unitPressure,
+                                                   acceleration: record.acceleration,
+                                                   voltage: record.unitVoltage,
+                                                   movementCounter: record.movementCounter.value,
+                                                   measurementSequenceNumber: record.measurementSequenceNumber.value,
+                                                   txPower: record.txPower.value))
+                }
+            }
+            promise.succeed(value: result)
+        }
+        return promise.future
+    }
+
     func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         context.bgWorker.enqueue {

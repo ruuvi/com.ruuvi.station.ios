@@ -202,7 +202,16 @@ extension TagChartsInteractor {
     }
 
     private func fetchAll(_ competion: (() -> Void)? = nil) {
-        let op = ruuviTagTrunk.readAll(ruuviTagSensor.id, with: TimeInterval(settings.chartIntervalSeconds))
+        let date = Calendar.current.date(
+            byAdding: .hour,
+            value: -settings.dataPruningOffsetHours,
+            to: Date()
+        ) ?? Date.distantPast
+        let op = ruuviTagTrunk.read(
+            ruuviTagSensor.id,
+            after: date,
+            with: TimeInterval(settings.chartIntervalSeconds)
+        )
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
