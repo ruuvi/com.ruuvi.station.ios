@@ -6,7 +6,7 @@ class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
     var gattService: GATTService!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrank: RuuviTagTrunk!
+    var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
@@ -182,7 +182,7 @@ extension TagChartsInteractor {
             return
         }
         let interval = TimeInterval(settings.chartIntervalSeconds)
-        let op = ruuviTagTrank.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
+        let op = ruuviTagTrunk.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
         op.on(success: { [weak self] (results) in
             guard results.count > 0 else { return }
             var lastResults: [RuuviMeasurement] = []
@@ -202,7 +202,7 @@ extension TagChartsInteractor {
     }
 
     private func fetchAll(_ competion: (() -> Void)? = nil) {
-        let op = ruuviTagTrank.readAll(ruuviTagSensor.id, with: TimeInterval(settings.chartIntervalSeconds))
+        let op = ruuviTagTrunk.readAll(ruuviTagSensor.id, with: TimeInterval(settings.chartIntervalSeconds))
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
