@@ -174,7 +174,20 @@ extension TagChartsInteractor {
                                      repeats: true,
                                      block: { [weak self] (_) in
             self?.fetchLast()
+            self?.removeFirst()
         })
+    }
+
+    private func removeFirst() {
+        guard !self.settings.chartDownsamplingOn else { return }
+        let cropDate = Calendar.current.date(
+            byAdding: .hour,
+            value: -settings.dataPruningOffsetHours,
+            to: Date()
+        ) ?? Date.distantPast
+        let prunedResults = self.ruuviTagData.filter({ $0.date < cropDate})
+        self.ruuviTagData.removeFirst(prunedResults.count)
+        self.removeMeasurements(prunedResults)
     }
 
     private func fetchLast() {
@@ -235,6 +248,12 @@ extension TagChartsInteractor {
     private func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         chartModules.forEach({
             $0.insertMeasurements(newValues)
+        })
+    }
+
+    private func removeMeasurements(_ oldValues: [RuuviMeasurement]) {
+        chartModules.forEach({
+            $0.removeMeasurements(oldValues)
         })
     }
 
