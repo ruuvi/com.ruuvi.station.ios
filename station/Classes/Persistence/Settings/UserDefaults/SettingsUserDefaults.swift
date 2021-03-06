@@ -207,7 +207,7 @@ class SettingsUserDegaults: Settings {
         }
     }
 
-    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 72)
+    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 240)
     var dataPruningOffsetHours: Int
 
     @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 300)
