@@ -224,6 +224,23 @@ extension TagChartPresenter {
         view.reloadData()
     }
 
+    func removeMeasurements(_ oldValues: [RuuviMeasurement]) {
+        guard !self.settings.chartDownsamplingOn else { return }
+        guard let chartData = viewModel.chartData.value else {
+            return
+        }
+        oldValues.forEach({
+            let success = chartData.removeEntry(
+                xValue: $0.date.timeIntervalSince1970,
+                dataSetIndex: 0
+            )
+            assert(success)
+            chartData.notifyDataChanged()
+        })
+        drawCirclesIfNeeded(for: chartData)
+        view.reloadData()
+    }
+
     private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
         if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
             let count: Int
