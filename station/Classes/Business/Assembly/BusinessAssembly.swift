@@ -124,6 +124,12 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerToPrune240.self) { r in
+            let manager = MigrationManagerToPrune240()
+            manager.settings = r.resolve(Settings.self)
+            return manager
+        }
+
         container.register(PullWebDaemon.self) { r in
             let daemon = PullWebDaemonOperations()
             daemon.settings = r.resolve(Settings.self)

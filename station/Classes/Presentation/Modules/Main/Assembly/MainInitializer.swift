@@ -11,6 +11,7 @@ class MainInitializer: NSObject {
         r.resolve(SQLiteContext.self)?.database.migrateIfNeeded()
         r.resolve(MigrationManagerToSQLite.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerAlertService.self)?.migrateIfNeeded()
+        r.resolve(MigrationManagerToPrune240.self)?.migrateIfNeeded()
         MainConfigurator().configure(navigationController: navigationController)
     }
 }

@@ -1187,6 +1187,9 @@
 		0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */; };
 		0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */; };
 		0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */; };
+		0EF2692125F389CB0036F693 /* MigrationManagerToPrune240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2692025F389CB0036F693 /* MigrationManagerToPrune240.swift */; };
+		0EF2692225F389CB0036F693 /* MigrationManagerToPrune240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2692025F389CB0036F693 /* MigrationManagerToPrune240.swift */; };
+		0EF2692325F389CB0036F693 /* MigrationManagerToPrune240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2692025F389CB0036F693 /* MigrationManagerToPrune240.swift */; };
 		0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */; };
 		0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
 		0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -1827,6 +1830,7 @@
 		0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationConfigurator.swift; sourceTree = "<group>"; };
 		0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationTransitioningDelegate.swift; sourceTree = "<group>"; };
 		0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationPresentationController.swift; sourceTree = "<group>"; };
+		0EF2692025F389CB0036F693 /* MigrationManagerToPrune240.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToPrune240.swift; sourceTree = "<group>"; };
 		0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagSettings.storyboard; sourceTree = "<group>"; };
 		0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableViewController.swift; sourceTree = "<group>"; };
 		0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewInput.swift; sourceTree = "<group>"; };
@@ -4385,6 +4389,7 @@
 		0EEB215E22BA610E0015F9E0 /* Migration */ = {
 			isa = PBXGroup;
 			children = (
+				0EF2691F25F389940036F693 /* toPrune240 */,
 				A98D997F25175C6100ED3760 /* AlertService */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
@@ -4466,6 +4471,14 @@
 				0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */,
 			);
 			path = Transition;
+			sourceTree = "<group>";
+		};
+		0EF2691F25F389940036F693 /* toPrune240 */ = {
+			isa = PBXGroup;
+			children = (
+				0EF2692025F389CB0036F693 /* MigrationManagerToPrune240.swift */,
+			);
+			path = toPrune240;
 			sourceTree = "<group>";
 		};
 		0EF26D172381A12F005BD84E /* Cell */ = {
@@ -5912,6 +5925,7 @@
 				0E6BADDB23856A01003A2D4C /* AboutViewInput.swift in Sources */,
 				A964646E247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0E6BADDC23856A01003A2D4C /* TagChartsViewInput.swift in Sources */,
+				0EF2692325F389CB0036F693 /* MigrationManagerToPrune240.swift in Sources */,
 				0E8BACBD245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E6BADDD23856A01003A2D4C /* LanguageTableViewController.swift in Sources */,
 				0E6BADDE23856A01003A2D4C /* DefaultsViewController.swift in Sources */,
@@ -6531,6 +6545,7 @@
 				0E8BD39B238566AB008B31EF /* MenuTableDismissTransitionAnimation.swift in Sources */,
 				0E8BD39C238566AB008B31EF /* DiscoverModuleInput.swift in Sources */,
 				0E8BD39E238566AB008B31EF /* SettingsTableConfigurator.swift in Sources */,
+				0EF2692225F389CB0036F693 /* MigrationManagerToPrune240.swift in Sources */,
 				0E8BD39F238566AB008B31EF /* RuuviTagPropertiesDaemon.swift in Sources */,
 				0E31B04C23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E8BD3A0238566AB008B31EF /* LanguageTableInitializer.swift in Sources */,
@@ -6775,6 +6790,7 @@
 				0EBAF072232007910025A191 /* LanguageTableViewController.swift in Sources */,
 				A964646C247BAE6B0001D55D /* AdvancedStepperTableViewCell.swift in Sources */,
 				0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */,
+				0EF2692125F389CB0036F693 /* MigrationManagerToPrune240.swift in Sources */,
 				0E8BACBB245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */,
 				0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */,
 				0EA31068232B711200BC8CF5 /* WebTagDataRealm.swift in Sources */,
