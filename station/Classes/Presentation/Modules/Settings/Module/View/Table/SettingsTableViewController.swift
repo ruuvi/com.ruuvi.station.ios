@@ -36,7 +36,7 @@ class SettingsTableViewController: UITableViewController {
     #if DEVELOPMENT
     private let showDefaults = true
     #else
-    private let showDefaults = false
+    private let showDefaults = true
     #endif
 
     var temperatureUnit: TemperatureUnit = .celsius {
