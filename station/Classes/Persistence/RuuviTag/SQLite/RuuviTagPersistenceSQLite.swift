@@ -6,6 +6,7 @@ import GRDB
 import FirebaseCrashlytics
 #endif
 
+// swiftlint:disable:next type_body_length
 class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     typealias Entity = RuuviTagSQLite
     typealias Record = RuuviTagDataSQLite
