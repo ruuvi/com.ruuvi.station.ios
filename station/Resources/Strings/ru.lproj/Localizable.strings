@@ -306,13 +306,13 @@
 "V" = "В";
 "SignIn.Title.text" = "Войти";
 "TagsManager.SignOutButton" = "Выйти из сети";
-"SignIn.SignInBenefits" = "Войдя в сеть вы сможете сохранить свои данные в облаке:\n- список датчиков\n- названия датчиков";
-"SignIn.RequestSignLink" = "Зарегистрируйтесь или получите ссылку для входа";
+"SignIn.SignInBenefits" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.EmailSent" = "Email отправлен";
-"SignIn.CheckMailbox" = "Пожалуйста проверьте email для дальнейших инструкций";
+"SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Хотите выйти их сети?";
-"TagSettings.ClaimTagButton.Claim" = "Мой датчик";
+"TagSettings.ClaimTagButton.Claim" = "Мой сенсор";
+"TagSettings.ClaimTagButton.Unclaim" = "Отвязать";
 "TagSettings.ShareButton" = "Поделиться";
 "Synchronized" = "Синхронизировано";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Синхронизировано: %@";
@@ -321,6 +321,8 @@
 "ShareViewController.Title" = "Поделиться датчиком Ruuvi";
 "ShareViewController.Description" = "Поделитесь показаниями своего датчика. Добавьте адреса своих друзей (10 максимум)";
 "ShareViewController.addFriend.Title" = "Добавить друга";
+"ShareViewController.emailTextField.placeholder" = "Введите email";
+"ShareViewController.sharedEmails.Title" = "Предоставлен доступ %d/%d";
 "SharePresenter.UnshareSensor.Message" = "Хотите перестать делиться показаниями датчика с %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "Данные сети";
 "TagSettings.NetworkInfo.Owner" = "Владелец";
@@ -335,7 +337,7 @@
 "UserApiError.ER_SUBSCRIPTION_NOT_FOUND" = "Подписка не найдена";
 "UserApiError.ER_SHARE_COUNT_REACHED" = "Достигнут лимит количества общих сенсоров";
 "UserApiError.ER_SENSOR_SHARE_COUNT_REACHED" = "Превышено количество общих сенсоров";
-"UserApiError.ER_NO_DATA_TO_SHARE" = "Нет данных для того чтобы поделиться сенсором";
+"UserApiError.ER_NO_DATA_TO_SHARE" = "Чтобы поделиться сенсором, нужны сохраненные данные в Ruuvi Network";
 "UserApiError.ER_SENSOR_ALREADY_SHARED" = "Вы уже делились этим сенсором";
 "UserApiError.ER_UNABLE_TO_SEND_EMAIL" = "Не удалось отправить e-mail";
 "UserApiError.ER_MISSING_ARGUMENT" = "Пропущен аргумент запроса";
@@ -343,6 +345,6 @@
 "UserApiError.ER_INVALID_SORT_MODE" = "Выбран недопустимый метод сортировки";
 "UserApiError.ER_INVALID_TIME_RANGE" = "Выбран недопустимый промежуток времени";
 "UserApiError.ER_INVALID_EMAIL_ADDRESS" = "Недопустимый e-mail";
-"UserApiError.ER_INVALID_MAC_ADDRESS" = "Недопустимый mac-адрес";
+"UserApiError.ER_INVALID_MAC_ADDRESS" = "Недопустимый MAC-адрес";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Ошибка сохранения данных";
 "UserApiError.ER_SUB_NO_USER" = "Нет пользователя";

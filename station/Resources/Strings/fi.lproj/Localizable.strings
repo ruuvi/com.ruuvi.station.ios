@@ -307,12 +307,12 @@
 "SignIn.Title.text" = "";
 "TagsManager.SignOutButton" = "";
 "SignIn.SignInBenefits" = "";
-"SignIn.RequestSignLink" = "";
 "SignIn.EmailPlaceholder" = "";
 "SignIn.EmailSent" = "";
 "SignIn.CheckMailbox" = "";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "";
 "TagSettings.ClaimTagButton.Claim" = "";
+"TagSettings.ClaimTagButton.Unclaim" = "";
 "TagSettings.ShareButton" = "";
 "Synchronized" = "";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "";
@@ -321,6 +321,8 @@
 "ShareViewController.Title" = "";
 "ShareViewController.Description" = "";
 "ShareViewController.addFriend.Title" = "";
+"ShareViewController.emailTextField.placeholder" = "";
+"ShareViewController.sharedEmails.Title" = "";
 "SharePresenter.UnshareSensor.Message" = "";
 "TagSettings.SectionHeader.NetworkInfo.title" = "";
 "TagSettings.NetworkInfo.Owner" = "";
