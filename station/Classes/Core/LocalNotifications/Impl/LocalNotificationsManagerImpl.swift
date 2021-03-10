@@ -188,8 +188,13 @@ extension LocalNotificationsManagerImpl {
         }
 
         if let shownDate = cache[uuid] {
-            needsToShow = Date().timeIntervalSince(shownDate) >=
+            let intervalPassed = Date().timeIntervalSince(shownDate) >=
                 TimeInterval(settings.saveHeartbeatsIntervalMinutes * 60)
+            if let mutedTill = alertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
+                needsToShow = intervalPassed && (Date() > mutedTill)
+            } else {
+                needsToShow = intervalPassed
+            }
         } else if let mutedTill = alertService.mutedTill(type: Self.alertType(from: type), for: uuid) {
             needsToShow = Date() > mutedTill
         } else {
