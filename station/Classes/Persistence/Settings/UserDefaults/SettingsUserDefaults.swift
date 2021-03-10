@@ -170,9 +170,6 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
     var advertisementDaemonIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.alertsRepeatingIntervalSeconds", defaultValue: 30)
-    var alertsRepeatingIntervalSeconds: Int
-
     @UserDefault("SettingsUserDegaults.alertsMuteIntervalMinutes", defaultValue: 60)
     var alertsMuteIntervalMinutes: Int
 
