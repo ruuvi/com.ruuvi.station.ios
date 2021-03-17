@@ -7,6 +7,7 @@ class NetworkServiceQueue: NetworkService {
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrunk: RuuviTagTrunk!
     var networkPersistence: NetworkPersistence!
+    var settings: Settings!
 
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -18,13 +19,17 @@ class NetworkServiceQueue: NetworkService {
     func loadData(for ruuviTagId: String, mac: String, from provider: RuuviNetworkProvider) -> Future<Int, RUError> {
         let promise = Promise<Int, RUError>()
         let operation = ruuviTagTrunk.readOne(ruuviTagId)
+        let networkPruningOffset = -TimeInterval(settings.networkPruningIntervalHours * 60 * 60)
+        let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
         operation.on(success: { [weak self] sensor in
             guard let strongSelf = self else {
                 return
             }
             let lastRecord = strongSelf.ruuviTagTrunk.readLast(sensor)
             lastRecord.on(success: { (record) in
-                let since: Date? = record?.date
+                let since: Date = record?.date
+                    ?? self?.networkPersistence.lastSyncDate
+                    ?? networkPuningDate
                 let loadDataOperation = strongSelf.loadDataOperation(for: sensor,
                                                                      mac: mac,
                                                                      since: since,
@@ -36,8 +41,11 @@ class NetworkServiceQueue: NetworkService {
                     promise.fail(error: error)
                  })
             }, failure: { _ in
+                let since: Date = self?.networkPersistence.lastSyncDate
+                    ?? networkPuningDate
                 let loadDataOperation = strongSelf.loadDataOperation(for: sensor,
                                                                      mac: mac,
+                                                                     since: since,
                                                                      from: provider)
                 loadDataOperation.on(success: { (result) in
                     promise.succeed(value: result)
@@ -96,7 +104,7 @@ class NetworkServiceQueue: NetworkService {
 extension NetworkServiceQueue {
     private func loadDataOperation(for sensor: AnyRuuviTagSensor,
                                    mac: String,
-                                   since: Date? = nil,
+                                   since: Date,
                                    from provider: RuuviNetworkProvider) -> Future<Int, RUError> {
         let promise = Promise<Int, RUError>()
         let network = ruuviNetworkFactory.network(for: provider)

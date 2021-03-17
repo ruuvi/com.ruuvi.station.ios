@@ -2,17 +2,18 @@ import UIKit
 
 class AppStateServiceImpl: AppStateService {
 
-    var settings: Settings!
     var advertisementDaemon: RuuviTagAdvertisementDaemon!
-    var propertiesDaemon: RuuviTagPropertiesDaemon!
-    var webTagDaemon: WebTagDaemon!
-    var heartbeatDaemon: RuuviTagHeartbeatDaemon!
-    var pullWebDaemon: PullWebDaemon!
-    var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
     var backgroundTaskService: BackgroundTaskService!
     var backgroundProcessService: BackgroundProcessService!
+    var heartbeatDaemon: RuuviTagHeartbeatDaemon!
+    var keychainService: KeychainService!
+    var propertiesDaemon: RuuviTagPropertiesDaemon!
+    var pullWebDaemon: PullWebDaemon!
+    var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
+    var settings: Settings!
     var userPropertiesService: UserPropertiesService!
     var universalLinkCoordinator: UniversalLinkCoordinator!
+    var webTagDaemon: WebTagDaemon!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
@@ -22,7 +23,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
         }
-        if settings.networkFeatureEnabled {
+        if keychainService.userIsAuthorized {
             pullNetworkTagDaemon.start()
         }
         heartbeatDaemon.start()
@@ -50,7 +51,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.stop()
         }
-        if settings.networkFeatureEnabled {
+        if keychainService.userIsAuthorized {
             pullNetworkTagDaemon.stop()
         }
         propertiesDaemon.stop()
@@ -66,7 +67,7 @@ class AppStateServiceImpl: AppStateService {
         if settings.isWebTagDaemonOn {
             webTagDaemon.start()
         }
-        if settings.networkFeatureEnabled {
+        if keychainService.userIsAuthorized {
             pullNetworkTagDaemon.start()
         }
         propertiesDaemon.start()

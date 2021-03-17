@@ -55,7 +55,7 @@ extension UniversalLinkCoordinatorImpl {
         guard let token = urlComponents.queryItems?
                 .first(where: { $0.name == "token" })?
                 .value,
-              !keychainService.userApiIsAuthorized else {
+              !keychainService.userIsAuthorized else {
             return
         }
         router.openSignInVerify(with: token, from: topViewController)

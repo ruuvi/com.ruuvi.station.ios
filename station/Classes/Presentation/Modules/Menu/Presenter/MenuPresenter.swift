@@ -21,6 +21,7 @@ class MenuPresenter: MenuModuleInput {
 
     func configure(output: MenuModuleOutput) {
         self.output = output
+        startObservingAppState()
     }
 
     func dismiss() {
@@ -36,11 +37,10 @@ extension MenuPresenter: MenuViewOutput {
 
     func viewDidLoad() {
         syncViewModel()
-        createLastUpdateTimer()
     }
 
     var userIsAuthorized: Bool {
-        return keychainService.userApiIsAuthorized
+        return keychainService.userIsAuthorized
     }
 
     var userEmail: String? {
@@ -100,11 +100,27 @@ extension MenuPresenter: MenuViewOutput {
 }
 
 extension MenuPresenter {
-    private func syncViewModel() {
+    private func startObservingAppState() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(syncViewModel),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(invalidateTimer),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+    }
+
+    @objc private func syncViewModel() {
         let viewModel = MenuViewModel()
         viewModel.username.value = keychainService.userApiEmail
         self.viewModel = viewModel
         setSyncStatus()
+        createLastUpdateTimer()
+    }
+
+    @objc private func invalidateTimer() {
+        timer?.invalidate()
     }
 
     private func setSyncStatus() {
