@@ -26,6 +26,7 @@ class BusinessAssembly: Assembly {
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
             service.pullNetworkTagDaemon = r.resolve(PullRuuviNetworkDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
+            service.keychainService = r.resolve(KeychainService.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
@@ -137,6 +138,7 @@ class BusinessAssembly: Assembly {
         container.register(PullRuuviNetworkDaemon.self) { r in
             let daemon = PullRuuviNetworkDaemonOperation()
             daemon.settings = r.resolve(Settings.self)
+            daemon.networkPersistance = r.resolve(NetworkPersistence.self)
             daemon.ruuviTagNetworkOperationsManager = r.resolve(RuuviNetworkTagOperationsManager.self)
             return daemon
         }.inObjectScope(.container)
@@ -171,6 +173,7 @@ class BusinessAssembly: Assembly {
             factory.userApi = r.resolve(RuuviNetworkUserApi.self)
             service.ruuviNetworkFactory = factory
             service.networkPersistence = r.resolve(NetworkPersistence.self)
+            service.settings = r.resolve(Settings.self)
             return service
         }.inObjectScope(.container)
 
@@ -229,6 +232,8 @@ class BusinessAssembly: Assembly {
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             service.keychainService = r.resolve(KeychainService.self)
+            service.networkPersistance = r.resolve(NetworkPersistence.self)
+            service.settings = r.resolve(Settings.self)
             return service
         }
 

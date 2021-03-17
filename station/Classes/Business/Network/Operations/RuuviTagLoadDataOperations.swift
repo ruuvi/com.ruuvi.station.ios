@@ -6,14 +6,14 @@ class RuuviTagLoadDataOperation: AsyncOperation {
     var mac: String
     var error: RUError?
     var recordsCount: Int = 0
-    private var since: Date?
+    private var since: Date
     private var until: Date?
     private var network: RuuviNetwork
     private var ruuviTagTank: RuuviTagTank
 
     init(ruuviTagId: String,
          mac: String,
-         since: Date? = nil,
+         since: Date,
          until: Date? = nil,
          network: RuuviNetwork,
          ruuviTagTank: RuuviTagTank) {

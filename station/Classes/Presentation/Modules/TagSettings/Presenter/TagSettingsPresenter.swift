@@ -162,7 +162,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
-        guard keychainService.userApiIsAuthorized,
+        guard keychainService.userIsAuthorized,
               let mac = ruuviTag.macId?.value else {
             return
         }
@@ -351,7 +351,7 @@ extension TagSettingsPresenter {
             assertionFailure()
         }
 
-        viewModel.isAuthorized.value = keychainService.userApiIsAuthorized
+        viewModel.isAuthorized.value = keychainService.userIsAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner
         viewModel.owner.value = ruuviTag.owner
