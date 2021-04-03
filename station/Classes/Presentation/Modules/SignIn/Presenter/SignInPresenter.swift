@@ -171,7 +171,6 @@ extension SignInPresenter {
                     return
                 }
                 sSelf.keychainService.ruuviUserApiKey = response.accessToken
-                
                 sSelf.output?.signIn(module: sSelf, didSuccessfulyLogin: nil)
             }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)

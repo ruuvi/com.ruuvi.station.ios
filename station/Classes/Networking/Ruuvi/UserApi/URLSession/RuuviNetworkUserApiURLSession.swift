@@ -105,6 +105,7 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
 
 // MARK: - Private
 extension RuuviNetworkUserApiURLSession {
+    // swiftlint:disable:next function_body_length
     private func request<Request: Encodable, Response: Decodable>(
         endpoint: Routes,
         with model: Request,

@@ -87,7 +87,9 @@ extension RuuviNetworkUserApi {
 }
 // MARK: - Private
 extension RuuviNetworkUserApi {
-    private func decodeSensorResponse(responses: [UserApiGetSensorResponse]) -> [(AnyRuuviTagSensor, RuuviTagSensorRecord)] {
+    private func decodeSensorResponse(
+        responses: [UserApiGetSensorResponse]
+    ) -> [(AnyRuuviTagSensor, RuuviTagSensorRecord)] {
         let decoder = Ruuvi.decoder
         var sensors: [(AnyRuuviTagSensor, RuuviTagSensorRecord)] = []
         responses.forEach({

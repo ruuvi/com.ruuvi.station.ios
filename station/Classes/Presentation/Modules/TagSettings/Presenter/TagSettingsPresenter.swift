@@ -337,6 +337,8 @@ extension TagSettingsPresenter {
                 sSelf.reloadMutedTill()
         }
     }
+
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit

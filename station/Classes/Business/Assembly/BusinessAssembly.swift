@@ -1,6 +1,7 @@
 import Swinject
 import BTKit
 
+// swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
 
     // swiftlint:disable:next function_body_length

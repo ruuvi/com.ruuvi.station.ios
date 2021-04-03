@@ -393,6 +393,7 @@ extension CardsScrollViewController {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bind(view: CardView, with viewModel: CardsViewModel) {
         view.nameLabel.bind(viewModel.name,
                             block: {
