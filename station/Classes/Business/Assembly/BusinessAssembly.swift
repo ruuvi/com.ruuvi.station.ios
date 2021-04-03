@@ -128,6 +128,12 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerToPrune240.self) { r in
+            let manager = MigrationManagerToPrune240()
+            manager.settings = r.resolve(Settings.self)
+            return manager
+        }
+
         container.register(PullWebDaemon.self) { r in
             let daemon = PullWebDaemonOperations()
             daemon.settings = r.resolve(Settings.self)
@@ -201,6 +207,7 @@ class BusinessAssembly: Assembly {
             daemon.webTagService = r.resolve(WebTagService.self)
             daemon.settings = r.resolve(Settings.self)
             daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
+            daemon.alertService = r.resolve(AlertService.self)
             return daemon
         }.inObjectScope(.container)
 

@@ -63,4 +63,3 @@ extension MeasurementsService {
         return double(for: voltage)
     }
 }
-

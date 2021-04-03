@@ -25,6 +25,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
             view.viewModel.temperature.value = temperature
         }
     }
+    private var mutedTillTimer: Timer?
     private var webTagToken: NotificationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
@@ -39,6 +40,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     }
 
     deinit {
+        mutedTillTimer?.invalidate()
         webTagToken?.invalidate()
         temperatureUnitToken?.invalidate()
         appDidBecomeActiveToken?.invalidate()
@@ -55,6 +57,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
         startObservingSettingsChanges()
         startObservingApplicationState()
         startObservingAlertChanges()
+        startMutedTillTimer()
     }
 }
 
@@ -195,6 +198,16 @@ extension WebTagSettingsPresenter: LocationPickerModuleOutput {
 
 // MARK: - Private
 extension WebTagSettingsPresenter {
+    private func startMutedTillTimer() {
+        self.mutedTillTimer = Timer
+            .scheduledTimer(
+                withTimeInterval: 5,
+                repeats: true
+            ) { [weak self] timer in
+                guard let sSelf = self else { timer.invalidate(); return }
+                sSelf.reloadMutedTill()
+        }
+    }
 
     private func bindViewModel(to webTag: WebTagRealm) {
         bindTemperatureAlert(webTag)
@@ -219,6 +232,7 @@ extension WebTagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: webTag.uuid)
                     }
+                    observer.alertService.unmute(type: type, for: webTag.uuid)
                 }
             }
         }
@@ -252,6 +266,7 @@ extension WebTagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: webTag.uuid)
                     }
+                    observer.alertService.unmute(type: type, for: webTag.uuid)
                 }
             }
         }
@@ -282,6 +297,7 @@ extension WebTagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: webTag.uuid)
                     }
+                    observer.alertService.unmute(type: type, for: webTag.uuid)
                 }
             }
         }
@@ -318,6 +334,7 @@ extension WebTagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: webTag.uuid)
                     }
+                    observer.alertService.unmute(type: type, for: webTag.uuid)
                 }
             }
         }
@@ -407,6 +424,8 @@ extension WebTagSettingsPresenter {
                 view.viewModel.temperatureUpperBound.value = Temperature(celsiusUpper, unit: .celsius)
             }
         }
+        view.viewModel.temperatureAlertMutedTill.value
+            = alertService.mutedTill(type: temperatureAlertType, for: webTag.uuid)
 
         let humidityAlertType: AlertType = .humidity(lower: .init(value: 0, unit: .absolute),
                                                      upper: .init(value: 0, unit: .absolute))
@@ -424,6 +443,7 @@ extension WebTagSettingsPresenter {
                 view.viewModel.humidityUpperBound.value = humidityUpper
             }
         }
+        view.viewModel.humidityAlertMutedTill.value = alertService.mutedTill(type: humidityAlertType, for: webTag.uuid)
 
         let dewPointAlertType: AlertType = .dewPoint(lower: 0, upper: 0)
         if case .dewPoint(let lower, let upper) = alertService.alert(for: webTag.uuid, of: dewPointAlertType) {
@@ -440,6 +460,8 @@ extension WebTagSettingsPresenter {
             }
         }
 
+        view.viewModel.dewPointAlertMutedTill.value = alertService.mutedTill(type: dewPointAlertType, for: webTag.uuid)
+
         let pressureAlertType: AlertType = .pressure(lower: 0, upper: 0)
         if case .pressure(let lower, let upper) = alertService.alert(for: webTag.uuid, of: pressureAlertType) {
             view.viewModel.isPressureAlertOn.value = true
@@ -454,6 +476,9 @@ extension WebTagSettingsPresenter {
                 view.viewModel.pressureUpperBound.value = Pressure(pressureUpperBound, unit: .hectopascals)
             }
         }
+        view.viewModel.pressureAlertMutedTill.value = alertService.mutedTill(type: pressureAlertType, for: webTag.uuid)
+
+        reloadMutedTill()
     }
 
     private func checkPushNotificationsStatus() {
@@ -481,6 +506,7 @@ extension WebTagSettingsPresenter {
                 uuid == self?.view.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
                 self?.updateIsOnState(of: type, for: uuid)
+                self?.updateMutedTill(of: type, for: uuid)
             }
         })
     }
@@ -506,6 +532,54 @@ extension WebTagSettingsPresenter {
             let isOn = alertService.isOn(type: type, for: uuid)
             if isOn != observable.value {
                 observable.value = isOn
+            }
+        }
+    }
+
+    private func reloadMutedTill() {
+        if let mutedTill = view.viewModel.temperatureAlertMutedTill.value,
+           mutedTill < Date() {
+            view.viewModel.temperatureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = view.viewModel.humidityAlertMutedTill.value,
+           mutedTill < Date() {
+            view.viewModel.humidityAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = view.viewModel.dewPointAlertMutedTill.value,
+           mutedTill < Date() {
+            view.viewModel.dewPointAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = view.viewModel.pressureAlertMutedTill.value,
+           mutedTill < Date() {
+            view.viewModel.pressureAlertMutedTill.value = nil
+        }
+
+    }
+
+    private func updateMutedTill(of type: AlertType, for uuid: String) {
+        var observable: Observable<Date?>?
+        switch type {
+        case .temperature:
+            observable = view.viewModel.temperatureAlertMutedTill
+        case .humidity:
+            observable = view.viewModel.humidityAlertMutedTill
+        case .dewPoint:
+            observable = view.viewModel.dewPointAlertMutedTill
+        case .pressure:
+            observable = view.viewModel.pressureAlertMutedTill
+        case .connection:
+            observable = nil
+        case .movement:
+            observable = nil
+        }
+
+        if let observable = observable {
+            let date = alertService.mutedTill(type: type, for: uuid)
+            if date != observable.value {
+                observable.value = date
             }
         }
     }

@@ -170,8 +170,8 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.advertisementDaemonIntervalMinutes", defaultValue: 5)
     var advertisementDaemonIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.alertsRepeatingIntervalMinutes", defaultValue: 60)
-    var alertsRepeatingIntervalMinutes: Int
+    @UserDefault("SettingsUserDegaults.alertsMuteIntervalMinutes", defaultValue: 60)
+    var alertsMuteIntervalMinutes: Int
 
     @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: false)
     var saveHeartbeats: Bool
@@ -204,7 +204,7 @@ class SettingsUserDegaults: Settings {
         }
     }
 
-    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 72)
+    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 240)
     var dataPruningOffsetHours: Int
 
     @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 300)

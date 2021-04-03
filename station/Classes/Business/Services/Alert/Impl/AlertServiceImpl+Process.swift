@@ -10,30 +10,40 @@ extension AlertServiceImpl {
         AlertType.allCases.forEach { (type) in
             switch type {
             case .temperature:
-                isTriggered = isTriggered
-                    || process(temperature: ruuviTag.temperature,
-                               alertType: type,
-                               identifier: ruuviTag.ruuviTagId.luid)
+                let isTemperature = process(
+                    temperature: ruuviTag.temperature,
+                    alertType: type,
+                    identifier: ruuviTag.ruuviTagId.luid
+                )
+                isTriggered = isTriggered || isTemperature
             case .humidity:
-                isTriggered = isTriggered
-                    || process(humidity: ruuviTag.humidity,
-                               temperature: ruuviTag.temperature,
-                               alertType: type,
-                               identifier: ruuviTag.ruuviTagId.luid)
+                let isHumidity = process(
+                    humidity: ruuviTag.humidity,
+                    temperature: ruuviTag.temperature,
+                    alertType: type,
+                    identifier: ruuviTag.ruuviTagId.luid
+                )
+                isTriggered = isTriggered || isHumidity
             case .dewPoint:
-                isTriggered = isTriggered
-                    || processDewPoint(humidity: ruuviTag.humidity,
-                                       temperature: ruuviTag.temperature,
-                                       alertType: type, identifier: ruuviTag.ruuviTagId.luid)
+                let isDewPoint = processDewPoint(
+                    humidity: ruuviTag.humidity,
+                    temperature: ruuviTag.temperature,
+                    alertType: type,
+                    identifier: ruuviTag.ruuviTagId.luid
+                )
+                isTriggered = isTriggered || isDewPoint
             case .pressure:
-                isTriggered = isTriggered
-                    || process(pressure: ruuviTag.pressure,
-                               alertType: type,
-                               identifier: ruuviTag.ruuviTagId.luid)
+                let isPressure = process(
+                    pressure: ruuviTag.pressure,
+                    alertType: type,
+                    identifier: ruuviTag.ruuviTagId.luid
+                )
+                isTriggered = isTriggered || isPressure
             case .movement:
-                isTriggered = isTriggered || process(movement: type, ruuviTag: ruuviTag)
+                let isMovement = process(movement: type, ruuviTag: ruuviTag)
+                isTriggered = isTriggered || isMovement
             case .connection:
-                //do nothing, see RuuviTagHeartbeatDaemon
+                // do nothing, see RuuviTagHeartbeatDaemon
                 break
             }
         }

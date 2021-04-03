@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import Charts
 import UIKit
@@ -223,6 +224,23 @@ extension TagChartPresenter {
         view.reloadData()
     }
 
+    func removeMeasurements(_ oldValues: [RuuviMeasurement]) {
+        guard !self.settings.chartDownsamplingOn else { return }
+        guard let chartData = viewModel.chartData.value else {
+            return
+        }
+        oldValues.forEach({
+            let success = chartData.removeEntry(
+                xValue: $0.date.timeIntervalSince1970,
+                dataSetIndex: 0
+            )
+            assert(success)
+            chartData.notifyDataChanged()
+        })
+        drawCirclesIfNeeded(for: chartData)
+        view.reloadData()
+    }
+
     private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
         if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
             let count: Int
@@ -301,7 +319,7 @@ extension TagChartPresenter {
         }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func setDownSampled(dataSet: [RuuviMeasurement], completion: (() -> Void)? = nil) {
         defer {
             completion?()
@@ -401,5 +419,5 @@ extension TagChartPresenter {
         addEntry(for: chartData, data: dataSet[dataSet.count - 2])
         addEntry(for: chartData, data: dataSet[dataSet.count - 1])
     }
-    // swiftlint:enable function_body_length
 }
+// swiftlint:enable file_length

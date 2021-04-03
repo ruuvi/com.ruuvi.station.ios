@@ -5,6 +5,9 @@ protocol AlertPersistence {
     func alert(for uuid: String, of type: AlertType) -> AlertType?
     func register(type: AlertType, for uuid: String)
     func unregister(type: AlertType, for uuid: String)
+    func mute(type: AlertType, for uuid: String, till date: Date)
+    func unmute(type: AlertType, for uuid: String)
+    func mutedTill(type: AlertType, for uuid: String) -> Date?
 
     // temperature (celsius)
     func lowerCelsius(for uuid: String) -> Double?

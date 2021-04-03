@@ -99,6 +99,7 @@
 "Language.Finnish" = "Suomi";
 "Language.Russian" = "Русский";
 "Language.Swedish" = "Svenska";
+"Language.French" = "Français";
 "LocalNotificationsManager.DidConnect.title" = "Connected";
 "LocalNotificationsManager.DidDisconnect.title" = "Disconnected";
 "LocalNotificationsManager.Disable.button" = "Turn Off";
@@ -304,6 +305,8 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Updated";
 "V" = "V";
+"LocalNotificationsManager.Mute.button" = "Mute for an hour";
+"Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
 "TagsManager.SignOutButton" = "Sign out";
 "SignIn.SignInBenefits" = "After signing in, you will be automatically marked as an owner of your nearby Ruuvi sensors. The claimed sensors will be restored after an app re-install.\n\nWith a Ruuvi Gateway router, you'll be able to monitor the claimed sensors remotely and share them with your friends.";

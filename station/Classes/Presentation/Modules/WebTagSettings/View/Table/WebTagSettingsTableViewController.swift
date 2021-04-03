@@ -596,6 +596,7 @@ extension WebTagSettingsTableViewController: WebTagSettingsAlertControlsCellDele
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell,
                                      didSlideTo minValue: CGFloat,
                                      maxValue: CGFloat) {
@@ -670,6 +671,25 @@ extension WebTagSettingsTableViewController {
         guard isViewLoaded else { return }
         pressureAlertHeaderCell.isOnSwitch.bind(viewModel.isPressureAlertOn) { (view, isOn) in
             view.isOn = isOn.bound
+        }
+
+        pressureAlertHeaderCell.mutedTillLabel.bind(viewModel.pressureAlertMutedTill) { (label, date) in
+            if let date = date, date > Date() {
+                label.isHidden = false
+                let formatter = DateFormatter()
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                label.text = formatter.string(from: date)
+            } else {
+                label.isHidden = true
+            }
+        }
+        pressureAlertHeaderCell.mutedTillImageView.bind(viewModel.pressureAlertMutedTill) { (imageView, date) in
+            if let date = date, date > Date() {
+                imageView.isHidden = false
+            } else {
+                imageView.isHidden = true
+            }
         }
 
         pressureAlertControlsCell.slider.bind(viewModel.isPressureAlertOn) { (slider, isOn) in
@@ -799,6 +819,25 @@ extension WebTagSettingsTableViewController {
         guard isViewLoaded else { return }
         humidityAlertHeaderCell.isOnSwitch.bind(viewModel.isHumidityAlertOn) { (view, isOn) in
             view.isOn = isOn.bound
+        }
+
+        humidityAlertHeaderCell.mutedTillLabel.bind(viewModel.humidityAlertMutedTill) { (label, date) in
+            if let date = date, date > Date() {
+                label.isHidden = false
+                let formatter = DateFormatter()
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                label.text = formatter.string(from: date)
+            } else {
+                label.isHidden = true
+            }
+        }
+        humidityAlertHeaderCell.mutedTillImageView.bind(viewModel.humidityAlertMutedTill) { (imageView, date) in
+            if let date = date, date > Date() {
+                imageView.isHidden = false
+            } else {
+                imageView.isHidden = true
+            }
         }
 
         humidityAlertControlsCell.slider.bind(viewModel.isHumidityAlertOn) { (slider, isOn) in
@@ -937,6 +976,25 @@ extension WebTagSettingsTableViewController {
             view.isOn = isOn.bound
         }
 
+        temperatureAlertHeaderCell.mutedTillLabel.bind(viewModel.temperatureAlertMutedTill) { (label, date) in
+            if let date = date, date > Date() {
+                label.isHidden = false
+                let formatter = DateFormatter()
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                label.text = formatter.string(from: date)
+            } else {
+                label.isHidden = true
+            }
+        }
+        temperatureAlertHeaderCell.mutedTillImageView.bind(viewModel.temperatureAlertMutedTill) { (imageView, date) in
+            if let date = date, date > Date() {
+                imageView.isHidden = false
+            } else {
+                imageView.isHidden = true
+            }
+        }
+
         temperatureAlertControlsCell.slider.bind(viewModel.temperatureLowerBound) { [weak self] (_, _) in
             self?.updateUITemperatureLowerBound()
             self?.updateUITemperatureAlertDescription()
@@ -1051,6 +1109,25 @@ extension WebTagSettingsTableViewController {
         }
         dewPointAlertHeaderCell.isOnSwitch.bind(viewModel.isDewPointAlertOn) { (view, isOn) in
             view.isOn = isOn.bound
+        }
+
+        dewPointAlertHeaderCell.mutedTillLabel.bind(viewModel.dewPointAlertMutedTill) { (label, date) in
+            if let date = date, date > Date() {
+                label.isHidden = false
+                let formatter = DateFormatter()
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                label.text = formatter.string(from: date)
+            } else {
+                label.isHidden = true
+            }
+        }
+        dewPointAlertHeaderCell.mutedTillImageView.bind(viewModel.dewPointAlertMutedTill) { (imageView, date) in
+            if let date = date, date > Date() {
+                imageView.isHidden = false
+            } else {
+                imageView.isHidden = true
+            }
         }
 
         dewPointAlertControlsCell.slider.bind(viewModel.isDewPointAlertOn) { (slider, isOn) in
