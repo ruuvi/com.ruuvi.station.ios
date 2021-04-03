@@ -71,7 +71,6 @@ class CardsPresenter: CardsModuleInput {
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
 
-    // swiftlint:disable:next function_body_length
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
