@@ -2,6 +2,12 @@ import Foundation
 import Future
 
 protocol RuuviTagTrunk {
+    func read(
+        _ id: String,
+        after date: Date,
+        with interval: TimeInterval
+    ) -> Future<[RuuviTagSensorRecord], RUError>
+
     func readOne(_ id: String) -> Future<AnyRuuviTagSensor, RUError>
     func readAll(_ id: String) -> Future<[RuuviTagSensorRecord], RUError>
     func readAll(_ id: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError>

@@ -1,4 +1,4 @@
-//swiftlint:disable file_length
+// swiftlint:disable file_length
 import Foundation
 import RealmSwift
 import BTKit
@@ -525,6 +525,7 @@ extension TagChartsPresenter {
             })
     }
 }
+
 extension TagChartsPresenter: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if let url = exportFileUrl {

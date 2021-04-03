@@ -60,8 +60,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
+    private var mutedTillTimer: Timer?
 
     deinit {
+        mutedTillTimer?.invalidate()
         ruuviTagToken?.invalidate()
         ruuviTagSensorRecordToken?.invalidate()
         advertisementToken?.invalidate()
@@ -92,6 +94,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         startObservingConnectionStatus()
         startObservingApplicationState()
         startObservingAlertChanges()
+        startMutedTillTimer()
     }
 
     func dismiss(completion: (() -> Void)?) {
@@ -324,7 +327,16 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
 
 // MARK: - Private
 extension TagSettingsPresenter {
-
+    private func startMutedTillTimer() {
+        self.mutedTillTimer = Timer
+            .scheduledTimer(
+                withTimeInterval: 5,
+                repeats: true
+            ) { [weak self] timer in
+                guard let sSelf = self else { timer.invalidate(); return }
+                sSelf.reloadMutedTill()
+        }
+    }
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -415,6 +427,7 @@ extension TagSettingsPresenter {
                 viewModel.temperatureUpperBound.value = Temperature(Double(celsiusUpper), unit: .celsius)
             }
         }
+        viewModel.temperatureAlertMutedTill.value = alertService.mutedTill(type: temperature, for: uuid)
     }
 
     private func sync(humidity: AlertType, uuid: String) {
@@ -438,6 +451,7 @@ extension TagSettingsPresenter {
                 viewModel.humidityUpperBound.value = humidityUpper
             }
         }
+        viewModel.humidityAlertMutedTill.value = alertService.mutedTill(type: humidity, for: uuid)
     }
 
     private func sync(dewPoint: AlertType, uuid: String) {
@@ -454,6 +468,7 @@ extension TagSettingsPresenter {
                 viewModel.dewPointUpperBound.value = Temperature(Double(dewPointUpperBound), unit: .celsius)
             }
         }
+        viewModel.dewPointAlertMutedTill.value = alertService.mutedTill(type: dewPoint, for: uuid)
     }
 
     private func sync(pressure: AlertType, uuid: String) {
@@ -470,6 +485,7 @@ extension TagSettingsPresenter {
                 viewModel.pressureUpperBound.value = Pressure(Double(pressureUpperBound), unit: .hectopascals)
             }
         }
+        viewModel.pressureAlertMutedTill.value = alertService.mutedTill(type: pressure, for: uuid)
     }
 
     private func sync(connection: AlertType, uuid: String) {
@@ -478,6 +494,7 @@ extension TagSettingsPresenter {
         } else {
             viewModel.isConnectionAlertOn.value = false
         }
+        viewModel.connectionAlertMutedTill.value = alertService.mutedTill(type: connection, for: uuid)
     }
 
     private func sync(movement: AlertType, uuid: String) {
@@ -486,6 +503,7 @@ extension TagSettingsPresenter {
         } else {
             viewModel.isMovementAlertOn.value = false
         }
+        viewModel.movementAlertMutedTill.value = alertService.mutedTill(type: movement, for: uuid)
     }
 
     private func startObservingRuuviTag() {
@@ -564,6 +582,7 @@ extension TagSettingsPresenter {
             viewModel.mac.value = mac
         }
         viewModel.updateRecord(record)
+        reloadMutedTill()
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
@@ -600,6 +619,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -633,6 +653,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -662,6 +683,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -695,6 +717,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }
         }
@@ -726,6 +749,7 @@ extension TagSettingsPresenter {
                 } else {
                     observer.alertService.unregister(type: type, for: uuid)
                 }
+                observer.alertService.unmute(type: type, for: uuid)
             }
         }
 
@@ -749,6 +773,7 @@ extension TagSettingsPresenter {
                     } else {
                         observer.alertService.unregister(type: type, for: uuid)
                     }
+                    observer.alertService.unmute(type: type, for: uuid)
                 }
             }, failure: { error in
                 observer.errorPresenter.present(error: error)
@@ -849,8 +874,64 @@ extension TagSettingsPresenter {
                 uuid == self?.viewModel.uuid.value,
                 let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
                 self?.updateIsOnState(of: type, for: uuid)
+                self?.updateMutedTill(of: type, for: uuid)
             }
         })
+    }
+
+    private func reloadMutedTill() {
+        if let mutedTill = viewModel.temperatureAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.temperatureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.humidityAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.humidityAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.dewPointAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.dewPointAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.pressureAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.pressureAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.connectionAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.connectionAlertMutedTill.value = nil
+        }
+
+        if let mutedTill = viewModel.movementAlertMutedTill.value,
+           mutedTill < Date() {
+            viewModel.movementAlertMutedTill.value = nil
+        }
+    }
+
+    private func updateMutedTill(of type: AlertType, for uuid: String) {
+        var observable: Observable<Date?>
+        switch type {
+        case .temperature:
+            observable = viewModel.temperatureAlertMutedTill
+        case .humidity:
+            observable = viewModel.humidityAlertMutedTill
+        case .dewPoint:
+            observable = viewModel.dewPointAlertMutedTill
+        case .pressure:
+            observable = viewModel.pressureAlertMutedTill
+        case .connection:
+            observable = viewModel.connectionAlertMutedTill
+        case .movement:
+            observable = viewModel.movementAlertMutedTill
+        }
+
+        let date = alertService.mutedTill(type: type, for: uuid)
+        if date != observable.value {
+            observable.value = date
+        }
     }
 
     private func updateIsOnState(of type: AlertType, for uuid: String) {

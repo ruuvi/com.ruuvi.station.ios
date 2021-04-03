@@ -5,8 +5,8 @@ inhibit_all_warnings!
 install! 'cocoapods', :disable_input_output_paths => true
 
 def shared_pods
-  pod 'BTKit', '~> 0.1.13'
-  pod 'Charts'
+  pod 'BTKit'
+  pod 'Charts', :git => 'https://github.com/rinat-enikeev/Charts.git', :tag => 'v3.6.1'
   pod 'Firebase'
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
@@ -46,7 +46,9 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 9.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
+      end
     end
   end
 end

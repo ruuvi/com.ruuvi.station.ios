@@ -553,6 +553,7 @@ extension CardsPresenter {
         })
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
