@@ -14,7 +14,8 @@ extension LocalFeatureToggleProvider {
     static let configurationType: String = "json"
 
     static func loadConfiguration() -> [FeatureToggle]? {
-        guard let configurationURL = bundledConfigurationURL(), let data = try? Data(contentsOf: configurationURL) else {
+        guard let configurationURL = bundledConfigurationURL(),
+              let data = try? Data(contentsOf: configurationURL) else {
             return nil
         }
         return parseConfiguration(data: data)
