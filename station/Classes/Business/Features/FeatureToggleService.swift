@@ -1,9 +1,6 @@
 import Foundation
 
 public final class FeatureToggleService {
-    private init() { }
-    static let shared = FeatureToggleService()
-
     private var featureToggles: [FeatureToggle] = []
 
     public func fetchFeatureToggles(

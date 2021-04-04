@@ -84,6 +84,11 @@ class BusinessAssembly: Assembly {
             return service
         }
 
+        container.register(FeatureToggleService.self) { _ in
+            let service = FeatureToggleService()
+            return service
+        }.inObjectScope(.container)
+
         container.register(GATTService.self) { r in
             let service = GATTServiceQueue()
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
