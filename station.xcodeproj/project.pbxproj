@@ -1101,6 +1101,12 @@
 		0EB48DA32619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DA22619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift */; };
 		0EB48DA42619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DA22619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift */; };
 		0EB48DA52619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DA22619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift */; };
+		0EB48DDC2619E306008E0D2D /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DDB2619E306008E0D2D /* LocalFeatureToggleProvider.swift */; };
+		0EB48DDD2619E306008E0D2D /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DDB2619E306008E0D2D /* LocalFeatureToggleProvider.swift */; };
+		0EB48DDE2619E306008E0D2D /* LocalFeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DDB2619E306008E0D2D /* LocalFeatureToggleProvider.swift */; };
+		0EB48DE6261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
+		0EB48DE7261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
+		0EB48DE8261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -2102,6 +2108,8 @@
 		0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleService.swift; sourceTree = "<group>"; };
 		0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EB48DA22619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRemoteConfigProvider.swift; sourceTree = "<group>"; };
+		0EB48DDB2619E306008E0D2D /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
+		0EB48DE5261A1816008E0D2D /* FeatureToggles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FeatureToggles.json; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -2762,6 +2770,7 @@
 		0E09671722AE762900E85F48 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0EB48DE4261A17F4008E0D2D /* JSONs */,
 				0E1C1DC722B396180032F6CA /* Strings */,
 				0E09671A22AE769F00E85F48 /* Plists */,
 				0E09671822AE763500E85F48 /* Images */,
@@ -4406,8 +4415,17 @@
 			children = (
 				0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */,
 				0EB48DA22619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift */,
+				0EB48DDB2619E306008E0D2D /* LocalFeatureToggleProvider.swift */,
 			);
 			path = Providers;
+			sourceTree = "<group>";
+		};
+		0EB48DE4261A17F4008E0D2D /* JSONs */ = {
+			isa = PBXGroup;
+			children = (
+				0EB48DE5261A1816008E0D2D /* FeatureToggles.json */,
+			);
+			path = JSONs;
 			sourceTree = "<group>";
 		};
 		0EBAF062232000F50025A191 /* Module */ = {
@@ -6451,6 +6469,7 @@
 				A9646490247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				0E6BAEC323856A01003A2D4C /* Main.storyboard in Resources */,
 				0E6BAEC423856A01003A2D4C /* Settings.storyboard in Resources */,
+				0EB48DE8261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				0E6BAEC523856A01003A2D4C /* Muli-Bold.ttf in Resources */,
 				0E6BAEC623856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E197C8323C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
@@ -6500,6 +6519,7 @@
 				A964648F247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				0E8BD3F9238566AB008B31EF /* Main.storyboard in Resources */,
 				0E8BD3FA238566AB008B31EF /* Settings.storyboard in Resources */,
+				0EB48DE7261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				0E8BD3FB238566AB008B31EF /* Muli-Bold.ttf in Resources */,
 				0E8BD3FC238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E197C8223C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
@@ -6549,6 +6569,7 @@
 				A964648E247BAEBA0001D55D /* AdvancedSettings.storyboard in Resources */,
 				64333D2E20B0C45900CDF4B6 /* Main.storyboard in Resources */,
 				0EEB20D122B7C6F30015F9E0 /* Settings.storyboard in Resources */,
+				0EB48DE6261A1816008E0D2D /* FeatureToggles.json in Resources */,
 				64678191225D03300072856A /* Muli-Bold.ttf in Resources */,
 				0E62AECB22E065F000A49BFB /* TagSettingsMoreInfoHeaderFooterView.xib in Resources */,
 				0E197C8123C5CDBE0074015B /* iOSDeviceModelMapping.plist in Resources */,
@@ -7163,6 +7184,7 @@
 				0EAD33EB2399273E00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E6BADFE23856A01003A2D4C /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E6BADFF23856A01003A2D4C /* Date+Ruuvi.swift in Sources */,
+				0EB48DDE2619E306008E0D2D /* LocalFeatureToggleProvider.swift in Sources */,
 				0E6BAE0123856A01003A2D4C /* ExportServiceTemp.swift in Sources */,
 				0E6BAE0223856A01003A2D4C /* DateValueFormatter.swift in Sources */,
 				A98D3F19256CBD610066588B /* ShareViewInput.swift in Sources */,
@@ -7656,6 +7678,7 @@
 				0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				A989A33C2532632100D092DB /* UserApiClaimResponse.swift in Sources */,
 				0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */,
+				0EB48DDD2619E306008E0D2D /* LocalFeatureToggleProvider.swift in Sources */,
 				A9F0F2842534D53800DE9F70 /* UserApiRegisterResponse.swift in Sources */,
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
 				A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
@@ -8264,6 +8287,7 @@
 				0E8FD0D723336C6E00FFA577 /* TagChartsDismissTransitionAnimation.swift in Sources */,
 				0E84BF5F2397F6BE00A37E1A /* HeartbeatViewController.swift in Sources */,
 				0E84BF67239801AF00A37E1A /* HeartbeatRouterInput.swift in Sources */,
+				0EB48DDC2619E306008E0D2D /* LocalFeatureToggleProvider.swift in Sources */,
 				0EF5B72B22D62CD900D9D14A /* Date+Ruuvi.swift in Sources */,
 				0E538367236AEE400007956D /* ExportServiceTemp.swift in Sources */,
 				A98D3F0F256CBD600066588B /* ShareViewInput.swift in Sources */,
