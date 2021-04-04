@@ -1,0 +1,8 @@
+{
+   "featureToggles":[
+      {
+         "feature":"ios_network",
+         "enabled":true
+      }
+   ]
+}
