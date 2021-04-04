@@ -1092,6 +1092,12 @@
 		0EB48D7D2619D536008E0D2D /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D7C2619D536008E0D2D /* Feature.swift */; };
 		0EB48D7E2619D536008E0D2D /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D7C2619D536008E0D2D /* Feature.swift */; };
 		0EB48D7F2619D536008E0D2D /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D7C2619D536008E0D2D /* Feature.swift */; };
+		0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */; };
+		0EB48D8C2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */; };
+		0EB48D8D2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */; };
+		0EB48D952619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */; };
+		0EB48D962619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */; };
+		0EB48D972619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -2090,6 +2096,8 @@
 		0EB48D5F26183B34008E0D2D /* MigrationManagerToPrune240.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationManagerToPrune240.swift; sourceTree = "<group>"; };
 		0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggle.swift; sourceTree = "<group>"; };
 		0EB48D7C2619D536008E0D2D /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
+		0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleService.swift; sourceTree = "<group>"; };
+		0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -4381,10 +4389,20 @@
 		0EB48D6D2619D4D4008E0D2D /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				0EB48D932619D5D5008E0D2D /* Providers */,
 				0EB48D7C2619D536008E0D2D /* Feature.swift */,
 				0EB48D6E2619D50A008E0D2D /* FeatureToggle.swift */,
+				0EB48D8A2619D5AC008E0D2D /* FeatureToggleService.swift */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		0EB48D932619D5D5008E0D2D /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				0EB48D942619D5E5008E0D2D /* FeatureToggleProvider.swift */,
+			);
+			path = Providers;
 			sourceTree = "<group>";
 		};
 		0EBAF062232000F50025A191 /* Module */ = {
@@ -6929,6 +6947,7 @@
 				A98D3F1F256CBD610066588B /* ShareViewOutput.swift in Sources */,
 				A976CA7824A5E68E0099BDC1 /* PullRuuviNetworkDaemonOperation.swift in Sources */,
 				0E8BAC82245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
+				0EB48D972619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
 				0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E2864282460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
@@ -7235,6 +7254,7 @@
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
 				0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */,
 				0E28642D2460687200363DCB /* VirtualTagTank.swift in Sources */,
+				0EB48D8D2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0E6BAE3123856A01003A2D4C /* TagChartsModuleInput.swift in Sources */,
 				0E6BAE3223856A01003A2D4C /* Double+Temperature.swift in Sources */,
 				0E6BAE3323856A01003A2D4C /* HumidityCalibrationViewInput.swift in Sources */,
@@ -7552,6 +7572,7 @@
 				A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */,
 				0E8BD2EC238566AB008B31EF /* HumidityCalibrationPresenter.swift in Sources */,
 				0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
+				0EB48D962619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A91D0317251124F900694733 /* SelectionItem.swift in Sources */,
 				0E8BD2EE238566AB008B31EF /* RealmContext.swift in Sources */,
 				0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */,
@@ -7623,6 +7644,7 @@
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				A9E599592557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
+				0EB48D8C2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
 				0E8BACE8245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
@@ -8024,6 +8046,7 @@
 				A98D3F15256CBD600066588B /* ShareViewOutput.swift in Sources */,
 				0E8BAC80245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
+				0EB48D952619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A92E3C63242644B800D981D5 /* TagChartViewInput.swift in Sources */,
 				0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
@@ -8330,6 +8353,7 @@
 				0E28642B2460687200363DCB /* VirtualTagTank.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
 				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
+				0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
