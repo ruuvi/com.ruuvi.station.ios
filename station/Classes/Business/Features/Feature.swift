@@ -5,7 +5,8 @@ public struct Feature: RawRepresentable {
 
     public init(rawValue: String) {
         self.name = rawValue
-    } 
+    }
+
     public var rawValue: String {
         return self.name
     }
