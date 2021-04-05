@@ -4,6 +4,8 @@ class AdvancedPresenter: NSObject, AdvancedModuleInput {
     weak var view: AdvancedViewInput!
     var router: AdvancedRouterInput!
     var settings: Settings!
+    var featureToggleService: FeatureToggleService!
+
     private var chartIntervalDidChanged: Bool = false
     private var viewModel: AdvancedViewModel = AdvancedViewModel(sections: []) {
         didSet {
@@ -17,14 +19,16 @@ class AdvancedPresenter: NSObject, AdvancedModuleInput {
             buildChartDownsampling(),
             buildChartIntervalSeconds()
         ])
-        let ruuviNetworkSection = AdvancedSection(title: "Advanced.RuuviNetwork.Section.title".localized(),
-                                                  cells: [
-            buildRuuviNetwork()
-        ])
-        viewModel = AdvancedViewModel(sections: [
-            chartsSection,
-            ruuviNetworkSection
-        ])
+        var sections: [AdvancedSection] = []
+        sections.append(chartsSection)
+        if featureToggleService.isEnabled(.network) {
+            let ruuviNetworkSection = AdvancedSection(title: "Advanced.RuuviNetwork.Section.title".localized(),
+                                                      cells: [
+                buildRuuviNetwork()
+            ])
+            sections.append(ruuviNetworkSection)
+        }
+        viewModel = AdvancedViewModel(sections: sections)
     }
 }
 

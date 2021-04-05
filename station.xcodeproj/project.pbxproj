@@ -5948,8 +5948,8 @@
 		A9646453247BAE6A0001D55D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */,
 				A9646456247BAE6A0001D55D /* Table */,
+				A9646454247BAE6A0001D55D /* AdvancedViewInput.swift */,
 				A964645B247BAE6A0001D55D /* AdvancedViewOutput.swift */,
 				A964645C247BAE6A0001D55D /* AdvancedViewModel.swift */,
 			);
