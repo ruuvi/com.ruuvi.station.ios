@@ -3,8 +3,8 @@ import UIKit
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
 
     var viewModel: MenuViewModel?
-
     var output: MenuViewOutput!
+    var isNetworkHidden: Bool = false
 
     @IBOutlet weak var feedbackCell: UITableViewCell!
     @IBOutlet weak var addRuuviTagCell: UITableViewCell!

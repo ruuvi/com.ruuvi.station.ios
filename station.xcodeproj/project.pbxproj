@@ -1107,6 +1107,12 @@
 		0EB48DE6261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
 		0EB48DE7261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
 		0EB48DE8261A1816008E0D2D /* FeatureToggles.json in Resources */ = {isa = PBXBuildFile; fileRef = 0EB48DE5261A1816008E0D2D /* FeatureToggles.json */; };
+		0EB48DFC261B105D008E0D2D /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */; };
+		0EB48DFD261B105D008E0D2D /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */; };
+		0EB48DFE261B105D008E0D2D /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */; };
+		0EB48E06261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */; };
+		0EB48E07261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */; };
+		0EB48E08261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */; };
 		0EBAF065232002A00025A191 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF064232002A00025A191 /* Language.swift */; };
 		0EBAF06C232006E00025A191 /* Language.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EBAF06B232006E00025A191 /* Language.storyboard */; };
 		0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF06D232007510025A191 /* LanguageViewInput.swift */; };
@@ -2110,6 +2116,8 @@
 		0EB48DA22619D7EE008E0D2D /* FirebaseRemoteConfigProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRemoteConfigProvider.swift; sourceTree = "<group>"; };
 		0EB48DDB2619E306008E0D2D /* LocalFeatureToggleProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeatureToggleProvider.swift; sourceTree = "<group>"; };
 		0EB48DE5261A1816008E0D2D /* FeatureToggles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FeatureToggles.json; sourceTree = "<group>"; };
+		0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigService.swift; sourceTree = "<group>"; };
+		0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRemoteConfigService.swift; sourceTree = "<group>"; };
 		0EBAF064232002A00025A191 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		0EBAF06B232006E00025A191 /* Language.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Language.storyboard; sourceTree = "<group>"; };
 		0EBAF06D232007510025A191 /* LanguageViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewInput.swift; sourceTree = "<group>"; };
@@ -4428,6 +4436,23 @@
 			path = JSONs;
 			sourceTree = "<group>";
 		};
+		0EB48DFA261B1046008E0D2D /* RemoteConfig */ = {
+			isa = PBXGroup;
+			children = (
+				0EB48E04261B1085008E0D2D /* Firebase */,
+				0EB48DFB261B105D008E0D2D /* RemoteConfigService.swift */,
+			);
+			path = RemoteConfig;
+			sourceTree = "<group>";
+		};
+		0EB48E04261B1085008E0D2D /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				0EB48E05261B1095008E0D2D /* FirebaseRemoteConfigService.swift */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
 		0EBAF062232000F50025A191 /* Module */ = {
 			isa = PBXGroup;
 			children = (
@@ -4895,6 +4920,7 @@
 				0E75661C2361C18C00FCA977 /* GATT */,
 				0EEB215E22BA610E0015F9E0 /* Migration */,
 				0E79F277244201370048BF86 /* Network */,
+				0EB48DFA261B1046008E0D2D /* RemoteConfig */,
 				0EFDD6D122BBD9AB00EADFC6 /* Services */,
 				A9FC78E7257966EF00F94604 /* UniversalLinks */,
 			);
@@ -7214,6 +7240,7 @@
 				A90E16992460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031C25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
 				0E8BAC63245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
+				0EB48E08261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */,
 				A9C03F8124E708DD00BC046F /* MeasurementsServiceImpl.swift in Sources */,
 				0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				A9BB94A525409B060042B190 /* TagsManagerViewInput.swift in Sources */,
@@ -7293,6 +7320,7 @@
 				0E6BAE3923856A01003A2D4C /* LocationPickerAppleViewController.swift in Sources */,
 				0E6BAE3A23856A01003A2D4C /* TagSettingsTableConfigurator.swift in Sources */,
 				0E6BAE3B23856A01003A2D4C /* WebTagServiceImpl.swift in Sources */,
+				0EB48DFE261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				A9BB94A225409B060042B190 /* TagsManagerConfigurator.swift in Sources */,
 				0E6BAE3C23856A01003A2D4C /* SwipeDownToDismissTransitioningDelegate.swift in Sources */,
 				0E6BAE3D23856A01003A2D4C /* MenuViewInput.swift in Sources */,
@@ -7508,6 +7536,7 @@
 				0E8BD2C3238566AB008B31EF /* MigrationManager.swift in Sources */,
 				A9646473247BAE6B0001D55D /* AdvancedTableViewController.swift in Sources */,
 				A9828E4224792D6B00E7E9D4 /* SectionChanges.swift in Sources */,
+				0EB48DFD261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */,
 				0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */,
 				0E31B05123BDED6C00660412 /* PullWebDaemonOperations.swift in Sources */,
@@ -7873,6 +7902,7 @@
 				A93CDCB62565900D00018C6C /* NetworkPersistence.swift in Sources */,
 				0E8BD392238566AB008B31EF /* HumidityUnit.swift in Sources */,
 				0E8BD393238566AB008B31EF /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
+				0EB48E07261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */,
 				0E8BD394238566AB008B31EF /* TagSettingsRouterInput.swift in Sources */,
 				0E8BD395238566AB008B31EF /* NSObject+Observable.swift in Sources */,
 				0E8BD396238566AB008B31EF /* TagSettingsModuleInput.swift in Sources */,
@@ -8317,6 +8347,7 @@
 				A9BB94B025409B060042B190 /* TagsManagerViewInput.swift in Sources */,
 				0E8BAC61245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
 				A9C03F7F24E708BF00BC046F /* MeasurementsServiceImpl.swift in Sources */,
+				0EB48E06261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */,
 				0EEB211222B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */,
 				A9F0F29B2534EF3700DE9F70 /* HTTPMethod.swift in Sources */,
 				0E5C301F22D0905D00B52E39 /* ImagePersistence.swift in Sources */,
@@ -8396,6 +8427,7 @@
 				A9BB94AD25409B060042B190 /* TagsManagerConfigurator.swift in Sources */,
 				0E1C1DF322B3FEFF0032F6CA /* MenuViewInput.swift in Sources */,
 				0E1C1DB922B390ED0032F6CA /* ActivitySpinnerView.swift in Sources */,
+				0EB48DFC261B105D008E0D2D /* RemoteConfigService.swift in Sources */,
 				0E5C302222D090A000B52E39 /* ImagePersistenceDocuments.swift in Sources */,
 				0E1C1DB322B390080032F6CA /* ActivityPresenterRuuviLogo.swift in Sources */,
 				A9F0F2312534D0ED00DE9F70 /* UserApiShareResponse.swift in Sources */,

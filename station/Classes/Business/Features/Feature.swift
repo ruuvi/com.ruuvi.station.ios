@@ -17,3 +17,7 @@ extension Feature: Decodable {
         case name
     }
 }
+
+extension Feature {
+    static let network = Feature(rawValue: "ios_network")
+}

@@ -12,6 +12,7 @@ class MenuTableConfigurator {
         presenter.networkService = r.resolve(NetworkService.self)
         presenter.networkPersistence = r.resolve(NetworkPersistence.self)
         presenter.keychainService = r.resolve(KeychainService.self)
+        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.view = view
         presenter.router = router
 

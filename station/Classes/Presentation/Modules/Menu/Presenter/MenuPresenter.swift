@@ -7,6 +7,7 @@ class MenuPresenter: MenuModuleInput {
     var networkService: NetworkService!
     var keychainService: KeychainService!
     var networkPersistence: NetworkPersistence!
+    var featureToggleService: FeatureToggleService!
 
     var viewModel: MenuViewModel? {
         didSet {
@@ -36,6 +37,7 @@ class MenuPresenter: MenuModuleInput {
 extension MenuPresenter: MenuViewOutput {
 
     func viewDidLoad() {
+        view.isNetworkHidden = !featureToggleService.isEnabled(.network)
         syncViewModel()
     }
 

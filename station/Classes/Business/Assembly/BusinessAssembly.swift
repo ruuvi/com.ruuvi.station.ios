@@ -84,9 +84,17 @@ class BusinessAssembly: Assembly {
             return service
         }
 
-        container.register(FeatureToggleService.self) { _ in
+        container.register(FeatureToggleService.self) { r in
             let service = FeatureToggleService()
+            service.mainProvider = r.resolve(FirebaseRemoteConfigProvider.self)
+            service.fallbackProvider = r.resolve(LocalFeatureToggleProvider.self)
             return service
+        }.inObjectScope(.container)
+
+        container.register(FirebaseRemoteConfigProvider.self) { r in
+            let provider = FirebaseRemoteConfigProvider()
+            provider.remoteConfigService = r.resolve(RemoteConfigService.self)
+            return provider
         }.inObjectScope(.container)
 
         container.register(GATTService.self) { r in
@@ -94,6 +102,11 @@ class BusinessAssembly: Assembly {
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.background = r.resolve(BTBackground.self)
             return service
+        }.inObjectScope(.container)
+
+        container.register(LocalFeatureToggleProvider.self) { _ in
+            let provider = LocalFeatureToggleProvider()
+            return provider
         }.inObjectScope(.container)
 
         container.register(LocationService.self) { r in
@@ -153,6 +166,11 @@ class BusinessAssembly: Assembly {
             daemon.networkPersistance = r.resolve(NetworkPersistence.self)
             daemon.ruuviTagNetworkOperationsManager = r.resolve(RuuviNetworkTagOperationsManager.self)
             return daemon
+        }.inObjectScope(.container)
+
+        container.register(RemoteConfigService.self) { _ in
+            let service = FirebaseRemoteConfigService()
+            return service
         }.inObjectScope(.container)
 
         container.register(RuuviTagAdvertisementDaemon.self) { r in

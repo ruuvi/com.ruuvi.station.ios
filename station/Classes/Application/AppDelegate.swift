@@ -11,6 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateService: AppStateService!
     var localNotificationsManager: LocalNotificationsManager!
     var webTagOperationsManager: WebTagOperationsManager!
+    var featureToggleService: FeatureToggleService!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -25,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         #if canImport(Firebase)
         FirebaseApp.configure()
+        featureToggleService = r.resolve(FeatureToggleService.self)
+        featureToggleService.fetchFeatureToggles()
         #endif
 
         if let settings = r.resolve(Settings.self),
