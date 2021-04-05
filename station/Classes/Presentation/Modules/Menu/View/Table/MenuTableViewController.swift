@@ -48,9 +48,7 @@ extension MenuTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         if segue.identifier == "EmbedMenuTableEmbededViewControllerSegueIdentifier" {
-            // swiftlint:disable force_cast
-            embeded = segue.destination as! MenuTableEmbededViewController
-            // swiftlint:enable force_cast
+            embeded = segue.destination as? MenuTableEmbededViewController
             embeded?.output = output
         }
     }
