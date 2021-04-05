@@ -2,10 +2,18 @@ import UIKit
 
 class MenuTableViewController: UIViewController {
     var output: MenuViewOutput!
+
+    var isNetworkHidden: Bool = false {
+        didSet {
+            updateUIIsNetworkHidden()
+        }
+    }
+
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var refreshIcon: UIImageView!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var syncContainer: UIView!
+    @IBOutlet weak var networkContainer: UIView!
 
     @IBAction func didPressSyncButton(_ sender: Any) {
         output.viewDidTapSyncButton()
@@ -28,6 +36,7 @@ extension MenuTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        updateUI()
         output.viewDidLoad()
     }
 }
@@ -40,6 +49,18 @@ extension MenuTableViewController {
             let embeded = segue.destination as! MenuTableEmbededViewController
             // swiftlint:enable force_cast
             embeded.output = output
+        }
+    }
+}
+
+extension MenuTableViewController {
+    private func updateUI() {
+        updateUIIsNetworkHidden()
+    }
+
+    private func updateUIIsNetworkHidden() {
+        if isViewLoaded {
+            networkContainer.isHidden = isNetworkHidden
         }
     }
 }
