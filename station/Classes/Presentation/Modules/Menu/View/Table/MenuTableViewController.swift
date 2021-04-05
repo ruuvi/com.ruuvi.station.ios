@@ -5,6 +5,7 @@ class MenuTableViewController: UIViewController {
 
     var isNetworkHidden: Bool = false {
         didSet {
+            embeded?.isNetworkHidden = isNetworkHidden
             updateUIIsNetworkHidden()
         }
     }
@@ -24,6 +25,8 @@ class MenuTableViewController: UIViewController {
             bindViewModel()
         }
     }
+
+    private var embeded: MenuTableEmbededViewController?
 }
 
 extension MenuTableViewController: MenuViewInput {
@@ -46,9 +49,9 @@ extension MenuTableViewController {
         super.prepare(for: segue, sender: sender)
         if segue.identifier == "EmbedMenuTableEmbededViewControllerSegueIdentifier" {
             // swiftlint:disable force_cast
-            let embeded = segue.destination as! MenuTableEmbededViewController
+            embeded = segue.destination as! MenuTableEmbededViewController
             // swiftlint:enable force_cast
-            embeded.output = output
+            embeded?.output = output
         }
     }
 }
