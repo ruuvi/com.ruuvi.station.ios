@@ -1,7 +1,7 @@
 import Foundation
 import FirebaseRemoteConfig
 
-public final class FirebaseRemoteConfigProvider: FeatureToggleProvider {
+public final class FirebaseFeatureToggleProvider: FeatureToggleProvider {
     var remoteConfigService: RemoteConfigService!
 
     public func fetchFeatureToggles(_ completion: @escaping FeatureToggleCallback) {
@@ -11,8 +11,16 @@ public final class FirebaseRemoteConfigProvider: FeatureToggleProvider {
             case .success:
                 let remoteConfig = sSelf.remoteConfigService.remoteConfig
                 let keys = remoteConfig.allKeys(from: .remote)
-                let featureToggles = keys.map {
-                    FeatureToggle(feature: Feature(rawValue: $0), enabled: remoteConfig[$0].boolValue)
+                let featureToggles: [FeatureToggle] = keys.compactMap {
+                    if let feature = Feature(rawValue: $0) {
+                        return FeatureToggle(
+                            feature: feature,
+                            enabled: remoteConfig[$0].boolValue,
+                            source: .remote
+                        )
+                    } else {
+                        return nil
+                    }
                 }
                 completion(featureToggles)
             case .failure(let error):
