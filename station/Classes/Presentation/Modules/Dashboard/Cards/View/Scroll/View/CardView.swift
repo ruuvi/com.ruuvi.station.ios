@@ -34,7 +34,7 @@ class CardView: UIView {
                 startTimer()
                 return
             }
-            startObservingNetworkSyncNotification(for: macId)
+            startObservingNetworkSyncNotification(for: macId.any)
         }
     }
     var syncStatus: NetworkSyncStatus = .none {
@@ -84,16 +84,16 @@ class CardView: UIView {
         })
     }
 
-    private func startObservingNetworkSyncNotification(for macId: MACIdentifier) {
+    private func startObservingNetworkSyncNotification(for macId: AnyMACIdentifier) {
         notificationToken = NotificationCenter
             .default
             .addObserver(forName: .NetworkSyncDidChangeStatus,
-                         object: self,
-                         queue: .main,
+                         object: nil,
+                         queue: nil,
                          using: { [weak self] notification in
-            guard let macIdString = notification.userInfo?[NetworkSyncStatusKey.mac] as? String,
+            guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? AnyMACIdentifier,
                   let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                  macIdString == macId.mac else {
+                  mac == macId else {
                 return
             }
             self?.updateSyncLabel(with: status)
