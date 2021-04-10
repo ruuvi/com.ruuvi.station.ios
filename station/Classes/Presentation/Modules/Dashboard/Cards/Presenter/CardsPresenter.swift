@@ -28,6 +28,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviTagTrunk: RuuviTagTrunk!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
+    var networkPersistance: NetworkPersistence!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -330,6 +331,7 @@ extension CardsPresenter {
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
+                viewModel.networkSyncStatus.value = networkPersistance.getSyncStatus(for: macId)
                 viewModel.isConnected.value = true
                 viewModel.alertState.value = .empty
             } else {
