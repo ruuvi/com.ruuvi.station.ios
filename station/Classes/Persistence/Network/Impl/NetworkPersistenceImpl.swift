@@ -15,6 +15,7 @@ enum NetworkSyncStatusKey: String {
 class NetworkPersistenceImpl: NetworkPersistence {
 
     private let networkSyncStatusPrefix = "NetworkPersistence.syncState."
+    private var syncingEnqueue: [AnyMACIdentifier] = []
 
     func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier) {
         UserDefaults.standard.set(status.rawValue, forKey: networkSyncStatusPrefix + macId.mac)
@@ -32,9 +33,18 @@ class NetworkPersistenceImpl: NetworkPersistence {
                                           execute: { [weak self] in
                 self?.setSyncStatus(.none, for: macId)
             })
-        default:
-            break
+        case .syncing:
+            if syncingEnqueue.isEmpty {
+                syncStatus = .syncing
+            }
+            syncingEnqueue.append(macId.any)
+        case .none:
+            syncingEnqueue.removeAll(where: {$0 == macId.any})
+            if syncingEnqueue.isEmpty {
+                syncStatus = .none
+            }
         }
+        debugPrint(syncingEnqueue)
     }
 
     func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus {
@@ -50,6 +60,23 @@ class NetworkPersistenceImpl: NetworkPersistence {
                 .post(name: .NetworkLastSyncDateDidChange,
                       object: self,
                       userInfo: nil)
+        }
+    }
+
+    @UserDefault("NetworkPersistence.syncStatus", defaultValue: 0)
+    private var syncStatusInt: Int
+
+    var syncStatus: NetworkSyncStatus {
+        get {
+            return NetworkSyncStatus(rawValue: syncStatusInt) ?? NetworkSyncStatus.none
+        }
+        set {
+            syncStatusInt = newValue.rawValue
+            NotificationCenter
+                .default
+                .post(name: .NetworkSyncDidChangeCommonStatus, object: self, userInfo: [
+                    NetworkSyncStatusKey.status: newValue
+                ])
         }
     }
 }
