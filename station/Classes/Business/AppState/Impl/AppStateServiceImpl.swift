@@ -69,6 +69,7 @@ class AppStateServiceImpl: AppStateService {
         }
         if keychainService.userIsAuthorized {
             pullNetworkTagDaemon.start()
+            pullNetworkTagDaemon.refreshImmediately()
         }
         propertiesDaemon.start()
         pullWebDaemon.start()
