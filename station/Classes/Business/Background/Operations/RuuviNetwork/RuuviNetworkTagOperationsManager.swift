@@ -24,13 +24,14 @@ class RuuviNetworkTagOperationsManager {
             sensors.forEach({
                 guard let mac = $0.macId?.mac,
                     let ruuviNetworkFactory = self?.ruuviNetworkFactory,
-                    let ruuviTagTank = self?.ruuviTagTank else {
+                    let ruuviTagTank = self?.ruuviTagTank,
+                    let networkPersistance = self?.networkPersistance else {
                     return
                 }
                 operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
                                                             mac: mac, since: since,
                                                             network: ruuviNetworkFactory.userApi,
-                                                            ruuviTagTank: ruuviTagTank))
+                                                            ruuviTagTank: ruuviTagTank, networkPersistance: networkPersistance))
             })
             promise.succeed(value: operations)
         }
