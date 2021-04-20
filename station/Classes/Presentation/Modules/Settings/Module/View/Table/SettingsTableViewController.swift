@@ -32,6 +32,8 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var foregroundTitleLabel: UILabel!
     @IBOutlet weak var advancedCell: UITableViewCell!
     @IBOutlet weak var advancedTitleLabel: UILabel!
+    @IBOutlet weak var experimentalFunctionsCell: UITableViewCell!
+    @IBOutlet weak var experimentalFunctionsLabel: UILabel!
 
     #if DEVELOPMENT
     private let showDefaults = true
@@ -60,6 +62,11 @@ class SettingsTableViewController: UITableViewController {
         }
     }
     var isBackgroundVisible: Bool = false {
+        didSet {
+            updateTableIfLoaded()
+        }
+    }
+    var experimentalFunctionsEnabled: Bool = false {
         didSet {
             updateTableIfLoaded()
         }
@@ -100,11 +107,22 @@ extension SettingsTableViewController {
 
 // MARK: - View lifecycle
 extension SettingsTableViewController {
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocalization()
         updateUI()
         output.viewDidLoad()
+        becomeFirstResponder()
+    }
+
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake && !experimentalFunctionsEnabled {
+            output.viewDidTriggerShake()
+        }
     }
 }
 
@@ -112,6 +130,11 @@ extension SettingsTableViewController {
 extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        if cell == experimentalFunctionsCell {
+            return experimentalFunctionsEnabled
+                ? super.tableView(tableView, heightForRowAt: indexPath)
+                : 0
+        }
         if !isBackgroundVisible && cell == heartbeatCell ||
             !showDefaults && cell == defaultsCell {
             return 0
@@ -150,6 +173,8 @@ extension SettingsTableViewController {
                 output.viewDidTapOnHeartbeat()
             case advancedCell:
                 output.viewDidTapOnAdvanced()
+            case experimentalFunctionsCell:
+                output.viewDidTapOnExperimental()
             default:
                 break
             }

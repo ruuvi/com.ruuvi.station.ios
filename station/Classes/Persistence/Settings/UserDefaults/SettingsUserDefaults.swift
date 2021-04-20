@@ -270,4 +270,7 @@ class SettingsUserDegaults: Settings {
                       userInfo: nil)
         }
     }
+
+    @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
+    var experimentalFeaturesEnabled: Bool
 }

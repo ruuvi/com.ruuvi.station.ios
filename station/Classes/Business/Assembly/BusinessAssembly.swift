@@ -88,6 +88,7 @@ class BusinessAssembly: Assembly {
             let service = FeatureToggleService()
             service.mainProvider = r.resolve(FirebaseRemoteConfigProvider.self)
             service.fallbackProvider = r.resolve(LocalFeatureToggleProvider.self)
+            service.settings = r.resolve(Settings.self)
             return service
         }.inObjectScope(.container)
 
