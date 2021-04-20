@@ -2,10 +2,19 @@ import UIKit
 
 class MenuTableViewController: UIViewController {
     var output: MenuViewOutput!
+
+    var isNetworkHidden: Bool = false {
+        didSet {
+            embeded?.isNetworkHidden = isNetworkHidden
+            updateUIIsNetworkHidden()
+        }
+    }
+
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var refreshIcon: UIImageView!
     @IBOutlet weak var syncStatusLabel: UILabel!
     @IBOutlet weak var syncContainer: UIView!
+    @IBOutlet weak var networkContainer: UIView!
 
     @IBAction func didPressSyncButton(_ sender: Any) {
         output.viewDidTapSyncButton()
@@ -16,6 +25,8 @@ class MenuTableViewController: UIViewController {
             bindViewModel()
         }
     }
+
+    private var embeded: MenuTableEmbededViewController?
 }
 
 extension MenuTableViewController: MenuViewInput {
@@ -28,6 +39,7 @@ extension MenuTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
+        updateUI()
         output.viewDidLoad()
     }
 }
@@ -36,10 +48,20 @@ extension MenuTableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         if segue.identifier == "EmbedMenuTableEmbededViewControllerSegueIdentifier" {
-            // swiftlint:disable force_cast
-            let embeded = segue.destination as! MenuTableEmbededViewController
-            // swiftlint:enable force_cast
-            embeded.output = output
+            embeded = segue.destination as? MenuTableEmbededViewController
+            embeded?.output = output
+        }
+    }
+}
+
+extension MenuTableViewController {
+    private func updateUI() {
+        updateUIIsNetworkHidden()
+    }
+
+    private func updateUIIsNetworkHidden() {
+        if isViewLoaded {
+            networkContainer.isHidden = isNetworkHidden
         }
     }
 }

@@ -208,6 +208,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="3SK-i2-Y7s"/>
                     <connections>
+                        <outlet property="networkContainer" destination="3ew-Bj-Hn4" id="Lky-z7-KQu"/>
                         <outlet property="refreshIcon" destination="Hjt-0p-nnr" id="PQN-6r-dha"/>
                         <outlet property="syncContainer" destination="Ig5-eH-QD7" id="UWe-ST-YPE"/>
                         <outlet property="syncStatusLabel" destination="DDc-zK-ELP" id="4xP-EK-5CV"/>
