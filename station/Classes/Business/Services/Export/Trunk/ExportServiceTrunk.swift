@@ -89,7 +89,8 @@ extension ExportServiceTrunk {
                     return
                 }
                 let fileName = ruuviTag.name + "-" + date + ".csv"
-                let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+                let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
+                let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
                 let headersString = self.getHeaders(units)
                     .joined(separator: ",")
 
