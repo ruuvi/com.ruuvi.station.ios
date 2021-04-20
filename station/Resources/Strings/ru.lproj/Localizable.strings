@@ -307,7 +307,7 @@
 "V" = "В";
 "LocalNotificationsManager.Mute.button" = "Отключить на час";
 "Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
-"SignIn.Title.text" = "Вход";
+"SignIn.Title.text" = "Войти";
 "TagsManager.SignOutButton" = "Выйти из сети";
 "SignIn.RequestSignLink" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.SignInBenefits" = "Преимущества Ruuvi Network";
