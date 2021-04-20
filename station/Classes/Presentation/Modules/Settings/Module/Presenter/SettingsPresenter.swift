@@ -8,6 +8,7 @@ class SettingsPresenter: SettingsModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var alertService: AlertService!
     var realmContext: RealmContext!
+    var featureToggleService: FeatureToggleService!
 
     private var languageToken: NSObjectProtocol?
     private var ruuviTagsToken: RUObservationToken?
@@ -52,6 +53,7 @@ extension SettingsPresenter: SettingsViewOutput {
                 break
             }
         })
+        view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
     }
 
     func viewDidTapTemperatureUnit() {
@@ -112,6 +114,18 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnAdvanced() {
         router.openAdvanced()
+    }
+
+    func viewDidTapOnExperimental() {
+        router.openNetworkSettings()
+    }
+
+    func viewDidTriggerShake() {
+        guard !settings.experimentalFeaturesEnabled else {
+            return
+        }
+        settings.experimentalFeaturesEnabled = true
+        view.experimentalFunctionsEnabled = true
     }
 }
 extension SettingsPresenter: SelectionModuleOutput {

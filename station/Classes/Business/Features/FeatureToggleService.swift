@@ -3,6 +3,7 @@ import Foundation
 public final class FeatureToggleService {
     var mainProvider: FeatureToggleProvider!
     var fallbackProvider: FeatureToggleProvider!
+    var settings: Settings!
 
     private var featureToggles: [FeatureToggle] = []
 
@@ -20,6 +21,9 @@ public final class FeatureToggleService {
         }
     }
     public func isEnabled(_ feature: Feature) -> Bool {
+        if feature == .network && settings.networkFeatureEnabled {
+            return true
+        }
         let feature = featureToggles.first(where: { $0.feature == feature })
         return feature?.enabled ?? false
     }

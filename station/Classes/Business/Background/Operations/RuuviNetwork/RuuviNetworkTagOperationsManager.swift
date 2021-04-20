@@ -28,10 +28,16 @@ class RuuviNetworkTagOperationsManager {
                     let networkPersistance = self?.networkPersistance else {
                     return
                 }
-                operations.append(RuuviTagLoadDataOperation(ruuviTagId: $0.id,
-                                                            mac: mac, since: since,
-                                                            network: ruuviNetworkFactory.userApi,
-                                                            ruuviTagTank: ruuviTagTank, networkPersistance: networkPersistance))
+                operations.append(
+                    RuuviTagLoadDataOperation(
+                        ruuviTagId: $0.id,
+                        mac: mac,
+                        since: since,
+                        network: ruuviNetworkFactory.userApi,
+                        ruuviTagTank: ruuviTagTank,
+                        networkPersistance: networkPersistance
+                    )
+                )
             })
             promise.succeed(value: operations)
         }

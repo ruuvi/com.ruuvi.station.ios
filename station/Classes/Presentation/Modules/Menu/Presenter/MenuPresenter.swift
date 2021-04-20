@@ -168,8 +168,8 @@ extension MenuPresenter {
     private func createSignOutAlert() {
         let title = "TagsManager.SignOutButton".localized()
         let message = "TagsManagerPresenter.SignOutConfirmAlert.Message".localized()
-        let confirmActionTitle = "TagsManagerPresenter.SignOutConfirmAlert.ConfirmAction".localized()
-        let cancelActionTitle = "TagsManagerPresenter.SignOutConfirmAlert.CancelAction".localized()
+        let confirmActionTitle = "OK".localized()
+        let cancelActionTitle = "Cancel".localized()
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             self?.keychainService.userApiLogOut()

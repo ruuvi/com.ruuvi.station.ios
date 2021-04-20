@@ -42,6 +42,7 @@ protocol Settings {
     var networkFeatureEnabled: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
     var networkPruningIntervalHours: Int { get set }
+    var experimentalFeaturesEnabled: Bool { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
