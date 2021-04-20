@@ -17,6 +17,7 @@ class MenuPresenter: MenuModuleInput {
 
     private var timer: Timer?
     private var lastSyncDate: CFAbsoluteTime!
+    private var syncNotificationToken: NSObjectProtocol?
 
     private weak var output: MenuModuleOutput?
 
@@ -30,6 +31,7 @@ class MenuPresenter: MenuModuleInput {
     }
 
     deinit {
+        syncNotificationToken?.invalidate()
         timer?.invalidate()
     }
 }
@@ -111,12 +113,35 @@ extension MenuPresenter {
                                                selector: #selector(invalidateTimer),
                                                name: UIApplication.didEnterBackgroundNotification,
                                                object: nil)
+        syncNotificationToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidChangeCommonStatus,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] notification in
+            guard let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus else {
+                return
+            }
+            if status == .syncing {
+                self?.invalidateTimer()
+                self?.viewModel?.isSyncing.value = true
+                self?.lastSyncDate = CFAbsoluteTimeGetCurrent()
+            } else {
+                self?.viewModel?.isSyncing.value = false
+                self?.setSyncStatus()
+                self?.createLastUpdateTimer()
+            }
+        })
     }
 
     @objc private func syncViewModel() {
         let viewModel = MenuViewModel()
         viewModel.username.value = keychainService.userApiEmail
+        viewModel.isSyncing.value = networkPersistence.syncStatus == .syncing
         self.viewModel = viewModel
+        guard networkPersistence.syncStatus != .syncing else {
+            return
+        }
         setSyncStatus()
         createLastUpdateTimer()
     }

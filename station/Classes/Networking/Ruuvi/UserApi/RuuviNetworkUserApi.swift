@@ -27,7 +27,7 @@ extension RuuviNetworkUserApi {
         let requestModel = UserApiGetSensorRequest(sensor: mac,
                                                    until: until?.timeIntervalSince1970,
                                                    since: since?.timeIntervalSince1970,
-                                                   limit: nil,
+                                                   limit: 5000,
                                                    sort: nil)
         getSensorData(requestModel).on(success: { (response) in
             let records = self.decodeSensorRecords(ruuviTagId, mac: mac, response: response)

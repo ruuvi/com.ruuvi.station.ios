@@ -112,7 +112,7 @@ extension NetworkServiceQueue {
                                                   mac: mac,
                                                   since: since,
                                                   network: network,
-                                                  ruuviTagTank: ruuviTagTank)
+                                                  ruuviTagTank: ruuviTagTank, networkPersistance: networkPersistence)
         operation.completionBlock = { [unowned operation] in
             if let error = operation.error {
                 promise.fail(error: error)

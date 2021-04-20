@@ -124,19 +124,20 @@ extension TagChartsInteractor: TagChartsInteractorInput {
 
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        var operations = [Future<Void, RUError>]()
-        if let luid = ruuviTagSensor.luid {
-            operations.append(syncLocalTag(luid: luid.value, progress: progress))
+        guard let luid = ruuviTagSensor.luid else {
+            promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
+            return promise.future
         }
-        if let macId = ruuviTagSensor.macId,
-           ruuviTagSensor.isNetworkConnectable {
-            operations.append(syncNetworkRecords(for: ruuviTagSensor.id, macId: macId))
-        }
-        Future.zip(operations).on(success: { [weak self] (_) in
-            self?.clearChartsAndRestartObserving()
-            progress?(.success)
+        let connectionTimeout: TimeInterval = settings.connectionTimeout
+        let serviceTimeout: TimeInterval = settings.serviceTimeout
+        let op = gattService.syncLogs(uuid: luid.value,
+                                      mac: ruuviTagSensor.macId?.value,
+                                      progress: progress,
+                                      connectionTimeout: connectionTimeout,
+                                      serviceTimeout: serviceTimeout)
+        op.on(success: { _ in
             promise.succeed(value: ())
-        }, failure: { error in
+        }, failure: {error in
             promise.fail(error: error)
         })
         return promise.future
