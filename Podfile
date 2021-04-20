@@ -11,6 +11,7 @@ def shared_pods
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
   pod 'Firebase/Crashlytics'
+  pod 'Firebase/RemoteConfig'
   pod 'Firebase/InAppMessaging'
   pod 'FutureX'
   pod 'GestureInstructions'
