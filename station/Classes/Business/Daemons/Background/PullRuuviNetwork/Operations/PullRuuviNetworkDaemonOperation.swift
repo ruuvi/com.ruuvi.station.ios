@@ -17,6 +17,11 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
         }
     }
 
+    func refreshImmediately() {
+        needToRefreshImmediately = true
+        wakeUp()
+    }
+
     func start() {
         start { [weak self] in
             guard let sSelf = self else { return }
