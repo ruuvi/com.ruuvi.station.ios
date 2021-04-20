@@ -309,9 +309,7 @@ extension DiscoverPresenter {
     }
 
     private func updateCloseButtonVisibilityState() {
-        if persistedSensors != nil && persistedWebTags != nil {
-            view.isCloseEnabled = persistedSensors.count > 0 || persistedWebTags.count > 0
-        }
+        view.isCloseEnabled = true
     }
 
     private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {
