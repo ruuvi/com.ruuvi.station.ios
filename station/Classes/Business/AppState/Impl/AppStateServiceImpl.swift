@@ -25,6 +25,9 @@ class AppStateServiceImpl: AppStateService {
         }
         if keychainService.userIsAuthorized {
             pullNetworkTagDaemon.start()
+        } else if keychainService.ruuviUserApiKey != nil
+                    && keychainService.userApiEmail != nil {
+            keychainService.userApiLogOut()
         }
         heartbeatDaemon.start()
         propertiesDaemon.start()
