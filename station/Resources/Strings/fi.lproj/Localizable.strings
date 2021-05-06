@@ -113,6 +113,7 @@
 "PhotoPicker.Sheet.message" = "Valitse kuva";
 "PhotoPicker.Sheet.library" = "Valitse kirjastosta";
 "PhotoPicker.Sheet.camera" = "Ota kuva";
+"PhotoPicker.Sheet.files" = "Choose from files";
 "Settings.SectionHeader.General.title" = "YLEISET";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Suht.";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs.";
@@ -147,7 +148,6 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Kosteus on säädetty";
 "TagSettings.HumidityIsClipped.Alert.message" = "Kalibroinnin jälkeinen kosteusarvo on suurempi kuin 100%. Tämä ei käy järkeen, joten maksimiarvona näytetään 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Korjaa";
-"TagSettings.navigationItem.title" = "Asetukset";
 "TagSettings.tagNameTitleLabel.text" = "Anturin nimi";
 "TagSettings.humidityTitleLabel.text" = "Kosteus";
 "TagSettings.uuidTitleLabel.text" = "UUID";
@@ -305,6 +305,7 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Päivitetty";
 "V" = "V";
+"TagSettings.navigationItem.title" = "Asetukset";
 "LocalNotificationsManager.Mute.button" = "Mykistä tunniksi";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
@@ -359,3 +360,4 @@
 "NetworkSettings.NetworkFeature" = "Ruuvi Network";
 "SignIn.EnterVerificationCode" = "Enter verification code";
 "SignIn.EnterCorrectEmail" = "Enter correct email";
+"RuuviNetworkError.NotAuthorized" = "Not authorized";

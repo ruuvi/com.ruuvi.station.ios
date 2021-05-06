@@ -113,6 +113,7 @@
 "PhotoPicker.Sheet.message" = "Välj ett foto";
 "PhotoPicker.Sheet.library" = "Välj från bilder";
 "PhotoPicker.Sheet.camera" = "Ta ett foto";
+"PhotoPicker.Sheet.files" = "Choose from files";
 "Settings.SectionHeader.General.title" = "ALLMÄNT";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
@@ -147,7 +148,6 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Luftfuktigheten är justerad";
 "TagSettings.HumidityIsClipped.Alert.message" = "Fuktighetsvärdet efter kalibreringen är större än 100%. Detta är inte rimligt, så det maximala värdet visas som 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fixa";
-"TagSettings.navigationItem.title" = "Inställningar";
 "TagSettings.tagNameTitleLabel.text" = "Sensornamn";
 "TagSettings.humidityTitleLabel.text" = "Luftfuktighet";
 "TagSettings.uuidTitleLabel.text" = "UUID";
@@ -305,6 +305,7 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Uppdaterad";
 "V" = "V";
+"TagSettings.navigationItem.title" = "Sensorinställningar";
 "LocalNotificationsManager.Mute.button" = "Pausa alarmet i en timme";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
@@ -359,3 +360,4 @@
 "NetworkSettings.NetworkFeature" = "Ruuvi Network";
 "SignIn.EnterVerificationCode" = "Enter verification code";
 "SignIn.EnterCorrectEmail" = "Enter correct email";
+"RuuviNetworkError.NotAuthorized" = "Not authorized";
