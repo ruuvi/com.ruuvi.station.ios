@@ -128,7 +128,11 @@ extension RuuviNetworkUserApiURLSession {
             request.httpBody = try? JSONEncoder().encode(model)
         }
         if authorizationRequered {
-            request.setValue(keychainService.ruuviUserApiKey, forHTTPHeaderField: "Authorization")
+            guard let apiKey = keychainService.ruuviUserApiKey else {
+                promise.fail(error: .ruuviNetwork(.notAuthorized))
+                return promise.future
+            }
+            request.setValue(apiKey, forHTTPHeaderField: "Authorization")
         }
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let task = URLSession.shared.dataTask(with: request) { (data, _, error) in

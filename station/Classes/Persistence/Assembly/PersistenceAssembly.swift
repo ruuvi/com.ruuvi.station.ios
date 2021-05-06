@@ -34,8 +34,9 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
-        container.register(KeychainService.self) { _ in
+        container.register(KeychainService.self) { r in
             let persistence = KeychainServiceImpl()
+            persistence.settings = r.resolve(Settings.self)
             return persistence
         }.inObjectScope(.container)
 
