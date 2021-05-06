@@ -53,7 +53,7 @@ extension AdvancedPresenter: AdvancedViewOutput {
 
     func viewDidPress(at indexPath: IndexPath) {
         if case AdvancedCellType.disclosure(let title) = viewModel.sections[indexPath.section].cells[indexPath.row],
-            title == "Advanced.RuuviNetwork.title".localized() {
+            title == "NetworkSettings.title".localized() {
             router.openNetworkSettings()
         }
     }
@@ -78,7 +78,7 @@ extension AdvancedPresenter {
     }
 
     private func buildRuuviNetwork() -> AdvancedCellType {
-        let title = "Advanced.RuuviNetwork.title".localized()
+        let title = "NetworkSettings.title".localized()
         return .disclosure(title: title)
     }
 }
