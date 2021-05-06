@@ -113,6 +113,7 @@
 "PhotoPicker.Sheet.message" = "Pick a photo";
 "PhotoPicker.Sheet.library" = "Choose from library";
 "PhotoPicker.Sheet.camera" = "Take Picture";
+"PhotoPicker.Sheet.files" = "Choose from files";
 "Settings.SectionHeader.General.title" = "GENERAL";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
@@ -147,7 +148,6 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
-"TagSettings.navigationItem.title" = "Sensor Settings";
 "TagSettings.tagNameTitleLabel.text" = "Sensor Name";
 "TagSettings.humidityTitleLabel.text" = "Humidity";
 "TagSettings.uuidTitleLabel.text" = "UUID";
@@ -305,6 +305,7 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Updated";
 "V" = "V";
+"TagSettings.navigationItem.title" = "Sensor Settings";
 "LocalNotificationsManager.Mute.button" = "Mute for an hour";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
@@ -359,3 +360,4 @@
 "NetworkSettings.NetworkFeature" = "Ruuvi Network";
 "SignIn.EnterVerificationCode" = "Enter verification code";
 "SignIn.EnterCorrectEmail" = "Enter correct email";
+"RuuviNetworkError.NotAuthorized" = "Not authorized";

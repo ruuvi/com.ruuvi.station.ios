@@ -113,6 +113,7 @@
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
 "PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
 "PhotoPicker.Sheet.camera" = "Сделать фото";
+"PhotoPicker.Sheet.files" = "Выбрать из файлов";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
@@ -147,7 +148,6 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
 "TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Исправить";
-"TagSettings.navigationItem.title" = "Настройки";
 "TagSettings.tagNameTitleLabel.text" = "Имя";
 "TagSettings.humidityTitleLabel.text" = "Влажность";
 "TagSettings.uuidTitleLabel.text" = "UUID";
@@ -305,6 +305,7 @@
 "TemperatureUnit.Kelvin.title" = "Кельвин (K)";
 "Updated" = "Обновлено";
 "V" = "В";
+"TagSettings.navigationItem.title" = "Настройки датчика";
 "LocalNotificationsManager.Mute.button" = "Отключить на час";
 "Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
 "SignIn.Title.text" = "Войти";
@@ -359,3 +360,4 @@
 "NetworkSettings.NetworkFeature" = "Сеть Ruuvi";
 "SignIn.EnterVerificationCode" = "Введите код подтверждения";
 "SignIn.EnterCorrectEmail" = "Введите корректный email";
+"RuuviNetworkError.NotAuthorized" = "Не авторизован";

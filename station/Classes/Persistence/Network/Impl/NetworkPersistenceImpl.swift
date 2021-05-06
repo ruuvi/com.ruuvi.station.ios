@@ -44,7 +44,6 @@ class NetworkPersistenceImpl: NetworkPersistence {
                 syncStatus = .none
             }
         }
-        debugPrint(syncingEnqueue)
     }
 
     func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus {
