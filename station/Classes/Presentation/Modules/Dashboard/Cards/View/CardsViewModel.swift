@@ -31,6 +31,8 @@ struct CardsViewModel {
     var provider: WeatherProvider?
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
+    var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
+
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
     init(_ webTag: WebTagRealm) {

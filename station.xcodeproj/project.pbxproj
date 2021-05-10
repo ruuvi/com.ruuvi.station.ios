@@ -2251,6 +2251,9 @@
 		1BEC3F4053845DBFF4E84F57 /* TagsManagerRouterInput.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagsManagerRouterInput.swift; sourceTree = "<group>"; };
 		28B469B53431F206F4D0EC60 /* SignInConfigurator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SignInConfigurator.swift; sourceTree = "<group>"; };
 		2CFE01D4D914A918175D4BEA /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
+		310159B7264484D700A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		310159B82644864400A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		310159B92644864C00A5E8E8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		318592D925BB4D000093B8EB /* UserPropertiesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesService.swift; sourceTree = "<group>"; };
 		318592E225BB4D8D0093B8EB /* UserPropertiesServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPropertiesServiceImpl.swift; sourceTree = "<group>"; };
 		354B5B6F50E98F55D6A672BA /* ShareViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewModel.swift; sourceTree = "<group>"; };
@@ -6423,6 +6426,7 @@
 				ru,
 				fi,
 				sv,
+				fr,
 			);
 			mainGroup = 64333D1C20B0C45900CDF4B6;
 			packageReferences = (
@@ -8662,6 +8666,7 @@
 				0E53A3F4232DFC6400ACED49 /* ru */,
 				0E53A3F5232DFC6500ACED49 /* fi */,
 				64A2DAE324310B2900DE6699 /* sv */,
+				310159B92644864C00A5E8E8 /* fr */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -8673,6 +8678,7 @@
 				0E9D0AAF231E9BD800C6BDA7 /* ru */,
 				0EBAF0832320120F0025A191 /* fi */,
 				64A2DAE224310B2900DE6699 /* sv */,
+				310159B82644864400A5E8E8 /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -8681,6 +8687,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				64333D2D20B0C45900CDF4B6 /* Base */,
+				310159B7264484D700A5E8E8 /* fr */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -8704,7 +8711,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -8749,7 +8756,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
@@ -8794,7 +8801,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -8822,7 +8829,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/DevInfo.plist";
@@ -8966,7 +8973,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -9026,7 +9033,7 @@
 				CODE_SIGN_ENTITLEMENTS = station/station.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = 4MUYJ4YYH4;
 				INFOPLIST_FILE = "$(SRCROOT)/station/Resources/Plists/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

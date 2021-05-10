@@ -48,7 +48,7 @@ extension PhotoPickerPresenterSheet {
 
     private func showSourceDialog() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let title = "PhotoPicker.Sheet.title".localized()
+        let title = "PhotoPicker.Sheet.message".localized()
         let sheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         let libraryTitle = "PhotoPicker.Sheet.library".localized()
         let library = UIAlertAction(title: libraryTitle, style: .default) { [weak self] (_) in

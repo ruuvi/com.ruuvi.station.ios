@@ -18,6 +18,7 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     @IBOutlet weak var getMoreSensorsLabel: UILabel!
     @IBOutlet weak var accountCell: UITableViewCell!
     @IBOutlet weak var accountAuthLabel: UILabel!
+    @IBOutlet weak var betaLabel: UILabel!
 }
 
 // MARK: - MenuViewInput
@@ -56,6 +57,7 @@ extension MenuTableEmbededViewController {
             accountAuthLabel.text = output.userIsAuthorized
                 ? "Sign out".localized()
                 : "Sign in".localized()
+            betaLabel.isHidden = output.userIsAuthorized
         }
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

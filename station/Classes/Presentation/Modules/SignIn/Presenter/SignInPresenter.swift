@@ -120,7 +120,7 @@ extension SignInPresenter {
             switch presenter.state {
             case .enterEmail:
                 if !presenter.isValidEmail(text) {
-                    presenter.viewModel.errorLabelText.value = "SignIn.EnterCorrectEmail".localized()
+                    presenter.viewModel.errorLabelText.value = "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
                 }
             case .enterVerificationCode:
                 if text?.isEmpty == true {

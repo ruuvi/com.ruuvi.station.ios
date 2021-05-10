@@ -2,6 +2,8 @@ import Foundation
 import KeychainAccess
 
 class KeychainServiceImpl {
+    var settings: Settings!
+
     private let keychain: Keychain = Keychain(service: "com.ruuvi.station",
                                               accessGroup: "4MUYJ4YYH4.com.ruuvi.station")
         .label("Ruuvi Station")
@@ -45,5 +47,11 @@ extension KeychainServiceImpl: KeychainService {
                 )
             }
         }
+    }
+
+    var userIsAuthorized: Bool {
+        return !((ruuviUserApiKey ?? "").isEmpty)
+            && !((userApiEmail ?? "").isEmpty)
+            && settings.networkFeatureEnabled
     }
 }
