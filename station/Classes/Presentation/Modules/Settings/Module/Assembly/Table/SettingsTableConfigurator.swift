@@ -15,6 +15,7 @@ class SettingsTableConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.realmContext = r.resolve(RealmContext.self)
+        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
 
         view.output = presenter
     }

@@ -165,6 +165,7 @@ enum RuuviNetworkError: Error {
     case doesNotHaveSensors
     case noStoredData
     case tagAlreadyExists
+    case notAuthorized
 }
 extension RuuviNetworkError: LocalizedError {
     public var errorDescription: String? {
@@ -179,6 +180,8 @@ extension RuuviNetworkError: LocalizedError {
             return "RuuviNetworkError.NoStoredData".localized()
         case .tagAlreadyExists:
             return "RuuviNetworkError.TagAlreadyExists".localized()
+        case .notAuthorized:
+            return "RuuviNetworkError.NotAuthorized".localized()
         }
     }
 }

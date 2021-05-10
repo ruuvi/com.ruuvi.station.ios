@@ -46,7 +46,6 @@ public final class FeatureToggleService {
             let toggle = localToggles.first(where: { $0.feature == feature })
             return toggle?.enabled ?? false
         }
-
     }
 
     private func useFallbackFeatureToggles(_ fallbackProvider: FeatureToggleProvider) {

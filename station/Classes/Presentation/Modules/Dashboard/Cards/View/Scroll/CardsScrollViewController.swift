@@ -363,7 +363,6 @@ extension CardsScrollViewController {
     private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
         let isConnected = viewModel.isConnected
         let date = viewModel.date
-
         view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
             if let isConnected = isConnected, isConnected, let date = date?.value {
                 label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo()
@@ -409,6 +408,12 @@ extension CardsScrollViewController {
         case .ruuvi:
             let rssiUpdate = rssiUpdateBlock(for: viewModel)
             view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+            if let macId = viewModel.mac.value {
+                view.networkTagMacId = macId
+                view.bind(viewModel.networkSyncStatus) { view, syncStatus in
+                    view.syncStatus = syncStatus ?? NetworkSyncStatus.none
+                }
+            }
         case .web:
             let locationUpdate = locationUpdateBlock(for: viewModel)
             view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
