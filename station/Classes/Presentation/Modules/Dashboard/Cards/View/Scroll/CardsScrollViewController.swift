@@ -43,6 +43,42 @@ class CardsScrollViewController: UIViewController {
     deinit {
         appDidBecomeActiveToken?.invalidate()
     }
+    // MacCatalyst arrows detect
+    #if targetEnvironment(macCatalyst)
+    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        var didHandleEvent = false
+        for press in presses {
+            guard let key = press.key else {
+                continue
+            }
+            if key.charactersIgnoringModifiers == UIKeyCommand.inputLeftArrow {
+                if currentPage == 0 {
+                    didHandleEvent = false
+                } else {
+                    scroll(to: currentPage - 1,
+                           immediately: true,
+                           animated: true)
+                    output.viewDidScroll(to: viewModels[currentPage - 1])
+                    didHandleEvent = true
+                }
+            }
+            if key.charactersIgnoringModifiers == UIKeyCommand.inputRightArrow {
+                if currentPage + 1 < viewModels.count {
+                    scroll(to: currentPage + 1,
+                           immediately: true,
+                           animated: true)
+                    output.viewDidScroll(to: viewModels[currentPage + 1])
+                    didHandleEvent = true
+                } else {
+                    didHandleEvent = false
+                }
+            }
+        }
+        if didHandleEvent == false {
+            super.pressesBegan(presses, with: event)
+        }
+    }
+    #endif
 }
 
 // MARK: - CardsViewInput
@@ -92,17 +128,17 @@ extension CardsScrollViewController: CardsViewInput {
         gestureInstructor.show(.swipeRight, after: 0.1)
     }
 
-    func scroll(to index: Int, immediately: Bool = false) {
+    func scroll(to index: Int, immediately: Bool = false, animated: Bool = false) {
         if immediately {
             view.layoutIfNeeded()
             scrollView.layoutIfNeeded()
             let x: CGFloat = scrollView.frame.size.width * CGFloat(index)
-            scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
+            scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                 guard let sSelf = self else { return }
                 let x: CGFloat = sSelf.scrollView.frame.size.width * CGFloat(index)
-                sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
+                sSelf.scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
             }
         }
     }
@@ -327,13 +363,12 @@ extension CardsScrollViewController {
     private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
         let isConnected = viewModel.isConnected
         let date = viewModel.date
-
         view.updatedLabel.bind(viewModel.isConnected) { [weak view, weak date] (label, isConnected) in
             if let isConnected = isConnected, isConnected, let date = date?.value {
-                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo()
             } else {
                 if let date = date?.value {
-                    label.text = date.ruuviAgo
+                    label.text = date.ruuviAgo()
                 } else {
                     label.text = CardsScrollViewController.localizedCache.notAvailable
                 }
@@ -344,10 +379,10 @@ extension CardsScrollViewController {
 
         view.updatedLabel.bind(viewModel.date) { [weak view, weak isConnected] (label, date) in
             if let isConnected = isConnected, isConnected.value.bound, let date = date {
-                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo
+                label.text = "Cards.Connected.title".localized() + " " + "|" + " " + date.ruuviAgo()
             } else {
                 if let date = date {
-                    label.text = date.ruuviAgo
+                    label.text = date.ruuviAgo()
                 } else {
                     label.text = CardsScrollViewController.localizedCache.notAvailable
                 }
@@ -357,15 +392,15 @@ extension CardsScrollViewController {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func bind(view: CardView, with viewModel: CardsViewModel) {
-        view.nameLabel.bind(viewModel.name, block: {
+        view.nameLabel.bind(viewModel.name,
+                            block: {
             $0.text = $1?.uppercased() ?? CardsScrollViewController.localizedCache.notAvailable
         })
-
         bindConnectionRelated(view: view, with: viewModel)
         bindTemperature(view: view, with: viewModel)
         bindHumidity(view: view, with: viewModel)
-
         let pressureUpdate = pressureUpdateBlock(for: viewModel)
         view.pressureLabel.bind(viewModel.pressure, block: pressureUpdate)
 
@@ -373,15 +408,18 @@ extension CardsScrollViewController {
         case .ruuvi:
             let rssiUpdate = rssiUpdateBlock(for: viewModel)
             view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+            if let macId = viewModel.mac.value {
+                view.networkTagMacId = macId
+                view.bind(viewModel.networkSyncStatus) { view, syncStatus in
+                    view.syncStatus = syncStatus ?? NetworkSyncStatus.none
+                }
+            }
         case .web:
             let locationUpdate = locationUpdateBlock(for: viewModel)
             view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
         }
-
         bindUpdated(view: view, with: viewModel)
-
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
-
         view.alertImageView.bind(viewModel.alertState) { [weak self] (imageView, state) in
             if let state = state {
                 switch state {

@@ -44,6 +44,11 @@ class CoreAssembly: Assembly {
             return manager
         }
 
+        container.register(DiffCalculator.self) { _ in
+            let diffCalculator = DiffCalculatorImpl()
+            return diffCalculator
+        }
+
         container.register(MeasurementsService.self, factory: { r in
             let settings = r.resolve(Settings.self)
             let service = MeasurementsServiceImpl()

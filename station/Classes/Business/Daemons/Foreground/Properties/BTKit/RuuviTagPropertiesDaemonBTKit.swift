@@ -12,6 +12,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
 
     private var ruuviTagsToken: RUObservationToken?
     private var observeTokens = [ObservationToken]()
+    private var scanTokens = [ObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var isTransitioningFromRealmToSQLite = false
 
@@ -28,6 +29,8 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     deinit {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
+        scanTokens.forEach({ $0.invalidate() })
+        scanTokens.removeAll()
         ruuviTagsToken?.invalidate()
     }
 
@@ -66,31 +69,39 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     @objc private func stopDaemon() {
-        observeTokens.forEach({ $0.invalidate() })
-        observeTokens.removeAll()
+        removeTokens()
         ruuviTagsToken?.invalidate()
         stopWork()
     }
 
+    private func removeTokens() {
+        observeTokens.forEach({ $0.invalidate() })
+        observeTokens.removeAll()
+        scanTokens.forEach({ $0.invalidate() })
+        scanTokens.removeAll()
+    }
+
     private func restartObserving() {
-       observeTokens.forEach({ $0.invalidate() })
-       observeTokens.removeAll()
+        removeTokens()
         for ruuviTag in ruuviTags {
-            guard let luid = ruuviTag.luid else { return }
-            observeTokens.append(foreground.observe(self,
-                                                    uuid: luid.value,
-                                                    options: [.callbackQueue(.untouch)]) {
-                                                        [weak self] (_, device) in
-                guard let sSelf = self else { return }
-                if let tag = device.ruuvi?.tag {
-                    let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
-                    sSelf.perform(#selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
-                                  on: sSelf.thread,
-                                  with: pair,
-                                  waitUntilDone: false,
-                                  modes: [RunLoop.Mode.default.rawValue])
-                }
-            })
+            if let luid = ruuviTag.luid {
+                observeTokens.append(foreground.observe(self,
+                                                        uuid: luid.value,
+                                                        options: [.callbackQueue(.untouch)]) {
+                                                            [weak self] (_, device) in
+                    guard let sSelf = self else { return }
+                    if let tag = device.ruuvi?.tag {
+                        let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
+                        sSelf.perform(#selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
+                                      on: sSelf.thread,
+                                      with: pair,
+                                      waitUntilDone: false,
+                                      modes: [RunLoop.Mode.default.rawValue])
+                    }
+                })
+            } else if ruuviTag.networkProvider != nil {
+                scanRemoteSensor(ruuviTag: ruuviTag)
+            }
         }
     }
 
@@ -156,6 +167,38 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                     })
             }
         }
+    }
+
+    private func scanRemoteSensor(ruuviTag: AnyRuuviTagSensor) {
+        guard let mac = ruuviTag.macId,
+              ruuviTag.luid == nil else {
+            return
+        }
+        let scanToken = foreground.scan(self, closure: { [weak self] (_, device) in
+            guard let self = self,
+                  let tag = device.ruuvi?.tag,
+                  mac.any == tag.macId?.any,
+                  ruuviTag.luid == nil else {
+                return
+            }
+            let ruuviSensor = RuuviTagSensorStruct(
+                version: tag.version,
+                luid: device.uuid.luid,
+                macId: mac,
+                isConnectable: device.isConnectable,
+                name: ruuviTag.name,
+                networkProvider: ruuviTag.networkProvider,
+                isClaimed: ruuviTag.isClaimed,
+                isOwner: ruuviTag.isClaimed,
+                owner: ruuviTag.owner)
+            self.ruuviTagTank.update(ruuviSensor)
+                .on(failure: { [weak self] error in
+                    self?.post(error: error)
+                }, completion: { [weak self] in
+                    self?.restartObserving()
+                })
+        })
+        scanTokens.append(scanToken)
     }
 
     private func post(error: Error) {

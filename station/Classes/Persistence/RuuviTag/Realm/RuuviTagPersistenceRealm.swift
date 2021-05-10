@@ -167,7 +167,9 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                   luid: ruuviTagRealm.uuid.luid,
                                                   macId: ruuviTagRealm.mac?.mac,
                                                   isConnectable: ruuviTagRealm.isConnectable,
-                                                  name: ruuviTagRealm.name).any
+                                                  name: ruuviTagRealm.name,
+                                                  isClaimed: false,
+                                                  isOwner: false).any
                 promise.succeed(value: result)
             } else {
                 promise.fail(error: .unexpected(.failedToFindRuuviTag))
@@ -185,7 +187,9 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                             luid: ruuviTagRealm.uuid.luid,
                                             macId: ruuviTagRealm.mac?.mac,
                                             isConnectable: ruuviTagRealm.isConnectable,
-                                            name: ruuviTagRealm.name).any
+                                            name: ruuviTagRealm.name,
+                                            isClaimed: false,
+                                            isOwner: false).any
             }
             promise.succeed(value: result)
         }
@@ -320,7 +324,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         let promise = Promise<RuuviTagSensorRecord?, RUError>()
         guard ruuviTag.macId == nil,
             let luid = ruuviTag.luid else {
-            promise.fail(error: .unexpected(.attemptToReadDataFromRealmWithoutLUID))
+            promise.succeed(value: nil)
             return promise.future
         }
         context.bgWorker.enqueue {
@@ -345,6 +349,22 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             } else {
                 promise.succeed(value: nil)
             }
+        }
+        return promise.future
+    }
+    func getStoredTagsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        context.bgWorker.enqueue {
+            let tagsCount = self.context.bg.objects(RuuviTagRealm.self).count
+            promise.succeed(value: tagsCount)
+        }
+        return promise.future
+    }
+    func getStoredMeasurementsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        context.bgWorker.enqueue {
+            let tagsCount = self.context.bg.objects(RuuviTagDataRealm.self).count
+            promise.succeed(value: tagsCount)
         }
         return promise.future
     }

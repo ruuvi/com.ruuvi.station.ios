@@ -8,7 +8,7 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
     var settings: Settings!
 
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
-        // FIXME: respect realm
+        // MARK: - respect realm
         return sqlite.readOne(ruuviTagId)
     }
 
@@ -29,13 +29,9 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
         let sqliteOperation = sqlite.readAll()
         let realmOperation = realm.readAll()
         Future.zip(sqliteOperation, realmOperation)
-            .on(success: { [weak self] sqliteEntities, realmEntities in
+            .on(success: { sqliteEntities, realmEntities in
             let combinedValues = sqliteEntities + realmEntities
-            if let strongSelf = self {
-                promise.succeed(value: strongSelf.reorder(combinedValues))
-            } else {
-                promise.succeed(value: combinedValues)
-            }
+            promise.succeed(value: combinedValues)
         }, failure: { error in
             promise.fail(error: error)
         })
@@ -89,16 +85,28 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
             return realm.readLast(ruuviTag)
         }
     }
-}
 
-extension RuuviTagTrunkCoordinator {
-    private func reorder(_ sensors: [RuuviTagSensor]) -> [RuuviTagSensor] {
-        let anySensors = sensors.map({$0.any})
-        if settings.tagsSorting.isEmpty {
-            settings.tagsSorting = sensors.map({$0.id})
-            return sensors
-        } else {
-            return anySensors.reorder(by: settings.tagsSorting).map({$0.struct})
-        }
+    func getStoredTagsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        let sqliteOperation = sqlite.getStoredTagsCount()
+        let realmOperation = realm.getStoredTagsCount()
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
+    func getStoredMeasurementsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        let sqliteOperation = sqlite.getStoredMeasurementsCount()
+        let realmOperation = realm.getStoredMeasurementsCount()
+        Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
+            promise.succeed(value: sqliteEntities + realmEntities)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
     }
 }

@@ -19,6 +19,15 @@ class RuuviTagRealm: Object, RuuviTagRealmProtocol {
         return "uuid"
     }
 
+    convenience required init(mac: String) {
+        self.init()
+        self.uuid = UUID().uuidString
+        self.mac = mac
+        self.name = mac
+        self.version = 5
+        self.isConnectable = true
+    }
+
     convenience required init(ruuviTag: RuuviTagProtocol, name: String) {
         self.init()
         self.uuid = ruuviTag.uuid

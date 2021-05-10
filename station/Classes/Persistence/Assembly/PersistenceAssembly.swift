@@ -34,6 +34,17 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
+        container.register(KeychainService.self) { r in
+            let persistence = KeychainServiceImpl()
+            persistence.settings = r.resolve(Settings.self)
+            return persistence
+        }.inObjectScope(.container)
+
+        container.register(NetworkPersistence.self) { _ in
+            let persistence = NetworkPersistenceImpl()
+            return persistence
+        }
+
         container.register(RealmContext.self) { _ in
             let context = RealmContextImpl()
             return context
@@ -70,6 +81,7 @@ class PersistenceAssembly: Assembly {
         container.register(WebTagPersistence.self) { r in
             let persistence = WebTagPersistenceRealm()
             persistence.context = r.resolve(RealmContext.self)
+            persistence.settings = r.resolve(Settings.self)
             return persistence
         }
 

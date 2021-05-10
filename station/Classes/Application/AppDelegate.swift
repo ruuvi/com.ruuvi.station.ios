@@ -2,6 +2,9 @@ import UIKit
 #if canImport(Firebase)
 import Firebase
 #endif
+#if canImport(FLEX)
+import FLEX
+#endif
 import UserNotifications
 
 @UIApplicationMain
@@ -11,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appStateService: AppStateService!
     var localNotificationsManager: LocalNotificationsManager!
     var webTagOperationsManager: WebTagOperationsManager!
+    var featureToggleService: FeatureToggleService!
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -25,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         #if canImport(Firebase)
         FirebaseApp.configure()
+        featureToggleService = r.resolve(FeatureToggleService.self)
+        featureToggleService.fetchFeatureToggles()
         #endif
 
         if let settings = r.resolve(Settings.self),
@@ -36,6 +42,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
         localNotificationsManager = r.resolve(LocalNotificationsManager.self)
         localNotificationsManager.application(application, didFinishLaunchingWithOptions: launchOptions)
+
+        #if canImport(FLEX)
+        FLEXManager.shared.registerGlobalEntry(
+            withName: "Feature Toggles",
+            viewControllerFutureBlock: { r.resolve(FLEXFeatureTogglesViewController.self) ?? UIViewController()
+            }
+        )
+        #endif
+
         return true
     }
 
@@ -78,17 +93,36 @@ extension AppDelegate {
             completionHandler(.noData)
         } else {
             let operations = webTagOperationsManager.alertsPullOperations()
-            if operations.count > 0 {
-                let queue = OperationQueue()
-                queue.maxConcurrentOperationCount = 1
-                let lastOperation = operations.last!
-                lastOperation.completionBlock = {
-                    completionHandler(.newData)
-                }
-                queue.addOperations(operations, waitUntilFinished: false)
-            } else {
-                completionHandler(.noData)
-            }
+            enqueueOperations(operations, completionHandler: completionHandler)
         }
+    }
+
+    private func enqueueOperations(_ operations: [Operation],
+                                   completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        if operations.count > 0 {
+            let queue = OperationQueue()
+            queue.maxConcurrentOperationCount = 1
+            let lastOperation = operations.last!
+            lastOperation.completionBlock = {
+                completionHandler(.newData)
+            }
+            queue.addOperations(operations, waitUntilFinished: false)
+        } else {
+            completionHandler(.noData)
+        }
+    }
+}
+
+// MARK: - UniversalLins
+extension AppDelegate {
+    func application(_ application: UIApplication,
+                     continue userActivity: NSUserActivity,
+                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+              let url = userActivity.webpageURL else {
+           return false
+        }
+        appStateService.applicationDidOpenWithUniversalLink(application, url: url)
+        return true
     }
 }

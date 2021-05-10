@@ -11,7 +11,7 @@ class AdvancedConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.settings = r.resolve(Settings.self)
-
+        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         view.output = presenter
     }
 }

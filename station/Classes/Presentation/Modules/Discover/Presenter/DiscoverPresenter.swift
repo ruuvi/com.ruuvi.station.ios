@@ -4,17 +4,19 @@ import RealmSwift
 import UIKit
 import Future
 
-class DiscoverPresenter: DiscoverModuleInput {
+class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
     var router: DiscoverRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
+    var activityPresenter: ActivityPresenter!
     var webTagService: WebTagService!
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagReactor: RuuviTagReactor!
+    var settings: Settings!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedWebTags: Results<WebTagRealm>! {
@@ -80,6 +82,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             && foreground.bluetoothState != .unknown {
             view.showBluetoothDisabled()
         }
+
         startObservingPersistedRuuviSensors()
         startObservingPersistedWebTags()
     }
@@ -104,7 +107,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
                                               luid: ruuviTag.uuid.luid,
                                               macId: ruuviTag.mac?.mac,
                                               isConnectable: ruuviTag.isConnectable,
-                                              name: displayName)
+                                              name: displayName,
+                                              isClaimed: false,
+                                              isOwner: true)
             let entity = ruuviTagTank.create(sensor)
             let record = ruuviTagTank.create(ruuviTag)
             Future.zip(entity, record).on(success: { [weak self] _ in
@@ -218,6 +223,8 @@ extension DiscoverPresenter {
                 self?.persistedSensors = sensors
             case .insert(let sensor):
                 self?.persistedSensors.append(sensor)
+            case .delete(let sensor):
+                self?.persistedSensors.removeAll(where: {$0.any == sensor})
             default:
                 return
             }
@@ -302,8 +309,27 @@ extension DiscoverPresenter {
     }
 
     private func updateCloseButtonVisibilityState() {
-        if persistedSensors != nil && persistedWebTags != nil {
-            view.isCloseEnabled = persistedSensors.count > 0 || persistedWebTags.count > 0
+        view.isCloseEnabled = true
+    }
+
+    private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {
+        guard !persistedSensors.contains(where: {$0.any == sensor}) else {
+            activityPresenter.decrement()
+            errorPresenter.present(error: RUError.ruuviNetwork(.tagAlreadyExists))
+            return
         }
+        let operation = ruuviTagTank.create(sensor)
+        operation.on(success: { [weak self] (_) in
+            self?.activityPresenter.decrement()
+            guard let sSelf = self else { return }
+            if sSelf.isOpenedFromWelcome {
+                sSelf.router.openCards()
+            } else {
+                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
+            }
+        }, failure: { [weak self] (error) in
+            self?.activityPresenter.decrement()
+            self?.errorPresenter.present(error: error)
+        })
     }
 }

@@ -6,5 +6,5 @@ protocol SettingsViewInput: ViewInput {
     var pressureUnit: UnitPressure { get set }
     var language: Language { get set }
     var isBackgroundVisible: Bool { get set }
-    var isAdvancedVisible: Bool { get set }
+    var experimentalFunctionsEnabled: Bool { get set }
 }

@@ -11,6 +11,8 @@ class TagChartsInteractor {
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var exportService: ExportService!
+    var networkService: NetworkService!
+    var keychainService: KeychainService!
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RUObservationToken?
     private var didMigrationCompleteToken: NSObjectProtocol?
@@ -28,6 +30,11 @@ class TagChartsInteractor {
             }
         }
     }
+    private lazy var queue: OperationQueue = {
+        var queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
+        return queue
+    }()
     private var sensors: [AnyRuuviTagSensor] = []
 
     deinit {
@@ -118,7 +125,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         guard let luid = ruuviTagSensor.luid else {
-            promise.fail(error: .unexpected(.viewModelUUIDIsNil))
+            promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
             return promise.future
         }
         let connectionTimeout: TimeInterval = settings.connectionTimeout
@@ -128,8 +135,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
-        op.on(success: { [weak self] _ in
-            self?.clearChartsAndRestartObserving()
+        op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
             promise.fail(error: error)
@@ -273,5 +279,34 @@ extension TagChartsInteractor {
         chartModules.forEach({
             $0.localize()
         })
+    }
+
+    private func syncLocalTag(luid: String, progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
+        let promise = Promise<Void, RUError>()
+        let connectionTimeout: TimeInterval = settings.connectionTimeout
+        let serviceTimeout: TimeInterval = settings.serviceTimeout
+        let op = gattService.syncLogs(uuid: luid,
+                                      mac: ruuviTagSensor.macId?.value,
+                                      progress: progress,
+                                      connectionTimeout: connectionTimeout,
+                                      serviceTimeout: serviceTimeout)
+        op.on(success: { _ in
+            promise.succeed(value: ())
+        }, failure: {error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
+
+    private func syncNetworkRecords(for ruuviTagId: String, macId: MACIdentifier) -> Future<Void, RUError> {
+        let promise = Promise<Void, RUError>()
+        let op = networkService.loadData(for: ruuviTagId, mac: macId.value, from: .userApi)
+        op.on(success: { [weak self] count in
+            self?.presenter.interactorDidSyncComplete(count)
+            promise.succeed(value: ())
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
     }
 }

@@ -18,6 +18,7 @@ struct TagSettingsViewModel {
     let txPower: Observable<Int?> = Observable<Int?>()
     let isConnectable: Observable<Bool?> = Observable<Bool?>()
     let isConnected: Observable<Bool?> = Observable<Bool?>()
+    let isNetworkConnected: Observable<Bool?> = Observable<Bool?>()
     let keepConnection: Observable<Bool?> = Observable<Bool?>()
     let isPushNotificationsEnabled: Observable<Bool?> = Observable<Bool?>()
 
@@ -56,6 +57,13 @@ struct TagSettingsViewModel {
     let isMovementAlertOn: Observable<Bool?> = Observable<Bool?>(false)
     let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
+
+    let isAuthorized: Observable<Bool?> = Observable<Bool?>(true)
+    let canClaimTag: Observable<Bool?> = Observable<Bool?>(false)
+    let canShareTag: Observable<Bool?> = Observable<Bool?>(false)
+    let isClaimedTag: Observable<Bool?> = Observable<Bool?>(false)
+
+    let owner: Observable<String?> = Observable<String?>()
 
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity

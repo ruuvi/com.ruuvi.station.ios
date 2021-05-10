@@ -3,16 +3,13 @@ import UIKit
 class AdvancedTableViewController: UITableViewController {
     var output: AdvancedViewOutput!
 
-    var viewModels = [AdvancedViewModel]() {
+    var viewModel = AdvancedViewModel(sections: []) {
         didSet {
             if isViewLoaded {
                 tableView.reloadData()
             }
         }
     }
-
-    private let switchCellReuseIdentifier = "AdvancedSwitchTableViewCellReuseIdentifier"
-    private let stepperCellReuseIdentifier = "AdvancedStepperTableViewCellReuseIdentifier"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,48 +36,53 @@ extension AdvancedTableViewController {
 // MARK: - UITableViewDataSource
 extension AdvancedTableViewController {
 
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.sections.count
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModels.count
+        return viewModel.sections[section].cells.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let viewModel = viewModels[indexPath.row]
-        if let boolean = viewModel.boolean.value {
-            // swiftlint:disable force_cast
+        let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
+        switch cellViewModel {
+        case .switcher(let title, let value):
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: switchCellReuseIdentifier,
-                                     for: indexPath) as! AdvancedSwitchTableViewCell
-            // swiftlint:enable force_cast
-            cell.titleLabel.text = viewModel.title
-            cell.isOnSwitch.isOn = boolean
+                .dequeueReusableCell(with: AdvancedSwitchTableViewCell.self, for: indexPath)
+            cell.titleLabel.text = title
+            cell.isOnSwitch.isOn = value
             cell.delegate = self
             return cell
-        } else {
-            // swiftlint:disable force_cast
+        case .stepper(let title, let value, let unit):
             let cell = tableView
-                .dequeueReusableCell(withIdentifier: stepperCellReuseIdentifier,
-                                     for: indexPath) as! AdvancedStepperTableViewCell
-            // swiftlint:enable force_cast
-            let title = viewModel.title ?? ""
-            let unitString: String
-            switch viewModel.unit {
-            case .hours:
-                unitString = "Advanced.Interval.Hour.string".localized()
-            case .minutes:
-                unitString = "Advanced.Interval.Min.string".localized()
-            case .seconds:
-                unitString = "Advanced.Interval.Sec.string".localized()
-            }
-            cell.unit = viewModel.unit
+                .dequeueReusableCell(with: AdvancedStepperTableViewCell.self,
+                                     for: indexPath)
+            let title = title
+            cell.unit = unit
             cell.titleLabel.text = title + " "
-                + "(" + "\(viewModel.integer.value.bound)" + " "
-                + unitString + ")"
+                + "(" + "\(value)" + " "
+                + unit.unitString + ")"
             cell.prefix = title
-            cell.stepper.value = Double(viewModel.integer.value.bound)
+            cell.stepper.value = Double(value)
             cell.delegate = self
+            return cell
+        case .disclosure(let title):
+            let cell = tableView.dequeueReusableCell(with: AdvancedDisclosureTableViewCell.self, for: indexPath)
+            cell.textLabel?.text = title
             return cell
         }
+    }
 
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return viewModel.sections[section].title
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.isSelected = false
+        if case AdvancedCellType.disclosure(_) = viewModel.sections[indexPath.section].cells[indexPath.row] {
+            output.viewDidPress(at: indexPath)
+        }
     }
 }
 
@@ -88,7 +90,8 @@ extension AdvancedTableViewController {
 extension AdvancedTableViewController: AdvancedSwitchTableViewCellDelegate {
     func advancedSwitch(cell: AdvancedSwitchTableViewCell, didChange value: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
-            viewModels[indexPath.row].boolean.value = value
+            output.viewDidChangeSwitchValue(for: indexPath.row,
+                                            newValue: value)
         }
     }
 }
@@ -97,7 +100,8 @@ extension AdvancedTableViewController: AdvancedSwitchTableViewCellDelegate {
 extension AdvancedTableViewController: AdvancedStepperTableViewCellDelegate {
     func advancedStepper(cell: AdvancedStepperTableViewCell, didChange value: Int) {
         if let indexPath = tableView.indexPath(for: cell) {
-            viewModels[indexPath.row].integer.value = value
+            output.viewDidChangeStepperValue(for: indexPath.row,
+                                             newValue: value)
         }
     }
 }

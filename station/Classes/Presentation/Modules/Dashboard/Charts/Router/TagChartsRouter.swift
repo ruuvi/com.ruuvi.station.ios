@@ -77,4 +77,19 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(webTag: webTag, temperature: temperature)
             })
     }
+
+    func openSignIn(output: SignInModuleOutput) {
+        let factory = StoryboardFactory(storyboardName: "SignIn")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: SignInModuleInput.self)
+            .then({ (module) -> Any? in
+                module.configure(with: .enterEmail, output: output)
+            })
+    }
+
+    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?) {
+        let controller = UIDocumentPickerViewController(url: path, in: .exportToService)
+        controller.delegate = delegate
+        transitionHandler.present(controller, animated: true)
+    }
 }

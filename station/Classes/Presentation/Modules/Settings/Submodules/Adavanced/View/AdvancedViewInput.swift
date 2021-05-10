@@ -1,5 +1,5 @@
 import Foundation
 
 protocol AdvancedViewInput: ViewInput {
-    var viewModels: [AdvancedViewModel] { get set }
+    var viewModel: AdvancedViewModel { get set }
 }
