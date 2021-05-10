@@ -9,5 +9,15 @@ public final class LocalFeatureToggleProvider: FeatureToggleProvider {
         completion(featureToggles)
     }
 
+    public func enable(_ featureToggle: FeatureToggle) {
+        guard featureToggle.source == .local else { assertionFailure(); return }
+        UserDefaults.standard.setValue(true, forKey: isEnabledPrefix + featureToggle.feature.rawValue)
+    }
+
+    public func disable(_ featureToggle: FeatureToggle) {
+        guard featureToggle.source == .local else { assertionFailure(); return }
+        UserDefaults.standard.setValue(false, forKey: isEnabledPrefix + featureToggle.feature.rawValue)
+    }
+
     private let isEnabledPrefix = "LocalFeatureToggleProvider.isEnabledPrefix"
 }

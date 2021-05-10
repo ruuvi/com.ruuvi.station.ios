@@ -46,7 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #if canImport(FLEX)
         FLEXManager.shared.registerGlobalEntry(
             withName: "Feature Toggles",
-            viewControllerFutureBlock: { FLEXFeatureTogglesViewController() }
+            viewControllerFutureBlock: { r.resolve(FLEXFeatureTogglesViewController.self) ?? UIViewController()
+            }
         )
         #endif
 

@@ -1,13 +1,13 @@
 import UIKit
 
 final class FLEXFeatureTogglesViewController: UITableViewController {
+    var featureToggleService: FeatureToggleService!
+
     init() {
         self.headerView = UIView()
         self.sourceSwitch = UISwitch()
         self.sourceLabel = Self.makeSourceLabel()
         super.init(nibName: nil, bundle: nil)
-        self.setupViews()
-        self.layoutViews()
     }
 
     @available(*, unavailable)
@@ -18,11 +18,24 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
     private let headerView: UIView
     private let sourceSwitch: UISwitch
     private let sourceLabel: UILabel
+    private let features = Feature.allCases
+    private static let featureCellReuseIdentifier = "FeatureCellReuseIdentifier"
 
     private func setupViews() {
         self.headerView.addSubview(self.sourceSwitch)
         self.headerView.addSubview(self.sourceLabel)
         self.tableView.tableHeaderView = self.headerView
+        self.sourceSwitch.addTarget(self, action: #selector(sourceSwitchValueChanged(_:)), for: .valueChanged)
+    }
+
+    @objc
+    private func sourceSwitchValueChanged(_ sender: Any) {
+        if self.sourceSwitch.isOn {
+            self.featureToggleService.source = .local
+        } else {
+            self.featureToggleService.source = .remote
+        }
+        self.tableView.reloadData()
     }
 
     private func layoutViews() {
@@ -50,8 +63,60 @@ final class FLEXFeatureTogglesViewController: UITableViewController {
         headerView.frame = frame
         self.tableView.tableHeaderView = headerView
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.setupViews()
+        self.layoutViews()
+        self.sourceSwitch.isOn = self.featureToggleService.source == .local
+    }
 }
 
+// MARK: - UITableViewDelegate
+extension FLEXFeatureTogglesViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard self.sourceSwitch.isOn else { return }
+        let feature = self.features[indexPath.row]
+        if self.featureToggleService.isEnabled(feature) {
+            self.featureToggleService.disableLocal(feature)
+        } else {
+            self.featureToggleService.enableLocal(feature)
+        }
+        self.tableView.reloadData()
+    }
+}
+
+// MARK: - UITableViewDataSource
+extension FLEXFeatureTogglesViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.features.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: Self.featureCellReuseIdentifier)
+        let feature = self.features[indexPath.row]
+        cell.textLabel?.text = Self.title(for: feature)
+        if self.featureToggleService.isEnabled(feature) {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
+        return cell
+    }
+}
+
+// MARK: - Helpers
+extension FLEXFeatureTogglesViewController {
+    private static func title(for feature: Feature) -> String {
+        switch feature {
+        case .network:
+            return "Network"
+        }
+    }
+}
+
+// MARK: - Factory
 extension FLEXFeatureTogglesViewController {
     private static func makeSourceLabel() -> UILabel {
         let label = UILabel()
