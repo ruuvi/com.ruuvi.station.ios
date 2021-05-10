@@ -133,11 +133,11 @@ PODS:
   - Protobuf (3.13.0)
   - Quick (3.0.0)
   - RangeSeekSlider (1.8.2)
-  - Realm (10.0.0):
-    - Realm/Headers (= 10.0.0)
-  - Realm/Headers (10.0.0)
-  - RealmSwift (10.0.0):
-    - Realm (= 10.0.0)
+  - Realm (10.7.5):
+    - Realm/Headers (= 10.7.5)
+  - Realm/Headers (10.7.5)
+  - RealmSwift (10.7.5):
+    - Realm (= 10.7.5)
   - RxSwift (5.1.1)
   - SwiftGen (6.4.0)
   - Swinject (2.6.2)
@@ -268,8 +268,8 @@ SPEC CHECKSUMS:
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Quick: 6d9559f40647bc4d510103842ef2fdd882d753e2
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
-  Realm: 5654b8e5e45034d07b219e089034be2ef7d1e7bf
-  RealmSwift: 5b4c8c85be4c14ff52054a4d80a8d338167dd79c
+  Realm: 06f5c67f87cb8c5f27b122218ce22e9a77314517
+  RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
