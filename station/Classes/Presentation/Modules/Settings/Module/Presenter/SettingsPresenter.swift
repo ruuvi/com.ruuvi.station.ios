@@ -8,6 +8,7 @@ class SettingsPresenter: SettingsModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var alertService: AlertService!
     var realmContext: RealmContext!
+    var featureToggleService: FeatureToggleService!
 
     private var languageToken: NSObjectProtocol?
     private var ruuviTagsToken: RUObservationToken?
@@ -43,17 +44,16 @@ extension SettingsPresenter: SettingsViewOutput {
                 sSelf.sensors = sensors
                 let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
                 sSelf.view.isBackgroundVisible = containsConnectable
-                sSelf.view.isAdvancedVisible = containsConnectable
             case .insert(let sensor):
                 sSelf.sensors.append(sensor)
                 sSelf.view.isBackgroundVisible = sSelf.view.isBackgroundVisible || sensor.isConnectable
-                sSelf.view.isAdvancedVisible = sSelf.view.isAdvancedVisible || sensor.isConnectable
             case .error(let error):
                 sSelf.errorPresenter.present(error: error)
             default:
                 break
             }
         })
+        view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
     }
 
     func viewDidTapTemperatureUnit() {
@@ -114,6 +114,18 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnAdvanced() {
         router.openAdvanced()
+    }
+
+    func viewDidTapOnExperimental() {
+        router.openNetworkSettings()
+    }
+
+    func viewDidTriggerShake() {
+        guard !settings.experimentalFeaturesEnabled else {
+            return
+        }
+        settings.experimentalFeaturesEnabled = true
+        view.experimentalFunctionsEnabled = true
     }
 }
 extension SettingsPresenter: SelectionModuleOutput {

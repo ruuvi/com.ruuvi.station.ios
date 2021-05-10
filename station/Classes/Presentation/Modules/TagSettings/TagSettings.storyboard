@@ -15,7 +15,7 @@
         <!--Tag Settings-->
         <scene sceneID="zZa-6b-ivF">
             <objects>
-                <tableViewController storyboardIdentifier="TagSettingsTableViewController" id="JXe-xp-HbB" customClass="TagSettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TagSettingsTableViewController" id="JXe-xp-HbB" customClass="TagSettingsTableViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="ece-Kf-Sc4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="2800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -154,29 +154,80 @@ IMAGE</string>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="oC8-Vk-na9">
-                            <rect key="frame" x="0.0" y="2425.5" width="414" height="100"/>
+                            <rect key="frame" x="0.0" y="2525.5" width="414" height="145"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
-                                    <rect key="frame" x="147.5" y="8" width="119" height="43"/>
-                                    <color key="backgroundColor" red="0.082352941176470587" green="0.55294117647058827" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
-                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                    <state key="normal" title="REMOVE"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="22"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="removeThisRuuviTagButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="btN-AQ-GfZ"/>
-                                    </connections>
-                                </button>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Cy9-GG-Tpy">
+                                    <rect key="frame" x="79.5" y="8" width="255" height="107"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="sUo-Yp-ntD">
+                                            <rect key="frame" x="0.0" y="0.0" width="255" height="44"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cnr-Pg-Ahg">
+                                                    <rect key="frame" x="0.0" y="0.0" width="96" height="44"/>
+                                                    <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="NML-2L-tix"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                    <state key="normal" title="Claim"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="22"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="didTapClaimButton:" destination="JXe-xp-HbB" eventType="touchUpInside" id="gYi-2V-P2i"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rSk-oG-8no">
+                                                    <rect key="frame" x="160" y="0.0" width="95" height="44"/>
+                                                    <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="taa-bJ-drZ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                    <state key="normal" title="Share"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="22"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="didTapShareButton:" destination="JXe-xp-HbB" eventType="touchUpInside" id="8wH-gs-B0H"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="8fR-rw-kJT"/>
+                                            </constraints>
+                                        </stackView>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dfl-wc-2o6">
+                                            <rect key="frame" x="68" y="64" width="119" height="43"/>
+                                            <color key="backgroundColor" red="0.082352941176470587" green="0.55294117647058827" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                            <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                            <state key="normal" title="REMOVE"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="22"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="removeThisRuuviTagButtonTouchUpInside:" destination="JXe-xp-HbB" eventType="touchUpInside" id="btN-AQ-GfZ"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </stackView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="dfl-wc-2o6" firstAttribute="top" secondItem="oC8-Vk-na9" secondAttribute="top" constant="8" id="47b-uf-aHe"/>
-                                <constraint firstItem="dfl-wc-2o6" firstAttribute="centerX" secondItem="oC8-Vk-na9" secondAttribute="centerX" id="F4d-yF-8rl"/>
+                                <constraint firstAttribute="bottom" secondItem="Cy9-GG-Tpy" secondAttribute="bottom" constant="30" id="JKm-Wl-63A"/>
+                                <constraint firstItem="Cy9-GG-Tpy" firstAttribute="centerX" secondItem="oC8-Vk-na9" secondAttribute="centerX" id="cAQ-Ej-yph"/>
+                                <constraint firstItem="Cy9-GG-Tpy" firstAttribute="top" secondItem="oC8-Vk-na9" secondAttribute="top" constant="8" id="vMz-qj-iUM"/>
                             </constraints>
                         </view>
                         <sections>
@@ -273,7 +324,7 @@ IMAGE</string>
                             </tableViewSection>
                             <tableViewSection headerTitle="ALERTS" id="mkz-zQ-bWy">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="64" id="iyl-CJ-dzq" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="64" id="iyl-CJ-dzq" customClass="TagSettingsAlertHeaderCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="579.5" width="414" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iyl-CJ-dzq" id="ukw-98-ePP">
@@ -337,7 +388,7 @@ IMAGE</string>
                                             <outlet property="titleLabel" destination="M54-Zn-4rJ" id="gDu-VI-XfR"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="148" id="ah8-fs-Iim" customClass="TagSettingsAlertControlsCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="148" id="ah8-fs-Iim" customClass="TagSettingsAlertControlsCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="643.5" width="414" height="148"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ah8-fs-Iim" id="scx-ro-zuZ">
@@ -353,7 +404,7 @@ IMAGE</string>
                                                         <outlet property="delegate" destination="ah8-fs-Iim" id="qXO-HJ-PXI"/>
                                                     </connections>
                                                 </textField>
-                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="wFo-5h-WB4" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="wFo-5h-WB4" customClass="RURangeSeekSlider" customModule="Ruuvi_Station" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="0.0" width="374" height="80"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -409,7 +460,7 @@ IMAGE</string>
                                             <outlet property="textField" destination="U1C-f4-dAe" id="cZy-6M-Pgv"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="ou1-lj-omv" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="ou1-lj-omv" customClass="TagSettingsAlertHeaderCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="791.5" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ou1-lj-omv" id="M9r-hZ-GPn">
@@ -473,7 +524,7 @@ IMAGE</string>
                                             <outlet property="titleLabel" destination="tsQ-lA-etV" id="d3x-Ko-YmH"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="tny-we-iAB" customClass="TagSettingsAlertControlsCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="tny-we-iAB" customClass="TagSettingsAlertControlsCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="867.5" width="414" height="164"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tny-we-iAB" id="Tkl-kp-q1w">
@@ -489,7 +540,7 @@ IMAGE</string>
                                                         <outlet property="delegate" destination="tny-we-iAB" id="5Vg-vK-I6N"/>
                                                     </connections>
                                                 </textField>
-                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-YM-dem" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-YM-dem" customClass="RURangeSeekSlider" customModule="Ruuvi_Station" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="8" width="374" height="80"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -545,7 +596,7 @@ IMAGE</string>
                                             <outlet property="textField" destination="ooM-Ks-W09" id="Jau-Dm-Juc"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="KhI-Mi-Cza" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="KhI-Mi-Cza" customClass="TagSettingsAlertHeaderCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1031.5" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KhI-Mi-Cza" id="Tkm-Qh-v5K">
@@ -609,7 +660,7 @@ IMAGE</string>
                                             <outlet property="titleLabel" destination="eZ5-qb-lju" id="9Bc-fh-b28"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="Igi-ZZ-pMK" customClass="TagSettingsAlertControlsCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="Igi-ZZ-pMK" customClass="TagSettingsAlertControlsCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1107.5" width="414" height="164"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Igi-ZZ-pMK" id="wDe-QN-fDX">
@@ -625,7 +676,7 @@ IMAGE</string>
                                                         <outlet property="delegate" destination="Igi-ZZ-pMK" id="b6l-EL-Lf8"/>
                                                     </connections>
                                                 </textField>
-                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="UFM-jU-SZf" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="UFM-jU-SZf" customClass="RURangeSeekSlider" customModule="Ruuvi_Station" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="8" width="374" height="80"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -681,7 +732,7 @@ IMAGE</string>
                                             <outlet property="textField" destination="spJ-in-2aZ" id="Xjd-Kg-yNw"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="wNV-cm-93s" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="wNV-cm-93s" customClass="TagSettingsAlertHeaderCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1271.5" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wNV-cm-93s" id="x0C-bI-5TS">
@@ -745,7 +796,7 @@ IMAGE</string>
                                             <outlet property="titleLabel" destination="frV-AK-it4" id="U5d-H6-J2W"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="iu5-8h-FfM" customClass="TagSettingsAlertControlsCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertControlsCellReuseIdentifier" rowHeight="164" id="iu5-8h-FfM" customClass="TagSettingsAlertControlsCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1347.5" width="414" height="164"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iu5-8h-FfM" id="LEi-4Y-zUo">
@@ -761,7 +812,7 @@ IMAGE</string>
                                                         <outlet property="delegate" destination="iu5-8h-FfM" id="4UJ-JH-4Dw"/>
                                                     </connections>
                                                 </textField>
-                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="YAJ-ng-2Xz" customClass="RURangeSeekSlider" customModule="station" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="YAJ-ng-2Xz" customClass="RURangeSeekSlider" customModule="Ruuvi_Station" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="8" width="374" height="80"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -817,7 +868,7 @@ IMAGE</string>
                                             <outlet property="textField" destination="uX0-Ra-NTO" id="jFD-sV-yxZ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="Ys9-CY-kSW" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="Ys9-CY-kSW" customClass="TagSettingsAlertHeaderCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1511.5" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ys9-CY-kSW" id="LWA-77-ySg">
@@ -881,7 +932,7 @@ IMAGE</string>
                                             <outlet property="titleLabel" destination="9FZ-GO-d93" id="wS7-S0-B3X"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertDescriptionCellReuseIdentifier" rowHeight="60" id="SHq-wf-GdC" customClass="TagSettingsAlertDescriptionCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertDescriptionCellReuseIdentifier" rowHeight="60" id="SHq-wf-GdC" customClass="TagSettingsAlertDescriptionCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1587.5" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SHq-wf-GdC" id="j6k-1Y-GGj">
@@ -908,7 +959,7 @@ IMAGE</string>
                                             <outlet property="textField" destination="fAD-E3-lvX" id="6zG-SB-tef"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="gnp-V2-sVd" customClass="TagSettingsAlertHeaderCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertHeaderCellReuseIdentifier" rowHeight="76" id="gnp-V2-sVd" customClass="TagSettingsAlertHeaderCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1647.5" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gnp-V2-sVd" id="vxf-ke-pFC">
@@ -972,7 +1023,7 @@ IMAGE</string>
                                             <outlet property="titleLabel" destination="gnM-AZ-FdW" id="xt8-G4-Coi"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertDescriptionCellReuseIdentifier" rowHeight="60" id="TQr-ZK-iiD" customClass="TagSettingsAlertDescriptionCell" customModule="station" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TagSettingsAlertDescriptionCellReuseIdentifier" rowHeight="60" id="TQr-ZK-iiD" customClass="TagSettingsAlertDescriptionCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="1723.5" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TQr-ZK-iiD" id="Y9W-1C-p9A">
@@ -1351,6 +1402,39 @@ IMAGE</string>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="NETWORK INFO" id="7xY-NH-UvA">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="uaJ-tK-9dE">
+                                        <rect key="frame" x="0.0" y="2463.5" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uaJ-tK-9dE" id="jvp-Sm-L2g">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Owner" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MkW-gb-yNU">
+                                                    <rect key="frame" x="20" y="11.5" width="50.5" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="unu-ZE-wgc">
+                                                    <rect key="frame" x="398" y="22" width="0.0" height="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="MkW-gb-yNU" firstAttribute="leading" secondItem="jvp-Sm-L2g" secondAttribute="leading" constant="20" id="Kpb-x9-1vf"/>
+                                                <constraint firstAttribute="trailing" secondItem="unu-ZE-wgc" secondAttribute="trailing" constant="16" id="QBX-3e-Ti7"/>
+                                                <constraint firstItem="unu-ZE-wgc" firstAttribute="centerY" secondItem="jvp-Sm-L2g" secondAttribute="centerY" id="Zim-6f-r4f"/>
+                                                <constraint firstItem="MkW-gb-yNU" firstAttribute="centerY" secondItem="jvp-Sm-L2g" secondAttribute="centerY" id="qvM-Lg-c9y"/>
+                                                <constraint firstItem="unu-ZE-wgc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="MkW-gb-yNU" secondAttribute="trailing" constant="8" id="u1C-0I-LFd"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="JXe-xp-HbB" id="ACm-2h-12K"/>
@@ -1376,6 +1460,7 @@ IMAGE</string>
                         <outlet property="backgroundImageView" destination="PPK-KZ-0TC" id="1NZ-SW-ZHa"/>
                         <outlet property="batteryVoltageTitleLabel" destination="Wim-BP-74w" id="6Vj-s0-VH2"/>
                         <outlet property="calibrationHumidityCell" destination="msV-Z2-Y6n" id="ROS-rZ-GD2"/>
+                        <outlet property="claimTagButton" destination="Cnr-Pg-Ahg" id="F62-gQ-IBw"/>
                         <outlet property="connectStatusLabel" destination="j9c-gN-4Da" id="5ZL-zl-roh"/>
                         <outlet property="connectionAlertDescriptionCell" destination="SHq-wf-GdC" id="jdS-2I-0Ez"/>
                         <outlet property="connectionAlertHeaderCell" destination="Ys9-CY-kSW" id="IeI-Se-lG3"/>
@@ -1385,6 +1470,7 @@ IMAGE</string>
                         <outlet property="dataSourceValueLabel" destination="hD6-Gs-hVm" id="5vy-d8-KZu"/>
                         <outlet property="dewPointAlertControlsCell" destination="Igi-ZZ-pMK" id="ly6-Us-tRe"/>
                         <outlet property="dewPointAlertHeaderCell" destination="KhI-Mi-Cza" id="DTD-nA-RhA"/>
+                        <outlet property="footerView" destination="oC8-Vk-na9" id="sFR-cB-TvJ"/>
                         <outlet property="humidityAlertControlsCell" destination="tny-we-iAB" id="3ca-qR-m6V"/>
                         <outlet property="humidityAlertHeaderCell" destination="ou1-lj-omv" id="1LL-oN-akX"/>
                         <outlet property="humidityLabel" destination="h1w-an-ceI" id="Kcn-AW-TMy"/>
@@ -1406,9 +1492,14 @@ IMAGE</string>
                         <outlet property="msnTitleLabel" destination="40B-Fr-4YX" id="uEB-T5-6P0"/>
                         <outlet property="msnValueLabel" destination="BDV-Du-PWf" id="I1g-0z-NB5"/>
                         <outlet property="msnValueLabelTrailing" destination="plZ-be-5zU" id="r03-dP-4ih"/>
+                        <outlet property="networkOwnerCell" destination="uaJ-tK-9dE" id="1ui-bY-IQt"/>
+                        <outlet property="networkOwnerLabel" destination="MkW-gb-yNU" id="0A3-3t-Hyh"/>
+                        <outlet property="networkOwnerValueLabel" destination="unu-ZE-wgc" id="VqC-Vc-2CM"/>
+                        <outlet property="networkTagActionsStackView" destination="sUo-Yp-ntD" id="xDU-GU-T8T"/>
                         <outlet property="pressureAlertControlsCell" destination="iu5-8h-FfM" id="8O1-Jh-XUC"/>
                         <outlet property="pressureAlertHeaderCell" destination="wNV-cm-93s" id="JJH-kL-bVA"/>
                         <outlet property="removeThisRuuviTagButton" destination="dfl-wc-2o6" id="4Jd-nv-rA2"/>
+                        <outlet property="shareTagButton" destination="rSk-oG-8no" id="bfH-eZ-ivw"/>
                         <outlet property="tagNameCell" destination="Ltg-8j-gFv" id="ITi-X4-fhs"/>
                         <outlet property="tagNameTextField" destination="wsY-ah-PBa" id="jfa-8a-aDt"/>
                         <outlet property="tagNameTitleLabel" destination="5rU-pr-cVB" id="svL-c0-SM3"/>
@@ -1425,7 +1516,7 @@ IMAGE</string>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e12-8u-47A" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="tyv-K8-0GP" customClass="TagSettingsTableInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="tyv-K8-0GP" customClass="TagSettingsTableInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="JXe-xp-HbB" id="U5C-d0-Q3H"/>
                     </connections>

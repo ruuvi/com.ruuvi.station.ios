@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Share Ruuvi sensor-->
+        <scene sceneID="xGI-fv-TzY">
+            <objects>
+                <tableViewController storyboardIdentifier="ShareViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vpJ-wk-EwZ" customClass="ShareViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="jWW-qz-4Y5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareDescriptionTableViewCell" rowHeight="108" id="6X1-1G-8p6" customClass="ShareDescriptionTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="108"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6X1-1G-8p6" id="TDj-aD-hqN">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MLf-W5-ib2">
+                                            <rect key="frame" x="20" y="11" width="374" height="86"/>
+                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                            <attributedString key="attributedText">
+                                                <fragment content="Share your Ruuvi sensor. Add your friend email address. Max 3">
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system" size="20"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="10" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="MLf-W5-ib2" firstAttribute="leading" secondItem="TDj-aD-hqN" secondAttribute="leadingMargin" id="S1L-sY-Bm4"/>
+                                        <constraint firstItem="MLf-W5-ib2" firstAttribute="trailing" secondItem="TDj-aD-hqN" secondAttribute="trailingMargin" id="U0X-Ka-emB"/>
+                                        <constraint firstItem="MLf-W5-ib2" firstAttribute="top" secondItem="TDj-aD-hqN" secondAttribute="topMargin" id="kvC-qc-qeZ"/>
+                                        <constraint firstItem="MLf-W5-ib2" firstAttribute="bottom" secondItem="TDj-aD-hqN" secondAttribute="bottomMargin" id="ts6-7g-doJ"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="MLf-W5-ib2" id="cW9-q4-hIf"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailInputTableViewCell" rowHeight="57" id="l7S-aJ-8e8" customClass="ShareEmailInputTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="136" width="414" height="57"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l7S-aJ-8e8" id="SAL-7y-xAR">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="57"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ara-rC-ms9">
+                                            <rect key="frame" x="20" y="46" width="374" height="1"/>
+                                            <color key="backgroundColor" systemColor="separatorColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="Yt9-8a-YxW"/>
+                                            </constraints>
+                                        </view>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeU-ve-Fbq">
+                                            <rect key="frame" x="20" y="11" width="374" height="35"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="34" id="62B-EZ-38I"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <textInputTraits key="textInputTraits" textContentType="email"/>
+                                        </textField>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="ZeU-ve-Fbq" secondAttribute="bottom" id="3M8-C6-5Mo"/>
+                                        <constraint firstItem="Ara-rC-ms9" firstAttribute="top" secondItem="ZeU-ve-Fbq" secondAttribute="bottom" id="9c6-PB-4ou"/>
+                                        <constraint firstAttribute="trailing" secondItem="Ara-rC-ms9" secondAttribute="trailing" constant="20" id="Svb-Qf-cgj"/>
+                                        <constraint firstItem="ZeU-ve-Fbq" firstAttribute="leading" secondItem="SAL-7y-xAR" secondAttribute="leadingMargin" id="hfn-VF-wtx"/>
+                                        <constraint firstItem="ZeU-ve-Fbq" firstAttribute="top" secondItem="SAL-7y-xAR" secondAttribute="topMargin" id="htg-Ok-gri"/>
+                                        <constraint firstItem="Ara-rC-ms9" firstAttribute="leading" secondItem="SAL-7y-xAR" secondAttribute="leading" constant="20" id="j3c-aJ-KLz"/>
+                                        <constraint firstItem="ZeU-ve-Fbq" firstAttribute="trailing" secondItem="SAL-7y-xAR" secondAttribute="trailingMargin" id="uTg-Ri-QAB"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <connections>
+                                    <outlet property="emailTextField" destination="ZeU-ve-Fbq" id="sP0-6s-Rul"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareSendButtonTableViewCell" id="bJm-nn-jm5" customClass="ShareSendButtonTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="193" width="414" height="66.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bJm-nn-jm5" id="0Ss-IZ-OAV">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="66.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evc-gX-tbY">
+                                            <rect key="frame" x="107" y="11" width="200" height="44.5"/>
+                                            <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="200" id="F4C-0w-w3r"/>
+                                                <constraint firstAttribute="height" constant="44" id="Tbj-Pb-d81"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                            <inset key="contentEdgeInsets" minX="32" minY="12" maxX="32" maxY="12"/>
+                                            <state key="normal" title="SEND"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="22"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="evc-gX-tbY" firstAttribute="top" secondItem="0Ss-IZ-OAV" secondAttribute="topMargin" id="3jL-2a-Rrn"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="evc-gX-tbY" secondAttribute="bottom" id="4Id-zU-Fz2"/>
+                                        <constraint firstItem="evc-gX-tbY" firstAttribute="centerX" secondItem="0Ss-IZ-OAV" secondAttribute="centerX" id="FVa-e5-25n"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <connections>
+                                    <outlet property="sendButton" destination="evc-gX-tbY" id="XWZ-qA-B1G"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailTableViewCell" rowHeight="52" id="wxH-bv-pTT" customClass="ShareEmailTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="259.5" width="414" height="52"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wxH-bv-pTT" id="3ef-wz-tkh">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="50c-ak-ZNd">
+                                            <rect key="frame" x="20" y="43" width="374" height="1"/>
+                                            <color key="backgroundColor" systemColor="separatorColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="vBm-5x-pcN"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email@email.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrW-d2-ghU">
+                                            <rect key="frame" x="20" y="15.5" width="334" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OhF-9r-eYZ">
+                                            <rect key="frame" x="354" y="0.0" width="52" height="52"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="5yx-y4-gXw"/>
+                                                <constraint firstAttribute="width" secondItem="OhF-9r-eYZ" secondAttribute="height" id="HOV-7I-P4Y"/>
+                                            </constraints>
+                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                            <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                                            <state key="normal" image="small-cross-clear-icon"/>
+                                            <connections>
+                                                <action selector="didTapUnshareButton:" destination="wxH-bv-pTT" eventType="touchUpInside" id="rZe-WS-Kpl"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="height" secondItem="3ef-wz-tkh" secondAttribute="height" id="4aC-To-RAH"/>
+                                        <constraint firstAttribute="bottom" secondItem="OhF-9r-eYZ" secondAttribute="bottom" id="9fA-6B-Fzo"/>
+                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="leading" secondItem="KrW-d2-ghU" secondAttribute="trailing" id="PTJ-S6-w5M"/>
+                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="centerY" secondItem="OhF-9r-eYZ" secondAttribute="centerY" id="TcR-wo-eXZ"/>
+                                        <constraint firstAttribute="trailing" secondItem="OhF-9r-eYZ" secondAttribute="trailing" constant="8" id="ijq-gi-HDU"/>
+                                        <constraint firstItem="50c-ak-ZNd" firstAttribute="trailing" secondItem="3ef-wz-tkh" secondAttribute="trailingMargin" id="pIz-QF-PGR"/>
+                                        <constraint firstItem="KrW-d2-ghU" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leadingMargin" id="r7u-dR-5sf"/>
+                                        <constraint firstItem="OhF-9r-eYZ" firstAttribute="top" secondItem="3ef-wz-tkh" secondAttribute="top" id="rC9-N8-CnK"/>
+                                        <constraint firstAttribute="bottom" secondItem="50c-ak-ZNd" secondAttribute="bottom" constant="8" id="tAu-1J-qwa"/>
+                                        <constraint firstItem="50c-ak-ZNd" firstAttribute="leading" secondItem="3ef-wz-tkh" secondAttribute="leading" constant="20" id="xGI-Fi-EPc"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="emailLabel" destination="KrW-d2-ghU" id="plf-Nr-rrY"/>
+                                    <outlet property="unshareButton" destination="OhF-9r-eYZ" id="vl7-gr-A2J"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="vpJ-wk-EwZ" id="zcb-CS-fPw"/>
+                            <outlet property="delegate" destination="vpJ-wk-EwZ" id="IaX-HS-N8j"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Share Ruuvi sensor" id="Ctd-2f-lxb">
+                        <barButtonItem key="backBarButtonItem" title=" " id="UTU-o7-TrR"/>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXr-2N-9WP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="KFR-KG-W1n" customClass="ShareInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="vpJ-wk-EwZ" id="SDS-AA-Us4"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="1513.0434782608697" y="72.991071428571431"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="uwY-bT-Jhi">
+            <objects>
+                <navigationController id="LbA-Te-w1h" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fr2-ra-azP">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vpJ-wk-EwZ" kind="relationship" relationship="rootViewController" id="jlp-B3-UoU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3cW-vx-U68" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="772" y="73"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="small-cross-clear-icon" width="36" height="36"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="separatorColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

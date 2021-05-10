@@ -5,6 +5,7 @@ import CoreLocation
 class WebTagPersistenceRealm: WebTagPersistence {
 
     var context: RealmContext!
+    var settings: Settings!
 
     func readAll() -> Future<[AnyVirtualTagSensor], RUError> {
         let promise = Promise<[AnyVirtualTagSensor], RUError>()
@@ -133,6 +134,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                     self.context.bg.add(webTagLocation, update: .modified)
                     webTag.location = webTagLocation
                 }
+                self.settings.tagsSorting.append(uuid)
                 promise.succeed(value: provider)
             } catch {
                 promise.fail(error: .persistence(error))
@@ -151,6 +153,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                 try self.context.bg.write {
                     self.context.bg.add(webTag, update: .all)
                 }
+                self.settings.tagsSorting.append(uuid)
                 promise.succeed(value: provider)
             } catch {
                 promise.fail(error: .persistence(error))
@@ -167,6 +170,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                     try self.context.bg.write {
                         self.context.bg.delete(webTag)
                     }
+                    self.settings.tagsSorting.removeAll(where: {$0 == webTag.id})
                     promise.succeed(value: true)
                 } catch {
                     promise.fail(error: .persistence(error))
@@ -177,6 +181,7 @@ class WebTagPersistenceRealm: WebTagPersistence {
                 try context.main.write {
                     self.context.main.delete(webTag)
                 }
+                self.settings.tagsSorting.removeAll(where: {$0 == webTag.id})
                 promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))

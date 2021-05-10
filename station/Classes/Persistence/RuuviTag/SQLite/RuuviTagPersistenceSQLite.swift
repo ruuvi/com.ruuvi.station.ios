@@ -25,7 +25,11 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable)
+                            isConnectable: ruuviTag.isConnectable,
+                            networkProvider: ruuviTag.networkProvider,
+                            isClaimed: ruuviTag.isClaimed,
+                            isOwner: ruuviTag.isOwner,
+                            owner: ruuviTag.owner)
 
         do {
             try database.dbPool.write { db in
@@ -234,7 +238,11 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable)
+                            isConnectable: ruuviTag.isConnectable,
+                            networkProvider: ruuviTag.networkProvider,
+                            isClaimed: ruuviTag.isClaimed,
+                            isOwner: ruuviTag.isOwner,
+                            owner: ruuviTag.owner)
 
         do {
             try database.dbPool.write { db in
@@ -256,7 +264,11 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             luid: ruuviTag.luid,
                             name: ruuviTag.name,
                             version: ruuviTag.version,
-                            isConnectable: ruuviTag.isConnectable)
+                            isConnectable: ruuviTag.isConnectable,
+                            networkProvider: ruuviTag.networkProvider,
+                            isClaimed: ruuviTag.isClaimed,
+                            isOwner: ruuviTag.isOwner,
+                            owner: ruuviTag.owner)
 
         do {
             var success = false
@@ -299,6 +311,38 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         } catch {
             reportToCrashlytics(error: error)
             promise.fail(error: .persistence(error))
+        }
+        return promise.future
+    }
+    func getStoredTagsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        readQueue.async { [weak self] in
+            do {
+                var count = 0
+                try self?.database.dbPool.read { db in
+                    count = try Entity.fetchCount(db)
+                }
+                promise.succeed(value: count)
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
+    func getStoredMeasurementsCount() -> Future<Int, RUError> {
+        let promise = Promise<Int, RUError>()
+        readQueue.async { [weak self] in
+            do {
+                var count = 0
+                try self?.database.dbPool.read { db in
+                    count = try Record.fetchCount(db)
+                }
+                promise.succeed(value: count)
+            } catch {
+                self?.reportToCrashlytics(error: error)
+                promise.fail(error: .persistence(error))
+            }
         }
         return promise.future
     }

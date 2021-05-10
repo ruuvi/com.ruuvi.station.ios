@@ -12,9 +12,9 @@ class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
             mail.mailComposeDelegate = self
             mail.setSubject(subject)
             if let body = body {
-                mail.setMessageBody(body, isHTML: false)
+                mail.setMessageBody(body, isHTML: true)
             }
-            mail.setToRecipients([email])
+            mail.setToRecipients([String(format: "App Feedback <%@>".localized(), email)])
             viewController.present(mail, animated: true)
         } else {
             errorPresenter.present(error: CoreError.unableToSendEmail)

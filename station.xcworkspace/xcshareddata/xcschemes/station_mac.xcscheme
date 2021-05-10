@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0E6BAD7623856A01003A2D4C"
-               BuildableName = "station_mac.app"
+               BuildableName = "Ruuvi Station.app"
                BlueprintName = "station_mac"
                ReferencedContainer = "container:station.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0E6BAD7623856A01003A2D4C"
-            BuildableName = "station_mac.app"
+            BuildableName = "Ruuvi Station.app"
             BlueprintName = "station_mac"
             ReferencedContainer = "container:station.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0E6BAD7623856A01003A2D4C"
-            BuildableName = "station_mac.app"
+            BuildableName = "Ruuvi Station.app"
             BlueprintName = "station_mac"
             ReferencedContainer = "container:station.xcodeproj">
          </BuildableReference>

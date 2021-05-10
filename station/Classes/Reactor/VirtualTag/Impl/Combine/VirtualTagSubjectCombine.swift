@@ -37,7 +37,6 @@ class VirtualTagSubjectCombine {
                                                     .map { $0.element }
                     for ins in insertions {
                         sSelf.insertSubject.send(webTags[ins].any)
-                        // TODO: test if ok with multiple
                         sSelf.webTagRealmCache.insert(webTags[ins].any, at: ins)
                     }
                     for mod in modifications {

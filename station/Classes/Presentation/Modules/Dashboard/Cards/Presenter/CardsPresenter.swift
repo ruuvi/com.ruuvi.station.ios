@@ -28,6 +28,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviTagTrunk: RuuviTagTrunk!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
+    var networkPersistance: NetworkPersistence!
 
     weak var tagCharts: TagChartsModuleInput?
 
@@ -155,6 +156,8 @@ extension CardsPresenter: CardsViewOutput {
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
+        } else if viewModel.mac.value != nil {
+            router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
@@ -184,12 +187,21 @@ extension CardsPresenter: CardsViewOutput {
             let sensor = ruuviTags.first(where: {$0.luid?.any == luid}) {
             restartObservingRuuviTagNetwork(for: sensor)
             tagCharts?.configure(ruuviTag: sensor)
+        } else if let macId = viewModel.mac.value,
+            let sensor = ruuviTags.first(where: {$0.macId?.any == macId}) {
+            restartObservingRuuviTagNetwork(for: sensor)
+            tagCharts?.configure(ruuviTag: sensor)
         }
     }
 }
 
 // MARK: - DiscoverModuleOutput
 extension CardsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
+        module.dismiss()
+        self.startObservingRuuviTags()
+    }
+
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
         module.dismiss()
         self.startObservingRuuviTags()
@@ -232,16 +244,35 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "\n\n" + summary)
+                                                body: "<br><br>" + summary)
         }
     }
+
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn(output: self)
+    }
+
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+    }
 }
+
+// MARK: - SignInModuleOutput
+extension CardsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+    }
+}
+
+// MARK: - TagsManagerModuleOutput
+extension CardsPresenter: TagsManagerModuleOutput {}
 
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
         if let index = viewModels.firstIndex(where: { $0.luid.value?.value == uuid }) {
-            view.scroll(to: index, immediately: true)
+            view.scroll(to: index, immediately: true, animated: false)
         }
     }
 
@@ -295,12 +326,11 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                print(macId)
-                // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
-                // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
-                // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
-                // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+                viewModel.background.value = backgroundPersistence.background(for: macId)
+                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
+                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
+                viewModel.networkSyncStatus.value = networkPersistance.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
                 viewModel.alertState.value = .empty
             } else {
@@ -325,14 +355,20 @@ extension CardsPresenter {
                 return viewModel
             }) ?? []
         }
-        viewModels = ruuviViewModels + virtualViewModels
-
+        viewModels = reorder(ruuviViewModels + virtualViewModels)
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
             && viewModels.isEmpty {
             self.router.openDiscover(output: self)
         }
+    }
+
+    private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
+        guard !settings.tagsSorting.isEmpty else {
+            return viewModels
+        }
+        return viewModels.reorder(by: settings.tagsSorting)
     }
 
     private func startObservingBluetoothState() {
@@ -538,7 +574,10 @@ extension CardsPresenter {
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
-                if let index = self?.viewModels.firstIndex(where: { $0.luid.value == sensor.luid?.any }) {
+                if let index = self?.viewModels.firstIndex(where: {
+                    return $0.luid.value == sensor.luid?.any
+                        || $0.mac.value == sensor.macId?.any
+                }) {
                     self?.view.scroll(to: index)
                     self?.restartObservingRuuviTagNetwork(for: sensor)
                     self?.tagCharts?.configure(ruuviTag: sensor)
@@ -584,10 +623,14 @@ extension CardsPresenter {
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
                          object: nil,
                          queue: .main) { [weak self] notification in
-            if let userInfo = notification.userInfo,
-                let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+            if let userInfo = notification.userInfo {
+                if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
                 let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid.any }) {
                     viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
+                    let viewModel = self?.view.viewModels.first(where: {$0.mac.value == macId.any }) {
+                    viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                }
             }
         }
     }

@@ -54,6 +54,16 @@ class SettingsRouter: SettingsRouterInput {
             })
     }
 
+    func openNetworkSettings() {
+        let factory = StoryboardFactory(storyboardName: "NetworkSettings")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: NetworkSettingsModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ module in
+                module.configure()
+            })
+    }
+
     func openSelection(with viewModel: SelectionViewModel, output: SelectionModuleOutput?) {
         let factory = StoryboardFactory(storyboardName: "Selection")
         try! transitionHandler
