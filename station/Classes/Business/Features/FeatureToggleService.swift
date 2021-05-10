@@ -16,7 +16,7 @@ public final class FeatureToggleService {
 
     var firebaseProvider: FeatureToggleProvider!
     var fallbackProvider: FeatureToggleProvider!
-    var localProvider: FeatureToggleProvider!
+    var localProvider: LocalFeatureToggleProvider!
 
     private var remoteToggles: [FeatureToggle] = []
     private var localToggles: [FeatureToggle] = []
@@ -37,6 +37,7 @@ public final class FeatureToggleService {
             sSelf.localToggles = fetchedFeatureToggles
         }
     }
+
     public func isEnabled(_ feature: Feature) -> Bool {
         switch source {
         case .remote:
@@ -45,6 +46,28 @@ public final class FeatureToggleService {
         case .local:
             let toggle = localToggles.first(where: { $0.feature == feature })
             return toggle?.enabled ?? false
+        }
+    }
+
+    public func enableLocal(_ feature: Feature) {
+        if let toggleIndex = localToggles.firstIndex(where: { $0.feature == feature }) {
+            let toggle = localToggles[toggleIndex]
+            assert(toggle.source == .local)
+            localProvider.enable(toggle)
+            localToggles[toggleIndex] = FeatureToggle(feature: toggle.feature, enabled: true, source: toggle.source)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    public func disableLocal(_ feature: Feature) {
+        if let toggleIndex = localToggles.firstIndex(where: { $0.feature == feature }) {
+            let toggle = localToggles[toggleIndex]
+            assert(toggle.source == .local)
+            localProvider.disable(toggle)
+            localToggles[toggleIndex] = FeatureToggle(feature: toggle.feature, enabled: false, source: toggle.source)
+        } else {
+            assertionFailure()
         }
     }
 
