@@ -1,6 +1,6 @@
 import UIKit
 
-protocol AdvancedSwitchTableViewCellDelegate: class {
+protocol AdvancedSwitchTableViewCellDelegate: AnyObject {
     func advancedSwitch(cell: AdvancedSwitchTableViewCell, didChange value: Bool)
 }
 

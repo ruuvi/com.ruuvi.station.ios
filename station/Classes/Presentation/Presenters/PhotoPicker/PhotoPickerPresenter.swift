@@ -1,6 +1,6 @@
 import UIKit
 
-protocol PhotoPickerPresenterDelegate: class {
+protocol PhotoPickerPresenterDelegate: AnyObject {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage)
 }
 

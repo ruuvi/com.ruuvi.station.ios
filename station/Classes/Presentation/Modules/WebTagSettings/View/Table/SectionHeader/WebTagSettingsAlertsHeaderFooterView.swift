@@ -1,6 +1,6 @@
 import UIKit
 
-protocol WebTagSettingsAlertsHeaderFooterViewDelegate: class {
+protocol WebTagSettingsAlertsHeaderFooterViewDelegate: AnyObject {
     func webTagSettingsAlerts(headerView: WebTagSettingsAlertsHeaderFooterView,
                               didTapOnDisabled button: UIButton)
 }

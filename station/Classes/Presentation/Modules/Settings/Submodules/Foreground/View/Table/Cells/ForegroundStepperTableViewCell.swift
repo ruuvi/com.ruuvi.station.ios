@@ -1,6 +1,6 @@
 import UIKit
 
-protocol ForegroundStepperTableViewCellDelegate: class {
+protocol ForegroundStepperTableViewCellDelegate: AnyObject {
     func foregroundStepper(cell: ForegroundStepperTableViewCell, didChange value: Int)
 }
 

@@ -1,7 +1,7 @@
 import UIKit
 import Localize_Swift
 
-protocol CardViewDelegate: class {
+protocol CardViewDelegate: AnyObject {
     func card(view: CardView, didTriggerSettings sender: Any)
     func card(view: CardView, didTriggerCharts sender: Any)
 }

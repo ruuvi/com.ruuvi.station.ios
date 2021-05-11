@@ -1,6 +1,6 @@
 import Foundation
 
-protocol LocationPickerModuleInput: class {
+protocol LocationPickerModuleInput: AnyObject {
     func configure(output: LocationPickerModuleOutput)
     func dismiss(completion: (() -> Void)?)
 }

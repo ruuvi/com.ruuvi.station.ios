@@ -1,7 +1,7 @@
 import UIKit
 import RangeSeekSlider
 
-protocol WebTagSettingsAlertControlsCellDelegate: class {
+protocol WebTagSettingsAlertControlsCellDelegate: AnyObject {
     func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell,
                                      didEnter description: String?)
     func webTagSettingsAlertControls(cell: WebTagSettingsAlertControlsCell,

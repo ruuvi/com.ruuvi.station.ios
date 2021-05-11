@@ -1,6 +1,6 @@
 import UIKit
 
-protocol ForegroundSwitchTableViewCellDelegate: class {
+protocol ForegroundSwitchTableViewCellDelegate: AnyObject {
     func foregroundSwitch(cell: ForegroundSwitchTableViewCell, didChange value: Bool)
 }
 

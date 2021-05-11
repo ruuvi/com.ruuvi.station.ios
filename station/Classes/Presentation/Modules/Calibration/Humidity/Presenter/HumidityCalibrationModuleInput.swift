@@ -1,5 +1,5 @@
 import Foundation
 
-protocol HumidityCalibrationModuleInput: class {
+protocol HumidityCalibrationModuleInput: AnyObject {
     func configure(ruuviTag: RuuviTagSensor, humidity: Double)
 }

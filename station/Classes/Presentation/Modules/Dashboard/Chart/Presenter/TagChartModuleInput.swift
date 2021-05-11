@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TagChartModuleInput: class {
+protocol TagChartModuleInput: AnyObject {
     var chartView: TagChartView { get }
     func configure(_ viewModel: TagChartViewModel, output: TagChartModuleOutput, luid: LocalIdentifier?)
     func insertMeasurements(_ newValues: [RuuviMeasurement])

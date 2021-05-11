@@ -1,6 +1,6 @@
 import Foundation
 
-protocol MenuModuleOutput: class {
+protocol MenuModuleOutput: AnyObject {
     func menu(module: MenuModuleInput, didSelectAddRuuviTag sender: Any?)
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?)
     func menu(module: MenuModuleInput, didSelectAbout sender: Any?)
