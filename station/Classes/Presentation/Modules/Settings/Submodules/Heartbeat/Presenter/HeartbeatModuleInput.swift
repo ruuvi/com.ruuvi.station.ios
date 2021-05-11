@@ -1,5 +1,5 @@
 import Foundation
 
-protocol HeartbeatModuleInput: class {
+protocol HeartbeatModuleInput: AnyObject {
     func configure()
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol MenuModuleInput: class {
+protocol MenuModuleInput: AnyObject {
     func configure(output: MenuModuleOutput)
     func dismiss()
 }

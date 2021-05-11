@@ -1,2 +1,2 @@
-protocol TagsManagerModuleOutput: class {
+protocol TagsManagerModuleOutput: AnyObject {
 }

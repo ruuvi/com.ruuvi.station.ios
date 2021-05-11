@@ -1,7 +1,7 @@
 import UIKit
 import RangeSeekSlider
 
-protocol TagSettingsAlertControlsCellDelegate: class {
+protocol TagSettingsAlertControlsCellDelegate: AnyObject {
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didEnter description: String?)
     func tagSettingsAlertControls(cell: TagSettingsAlertControlsCell, didSlideTo minValue: CGFloat, maxValue: CGFloat)
 }

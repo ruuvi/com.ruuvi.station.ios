@@ -6,7 +6,7 @@
 //
 import UIKit
 
-protocol RemoveKeyboardDelegate: class {
+protocol RemoveKeyboardDelegate: AnyObject {
     func removeKeyboard()
 }
 
