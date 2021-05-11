@@ -2,6 +2,9 @@ import UIKit
 #if canImport(Firebase)
 import Firebase
 #endif
+#if canImport(FLEX)
+import FLEX
+#endif
 import UserNotifications
 
 @UIApplicationMain
@@ -39,6 +42,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
         localNotificationsManager = r.resolve(LocalNotificationsManager.self)
         localNotificationsManager.application(application, didFinishLaunchingWithOptions: launchOptions)
+
+        #if canImport(FLEX)
+        FLEXManager.shared.registerGlobalEntry(
+            withName: "Feature Toggles",
+            viewControllerFutureBlock: { r.resolve(FLEXFeatureTogglesViewController.self) ?? UIViewController()
+            }
+        )
+        #endif
+
         return true
     }
 

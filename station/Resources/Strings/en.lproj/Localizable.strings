@@ -113,7 +113,6 @@
 "PhotoPicker.Sheet.message" = "Pick a photo";
 "PhotoPicker.Sheet.library" = "Choose from library";
 "PhotoPicker.Sheet.camera" = "Take Picture";
-"PhotoPicker.Sheet.files" = "Choose from files";
 "Settings.SectionHeader.General.title" = "GENERAL";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Rel";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Abs";
@@ -148,6 +147,7 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Humidity is adjusted";
 "TagSettings.HumidityIsClipped.Alert.message" = "Humidity value is greater than 100.0% after calibration. This value doesn't make sense, so the value is adjusted to 100.0%";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Fix";
+"TagSettings.navigationItem.title" = "Sensor Settings";
 "TagSettings.tagNameTitleLabel.text" = "Sensor Name";
 "TagSettings.humidityTitleLabel.text" = "Humidity";
 "TagSettings.uuidTitleLabel.text" = "UUID";
@@ -305,13 +305,11 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Updated";
 "V" = "V";
-"TagSettings.navigationItem.title" = "Sensor Settings";
 "LocalNotificationsManager.Mute.button" = "Mute for an hour";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
 "TagsManager.SignOutButton" = "Sign out";
-"SignIn.RequestSignLink" = "After signing in, you will be automatically marked as an owner of your nearby Ruuvi sensors. The claimed sensors will be restored after an app re-install.\n\nWith a Ruuvi Gateway router, you'll be able to monitor the claimed sensors remotely and share them with your friends.";
-"SignIn.SignInBenefits" = "Benefits of Ruuvi Network";
+"SignIn.SignInBenefits" = "After signing in, you will be automatically marked as an owner of your nearby Ruuvi sensors. The claimed sensors will be restored after an app re-install.\n\nWith a Ruuvi Gateway router, you'll be able to monitor the claimed sensors remotely and share them with your friends.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.EmailSent" = "Email sent";
 "SignIn.CheckMailbox" = "Check your email for an activation code.";
@@ -353,11 +351,3 @@
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Invalid MAC-address";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Data storage error";
 "UserApiError.ER_SUB_NO_USER" = "No user";
-"Advanced.Charts.title" = "Charts";
-"Advanced.RuuviNetwork.Section.title" = "Network";
-"NetworkSettings.title" = "Network settings";
-"NetworkSettings.NetworkFeature" = "Ruuvi Network";
-"NetworkSettings.NetworkFeature" = "Ruuvi Network";
-"SignIn.EnterVerificationCode" = "Enter verification code";
-"SignIn.EnterCorrectEmail" = "Enter correct email";
-"RuuviNetworkError.NotAuthorized" = "Not authorized";

@@ -22,6 +22,12 @@ class PresentationAssembly: Assembly {
             return presenter
         }
 
+        container.register(FLEXFeatureTogglesViewController.self) { r in
+            let controller = FLEXFeatureTogglesViewController()
+            controller.featureToggleService = r.resolve(FeatureToggleService.self)
+            return controller
+        }
+
         container.register(MailComposerPresenter.self) { r in
             let presenter = MailComposerPresenterMessageUI()
             presenter.errorPresenter = r.resolve(ErrorPresenter.self)
