@@ -113,7 +113,6 @@
 "PhotoPicker.Sheet.message" = "Выбрать фотографию";
 "PhotoPicker.Sheet.library" = "Выбрать из библиотеки";
 "PhotoPicker.Sheet.camera" = "Сделать фото";
-"PhotoPicker.Sheet.files" = "Выбрать из файлов";
 "Settings.SectionHeader.General.title" = "ОСНОВНЫЕ";
 "Settings.SegmentedControl.Humidity.Relative.title" = "Отн";
 "Settings.SegmentedControl.Humidity.Absolute.title" = "Абс";
@@ -148,6 +147,7 @@
 "TagSettings.HumidityIsClipped.Alert.title" = "Датчик влажности откалиброван";
 "TagSettings.HumidityIsClipped.Alert.message" = "Значение относительной влажности больше 100% после калибровки. Это значение не имеет смысла, поэтому значение откалибровано до 100%.";
 "TagSettings.HumidityIsClipped.Alert.Fix.button" = "Исправить";
+"TagSettings.navigationItem.title" = "Настройки";
 "TagSettings.tagNameTitleLabel.text" = "Имя";
 "TagSettings.humidityTitleLabel.text" = "Влажность";
 "TagSettings.uuidTitleLabel.text" = "UUID";
@@ -305,13 +305,11 @@
 "TemperatureUnit.Kelvin.title" = "Кельвин (K)";
 "Updated" = "Обновлено";
 "V" = "В";
-"TagSettings.navigationItem.title" = "Настройки датчика";
 "LocalNotificationsManager.Mute.button" = "Отключить на час";
 "Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
 "SignIn.Title.text" = "Войти";
 "TagsManager.SignOutButton" = "Выйти из сети";
-"SignIn.RequestSignLink" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
-"SignIn.SignInBenefits" = "Преимущества Ruuvi Network";
+"SignIn.SignInBenefits" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.EmailSent" = "Email отправлен";
 "SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
@@ -353,11 +351,3 @@
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Недопустимый MAC-адрес";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Ошибка сохранения данных";
 "UserApiError.ER_SUB_NO_USER" = "Нет пользователя";
-"Advanced.Charts.title" = "Графики";
-"Advanced.RuuviNetwork.Section.title" = "Сеть";
-"NetworkSettings.title" = "Настройки сети";
-"NetworkSettings.NetworkFeature" = "Сеть Ruuvi";
-"NetworkSettings.NetworkFeature" = "Сеть Ruuvi";
-"SignIn.EnterVerificationCode" = "Введите код подтверждения";
-"SignIn.EnterCorrectEmail" = "Введите корректный email";
-"RuuviNetworkError.NotAuthorized" = "Не авторизован";

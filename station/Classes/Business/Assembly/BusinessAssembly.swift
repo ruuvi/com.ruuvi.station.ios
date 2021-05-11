@@ -84,16 +84,21 @@ class BusinessAssembly: Assembly {
             return service
         }
 
+        container.register(FallbackFeatureToggleProvider.self) { _ in
+            let provider = FallbackFeatureToggleProvider()
+            return provider
+        }.inObjectScope(.container)
+
         container.register(FeatureToggleService.self) { r in
             let service = FeatureToggleService()
-            service.mainProvider = r.resolve(FirebaseRemoteConfigProvider.self)
-            service.fallbackProvider = r.resolve(LocalFeatureToggleProvider.self)
-            service.settings = r.resolve(Settings.self)
+            service.firebaseProvider = r.resolve(FirebaseFeatureToggleProvider.self)
+            service.fallbackProvider = r.resolve(FallbackFeatureToggleProvider.self)
+            service.localProvider = r.resolve(LocalFeatureToggleProvider.self)
             return service
         }.inObjectScope(.container)
 
-        container.register(FirebaseRemoteConfigProvider.self) { r in
-            let provider = FirebaseRemoteConfigProvider()
+        container.register(FirebaseFeatureToggleProvider.self) { r in
+            let provider = FirebaseFeatureToggleProvider()
             provider.remoteConfigService = r.resolve(RemoteConfigService.self)
             return provider
         }.inObjectScope(.container)

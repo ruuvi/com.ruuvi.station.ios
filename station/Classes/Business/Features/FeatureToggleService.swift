@@ -1,37 +1,80 @@
 import Foundation
 
 public final class FeatureToggleService {
-    var mainProvider: FeatureToggleProvider!
+    public var source: FeatureSource {
+        get {
+            if let rawValue = UserDefaults.standard.string(forKey: sourceUDKey) {
+                return FeatureSource(rawValue: rawValue) ?? .remote
+            } else {
+                return .remote
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: sourceUDKey)
+        }
+    }
+
+    var firebaseProvider: FeatureToggleProvider!
     var fallbackProvider: FeatureToggleProvider!
-    var settings: Settings!
+    var localProvider: LocalFeatureToggleProvider!
 
-    private var featureToggles: [FeatureToggle] = []
+    private var remoteToggles: [FeatureToggle] = []
+    private var localToggles: [FeatureToggle] = []
+    private let sourceUDKey = "FeatureToggleService.sourceUDKey"
 
-    public func fetchFeatureToggles(completion: (([FeatureToggle]) -> Void)? = nil) {
-        mainProvider.fetchFeatureToggles { [weak self] fetchedFeatureToggles in
+    public func fetchFeatureToggles() {
+        firebaseProvider.fetchFeatureToggles { [weak self] fetchedFeatureToggles in
             guard let sSelf = self else { return }
 
             if fetchedFeatureToggles.count > 0 {
-                sSelf.featureToggles = fetchedFeatureToggles
+                sSelf.remoteToggles = fetchedFeatureToggles
             } else {
                 sSelf.useFallbackFeatureToggles(sSelf.fallbackProvider)
             }
-
-            completion?(sSelf.featureToggles)
+        }
+        localProvider.fetchFeatureToggles { [weak self] fetchedFeatureToggles in
+            guard let sSelf = self else { return }
+            sSelf.localToggles = fetchedFeatureToggles
         }
     }
+
     public func isEnabled(_ feature: Feature) -> Bool {
-        if feature == .network && settings.networkFeatureEnabled {
-            return true
+        switch source {
+        case .remote:
+            let toggle = remoteToggles.first(where: { $0.feature == feature })
+            return toggle?.enabled ?? false
+        case .local:
+            let toggle = localToggles.first(where: { $0.feature == feature })
+            return toggle?.enabled ?? false
         }
-        let feature = featureToggles.first(where: { $0.feature == feature })
-        return feature?.enabled ?? false
+    }
+
+    public func enableLocal(_ feature: Feature) {
+        if let toggleIndex = localToggles.firstIndex(where: { $0.feature == feature }) {
+            let toggle = localToggles[toggleIndex]
+            assert(toggle.source == .local)
+            localProvider.enable(toggle)
+            localToggles[toggleIndex] = FeatureToggle(feature: toggle.feature, enabled: true, source: toggle.source)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    public func disableLocal(_ feature: Feature) {
+        if let toggleIndex = localToggles.firstIndex(where: { $0.feature == feature }) {
+            let toggle = localToggles[toggleIndex]
+            assert(toggle.source == .local)
+            localProvider.disable(toggle)
+            localToggles[toggleIndex] = FeatureToggle(feature: toggle.feature, enabled: false, source: toggle.source)
+        } else {
+            assertionFailure()
+        }
     }
 
     private func useFallbackFeatureToggles(_ fallbackProvider: FeatureToggleProvider) {
         fallbackProvider.fetchFeatureToggles { [weak self] featureToggles in
             if let sSelf = self {
-                sSelf.featureToggles = featureToggles
+                sSelf.remoteToggles = featureToggles
             }
         }
     }
