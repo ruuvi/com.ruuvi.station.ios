@@ -164,6 +164,17 @@ extension TagChartsInteractor: TagChartModuleOutput {
     var dataSource: [RuuviMeasurement] {
         return ruuviTagData
     }
+
+    func chartViewDidChangeViewPort(_ chartView: TagChartView) {
+        chartViews.filter({ $0 != chartView }).forEach { otherChart in
+            let matrix = chartView.viewPortHandler.touchMatrix
+            otherChart.viewPortHandler.refresh(
+                newMatrix: matrix,
+                chart: otherChart,
+                invalidate: true
+            )
+        }
+    }
 }
 // MARK: - Private
 extension TagChartsInteractor {
