@@ -154,6 +154,7 @@ extension SettingsTableViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
             switch cell {

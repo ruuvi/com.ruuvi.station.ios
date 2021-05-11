@@ -4,6 +4,6 @@ extension Notification.Name {
     static let DidOpenWithUniversalLink = Notification.Name("DidOpenWithUniversalLink")
 }
 
-protocol UniversalLinkCoordinator: class {
+protocol UniversalLinkCoordinator: AnyObject {
     func processUniversalLink(url: URL)
 }

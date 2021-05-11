@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TagSettingsAlertsHeaderFooterViewDelegate: class {
+protocol TagSettingsAlertsHeaderFooterViewDelegate: AnyObject {
     func tagSettingsAlerts(headerView: TagSettingsAlertsHeaderFooterView, didTapOnDisabled button: UIButton)
 }
 

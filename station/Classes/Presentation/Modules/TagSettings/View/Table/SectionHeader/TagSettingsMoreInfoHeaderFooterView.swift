@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TagSettingsMoreInfoHeaderFooterViewDelegate: class {
+protocol TagSettingsMoreInfoHeaderFooterViewDelegate: AnyObject {
     func tagSettingsMoreInfo(headerView: TagSettingsMoreInfoHeaderFooterView, didTapOnInfo button: UIButton)
 }
 

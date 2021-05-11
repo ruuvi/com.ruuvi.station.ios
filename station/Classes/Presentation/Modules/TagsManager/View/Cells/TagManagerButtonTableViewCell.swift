@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TagManagerButtonTableViewCellOutput: class {
+protocol TagManagerButtonTableViewCellOutput: AnyObject {
     func tagManagerButtonCell(didTapButton action: TagManagerActionType)
 }
 

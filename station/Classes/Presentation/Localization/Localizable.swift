@@ -1,6 +1,6 @@
 import Foundation
 
-protocol Localizable: class {
+protocol Localizable: AnyObject {
     func localize()
 }
 

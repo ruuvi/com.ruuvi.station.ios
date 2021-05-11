@@ -1,6 +1,6 @@
 import UIKit
 
-protocol DiscoverWebTagsInfoHeaderFooterViewDelegate: class {
+protocol DiscoverWebTagsInfoHeaderFooterViewDelegate: AnyObject {
     func discoverWebTagsInfo(headerView: DiscoverWebTagsInfoHeaderFooterView, didTapOnInfo button: UIButton)
 }
 

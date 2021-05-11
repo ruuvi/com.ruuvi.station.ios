@@ -1,2 +1,2 @@
-protocol ShareModuleOutput: class {
+protocol ShareModuleOutput: AnyObject {
 }

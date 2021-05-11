@@ -1,6 +1,6 @@
 import Foundation
 
-protocol DiscoverModuleInput: class {
+protocol DiscoverModuleInput: AnyObject {
     func configure(isOpenedFromWelcome: Bool, output: DiscoverModuleOutput?)
     func dismiss(completion: (() -> Void)?)
 }

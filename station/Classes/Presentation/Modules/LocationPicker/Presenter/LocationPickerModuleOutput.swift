@@ -1,5 +1,5 @@
 import Foundation
 
-protocol LocationPickerModuleOutput: class {
+protocol LocationPickerModuleOutput: AnyObject {
     func locationPicker(module: LocationPickerModuleInput, didPick location: Location)
 }
