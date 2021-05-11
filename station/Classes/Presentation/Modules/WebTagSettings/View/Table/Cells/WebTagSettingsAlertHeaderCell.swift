@@ -1,6 +1,6 @@
 import UIKit
 
-protocol WebTagSettingsAlertHeaderCellDelegate: class {
+protocol WebTagSettingsAlertHeaderCellDelegate: AnyObject {
     func webTagSettingsAlertHeader(cell: WebTagSettingsAlertHeaderCell, didToggle isOn: Bool)
 }
 

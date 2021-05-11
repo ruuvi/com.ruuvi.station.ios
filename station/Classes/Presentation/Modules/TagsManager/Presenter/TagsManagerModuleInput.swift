@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TagsManagerModuleInput: class {
+protocol TagsManagerModuleInput: AnyObject {
     func configure(output: TagsManagerModuleOutput)
     func dismiss()
 }

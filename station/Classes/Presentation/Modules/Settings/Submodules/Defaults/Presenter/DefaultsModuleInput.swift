@@ -1,5 +1,5 @@
 import Foundation
 
-protocol DefaultsModuleInput: class {
+protocol DefaultsModuleInput: AnyObject {
     func configure()
 }

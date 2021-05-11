@@ -1,5 +1,5 @@
 import Foundation
 
-protocol CardsRouterDelegate: class {
+protocol CardsRouterDelegate: AnyObject {
     func shouldDismissDiscover() -> Bool
 }

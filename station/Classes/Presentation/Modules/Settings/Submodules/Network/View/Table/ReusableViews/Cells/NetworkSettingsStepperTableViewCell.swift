@@ -1,6 +1,6 @@
 import UIKit
 
-protocol NetworkSettingsStepperTableViewCellDelegate: class {
+protocol NetworkSettingsStepperTableViewCellDelegate: AnyObject {
     func foregroundStepper(cell: NetworkSettingsStepperTableViewCell, didChange value: Int)
 }
 
