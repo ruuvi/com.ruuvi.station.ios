@@ -92,11 +92,11 @@ platform :ios do
       app: ENV["GOOGLE_APP_ID"],
       firebase_cli_token: ENV["FIREBASE_REFRESH_TOKEN"],
       release_notes: changelog,
-      ipa_path: "./Build/station.ipa",
+      ipa_path: "./Build/" + scheme + ".ipa",
       groups: options[:group]
     )
     upload_symbols_to_crashlytics(
-      dsym_path: "./Build/station.app.dSYM.zip",
+      dsym_path: "./Build/" + scheme + ".app.dSYM.zip",
       gsp_path: ENV["GSP_PATH"]
     )
     skip_docs
