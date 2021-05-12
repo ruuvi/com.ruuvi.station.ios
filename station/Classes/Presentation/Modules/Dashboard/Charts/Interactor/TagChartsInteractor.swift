@@ -99,7 +99,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
     func restartObservingData() {
         presenter.isLoading = true
         fetchAll { [weak self] in
-            self?.startSheduler()
+            self?.restartScheduler()
             self?.reloadCharts()
             self?.presenter.isLoading = false
         }
@@ -186,12 +186,14 @@ extension TagChartsInteractor {
             })
     }
 
-    private func startSheduler() {
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(settings.chartIntervalSeconds),
-                                     repeats: true,
-                                     block: { [weak self] (_) in
-            self?.fetchLast()
-            self?.removeFirst()
+    private func restartScheduler() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(
+            withTimeInterval: TimeInterval(settings.chartIntervalSeconds),
+            repeats: true,
+            block: { [weak self] (_) in
+                self?.fetchLast()
+                self?.removeFirst()
         })
     }
 
