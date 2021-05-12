@@ -60,7 +60,7 @@ protocol AlertService {
     func setMovement(description: String?, for uuid: String)
 }
 
-protocol AlertServiceObserver: class {
+protocol AlertServiceObserver: AnyObject {
     func alert(service: AlertService, isTriggered: Bool, for uuid: String)
 }
 

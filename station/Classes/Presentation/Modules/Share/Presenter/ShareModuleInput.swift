@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ShareModuleInput: class {
+protocol ShareModuleInput: AnyObject {
     func configure(ruuviTagId: String)
     func dismiss()
 }

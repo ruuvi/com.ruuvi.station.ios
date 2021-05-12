@@ -113,6 +113,14 @@ extension TagChartPresenter: TagChartViewOutput {
         fetchPointsByDates(start: range.min,
                            stop: range.max)
     }
+
+    func chartDidScale(_ chartView: TagChartView) {
+        ouptut?.chartViewDidChangeViewPort(chartView)
+    }
+
+    func chartDidTranslate(_ chartView: TagChartView) {
+        ouptut?.chartViewDidChangeViewPort(chartView)
+    }
 }
 extension TagChartPresenter: MeasurementsServiceDelegate {
     func measurementServiceDidUpdateUnit() {

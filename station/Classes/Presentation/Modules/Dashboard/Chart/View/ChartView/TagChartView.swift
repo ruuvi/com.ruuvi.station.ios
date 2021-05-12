@@ -205,6 +205,7 @@ extension TagChartView: TagChartViewInput {
 }
 extension TagChartView: ChartViewDelegate {
     func chartTranslated(_ chartView: ChartViewBase, dX: CGFloat, dY: CGFloat) {
+        presenter?.chartDidTranslate(self)
         guard viewModel.isDownsamplingOn.value == true else {
             return
         }
@@ -216,5 +217,6 @@ extension TagChartView: ChartViewDelegate {
         let offset = getScaleOffset(scaleX: scaleX, scaleY: scaleY)
         let newVisibleRange = (min: lowestVisibleX - offset * 2, max: highestVisibleX + offset * 2)
         presenter?.didChartChangeVisibleRange(self, newRange: newVisibleRange)
+        presenter?.chartDidScale(self)
     }
 }

@@ -177,6 +177,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         }
         op.on(success: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
+            self?.interactor.restartObservingData()
         }, failure: { [weak self] error in
             self?.view.setSync(progress: nil, for: viewModel)
             if case .btkit(.logic(.connectionTimedOut)) = error {

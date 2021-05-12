@@ -1,6 +1,6 @@
 import UIKit
 
-protocol AdvancedStepperTableViewCellDelegate: class {
+protocol AdvancedStepperTableViewCellDelegate: AnyObject {
     func advancedStepper(cell: AdvancedStepperTableViewCell, didChange value: Int)
 }
 

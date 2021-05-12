@@ -1,5 +1,5 @@
 import Foundation
 
-protocol NetworkSettingsModuleInput: class {
+protocol NetworkSettingsModuleInput: AnyObject {
     func configure()
 }
