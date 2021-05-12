@@ -1,5 +1,5 @@
 import Foundation
 
-protocol WelcomeModuleInput: class {
+protocol WelcomeModuleInput: AnyObject {
 
 }

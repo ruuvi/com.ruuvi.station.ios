@@ -2,7 +2,7 @@ import Foundation
 import Future
 import BTKit
 
-protocol TagChartsInteractorInput: class {
+protocol TagChartsInteractorInput: AnyObject {
     var chartViews: [TagChartView] { get }
     var lastMeasurement: RuuviMeasurement? { get }
     func configure(withTag ruuviTag: AnyRuuviTagSensor)

@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TagSettingsAlertHeaderCellDelegate: class {
+protocol TagSettingsAlertHeaderCellDelegate: AnyObject {
     func tagSettingsAlertHeader(cell: TagSettingsAlertHeaderCell, didToggle isOn: Bool)
 }
 

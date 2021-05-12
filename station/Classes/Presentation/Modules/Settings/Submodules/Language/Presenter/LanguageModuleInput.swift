@@ -1,5 +1,5 @@
 import Foundation
 
-protocol LanguageModuleInput: class {
+protocol LanguageModuleInput: AnyObject {
 
 }

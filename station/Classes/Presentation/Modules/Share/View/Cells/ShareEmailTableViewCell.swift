@@ -1,5 +1,5 @@
 import UIKit
-protocol ShareEmailTableViewCellDelegate: class {
+protocol ShareEmailTableViewCellDelegate: AnyObject {
     func didTapUnshare(for email: String)
 }
 class ShareEmailTableViewCell: UITableViewCell {
