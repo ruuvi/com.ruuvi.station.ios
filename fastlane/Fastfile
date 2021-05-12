@@ -13,9 +13,13 @@ end
 
 def remove_artifacts
   clean_build_artifacts()
-  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
-  sh("rm", "README.md")
-  sh("rm", "report.xml")
+  begin
+      sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
+      sh("rm", "report.xml")
+      sh("rm", "README.md")
+   rescue => ex
+     UI.error(ex)
+   end
 end
 
 platform :ios do
@@ -97,7 +101,7 @@ platform :ios do
     )
     last_pr_title = result[:json]['title']
     last_pr_body = result[:json]['body']
-    release_notes = "• " + last_pr_title + "\n" + last_pr_body
+    release_notes = last_pr_title + "\n\n" + last_pr_body
 
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
