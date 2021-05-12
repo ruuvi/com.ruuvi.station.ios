@@ -85,15 +85,24 @@ platform :ios do
     )
 
     changelog = changelog_from_git_commits(
-      commits_count: 2,
-      pretty: "• %s",
+      commits_count: 1,
+      pretty: "%s",
       merge_commit_filtering: "only_include_merges"
     )
+    last_pr_number = changelog[/\d+/]
+    result = github_api(
+      server_url: "https://api.github.com",
+      http_method: "GET",
+      path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
+    )
+    last_pr_title = result[:json]['title']
+    last_pr_body = result[:json]['body']
+    release_notes = "• " + last_pr_title + "\n" + last_pr_body
 
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
       firebase_cli_token: ENV["FIREBASE_REFRESH_TOKEN"],
-      release_notes: changelog,
+      release_notes: release_notes,
       ipa_path: "./Build/" + SCHEME + ".ipa",
       groups: options[:group]
     )
