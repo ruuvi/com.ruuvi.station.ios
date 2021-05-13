@@ -92,11 +92,10 @@ extension SignInPresenter {
         viewModel = SignInViewModel()
         switch state {
         case .enterEmail:
-            viewModel.titleLabelText.value = "SignIn.SignInBenefits".localized()
-            viewModel.subTitleLabelText.value = "SignIn.RequestSignLink".localized()
+            viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
+            viewModel.subTitleLabelText.value = "SignIn.SubtitleLabel.text".localized()
             viewModel.placeholder.value = "SignIn.EmailPlaceholder".localized()
             viewModel.errorLabelText.value = nil
-            viewModel.enterCodeManuallyButtonIsHidden.value = false
             viewModel.canPopViewController.value = false
             viewModel.textContentType.value = .emailAddress
             viewModel.inputText.value = keychainService.userApiEmail
@@ -105,7 +104,6 @@ extension SignInPresenter {
             viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
             viewModel.placeholder.value = "SignIn.VerificationCodePlaceholder".localized()
             viewModel.errorLabelText.value = nil
-            viewModel.enterCodeManuallyButtonIsHidden.value = true
             viewModel.textContentType.value = .name
             if let code = code {
                 viewModel.canPopViewController.value = false

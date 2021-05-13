@@ -4,9 +4,9 @@ class SignInViewController: UIViewController {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subTitleLabel: UILabel!
+    @IBOutlet weak var textFieldHeaderLabel: UILabel!
     @IBOutlet weak var textTextField: UITextField!
     @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var enterCodeManuallyButton: UIButton!
     @IBOutlet weak var errorLabel: UILabel!
 
     var output: SignInViewOutput!
@@ -43,6 +43,7 @@ class SignInViewController: UIViewController {
 extension SignInViewController: SignInViewInput {
     func localize() {
         title = "SignIn.Title.text".localized()
+        
     }
 }
 
@@ -94,11 +95,8 @@ extension SignInViewController {
                 label.text = nil
             }
         }
-        enterCodeManuallyButton.bind(viewModel.enterCodeManuallyButtonIsHidden) { (button, isHidden) in
-            button.isHidden = isHidden ?? false
-        }
-        textTextField.bind(viewModel.placeholder) { (textField, placeholder) in
-            textField.placeholder = placeholder
+        textFieldHeaderLabel.bind(viewModel.placeholder) { (label, placeholder) in
+            label.text = placeholder
         }
         textTextField.bind(viewModel.textContentType) { (textField, textContentType) in
             if let textContentType = textContentType {
