@@ -119,11 +119,11 @@ extension SignInPresenter {
         bind(viewModel.inputText) { (presenter, text) in
             switch presenter.state {
             case .enterEmail:
-                if !presenter.isValidEmail(text) {
+                if let text = text, !text.isEmpty, !presenter.isValidEmail(text) {
                     presenter.viewModel.errorLabelText.value = "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
                 }
             case .enterVerificationCode:
-                if text?.isEmpty == true {
+                if let text = text, text.isEmpty {
                     presenter.viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
                 }
             }
