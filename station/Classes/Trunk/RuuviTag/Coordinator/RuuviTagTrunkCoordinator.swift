@@ -102,3 +102,21 @@ extension RuuviTagTrunkCoordinator {
         }
     }
 }
+
+extension RuuviTagTrunkCoordinator {
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RUError> {
+        if ruuviTag.macId != nil {
+            return sqlite.readSensorSettings(ruuviTag)
+        } else {
+            return realm.readSensorSettings(ruuviTag)
+        }
+    }
+    
+    func updateOffsetCorrection(type: OffsetCorrectionType, with value: Double?, of ruuviTag: RuuviTagSensor) -> Future<SensorSettings, RUError> {
+        if ruuviTag.macId != nil {
+            return sqlite.updateOffsetCorrection(type: type, with: value, of: ruuviTag)
+        } else {
+            return realm.updateOffsetCorrection(type: type, with: value, of: ruuviTag)
+        }
+    }
+}

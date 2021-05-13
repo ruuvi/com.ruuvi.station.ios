@@ -51,6 +51,9 @@ class TagChartsPresenter: TagChartsModuleInput {
             syncViewModel()
         }
     }
+    
+    private var sensorSettings: SensorSettings!
+    
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
             self.view.viewModel = self.viewModel
@@ -128,6 +131,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
+                                   sensor: sensorSettings,
                                    output: self)
         } else {
             assert(false)

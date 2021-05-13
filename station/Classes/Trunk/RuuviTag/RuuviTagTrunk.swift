@@ -14,4 +14,8 @@ protocol RuuviTagTrunk {
     func readAll() -> Future<[RuuviTagSensor], RUError>
     func readLast(_ id: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError>
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RUError>
+    
+    //sensor settings
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RUError>
+    func updateOffsetCorrection(type: OffsetCorrectionType, with value: Double?, of ruuviTag: RuuviTagSensor) -> Future<SensorSettings, RUError>
 }
