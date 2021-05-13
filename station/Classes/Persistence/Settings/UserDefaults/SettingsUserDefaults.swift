@@ -216,9 +216,6 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])
     var tagsSorting: [String]
 
-    @UserDefault("SettingsUserDefaults.networkFeatureEnabled", defaultValue: false)
-    var networkFeatureEnabled: Bool
-
     @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
     var networkPullIntervalSeconds: Int
 

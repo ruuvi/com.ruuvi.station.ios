@@ -154,13 +154,8 @@ extension SignInViewController {
         subTitleLabel.bind(viewModel.subTitleLabelText) { (label, value) in
             label.text = value
         }
-        errorLabel.bind(viewModel.errorLabelText) { [weak self] (label, value) in
-            if let errorText = value,
-               self?.textTextField.text?.isEmpty == false {
-                label.text = errorText
-            } else {
-                label.text = nil
-            }
+        errorLabel.bind(viewModel.errorLabelText) { (label, value) in
+            label.text = value
         }
         textFieldHeaderLabel.bind(viewModel.placeholder) { (label, placeholder) in
             label.text = placeholder
@@ -179,7 +174,7 @@ extension SignInViewController {
         submitButton.bind(viewModel.submitButtonText) { button, text in
             button.setTitle(text, for: .normal)
         }
-        
+
         navigationItem.leftBarButtonItem?.bind(viewModel.canPopViewController,
                                                block: { (buttonItem, canPopViewController) in
             buttonItem.image = canPopViewController ?? false ? #imageLiteral(resourceName: "icon_back_arrow") : #imageLiteral(resourceName: "dismiss-modal-icon")
