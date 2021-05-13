@@ -52,6 +52,5 @@ extension KeychainServiceImpl: KeychainService {
     var userIsAuthorized: Bool {
         return !((ruuviUserApiKey ?? "").isEmpty)
             && !((userApiEmail ?? "").isEmpty)
-            && settings.networkFeatureEnabled
     }
 }
