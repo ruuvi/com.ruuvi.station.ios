@@ -313,8 +313,11 @@
 "TagsManager.SignOutButton" = "Sign out";
 "SignIn.SignInBenefits" = "After signing in, you will be automatically marked as an owner of your nearby Ruuvi sensors. The claimed sensors will be restored after an app re-install.\n\nWith a Ruuvi Gateway router, you'll be able to monitor the claimed sensors remotely and share them with your friends.";
 "SignIn.EmailPlaceholder" = "Email";
+"SignIn.RequestCode" = "Request a Code";
+"SignIn.SubmitCode" = "Submit";
 "SignIn.EmailSent" = "Email sent";
 "SignIn.CheckMailbox" = "Check your email for an activation code.";
+"SignIn.CodeHint" = "Code";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Do you want sign out?";
 "TagSettings.ClaimTagButton.Claim" = "Claim";
 "TagSettings.ClaimTagButton.Unclaim" = "Unclaim";

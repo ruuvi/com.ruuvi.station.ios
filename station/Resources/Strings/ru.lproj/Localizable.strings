@@ -313,8 +313,11 @@
 "TagsManager.SignOutButton" = "Выйти из сети";
 "SignIn.SignInBenefits" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.EmailPlaceholder" = "Email";
+"SignIn.RequestCode" = "Запросить код";
+"SignIn.SubmitCode" = "Отправить";
 "SignIn.EmailSent" = "Email отправлен";
 "SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
+"SignIn.CodeHint" = "Код для входа";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Хотите выйти их сети?";
 "TagSettings.ClaimTagButton.Claim" = "Мой сенсор";
 "TagSettings.ClaimTagButton.Unclaim" = "Отвязать";
