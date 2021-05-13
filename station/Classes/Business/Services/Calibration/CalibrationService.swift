@@ -10,8 +10,14 @@ protocol CalibrationService {
 
 extension Notification.Name {
     static let CalibrationServiceHumidityDidChange = Notification.Name("CalibrationServiceDidChange")
+    static let OffsetCorrectionDidChange = Notification.Name("OffsetCorrectionDidChange")
 }
 
 enum CalibrationServiceHumidityDidChangeKey: String {
     case luid // LocalIdentifier
+}
+
+enum OffsetCorrectionDidChangeKey: String {
+    case luid // LocalIdentifier
+    case ruuviTagId
 }

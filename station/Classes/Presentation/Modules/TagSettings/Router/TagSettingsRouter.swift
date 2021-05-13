@@ -24,4 +24,16 @@ class TagSettingsRouter: TagSettingsRouterInput {
                 module.configure(ruuviTag: ruuviTag, humidity: humidity)
             })
     }
+    
+    func openOffsetCorrection(type: OffsetCorrectionType,
+                              ruuviTag: RuuviTagSensor,
+                              sensorSettings: SensorSettings?) {
+        let factory = StoryboardFactory(storyboardName: "OffsetCorrection")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: OffsetCorrectionModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(type: type, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
+            })
+    }
 }

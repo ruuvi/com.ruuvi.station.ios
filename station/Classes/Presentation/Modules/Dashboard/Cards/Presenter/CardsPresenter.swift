@@ -53,6 +53,7 @@ class CardsPresenter: CardsModuleInput {
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var calibrationHumidityDidChangeToken: NSObjectProtocol?
+    private var offsetCorrectionDidChangeToken: NSObjectProtocol?
     private var didMigrationCompleteToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
     private var lnmDidReceiveToken: NSObjectProtocol?
@@ -113,6 +114,7 @@ extension CardsPresenter: CardsViewOutput {
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
         startObservingCalibrationHumidityChanges()
+        startObservingOffsetCorrectionChanges()
         startObservingLocalNotificationsManager()
         pushNotificationsManager.registerForRemoteNotifications()
     }
@@ -137,9 +139,11 @@ extension CardsPresenter: CardsViewOutput {
                 humidity = viewModel.humidity.value?
                     .converted(to: .relative(temperature: temperature))
             }
-            router.openTagSettings(ruuviTag: ruuviTag,
+            
+            self.router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: viewModel.temperature.value,
                                    humidity: humidity,
+                                   sensorSettings: viewModel.sensorSettings.value,
                                    output: self)
         } else if viewModel.type == .web,
             let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
@@ -310,6 +314,11 @@ extension CardsPresenter {
                 if let record = record {
                     viewModel.update(record)
                     self?.updateAlertState(for: viewModel)
+                }
+            }
+            ruuviTagTrunk.readSensorSettings(ruuviTag).on { settings in
+                if let settings = settings {
+                    viewModel.sensorSettings.value = settings
                 }
             }
             return viewModel
@@ -756,6 +765,27 @@ extension CardsPresenter {
                         viewModel.humidityOffset.value = self?.calibrationService.humidityOffset(for: luid).0
                         viewModel.humidityOffsetDate.value = self?.calibrationService.humidityOffset(for: luid).1
                        })
+                   }
+               })
+    }
+    
+    private func startObservingOffsetCorrectionChanges() {
+        offsetCorrectionDidChangeToken = NotificationCenter
+                   .default
+                   .addObserver(forName: .OffsetCorrectionDidChange,
+                                object: nil,
+                                queue: .main,
+                                using: { [weak self] (notification) in
+                   if let userInfo = notification.userInfo,
+                      let luid = userInfo[OffsetCorrectionDidChangeKey.luid] as? LocalIdentifier,
+                      let ruuviTagId = userInfo[OffsetCorrectionDidChangeKey.ruuviTagId] as? String {
+                    self?.ruuviTagTrunk.readOne(ruuviTagId).on { ruuviTag in
+                        self?.ruuviTagTrunk.readSensorSettings(ruuviTag).on { settings in
+                            self?.viewModels.filter({ $0.luid.value == luid.any }).forEach({ (viewModel) in
+                                viewModel.sensorSettings.value = settings
+                            })
+                        }
+                    }
                    }
                })
     }

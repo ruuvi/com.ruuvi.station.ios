@@ -43,6 +43,23 @@ extension RuuviTagSensorRecord {
     }
 }
 
+extension RuuviTagSensorRecord {
+    func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
+        return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
+                                          date: date,
+                                          macId: macId,
+                                          rssi: rssi,
+                                          temperature: temperature?.withSensorSettings(sensorSettings: sensorSettings),
+                                          humidity: humidity?.withSensorSettings(sensorSettings: sensorSettings),
+                                          pressure: pressure?.withSensorSettings(sensorSettings: sensorSettings),
+                                          acceleration: acceleration,
+                                          voltage: voltage,
+                                          movementCounter: movementCounter,
+                                          measurementSequenceNumber: measurementSequenceNumber,
+                                          txPower: txPower)
+    }
+}
+
 struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     var ruuviTagId: String
     var date: Date

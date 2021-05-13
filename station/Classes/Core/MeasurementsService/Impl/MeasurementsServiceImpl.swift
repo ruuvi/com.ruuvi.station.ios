@@ -218,3 +218,40 @@ extension MeasurementsServiceImpl {
         })
     }
 }
+
+extension MeasurementsServiceImpl {
+    func temperatureOffsetCorrection(for temperature: Double) -> Double {
+        switch units.temperatureUnit {
+        case .fahrenheit:
+            return temperature * 1.8
+        default:
+            return temperature
+        }
+    }
+    
+    func temperatureOffsetCorrectionString(for temperature: Double) -> String {
+        return string(for: Temperature(
+            temperatureOffsetCorrection(for: temperature),
+            unit: units.temperatureUnit
+        ))
+    }
+    
+    func humidityOffsetCorrection(for humidity: Double) -> Double {
+        return humidity
+    }
+    
+    func humidityOffsetCorrectionString(for humidity: Double) -> String {
+        return "\((humidityOffsetCorrection(for: humidity) * 100).round(to: 2)) \("%".localized())"
+    }
+    
+    func pressureOffsetCorrection(for pressure: Double) -> Double {
+        return double(for: Pressure(pressure, unit: .hectopascals)!)
+    }
+    
+    func pressureOffsetCorrectionString(for pressure: Double) -> String {
+        return string(for: Pressure(
+            pressureOffsetCorrection(for: pressure),
+            unit: units.pressureUnit
+        ))
+    }
+}

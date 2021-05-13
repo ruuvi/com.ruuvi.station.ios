@@ -32,6 +32,8 @@ struct CardsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
+    
+    var sensorSettings: Observable<SensorSettings?> = Observable<SensorSettings?>()
 
     init(_ webTag: WebTagRealm) {
         type = .web
@@ -78,20 +80,22 @@ struct CardsViewModel {
     }
 
     func update(_ record: RuuviTagSensorRecord) {
-        temperature.value = record.temperature
-        humidity.value = record.humidity
-        pressure.value = record.pressure
-        mac.value = record.macId?.any
-        date.value = record.date
+        let offsetCorrectionRecord = record.with(sensorSettings: self.sensorSettings.value)
+        temperature.value = offsetCorrectionRecord.temperature
+        humidity.value = offsetCorrectionRecord.humidity
+        pressure.value = offsetCorrectionRecord.pressure
+        mac.value = offsetCorrectionRecord.macId?.any
+        date.value = offsetCorrectionRecord.date
     }
 
     func update(with ruuviTag: RuuviTag) {
+        let offsetCorrectionRecord = ruuviTag.with(sensorSettings: self.sensorSettings.value)
         if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable, ruuviTag.isConnectable {
             isConnectable.value = ruuviTag.isConnectable
         }
-        temperature.value = ruuviTag.temperature
-        humidity.value = ruuviTag.humidity
-        pressure.value = ruuviTag.pressure
+        temperature.value = offsetCorrectionRecord.temperature
+        humidity.value = offsetCorrectionRecord.humidity
+        pressure.value = offsetCorrectionRecord.pressure
         version.value = ruuviTag.version
         mac.value = ruuviTag.mac?.mac.any
         date.value = Date()
