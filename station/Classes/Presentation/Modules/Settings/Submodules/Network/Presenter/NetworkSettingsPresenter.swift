@@ -37,7 +37,8 @@ extension NetworkSettingsPresenter: NetworkSettingsViewOutput {
     }
 
     func viewDidTriggerNetworkFeatureSwitch(_ state: Bool) {
-        settings.networkFeatureEnabled = state
+//        TODO: @rinatenikeev ENABLE FEATURE TOGGLE
+//        settings.networkFeatureEnabled = state
         viewModel.networkFeatureEnabled.value = state
     }
 }
@@ -45,7 +46,8 @@ extension NetworkSettingsPresenter: NetworkSettingsViewOutput {
 extension NetworkSettingsPresenter {
     private func syncViewModel() {
         viewModel = NetworkSettingsViewModel()
-        viewModel.networkFeatureEnabled.value = settings.networkFeatureEnabled
+//        TODO: @rinatenikeev ENABLE FEATURE TOGGLE
+//        viewModel.networkFeatureEnabled.value = settings.networkFeatureEnabled
         viewModel.minNetworkRefreshInterval.value = minNetworkRefreshInterval
         viewModel.networkRefreshInterval.value = settings.networkPullIntervalSeconds / 60
         bindNetworkRefreshIntervalChanges()

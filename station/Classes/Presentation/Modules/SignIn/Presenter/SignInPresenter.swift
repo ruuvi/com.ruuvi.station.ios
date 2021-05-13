@@ -92,20 +92,20 @@ extension SignInPresenter {
         viewModel = SignInViewModel()
         switch state {
         case .enterEmail:
-            viewModel.titleLabelText.value = "SignIn.SignInBenefits".localized()
-            viewModel.subTitleLabelText.value = "SignIn.RequestSignLink".localized()
+            viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
+            viewModel.subTitleLabelText.value = "SignIn.SubtitleLabel.text".localized()
             viewModel.placeholder.value = "SignIn.EmailPlaceholder".localized()
+            viewModel.submitButtonText.value = "SignIn.RequestCode".localized()
             viewModel.errorLabelText.value = nil
-            viewModel.enterCodeManuallyButtonIsHidden.value = false
             viewModel.canPopViewController.value = false
             viewModel.textContentType.value = .emailAddress
             viewModel.inputText.value = keychainService.userApiEmail
         case .enterVerificationCode(let code):
-            viewModel.titleLabelText.value = "SignIn.EmailSent".localized()
+            viewModel.titleLabelText.value = "SignIn.TitleLabel.text".localized()
             viewModel.subTitleLabelText.value = "SignIn.CheckMailbox".localized()
-            viewModel.placeholder.value = "SignIn.VerificationCodePlaceholder".localized()
+            viewModel.placeholder.value = "SignIn.CodeHint".localized()
+            viewModel.submitButtonText.value = "SignIn.SubmitCode".localized()
             viewModel.errorLabelText.value = nil
-            viewModel.enterCodeManuallyButtonIsHidden.value = true
             viewModel.textContentType.value = .name
             if let code = code {
                 viewModel.canPopViewController.value = false
@@ -119,11 +119,11 @@ extension SignInPresenter {
         bind(viewModel.inputText) { (presenter, text) in
             switch presenter.state {
             case .enterEmail:
-                if !presenter.isValidEmail(text) {
+                if let text = text, !text.isEmpty, !presenter.isValidEmail(text) {
                     presenter.viewModel.errorLabelText.value = "UserApiError.ER_INVALID_EMAIL_ADDRESS".localized()
                 }
             case .enterVerificationCode:
-                if text?.isEmpty == true {
+                if let text = text, text.isEmpty {
                     presenter.viewModel.errorLabelText.value = "SignIn.EnterVerificationCode".localized()
                 }
             }
