@@ -301,7 +301,9 @@
 "TagSettings.confirmTagRemovalDialog.message" = "Вы уверены что хотите удалить этот сенсор?";
 "TagSettings.temperatureAlertTitleLabel.text" = "Температура (%@)";
 "TemperatureUnit.Celsius.title" = "Цельсий (℃)";
+"ºC" = "°C";
 "TemperatureUnit.Fahrenheit.title" = "Фаренгейт (℉)";
+"ºF" = "°F";
 "TemperatureUnit.Kelvin.title" = "Кельвин (K)";
 "Updated" = "Обновлено";
 "V" = "В";
@@ -311,8 +313,11 @@
 "TagsManager.SignOutButton" = "Выйти из сети";
 "SignIn.SignInBenefits" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.EmailPlaceholder" = "Email";
+"SignIn.RequestCode" = "Запросить код";
+"SignIn.SubmitCode" = "Отправить";
 "SignIn.EmailSent" = "Email отправлен";
 "SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
+"SignIn.CodeHint" = "Код для входа";
 "TagsManagerPresenter.SignOutConfirmAlert.Message" = "Хотите выйти их сети?";
 "TagSettings.ClaimTagButton.Claim" = "Мой сенсор";
 "TagSettings.ClaimTagButton.Unclaim" = "Отвязать";
@@ -329,6 +334,8 @@
 "SharePresenter.UnshareSensor.Message" = "Хотите перестать делиться показаниями датчика с %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "Данные сети";
 "TagSettings.NetworkInfo.Owner" = "Владелец";
+"SignIn.TitleLabel.text" = "Login to\nRuuvi\nNetwork";
+"SignIn.SubtitleLabel.text" = "To enjoy all the features, create an account or login to your existing Ruuvi account by entering your email address.";
 "SignIn.VerificationCodePlaceholder" = "код подтверждения в формате: CJSM";
 "UserApiError.ER_FORBIDDEN" = "Запрещено";
 "UserApiError.ER_UNAUTHORIZED" = "Требуется авторизация";
@@ -351,3 +358,16 @@
 "UserApiError.ER_INVALID_MAC_ADDRESS" = "Недопустимый MAC-адрес";
 "UserApiError.ER_SUB_DATA_STORAGE_ERROR" = "Ошибка сохранения данных";
 "UserApiError.ER_SUB_NO_USER" = "Нет пользователя";
+"OffsetCorrection.CalibrationDescription.text" = "In normal use, it's not necessary to adjust the offset.\n\nIf you're an advanced user and you'd like to manually configure the factory calibrated sensors, it's possible to do so.\n\nCalibration tips are available on ruuvi.com/support";
+"OffsetCorrection.Dialog.Calibration.ClearConfirm" = "Сбросить настройки калибровки?";
+"OffsetCorrection.Dialog.Calibration.Title" = "Calibration setup";
+"OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Enter temperature value expected from sensor in current conditions (%@): ";
+"OffsetCorrection.Dialog.Calibration.EnterPressure" = "Enter pressure value expected from sensor in current conditions (%@): ";
+"OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Enter humidity value expected from sensor in current conditions (%@): ";
+"OffsetCorrection.Temperature.Title" = "Temperature offset";
+"OffsetCorrection.Humidity.Title" = "Humidity offset";
+"OffsetCorrection.Pressure.Title" = "Pressure offset";
+"TagSettings.SectionHeader.OffsetCorrection.Title" = "OFFSET CORRECTION";
+"TagSettings.OffsetCorrection.Temperature" = "Temperature";
+"TagSettings.OffsetCorrection.Humidity" = "Humidity";
+"TagSettings.OffsetCorrection.Pressure" = "Pressure";
