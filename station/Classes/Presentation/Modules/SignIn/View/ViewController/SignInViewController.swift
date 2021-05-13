@@ -8,12 +8,18 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var textTextField: UITextField!
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var scrollView: SignInScrollView!
+    @IBOutlet weak var containerView: UIView!
 
     var output: SignInViewOutput!
     var viewModel: SignInViewModel! {
         didSet {
             bindViewModel()
         }
+    }
+
+    deinit {
+        unregisterFromKeyboardNotifications()
     }
 
     // MARK: - Lifecycle
@@ -25,6 +31,16 @@ class SignInViewController: UIViewController {
         output.viewDidLoad()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        registerForKeyboardNotifications()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unregisterFromKeyboardNotifications()
+    }
+
     @IBAction func didTapCloseButton(_ sender: Any) {
         output.viewDidClose()
     }
@@ -33,29 +49,80 @@ class SignInViewController: UIViewController {
         updateTextFieldText()
         output.viewDidTapSubmitButton()
     }
-
-    @IBAction func viewDidTapEnterCodeManually(_ sender: UIButton) {
-        output.viewDidTapEnterCodeManually()
-    }
 }
 
 // MARK: - SignInViewInput
 extension SignInViewController: SignInViewInput {
     func localize() {
         title = "SignIn.Title.text".localized()
-        
+    }
+}
+
+// MARK: - Keyboard
+extension SignInViewController {
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onKeyboardAppear(_:)),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onKeyboardDisappear(_:)),
+            name: UIResponder.keyboardDidHideNotification,
+            object: nil
+        )
+    }
+
+    func unregisterFromKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIResponder.keyboardDidHideNotification,
+            object: nil
+        )
+    }
+
+    @objc func onKeyboardAppear(_ notification: NSNotification) {
+        guard let info = notification.userInfo,
+              let rect = info[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+        else { return }
+        let kbSize = rect.size
+
+        let insets = UIEdgeInsets(top: 0, left: 0, bottom: kbSize.height, right: 0)
+        scrollView.contentInset = insets
+        scrollView.scrollIndicatorInsets = insets
+
+        let margin: CGFloat = 20
+        let y = kbSize.height - containerView.frame.origin.y + margin
+        let scrollPoint = CGPoint(x: 0, y: y)
+        scrollView.setContentOffset(scrollPoint, animated: true)
+    }
+
+    @objc func onKeyboardDisappear(_ notification: NSNotification) {
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
     }
 }
 
 // MARK: - UITextFieldDelegate
 extension SignInViewController: UITextFieldDelegate {
-
     func textFieldDidEndEditing(_ textField: UITextField) {
         updateTextFieldText()
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         viewModel.errorLabelText.value = nil
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
 }
 
@@ -112,5 +179,10 @@ extension SignInViewController {
                                                block: { (buttonItem, canPopViewController) in
             buttonItem.image = canPopViewController ?? false ? #imageLiteral(resourceName: "icon_back_arrow") : #imageLiteral(resourceName: "dismiss-modal-icon")
         })
+    }
+}
+
+final class SignInScrollView: UIScrollView {
+    override func scrollRectToVisible(_ rect: CGRect, animated: Bool) {
     }
 }
