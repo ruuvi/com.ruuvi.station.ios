@@ -28,11 +28,11 @@ class SensorSettingsRealm: Object {
 extension SensorSettingsRealm {
     var sensorSettings: SensorSettings {
         return SensorSettingsStruct(tagId: tagId!,
-                                            temperatureOffset: temperatureOffset.value,
-                                            temperatureOffsetDate: temperatureOffsetDate,
-                                            humidityOffset: humidityOffset.value,
-                                            humidityOffsetDate: humidityOffsetDate,
-                                            pressureOffset: pressureOffset.value,
-                                            pressureOffsetDate: pressureOffsetDate)
+                                    temperatureOffset: temperatureOffset.value,
+                                    temperatureOffsetDate: temperatureOffsetDate,
+                                    humidityOffset: humidityOffset.value,
+                                    humidityOffsetDate: humidityOffsetDate,
+                                    pressureOffset: pressureOffset.value,
+                                    pressureOffsetDate: pressureOffsetDate)
     }
 }

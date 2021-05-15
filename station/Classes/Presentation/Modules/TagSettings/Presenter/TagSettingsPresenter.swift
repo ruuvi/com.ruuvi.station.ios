@@ -95,7 +95,13 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         if let sensorSettings = sensor {
             self.sensorSettings = sensorSettings
         } else {
-            self.sensorSettings = SensorSettingsStruct(tagId: ruuviTag.id, temperatureOffset: nil, temperatureOffsetDate: nil, humidityOffset: nil, humidityOffsetDate: nil, pressureOffset: nil, pressureOffsetDate: nil)
+            self.sensorSettings = SensorSettingsStruct(tagId: ruuviTag.id,
+                                                       temperatureOffset: nil,
+                                                       temperatureOffsetDate: nil,
+                                                       humidityOffset: nil,
+                                                       humidityOffsetDate: nil,
+                                                       pressureOffset: nil,
+                                                       pressureOffsetDate: nil)
         }
         
         bindViewModel(to: ruuviTag)

@@ -68,6 +68,12 @@ extension SensorSettingsSQLite {
 
 extension SensorSettingsSQLite {
     var sensorSettings: SensorSettings {
-        return SensorSettingsStruct(tagId: tagId, temperatureOffset: temperatureOffset, temperatureOffsetDate: temperatureOffsetDate, humidityOffset: humidityOffset, humidityOffsetDate: humidityOffsetDate, pressureOffset: pressureOffset, pressureOffsetDate: pressureOffsetDate)
+        return SensorSettingsStruct(tagId: tagId,
+                                    temperatureOffset: temperatureOffset,
+                                    temperatureOffsetDate: temperatureOffsetDate,
+                                    humidityOffset: humidityOffset,
+                                    humidityOffsetDate: humidityOffsetDate,
+                                    pressureOffset: pressureOffset,
+                                    pressureOffsetDate: pressureOffsetDate)
     }
 }
