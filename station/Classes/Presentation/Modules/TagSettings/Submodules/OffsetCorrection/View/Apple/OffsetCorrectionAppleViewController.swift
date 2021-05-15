@@ -54,9 +54,9 @@ class OffsetCorrectionAppleViewController: UIViewController {
                 }
             }
 
-            originalValueUpdateTimeLabel.bind(viewModel.updateAt) { _, date in
+            originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] _, date in
                 if let date = date {
-                    self.updatedAt = date
+                    self?.updatedAt = date
                 }
             }
 
@@ -84,15 +84,18 @@ class OffsetCorrectionAppleViewController: UIViewController {
                 }
             }
 
-            self.correctedValueView.bind(viewModel.hasOffsetValue) { _, hasValue in
+            self.correctedValueView.bind(viewModel.hasOffsetValue) {[weak self] _, hasValue in
                 if let hasValue = hasValue, hasValue == true {
-                    self.correctedValueView.isHidden = false
-                    self.clearButton.isEnabled = true
-                    self.clearButton.backgroundColor = UIColor(red: 21.0 / 255, green: 141.0 / 255, blue: 165.0 / 255, alpha: 1)
+                    self?.correctedValueView.isHidden = false
+                    self?.clearButton.isEnabled = true
+                    self?.clearButton.backgroundColor = UIColor(red: 21.0 / 255,
+                                                                green: 141.0 / 255,
+                                                                blue: 165.0 / 255,
+                                                                alpha: 1)
                 } else {
-                    self.correctedValueView.isHidden = true
-                    self.clearButton.backgroundColor = UIColor.darkGray
-                    self.clearButton.isEnabled = false
+                    self?.correctedValueView.isHidden = true
+                    self?.clearButton.backgroundColor = UIColor.darkGray
+                    self?.clearButton.isEnabled = false
                 }
             }
         }
