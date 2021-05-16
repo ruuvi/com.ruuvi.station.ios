@@ -371,3 +371,6 @@
 "TagSettings.OffsetCorrection.Temperature" = "Temperature";
 "TagSettings.OffsetCorrection.Humidity" = "Humidity";
 "TagSettings.OffsetCorrection.Pressure" = "Pressure";
+"Advanced.Charts.title" = "Charts";
+"Advanced.Network.title" = "Network";
+"Advanced.NetworkInterval.title" = "Pull Interval";

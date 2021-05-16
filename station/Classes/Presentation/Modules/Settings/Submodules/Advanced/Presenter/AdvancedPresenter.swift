@@ -14,21 +14,29 @@ class AdvancedPresenter: NSObject, AdvancedModuleInput {
     }
 
     func configure() {
-        let chartsSection = AdvancedSection(title: "Advanced.Charts.title".localized(),
-                                            cells: [
-            buildChartDownsampling(),
-            buildChartIntervalSeconds()
-        ])
         var sections: [AdvancedSection] = []
-        sections.append(chartsSection)
+        sections.append(buildChartsSection())
         if featureToggleService.isEnabled(.network) {
-            let ruuviNetworkSection = AdvancedSection(title: "Advanced.RuuviNetwork.Section.title".localized(),
-                                                      cells: [
-                buildRuuviNetwork()
-            ])
-            sections.append(ruuviNetworkSection)
+            sections.append(buildNetworkSection())
         }
         viewModel = AdvancedViewModel(sections: sections)
+    }
+
+    private func buildChartsSection() -> AdvancedSection {
+        return AdvancedSection(
+            title: "Advanced.Charts.title".localized(),
+            cells: [
+                buildChartDownsampling(),
+                buildChartIntervalSeconds()
+            ]
+        )
+    }
+
+    private func buildNetworkSection() -> AdvancedSection {
+        return AdvancedSection(
+            title: "Advanced.Network.title".localized(),
+            cells: [buildNetworkPullInterval()]
+        )
     }
 }
 
@@ -41,44 +49,54 @@ extension AdvancedPresenter: AdvancedViewOutput {
                 .post(name: .ChartIntervalDidChange, object: self)
         }
     }
-
-    func viewDidChangeStepperValue(for index: Int, newValue: Int) {
-        chartIntervalDidChanged = true
-        settings.chartIntervalSeconds = newValue * 60
-    }
-
-    func viewDidChangeSwitchValue(for index: Int, newValue: Bool) {
-        settings.chartDownsamplingOn = newValue
-    }
-
-    func viewDidPress(at indexPath: IndexPath) {
-        if case AdvancedCellType.disclosure(let title) = viewModel.sections[indexPath.section].cells[indexPath.row],
-            title == "NetworkSettings.title".localized() {
-            router.openNetworkSettings()
-        }
-    }
 }
 
 // MARK: Private
 extension AdvancedPresenter {
-    private func buildChartIntervalSeconds() -> AdvancedCellType {
+    private func buildChartIntervalSeconds() -> AdvancedCell {
         let title = "Advanced.ChartIntervalMinutes.title".localized()
         let value = settings.chartIntervalSeconds / 60
         let unit = AdvancedIntegerUnit.minutes
-        return .stepper(title: title,
-                        value: value,
-                        unit: unit)
+        let type: AdvancedCellType = .stepper(
+            title: title,
+            value: value,
+            unit: unit
+        )
+        let cell = AdvancedCell(type: type)
+        cell.integer.value = value
+        bind(cell.integer, fire: false) { observer, value in
+            guard let value = value else { return }
+            observer.chartIntervalDidChanged = true
+            observer.settings.chartIntervalSeconds = value * 60
+        }
+        return cell
     }
 
-    private func buildChartDownsampling() -> AdvancedCellType {
+    private func buildChartDownsampling() -> AdvancedCell {
         let title = "Advanced.Downsampling.title".localized()
         let value = settings.chartDownsamplingOn
-        return .switcher(title: title,
+        let type: AdvancedCellType = .switcher(title: title,
                          value: value)
+        let cell = AdvancedCell(type: type)
+        cell.boolean.value = value
+        bind(cell.boolean, fire: false) { observer, value in
+            guard let value = value else { return }
+            observer.settings.chartDownsamplingOn = value
+        }
+        return cell
     }
 
-    private func buildRuuviNetwork() -> AdvancedCellType {
-        let title = "NetworkSettings.title".localized()
-        return .disclosure(title: title)
+    private func buildNetworkPullInterval() -> AdvancedCell {
+        let title = "Advanced.NetworkInterval.title".localized()
+        let value = settings.networkPullIntervalSeconds / 60
+        let unit = AdvancedIntegerUnit.minutes
+        let type: AdvancedCellType = .stepper(title: title, value: value, unit: unit)
+        let cell = AdvancedCell(type: type)
+        cell.integer.value = value
+        bind(cell.integer, fire: false) { observer, value in
+            guard let value = value else { return }
+            observer.settings.networkPullIntervalSeconds = value * 60
+        }
+        return cell
     }
 }
