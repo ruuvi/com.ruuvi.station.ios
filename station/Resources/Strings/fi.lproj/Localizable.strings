@@ -358,6 +358,7 @@
 "OffsetCorrection.Dialog.Calibration.Title" = "Calibration setup";
 "OffsetCorrection.Dialog.Calibration.EnterTemperature" = "Enter temperature value expected from sensor in current conditions (%@): ";
 "OffsetCorrection.Dialog.Calibration.EnterPressure" = "Enter pressure value expected from sensor in current conditions (%@): ";
+"OffsetCorrection.Dialog.Calibration.EnterHumidity" = "Enter humidity value expected from sensor in current conditions (%@): ";
 "OffsetCorrection.Temperature.Title" = "Temperature offset";
 "OffsetCorrection.Humidity.Title" = "Humidity offset";
 "OffsetCorrection.Pressure.Title" = "Pressure offset";
