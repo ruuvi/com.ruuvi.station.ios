@@ -25,7 +25,6 @@ public final class FirebaseFeatureToggleProvider: FeatureToggleProvider {
                 completion(featureToggles)
             case .failure(let error):
                 print(error.localizedDescription)
-                assertionFailure("Failed to synchronize RemoteConfig")
                 completion([])
             }
         }
