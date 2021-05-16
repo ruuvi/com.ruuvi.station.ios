@@ -245,10 +245,7 @@ extension MeasurementsServiceImpl {
     }
     
     func pressureOffsetCorrection(for pressure: Double) -> Double {
-        guard let notNullPressure = Pressure(pressure, .hectopascals) else {
-            return 0
-        }
-        return double(for: notNullPressure)
+        return double(for: Pressure.init(value: pressure, unit: .hectopascals))
     }
     
     func pressureOffsetCorrectionString(for pressure: Double) -> String {
