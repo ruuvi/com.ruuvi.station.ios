@@ -7,6 +7,6 @@ protocol SettingsRouterInput {
     func openDefaults()
     func openHeartbeat()
     func openAdvanced()
-    func openNetworkSettings()
+    func openFeatureToggles()
     func openSelection(with viewModel: SelectionViewModel, output: SelectionModuleOutput?)
 }

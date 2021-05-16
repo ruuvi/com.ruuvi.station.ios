@@ -6,7 +6,13 @@ struct AdvancedViewModel {
 
 struct AdvancedSection {
     let title: String?
-    let cells: [AdvancedCellType]
+    let cells: [AdvancedCell]
+}
+
+struct AdvancedCell {
+    var type: AdvancedCellType
+    var boolean: Observable<Bool?> = Observable<Bool?>()
+    var integer: Observable<Int?> = Observable<Int?>()
 }
 
 enum AdvancedIntegerUnit {

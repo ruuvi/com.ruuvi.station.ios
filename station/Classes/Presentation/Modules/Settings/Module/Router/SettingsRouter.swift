@@ -1,7 +1,8 @@
 import LightRoute
+import UIKit
 
 class SettingsRouter: SettingsRouterInput {
-    weak var transitionHandler: TransitionHandler!
+    weak var transitionHandler: UIViewController!
 
     func dismiss() {
         try! transitionHandler.closeCurrentModule().perform()
@@ -54,14 +55,16 @@ class SettingsRouter: SettingsRouterInput {
             })
     }
 
-    func openNetworkSettings() {
-        let factory = StoryboardFactory(storyboardName: "NetworkSettings")
-        try! transitionHandler
-            .forStoryboard(factory: factory, to: NetworkSettingsModuleInput.self)
-            .to(preferred: .navigation(style: .push))
-            .then({ module in
-                module.configure()
-            })
+    func openFeatureToggles() {
+        let r = AppAssembly.shared.assembler.resolver
+        if let viewController = r.resolve(FLEXFeatureTogglesViewController.self) {
+            transitionHandler.navigationController?.pushViewController(
+                viewController,
+                animated: true
+            )
+        } else {
+            assertionFailure()
+        }
     }
 
     func openSelection(with viewModel: SelectionViewModel, output: SelectionModuleOutput?) {
