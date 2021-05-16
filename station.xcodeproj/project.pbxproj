@@ -4477,7 +4477,7 @@
 			isa = PBXGroup;
 			children = (
 				A91D02D92511207200694733 /* Selection */,
-				A9828E54247BAC0700E7E9D4 /* Adavanced */,
+				A9828E54247BAC0700E7E9D4 /* Advanced */,
 				0E8A100023845E1200A9CBA6 /* Defaults */,
 				0ECFF34F235056770061D11B /* Foreground */,
 				0E84BF4F2397F24D00A37E1A /* Heartbeat */,
@@ -6090,7 +6090,7 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		A9828E54247BAC0700E7E9D4 /* Adavanced */ = {
+		A9828E54247BAC0700E7E9D4 /* Advanced */ = {
 			isa = PBXGroup;
 			children = (
 				A964648D247BAEBA0001D55D /* AdvancedSettings.storyboard */,
@@ -6099,7 +6099,7 @@
 				A9646463247BAE6A0001D55D /* Router */,
 				A9646453247BAE6A0001D55D /* View */,
 			);
-			path = Adavanced;
+			path = Advanced;
 			sourceTree = "<group>";
 		};
 		A98D997F25175C6100ED3760 /* AlertService */ = {
