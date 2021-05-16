@@ -46,7 +46,7 @@ extension AdvancedTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
-        switch cellViewModel {
+        switch cellViewModel.type {
         case .switcher(let title, let value):
             let cell = tableView
                 .dequeueReusableCell(with: AdvancedSwitchTableViewCell.self, for: indexPath)
@@ -79,10 +79,7 @@ extension AdvancedTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.isSelected = false
-        if case AdvancedCellType.disclosure(_) = viewModel.sections[indexPath.section].cells[indexPath.row] {
-            output.viewDidPress(at: indexPath)
-        }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
@@ -90,8 +87,8 @@ extension AdvancedTableViewController {
 extension AdvancedTableViewController: AdvancedSwitchTableViewCellDelegate {
     func advancedSwitch(cell: AdvancedSwitchTableViewCell, didChange value: Bool) {
         if let indexPath = tableView.indexPath(for: cell) {
-            output.viewDidChangeSwitchValue(for: indexPath.row,
-                                            newValue: value)
+            let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
+            cellViewModel.boolean.value = value
         }
     }
 }
@@ -100,8 +97,8 @@ extension AdvancedTableViewController: AdvancedSwitchTableViewCellDelegate {
 extension AdvancedTableViewController: AdvancedStepperTableViewCellDelegate {
     func advancedStepper(cell: AdvancedStepperTableViewCell, didChange value: Int) {
         if let indexPath = tableView.indexPath(for: cell) {
-            output.viewDidChangeStepperValue(for: indexPath.row,
-                                             newValue: value)
+            let cellViewModel = viewModel.sections[indexPath.section].cells[indexPath.row]
+            cellViewModel.integer.value = value
         }
     }
 }

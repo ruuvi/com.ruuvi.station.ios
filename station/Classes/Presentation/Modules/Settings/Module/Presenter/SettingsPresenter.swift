@@ -117,7 +117,7 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTapOnExperimental() {
-        router.openNetworkSettings()
+        router.openFeatureToggles()
     }
 
     func viewDidTriggerShake() {
