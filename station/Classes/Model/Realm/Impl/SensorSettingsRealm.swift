@@ -27,7 +27,7 @@ class SensorSettingsRealm: Object {
 
 extension SensorSettingsRealm {
     var sensorSettings: SensorSettings {
-        return SensorSettingsStruct(tagId: tagId!,
+        return SensorSettingsStruct(ruuviTagId: tagId!,
                                     temperatureOffset: temperatureOffset.value,
                                     temperatureOffsetDate: temperatureOffsetDate,
                                     humidityOffset: humidityOffset.value,

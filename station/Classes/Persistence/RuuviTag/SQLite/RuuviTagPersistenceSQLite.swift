@@ -46,7 +46,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         do {
             var sqliteSensorSettings: Settings?
             try self.database.dbPool.read { db in
-                let request = Settings.filter(Settings.tagIdColumn == record.ruuviTagId)
+                let request = Settings.filter(Settings.ruuviTagIdColumn == record.ruuviTagId)
                 sqliteSensorSettings = try request.fetchOne(db)
             }
             try database.dbPool.write { db in
@@ -67,7 +67,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
             var sqliteSensorSettings: Settings?
             if let record = records.first {
                 try self.database.dbPool.read { db in
-                    let request = Settings.filter(Settings.tagIdColumn == record.ruuviTagId)
+                    let request = Settings.filter(Settings.ruuviTagIdColumn == record.ruuviTagId)
                     sqliteSensorSettings = try request.fetchOne(db)
                 }
             }
@@ -334,7 +334,7 @@ extension RuuviTagPersistenceSQLite {
         do {
             var sqliteSensorSettings: Settings?
             try self.database.dbPool.read { db in
-                let request = Settings.filter(Settings.tagIdColumn == ruuviTag.id)
+                let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
                 sqliteSensorSettings = try request.fetchOne(db)
             }
             promise.succeed(value: sqliteSensorSettings)
@@ -351,7 +351,7 @@ extension RuuviTagPersistenceSQLite {
         do {
             var sqliteSensorSettings: Settings?
             try database.dbPool.read { db in
-                let request = Settings.filter(Settings.tagIdColumn == ruuviTag.id)
+                let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
                 sqliteSensorSettings = try request.fetchOne(db)
             }
             if sqliteSensorSettings != nil {
@@ -370,7 +370,7 @@ extension RuuviTagPersistenceSQLite {
                     try sqliteSensorSettings!.update(db)
                 }
             } else {
-                sqliteSensorSettings = Settings(tagId: ruuviTag.id,
+                sqliteSensorSettings = Settings(ruuviTagId: ruuviTag.id,
                                                 temperatureOffset: nil,
                                                 temperatureOffsetDate: nil,
                                                 humidityOffset: nil,

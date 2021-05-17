@@ -2,7 +2,7 @@ import Foundation
 import GRDB
 
 struct SensorSettingsSQLite: SensorSettings {
-    var tagId: String
+    var ruuviTagId: String
     var temperatureOffset: Double?
     var temperatureOffsetDate: Date?
     var humidityOffset: Double?
@@ -13,7 +13,7 @@ struct SensorSettingsSQLite: SensorSettings {
 
 extension SensorSettingsSQLite {
     static let idColumn = Column("id")
-    static let tagIdColumn = Column("tagId")
+    static let ruuviTagIdColumn = Column("ruuviTagIdColumn")
     static let temperatureOffsetColumn = Column("temperatureOffset")
     static let temperatureOffsetDateColumn = Column("temperatureOffsetDate")
     static let humidityOffsetColumn = Column("humidityOffset")
@@ -24,7 +24,7 @@ extension SensorSettingsSQLite {
 
 extension SensorSettingsSQLite: FetchableRecord {
     init(row: Row) {
-        tagId = row[SensorSettingsSQLite.tagIdColumn]
+        ruuviTagId = row[SensorSettingsSQLite.ruuviTagIdColumn]
         temperatureOffset = row[SensorSettingsSQLite.temperatureOffsetColumn]
         temperatureOffsetDate = row[SensorSettingsSQLite.temperatureOffsetDateColumn]
         humidityOffset = row[SensorSettingsSQLite.humidityOffsetColumn]
@@ -41,7 +41,7 @@ extension SensorSettingsSQLite: PersistableRecord {
 
     func encode(to container: inout PersistenceContainer) {
         container[SensorSettingsSQLite.idColumn] = id
-        container[SensorSettingsSQLite.tagIdColumn] = tagId
+        container[SensorSettingsSQLite.ruuviTagIdColumn] = ruuviTagId
         container[SensorSettingsSQLite.temperatureOffsetColumn] = temperatureOffset
         container[SensorSettingsSQLite.temperatureOffsetDateColumn] = temperatureOffsetDate
         container[SensorSettingsSQLite.humidityOffsetColumn] = humidityOffset
@@ -55,7 +55,7 @@ extension SensorSettingsSQLite {
     static func createTable(in db: Database) throws {
         try db.create(table: SensorSettingsSQLite.databaseTableName, body: { table in
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
-            table.column(SensorSettingsSQLite.tagIdColumn.name, .text)
+            table.column(SensorSettingsSQLite.ruuviTagIdColumn.name, .text)
             table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.temperatureOffsetDateColumn.name, .datetime)
             table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
@@ -68,7 +68,7 @@ extension SensorSettingsSQLite {
 
 extension SensorSettingsSQLite {
     var sensorSettings: SensorSettings {
-        return SensorSettingsStruct(tagId: tagId,
+        return SensorSettingsStruct(ruuviTagId: ruuviTagId,
                                     temperatureOffset: temperatureOffset,
                                     temperatureOffsetDate: temperatureOffsetDate,
                                     humidityOffset: humidityOffset,
