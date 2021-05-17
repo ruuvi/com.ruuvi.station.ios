@@ -517,19 +517,21 @@ extension TagSettingsPresenter {
     }
     
     private func sync(device: RuuviTag) {
-        humidity = device.humidity
-        let record = RuuviTagSensorRecordStruct(ruuviTagId: device.ruuviTagId,
-                                                date: device.date,
-                                                macId: device.mac?.mac,
-                                                rssi: device.rssi,
-                                                temperature: device.temperature,
-                                                humidity: device.humidity,
-                                                pressure: device.pressure,
-                                                acceleration: device.acceleration,
-                                                voltage: device.voltage,
-                                                movementCounter: device.movementCounter,
-                                                measurementSequenceNumber: device.measurementSequenceNumber,
-                                                txPower: device.txPower)
+        humidity = device.humidity?.withSensorSettings(sensorSettings: sensorSettings)
+        let record = RuuviTagSensorRecordStruct(
+            ruuviTagId: device.ruuviTagId,
+            date: device.date,
+            macId: device.mac?.mac,
+            rssi: device.rssi,
+            temperature: device.temperature,
+            humidity: device.humidity,
+            pressure: device.pressure,
+            acceleration: device.acceleration,
+            voltage: device.voltage,
+            movementCounter: device.movementCounter,
+            measurementSequenceNumber: device.measurementSequenceNumber,
+            txPower: device.txPower
+        ).with(sensorSettings: sensorSettings)
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
