@@ -1,8 +1,7 @@
 import Foundation
 
 protocol SensorSettings {
-    var tagId: String { get }
-    
+    var ruuviTagId: String { get }
     var temperatureOffset: Double? { get }
     var temperatureOffsetDate: Date? { get }
     var humidityOffset: Double? { get }
@@ -13,13 +12,12 @@ protocol SensorSettings {
 
 extension SensorSettings {
     var id: String {
-        return "\(tagId)-settings"
+        return "\(ruuviTagId)-settings"
     }
 }
 
 struct SensorSettingsStruct: SensorSettings {
-    var tagId: String
-    
+    var ruuviTagId: String
     var temperatureOffset: Double?
     var temperatureOffsetDate: Date?
     var humidityOffset: Double?

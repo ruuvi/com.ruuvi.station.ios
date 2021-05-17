@@ -27,7 +27,7 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
         self.view.viewModel = {
             let vm = OffsetCorrectionViewModel(
                 type: type,
-                sensorSettings: sensorSettings ?? SensorSettingsStruct(tagId: ruuviTag.id,
+                sensorSettings: sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
                                                                        temperatureOffset: nil,
                                                                        temperatureOffsetDate: nil,
                                                                        humidityOffset: nil,
