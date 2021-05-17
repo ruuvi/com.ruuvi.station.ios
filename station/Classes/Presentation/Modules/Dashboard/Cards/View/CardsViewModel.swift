@@ -80,22 +80,20 @@ struct CardsViewModel {
     }
 
     func update(_ record: RuuviTagSensorRecord) {
-        let offsetCorrectionRecord = record.with(sensorSettings: self.sensorSettings.value)
-        temperature.value = offsetCorrectionRecord.temperature
-        humidity.value = offsetCorrectionRecord.humidity
-        pressure.value = offsetCorrectionRecord.pressure
-        mac.value = offsetCorrectionRecord.macId?.any
-        date.value = offsetCorrectionRecord.date
+        temperature.value = record.temperature
+        humidity.value = record.humidity
+        pressure.value = record.pressure
+        mac.value = record.macId?.any
+        date.value = record.date
     }
 
     func update(with ruuviTag: RuuviTag) {
-        let offsetCorrectionRecord = ruuviTag.with(sensorSettings: self.sensorSettings.value)
         if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable, ruuviTag.isConnectable {
             isConnectable.value = ruuviTag.isConnectable
         }
-        temperature.value = offsetCorrectionRecord.temperature
-        humidity.value = offsetCorrectionRecord.humidity
-        pressure.value = offsetCorrectionRecord.pressure
+        temperature.value = ruuviTag.temperature
+        humidity.value = ruuviTag.humidity
+        pressure.value = ruuviTag.pressure
         version.value = ruuviTag.version
         mac.value = ruuviTag.mac?.mac.any
         date.value = Date()

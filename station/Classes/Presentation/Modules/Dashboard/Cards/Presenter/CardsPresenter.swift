@@ -433,9 +433,12 @@ extension CardsPresenter {
         }.forEach { (luid) in
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
-                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                    viewModel.update(with: ruuviTag)
-                    self?.updateAlertState(for: viewModel)
+                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }),
+                    let ruuviTagSensor = self?.ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+                    self?.ruuviTagTrunk.readSensorSettings(ruuviTagSensor).on(success: { [weak self] settings in
+                        viewModel.update(ruuviTag.with(sensorSettings: settings))
+                        self?.updateAlertState(for: viewModel)
+                    })
                 }
             })
         }
@@ -445,13 +448,17 @@ extension CardsPresenter {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
-            if viewModel.type == .ruuvi, let luid = viewModel.luid.value {
+            if viewModel.type == .ruuvi,
+               let luid = viewModel.luid.value {
                 advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
                     if let ruuviTag = device.ruuvi?.tag,
-                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                        viewModel.update(with: ruuviTag)
-                        viewModel.update(rssi: ruuviTag.rssi)
-                        self?.updateAlertState(for: viewModel)
+                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }),
+                        let ruuviTagSensor = self?.ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+                        self?.ruuviTagTrunk.readSensorSettings(ruuviTagSensor).on(success: { [weak self] settings in
+                            viewModel.update(ruuviTag.with(sensorSettings: settings))
+                            viewModel.update(rssi: ruuviTag.rssi)
+                            self?.updateAlertState(for: viewModel)
+                        })
                     }
                 })
             }
@@ -463,9 +470,12 @@ extension CardsPresenter {
         ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                 let viewModel = self?.viewModels.first(where: {$0.id.value == anyRecord?.ruuviTagId}),
-                let record = anyRecord?.object {
+                let record = anyRecord?.object,
+                let ruuviTagSensor = self?.ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 if viewModel.needUpdateFromObservingLastRecord {
-                    viewModel.update(record)
+                    self?.ruuviTagTrunk.readSensorSettings(ruuviTagSensor).on(success: { settings in
+                        viewModel.update(record.with(sensorSettings: settings))
+                    })
                 }
             }
         }
