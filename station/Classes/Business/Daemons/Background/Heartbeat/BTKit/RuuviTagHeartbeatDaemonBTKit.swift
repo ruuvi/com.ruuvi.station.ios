@@ -135,7 +135,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings? = nil
                 if let ruuviTagSensor = observer.ruuviTags
-                    .first(where: {$0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId}),
+                    .first(where: { $0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId }),
                    let settings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id }) {
                     sensorSettings = settings
                 }
@@ -255,9 +255,10 @@ extension RuuviTagHeartbeatDaemonBTKit {
     }
 }
 
+//MARK: - Sensor Settings
 extension RuuviTagHeartbeatDaemonBTKit {
     private func restartSensorSettingsObservers() {
-        sensorSettingsTokens.forEach({$0.value.invalidate()})
+        sensorSettingsTokens.forEach({ $0.value.invalidate() })
         sensorSettingsTokens.removeAll()
         
         ruuviTags.forEach { ruuviTagSensor in
@@ -267,15 +268,19 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     switch change {
                     case .insert(let sensorSettings):
                         self?.sensorSettingsList.append(sensorSettings)
-                    case .update(let sensorSettings):
-                        if let index = self?.sensorSettingsList.firstIndex(where: { $0.ruuviTagId == sensorSettings.ruuviTagId }) {
-                            self?.sensorSettingsList[index] = sensorSettings
+                    case .update(let updateSensorSettings):
+                        if let updateIndex = self?.sensorSettingsList.firstIndex(
+                            where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                        ) {
+                            self?.sensorSettingsList[updateIndex] = updateSensorSettings
                         } else {
-                            self?.sensorSettingsList.append(sensorSettings)
+                            self?.sensorSettingsList.append(updateSensorSettings)
                         }
-                    case .delete(let sensorSettings):
-                        if let index = self?.sensorSettingsList.firstIndex(where: { $0.ruuviTagId == sensorSettings.ruuviTagId }) {
-                            self?.sensorSettingsList.remove(at: index)
+                    case .delete(let deleteSensorSettings):
+                        if let deleteIndex = self?.sensorSettingsList.firstIndex(
+                            where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
+                        ) {
+                            self?.sensorSettingsList.remove(at: deleteIndex)
                         }
                     default:
                         break

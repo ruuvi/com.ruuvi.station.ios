@@ -51,21 +51,21 @@ class RuuviTagReactorImpl: RuuviTagReactor {
                 cancellable.cancel()
             }
         } else {
-            var recordRxSwift: RuuviTagRecordSubjectRxSwift
+            var recordSubjectRxSwift: RuuviTagRecordSubjectRxSwift
             if let rxSwift = recordRxSwifts[ruuviTagId] {
-                recordRxSwift = rxSwift
+                recordSubjectRxSwift = rxSwift
             } else {
                 let rxSwift = RuuviTagRecordSubjectRxSwift(ruuviTagId: ruuviTagId,
                                                            sqlite: sqliteContext,
                                                            realm: realmContext)
                 recordRxSwifts[ruuviTagId] = rxSwift
-                recordRxSwift = rxSwift
+                recordSubjectRxSwift = rxSwift
             }
-            let cancellable = recordRxSwift.subject.subscribe(onNext: { values in
+            let cancellable = recordSubjectRxSwift.subject.subscribe(onNext: { values in
                 block(values)
             })
-            if !recordRxSwift.isServing {
-                recordRxSwift.start()
+            if !recordSubjectRxSwift.isServing {
+                recordSubjectRxSwift.start()
             }
             return RUObservationToken {
                 cancellable.dispose()
@@ -271,23 +271,23 @@ class RuuviTagReactorImpl: RuuviTagReactor {
                 delete.cancel()
             }
         } else {
-            var sensorSettingsRxSwift: SensorSettingsRxSwift
+            var settingsRxSwift: SensorSettingsRxSwift
             if let rxSwift = sensorSettingsRxSwifts[ruuviTag.id] {
-                sensorSettingsRxSwift = rxSwift
+                settingsRxSwift = rxSwift
             } else {
                 let rxSwift = SensorSettingsRxSwift(ruuviTagId: ruuviTag.id,
                                                                sqlite: sqliteContext,
                                                                realm: realmContext)
                 sensorSettingsRxSwifts[ruuviTag.id] = rxSwift
-                sensorSettingsRxSwift = rxSwift
+                settingsRxSwift = rxSwift
             }
-            let insert = sensorSettingsRxSwift.insertSubject.subscribe(onNext: { value in
+            let insert = settingsRxSwift.insertSubject.subscribe(onNext: { value in
                 block(.insert(value))
             })
-            let update = sensorSettingsRxSwift.updateSubject.subscribe(onNext: { value in
+            let update = settingsRxSwift.updateSubject.subscribe(onNext: { value in
                 block(.update(value))
             })
-            let delete = sensorSettingsRxSwift.deleteSubject.subscribe(onNext: { value in
+            let delete = settingsRxSwift.deleteSubject.subscribe(onNext: { value in
                 block(.delete(value))
             })
             return RUObservationToken {
