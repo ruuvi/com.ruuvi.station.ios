@@ -16,6 +16,11 @@ protocol RuuviTagSensorRecord {
     var movementCounter: Int? { get }
     var measurementSequenceNumber: Int? { get }
     var txPower: Int? { get }
+    
+    //offset correction
+    var temperatureOffset: Double { get }
+    var humidityOffset: Double { get }
+    var pressureOffset: Double { get }
 }
 
 extension RuuviTagSensorRecord {
@@ -39,7 +44,10 @@ extension RuuviTagSensorRecord {
                                           voltage: voltage,
                                           movementCounter: movementCounter,
                                           measurementSequenceNumber: measurementSequenceNumber,
-                                          txPower: txPower)
+                                          txPower: txPower,
+                                          temperatureOffset: temperatureOffset,
+                                          humidityOffset: humidityOffset,
+                                          pressureOffset: pressureOffset)
     }
 }
 
@@ -56,7 +64,10 @@ extension RuuviTagSensorRecord {
                                           voltage: voltage,
                                           movementCounter: movementCounter,
                                           measurementSequenceNumber: measurementSequenceNumber,
-                                          txPower: txPower)
+                                          txPower: txPower,
+                                          temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
+                                          humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
+                                          pressureOffset: sensorSettings?.pressureOffset ?? 0.0)
     }
 }
 
@@ -75,6 +86,11 @@ struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     var movementCounter: Int?
     var measurementSequenceNumber: Int?
     var txPower: Int?
+    
+    //offset correction
+    var temperatureOffset: Double
+    var humidityOffset: Double
+    var pressureOffset: Double
 }
 
 struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
@@ -126,6 +142,18 @@ struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
 
     var txPower: Int? {
         return object.txPower
+    }
+    
+    var temperatureOffset: Double {
+        return object.temperatureOffset
+    }
+    
+    var humidityOffset: Double {
+        return object.humidityOffset
+    }
+    
+    var pressureOffset: Double {
+        return object.pressureOffset
     }
 
     static func == (lhs: AnyRuuviTagSensorRecord, rhs: AnyRuuviTagSensorRecord) -> Bool {

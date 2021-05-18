@@ -1227,6 +1227,12 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
+		66772268265370A00025043F /* SensorSettingsCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66772267265370700025043F /* SensorSettingsCombine.swift */; };
+		66772269265370A10025043F /* SensorSettingsCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66772267265370700025043F /* SensorSettingsCombine.swift */; };
+		6677226A265370A10025043F /* SensorSettingsCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66772267265370700025043F /* SensorSettingsCombine.swift */; };
+		6677226C265372140025043F /* SensorSettingsRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6677226B265372050025043F /* SensorSettingsRxSwift.swift */; };
+		6677226D265372150025043F /* SensorSettingsRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6677226B265372050025043F /* SensorSettingsRxSwift.swift */; };
+		6677226E265372150025043F /* SensorSettingsRxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6677226B265372050025043F /* SensorSettingsRxSwift.swift */; };
 		66E5AF35264D211600EB44BB /* OffsetCorrection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E5AF23264D211600EB44BB /* OffsetCorrection.storyboard */; };
 		66E5AF36264D211600EB44BB /* OffsetCorrection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E5AF23264D211600EB44BB /* OffsetCorrection.storyboard */; };
 		66E5AF37264D211600EB44BB /* OffsetCorrection.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E5AF23264D211600EB44BB /* OffsetCorrection.storyboard */; };
@@ -1922,6 +1928,8 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66772267265370700025043F /* SensorSettingsCombine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSettingsCombine.swift; sourceTree = "<group>"; };
+		6677226B265372050025043F /* SensorSettingsRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSettingsRxSwift.swift; sourceTree = "<group>"; };
 		66AFC219B8CE91CC315C30E4 /* Pods-stationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-stationTests.debug.xcconfig"; path = "Target Support Files/Pods-stationTests/Pods-stationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		66E5AF23264D211600EB44BB /* OffsetCorrection.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OffsetCorrection.storyboard; sourceTree = "<group>"; };
 		66E5AF26264D211600EB44BB /* OffsetCorrectionAppleInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffsetCorrectionAppleInitializer.swift; sourceTree = "<group>"; };
@@ -3460,9 +3468,10 @@
 		0E8BAC6B245C4B0100D380FB /* RxSwift */ = {
 			isa = PBXGroup;
 			children = (
-				0E8BAC6C245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift */,
-				0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */,
 				A93DB9E424731C01007C2C35 /* RuuviTagLastRecordSubjectRxSwift.swift */,
+				0E8BACE2245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift */,
+				0E8BAC6C245C4B2000D380FB /* RuuviTagSubjectRxSwift.swift */,
+				6677226B265372050025043F /* SensorSettingsRxSwift.swift */,
 			);
 			path = RxSwift;
 			sourceTree = "<group>";
@@ -3536,9 +3545,10 @@
 		0E8BAC92245C6C3B00D380FB /* Combine */ = {
 			isa = PBXGroup;
 			children = (
-				0E8BAC93245C6C6B00D380FB /* RuuviTagSubjectCombine.swift */,
-				0E8BACDA245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift */,
 				A93DB9E824732295007C2C35 /* RuuviTagLastRecordSubjectCombine.swift */,
+				0E8BACDA245EFC2800D380FB /* RuuviTagRecordSubjectCombine.swift */,
+				0E8BAC93245C6C6B00D380FB /* RuuviTagSubjectCombine.swift */,
+				66772267265370700025043F /* SensorSettingsCombine.swift */,
 			);
 			path = Combine;
 			sourceTree = "<group>";
@@ -6246,6 +6256,7 @@
 				0E28644C2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */,
 				0E6BAE5223856A01003A2D4C /* WelcomeModuleInput.swift in Sources */,
 				0E6BAE5323856A01003A2D4C /* PhotoPickerPresenter.swift in Sources */,
+				6677226E265372150025043F /* SensorSettingsRxSwift.swift in Sources */,
 				0E6BAE5423856A01003A2D4C /* LocationPickerPresenter.swift in Sources */,
 				0E6BAE5623856A01003A2D4C /* BusinessAssembly.swift in Sources */,
 				0EE49BC623B8CE12003012C2 /* WebTagOperationsManager.swift in Sources */,
@@ -6316,6 +6327,7 @@
 				0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */,
 				0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */,
+				6677226A265370A10025043F /* SensorSettingsCombine.swift in Sources */,
 				66E5AF3D264D211600EB44BB /* OffsetCorrectionConfigurator.swift in Sources */,
 				0E31B04423BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E6BAE8A23856A01003A2D4C /* CalibrationPersistenceUserDefaults.swift in Sources */,
@@ -6424,6 +6436,7 @@
 				A91D02F82511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0E8BD2CF238566AB008B31EF /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */,
+				6677226D265372150025043F /* SensorSettingsRxSwift.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
 				0E8BACD8245EE72500D380FB /* TrunkAssembly.swift in Sources */,
 				0E8BD2D2238566AB008B31EF /* WelcomeViewInput.swift in Sources */,
@@ -6801,6 +6814,7 @@
 				A9C03F8024E708DC00BC046F /* MeasurementsServiceImpl.swift in Sources */,
 				0E45580A23E907300025AEBF /* RuuviTagDataPruningOperation.swift in Sources */,
 				0E8BD3D2238566AB008B31EF /* CardsRouterDelegate.swift in Sources */,
+				66772269265370A10025043F /* SensorSettingsCombine.swift in Sources */,
 				A90E169424604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				0E8BD3D3238566AB008B31EF /* OpenWeatherMapAPIURLSession.swift in Sources */,
 				A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */,
@@ -7139,6 +7153,7 @@
 				0E28644A2461BCA100363DCB /* VirtualTagSubjectCombine.swift in Sources */,
 				A93052B8242BFCC000FB62B1 /* TagChartViewOutput.swift in Sources */,
 				0E046F5522F182BF00BD4E9C /* LocationPickerPresenter.swift in Sources */,
+				6677226C265372140025043F /* SensorSettingsRxSwift.swift in Sources */,
 				0EEB210E22B7DF080015F9E0 /* BusinessAssembly.swift in Sources */,
 				0E8A10182384613E00A9CBA6 /* DefaultsModuleInput.swift in Sources */,
 				0EEB20BE22B7700A0015F9E0 /* SettingsUserDefaults.swift in Sources */,
@@ -7209,6 +7224,7 @@
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0ECFF36223506C050061D11B /* ForegroundRow.swift in Sources */,
+				66772268265370A00025043F /* SensorSettingsCombine.swift in Sources */,
 				66E5AF3B264D211600EB44BB /* OffsetCorrectionConfigurator.swift in Sources */,
 				0EEB20D822B7C8060015F9E0 /* SettingsViewOutput.swift in Sources */,
 				0E31B04223BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,

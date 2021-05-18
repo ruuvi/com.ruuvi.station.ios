@@ -11,29 +11,29 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTrunk: RuuviTagTrunk!
     var settings: Settings!
-
+    
     private var ruuviTagObserveToken: ObservationToken?
     private var ruuviTagObserveLastRecordToken: RUObservationToken?
-
+    
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
-
+    
     private var ruuviTag: RuuviTagSensor!
-
+    private var sensorSettings: SensorSettings!
+    
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
-
+        self.sensorSettings = sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
+                                                                     temperatureOffset: nil,
+                                                                     temperatureOffsetDate: nil,
+                                                                     humidityOffset: nil,
+                                                                     humidityOffsetDate: nil,
+                                                                     pressureOffset: nil,
+                                                                     pressureOffsetDate: nil)
         self.view.viewModel = {
             let vm = OffsetCorrectionViewModel(
-                type: type,
-                sensorSettings: sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
-                                                                       temperatureOffset: nil,
-                                                                       temperatureOffsetDate: nil,
-                                                                       humidityOffset: nil,
-                                                                       humidityOffsetDate: nil,
-                                                                       pressureOffset: nil,
-                                                                       pressureOffsetDate: nil)
+                type: type, sensorSettings: self.sensorSettings
             )
             ruuviTagTrunk.readLast(ruuviTag).on { record in
                 if let record = record {
@@ -56,11 +56,11 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     func viewDidOpenCalibrateDialog() {
         view.showCalibrateDialog()
     }
-
+    
     func viewDidOpenClearDialog() {
         view.showClearConfirmationDialog()
     }
-
+    
     func viewDidSetCorrectValue(correctValue: Double) {
         var offset: Double = 0
         switch view.viewModel.type {
@@ -71,21 +71,24 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         default:
             offset = correctValue - view.viewModel.originalValue.value.bound
         }
-        ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: offset, of: self.ruuviTag).on (success: { [weak self] success in
-            self?.view.viewModel.update(sensorSettings: success)
+        ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: offset, of: self.ruuviTag).on (success: { [weak self] sensorSettings in
+            self?.sensorSettings = sensorSettings
+            self?.view.viewModel.update(sensorSettings: sensorSettings)
         }, failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            })
+            self?.errorPresenter.present(error: error)
+        })
     }
-
+    
     func viewDidClearOffsetValue() {
-        ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: nil, of: self.ruuviTag).on (success: { [weak self] success in
-            self?.view.viewModel.update(sensorSettings: success)
-        }, failure: { [weak self] (error) in
+        ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: nil, of: self.ruuviTag)
+            .on (success: { [weak self] sensorSettings in
+                self?.sensorSettings = sensorSettings
+                self?.view.viewModel.update(sensorSettings: sensorSettings)
+            }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
     }
-
+    
     private func observeRuuviTagUpdate() {
         guard let luid = self.ruuviTag.luid?.value else {
             return
@@ -93,34 +96,34 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         ruuviTagObserveToken?.invalidate()
         ruuviTagObserveToken = foreground.observe(self, uuid: luid) { [weak self] (_, device) in
             if let ruuviTag = device.ruuvi?.tag {
-                self?.view.viewModel.update(ruuviTag: ruuviTag)
+                self?.view.viewModel.update(ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings))
             }
         }
     }
-
+    
     private func startObservingSettingsChanges() {
         temperatureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
-            object: nil,
-            queue: .main) { [weak self] _ in
-            self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
-        }
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
+            }
         humidityUnitToken = NotificationCenter
             .default
             .addObserver(forName: .HumidityUnitDidChange,
-            object: nil,
-            queue: .main,
-            using: { [weak self] _ in
-                self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
-            })
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                            self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
+                         })
         pressureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitDidChange,
-            object: nil,
-            queue: .main,
-            using: { [weak self] _ in
-                self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
-            })
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                            self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
+                         })
     }
 }

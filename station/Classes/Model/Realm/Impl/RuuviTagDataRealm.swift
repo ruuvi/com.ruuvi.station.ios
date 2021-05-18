@@ -25,6 +25,10 @@ class RuuviTagDataRealm: Object {
     let movementCounter = RealmOptional<Int>()
     let measurementSequenceNumber = RealmOptional<Int>()
     let txPower = RealmOptional<Int>()
+    
+    @objc dynamic var  temperatureOffset: Double = 0.0
+    @objc dynamic var  humidityOffset: Double = 0.0
+    @objc dynamic var  pressureOffset: Double = 0.0
 
     var fahrenheit: Double? {
         return celsius.value?.fahrenheit
@@ -38,6 +42,7 @@ class RuuviTagDataRealm: Object {
         return "compoundKey"
     }
 
+    //this one is not use anymore, consider to delete
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
@@ -53,6 +58,9 @@ class RuuviTagDataRealm: Object {
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
+        self.temperatureOffset = data.temperatureOffset
+        self.humidityOffset = data.humidityOffset
+        self.pressureOffset = data.pressureOffset
     }
 
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
@@ -83,5 +91,8 @@ class RuuviTagDataRealm: Object {
         self.measurementSequenceNumber.value = record.measurementSequenceNumber
         self.txPower.value = record.txPower
         self.compoundKey = record.id
+        self.temperatureOffset = record.temperatureOffset
+        self.humidityOffset = record.humidityOffset
+        self.pressureOffset = record.pressureOffset
     }
 }

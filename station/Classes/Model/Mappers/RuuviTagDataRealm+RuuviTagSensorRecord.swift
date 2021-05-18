@@ -15,7 +15,11 @@ extension RuuviTagDataRealm {
                                                voltage: unitVoltage,
                                                movementCounter: movementCounter.value,
                                                measurementSequenceNumber: measurementSequenceNumber.value,
-                                               txPower: txPower.value)
+                                               txPower: txPower.value,
+                                               temperatureOffset: temperatureOffset,
+                                               humidityOffset: humidityOffset,
+                                               pressureOffset: pressureOffset)
+        
         return AnyRuuviTagSensorRecord(object: inner)
     }
 }
