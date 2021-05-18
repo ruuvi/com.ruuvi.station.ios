@@ -44,14 +44,8 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         let promise = Promise<Bool, RUError>()
         assert(record.macId != nil)
         do {
-            var sqliteSensorSettings: Settings?
-            try self.database.dbPool.read { db in
-                let request = Settings.filter(Settings.ruuviTagIdColumn == record.ruuviTagId)
-                sqliteSensorSettings = try request.fetchOne(db)
-            }
             try database.dbPool.write { db in
-                try record.with(sensorSettings: sqliteSensorSettings?.sensorSettings)
-                    .sqlite.insert(db)
+                try record.sqlite.insert(db)
             }
             promise.succeed(value: true)
         } catch {
@@ -64,18 +58,10 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         do {
-            var sqliteSensorSettings: Settings?
-            if let record = records.first {
-                try self.database.dbPool.read { db in
-                    let request = Settings.filter(Settings.ruuviTagIdColumn == record.ruuviTagId)
-                    sqliteSensorSettings = try request.fetchOne(db)
-                }
-            }
             try database.dbPool.write { db in
                 for record in records {
                     assert(record.macId != nil)
-                    try record.with(sensorSettings: sqliteSensorSettings?.sensorSettings)
-                        .sqlite.insert(db)
+                    try record.sqlite.insert(db)
                 }
             }
             promise.succeed(value: true)
@@ -399,6 +385,26 @@ extension RuuviTagPersistenceSQLite {
             promise.fail(error: .persistence(e))
         }
         
+        return promise.future
+    }
+    
+    func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.macId != nil)
+        do {
+            var success = false
+            try database.dbPool.write { db in
+                let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
+                let sensorSettings: Settings? = try request.fetchOne(db)
+                if let notNullSensorSettings = sensorSettings {
+                    success = try notNullSensorSettings.delete(db)
+                }
+            }
+            promise.succeed(value: success)
+        } catch {
+            reportToCrashlytics(error: error)
+            promise.fail(error: .persistence(error))
+        }
         return promise.future
     }
 }

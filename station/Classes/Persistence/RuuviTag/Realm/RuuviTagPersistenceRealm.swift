@@ -427,4 +427,28 @@ extension RuuviTagPersistenceRealm {
         }
         return promise.future
     }
+    
+    func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
+        let promise = Promise<Bool, RUError>()
+        assert(ruuviTag.macId == nil)
+        assert(ruuviTag.luid != nil)
+        context.bgWorker.enqueue {
+            do {
+                if let sensorSettingRealm = self.context.bg.objects(SensorSettingsRealm.self)
+                    .filter("tagId == %@", ruuviTag.luid!.value)
+                    .first {
+                    try self.context.bg.write {
+                        self.context.bg.delete(sensorSettingRealm)
+                    }
+                    promise.succeed(value: true)
+                } else {
+                    promise.fail(error: .unexpected(.failedToFindRuuviTag))
+                }
+            } catch {
+                self.reportToCrashlytics(error: error)
+                promise.fail(error: .persistence(error))
+            }
+        }
+        return promise.future
+    }
 }
