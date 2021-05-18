@@ -83,7 +83,7 @@ class CardsPresenter: CardsModuleInput {
         advertisementTokens.forEach({ $0.invalidate() })
         heartbeatTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.forEach({ $0.invalidate() })
-        sensorSettingsTokens.forEach({$0.invalidate()})
+        sensorSettingsTokens.forEach({ $0.invalidate() })
         stateToken?.invalidate()
         backgroundToken?.invalidate()
         webTagDaemonFailureToken?.invalidate()
@@ -145,7 +145,7 @@ extension CardsPresenter: CardsViewOutput {
             self.router.openTagSettings(ruuviTag: ruuviTag,
                                         temperature: viewModel.temperature.value,
                                         humidity: humidity,
-                                        sensorSettings: sensorSettingsList.first(where: {$0.ruuviTagId == viewModel.id.value}),
+                                        sensorSettings: sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value }),
                                         output: self)
         } else if viewModel.type == .web,
                   let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
@@ -187,7 +187,7 @@ extension CardsPresenter: CardsViewOutput {
     
     func viewDidScroll(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value,
-           let sensor = ruuviTags.first(where: {$0.luid?.any == luid}) {
+           let sensor = ruuviTags.first(where: { $0.luid?.any == luid }) {
             restartObservingRuuviTagNetwork(for: sensor)
             tagCharts?.configure(ruuviTag: sensor)
         }
@@ -431,7 +431,7 @@ extension CardsPresenter {
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                    let sensorSettings = self?.sensorSettingsList.first(where: {$0.ruuviTagId == viewModel.id.value})
+                    let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
                     viewModel.update(ruuviTag.with(sensorSettings: sensorSettings))
                     //self?.updateAlertState(for: viewModel)
                 }
@@ -448,7 +448,7 @@ extension CardsPresenter {
                 advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
                     if let ruuviTag = device.ruuvi?.tag,
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                        let sensorSettings = self?.sensorSettingsList.first(where: {$0.ruuviTagId == viewModel.id.value})
+                        let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
                         viewModel.update(ruuviTag.with(sensorSettings: sensorSettings))
                         viewModel.update(rssi: ruuviTag.rssi)
                         //self?.updateAlertState(for: viewModel)
@@ -464,21 +464,25 @@ extension CardsPresenter {
         
         for viewModel in viewModels {
             if viewModel.type == .ruuvi,
-               let ruuviTagSensor = ruuviTags.first(where: {$0.id == viewModel.id.value}) {
+               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
-                    ruuviTagReactor.observe(ruuviTagSensor, {[weak self] change in
+                    ruuviTagReactor.observe(ruuviTagSensor, { [weak self] change in
                         switch(change) {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
-                        case .update(let sensorSettings):
-                            if let index = self?.sensorSettingsList.firstIndex(where: { $0.ruuviTagId == sensorSettings.ruuviTagId}) {
-                                self?.sensorSettingsList[index] = sensorSettings
+                        case .update(let updateSensorSettings):
+                            if let updateIndex = self?.sensorSettingsList.firstIndex(
+                                where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                            ) {
+                                self?.sensorSettingsList[updateIndex] = updateSensorSettings
                             } else {
-                                self?.sensorSettingsList.append(sensorSettings)
+                                self?.sensorSettingsList.append(updateSensorSettings)
                             }
-                        case .delete(let sensorSettings):
-                            if let index = self?.sensorSettingsList.firstIndex(where: { $0.ruuviTagId == sensorSettings.ruuviTagId}) {
-                                self?.sensorSettingsList.remove(at: index)
+                        case .delete(let deleteSensorSettings):
+                            if let deleteIndex = self?.sensorSettingsList.firstIndex(
+                                where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
+                            ) {
+                                self?.sensorSettingsList.remove(at: deleteIndex)
                             }
                         default: break
                         }
@@ -492,9 +496,9 @@ extension CardsPresenter {
         ruuviTagObserveLastRecordToken?.invalidate()
         ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
-               let viewModel = self?.viewModels.first(where: {$0.id.value == anyRecord?.ruuviTagId}),
+               let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
                let record = anyRecord?.object {
-                let sensorSettings = self?.sensorSettingsList.first(where: {$0.ruuviTagId == viewModel.id.value})
+                let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
                 if viewModel.needUpdateFromObservingLastRecord {
                     viewModel.update(record.with(sensorSettings: sensorSettings))
                 }
@@ -513,13 +517,13 @@ extension CardsPresenter {
                     if let last = data.sorted(byKeyPath: "date").last {
                         self?.viewModels
                             .filter({ $0.luid.value == webTag.uuid.luid.any })
-                            .forEach({ $0.update(last)})
+                            .forEach({ $0.update(last) })
                     }
                 case .update(let data, _, _, _):
                     if let last = data.sorted(byKeyPath: "date").last {
                         self?.viewModels
                             .filter({ $0.luid.value == webTag.uuid.luid.any })
-                            .forEach({ $0.update(last)})
+                            .forEach({ $0.update(last) })
                     }
                 case .error(let error):
                     self?.errorPresenter.present(error: error)
@@ -610,7 +614,7 @@ extension CardsPresenter {
                 self?.errorPresenter.present(error: error)
             case .update(let sensor):
                 guard let sSelf = self else { return }
-                if let index = sSelf.ruuviTags.firstIndex(where: {$0.id == sensor.id}) {
+                if let index = sSelf.ruuviTags.firstIndex(where: { $0.id == sensor.id }) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
                 }
@@ -830,7 +834,7 @@ extension CardsPresenter {
                          using: { [weak self] (notification) in
                             if let uuid = notification.userInfo?[LNMDidReceiveKey.uuid] as? String,
                                let index = self?.viewModels.firstIndex(where: { $0.luid.value == uuid.luid.any }),
-                               let ruuviTag = self?.ruuviTags.first(where: {$0.luid?.value == uuid}) {
+                               let ruuviTag = self?.ruuviTags.first(where: { $0.luid?.value == uuid }) {
                                 self?.view.scroll(to: index)
                                 self?.tagCharts?.configure(ruuviTag: ruuviTag)
                             }

@@ -119,15 +119,19 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                 switch change {
                 case .insert(let sensorSettings):
                     self?.sensorSettingsList.append(sensorSettings)
-                case .update(let sensorSettings):
-                    if let index = self?.sensorSettingsList.firstIndex(where: { $0.ruuviTagId == sensorSettings.ruuviTagId }) {
-                        self?.sensorSettingsList[index] = sensorSettings
+                case .update(let updateSensorSettings):
+                    if let updateIndex = self?.sensorSettingsList.firstIndex(
+                        where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                    ) {
+                        self?.sensorSettingsList[updateIndex] = updateSensorSettings
                     } else {
-                        self?.sensorSettingsList.append(sensorSettings)
+                        self?.sensorSettingsList.append(updateSensorSettings)
                     }
-                case .delete(let sensorSettings):
-                    if let index = self?.sensorSettingsList.firstIndex(where: { $0.ruuviTagId == sensorSettings.ruuviTagId }) {
-                        self?.sensorSettingsList.remove(at: index)
+                case .delete(let deleteSensorSettings):
+                    if let deleteIndex = self?.sensorSettingsList.firstIndex(
+                        where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
+                    ) {
+                        self?.sensorSettingsList.remove(at: deleteIndex)
                     }
                 default: break
                 }
