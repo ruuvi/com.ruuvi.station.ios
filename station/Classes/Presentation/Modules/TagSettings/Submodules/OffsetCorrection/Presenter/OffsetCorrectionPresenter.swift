@@ -73,7 +73,6 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         }
         ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: offset, of: self.ruuviTag).on (success: { [weak self] success in
             self?.view.viewModel.update(sensorSettings: success)
-            self?.fireOffsetCorrectionNotificationChange()
         }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
@@ -82,19 +81,9 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     func viewDidClearOffsetValue() {
         ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: nil, of: self.ruuviTag).on (success: { [weak self] success in
             self?.view.viewModel.update(sensorSettings: success)
-            self?.fireOffsetCorrectionNotificationChange()
         }, failure: { [weak self] (error) in
                 self?.errorPresenter.present(error: error)
             })
-    }
-
-    private func fireOffsetCorrectionNotificationChange() {
-        NotificationCenter
-            .default
-            .post(name: .OffsetCorrectionDidChange,
-            object: nil,
-            userInfo: [OffsetCorrectionDidChangeKey.luid: self.ruuviTag.luid,
-                OffsetCorrectionDidChangeKey.ruuviTagId: self.ruuviTag.id])
     }
 
     private func observeRuuviTagUpdate() {

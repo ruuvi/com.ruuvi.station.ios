@@ -46,20 +46,24 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if ruuviTag.macId != nil {
-            sqlite.delete(ruuviTag).on(success: { [weak self] success in
-                if let luid = ruuviTag.luid {
-                    self?.backgroundPersistence.deleteCustomBackground(for: luid)
-                    self?.connectionPersistence.setKeepConnection(false, for: luid)
-                } else if let macId = ruuviTag.macId {
-                    print(macId)
-                    // FIXME:
-//                    self?.backgroundPersistence.deleteCustomBackground(for: macId)
-//                    self?.connectionPersistence.setKeepConnection(false, for: macId)
-                } else {
-                    assertionFailure()
-                }
-                self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
-                promise.succeed(value: success)
+            sqlite.delelteOffsetCorrection(ruuviTag: ruuviTag).on (success: { [weak self] success in
+                self?.sqlite.delete(ruuviTag).on(success: { [weak self] success in
+                    if let luid = ruuviTag.luid {
+                        self?.backgroundPersistence.deleteCustomBackground(for: luid)
+                        self?.connectionPersistence.setKeepConnection(false, for: luid)
+                    } else if let macId = ruuviTag.macId {
+                        print(macId)
+                        // FIXME:
+    //                    self?.backgroundPersistence.deleteCustomBackground(for: macId)
+    //                    self?.connectionPersistence.setKeepConnection(false, for: macId)
+                    } else {
+                        assertionFailure()
+                    }
+                    self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
+                    promise.succeed(value: success)
+                }, failure: { error in
+                    promise.fail(error: error)
+                })
             }, failure: { error in
                 promise.fail(error: error)
             })

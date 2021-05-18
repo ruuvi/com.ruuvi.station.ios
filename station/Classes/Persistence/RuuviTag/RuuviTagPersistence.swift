@@ -24,4 +24,5 @@ protocol RuuviTagPersistence {
     
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RUError>
     func updateOffsetCorrection(type: OffsetCorrectionType, with value: Double?, of ruuviTag: RuuviTagSensor) -> Future<SensorSettings, RUError>
+    func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>
 }

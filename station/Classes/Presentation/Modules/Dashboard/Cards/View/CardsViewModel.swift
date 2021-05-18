@@ -32,8 +32,6 @@ struct CardsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
-    
-    var sensorSettings: Observable<SensorSettings?> = Observable<SensorSettings?>()
 
     init(_ webTag: WebTagRealm) {
         type = .web
