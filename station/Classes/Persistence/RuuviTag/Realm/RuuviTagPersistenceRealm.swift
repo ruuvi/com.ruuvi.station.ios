@@ -210,7 +210,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                   voltage: record.unitVoltage,
                                                   movementCounter: record.movementCounter.value,
                                                   measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                  txPower: record.txPower.value)
+                                                  txPower: record.txPower.value,
+                                                  temperatureOffset: record.temperatureOffset,
+                                                  humidityOffset: record.humidityOffset,
+                                                  pressureOffset: record.pressureOffset)
             }
             promise.succeed(value: result)
         }
@@ -243,7 +246,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                    voltage: record.unitVoltage,
                                                    movementCounter: record.movementCounter.value,
                                                    measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                   txPower: record.txPower.value))
+                                                   txPower: record.txPower.value,
+                                                   temperatureOffset: record.temperatureOffset,
+                                                   humidityOffset: record.humidityOffset,
+                                                   pressureOffset: record.pressureOffset))
                 }
             }
             promise.succeed(value: result)
@@ -281,7 +287,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                    voltage: record.unitVoltage,
                                                    movementCounter: record.movementCounter.value,
                                                    measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                   txPower: record.txPower.value))
+                                                   txPower: record.txPower.value,
+                                                   temperatureOffset: record.temperatureOffset,
+                                                   humidityOffset: record.humidityOffset,
+                                                   pressureOffset: record.pressureOffset))
                 }
             }
             promise.succeed(value: result)
@@ -310,7 +319,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                   voltage: record.unitVoltage,
                                                   movementCounter: record.movementCounter.value,
                                                   measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                  txPower: record.txPower.value)
+                                                  txPower: record.txPower.value,
+                                                  temperatureOffset: record.temperatureOffset,
+                                                  humidityOffset: record.humidityOffset,
+                                                  pressureOffset: record.pressureOffset)
             }
             promise.succeed(value: result)
         }
@@ -340,7 +352,10 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                                                         voltage: record.unitVoltage,
                                                         movementCounter: record.movementCounter.value,
                                                         measurementSequenceNumber: sequenceNumber,
-                                                        txPower: record.txPower.value)
+                                                        txPower: record.txPower.value,
+                                                        temperatureOffset: record.temperatureOffset,
+                                                        humidityOffset: record.humidityOffset,
+                                                        pressureOffset: record.pressureOffset)
                 promise.succeed(value: result)
             } else {
                 promise.succeed(value: nil)

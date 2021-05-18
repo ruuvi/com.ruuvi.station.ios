@@ -530,7 +530,10 @@ extension TagSettingsPresenter {
             voltage: device.voltage,
             movementCounter: device.movementCounter,
             measurementSequenceNumber: device.measurementSequenceNumber,
-            txPower: device.txPower
+            txPower: device.txPower,
+            temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
+            humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
+            pressureOffset: sensorSettings?.pressureOffset ?? 0.0
         ).with(sensorSettings: sensorSettings)
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version

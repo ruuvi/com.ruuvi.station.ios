@@ -35,7 +35,8 @@ class OffsetCorrectionViewModel {
         hasOffsetValue.value = false
     }
 
-    convenience init(type: OffsetCorrectionType, sensorSettings: SensorSettings) {
+    convenience init(type: OffsetCorrectionType,
+                     sensorSettings: SensorSettings) {
         self.init()
         self.type = type
         self.update(sensorSettings: sensorSettings)
@@ -44,28 +45,42 @@ class OffsetCorrectionViewModel {
     func update(ruuviTag: RuuviTag) {
         switch type {
         case .humidity:
-            self.originalValue.value = ruuviTag.humidity?.value
+            if let value = ruuviTag.humidity?.value {
+                self.originalValue.value = value - ruuviTag.humidityOffset
+                self.correctedValue.value = value
+            }
         case .pressure:
-            self.originalValue.value = ruuviTag.pressure?.converted(to: .hectopascals).value
+            if let value = ruuviTag.pressure?.value {
+                self.originalValue.value = value - ruuviTag.pressureOffset
+                self.correctedValue.value = value
+            }
         default:
-            self.originalValue.value = ruuviTag.temperature?.converted(to: .celsius).value
+            if let value = ruuviTag.temperature?.value {
+                self.originalValue.value = value - ruuviTag.temperatureOffset
+                self.correctedValue.value = value
+            }
         }
-        self.correctedValue.value = (self.originalValue.value ?? 0) + (self.offsetCorrectionValue.value ?? 0)
         self.updateAt.value = Date()
     }
 
     func update(ruuviTagRecord: RuuviTagSensorRecord) {
         switch type {
         case .humidity:
-            self.correctedValue.value = ruuviTagRecord.humidity?.value
+            if let value = ruuviTagRecord.humidity?.value {
+                self.originalValue.value = value - ruuviTagRecord.humidityOffset
+                self.correctedValue.value = value
+            }
         case .pressure:
-            self.correctedValue.value
-                = ruuviTagRecord.pressure?.converted(to: .hectopascals).value
+            if let value = ruuviTagRecord.pressure?.value {
+                self.originalValue.value = value - ruuviTagRecord.pressureOffset
+                self.correctedValue.value = value
+            }
         default:
-            self.correctedValue.value
-                = ruuviTagRecord.temperature?.converted(to: .celsius).value
+            if let value = ruuviTagRecord.temperature?.value {
+                self.originalValue.value = value - ruuviTagRecord.temperatureOffset
+                self.correctedValue.value = value
+            }
         }
-        self.originalValue.value = (self.correctedValue.value ?? 0) - (self.offsetCorrectionValue.value ?? 0)
         self.updateAt.value = Date()
     }
 
@@ -81,7 +96,7 @@ class OffsetCorrectionViewModel {
             self.offsetCorrectionValue.value = sensorSettings.temperatureOffset
             self.offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         }
-        self.correctedValue.value = (self.originalValue.value ?? 0) + (self.offsetCorrectionValue.value ?? 0)
+        
         self.hasOffsetValue.value = self.offsetCorrectionValue.value != nil
     }
 }
