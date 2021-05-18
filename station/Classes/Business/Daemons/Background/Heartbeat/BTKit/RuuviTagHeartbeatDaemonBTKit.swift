@@ -134,9 +134,10 @@ extension RuuviTagHeartbeatDaemonBTKit {
             observer.pullWebDaemon.wakeUp()
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings? = nil
-                if let ruuviTagSensor = observer.ruuviTags.first(
-                    where: { $0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId}) {
-                    sensorSettings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id })
+                if let ruuviTagSensor = observer.ruuviTags
+                    .first(where: {$0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId}),
+                   let settings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id }) {
+                    sensorSettings = settings
                 }
                 observer.alertService.process(heartbeat: ruuviTag.with(sensorSettings: sensorSettings))
                 if observer.settings.saveHeartbeats {
