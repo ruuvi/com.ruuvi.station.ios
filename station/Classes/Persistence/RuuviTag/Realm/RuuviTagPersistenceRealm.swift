@@ -198,22 +198,22 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
                 .filter("ruuviTag.uuid == %@", ruuviTagId)
                 .sorted(byKeyPath: "date")
-            let result: [RuuviTagSensorRecord] = realmRecords.map { record in
+            let result: [RuuviTagSensorRecord] = realmRecords.map { realmRecord in
                 return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
-                                                  date: record.date,
+                                                  date: realmRecord.date,
                                                   macId: nil,
-                                                  rssi: record.rssi.value,
-                                                  temperature: record.unitTemperature,
-                                                  humidity: record.unitHumidity,
-                                                  pressure: record.unitPressure,
-                                                  acceleration: record.acceleration,
-                                                  voltage: record.unitVoltage,
-                                                  movementCounter: record.movementCounter.value,
-                                                  measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                  txPower: record.txPower.value,
-                                                  temperatureOffset: record.temperatureOffset,
-                                                  humidityOffset: record.humidityOffset,
-                                                  pressureOffset: record.pressureOffset)
+                                                  rssi: realmRecord.rssi.value,
+                                                  temperature: realmRecord.unitTemperature,
+                                                  humidity: realmRecord.unitHumidity,
+                                                  pressure: realmRecord.unitPressure,
+                                                  acceleration: realmRecord.acceleration,
+                                                  voltage: realmRecord.unitVoltage,
+                                                  movementCounter: realmRecord.movementCounter.value,
+                                                  measurementSequenceNumber: realmRecord.measurementSequenceNumber.value,
+                                                  txPower: realmRecord.txPower.value,
+                                                  temperatureOffset: realmRecord.temperatureOffset,
+                                                  humidityOffset: realmRecord.humidityOffset,
+                                                  pressureOffset: realmRecord.pressureOffset)
             }
             promise.succeed(value: result)
         }
@@ -223,36 +223,36 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
     func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         context.bgWorker.enqueue {
-            let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
+            let ruuviTagDataRealms = self.context.bg.objects(RuuviTagDataRealm.self)
                 .filter("ruuviTag.uuid == %@", ruuviTagId)
                 .sorted(byKeyPath: "date")
-            var result: [RuuviTagSensorRecord] = []
-            var previousDate = realmRecords.first?.date ?? Date()
-            for record in realmRecords {
+            var results: [RuuviTagSensorRecord] = []
+            var previousDate = ruuviTagDataRealms.first?.date ?? Date()
+            for ruuviTagDataRealm in ruuviTagDataRealms {
                 autoreleasepool {
-                    guard record.date >= previousDate.addingTimeInterval(interval) else {
+                    guard ruuviTagDataRealm.date >= previousDate.addingTimeInterval(interval) else {
                         return
                     }
-                    previousDate = record.date
-                    result.append(
+                    previousDate = ruuviTagDataRealm.date
+                    results.append(
                         RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
-                                                   date: record.date,
+                                                   date: ruuviTagDataRealm.date,
                                                    macId: nil,
-                                                   rssi: record.rssi.value,
-                                                   temperature: record.unitTemperature,
-                                                   humidity: record.unitHumidity,
-                                                   pressure: record.unitPressure,
-                                                   acceleration: record.acceleration,
-                                                   voltage: record.unitVoltage,
-                                                   movementCounter: record.movementCounter.value,
-                                                   measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                   txPower: record.txPower.value,
-                                                   temperatureOffset: record.temperatureOffset,
-                                                   humidityOffset: record.humidityOffset,
-                                                   pressureOffset: record.pressureOffset))
+                                                   rssi: ruuviTagDataRealm.rssi.value,
+                                                   temperature: ruuviTagDataRealm.unitTemperature,
+                                                   humidity: ruuviTagDataRealm.unitHumidity,
+                                                   pressure: ruuviTagDataRealm.unitPressure,
+                                                   acceleration: ruuviTagDataRealm.acceleration,
+                                                   voltage: ruuviTagDataRealm.unitVoltage,
+                                                   movementCounter: ruuviTagDataRealm.movementCounter.value,
+                                                   measurementSequenceNumber: ruuviTagDataRealm.measurementSequenceNumber.value,
+                                                   txPower: ruuviTagDataRealm.txPower.value,
+                                                   temperatureOffset: ruuviTagDataRealm.temperatureOffset,
+                                                   humidityOffset: ruuviTagDataRealm.humidityOffset,
+                                                   pressureOffset: ruuviTagDataRealm.pressureOffset))
                 }
             }
-            promise.succeed(value: result)
+            promise.succeed(value: results)
         }
         return promise.future
     }
@@ -267,33 +267,33 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             let realmRecords = self.context.bg.objects(RuuviTagDataRealm.self)
                 .filter("ruuviTag.uuid == %@ AND date > %@", ruuviTagId, date)
                 .sorted(byKeyPath: "date")
-            var result: [RuuviTagSensorRecord] = []
+            var results: [RuuviTagSensorRecord] = []
             var previousDate = realmRecords.first?.date ?? Date()
-            for record in realmRecords {
+            for realmRecord in realmRecords {
                 autoreleasepool {
-                    guard record.date >= previousDate.addingTimeInterval(interval) else {
+                    guard realmRecord.date >= previousDate.addingTimeInterval(interval) else {
                         return
                     }
-                    previousDate = record.date
-                    result.append(
+                    previousDate = realmRecord.date
+                    results.append(
                         RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
-                                                   date: record.date,
+                                                   date: realmRecord.date,
                                                    macId: nil,
-                                                   rssi: record.rssi.value,
-                                                   temperature: record.unitTemperature,
-                                                   humidity: record.unitHumidity,
-                                                   pressure: record.unitPressure,
-                                                   acceleration: record.acceleration,
-                                                   voltage: record.unitVoltage,
-                                                   movementCounter: record.movementCounter.value,
-                                                   measurementSequenceNumber: record.measurementSequenceNumber.value,
-                                                   txPower: record.txPower.value,
-                                                   temperatureOffset: record.temperatureOffset,
-                                                   humidityOffset: record.humidityOffset,
-                                                   pressureOffset: record.pressureOffset))
+                                                   rssi: realmRecord.rssi.value,
+                                                   temperature: realmRecord.unitTemperature,
+                                                   humidity: realmRecord.unitHumidity,
+                                                   pressure: realmRecord.unitPressure,
+                                                   acceleration: realmRecord.acceleration,
+                                                   voltage: realmRecord.unitVoltage,
+                                                   movementCounter: realmRecord.movementCounter.value,
+                                                   measurementSequenceNumber: realmRecord.measurementSequenceNumber.value,
+                                                   txPower: realmRecord.txPower.value,
+                                                   temperatureOffset: realmRecord.temperatureOffset,
+                                                   humidityOffset: realmRecord.humidityOffset,
+                                                   pressureOffset: realmRecord.pressureOffset))
                 }
             }
-            promise.succeed(value: result)
+            promise.succeed(value: results)
         }
         return promise.future
     }
@@ -336,27 +336,27 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
             return promise.future
         }
         context.bgWorker.enqueue {
-            if let record = self.context.bg.objects(RuuviTagDataRealm.self)
+            if let lastRecord = self.context.bg.objects(RuuviTagDataRealm.self)
                 .filter("ruuviTag.uuid == %@", luid.value)
                 .sorted(byKeyPath: "date", ascending: false)
                 .first {
-                let sequenceNumber = record.measurementSequenceNumber.value
-                let result = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
-                                                        date: record.date,
+                let sequenceNumber = lastRecord.measurementSequenceNumber.value
+                let lastRecordResult = RuuviTagSensorRecordStruct(ruuviTagId: luid.value,
+                                                        date: lastRecord.date,
                                                         macId: nil,
-                                                        rssi: record.rssi.value,
-                                                        temperature: record.unitTemperature,
-                                                        humidity: record.unitHumidity,
-                                                        pressure: record.unitPressure,
-                                                        acceleration: record.acceleration,
-                                                        voltage: record.unitVoltage,
-                                                        movementCounter: record.movementCounter.value,
+                                                        rssi: lastRecord.rssi.value,
+                                                        temperature: lastRecord.unitTemperature,
+                                                        humidity: lastRecord.unitHumidity,
+                                                        pressure: lastRecord.unitPressure,
+                                                        acceleration: lastRecord.acceleration,
+                                                        voltage: lastRecord.unitVoltage,
+                                                        movementCounter: lastRecord.movementCounter.value,
                                                         measurementSequenceNumber: sequenceNumber,
-                                                        txPower: record.txPower.value,
-                                                        temperatureOffset: record.temperatureOffset,
-                                                        humidityOffset: record.humidityOffset,
-                                                        pressureOffset: record.pressureOffset)
-                promise.succeed(value: result)
+                                                        txPower: lastRecord.txPower.value,
+                                                        temperatureOffset: lastRecord.temperatureOffset,
+                                                        humidityOffset: lastRecord.humidityOffset,
+                                                        pressureOffset: lastRecord.pressureOffset)
+                promise.succeed(value: lastRecordResult)
             } else {
                 promise.succeed(value: nil)
             }
@@ -378,13 +378,13 @@ extension RuuviTagPersistenceRealm {
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RUError> {
         let promise = Promise<SensorSettings?, RUError>()
         guard ruuviTag.macId == nil,
-              let luid = ruuviTag.luid else {
+              let _ = ruuviTag.luid else {
             promise.fail(error: .unexpected(.attemptToReadDataFromRealmWithoutLUID))
             return promise.future
         }
         context.bgWorker.enqueue {
             if let record = self.context.bg.objects(SensorSettingsRealm.self)
-                .first(where: {$0.tagId == ruuviTag.luid?.value}) {
+                .first(where: { $0.tagId == ruuviTag.luid?.value }) {
                 promise.succeed(value: record.sensorSettings)
             } else {
                 promise.succeed(value: nil)
@@ -400,7 +400,7 @@ extension RuuviTagPersistenceRealm {
         context.bgWorker.enqueue {
             do {
                 if let record = self.context.bg.objects(SensorSettingsRealm.self)
-                    .first(where: {$0.tagId == ruuviTag.luid?.value}) {
+                    .first(where: { $0.tagId == ruuviTag.luid?.value }) {
                     try self.context.bg.write {
                         switch type {
                         case .humidity:
@@ -448,7 +448,7 @@ extension RuuviTagPersistenceRealm {
         context.bgWorker.enqueue {
             do {
                 if let sensorSettingRealm = self.context.bg.objects(SensorSettingsRealm.self)
-                    .first(where: {$0.tagId == ruuviTag.luid?.value}) {
+                    .first(where: { $0.tagId == ruuviTag.luid?.value }) {
                     try self.context.bg.write {
                         self.context.bg.delete(sensorSettingRealm)
                     }
