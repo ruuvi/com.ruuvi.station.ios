@@ -384,8 +384,7 @@ extension RuuviTagPersistenceRealm {
         }
         context.bgWorker.enqueue {
             if let record = self.context.bg.objects(SensorSettingsRealm.self)
-                .filter("tagId == %@", luid.value)
-                .first {
+                .first(where: {$0.tagId == ruuviTag.luid?.value}) {
                 promise.succeed(value: record.sensorSettings)
             } else {
                 promise.succeed(value: nil)
@@ -401,8 +400,7 @@ extension RuuviTagPersistenceRealm {
         context.bgWorker.enqueue {
             do {
                 if let record = self.context.bg.objects(SensorSettingsRealm.self)
-                    .filter("tagId == %@", ruuviTag.luid!.value)
-                    .first {
+                    .first(where: {$0.tagId == ruuviTag.luid?.value}) {
                     try self.context.bg.write {
                         switch type {
                         case .humidity:
@@ -450,8 +448,7 @@ extension RuuviTagPersistenceRealm {
         context.bgWorker.enqueue {
             do {
                 if let sensorSettingRealm = self.context.bg.objects(SensorSettingsRealm.self)
-                    .filter("tagId == %@", ruuviTag.luid!.value)
-                    .first {
+                    .first(where: {$0.tagId == ruuviTag.luid?.value}) {
                     try self.context.bg.write {
                         self.context.bg.delete(sensorSettingRealm)
                     }
