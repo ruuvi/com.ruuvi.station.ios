@@ -3,6 +3,7 @@ import Foundation
 
 class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     var ruuviTagTank: RuuviTagTank!
+    var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
     var foreground: BTForeground!
     var settings: Settings!
@@ -57,6 +58,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                 switch change {
                 case .initial(let ruuviTags):
                     sSelf.ruuviTags = ruuviTags
+                    sSelf.reloadSensorSettings()
                     sSelf.restartObserving()
                 case .update(let ruuviTag):
                     if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
@@ -91,6 +93,17 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         sensorSettingsTokens.removeAll()
         ruuviTagsToken?.invalidate()
         stopWork()
+    }
+    
+    private func reloadSensorSettings() {
+        sensorSettingsList.removeAll()
+        ruuviTags.forEach { ruuviTag in
+            ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
+                if let sensorSettings = sensorSettings {
+                    self?.sensorSettingsList.append(sensorSettings)
+                }
+            }
+        }
     }
 
     private func restartObserving() {
