@@ -274,8 +274,14 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         } else {
                             self?.sensorSettingsList.append(updateSensorSettings)
                         }
+                        if let luid = ruuviTagSensor.luid?.value {
+                            self?.savedDate.removeValue(forKey: luid)
+                        }
                     case .insert(let sensorSettings):
                         self?.sensorSettingsList.append(sensorSettings)
+                        if let luid = ruuviTagSensor.luid?.value {
+                            self?.savedDate.removeValue(forKey: luid)
+                        }
                     case .delete(let deleteSensorSettings):
                         if let deleteIndex = self?.sensorSettingsList.firstIndex(
                             where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }

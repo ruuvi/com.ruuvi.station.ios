@@ -8,9 +8,7 @@ import FirebaseCrashlytics
 
 // swiftlint:disable:next type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
-    
     var context: RealmContext!
-    
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId == nil)
@@ -393,7 +391,10 @@ extension RuuviTagPersistenceRealm {
         return promise.future
     }
     
-    func updateOffsetCorrection(type: OffsetCorrectionType, with value: Double?, of ruuviTag: RuuviTagSensor) -> Future<SensorSettings, RUError> {
+    func updateOffsetCorrection(type: OffsetCorrectionType,
+                                with value: Double?,
+                                of ruuviTag: RuuviTagSensor,
+                                lastOriginalRecord record: RuuviTagSensorRecord?) -> Future<SensorSettings, RUError> {
         let promise = Promise<SensorSettings, RUError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)

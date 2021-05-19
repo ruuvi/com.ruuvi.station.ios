@@ -331,11 +331,15 @@ extension RuuviTagPersistenceSQLite {
         return promise.future
     }
     
-    func updateOffsetCorrection(type: OffsetCorrectionType, with value: Double?, of ruuviTag: RuuviTagSensor) -> Future<SensorSettings, RUError> {
+    func updateOffsetCorrection(type: OffsetCorrectionType,
+                                with value: Double?,
+                                of ruuviTag: RuuviTagSensor,
+                                lastOriginalRecord record: RuuviTagSensorRecord?) -> Future<SensorSettings, RUError> {
         let promise = Promise<SensorSettings, RUError>()
         assert(ruuviTag.macId != nil)
         do {
             var sqliteSensorSettings: Settings?
+            
             try database.dbPool.read { db in
                 let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
                 sqliteSensorSettings = try request.fetchOne(db)
@@ -376,6 +380,12 @@ extension RuuviTagPersistenceSQLite {
                 }
                 try database.dbPool.write { db in
                     try sqliteSensorSettings!.insert(db)
+                }
+            }
+            if let sqliteSensorRecord = record {
+                try database.dbPool.write { db in
+                    try sqliteSensorRecord.with(sensorSettings: sqliteSensorSettings?.sensorSettings)
+                        .sqlite.insert(db)
                 }
             }
             promise.succeed(value: sqliteSensorSettings!.sensorSettings)

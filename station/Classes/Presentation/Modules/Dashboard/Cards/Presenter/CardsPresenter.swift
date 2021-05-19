@@ -778,10 +778,15 @@ extension CardsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
+                            guard let `self` = self else { return }
                             if let userInfo = notification.userInfo,
                                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
-                                self?.viewModels.filter({ $0.luid.value == uuid.luid.any }).forEach({ (viewModel) in
-                                    //self?.updateAlertState(for: viewModel)
+                                `self`.viewModels.filter({ $0.luid.value == uuid.luid.any }).forEach({ (viewModel) in
+                                    if `self`.alertService.hasRegistrations(for: uuid) {
+                                        viewModel.alertState.value = .registered
+                                    } else {
+                                        viewModel.alertState.value = .empty
+                                    }
                                 })
                             }
                          })

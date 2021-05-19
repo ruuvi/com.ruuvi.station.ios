@@ -125,6 +125,8 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                     }
                 case .insert(let sensorSettings):
                     self?.sensorSettingsList.append(sensorSettings)
+                    //remove last update timestamp to force add new record in db
+                    self?.savedDate.removeValue(forKey: luid.value)
                 case .update(let sensorSettings):
                     if let uIndex = self?.sensorSettingsList.firstIndex(
                         where: { $0.ruuviTagId == sensorSettings.ruuviTagId }
@@ -133,6 +135,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                     } else {
                         self?.sensorSettingsList.append(sensorSettings)
                     }
+                    self?.savedDate.removeValue(forKey: luid.value)
                 default: break
                 }
             }))
