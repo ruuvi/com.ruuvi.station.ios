@@ -26,6 +26,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
 
     var uuid: String
     var mac: String?
+    var sensorSettings: SensorSettings?
     var error: RUError?
 
     private var background: BTBackground
@@ -36,6 +37,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
 
     init(uuid: String,
          mac: String?,
+         settings: SensorSettings?,
          ruuviTagTank: RuuviTagTank,
          background: BTBackground,
          progress: ((BTServiceProgress) -> Void)? = nil,
@@ -43,6 +45,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
          serviceTimeout: TimeInterval? = 0) {
         self.uuid = uuid
         self.mac = mac
+        self.sensorSettings = settings
         self.ruuviTagTank = ruuviTagTank
         self.background = background
         self.progress = progress
@@ -62,7 +65,9 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                                           progress: progress) { (observer, result) in
             switch result {
             case .success(let logs):
-                let records = logs.map({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac )})
+                let records = logs.map({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
+                    .with(sensorSettings: observer.sensorSettings)
+                })
                 let opLogs = observer.ruuviTagTank.create(records)
                 opLogs.on(success: { _ in
                     observer.post(logs: logs, with: observer.uuid)

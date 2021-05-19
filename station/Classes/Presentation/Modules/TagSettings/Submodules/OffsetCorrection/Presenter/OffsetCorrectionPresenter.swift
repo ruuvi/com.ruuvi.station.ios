@@ -22,6 +22,8 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     private var ruuviTag: RuuviTagSensor!
     private var sensorSettings: SensorSettings!
     
+    private var lastSensorRecord: RuuviTagSensorRecord?
+    
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
         self.sensorSettings = sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
@@ -35,8 +37,9 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
             let vm = OffsetCorrectionViewModel(
                 type: type, sensorSettings: self.sensorSettings
             )
-            ruuviTagTrunk.readLast(ruuviTag).on { record in
+            ruuviTagTrunk.readLast(ruuviTag).on {[weak self] record in
                 if let record = record {
+                    self?.lastSensorRecord = record
                     vm.update(ruuviTagRecord: record)
                 }
             }
@@ -53,6 +56,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         observeRuuviTagUpdate()
         startObservingSettingsChanges()
     }
+    
     func viewDidOpenCalibrateDialog() {
         view.showCalibrateDialog()
     }
@@ -71,22 +75,40 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         default:
             offset = correctValue - view.viewModel.originalValue.value.bound
         }
-        ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: offset, of: self.ruuviTag).on (success: { [weak self] sensorSettings in
-            self?.sensorSettings = sensorSettings
-            self?.view.viewModel.update(sensorSettings: sensorSettings)
+        ruuviTagTrunk.updateOffsetCorrection(
+            type: view.viewModel.type,
+            with: offset,
+            of: self.ruuviTag,
+            lastOriginalRecord: lastSensorRecord).on (success: { [weak self] settings in
+                self?.sensorSettings = settings
+                self?.view.viewModel.update(sensorSettings: settings)
+                if let lastRecord = self?.lastSensorRecord {
+                    self?.view.viewModel.update(
+                        ruuviTagRecord: lastRecord.with(sensorSettings: settings)
+                    )
+                }
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
     }
     
     func viewDidClearOffsetValue() {
-        ruuviTagTrunk.updateOffsetCorrection(type: view.viewModel.type, with: nil, of: self.ruuviTag)
-            .on (success: { [weak self] sensorSettings in
-                self?.sensorSettings = sensorSettings
-                self?.view.viewModel.update(sensorSettings: sensorSettings)
-            }, failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            })
+        ruuviTagTrunk.updateOffsetCorrection(
+            type: view.viewModel.type,
+            with: nil,
+            of: self.ruuviTag,
+            lastOriginalRecord: lastSensorRecord
+        ).on (success: { [weak self] sensorSettings in
+            self?.sensorSettings = sensorSettings
+            self?.view.viewModel.update(sensorSettings: sensorSettings)
+            if let lastRecord = self?.lastSensorRecord {
+                self?.view.viewModel.update(
+                    ruuviTagRecord: lastRecord.with(sensorSettings: sensorSettings)
+                )
+            }
+        }, failure: { [weak self] (error) in
+            self?.errorPresenter.present(error: error)
+        })
     }
     
     private func observeRuuviTagUpdate() {
@@ -96,6 +118,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         ruuviTagObserveToken?.invalidate()
         ruuviTagObserveToken = foreground.observe(self, uuid: luid) { [weak self] (_, device) in
             if let ruuviTag = device.ruuvi?.tag {
+                self?.lastSensorRecord = ruuviTag
                 self?.view.viewModel.update(
                     ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings)
                 )
