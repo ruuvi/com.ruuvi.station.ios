@@ -7,6 +7,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagTank: RuuviTagTank!
+    var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
     var alertService: AlertService!
     var settings: Settings!
@@ -191,7 +192,15 @@ extension RuuviTagHeartbeatDaemonBTKit {
             .filter { (luid) -> Bool in
                 !ruuviTags.contains(where: { $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
             }.forEach({ disconnect(uuid: $0.value) })
-
+        
+        sensorSettingsList.removeAll()
+        ruuviTags.forEach { ruuviTag in
+            ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
+                if let sensorSettings = sensorSettings {
+                    self?.sensorSettingsList.append(sensorSettings)
+                }
+            }
+        }
         restartSensorSettingsObservers()
     }
 
