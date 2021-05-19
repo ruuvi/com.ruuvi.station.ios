@@ -15,9 +15,9 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     private var ruuviTagObserveToken: ObservationToken?
     private var ruuviTagObserveLastRecordToken: RUObservationToken?
     
-    private var temperatureUnitToken: NSObjectProtocol?
-    private var humidityUnitToken: NSObjectProtocol?
-    private var pressureUnitToken: NSObjectProtocol?
+    private var temperatureUnitSettingToken: NSObjectProtocol?
+    private var humidityUnitSettingToken: NSObjectProtocol?
+    private var pressureUnitSettingToken: NSObjectProtocol?
     
     private var ruuviTag: RuuviTagSensor!
     private var sensorSettings: SensorSettings!
@@ -96,29 +96,28 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         ruuviTagObserveToken?.invalidate()
         ruuviTagObserveToken = foreground.observe(self, uuid: luid) { [weak self] (_, device) in
             if let ruuviTag = device.ruuvi?.tag {
-                self?.view.viewModel.update(ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings))
+                self?.view.viewModel.update(
+                    ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings)
+                )
             }
         }
     }
     
     private func startObservingSettingsChanges() {
-        temperatureUnitToken = NotificationCenter
-            .default
+        temperatureUnitSettingToken = NotificationCenter.default
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
                 self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
             }
-        humidityUnitToken = NotificationCenter
-            .default
+        humidityUnitSettingToken = NotificationCenter.default
             .addObserver(forName: .HumidityUnitDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
                             self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
                          })
-        pressureUnitToken = NotificationCenter
-            .default
+        pressureUnitSettingToken = NotificationCenter.default
             .addObserver(forName: .PressureUnitDidChange,
                          object: nil,
                          queue: .main,

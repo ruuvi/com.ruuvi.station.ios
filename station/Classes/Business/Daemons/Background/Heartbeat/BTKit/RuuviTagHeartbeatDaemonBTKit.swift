@@ -266,8 +266,6 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 ruuviTagSensor,
                 { [weak self] change in
                     switch change {
-                    case .insert(let sensorSettings):
-                        self?.sensorSettingsList.append(sensorSettings)
                     case .update(let updateSensorSettings):
                         if let updateIndex = self?.sensorSettingsList.firstIndex(
                             where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
@@ -276,6 +274,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         } else {
                             self?.sensorSettingsList.append(updateSensorSettings)
                         }
+                    case .insert(let sensorSettings):
+                        self?.sensorSettingsList.append(sensorSettings)
                     case .delete(let deleteSensorSettings):
                         if let deleteIndex = self?.sensorSettingsList.firstIndex(
                             where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
