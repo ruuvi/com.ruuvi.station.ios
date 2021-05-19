@@ -27,7 +27,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId == nil)
@@ -46,7 +46,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId == nil)
@@ -68,7 +68,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         context.bgWorker.enqueue {
@@ -86,7 +86,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         context.bgWorker.enqueue {
@@ -104,7 +104,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(record.macId == nil)
@@ -125,7 +125,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         context.bgWorker.enqueue {
@@ -156,7 +156,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
         let promise = Promise<AnyRuuviTagSensor, RUError>()
         context.bgWorker.enqueue {
@@ -173,7 +173,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func readAll() -> Future<[AnyRuuviTagSensor], RUError> {
         let promise = Promise<[AnyRuuviTagSensor], RUError>()
         context.bgWorker.enqueue {
@@ -189,7 +189,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         context.bgWorker.enqueue {
@@ -217,7 +217,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         context.bgWorker.enqueue {
@@ -254,7 +254,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func read(
         _ ruuviTagId: String,
         after date: Date,
@@ -295,7 +295,7 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         }
         return promise.future
     }
-    
+
     func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         context.bgWorker.enqueue {
@@ -390,7 +390,7 @@ extension RuuviTagPersistenceRealm {
         }
         return promise.future
     }
-    
+
     func updateOffsetCorrection(type: OffsetCorrectionType,
                                 with value: Double?,
                                 of ruuviTag: RuuviTagSensor,
@@ -441,7 +441,7 @@ extension RuuviTagPersistenceRealm {
         }
         return promise.future
     }
-    
+
     func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId == nil)

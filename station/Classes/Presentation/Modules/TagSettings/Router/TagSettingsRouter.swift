@@ -24,7 +24,7 @@ class TagSettingsRouter: TagSettingsRouterInput {
                 module.configure(ruuviTag: ruuviTag, humidity: humidity)
             })
     }
-    
+
     func openOffsetCorrection(type: OffsetCorrectionType,
                               ruuviTag: RuuviTagSensor,
                               sensorSettings: SensorSettings?) {

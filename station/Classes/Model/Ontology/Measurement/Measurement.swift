@@ -21,7 +21,7 @@ extension Temperature {
             return nil
         }
     }
-    
+
     func withSensorSettings(sensorSettings: SensorSettings?) -> Temperature? {
         return Temperature(
             self.value + (sensorSettings?.temperatureOffset ?? 0), unit: self.unit
@@ -37,7 +37,7 @@ extension Pressure {
             return nil
         }
     }
-    
+
     func withSensorSettings(sensorSettings: SensorSettings?) -> Pressure? {
         return Pressure(
             self.value + (sensorSettings?.pressureOffset ?? 0), unit: self.unit
@@ -54,7 +54,7 @@ extension Humidity {
             return nil
         }
     }
-    
+
     func withSensorSettings(sensorSettings: SensorSettings?) -> Humidity? {
         return Humidity(value: self.value + (sensorSettings?.humidityOffset ?? 0), unit: self.unit)
     }

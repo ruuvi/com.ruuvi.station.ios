@@ -139,7 +139,6 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
             break
         }
 
-
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
         controller.addTextField { textfield in
             textfield.keyboardType = .decimalPad

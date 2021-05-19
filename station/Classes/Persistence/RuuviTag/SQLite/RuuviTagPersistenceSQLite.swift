@@ -11,13 +11,13 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     typealias Entity = RuuviTagSQLite
     typealias Record = RuuviTagDataSQLite
     typealias Settings = SensorSettingsSQLite
-    
+
     let database: GRDBDatabase
     private let readQueue: DispatchQueue = DispatchQueue(label: "RuuviTagPersistenceSQLite.readQueue")
     init(database: GRDBDatabase) {
         self.database = database
     }
-    
+
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId != nil)
@@ -27,7 +27,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             name: ruuviTag.name,
                             version: ruuviTag.version,
                             isConnectable: ruuviTag.isConnectable)
-        
+
         do {
             try database.dbPool.write { db in
                 try entity.insert(db)
@@ -39,7 +39,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(record.macId != nil)
@@ -54,7 +54,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         do {
@@ -71,7 +71,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func readAll() -> Future<[AnyRuuviTagSensor], RUError> {
         let promise = Promise<[AnyRuuviTagSensor], RUError>()
         var sqliteEntities = [RuuviTagSensor]()
@@ -89,7 +89,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RUError> {
         let promise = Promise<AnyRuuviTagSensor, RUError>()
         readQueue.async { [weak self] in
@@ -111,7 +111,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         readQueue.async { [weak self] in
@@ -130,7 +130,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func read(
         _ ruuviTagId: String,
         after date: Date,
@@ -163,7 +163,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         readQueue.async { [weak self] in
@@ -188,7 +188,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RUError> {
         let promise = Promise<[RuuviTagSensorRecord], RUError>()
         readQueue.async { [weak self] in
@@ -226,7 +226,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId != nil)
@@ -236,7 +236,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             name: ruuviTag.name,
                             version: ruuviTag.version,
                             isConnectable: ruuviTag.isConnectable)
-        
+
         do {
             try database.dbPool.write { db in
                 try entity.update(db)
@@ -248,7 +248,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId != nil)
@@ -258,7 +258,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
                             name: ruuviTag.name,
                             version: ruuviTag.version,
                             isConnectable: ruuviTag.isConnectable)
-        
+
         do {
             var success = false
             try database.dbPool.write { db in
@@ -271,7 +271,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         do {
@@ -287,7 +287,7 @@ class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
         }
         return promise.future
     }
-    
+
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         do {
@@ -330,7 +330,7 @@ extension RuuviTagPersistenceSQLite {
         }
         return promise.future
     }
-    
+
     func updateOffsetCorrection(type: OffsetCorrectionType,
                                 with value: Double?,
                                 of ruuviTag: RuuviTagSensor,
@@ -339,7 +339,7 @@ extension RuuviTagPersistenceSQLite {
         assert(ruuviTag.macId != nil)
         do {
             var sqliteSensorSettings: Settings?
-            
+
             try database.dbPool.read { db in
                 let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
                 sqliteSensorSettings = try request.fetchOne(db)
@@ -394,10 +394,10 @@ extension RuuviTagPersistenceSQLite {
             reportToCrashlytics(error: e)
             promise.fail(error: .persistence(e))
         }
-        
+
         return promise.future
     }
-    
+
     func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         assert(ruuviTag.macId != nil)

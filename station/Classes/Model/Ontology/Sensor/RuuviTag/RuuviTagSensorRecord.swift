@@ -16,8 +16,8 @@ protocol RuuviTagSensorRecord {
     var movementCounter: Int? { get }
     var measurementSequenceNumber: Int? { get }
     var txPower: Int? { get }
-    
-    //offset correction
+
+    // offset correction
     var temperatureOffset: Double { get }
     var humidityOffset: Double { get }
     var pressureOffset: Double { get }
@@ -86,8 +86,8 @@ struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     var movementCounter: Int?
     var measurementSequenceNumber: Int?
     var txPower: Int?
-    
-    //offset correction
+
+    // offset correction
     var temperatureOffset: Double
     var humidityOffset: Double
     var pressureOffset: Double
@@ -143,15 +143,15 @@ struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
     var txPower: Int? {
         return object.txPower
     }
-    
+
     var temperatureOffset: Double {
         return object.temperatureOffset
     }
-    
+
     var humidityOffset: Double {
         return object.humidityOffset
     }
-    
+
     var pressureOffset: Double {
         return object.pressureOffset
     }

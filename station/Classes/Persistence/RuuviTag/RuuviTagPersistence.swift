@@ -21,7 +21,7 @@ protocol RuuviTagPersistence {
         after date: Date,
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RUError>
-    
+
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RUError>
     func updateOffsetCorrection(type: OffsetCorrectionType,
                                 with value: Double?,

@@ -54,13 +54,13 @@ class TagChartsPresenter: TagChartsModuleInput {
             syncViewModel()
         }
     }
-    
+
     private var sensorSettings: SensorSettings! {
         didSet {
             interactor.updateSensorSettings(settings: sensorSettings)
         }
     }
-    
+
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
             self.view.viewModel = self.viewModel
@@ -312,8 +312,8 @@ extension TagChartsPresenter {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
                                                                 ? .registered : .empty
-            
-            //get lastest sensorSettings
+
+            // get lastest sensorSettings
             ruuviTagTrunk.readSensorSettings(ruuviTag).on { settings in
                 self.sensorSettings = settings
             }
@@ -460,7 +460,7 @@ extension TagChartsPresenter {
                             }
             })
     }
-    
+
     private func startObservingSensorSettingsChanges() {
         sensorSettingsToken = ruuviTagReactor.observe(ruuviTag, { (reactorChange) in
             switch reactorChange {

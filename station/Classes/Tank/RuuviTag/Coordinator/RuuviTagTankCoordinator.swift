@@ -46,7 +46,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if ruuviTag.macId != nil {
-            sqlite.delelteOffsetCorrection(ruuviTag: ruuviTag).on (success: { [weak self] success in
+            sqlite.delelteOffsetCorrection(ruuviTag: ruuviTag).on(success: { [weak self] success in
                 self?.sqlite.delete(ruuviTag).on(success: { [weak self] success in
                     if let luid = ruuviTag.luid {
                         self?.backgroundPersistence.deleteCustomBackground(for: luid)

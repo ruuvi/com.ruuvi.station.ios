@@ -96,7 +96,7 @@ class OffsetCorrectionViewModel {
             self.offsetCorrectionValue.value = sensorSettings.temperatureOffset
             self.offsetCorrectionDate.value = sensorSettings.temperatureOffsetDate
         }
-        
+
         self.hasOffsetValue.value = self.offsetCorrectionValue.value != nil
     }
 }

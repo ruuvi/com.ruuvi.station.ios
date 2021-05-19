@@ -19,7 +19,7 @@ extension RuuviTagDataRealm {
                                                temperatureOffset: temperatureOffset,
                                                humidityOffset: humidityOffset,
                                                pressureOffset: pressureOffset)
-        
+
         return AnyRuuviTagSensorRecord(object: inner)
     }
 }

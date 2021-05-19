@@ -87,7 +87,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         lastMeasurement = nil
         createChartModules()
     }
-    
+
     func updateSensorSettings(settings: SensorSettings?) {
         sensorSettings = settings
     }
