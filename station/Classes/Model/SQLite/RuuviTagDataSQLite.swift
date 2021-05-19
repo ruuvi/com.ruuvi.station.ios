@@ -81,7 +81,7 @@ extension RuuviTagDataSQLite: FetchableRecord {
         temperatureOffset = row[RuuviTagDataSQLite.temperatureOffsetColumn]
         humidityOffset = row[RuuviTagDataSQLite.humidityOffsetColumn]
         pressureOffset = row[RuuviTagDataSQLite.pressureOffsetColumn]
-        
+
     }
 }
 

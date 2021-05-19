@@ -2,7 +2,7 @@ import Foundation
 import BTKit
 
 class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
-    
+
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
@@ -11,7 +11,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     var alertService: AlertService!
     var settings: Settings!
     var pullWebDaemon: PullWebDaemon!
-    
+
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
     private var connectTokens = [String: ObservationToken]()
@@ -21,7 +21,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var savedDate = [String: Date]() // [luid: date]
     private var ruuviTagsToken: RUObservationToken?
     private var sensorSettingsTokens = [String: RUObservationToken]()
-    
+
     override init() {
         super.init()
         connectionAddedToken = NotificationCenter
@@ -40,7 +40,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                                               modes: [RunLoop.Mode.default.rawValue])
                             }
                          })
-        
+
         connectionRemovedToken = NotificationCenter
             .default
             .addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection,
@@ -57,13 +57,13 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                             }
                          })
     }
-    
+
     deinit {
         invalidateTokens()
         connectionAddedToken?.invalidate()
         connectionRemovedToken?.invalidate()
     }
-    
+
     func start() {
         start { [weak self] in
             self?.invalidateTokens()
@@ -88,11 +88,10 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                     sSelf.post(error: RUError.persistence(error))
                 }
             })
-            
-            
+
         }
     }
-    
+
     func stop() {
         perform(#selector(RuuviTagHeartbeatDaemonBTKit.stopDaemon),
                 on: thread,
@@ -100,7 +99,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                 waitUntilDone: false,
                 modes: [RunLoop.Mode.default.rawValue])
     }
-    
+
     @objc private func stopDaemon() {
         invalidateTokens()
         connectionPersistence.keepConnectionUUIDs.forEach({ disconnect(uuid: $0.value) })
@@ -128,12 +127,12 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }
         }
     }
-    
+
     private func heartbeatHandler() -> ((RuuviTagHeartbeatDaemonBTKit, BTDevice) -> Void)? {
         return { [weak self] observer, device in
             observer.pullWebDaemon.wakeUp()
             if let ruuviTag = device.ruuvi?.tag {
-                var sensorSettings: SensorSettings? = nil
+                var sensorSettings: SensorSettings?
                 if let ruuviTagSensor = observer.ruuviTags
                     .first(where: { $0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId }),
                    let settings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id }) {
@@ -156,7 +155,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }
         }
     }
-    
+
     private func disconnectedHandler(for uuid: String) ->
     ((RuuviTagHeartbeatDaemonBTKit, BTDisconnectResult) -> Void)? {
         return { observer, result in
@@ -187,15 +186,15 @@ extension RuuviTagHeartbeatDaemonBTKit {
             .filter { (luid) -> Bool in
                 ruuviTags.contains(where: { $0.luid?.any == luid }) && !connectTokens.keys.contains(luid.value)
             }.forEach({ connect(uuid: $0.value) })
-        
+
         connectionPersistence.keepConnectionUUIDs
             .filter { (luid) -> Bool in
                 !ruuviTags.contains(where: { $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
             }.forEach({ disconnect(uuid: $0.value) })
-        
+
         restartSensorSettingsObservers()
     }
-    
+
     @objc private func connect(uuid: String) {
         disconnectTokens[uuid]?.invalidate()
         disconnectTokens.removeValue(forKey: uuid)
@@ -207,7 +206,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                      heartbeat: heartbeatHandler(),
                      disconnected: disconnectedHandler(for: uuid))
     }
-    
+
     @objc private func disconnect(uuid: String) {
         connectTokens[uuid]?.invalidate()
         connectTokens.removeValue(forKey: uuid)
@@ -219,7 +218,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         options: [.callbackQueue(.untouch)],
                         result: disconnectedHandler(for: uuid))
     }
-    
+
     private func invalidateTokens() {
         autoreleasepool {
             ruuviTagsToken?.invalidate()
@@ -231,7 +230,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             sensorSettingsTokens.removeAll()
         }
     }
-    
+
     private func post(error: Error) {
         DispatchQueue.main.async {
             NotificationCenter
@@ -241,13 +240,13 @@ extension RuuviTagHeartbeatDaemonBTKit {
                       userInfo: [RuuviTagHeartbeatDaemonDidFailKey.error: error])
         }
     }
-    
+
     private func notifyDidDisconnect(uuid: String) {
         DispatchQueue.main.async { [weak self] in
             self?.localNotificationsManager.showDidDisconnect(uuid: uuid)
         }
     }
-    
+
     private func notifyDidConnect(uuid: String) {
         DispatchQueue.main.async { [weak self] in
             self?.localNotificationsManager.showDidConnect(uuid: uuid)
@@ -255,16 +254,15 @@ extension RuuviTagHeartbeatDaemonBTKit {
     }
 }
 
-//MARK: - Sensor Settings
+// MARK: - Sensor Settings
 extension RuuviTagHeartbeatDaemonBTKit {
     private func restartSensorSettingsObservers() {
         sensorSettingsTokens.forEach({ $0.value.invalidate() })
         sensorSettingsTokens.removeAll()
-        
+
         ruuviTags.forEach { ruuviTagSensor in
             sensorSettingsTokens[ruuviTagSensor.id] = ruuviTagReactor.observe(
-                ruuviTagSensor,
-                { [weak self] change in
+                ruuviTagSensor, { [weak self] change in
                     switch change {
                     case .update(let updateSensorSettings):
                         if let updateIndex = self?.sensorSettingsList.firstIndex(

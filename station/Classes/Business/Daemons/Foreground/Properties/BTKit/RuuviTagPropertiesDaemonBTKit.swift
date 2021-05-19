@@ -2,35 +2,35 @@ import Foundation
 import BTKit
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
-    
+
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagReactor: RuuviTagReactor!
     var foreground: BTForeground!
     var idPersistence: IDPersistence!
     var realmPersistence: RuuviTagPersistenceRealm!
     var sqiltePersistence: RuuviTagPersistenceSQLite!
-    
+
     private var ruuviTagsToken: RUObservationToken?
     private var observeTokens = [ObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var isTransitioningFromRealmToSQLite = false
-    
+
     @objc private class RuuviTagPropertiesDaemonPair: NSObject {
         var ruuviTag: AnyRuuviTagSensor
         var device: RuuviTag
-        
+
         init(ruuviTag: AnyRuuviTagSensor, device: RuuviTag) {
             self.ruuviTag = ruuviTag
             self.device = device
         }
     }
-    
+
     deinit {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         ruuviTagsToken?.invalidate()
     }
-    
+
     func start() {
         start { [weak self] in
             self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
@@ -56,7 +56,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             })
         }
     }
-    
+
     func stop() {
         perform(#selector(RuuviTagPropertiesDaemonBTKit.stopDaemon),
                 on: thread,
@@ -64,14 +64,14 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 waitUntilDone: false,
                 modes: [RunLoop.Mode.default.rawValue])
     }
-    
+
     @objc private func stopDaemon() {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
         ruuviTagsToken?.invalidate()
         stopWork()
     }
-    
+
     private func restartObserving() {
         observeTokens.forEach({ $0.invalidate() })
         observeTokens.removeAll()
@@ -93,7 +93,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             })
         }
     }
-    
+
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
         if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
             // this is the case when data format 3 tag (2.5.9) changes format
@@ -133,10 +133,10 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 assertionFailure("Should never be there")
             }
         }
-        
+
         // while transitioning tag from realm to sqlite - stop operating
         guard !isTransitioningFromRealmToSQLite else { return }
-        
+
         // version and isConnectable change is allowed only when
         // the tag is in SQLite and has MAC
         if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
@@ -157,7 +157,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             }
         }
     }
-    
+
     private func post(error: Error) {
         DispatchQueue.main.async {
             NotificationCenter

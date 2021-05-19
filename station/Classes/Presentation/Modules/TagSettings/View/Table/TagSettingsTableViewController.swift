@@ -88,8 +88,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var txPowerTitleLabel: UILabel!
     @IBOutlet weak var mcTitleLabel: UILabel!
     @IBOutlet weak var msnTitleLabel: UILabel!
-    
-    
+
     @IBOutlet weak var temperatureOffsetCorrectionCell: UITableViewCell!
     @IBOutlet weak var humidityOffsetCorrectionCell: UITableViewCell!
     @IBOutlet weak var pressureOffsetCorrectionCell: UITableViewCell!
@@ -99,7 +98,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityOffsetValueLabel: UILabel!
     @IBOutlet weak var pressureOffsetTitleLabel: UILabel!
     @IBOutlet weak var pressureOffsetValueLabel: UILabel!
-    
+
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
 
     var viewModel: TagSettingsViewModel? {
@@ -157,7 +156,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         pressureAlertControlsCell.textField.placeholder = alertPlaceholder
         connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
         movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
-        
+
         temperatureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
         humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
         pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
@@ -790,7 +789,7 @@ extension TagSettingsTableViewController {
                 label.text = "TagSettings.ConnectStatus.Disconnected".localized()
             }
         }
-        
+
         bindOffsetCorrectionCells()
     }
 
@@ -1363,21 +1362,21 @@ extension TagSettingsTableViewController {
             }
         }
     }
-    
+
     // swiftlint:disable:next function_body_length
     private func bindOffsetCorrectionCells() {
         guard isViewLoaded, let viewModel = viewModel else {
             return
         }
-        
+
         temperatureOffsetValueLabel.bind(viewModel.temperatureOffsetCorrection) {[weak self] label, value in
             label.text = self?.measurementService.temperatureOffsetCorrectionString(for: value ?? 0)
         }
-        
+
         humidityOffsetValueLabel.bind(viewModel.humidityOffsetCorrection) {[weak self] label, value in
             label.text = self?.measurementService.humidityOffsetCorrectionString(for: value ?? 0)
         }
-        
+
         pressureOffsetValueLabel.bind(viewModel.pressureOffsetCorrection) {[weak self]  label, value in
             label.text = self?.measurementService.pressureOffsetCorrectionString(for: value ?? 0)
         }

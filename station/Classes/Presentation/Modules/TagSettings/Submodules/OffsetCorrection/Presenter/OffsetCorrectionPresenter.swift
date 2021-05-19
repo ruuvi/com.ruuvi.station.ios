@@ -11,19 +11,19 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var ruuviTagTrunk: RuuviTagTrunk!
     var settings: Settings!
-    
+
     private var ruuviTagObserveToken: ObservationToken?
     private var ruuviTagObserveLastRecordToken: RUObservationToken?
-    
+
     private var temperatureUnitSettingToken: NSObjectProtocol?
     private var humidityUnitSettingToken: NSObjectProtocol?
     private var pressureUnitSettingToken: NSObjectProtocol?
-    
+
     private var ruuviTag: RuuviTagSensor!
     private var sensorSettings: SensorSettings!
-    
+
     private var lastSensorRecord: RuuviTagSensorRecord?
-    
+
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
         self.sensorSettings = sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
@@ -56,15 +56,15 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         observeRuuviTagUpdate()
         startObservingSettingsChanges()
     }
-    
+
     func viewDidOpenCalibrateDialog() {
         view.showCalibrateDialog()
     }
-    
+
     func viewDidOpenClearDialog() {
         view.showClearConfirmationDialog()
     }
-    
+
     func viewDidSetCorrectValue(correctValue: Double) {
         var offset: Double = 0
         switch view.viewModel.type {
@@ -79,7 +79,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             type: view.viewModel.type,
             with: offset,
             of: self.ruuviTag,
-            lastOriginalRecord: lastSensorRecord).on (success: { [weak self] settings in
+            lastOriginalRecord: lastSensorRecord).on(success: { [weak self] settings in
                 self?.sensorSettings = settings
                 self?.view.viewModel.update(sensorSettings: settings)
                 if let lastRecord = self?.lastSensorRecord {
@@ -91,14 +91,14 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     func viewDidClearOffsetValue() {
         ruuviTagTrunk.updateOffsetCorrection(
             type: view.viewModel.type,
             with: nil,
             of: self.ruuviTag,
             lastOriginalRecord: lastSensorRecord
-        ).on (success: { [weak self] sensorSettings in
+        ).on(success: { [weak self] sensorSettings in
             self?.sensorSettings = sensorSettings
             self?.view.viewModel.update(sensorSettings: sensorSettings)
             if let lastRecord = self?.lastSensorRecord {
@@ -110,7 +110,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             self?.errorPresenter.present(error: error)
         })
     }
-    
+
     private func observeRuuviTagUpdate() {
         guard let luid = self.ruuviTag.luid?.value else {
             return
@@ -125,7 +125,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             }
         }
     }
-    
+
     private func startObservingSettingsChanges() {
         temperatureUnitSettingToken = NotificationCenter.default
             .addObserver(forName: .TemperatureUnitDidChange,

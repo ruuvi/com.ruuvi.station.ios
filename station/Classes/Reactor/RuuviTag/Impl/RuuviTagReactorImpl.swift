@@ -264,7 +264,7 @@ class RuuviTagReactorImpl: RuuviTagReactor {
             let delete = sensorSettingsCombine.deleteSubject.sink { value in
                 block(.delete(value))
             }
-            
+
             return RUObservationToken {
                 insert.cancel()
                 update.cancel()

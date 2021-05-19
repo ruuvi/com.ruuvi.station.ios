@@ -111,7 +111,7 @@ extension RuuviTagTrunkCoordinator {
             return realm.readSensorSettings(ruuviTag)
         }
     }
-    
+
     func updateOffsetCorrection(type: OffsetCorrectionType,
                                 with value: Double?,
                                 of ruuviTag: RuuviTagSensor,

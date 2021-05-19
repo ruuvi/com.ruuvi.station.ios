@@ -25,7 +25,7 @@ class RuuviTagDataRealm: Object {
     let movementCounter = RealmOptional<Int>()
     let measurementSequenceNumber = RealmOptional<Int>()
     let txPower = RealmOptional<Int>()
-    
+
     @objc dynamic var  temperatureOffset: Double = 0.0
     @objc dynamic var  humidityOffset: Double = 0.0
     @objc dynamic var  pressureOffset: Double = 0.0
@@ -42,7 +42,7 @@ class RuuviTagDataRealm: Object {
         return "compoundKey"
     }
 
-    //this one is not use anymore, consider to delete
+    // this one is not use anymore, consider to delete
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
         self.init()
         self.ruuviTag = ruuviTag
