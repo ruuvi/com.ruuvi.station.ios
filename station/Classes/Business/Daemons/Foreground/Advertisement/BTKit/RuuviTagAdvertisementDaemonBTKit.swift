@@ -117,21 +117,21 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
             })
             sensorSettingsTokens.append(ruuviTagReactor.observe(ruuviTag, { [weak self] change in
                 switch change {
+                case .delete(let sensorSettings):
+                    if let dIndex = self?.sensorSettingsList.firstIndex(
+                        where: { $0.ruuviTagId == sensorSettings.ruuviTagId }
+                    ) {
+                        self?.sensorSettingsList.remove(at: dIndex)
+                    }
                 case .insert(let sensorSettings):
                     self?.sensorSettingsList.append(sensorSettings)
-                case .update(let updateSensorSettings):
-                    if let updateIndex = self?.sensorSettingsList.firstIndex(
-                        where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                case .update(let sensorSettings):
+                    if let uIndex = self?.sensorSettingsList.firstIndex(
+                        where: { $0.ruuviTagId == sensorSettings.ruuviTagId }
                     ) {
-                        self?.sensorSettingsList[updateIndex] = updateSensorSettings
+                        self?.sensorSettingsList[uIndex] = sensorSettings
                     } else {
-                        self?.sensorSettingsList.append(updateSensorSettings)
-                    }
-                case .delete(let deleteSensorSettings):
-                    if let deleteIndex = self?.sensorSettingsList.firstIndex(
-                        where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
-                    ) {
-                        self?.sensorSettingsList.remove(at: deleteIndex)
+                        self?.sensorSettingsList.append(sensorSettings)
                     }
                 default: break
                 }
