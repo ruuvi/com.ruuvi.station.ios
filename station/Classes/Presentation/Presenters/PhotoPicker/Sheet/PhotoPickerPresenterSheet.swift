@@ -28,15 +28,19 @@ extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigati
 // MARK: - UIImagePickerControllerDelegate
 extension PhotoPickerPresenterSheet: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard controller.documentPickerMode == .open,
+              let url = urls.first, url.startAccessingSecurityScopedResource()
+        else { return }
         defer {
-            controller.dismiss(animated: true, completion: nil)
+            DispatchQueue.main.async {
+                url.stopAccessingSecurityScopedResource()
+            }
         }
-        guard let imageUrl = urls.first,
-            let imageData = try? Data(contentsOf: imageUrl),
-            let image = UIImage(data: imageData) else {
-            return
-        }
-        self.delegate?.photoPicker(presenter: self, didPick: image)
+        guard let image = UIImage(contentsOfFile: url.path),
+              let jpegData = image.jpegData(compressionQuality: 1.0),
+              let imageCopy = UIImage(data: jpegData) else { return }
+        controller.dismiss(animated: true)
+        self.delegate?.photoPicker(presenter: self, didPick: imageCopy)
     }
 
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
