@@ -94,7 +94,6 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
         ruuviTagsToken?.invalidate()
         stopWork()
     }
-    
     private func reloadSensorSettings() {
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in

@@ -1363,7 +1363,6 @@ extension TagSettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next function_body_length
     private func bindOffsetCorrectionCells() {
         guard isViewLoaded, let viewModel = viewModel else {
             return

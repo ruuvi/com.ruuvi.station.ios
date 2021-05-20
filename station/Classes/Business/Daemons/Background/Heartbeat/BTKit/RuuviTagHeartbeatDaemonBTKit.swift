@@ -49,7 +49,8 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
                          queue: .main,
                          using: { [weak self] (notification) in
                             guard let sSelf = self else { return }
-                            if let userInfo = notification.userInfo, let uuid = userInfo[CPDidStopToKeepConnectionKey.uuid] as? String {
+                            if let userInfo = notification.userInfo,
+                               let uuid = userInfo[CPDidStopToKeepConnectionKey.uuid] as? String {
                                 sSelf.perform(#selector(RuuviTagHeartbeatDaemonBTKit.disconnect(uuid:)),
                                               on: sSelf.thread,
                                               with: uuid,
@@ -130,7 +131,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
     }
 
     private func heartbeatHandler() -> ((RuuviTagHeartbeatDaemonBTKit, BTDevice) -> Void)? {
-        return { [weak self] observer, device in
+        return { observer, device in
             observer.pullWebDaemon.wakeUp()
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings?
@@ -192,7 +193,6 @@ extension RuuviTagHeartbeatDaemonBTKit {
             .filter { (luid) -> Bool in
                 !ruuviTags.contains(where: { $0.luid?.any == luid }) && connectTokens.keys.contains(luid.value)
             }.forEach({ disconnect(uuid: $0.value) })
-        
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
             ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in

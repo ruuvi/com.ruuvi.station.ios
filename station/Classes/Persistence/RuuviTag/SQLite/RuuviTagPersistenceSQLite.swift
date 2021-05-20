@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import BTKit
 import Foundation
 import Future
@@ -6,7 +7,7 @@ import GRDB
 import FirebaseCrashlytics
 #endif
 
-// swiftlint:disable:next type_body_length
+// swiftlint:disable type_body_length
 class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {
     typealias Entity = RuuviTagSQLite
     typealias Record = RuuviTagDataSQLite
@@ -331,6 +332,7 @@ extension RuuviTagPersistenceSQLite {
         return promise.future
     }
 
+    // swiftlint:disable:next function_body_length
     func updateOffsetCorrection(type: OffsetCorrectionType,
                                 with value: Double?,
                                 of ruuviTag: RuuviTagSensor,
@@ -418,3 +420,4 @@ extension RuuviTagPersistenceSQLite {
         return promise.future
     }
 }
+// swiftlint:enable file_length

@@ -2,6 +2,7 @@ import Foundation
 import GRDB
 import Future
 
+// swiftlint:disable type_body_length
 class RuuviTagReactorImpl: RuuviTagReactor {
     typealias SQLiteEntity = RuuviTagSQLite
     typealias RealmEntity = RuuviTagRealm

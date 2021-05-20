@@ -316,13 +316,13 @@ extension TagSettingsPresenter {
             print(macId)
             // FIXME
             // viewModel.background.value = backgroundPersistence.background(for: mac)
-            //            viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId)
-            //            viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: macId)
-            //            viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: macId)
-            //            viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId)
-            //            viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId)
-            //            viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId)
-            //            viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId)
+            // viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId)
+            // viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: macId)
+            // viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: macId)
+            // viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId)
+            // viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId)
+            // viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId)
+            // viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId)
         } else {
             assertionFailure()
         }
