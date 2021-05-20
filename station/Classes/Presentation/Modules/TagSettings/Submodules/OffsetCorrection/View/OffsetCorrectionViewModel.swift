@@ -16,15 +16,13 @@ class OffsetCorrectionViewModel {
     let pressureUnit: Observable<UnitPressure?> = Observable<UnitPressure?>()
 
     var title: String {
-        get {
-            switch type {
-            case .humidity:
-                return "OffsetCorrection.Humidity.Title".localized()
-            case .pressure:
-                return "OffsetCorrection.Pressure.Title".localized()
-            default:
-                return "OffsetCorrection.Temperature.Title".localized()
-            }
+        switch type {
+        case .humidity:
+            return "OffsetCorrection.Humidity.Title".localized()
+        case .pressure:
+            return "OffsetCorrection.Pressure.Title".localized()
+        default:
+            return "OffsetCorrection.Temperature.Title".localized()
         }
     }
 

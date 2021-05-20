@@ -145,7 +145,8 @@ extension CardsPresenter: CardsViewOutput {
             self.router.openTagSettings(ruuviTag: ruuviTag,
                                         temperature: viewModel.temperature.value,
                                         humidity: humidity,
-                                        sensorSettings: sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value }),
+                                        sensorSettings: sensorSettingsList.first(
+                                            where: { $0.ruuviTagId == viewModel.id.value }),
                                         output: self)
         } else if viewModel.type == .web,
                   let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
@@ -312,7 +313,7 @@ extension CardsPresenter {
             } else {
                 assertionFailure()
             }
-            ruuviTagTrunk.readLast(ruuviTag).on { [weak self] record in
+            ruuviTagTrunk.readLast(ruuviTag).on { record in
                 if let record = record {
                     viewModel.update(record)
                 }
@@ -404,7 +405,8 @@ extension CardsPresenter {
                                           result: { (observer, result) in
                                             switch result {
                                             case .success(let rssi):
-                                                if let viewModel = observer.viewModels.first(where: { $0.luid.value == luid }) {
+                                                if let viewModel = observer.viewModels
+                                                    .first(where: { $0.luid.value == luid }) {
                                                     viewModel.update(rssi: rssi, animated: true)
                                                 }
                                             case .failure(let error):
@@ -433,7 +435,6 @@ extension CardsPresenter {
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                     let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
                     viewModel.update(ruuviTag.with(sensorSettings: sensorSettings))
-                    // self?.updateAlertState(for: viewModel)
                 }
             })
         }
@@ -448,10 +449,10 @@ extension CardsPresenter {
                 advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] (_, device) in
                     if let ruuviTag = device.ruuvi?.tag,
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                        let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
+                        let sensorSettings = self?.sensorSettingsList
+                            .first(where: { $0.ruuviTagId == viewModel.id.value })
                         viewModel.update(ruuviTag.with(sensorSettings: sensorSettings))
                         viewModel.update(rssi: ruuviTag.rssi)
-                        // self?.updateAlertState(for: viewModel)
                     }
                 })
             }
@@ -778,11 +779,11 @@ extension CardsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-                            guard let `self` = self else { return }
+                            guard let sSelf = self else { return }
                             if let userInfo = notification.userInfo,
                                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String {
-                                `self`.viewModels.filter({ $0.luid.value == uuid.luid.any }).forEach({ (viewModel) in
-                                    if `self`.alertService.hasRegistrations(for: uuid) {
+                                sSelf.viewModels.filter({ $0.luid.value == uuid.luid.any }).forEach({ (viewModel) in
+                                    if sSelf.alertService.hasRegistrations(for: uuid) {
                                         viewModel.alertState.value = .registered
                                     } else {
                                         viewModel.alertState.value = .empty
@@ -803,8 +804,10 @@ extension CardsPresenter {
                             if let userInfo = notification.userInfo,
                                let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier {
                                 self?.viewModels.filter({ $0.luid.value == luid.any }).forEach({ (viewModel) in
-                                    viewModel.humidityOffset.value = self?.calibrationService.humidityOffset(for: luid).0
-                                    viewModel.humidityOffsetDate.value = self?.calibrationService.humidityOffset(for: luid).1
+                                    viewModel.humidityOffset.value =
+                                        self?.calibrationService.humidityOffset(for: luid).0
+                                    viewModel.humidityOffsetDate.value =
+                                        self?.calibrationService.humidityOffset(for: luid).1
                                 })
                             }
                          })

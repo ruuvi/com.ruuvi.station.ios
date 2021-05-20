@@ -43,60 +43,63 @@ class OffsetCorrectionAppleViewController: UIViewController {
 
     private func bindViewModel() {
         if isViewLoaded {
-            originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
-                switch self?.viewModel.type {
-                case .humidity:
-                    label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
-                case .pressure:
-                    label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
-                default:
-                    label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
-                }
+            bindLabels()
+            bindViews()
+        }
+    }
+    private func bindViews() {
+        correctedValueView.bind(viewModel.hasOffsetValue) {[weak self] _, hasValue in
+            if let hasValue = hasValue, hasValue == true {
+                self?.correctedValueView.isHidden = false
+                self?.clearButton.isEnabled = true
+                self?.clearButton.backgroundColor = UIColor(red: 21.0 / 255,
+                                                            green: 141.0 / 255,
+                                                            blue: 165.0 / 255,
+                                                            alpha: 1)
+            } else {
+                self?.correctedValueView.isHidden = true
+                self?.clearButton.backgroundColor = UIColor.darkGray
+                self?.clearButton.isEnabled = false
+            }
+        }
+    }
+    private func bindLabels() {
+        originalValueLabel.bind(viewModel.originalValue) { [weak self] label, value in
+            switch self?.viewModel.type {
+            case .humidity:
+                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
+            case .pressure:
+                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
+            default:
+                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
+            }
+        }
+        originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] _, date in
+            if let date = date {
+                self?.updatedAt = date
+            }
+        }
+        offsetValueLabel.bind(viewModel.offsetCorrectionValue) { [weak self] label, value in
+            let text: String?
+            switch self?.viewModel.type {
+            case .humidity:
+                text = self?.measurementService.humidityOffsetCorrectionString(for: value ?? 0)
+            case .pressure:
+                text = self?.measurementService.pressureOffsetCorrectionString(for: value ?? 0)
+            default:
+                text = self?.measurementService.temperatureOffsetCorrectionString(for: value ?? 0)
             }
 
-            originalValueUpdateTimeLabel.bind(viewModel.updateAt) {[weak self] _, date in
-                if let date = date {
-                    self?.updatedAt = date
-                }
-            }
-
-            offsetValueLabel.bind(viewModel.offsetCorrectionValue) { [weak self] label, value in
-                let text: String?
-                switch self?.viewModel.type {
-                case .humidity:
-                    text = self?.measurementService.humidityOffsetCorrectionString(for: value ?? 0)
-                case .pressure:
-                    text = self?.measurementService.pressureOffsetCorrectionString(for: value ?? 0)
-                default:
-                    text = self?.measurementService.temperatureOffsetCorrectionString(for: value ?? 0)
-                }
-
-                label.text = "(\(text!))"
-            }
-            correctedValueLabel.bind(viewModel.correctedValue) { [weak self] label, value in
-                switch self?.viewModel.type {
-                case .humidity:
-                    label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
-                case .pressure:
-                    label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
-                default:
-                    label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
-                }
-            }
-
-            self.correctedValueView.bind(viewModel.hasOffsetValue) {[weak self] _, hasValue in
-                if let hasValue = hasValue, hasValue == true {
-                    self?.correctedValueView.isHidden = false
-                    self?.clearButton.isEnabled = true
-                    self?.clearButton.backgroundColor = UIColor(red: 21.0 / 255,
-                                                                green: 141.0 / 255,
-                                                                blue: 165.0 / 255,
-                                                                alpha: 1)
-                } else {
-                    self?.correctedValueView.isHidden = true
-                    self?.clearButton.backgroundColor = UIColor.darkGray
-                    self?.clearButton.isEnabled = false
-                }
+            label.text = "(\(text!))"
+        }
+        correctedValueLabel.bind(viewModel.correctedValue) { [weak self] label, value in
+            switch self?.viewModel.type {
+            case .humidity:
+                label.text = "\((value.bound * 100).round(to: 2))\("%".localized())"
+            case .pressure:
+                label.text = self?.measurementService.string(for: Pressure(value, unit: .hectopascals))
+            default:
+                label.text = self?.measurementService.string(for: Temperature(value, unit: .celsius))
             }
         }
     }
@@ -136,7 +139,6 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         default:
             let unit = self.viewModel.temperatureUnit.value ?? .celsius
             message = "OffsetCorrection.Dialog.Calibration.EnterTemperature".localizedFormat(unit.symbol)
-            break
         }
 
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)

@@ -12,6 +12,7 @@ class GATTServiceQueue: GATTService {
         return queue
     }()
 
+    // swiftlint:disable function_parameter_count
     @discardableResult
     func syncLogs(uuid: String,
                   mac: String?,
@@ -42,6 +43,7 @@ class GATTServiceQueue: GATTService {
         }
         return promise.future
     }
+    // swiftlint:enable function_parameter_count
 
     func isSyncingLogs(with uuid: String) -> Bool {
         return queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })

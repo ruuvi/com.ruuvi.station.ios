@@ -64,7 +64,7 @@ class SensorSettingsRxSwift {
                         .map { $0.element }
                     for ins in insertions {
                         sSelf.insertSubject.onNext(sensorSettings[ins].sensorSettings)
-                        sSelf.ruuviTagRealmCache.insert(sensorSettings[ins].sensorSettings, at: ins) // TODO: test if ok with multiple
+                        sSelf.ruuviTagRealmCache.insert(sensorSettings[ins].sensorSettings, at: ins)
                     }
                     for mod in modifications {
                         sSelf.updateSubject.onNext(sensorSettings[mod].sensorSettings)
