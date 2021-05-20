@@ -15,6 +15,7 @@ class SignInPresenter: NSObject {
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
     var userApi: RuuviNetworkUserApi!
+    var networkService: NetworkService!
 
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -167,15 +168,19 @@ extension SignInPresenter {
         activityPresenter.increment()
         userApi.verify(requestModel)
             .on(success: { [weak self] (response) in
-                guard let sSelf = self else {
-                    return
-                }
+                guard let sSelf = self else { return }
                 sSelf.keychainService.ruuviUserApiKey = response.accessToken
-                sSelf.output?.signIn(module: sSelf, didSuccessfulyLogin: nil)
+                sSelf.networkService.updateTagsInfo(for: .userApi).on(success: { [weak sSelf] _ in
+                    guard let ssSelf = sSelf else { return }
+                    ssSelf.activityPresenter.decrement()
+                    ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)
+                }, failure: { [weak self] error in
+                    self?.activityPresenter.decrement()
+                    self?.errorPresenter.present(error: error)
+                })
             }, failure: { [weak self] (error) in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
                 self?.activityPresenter.decrement()
+                self?.errorPresenter.present(error: error)
             })
     }
 
