@@ -340,57 +340,46 @@ extension RuuviTagPersistenceSQLite {
         let promise = Promise<SensorSettings, RUError>()
         assert(ruuviTag.macId != nil)
         do {
-            var sqliteSensorSettings: Settings?
-
+            var isAddNewRecord = true
+            var sqliteSensorSettings = Settings(ruuviTagId: ruuviTag.id,
+                                                          temperatureOffset: nil,
+                                                          temperatureOffsetDate: nil,
+                                                          humidityOffset: nil,
+                                                          humidityOffsetDate: nil,
+                                                          pressureOffset: nil,
+                                                          pressureOffsetDate: nil)
             try database.dbPool.read { db in
                 let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
-                sqliteSensorSettings = try request.fetchOne(db)
+                if let existingSettings = try request.fetchOne(db) {
+                    sqliteSensorSettings = existingSettings
+                    isAddNewRecord = false
+                }
             }
-            if sqliteSensorSettings != nil {
-                switch type {
-                case .humidity:
-                    sqliteSensorSettings?.humidityOffset = value
-                    sqliteSensorSettings?.humidityOffsetDate = value == nil ? nil : Date()
-                case .pressure:
-                    sqliteSensorSettings?.pressureOffset = value
-                    sqliteSensorSettings?.pressureOffsetDate = value == nil ? nil : Date()
-                default:
-                    sqliteSensorSettings?.temperatureOffset = value
-                    sqliteSensorSettings?.temperatureOffsetDate = value == nil ? nil : Date()
-                }
-                try database.dbPool.write { db in
-                    try sqliteSensorSettings!.update(db)
-                }
-            } else {
-                sqliteSensorSettings = Settings(ruuviTagId: ruuviTag.id,
-                                                temperatureOffset: nil,
-                                                temperatureOffsetDate: nil,
-                                                humidityOffset: nil,
-                                                humidityOffsetDate: nil,
-                                                pressureOffset: nil,
-                                                pressureOffsetDate: nil)
-                switch type {
-                case .humidity:
-                    sqliteSensorSettings?.humidityOffset = value
-                    sqliteSensorSettings?.humidityOffsetDate = value == nil ? nil : Date()
-                case .pressure:
-                    sqliteSensorSettings?.pressureOffset = value
-                    sqliteSensorSettings?.pressureOffsetDate = value == nil ? nil : Date()
-                default:
-                    sqliteSensorSettings?.temperatureOffset = value
-                    sqliteSensorSettings?.temperatureOffsetDate = value == nil ? nil : Date()
-                }
-                try database.dbPool.write { db in
-                    try sqliteSensorSettings!.insert(db)
+            switch type {
+            case .humidity:
+                sqliteSensorSettings.humidityOffset = value
+                sqliteSensorSettings.humidityOffsetDate = value == nil ? nil : Date()
+            case .pressure:
+                sqliteSensorSettings.pressureOffset = value
+                sqliteSensorSettings.pressureOffsetDate = value == nil ? nil : Date()
+            default:
+                sqliteSensorSettings.temperatureOffset = value
+                sqliteSensorSettings.temperatureOffsetDate = value == nil ? nil : Date()
+            }
+            try database.dbPool.write { db in
+                if isAddNewRecord {
+                    try sqliteSensorSettings.insert(db)
+                } else {
+                    try sqliteSensorSettings.update(db)
                 }
             }
             if let sqliteSensorRecord = record {
                 try database.dbPool.write { db in
-                    try sqliteSensorRecord.with(sensorSettings: sqliteSensorSettings?.sensorSettings)
+                    try sqliteSensorRecord.with(sensorSettings: sqliteSensorSettings)
                         .sqlite.insert(db)
                 }
             }
-            promise.succeed(value: sqliteSensorSettings!.sensorSettings)
+            promise.succeed(value: sqliteSensorSettings)
         } catch let e {
             print(e)
             reportToCrashlytics(error: e)
