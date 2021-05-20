@@ -8,7 +8,7 @@ class MigrationManagerToVIPER: MigrationManager {
 
     func migrateIfNeeded() {
         let config = Realm.Configuration(
-            schemaVersion: 10,
+            schemaVersion: 11,
             migrationBlock: { [weak self] migration, oldSchemaVersion in
                 if oldSchemaVersion < 2 {
                     self?.from1to2(migration)

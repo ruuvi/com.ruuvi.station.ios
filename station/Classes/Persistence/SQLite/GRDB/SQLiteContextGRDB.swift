@@ -66,6 +66,11 @@ extension SQLiteGRDBDatabase {
             try RuuviTagDataSQLite.createTable(in: db)
         }
 
+        // v2
+        migrator.registerMigration("Create SensorSettingsSQLite table") { db in
+            try SensorSettingsSQLite.createTable(in: db)
+        }
+
         try migrator.migrate(dbPool)
     }
 }
