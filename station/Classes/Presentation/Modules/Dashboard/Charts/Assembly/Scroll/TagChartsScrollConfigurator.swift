@@ -17,6 +17,8 @@ class TagChartsScrollConfigurator {
         presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.settings = r.resolve(Settings.self)
         presenter.foreground = r.resolve(BTForeground.self)
+        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.background = r.resolve(BTBackground.self)

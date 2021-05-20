@@ -15,6 +15,9 @@ struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     var movementCounter: Int?
     var measurementSequenceNumber: Int?
     var txPower: Int?
+    var temperatureOffset: Double
+    var humidityOffset: Double
+    var pressureOffset: Double
 }
 
 extension RuuviTagDataSQLite {
@@ -33,6 +36,9 @@ extension RuuviTagDataSQLite {
     static let movementCounterColumn = Column("movementCounter")
     static let measurementSequenceNumberColumn = Column("measurementSequenceNumber")
     static let txPowerColumn = Column("txPower")
+    static let temperatureOffsetColumn = Column("temperatureOffset")
+    static let humidityOffsetColumn = Column("humidityOffset")
+    static let pressureOffsetColumn = Column("pressureOffset")
 }
 
 extension RuuviTagDataSQLite: Equatable {
@@ -72,6 +78,10 @@ extension RuuviTagDataSQLite: FetchableRecord {
         movementCounter = row[RuuviTagDataSQLite.movementCounterColumn]
         measurementSequenceNumber = row[RuuviTagDataSQLite.measurementSequenceNumberColumn]
         txPower = row[RuuviTagDataSQLite.txPowerColumn]
+        temperatureOffset = row[RuuviTagDataSQLite.temperatureOffsetColumn]
+        humidityOffset = row[RuuviTagDataSQLite.humidityOffsetColumn]
+        pressureOffset = row[RuuviTagDataSQLite.pressureOffsetColumn]
+
     }
 }
 
@@ -96,6 +106,9 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.movementCounterColumn] = movementCounter
         container[RuuviTagDataSQLite.measurementSequenceNumberColumn] = measurementSequenceNumber
         container[RuuviTagDataSQLite.txPowerColumn] = txPower
+        container[RuuviTagDataSQLite.temperatureOffsetColumn] = temperatureOffset
+        container[RuuviTagDataSQLite.humidityOffsetColumn] = humidityOffset
+        container[RuuviTagDataSQLite.pressureOffsetColumn] = pressureOffset
     }
 }
 
@@ -117,6 +130,9 @@ extension RuuviTagDataSQLite {
             table.column(RuuviTagDataSQLite.movementCounterColumn.name, .integer)
             table.column(RuuviTagDataSQLite.measurementSequenceNumberColumn.name, .integer)
             table.column(RuuviTagDataSQLite.txPowerColumn.name, .integer)
+            table.column(RuuviTagDataSQLite.temperatureOffsetColumn.name, .double).notNull()
+            table.column(RuuviTagDataSQLite.humidityOffsetColumn.name, .double).notNull()
+            table.column(RuuviTagDataSQLite.pressureOffsetColumn.name, .double).notNull()
         })
     }
 }

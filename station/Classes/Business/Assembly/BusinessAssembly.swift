@@ -143,6 +143,7 @@ class BusinessAssembly: Assembly {
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             return daemon
         }.inObjectScope(.container)
 
@@ -153,6 +154,7 @@ class BusinessAssembly: Assembly {
             daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
             daemon.alertService = r.resolve(AlertService.self)
             daemon.settings = r.resolve(Settings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)

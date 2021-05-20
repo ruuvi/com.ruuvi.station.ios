@@ -5,6 +5,7 @@ protocol TagSettingsModuleInput: class {
         ruuviTag: RuuviTagSensor,
         temperature: Temperature?,
         humidity: Humidity?,
+        sensor: SensorSettings?,
         output: TagSettingsModuleOutput
     )
     func dismiss(completion: (() -> Void)?)

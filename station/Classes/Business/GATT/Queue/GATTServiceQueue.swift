@@ -12,18 +12,21 @@ class GATTServiceQueue: GATTService {
         return queue
     }()
 
+    // swiftlint:disable function_parameter_count
     @discardableResult
     func syncLogs(uuid: String,
                   mac: String?,
-                  progress: ((BTServiceProgress) -> Void)? = nil,
-                  connectionTimeout: TimeInterval? = nil,
-                  serviceTimeout: TimeInterval? = nil) -> Future<Bool, RUError> {
+                  settings: SensorSettings?,
+                  progress: ((BTServiceProgress) -> Void)?,
+                  connectionTimeout: TimeInterval?,
+                  serviceTimeout: TimeInterval?) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         if isSyncingLogs(with: uuid) {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
         } else {
             let operation = RuuviTagReadLogsOperation(uuid: uuid,
                                                       mac: mac,
+                                                      settings: settings,
                                                       ruuviTagTank: ruuviTagTank,
                                                       background: background,
                                                       progress: progress,
@@ -40,6 +43,7 @@ class GATTServiceQueue: GATTService {
         }
         return promise.future
     }
+    // swiftlint:enable function_parameter_count
 
     func isSyncingLogs(with uuid: String) -> Bool {
         return queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })

@@ -57,6 +57,10 @@ struct TagSettingsViewModel {
     let movementAlertMutedTill: Observable<Date?> = Observable<Date?>(nil)
     let movementAlertDescription: Observable<String?> = Observable<String?>()
 
+    let temperatureOffsetCorrection: Observable<Double?> = Observable<Double?>()
+    let humidityOffsetCorrection: Observable<Double?> = Observable<Double?>()
+    let pressureOffsetCorrection: Observable<Double?> = Observable<Double?>()
+
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity
         temperature.value = record.temperature
