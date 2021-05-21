@@ -85,6 +85,7 @@ struct CardsViewModel {
         pressure.value = record.pressure
         mac.value = record.macId?.any
         date.value = record.date
+        rssi.value = record.rssi
     }
 
     func update(with ruuviTag: RuuviTag) {
