@@ -104,7 +104,6 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startListeningToSettings()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
-        startListeningToAlertStatus()
         startObservingDidConnectDisconnectNotifications()
         startObservingLocalNotificationsManager()
         startObservingSensorSettingsChanges()
@@ -112,6 +111,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
 
     func viewWillAppear() {
         startObservingBluetoothState()
+        startListeningToAlertStatus()
         tryToShowSwipeUpHint()
         restartObservingData()
         interactor.restartObservingTags()
@@ -366,7 +366,7 @@ extension TagChartsPresenter {
     }
 
     private func syncViewModel() {
-        viewModel = TagChartsViewModel(ruuviTag)
+        let viewModel = TagChartsViewModel(ruuviTag)
         if let luid = ruuviTag.luid {
             viewModel.name.value = ruuviTag.name
             viewModel.background.value = backgroundPersistence.background(for: luid)
@@ -385,6 +385,7 @@ extension TagChartsPresenter {
         } else {
             assertionFailure()
         }
+        self.viewModel = viewModel
     }
     private func restartObservingData() {
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
