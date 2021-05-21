@@ -252,6 +252,8 @@
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi Station is an easy-to-use but powerful tool to supercharge your Ruuvi sensors. Just add some sensors and you're ready to go.";
 "About.AboutHelp.header" = "ABOUT / HELP";
+"About.MeasurementsCount.text" = "Stored measurements: %d";
+"About.DatabaseSize.text" = "Database size: %@";
 "About.More.contents" = "Ruuvi's website: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi on Twitter: twitter.com/ruuvicom";
 "About.More.header" = "MORE TO READ";
 "About.OpenSource.contents" = "Just like Ruuvi sensor, Ruuvi Station is also open-source: github.com/ruuvi";
@@ -260,6 +262,7 @@
 "About.OperationsManual.header" = "OPERATIONS MANUAL";
 "About.Privacy.contents" = "By using the application, you accept Ruuvi's standard terms and conditions\nruuvi.com/terms";
 "About.Privacy.header" = "PRIVACY POLICY";
+"About.TagsCount.text" = "Seen sensors: %d";
 "About.Troubleshooting.contents" = "If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "TROUBLESHOOTING";
 "TagSettings.AirHumidityAlert.title" = "Air Humidity (%@)";
@@ -375,3 +378,4 @@
 "Advanced.Network.title" = "Network";
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
+"SignIn.EnterVerificationCode" = "Please enter verification code";

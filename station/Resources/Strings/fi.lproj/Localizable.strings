@@ -252,6 +252,8 @@
 "h" = "t";
 "About.AboutHelp.contents" = "Ruuvi Station on helppokäyttöinen sovellus Ruuvin tuotteiden hallinnointiin. Aloita lisäämällä antureita.";
 "About.AboutHelp.header" = "TIETOA / APUA";
+"About.MeasurementsCount.text" = "Tallennetut mittaukset: %d";
+"About.DatabaseSize.text" = "Tietokannan koko: %@";
 "About.More.contents" = "Ruuvin kotisivu: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
 "About.More.header" = "LUE LISÄÄ";
 "About.OpenSource.contents" = "Kuten muutkin Ruuvin tuotteet, myös Ruuvi Station perustuu avoimeen lähdekoodiin: github.com/ruuvi";
@@ -260,6 +262,7 @@
 "About.OperationsManual.header" = "KÄYTTÖOHJE";
 "About.Privacy.contents" = "Sovelluksen käyttäminen vaatii Ruuvin käyttöehtojen hyväksymisen\nruuvi.com/terms";
 "About.Privacy.header" = "TIETOSUOJAKÄYTÄNTÖ";
+"About.TagsCount.text" = "Havaitut anturit: %d";
 "About.Troubleshooting.contents" = "Jos törmäät ongelmiin ja ohjeet eivät auttaneet, tarkista vianetsintäkysymykset:  ruuvi.com/troubles";
 "About.Troubleshooting.header" = "VIANETSINTÄ";
 "TagSettings.AirHumidityAlert.title" = "Ilmankosteus (%@)";
@@ -375,3 +378,4 @@
 "Advanced.Network.title" = "Network";
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
+"SignIn.EnterVerificationCode" = "Please enter verification code";

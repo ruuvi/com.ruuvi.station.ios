@@ -252,6 +252,8 @@
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi Station est une application intuitive pour contôler vos capteurs Ruuvi. Commencez en jumelant des capteurs.";
 "About.AboutHelp.header" = "INFOS / AIDE";
+"About.MeasurementsCount.text" = "Données enregistrées : %d";
+"About.DatabaseSize.text" = "Taille de la base de données : %@";
 "About.More.contents" = "Site officiel de Ruuvi : ruuvi.com\nRuuvi Forum : f.ruuvi.com\nRuuvi Blog : blog.ruuvi.com\nRuuvi Twitter : twitter.com/ruuvicom";
 "About.More.header" = "PLUS D'INFOS";
 "About.OpenSource.contents" = "Comme tous les produits Ruuvi, Ruuvi Station est également open-source : github.com/ruuvi";
@@ -260,6 +262,7 @@
 "About.OperationsManual.header" = "NOTICE D'UTILISATION";
 "About.Privacy.contents" = "L'utilisation de l'application nécessite l'approbation des conditions générales de Ruuvi \nruuvi.com/terms";
 "About.Privacy.header" = "PROTECTION DES DONNÉES PERSONNELLES";
+"About.TagsCount.text" = "Capteurs détectés : %d";
 "About.Troubleshooting.contents" = "Si vous rencontrez des problèmes et que vous ne trouvez pas la réponse dans la notice, veuillez consulter la page d'assistance technique : ruuvi.com/troubles";
 "About.Troubleshooting.header" = "DÉPANNAGE TECHNIQUE";
 "TagSettings.AirHumidityAlert.title" = "Humidité de l'air (%@)";
@@ -375,4 +378,5 @@
 "Advanced.Network.title" = "Network";
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
+"SignIn.EnterVerificationCode" = "Please enter verification code";
 
