@@ -10,6 +10,7 @@ protocol CardsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         sensorSettings: SensorSettings?,
                          output: TagSettingsModuleOutput)
     func openWebTagSettings(webTag: WebTagRealm,
                             temperature: Temperature?)

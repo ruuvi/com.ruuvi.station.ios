@@ -19,6 +19,7 @@ protocol MeasurementsService {
                 withOffset offset: Double,
                 temperature: Temperature,
                 isDecimal: Bool) -> Double?
+
     func string(for humidity: Humidity?,
                 withOffset offset: Double?,
                 temperature: Temperature?) -> String
@@ -26,6 +27,15 @@ protocol MeasurementsService {
     func string(for pressure: Pressure?) -> String
     func double(for voltage: Voltage) -> Double
     func string(for voltage: Voltage?) -> String
+
+    func temperatureOffsetCorrection(for temperature: Double) -> Double
+    func temperatureOffsetCorrectionString(for temperature: Double) -> String
+
+    func humidityOffsetCorrection(for temperature: Double) -> Double
+    func humidityOffsetCorrectionString(for temperature: Double) -> String
+
+    func pressureOffsetCorrection(for temperature: Double) -> Double
+    func pressureOffsetCorrectionString(for temperature: Double) -> String
 }
 extension MeasurementsService {
     func double(for temperature: Temperature?) -> Double? {

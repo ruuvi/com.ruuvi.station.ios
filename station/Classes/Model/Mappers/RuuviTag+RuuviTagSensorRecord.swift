@@ -56,4 +56,7 @@ extension RuuviTag: RuuviTagSensorRecord {
         return Voltage(value: voltage, unit: .volts)
     }
 
+    var temperatureOffset: Double { return 0.0 }
+    var humidityOffset: Double { return 0.0 }
+    var pressureOffset: Double { return 0.0 }
 }

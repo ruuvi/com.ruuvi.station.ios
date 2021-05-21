@@ -56,6 +56,7 @@ class TagChartsRouter: TagChartsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         sensor: SensorSettings?,
                          output: TagSettingsModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
@@ -64,6 +65,7 @@ class TagChartsRouter: TagChartsRouterInput {
                 module.configure(ruuviTag: ruuviTag,
                                  temperature: temperature,
                                  humidity: humidity,
+                                 sensor: sensor,
                                  output: output)
             })
     }
