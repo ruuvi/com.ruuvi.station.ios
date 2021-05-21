@@ -86,7 +86,7 @@ extension SQLiteGRDBDatabase {
 
         // v3
         migrator.registerMigration("Create SensorSettingsSQLite table") { db in
-            guard try db.tableExists(SensorSettingsSQLite.databaseTableName) else { return }
+            guard try db.tableExists(SensorSettingsSQLite.databaseTableName) == false else { return }
             try SensorSettingsSQLite.createTable(in: db)
             try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
                 t.add(column: RuuviTagDataSQLite.temperatureOffsetColumn.name, .integer)
