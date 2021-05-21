@@ -11,16 +11,18 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var router: TagChartsRouterInput!
     var interactor: TagChartsInteractorInput!
 
+    var errorPresenter: ErrorPresenter!
+    var backgroundPersistence: BackgroundPersistence!
+    var settings: Settings!
+    var foreground: BTForeground!
+    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviTagReactor: RuuviTagReactor!
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
-    var errorPresenter: ErrorPresenter!
     var mailComposerPresenter: MailComposerPresenter!
 
     var alertService: AlertService!
-    var foreground: BTForeground!
     var background: BTBackground!
-    var backgroundPersistence: BackgroundPersistence!
-    var settings: Settings!
 
     var feedbackEmail: String!
     var feedbackSubject: String!
@@ -48,6 +50,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartIntervalDidChangeToken: NSObjectProtocol?
+    private var sensorSettingsToken: RUObservationToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var exportFileUrl: URL?
@@ -56,6 +59,13 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
             syncViewModel()
         }
     }
+
+    private var sensorSettings: SensorSettings! {
+        didSet {
+            interactor.updateSensorSettings(settings: sensorSettings)
+        }
+    }
+
     private var viewModel = TagChartsViewModel(type: .ruuvi) {
         didSet {
             self.view.viewModel = self.viewModel
@@ -96,6 +106,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingAlertChanges()
         startObservingDidConnectDisconnectNotifications()
         startObservingLocalNotificationsManager()
+        startObservingSensorSettingsChanges()
     }
 
     func viewWillAppear() {
@@ -133,6 +144,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
             router.openTagSettings(ruuviTag: ruuviTag,
                                    temperature: interactor.lastMeasurement?.temperature,
                                    humidity: interactor.lastMeasurement?.humidity,
+                                   sensor: sensorSettings,
                                    output: self)
         } else {
             assert(false)
@@ -361,6 +373,11 @@ extension TagChartsPresenter {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
                                                                 ? .registered : .empty
+
+            // get lastest sensorSettings
+            ruuviTagTrunk.readSensorSettings(ruuviTag).on { settings in
+                self.sensorSettings = settings
+            }
         } else if let macId = ruuviTag.macId {
             viewModel.background.value = backgroundPersistence.background(for: macId)
             viewModel.alertState.value = alertService.hasRegistrations(for: macId.value) ? .registered : .empty
@@ -371,7 +388,7 @@ extension TagChartsPresenter {
         self.viewModel = viewModel
     }
     private func restartObservingData() {
-        interactor.configure(withTag: ruuviTag)
+        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingData()
     }
     private func startListeningToSettings() {
@@ -511,6 +528,18 @@ extension TagChartsPresenter {
                                 self?.viewModel.isConnected.value = false
                             }
             })
+    }
+
+    private func startObservingSensorSettingsChanges() {
+        sensorSettingsToken = ruuviTagReactor.observe(ruuviTag, { (reactorChange) in
+            switch reactorChange {
+            case .update(let settings):
+                self.sensorSettings = settings
+            case .insert(let sensorSettings):
+                self.sensorSettings = sensorSettings
+            default: break
+            }
+        })
     }
 
     private func startObservingLocalNotificationsManager() {

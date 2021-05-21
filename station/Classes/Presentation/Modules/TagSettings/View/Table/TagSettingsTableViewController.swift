@@ -8,8 +8,9 @@ enum TagSettingsTableSection: Int {
     case connection = 2
     case alerts = 3
     case calibration = 4
-    case moreInfo = 5
-    case networkInfo = 6
+    case offsetCorrection = 5
+    case moreInfo = 7
+    case networkInfo = 8
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -101,6 +102,17 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var txPowerTitleLabel: UILabel!
     @IBOutlet weak var mcTitleLabel: UILabel!
     @IBOutlet weak var msnTitleLabel: UILabel!
+
+    @IBOutlet weak var temperatureOffsetCorrectionCell: UITableViewCell!
+    @IBOutlet weak var humidityOffsetCorrectionCell: UITableViewCell!
+    @IBOutlet weak var pressureOffsetCorrectionCell: UITableViewCell!
+    @IBOutlet weak var temperatureOffsetTitleLabel: UILabel!
+    @IBOutlet weak var temperatureOffsetValueLabel: UILabel!
+    @IBOutlet weak var humidityOffsetTitleLabel: UILabel!
+    @IBOutlet weak var humidityOffsetValueLabel: UILabel!
+    @IBOutlet weak var pressureOffsetTitleLabel: UILabel!
+    @IBOutlet weak var pressureOffsetValueLabel: UILabel!
+
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
 
@@ -159,9 +171,15 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         pressureAlertControlsCell.textField.placeholder = alertPlaceholder
         connectionAlertDescriptionCell.textField.placeholder = alertPlaceholder
         movementAlertDescriptionCell.textField.placeholder = alertPlaceholder
+
+        temperatureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
+        humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
+        pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
+
         claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
         shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
         networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
+
         tableView.reloadData()
     }
 
@@ -318,6 +336,7 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITableViewDelegate
 extension TagSettingsTableViewController {
+    // swiftlint:disable cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         guard let cell = tableView.cellForRow(at: indexPath) else {
@@ -338,10 +357,17 @@ extension TagSettingsTableViewController {
             output.viewDidTapOnMovementCounter()
         case msnCell:
             output.viewDidTapOnMeasurementSequenceNumber()
+        case temperatureOffsetCorrectionCell:
+            output.viewDidTapTemperatureOffsetCorrection()
+        case humidityOffsetCorrectionCell:
+            output.viewDidTapHumidityOffsetCorrection()
+        case pressureOffsetCorrectionCell:
+            output.viewDidTapOnPressureOffsetCorrection()
         default:
             break
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = TagSettingsTableSection.section(for: section)
@@ -350,6 +376,8 @@ extension TagSettingsTableViewController {
             return "TagSettings.SectionHeader.Name.title".localized()
         case .calibration:
             return "TagSettings.SectionHeader.Calibration.title".localized()
+        case .offsetCorrection:
+            return "TagSettings.SectionHeader.OffsetCorrection.Title".localized()
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
@@ -834,6 +862,8 @@ extension TagSettingsTableViewController {
                 label.text = "TagSettings.ConnectStatus.Disconnected".localized()
             }
         }
+
+        bindOffsetCorrectionCells()
     }
 
     private func bindHumidity() {
@@ -1431,6 +1461,23 @@ extension TagSettingsTableViewController {
                     ? "TagSettings.ClaimTagButton.Unclaim".localized()
                     : "TagSettings.ClaimTagButton.Claim".localized()
                 button.setTitle(title, for: .normal)
+        }
+    }
+    private func bindOffsetCorrectionCells() {
+        guard isViewLoaded, let viewModel = viewModel else {
+            return
+        }
+
+        temperatureOffsetValueLabel.bind(viewModel.temperatureOffsetCorrection) {[weak self] label, value in
+            label.text = self?.measurementService.temperatureOffsetCorrectionString(for: value ?? 0)
+        }
+
+        humidityOffsetValueLabel.bind(viewModel.humidityOffsetCorrection) {[weak self] label, value in
+            label.text = self?.measurementService.humidityOffsetCorrectionString(for: value ?? 0)
+        }
+
+        pressureOffsetValueLabel.bind(viewModel.pressureOffsetCorrection) {[weak self]  label, value in
+            label.text = self?.measurementService.pressureOffsetCorrectionString(for: value ?? 0)
         }
     }
 }

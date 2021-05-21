@@ -31,6 +31,9 @@ extension RuuviTagEnvLogFull {
                                           voltage: unitVoltage,
                                           movementCounter: nil,
                                           measurementSequenceNumber: nil,
-                                          txPower: nil)
+                                          txPower: nil,
+                                          temperatureOffset: 0.0,
+                                          humidityOffset: 0.0,
+                                          pressureOffset: 0.0)
     }
 }

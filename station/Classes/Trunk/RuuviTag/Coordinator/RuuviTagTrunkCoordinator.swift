@@ -110,3 +110,24 @@ class RuuviTagTrunkCoordinator: RuuviTagTrunk {
         return promise.future
     }
 }
+
+extension RuuviTagTrunkCoordinator {
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RUError> {
+        if ruuviTag.macId != nil {
+            return sqlite.readSensorSettings(ruuviTag)
+        } else {
+            return realm.readSensorSettings(ruuviTag)
+        }
+    }
+
+    func updateOffsetCorrection(type: OffsetCorrectionType,
+                                with value: Double?,
+                                of ruuviTag: RuuviTagSensor,
+                                lastOriginalRecord record: RuuviTagSensorRecord?) -> Future<SensorSettings, RUError> {
+        if ruuviTag.macId != nil {
+            return sqlite.updateOffsetCorrection(type: type, with: value, of: ruuviTag, lastOriginalRecord: record)
+        } else {
+            return realm.updateOffsetCorrection(type: type, with: value, of: ruuviTag, lastOriginalRecord: record)
+        }
+    }
+}

@@ -53,6 +53,7 @@ class CardsRouter: NSObject, CardsRouterInput {
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
                          humidity: Humidity?,
+                         sensorSettings: SensorSettings?,
                          output: TagSettingsModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "TagSettings")
         try! transitionHandler
@@ -61,6 +62,7 @@ class CardsRouter: NSObject, CardsRouterInput {
                 module.configure(ruuviTag: ruuviTag,
                                  temperature: temperature,
                                  humidity: humidity,
+                                 sensor: sensorSettings,
                                  output: output)
             })
     }

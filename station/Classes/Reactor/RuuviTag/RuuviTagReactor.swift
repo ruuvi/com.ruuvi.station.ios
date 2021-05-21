@@ -6,6 +6,8 @@ protocol RuuviTagReactor {
                  _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RUObservationToken
     func observeLast(_ ruuviTag: RuuviTagSensor,
                      _ block: @escaping (ReactorChange<AnyRuuviTagSensorRecord?>) -> Void) -> RUObservationToken
+    func observe(_ ruuviTag: RuuviTagSensor,
+                 _ block: @escaping (ReactorChange<SensorSettings>) -> Void) -> RUObservationToken
 }
 
 enum ReactorChange<Type> {

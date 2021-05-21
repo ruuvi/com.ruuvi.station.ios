@@ -22,4 +22,9 @@ protocol TagSettingsViewOutput {
     func viewDidAskToConnectFromAlertsDisabledDialog()
     func viewDidTapClaimButton()
     func viewDidTapShareButton()
+
+    // Offset Correction
+    func viewDidTapTemperatureOffsetCorrection()
+    func viewDidTapHumidityOffsetCorrection()
+    func viewDidTapOnPressureOffsetCorrection()
 }
