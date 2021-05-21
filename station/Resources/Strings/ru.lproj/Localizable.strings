@@ -252,6 +252,8 @@
 "h" = "ч";
 "About.AboutHelp.contents" = "Ruuvi Station - простой в использовании, но мощный инструмент для работы с вашими Ruuvi сенсорами.";
 "About.AboutHelp.header" = "О ПРИЛОЖЕНИИ";
+"About.MeasurementsCount.text" = "Кол-во сохраненных измерений: %d";
+"About.DatabaseSize.text" = "Размер базы данных: %@";
 "About.More.contents" = "Веб-сайт: ruuvi.com\nФорум: f.ruuvi.com\nБлог: blog.ruuvi.com\nTwitter: twitter.com/ruuvicom";
 "About.More.header" = "ПОЧИТАТЬ ЕЩЕ";
 "About.OpenSource.contents" = "Как и сенсоры Ruuvi, Ruuvi Station также доступна в исходных кодах: github.com/ruuvi";
@@ -260,6 +262,7 @@
 "About.OperationsManual.header" = "РУКОВОДСТВО";
 "About.Privacy.contents" = "Используя это приложение, вы соглашаетесь со стандартными условиями и положениями Ruuvi\nruuvi.com/terms";
 "About.Privacy.header" = "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ";
+"About.TagsCount.text" = "Датчиков обнаружено: %d";
 "About.Troubleshooting.contents" = "Если вы испытываете какие либо проблемы или наши руководства не помогли вам, посмотрите наши многочисленные темы с решением проблем здесь: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "РЕШЕНИЕ ПРОБЛЕМ";
 "TagSettings.AirHumidityAlert.title" = "Влажность воздуха (%@)";
@@ -318,7 +321,7 @@
 "SignIn.EmailSent" = "Email отправлен";
 "SignIn.CheckMailbox" = "Пожалуйста, проверьте email для дальнейших инструкций";
 "SignIn.CodeHint" = "Код для входа";
-"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Хотите выйти их сети?";
+"TagsManagerPresenter.SignOutConfirmAlert.Message" = "Хотите выйти из сети?";
 "TagSettings.ClaimTagButton.Claim" = "Мой сенсор";
 "TagSettings.ClaimTagButton.Unclaim" = "Отвязать";
 "TagSettings.ShareButton" = "Поделиться";
@@ -375,3 +378,4 @@
 "Advanced.Network.title" = "Network";
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Выбрать из файлов";
+"SignIn.EnterVerificationCode" = "Пожалуйста, введите код подтверждения";
