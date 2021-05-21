@@ -252,6 +252,8 @@
 "h" = "h";
 "About.AboutHelp.contents" = "Ruuvi State är en lättanvänt och kraftfullt program för Ruuvi sensorer. Sätt igång genom att lägga till sensorer.";
 "About.AboutHelp.header" = "OM / HJÄLP";
+"About.MeasurementsCount.text" = "Sparade mätningar: %d";
+"About.DatabaseSize.text" = "Databasens storlek: %@";
 "About.More.contents" = "Ruuvis hemsida: ruuvi.com\nRuuvi Forum: f.ruuvi.com\nRuuvi Blog: blog.ruuvi.com\nRuuvi Twitter: twitter.com/ruuvicom";
 "About.More.header" = "LÄS MER";
 "About.OpenSource.contents" = "Likt Ruuvi sensor är också Ruuvi Station gjord med öppen källkod: github.com/ruuvi";
@@ -260,6 +262,7 @@
 "About.OperationsManual.header" = "BRUKSANVISNING";
 "About.Privacy.contents" = "Användning av applikationen kräver godkännande av användarvillkoren\nruuvi.com/terms";
 "About.Privacy.header" = "INTEGRITETSPOLICY";
+"About.TagsCount.text" = "Upptäckta sensorer: %d";
 "About.Troubleshooting.contents" = "Om du stöter på problem och våra manualer inte hjälper så kan det hjälpa att ta en titt på våra många felsökningsämnen: ruuvi.com/troubles";
 "About.Troubleshooting.header" = "FELSÖKNING";
 "TagSettings.AirHumidityAlert.title" = "Luftfuktighet (%@)";
@@ -375,3 +378,4 @@
 "Advanced.Network.title" = "Network";
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
+"SignIn.EnterVerificationCode" = "Please enter verification code";

@@ -7,6 +7,7 @@ protocol AlertService {
     func processNetwork(record: RuuviTagSensorRecord, for identifier: MACIdentifier)
 
     func subscribe<T: AlertServiceObserver>(_ observer: T, to uuid: String)
+    func isSubscribed<T: AlertServiceObserver>(_ observer: T, to uuid: String) -> Bool
     func hasRegistrations(for uuid: String) -> Bool
 
     func isOn(type: AlertType, for uuid: String) -> Bool
