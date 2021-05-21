@@ -34,6 +34,12 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             syncViewModel()
         }
     }
+    private var sensorSettings: SensorSettings? {
+        didSet {
+            syncOffsetCorrection()
+        }
+    }
+
     private var temperature: Temperature? {
         didSet {
             viewModel.temperature.value = temperature
@@ -80,12 +86,26 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     func configure(ruuviTag: RuuviTagSensor,
                    temperature: Temperature?,
                    humidity: Humidity?,
+                   sensor: SensorSettings?,
                    output: TagSettingsModuleOutput) {
         self.viewModel = TagSettingsViewModel()
         self.output = output
         self.temperature = temperature
         self.humidity = humidity
         self.ruuviTag = ruuviTag
+
+        if let sensorSettings = sensor {
+            self.sensorSettings = sensorSettings
+        } else {
+            self.sensorSettings = SensorSettingsStruct(ruuviTagId: ruuviTag.id,
+                                                       temperatureOffset: nil,
+                                                       temperatureOffsetDate: nil,
+                                                       humidityOffset: nil,
+                                                       humidityOffsetDate: nil,
+                                                       pressureOffset: nil,
+                                                       pressureOffsetDate: nil)
+        }
+
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
         startScanningRuuviTag()
@@ -104,9 +124,9 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
 // MARK: - TagSettingsViewOutput
 extension TagSettingsPresenter: TagSettingsViewOutput {
-
     func viewWillAppear() {
         checkPushNotificationsStatus()
+        checkLastSensorSettings()
     }
 
     func viewDidAskToDismiss() {
@@ -118,6 +138,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
         } else if let macId = ruuviTag.macId {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
+            print(macId)
+//            FIXME
+//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
         } else {
             assertionFailure()
         }
@@ -129,8 +152,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidConfirmTagRemoval() {
         if let isConnected = viewModel.isConnected.value,
-            let keepConnection = viewModel.keepConnection.value,
-            !isConnected && keepConnection {
+           let keepConnection = viewModel.keepConnection.value,
+           !isConnected && keepConnection {
             errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
@@ -303,6 +326,18 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
         router.openShare(for: mac)
     }
+
+    func viewDidTapTemperatureOffsetCorrection() {
+        router.openOffsetCorrection(type: .temperature, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
+    }
+
+    func viewDidTapHumidityOffsetCorrection() {
+        router.openOffsetCorrection(type: .humidity, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
+    }
+
+    func viewDidTapOnPressureOffsetCorrection() {
+        router.openOffsetCorrection(type: .pressure, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -335,10 +370,9 @@ extension TagSettingsPresenter {
             ) { [weak self] timer in
                 guard let sSelf = self else { timer.invalidate(); return }
                 sSelf.reloadMutedTill()
-        }
+            }
     }
 
-    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -353,14 +387,16 @@ extension TagSettingsPresenter {
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
         } else if let macId = ruuviTag.macId {
-            viewModel.background.value = backgroundPersistence.background(for: macId)
-            viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId.value)
-            viewModel.humidityAlertDescription.value
-                = alertService.humidityDescription(for: macId.value)
-            viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId.value)
-            viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId.value)
-            viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId.value)
-            viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId.value)
+            print(macId)
+            // FIXME
+            // viewModel.background.value = backgroundPersistence.background(for: mac)
+            // viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId)
+            // viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: macId)
+            // viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: macId)
+            // viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId)
+            // viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId)
+            // viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId)
+            // viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId)
         } else {
             assertionFailure()
         }
@@ -392,6 +428,13 @@ extension TagSettingsPresenter {
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         syncAlerts()
+    }
+
+    private func syncOffsetCorrection() {
+        // reload offset correction
+        viewModel.temperatureOffsetCorrection.value = sensorSettings?.temperatureOffset
+        viewModel.humidityOffsetCorrection.value = sensorSettings?.humidityOffset
+        viewModel.pressureOffsetCorrection.value = sensorSettings?.pressureOffset
     }
 
     private func syncAlerts() {
@@ -558,19 +601,24 @@ extension TagSettingsPresenter {
     }
 
     private func sync(device: RuuviTag) {
-        humidity = device.humidity
-        let record = RuuviTagSensorRecordStruct(ruuviTagId: device.ruuviTagId,
-                                                date: device.date,
-                                                macId: device.mac?.mac,
-                                                rssi: device.rssi,
-                                                temperature: device.temperature,
-                                                humidity: device.humidity,
-                                                pressure: device.pressure,
-                                                acceleration: device.acceleration,
-                                                voltage: device.voltage,
-                                                movementCounter: device.movementCounter,
-                                                measurementSequenceNumber: device.measurementSequenceNumber,
-                                                txPower: device.txPower)
+        humidity = device.humidity?.withSensorSettings(sensorSettings: sensorSettings)
+        let record = RuuviTagSensorRecordStruct(
+            ruuviTagId: device.ruuviTagId,
+            date: device.date,
+            macId: device.mac?.mac,
+            rssi: device.rssi,
+            temperature: device.temperature,
+            humidity: device.humidity,
+            pressure: device.pressure,
+            acceleration: device.acceleration,
+            voltage: device.voltage,
+            movementCounter: device.movementCounter,
+            measurementSequenceNumber: device.measurementSequenceNumber,
+            txPower: device.txPower,
+            temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
+            humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
+            pressureOffset: sensorSettings?.pressureOffset ?? 0.0
+        ).with(sensorSettings: sensorSettings)
         if viewModel.version.value != device.version {
             viewModel.version.value = device.version
         }
@@ -603,6 +651,8 @@ extension TagSettingsPresenter {
             viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
             viewModel.isNetworkConnected.value = ruuviTag.isNetworkConnectable
         }
+
+        bindOffsetCorrection()
     }
 
     private func bindTemperatureAlert(uuid: String) {
@@ -786,30 +836,36 @@ extension TagSettingsPresenter {
         }
     }
 
+    private func bindOffsetCorrection() {
+        viewModel.temperatureOffsetCorrection.value = sensorSettings?.temperatureOffset
+        viewModel.humidityOffsetCorrection.value = sensorSettings?.humidityOffset
+        viewModel.pressureOffsetCorrection.value = sensorSettings?.pressureOffset
+    }
+
     private func startObservingSettingsChanges() {
         temperatureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .TemperatureUnitDidChange,
                          object: nil,
                          queue: .main) { [weak self] _ in
-            self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
-        }
+                self?.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
+            }
         humidityUnitToken = NotificationCenter
             .default
             .addObserver(forName: .HumidityUnitDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.viewModel.humidityUnit.value = self?.settings.humidityUnit
-        })
+                            self?.viewModel.humidityUnit.value = self?.settings.humidityUnit
+                         })
         pressureUnitToken = NotificationCenter
             .default
             .addObserver(forName: .PressureUnitDidChange,
                          object: nil,
                          queue: .main,
                          using: { [weak self] _ in
-            self?.viewModel.pressureUnit.value = self?.settings.pressureUnit
-        })
+                            self?.viewModel.pressureUnit.value = self?.settings.pressureUnit
+                         })
     }
 
     private func startObservingConnectionStatus() {
@@ -819,12 +875,12 @@ extension TagSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo,
-                let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
-                            uuid == self?.ruuviTag.luid?.value {
-                self?.viewModel.isConnected.value = true
-            }
-        })
+                            if let userInfo = notification.userInfo,
+                               let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
+                               uuid == self?.ruuviTag.luid?.value {
+                                self?.viewModel.isConnected.value = true
+                            }
+                         })
 
         disconnectToken = NotificationCenter
             .default
@@ -832,12 +888,12 @@ extension TagSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo,
-                let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                            uuid == self?.ruuviTag.luid?.value {
-                self?.viewModel.isConnected.value = false
-            }
-        })
+                            if let userInfo = notification.userInfo,
+                               let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
+                               uuid == self?.ruuviTag.luid?.value {
+                                self?.viewModel.isConnected.value = false
+                            }
+                         })
     }
 
     private func startObservingApplicationState() {
@@ -847,8 +903,8 @@ extension TagSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (_) in
-            self?.checkPushNotificationsStatus()
-        })
+                            self?.checkPushNotificationsStatus()
+                         })
     }
 
     private func checkPushNotificationsStatus() {
@@ -864,6 +920,12 @@ extension TagSettingsPresenter {
         }
     }
 
+    private func checkLastSensorSettings() {
+        ruuviTagTrunk.readSensorSettings(self.ruuviTag).on { settings in
+            self.sensorSettings = settings
+        }
+    }
+
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -871,14 +933,14 @@ extension TagSettingsPresenter {
                          object: nil,
                          queue: .main,
                          using: { [weak self] (notification) in
-            if let userInfo = notification.userInfo,
-                let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
-                uuid == self?.viewModel.uuid.value,
-                let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
-                self?.updateIsOnState(of: type, for: uuid)
-                self?.updateMutedTill(of: type, for: uuid)
-            }
-        })
+                            if let userInfo = notification.userInfo,
+                               let uuid = userInfo[AlertServiceAlertDidChangeKey.uuid] as? String,
+                               uuid == self?.viewModel.uuid.value,
+                               let type = userInfo[AlertServiceAlertDidChangeKey.type] as? AlertType {
+                                self?.updateIsOnState(of: type, for: uuid)
+                                self?.updateMutedTill(of: type, for: uuid)
+                            }
+                         })
     }
 
     private func reloadMutedTill() {

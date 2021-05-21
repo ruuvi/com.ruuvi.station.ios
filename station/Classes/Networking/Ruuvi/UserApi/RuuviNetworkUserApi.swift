@@ -119,7 +119,10 @@ extension RuuviNetworkUserApi {
                                                         voltage: tag.voltage,
                                                         movementCounter: tag.movementCounter,
                                                         measurementSequenceNumber: tag.measurementSequenceNumber,
-                                                        txPower: tag.txPower)
+                                                        txPower: tag.txPower,
+                                                        temperatureOffset: tag.temperatureOffset,
+                                                        humidityOffset: tag.humidityOffset,
+                                                        pressureOffset: tag.pressureOffset)
                 sensors.append((sensor.any, record))
             }
         })
@@ -149,7 +152,10 @@ extension RuuviNetworkUserApi {
                                               voltage: tag.voltage,
                                               movementCounter: tag.movementCounter,
                                               measurementSequenceNumber: tag.measurementSequenceNumber,
-                                              txPower: tag.txPower)
+                                              txPower: tag.txPower,
+                                              temperatureOffset: 0.0,
+                                              humidityOffset: 0.0,
+                                              pressureOffset: 0.0)
         })
     }
 }
