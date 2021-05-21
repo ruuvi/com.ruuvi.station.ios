@@ -336,6 +336,7 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITableViewDelegate
 extension TagSettingsTableViewController {
+    // swiftlint:disable cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         guard let cell = tableView.cellForRow(at: indexPath) else {
@@ -366,6 +367,7 @@ extension TagSettingsTableViewController {
             break
         }
     }
+    // swiftlint:enable cyclomatic_complexity
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let section = TagSettingsTableSection.section(for: section)

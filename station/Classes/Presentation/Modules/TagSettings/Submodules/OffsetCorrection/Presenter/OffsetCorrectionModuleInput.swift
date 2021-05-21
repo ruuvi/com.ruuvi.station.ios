@@ -6,6 +6,6 @@ enum OffsetCorrectionType: Int {
     case pressure = 2
 }
 
-protocol OffsetCorrectionModuleInput: class {
+protocol OffsetCorrectionModuleInput: AnyObject {
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?)
 }
