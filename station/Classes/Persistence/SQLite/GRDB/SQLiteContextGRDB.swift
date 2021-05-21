@@ -67,9 +67,6 @@ extension SQLiteGRDBDatabase {
         }
 
         // v2
-        migrator.registerMigration("Create SensorSettingsSQLite table") { db in
-            try SensorSettingsSQLite.createTable(in: db)
-        }
         migrator.registerMigration("Add networkProvider column") { (db) in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)
                     .contains(where: {$0.name == RuuviTagSQLite.networkProviderColumn.name}) == false else {
@@ -86,6 +83,21 @@ extension SQLiteGRDBDatabase {
                 t.add(column: RuuviTagSQLite.owner.name, .text)
             }
         }
+
+        // v3
+        migrator.registerMigration("Create SensorSettingsSQLite table") { db in
+            guard try db.tableExists(SensorSettingsSQLite.databaseTableName) else { return }
+            try SensorSettingsSQLite.createTable(in: db)
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagDataSQLite.temperatureOffsetColumn.name, .integer)
+                    .notNull().defaults(to: 0.0)
+                t.add(column: RuuviTagDataSQLite.humidityOffsetColumn.name, .integer)
+                    .notNull().defaults(to: 0.0)
+                t.add(column: RuuviTagDataSQLite.pressureOffsetColumn.name, .integer)
+                    .notNull().defaults(to: 0.0)
+            })
+        }
+
         try migrator.migrate(dbPool)
     }
 }
