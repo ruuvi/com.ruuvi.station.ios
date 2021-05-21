@@ -91,8 +91,9 @@ extension TagChartsScrollViewController: TagChartsViewInput {
         let message = "TagCharts.SyncConfirmationDialog.message".localized()
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(title: "Confirm".localized(), style: .default, handler: { [weak self] _ in
-            self?.output.viewDidConfirmToSync(for: viewModel)
+        let fromTag = "OK".localized()
+        alertVC.addAction(UIAlertAction(title: fromTag, style: .default, handler: { [weak self] _ in
+            self?.output.viewDidConfirmToSyncWithTag(for: viewModel)
         }))
         present(alertVC, animated: true)
     }
@@ -111,14 +112,6 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     }
 
     func showExportSheet(with path: URL) {
-        var shareItems = [Any]()
-        #if targetEnvironment(macCatalyst)
-        if let nsUrl = NSURL(string: path.absoluteString) {
-            shareItems.append(nsUrl)
-        }
-        #else
-        shareItems.append(path)
-        #endif
         let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
         vc.excludedActivityTypes = [
             UIActivity.ActivityType.assignToContact,
@@ -237,7 +230,7 @@ extension TagChartsScrollViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: scrollView)
-            return abs(velocity.y) > abs(velocity.x) && UIApplication.shared.statusBarOrientation.isPortrait
+            return abs(velocity.y) > abs(velocity.x) && UIWindow.isPortrait
         } else {
             return true
         }
@@ -299,7 +292,7 @@ extension TagChartsScrollViewController {
         super.viewDidLayoutSubviews()
         var maxY: CGFloat = 0
         let height: CGFloat
-        if UIApplication.shared.statusBarOrientation.isLandscape {
+        if UIWindow.isLandscape {
             height = scrollView.frame.height
         } else {
             height = scrollView.frame.height / 3

@@ -8,16 +8,23 @@ protocol LocalIdentifier: Identifier {
 }
 
 protocol MACIdentifier: Identifier {
+    var mac: String { get }
 }
 
 struct MACIdentifierStruct: MACIdentifier {
     var value: String
+    var mac: String {
+        return value
+    }
 }
 
 struct AnyMACIdentifier: MACIdentifier, Equatable, Hashable {
     var object: MACIdentifier
 
     var value: String {
+        return object.value
+    }
+    var mac: String {
         return object.value
     }
 

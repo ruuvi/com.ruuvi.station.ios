@@ -1,9 +1,9 @@
 import Foundation
 
 extension Date {
-    var ruuviAgo: String {
+    func ruuviAgo(prefix: String = "Updated".localized()) -> String {
         let elapsed = Int(Date().timeIntervalSince(self))
-        var output = "Updated".localized() + " "
+        var output = prefix + " "
         // show date if the tag has not been seen for 24h
         if elapsed >= 24 * 60 * 60 {
             let df = DateFormatter()

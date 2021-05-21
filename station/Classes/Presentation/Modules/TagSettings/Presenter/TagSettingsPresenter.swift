@@ -26,6 +26,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviTagTank: RuuviTagTank!
     var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
+    var keychainService: KeychainService!
+    var ruuviNetwork: RuuviNetworkUserApi!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -135,9 +137,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if let luid = ruuviTag.luid {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
         } else if let macId = ruuviTag.macId {
+            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
             print(macId)
-            //            FIXME
-            //            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
+//            FIXME
+//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
         } else {
             assertionFailure()
         }
@@ -156,11 +159,22 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
         let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
         let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
-        Future.zip(deleteTagOperation, deleteRecordsOperation).on(success: { [weak self] _ in
-            guard let sSelf = self else {
+        var operations = [deleteTagOperation, deleteRecordsOperation]
+        if let mac = ruuviTag.macId?.value,
+           ruuviTag.isNetworkConnectable {
+            if ruuviTag.isOwner {
+                let unclaimOperation = ruuviNetwork.unclaim(mac)
+                operations.append(unclaimOperation)
+            } else {
+                let unshareOperation = ruuviNetwork.unshare(mac, for: nil)
+                operations.append(unshareOperation)
+            }
+        }
+        Future.zip(operations).on(success: { [weak self] _ in
+            guard let self = self else {
                 return
             }
-            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
+            self.output.tagSettingsDidDeleteTag(module: self, ruuviTag: self.ruuviTag)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
@@ -174,6 +188,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
+        guard keychainService.userIsAuthorized,
+              let mac = ruuviTag.macId?.value else {
+            return
+        }
+        let requestModel = UserApiSensorUpdateRequest(sensor: mac, name: finalName)
+        let networkOperation = ruuviNetwork.update(requestModel)
+        networkOperation.on()
     }
 
     func viewDidAskToCalibrateHumidity() {
@@ -251,6 +272,61 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         viewModel?.keepConnection.value = true
     }
 
+    private func updateTag(with sensor: RuuviTagSensorStruct) {
+        self.ruuviTagTank.update(sensor).on(success: { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            self.ruuviTag = sensor
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
+    }
+
+    private func updateTagInDB(with networkProvider: RuuviNetworkProvider?, isClaimed: Bool) {
+        let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
+                                          luid: self.ruuviTag.luid,
+                                          macId: self.ruuviTag.macId,
+                                          isConnectable: self.ruuviTag.isConnectable,
+                                          name: self.ruuviTag.name,
+                                          networkProvider: networkProvider,
+                                          isClaimed: isClaimed,
+                                          isOwner: true)
+        self.updateTag(with: sensor)
+    }
+
+    func viewDidTapClaimButton() {
+        guard let mac = ruuviTag.macId?.value else {
+            return
+        }
+        if viewModel.isClaimedTag.value == true {
+            ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
+                .on(success: { [weak self] _ in
+                    self?.updateTagInDB(with: nil, isClaimed: false)
+                }, failure: { [weak self] (error) in
+                    self?.errorPresenter.present(error: error)
+                })
+        } else {
+            ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
+                .on(success: { [weak self] _ in
+                    self?.updateTagInDB(with: .userApi, isClaimed: true)
+                }, failure: { [weak self] (error) in
+                    if error.errorDescription == "Sensor already claimed" {
+                        self?.updateTagInDB(with: .userApi, isClaimed: true)
+                    } else {
+                        self?.errorPresenter.present(error: error)
+                    }
+                })
+        }
+    }
+
+    func viewDidTapShareButton() {
+        guard let mac = ruuviTag.macId?.value else {
+            return
+        }
+        router.openShare(for: mac)
+    }
+
     func viewDidTapTemperatureOffsetCorrection() {
         router.openOffsetCorrection(type: .temperature, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
     }
@@ -271,10 +347,7 @@ extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
         if let luid = ruuviTag.luid {
             set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
         } else if let macId = ruuviTag.macId {
-            print(macId)
-            // FIXME
-            // set = backgroundPersistence.setCustomBackground(image: photo, for: mac)
-            set = nil
+            set = backgroundPersistence.setCustomBackground(image: photo, for: macId)
         } else {
             set = nil
             assertionFailure()
@@ -299,6 +372,7 @@ extension TagSettingsPresenter {
                 sSelf.reloadMutedTill()
             }
     }
+
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -327,13 +401,22 @@ extension TagSettingsPresenter {
             assertionFailure()
         }
 
-        if ruuviTag.name == ruuviTag.luid?.value || ruuviTag.name == ruuviTag.macId?.value {
+        viewModel.isAuthorized.value = keychainService.userIsAuthorized
+        viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
+        viewModel.canClaimTag.value = ruuviTag.isOwner
+        viewModel.owner.value = ruuviTag.owner
+        viewModel.isClaimedTag.value = ruuviTag.isClaimed
+
+        if (ruuviTag.name == ruuviTag.luid?.value
+            || ruuviTag.name == ruuviTag.macId?.value)
+            && !ruuviTag.isNetworkConnectable {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable
+        viewModel.isNetworkConnected.value = ruuviTag.any.isNetworkConnectable
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
@@ -341,7 +424,6 @@ extension TagSettingsPresenter {
             viewModel.isConnected.value = false
             viewModel.keepConnection.value = false
         }
-
         viewModel.mac.value = ruuviTag.macId?.value
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
@@ -356,25 +438,23 @@ extension TagSettingsPresenter {
     }
 
     private func syncAlerts() {
-        if let luid = ruuviTag.luid {
+        if let identifier = ruuviTag.luid ?? ruuviTag.macId {
             AlertType.allCases.forEach { (type) in
                 switch type {
                 case .temperature:
-                    sync(temperature: type, uuid: luid.value)
+                    sync(temperature: type, uuid: identifier.value)
                 case .humidity:
-                    sync(humidity: type, uuid: luid.value)
+                    sync(humidity: type, uuid: identifier.value)
                 case .dewPoint:
-                    sync(dewPoint: type, uuid: luid.value)
+                    sync(dewPoint: type, uuid: identifier.value)
                 case .pressure:
-                    sync(pressure: type, uuid: luid.value)
+                    sync(pressure: type, uuid: identifier.value)
                 case .connection:
-                    sync(connection: type, uuid: luid.value)
+                    sync(connection: type, uuid: identifier.value)
                 case .movement:
-                    sync(movement: type, uuid: luid.value)
+                    sync(movement: type, uuid: identifier.value)
                 }
             }
-        } else {
-            // FIXME
         }
     }
 
@@ -475,6 +555,10 @@ extension TagSettingsPresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
+            case .update(let sensor):
+                if sensor.id == self?.ruuviTag.id {
+                    self?.ruuviTag = sensor
+                }
             case .error(let error):
                 self?.errorPresenter.present(error: error)
             default:
@@ -552,18 +636,20 @@ extension TagSettingsPresenter {
     }
 
     private func bindViewModel(to ruuviTag: RuuviTagSensor) {
-        if let luid = ruuviTag.luid {
-            bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
-                observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+        if let identifier = ruuviTag.luid ?? ruuviTag.macId {
+            if let luid = identifier as? LocalIdentifier {
+                bind(viewModel.keepConnection, fire: false) { observer, keepConnection in
+                    observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                }
             }
-            bindTemperatureAlert(uuid: luid.value)
-            bindHumidityAlert(uuid: luid.value)
-            bindDewPoint(uuid: luid.value)
-            bindPressureAlert(uuid: luid.value)
-            bindConnectionAlert(uuid: luid.value)
-            bindMovementAlert(uuid: luid.value)
-        } else {
-            // FIXME
+            bindTemperatureAlert(uuid: identifier.value)
+            bindHumidityAlert(uuid: identifier.value)
+            bindDewPoint(uuid: identifier.value)
+            bindPressureAlert(uuid: identifier.value)
+            bindConnectionAlert(uuid: identifier.value)
+            bindMovementAlert(uuid: identifier.value)
+            viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
+            viewModel.isNetworkConnected.value = ruuviTag.isNetworkConnectable
         }
 
         bindOffsetCorrection()

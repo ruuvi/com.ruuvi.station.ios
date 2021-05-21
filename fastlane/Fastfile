@@ -1,16 +1,25 @@
+fastlane_require 'plist'
+fastlane_require 'fileutils'
+
 default_platform(:ios)
 
 before_all do
   sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
   sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
-  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist", key: "GOOGLE_APP_ID")
+  ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
+  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
+  ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
 end
 
 def remove_artifacts
   clean_build_artifacts()
-  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
-  sh("rm", "README.md")
-  sh("rm", "report.xml")
+  begin
+      sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
+      sh("rm", "report.xml")
+      sh("rm", "README.md")
+   rescue => ex
+     UI.error(ex)
+   end
 end
 
 platform :ios do
@@ -45,36 +54,67 @@ platform :ios do
   Upload to firebase AppDistribution with options
 
   -group - testers group [alpha|beta]
-  -notes - release notes for testers
   -scheme - [station|station_dev]
 
-  fastlane ios upload_to_firebase group:alpha notes:'New feature' scheme:station_dev
+  fastlane upload_to_firebase group:AlphaTest scheme:station_dev
   """
   lane :upload_to_firebase do |options|
-    configuration = options[:scheme] == "station" ? "Release" : "Debug"
-#    match(type: "adhoc", app_identifier: "com.ruuvi.station")
+    BUILD_NUMBER = options[:build_number]
+    UI.crash!('build_number parameter is required') unless BUILD_NUMBER
+    SCHEME = options[:scheme]
+    UI.crash!('scheme parameter is required') unless SCHEME
+    SRC_ROOT = File.expand_path("#{ENV['PWD']}")
+
+    if SCHEME == "station"
+      PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/Info.plist"
+    else
+      PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/DevInfo.plist"
+    end
+
+    set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
+
+    configuration = SCHEME == "station" ? "Release" : "Debug"
+    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
     build_app(
-      scheme: options[:scheme],
+      scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
       configuration: configuration,
       output_directory: "./Build",
       export_options: {
         method: "ad-hoc",
         provisioningProfiles: {
-          "com.ruuvi.station" => "PAKKVQG4X9.mobileprovision"
+          "com.ruuvi.station" => "match AdHoc com.ruuvi.station"
         }
       }
     )
+
+    changelog = changelog_from_git_commits(
+      commits_count: 1,
+      pretty: "%s",
+      merge_commit_filtering: "only_include_merges"
+    )
+    last_pr_number = changelog[/\d+/]
+    result = github_api(
+      server_url: "https://api.github.com",
+      http_method: "GET",
+      path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
+    )
+    last_pr_title = result[:json]['title']
+    last_pr_body = result[:json]['body']
+    release_notes = last_pr_title + "\n\n" + last_pr_body
+
     firebase_app_distribution(
       app: ENV["GOOGLE_APP_ID"],
-      release_notes: git_branch.concat("\n".concat(options[:notes])),
-      ipa_path: "",
+      firebase_cli_token: ENV["FIREBASE_REFRESH_TOKEN"],
+      release_notes: release_notes,
+      ipa_path: "./Build/" + SCHEME + ".ipa",
       groups: options[:group]
     )
     upload_symbols_to_crashlytics(
-      dsym_path: "./Build/station.app.dSYM.zip",
-      gsp_path: "./fastlane/com.ruuvi.station.ios.keystore/Firebase/GoogleService-Info.plist"
+      dsym_path: "./Build/" + SCHEME + ".app.dSYM.zip",
+      gsp_path: ENV["GSP_PATH"]
     )
+    skip_docs
   end
 
   error do |lane, exception|

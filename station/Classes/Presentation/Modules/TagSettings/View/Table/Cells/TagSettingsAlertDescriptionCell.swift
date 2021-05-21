@@ -1,6 +1,6 @@
 import UIKit
 
-protocol TagSettingsAlertDescriptionCellDelegate: class {
+protocol TagSettingsAlertDescriptionCellDelegate: AnyObject {
     func tagSettingsAlertDescription(cell: TagSettingsAlertDescriptionCell, didEnter description: String?)
 }
 class TagSettingsAlertDescriptionCell: UITableViewCell {

@@ -12,9 +12,20 @@ class PresentationAssembly: Assembly {
             return presenter
         }
 
+        container.register(AlertPresenter.self) { _ in
+            let presenter = AlertPresenterImpl()
+            return presenter
+        }
+
         container.register(ErrorPresenter.self) { _ in
             let presenter = ErrorPresenterAlert()
             return presenter
+        }
+
+        container.register(FLEXFeatureTogglesViewController.self) { r in
+            let controller = FLEXFeatureTogglesViewController()
+            controller.featureToggleService = r.resolve(FeatureToggleService.self)
+            return controller
         }
 
         container.register(MailComposerPresenter.self) { r in

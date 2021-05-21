@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--About View Controller-->
         <scene sceneID="izz-TU-3SU">
             <objects>
-                <viewController storyboardIdentifier="AboutViewController" id="Jxi-gj-SMg" customClass="AboutViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AboutViewController" id="Jxi-gj-SMg" customClass="AboutViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="b2e-AP-9Um">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="1124"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -49,8 +49,8 @@
                                                 <string key="content">If you’re experiencing problems and our manuals didn’t provide the help you need, check out our many troubleshooting topics, here: ruuvi.com/troubles</string>
                                                 <attributes>
                                                     <color key="NSColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="SFProDisplay-Regular"/>
-                                                    <font key="NSOriginalFont" size="16" name="SFProDisplay-Regular"/>
+                                                    <font key="NSFont" metaFont="system" size="16"/>
+                                                    <font key="NSOriginalFont" metaFont="system" size="16"/>
                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
                                             </fragment>
@@ -73,8 +73,8 @@
                                             <fragment content="Just like RuuviTag, Ruuvi Station is also open-source: github.com/ruuvi">
                                                 <attributes>
                                                     <color key="NSColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <font key="NSFont" size="16" name="SFProDisplay-Regular"/>
-                                                    <font key="NSOriginalFont" size="16" name="SFProDisplay-Regular"/>
+                                                    <font key="NSFont" metaFont="system" size="16"/>
+                                                    <font key="NSOriginalFont" metaFont="system" size="16"/>
                                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                 </attributes>
                                             </fragment>
@@ -92,8 +92,26 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added tags" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Dj-qjx">
+                                        <rect key="frame" x="36" y="966.5" width="342" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stored measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nhq-tg-RXR">
+                                        <rect key="frame" x="36" y="982.5" width="342" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cl-Gj-SSM">
+                                        <rect key="frame" x="36" y="998.5" width="342" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZT-Oy-FFh">
-                                        <rect key="frame" x="182.5" y="950.5" width="49" height="16"/>
+                                        <rect key="frame" x="36" y="950.5" width="342" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -102,15 +120,25 @@
                                 <constraints>
                                     <constraint firstItem="pyx-d9-7cb" firstAttribute="top" secondItem="9bG-f9-nKD" secondAttribute="bottom" constant="31" id="1wA-dd-gpY"/>
                                     <constraint firstItem="YZT-Oy-FFh" firstAttribute="top" secondItem="pyx-d9-7cb" secondAttribute="bottom" constant="8" id="6RU-zH-7zv"/>
+                                    <constraint firstItem="YZT-Oy-FFh" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="36" id="7ia-Cl-8qc"/>
                                     <constraint firstItem="pyx-d9-7cb" firstAttribute="centerX" secondItem="zKU-NK-qkw" secondAttribute="centerX" id="Bkn-XT-2gJ"/>
                                     <constraint firstItem="9bG-f9-nKD" firstAttribute="top" secondItem="zKU-NK-qkw" secondAttribute="top" constant="61" id="L9i-Ot-728"/>
+                                    <constraint firstItem="Nhq-tg-RXR" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="36" id="LY1-d5-a7p"/>
+                                    <constraint firstAttribute="trailing" secondItem="Nhq-tg-RXR" secondAttribute="trailing" constant="36" id="MtL-b3-Hid"/>
+                                    <constraint firstItem="8cl-Gj-SSM" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="36" id="N67-Ym-QIz"/>
+                                    <constraint firstAttribute="trailing" secondItem="8cl-Gj-SSM" secondAttribute="trailing" constant="36" id="RFj-fa-bTb"/>
                                     <constraint firstItem="9bG-f9-nKD" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="57" id="Srz-TV-GZj"/>
+                                    <constraint firstAttribute="bottom" secondItem="8cl-Gj-SSM" secondAttribute="bottom" constant="20" id="SsX-SV-NFY"/>
+                                    <constraint firstItem="8cl-Gj-SSM" firstAttribute="top" secondItem="Nhq-tg-RXR" secondAttribute="bottom" id="V9J-KO-ART"/>
                                     <constraint firstAttribute="trailing" secondItem="9bG-f9-nKD" secondAttribute="trailing" constant="57" id="Wka-GZ-Je1"/>
                                     <constraint firstItem="9bG-f9-nKD" firstAttribute="centerX" secondItem="zKU-NK-qkw" secondAttribute="centerX" id="ewS-cJ-sdm"/>
-                                    <constraint firstItem="YZT-Oy-FFh" firstAttribute="centerX" secondItem="pyx-d9-7cb" secondAttribute="centerX" id="h4b-RE-chN"/>
+                                    <constraint firstAttribute="trailing" secondItem="YZT-Oy-FFh" secondAttribute="trailing" constant="36" id="gru-mO-X4V"/>
+                                    <constraint firstItem="DQc-Dj-qjx" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="36" id="pOW-hz-qdt"/>
                                     <constraint firstAttribute="trailing" secondItem="pyx-d9-7cb" secondAttribute="trailing" constant="36" id="qCC-St-INA"/>
-                                    <constraint firstAttribute="bottom" secondItem="YZT-Oy-FFh" secondAttribute="bottom" constant="20" id="rLT-0p-g5R"/>
                                     <constraint firstItem="pyx-d9-7cb" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="36" id="tdd-g4-rqM"/>
+                                    <constraint firstItem="Nhq-tg-RXR" firstAttribute="top" secondItem="DQc-Dj-qjx" secondAttribute="bottom" id="ubU-Hy-f2g"/>
+                                    <constraint firstItem="DQc-Dj-qjx" firstAttribute="top" secondItem="YZT-Oy-FFh" secondAttribute="bottom" id="uw4-Uv-VI3"/>
+                                    <constraint firstAttribute="trailing" secondItem="DQc-Dj-qjx" secondAttribute="trailing" constant="36" id="xwl-fW-iSD"/>
                                 </constraints>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWL-lH-VPV">
@@ -133,6 +161,7 @@
                                 </constraints>
                             </imageView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="NtZ-tC-tio"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="FWL-lH-VPV" firstAttribute="leading" secondItem="NtZ-tC-tio" secondAttribute="leading" constant="8" id="6e7-xp-4kM"/>
@@ -152,16 +181,18 @@
                             <constraint firstItem="zKU-NK-qkw" firstAttribute="top" secondItem="FWL-lH-VPV" secondAttribute="bottom" id="xGj-Xg-M98"/>
                             <constraint firstItem="3Q7-px-H5S" firstAttribute="leading" secondItem="FWL-lH-VPV" secondAttribute="trailing" constant="8" id="zLx-Bh-mWM"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="NtZ-tC-tio"/>
                     </view>
                     <size key="freeformSize" width="414" height="1124"/>
                     <connections>
                         <outlet property="aboutTextView" destination="pyx-d9-7cb" id="KnS-FS-hFt"/>
+                        <outlet property="addedTagsLabel" destination="DQc-Dj-qjx" id="Cb5-s2-ra4"/>
+                        <outlet property="databaseSizeLable" destination="8cl-Gj-SSM" id="52A-4u-X9Z"/>
+                        <outlet property="storedMeasurementsLabel" destination="Nhq-tg-RXR" id="lfF-HF-veI"/>
                         <outlet property="versionLabel" destination="YZT-Oy-FFh" id="Uqa-1k-Seb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="obc-y7-K3C" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="6zE-9P-1uY" customClass="AboutInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="6zE-9P-1uY" customClass="AboutInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="Jxi-gj-SMg" id="UJk-Af-C4J"/>
                     </connections>

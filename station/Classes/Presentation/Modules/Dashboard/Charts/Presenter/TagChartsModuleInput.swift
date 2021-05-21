@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TagChartsModuleInput: class {
+protocol TagChartsModuleInput: AnyObject {
     func configure(output: TagChartsModuleOutput)
     func configure(ruuviTag: AnyRuuviTagSensor)
     func dismiss(completion: (() -> Void)?)

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol TagSettingsModuleInput: class {
+protocol TagSettingsModuleInput: AnyObject {
     func configure(
         ruuviTag: RuuviTagSensor,
         temperature: Temperature?,

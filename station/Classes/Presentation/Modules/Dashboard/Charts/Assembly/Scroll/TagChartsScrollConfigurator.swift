@@ -20,18 +20,21 @@ class TagChartsScrollConfigurator {
         presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
-        presenter.alertService = r.resolve(AlertService.self)
-        presenter.background = r.resolve(BTBackground.self)
+        presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
+        presenter.alertService = r.resolve(AlertService.self)
+        presenter.foreground = r.resolve(BTForeground.self)
+        presenter.background = r.resolve(BTBackground.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!
-        presenter.settings = r.resolve(Settings.self)
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.interactor = interactor
 
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(Settings.self)
         interactor.exportService = r.resolve(ExportService.self)
+        interactor.keychainService = r.resolve(KeychainService.self)
+        interactor.networkService = r.resolve(NetworkService.self)
         interactor.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
         interactor.ruuviTagTank = r.resolve(RuuviTagTank.self)
         interactor.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)

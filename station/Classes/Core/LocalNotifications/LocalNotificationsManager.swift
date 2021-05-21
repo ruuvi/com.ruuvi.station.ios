@@ -9,7 +9,7 @@ enum LNMDidReceiveKey: String {
     case uuid
 }
 
-protocol LocalNotificationsManager: class {
+protocol LocalNotificationsManager: AnyObject {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)
 

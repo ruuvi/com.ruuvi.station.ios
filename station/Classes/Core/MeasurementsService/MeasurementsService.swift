@@ -1,7 +1,7 @@
 import Foundation
 import Humidity
 
-protocol MeasurementsServiceDelegate: class {
+protocol MeasurementsServiceDelegate: AnyObject {
     func measurementServiceDidUpdateUnit()
 }
 

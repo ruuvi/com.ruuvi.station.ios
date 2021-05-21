@@ -1,6 +1,6 @@
 import UIKit
 
-protocol DefaultsSwitchTableViewCellDelegate: class {
+protocol DefaultsSwitchTableViewCellDelegate: AnyObject {
     func defaultsSwitch(cell: DefaultsSwitchTableViewCell, didChange value: Bool)
 }
 

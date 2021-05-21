@@ -24,7 +24,7 @@ class SQLiteGRDBDatabase: GRDBDatabase {
         return instance
     }()
 
-    private static var databasePath: String {
+    static var databasePath: String {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,
                                                                 .userDomainMask, true).first! as NSString
         let databasePath = documentsPath.appendingPathComponent("grdb.sqlite")
@@ -70,7 +70,22 @@ extension SQLiteGRDBDatabase {
         migrator.registerMigration("Create SensorSettingsSQLite table") { db in
             try SensorSettingsSQLite.createTable(in: db)
         }
-
+        migrator.registerMigration("Add networkProvider column") { (db) in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                    .contains(where: {$0.name == RuuviTagSQLite.networkProviderColumn.name}) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName) { (t) in
+                t.add(column: RuuviTagSQLite.networkProviderColumn.name, .integer)
+                t.add(column: RuuviTagSQLite.isClaimedColumn.name, .boolean)
+                    .notNull()
+                    .defaults(to: false)
+                t.add(column: RuuviTagSQLite.isOwnerColumn.name, .boolean)
+                    .notNull()
+                    .defaults(to: false)
+                t.add(column: RuuviTagSQLite.owner.name, .text)
+            }
+        }
         try migrator.migrate(dbPool)
     }
 }

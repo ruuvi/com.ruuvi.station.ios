@@ -9,10 +9,11 @@ enum DiscoverTableSection {
     static var count = 2 // displayed simultaneously
 
     static func section(for index: Int, deviceCount: Int) -> DiscoverTableSection {
-        if deviceCount > 0 {
-            return index == 0 ? .webTag : .device
-        } else {
-            return index == 0 ? .webTag : .noDevices
+        switch index {
+        case 0:
+            return .webTag
+        default:
+            return deviceCount > 0 ? .device : .noDevices
         }
     }
 }
@@ -27,6 +28,8 @@ class DiscoverTableViewController: UITableViewController {
     @IBOutlet var getMoreSensorsEmptyDataSetView: UIView!
     @IBOutlet weak var getMoreSensorsFooterButton: UIButton!
     @IBOutlet weak var getMoreSensorsEmptyDataSetButton: UIButton!
+
+    private var alertVC: UIAlertController?
 
     var webTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]()
     var savedWebTagProviders: [WeatherProvider] = [WeatherProvider]() {
@@ -84,24 +87,22 @@ class DiscoverTableViewController: UITableViewController {
 
     private let hideAlreadyAddedWebProviders = false
     private var emptyDataSetView: UIView?
-    private let deviceCellReuseIdentifier = "DiscoverDeviceTableViewCellReuseIdentifier"
-    private let webTagCellReuseIdentifier = "DiscoverWebTagTableViewCellReuseIdentifier"
-    private let noDevicesCellReuseIdentifier = "DiscoverNoDevicesTableViewCellReuseIdentifier"
     private let webTagsInfoSectionHeaderReuseIdentifier = "DiscoverWebTagsInfoHeaderFooterView"
     private var shownDevices: [DiscoverDeviceViewModel] =  [DiscoverDeviceViewModel]() {
         didSet {
-            updateUIShownDevices()
+            updateTableView()
         }
     }
     private var shownWebTags: [DiscoverWebTagViewModel] = [DiscoverWebTagViewModel]() {
         didSet {
-            updateUIShownWebTags()
+            updateTableView()
         }
     }
 }
 
 // MARK: - DiscoverViewInput
 extension DiscoverTableViewController: DiscoverViewInput {
+
     func localize() {
         navigationItem.title = "DiscoverTable.NavigationItem.title".localized()
         getMoreSensorsFooterButton.setTitle("DiscoverTable.GetMoreSensors.button.title".localized(), for: .normal)
@@ -182,29 +183,17 @@ extension DiscoverTableViewController {
         let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
         switch section {
         case .webTag:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: webTagCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverWebTagTableViewCell
-            // swiftlint:enable force_cast
+            let cell = tableView.dequeueReusableCell(with: DiscoverWebTagTableViewCell.self, for: indexPath)
             let tag = shownWebTags[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .device:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: deviceCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverDeviceTableViewCell
-            // swiftlint:enable force_cast
+            let cell = tableView.dequeueReusableCell(with: DiscoverDeviceTableViewCell.self, for: indexPath)
             let tag = shownDevices[indexPath.row]
             configure(cell: cell, with: tag)
             return cell
         case .noDevices:
-            // swiftlint:disable force_cast
-            let cell = tableView
-                .dequeueReusableCell(withIdentifier: noDevicesCellReuseIdentifier,
-                                     for: indexPath) as! DiscoverNoDevicesTableViewCell
-            // swiftlint:enable force_cast
+            let cell = tableView.dequeueReusableCell(with: DiscoverNoDevicesTableViewCell.self, for: indexPath)
             cell.descriptionLabel.text = isBluetoothEnabled
                 ? "DiscoverTable.NoDevicesSection.NotFound.text".localized()
                 : "DiscoverTable.NoDevicesSection.BluetoothDisabled.text".localized()
@@ -217,8 +206,8 @@ extension DiscoverTableViewController {
 extension DiscoverTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let section = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
-        switch section {
+        let sectionType = DiscoverTableSection.section(for: indexPath.section, deviceCount: shownDevices.count)
+        switch sectionType {
         case .webTag:
             if indexPath.row < shownWebTags.count {
                 output.viewDidChoose(webTag: shownWebTags[indexPath.row])
@@ -234,8 +223,8 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let s = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if s == .webTag {
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if sectionType == .webTag {
             return 60
         } else {
             return super.tableView(tableView, heightForHeaderInSection: section)
@@ -247,8 +236,8 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        if section == .webTag {
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        if sectionType == .webTag {
             // swiftlint:disable force_cast
             let header = tableView
                 .dequeueReusableHeaderFooterView(withIdentifier: webTagsInfoSectionHeaderReuseIdentifier)
@@ -262,8 +251,8 @@ extension DiscoverTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let section = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
-        switch section {
+        let sectionType = DiscoverTableSection.section(for: section, deviceCount: shownDevices.count)
+        switch sectionType {
         case .device:
             return shownDevices.count > 0 ? "DiscoverTable.SectionTitle.Devices".localized() : nil
         case .noDevices:
@@ -271,7 +260,6 @@ extension DiscoverTableViewController {
         default:
             return nil
         }
-
     }
 }
 
@@ -332,8 +320,7 @@ extension DiscoverTableViewController {
 // MARK: - Update UI
 extension DiscoverTableViewController {
     private func updateUI() {
-        updateUIShownDevices()
-        updateUIShownWebTags()
+        updateTableView()
         updateUIISBluetoothEnabled()
         updateUIIsCloseEnabled()
     }
@@ -354,13 +341,7 @@ extension DiscoverTableViewController {
         }
     }
 
-    private func updateUIShownDevices() {
-        if isViewLoaded {
-            tableView.reloadData()
-        }
-    }
-
-    private func updateUIShownWebTags() {
+    private func updateTableView() {
         if isViewLoaded {
             tableView.reloadData()
         }
@@ -377,3 +358,4 @@ extension DiscoverTableViewController {
         }
     }
 }
+// swiftlint:enable file_length

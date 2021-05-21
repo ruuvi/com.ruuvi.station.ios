@@ -12,11 +12,11 @@
         <!--Selection Table View Controller-->
         <scene sceneID="khz-pU-Lms">
             <objects>
-                <tableViewController storyboardIdentifier="SelectionTableViewController" id="PdF-Y5-1vM" customClass="SelectionTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SelectionTableViewController" id="PdF-Y5-1vM" customClass="SelectionTableViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="1zQ-JX-1To">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="O45-Y6-VN5">
                             <rect key="frame" x="0.0" y="100" width="414" height="125"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -30,7 +30,6 @@
                                 </textView>
                             </subviews>
                             <viewLayoutGuide key="safeArea" id="dWm-r6-K5a"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="36O-BM-B99" firstAttribute="leading" secondItem="dWm-r6-K5a" secondAttribute="leading" constant="16" id="HMQ-Mr-KKd"/>
                                 <constraint firstItem="dWm-r6-K5a" firstAttribute="trailing" secondItem="36O-BM-B99" secondAttribute="trailing" constant="16" id="eko-El-u0F"/>
@@ -39,7 +38,7 @@
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectionTableViewCellReuseIdentifier" id="UiS-iq-DwB" customClass="SelectionTableViewCell" customModule="station" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectionTableViewCellReuseIdentifier" id="UiS-iq-DwB" customClass="SelectionTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UiS-iq-DwB" id="HrB-F0-P4C">
@@ -58,6 +57,7 @@
                                         <constraint firstItem="DVb-al-h02" firstAttribute="leading" secondItem="HrB-F0-P4C" secondAttribute="leading" constant="20" id="wEb-yp-Cxo"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" systemColor="tableCellGroupedBackgroundColor"/>
                                 <connections>
                                     <outlet property="nameLabel" destination="DVb-al-h02" id="RDx-Kl-1El"/>
                                 </connections>
@@ -73,7 +73,7 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QBY-SR-9HW" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="dl0-K2-4T7" customClass="SelectionTableInitializer" customModule="station" customModuleProvider="target">
+                <customObject id="dl0-K2-4T7" customClass="SelectionTableInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
                     <connections>
                         <outlet property="viewController" destination="PdF-Y5-1vM" id="YMv-Km-EbB"/>
                     </connections>
@@ -85,6 +85,12 @@
     <resources>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGroupedBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

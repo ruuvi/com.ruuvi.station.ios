@@ -9,7 +9,8 @@ enum TagSettingsTableSection: Int {
     case alerts = 3
     case calibration = 4
     case offsetCorrection = 5
-    case moreInfo = 6
+    case moreInfo = 7
+    case networkInfo = 8
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -21,6 +22,11 @@ enum TagSettingsTableSection: Int {
 
     static func section(for sectionIndex: Int) -> TagSettingsTableSection {
         return TagSettingsTableSection(rawValue: sectionIndex) ?? .name
+    }
+
+    static func showNetworkInfo(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.isAuthorized.value == true
+            && viewModel?.owner.value?.isEmpty == false
     }
 }
 
@@ -44,6 +50,14 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var humidityAlertHeaderCell: TagSettingsAlertHeaderCell!
     @IBOutlet weak var humidityAlertControlsCell: TagSettingsAlertControlsCell!
+
+    @IBOutlet weak var networkOwnerCell: UITableViewCell!
+    @IBOutlet weak var networkOwnerLabel: UILabel!
+    @IBOutlet weak var networkOwnerValueLabel: UILabel!
+
+    @IBOutlet weak var networkTagActionsStackView: UIStackView!
+    @IBOutlet weak var claimTagButton: UIButton!
+    @IBOutlet weak var shareTagButton: UIButton!
 
     @IBOutlet weak var connectStatusLabel: UILabel!
     @IBOutlet weak var keepConnectionSwitch: UISwitch!
@@ -100,6 +114,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var pressureOffsetValueLabel: UILabel!
 
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
+    @IBOutlet weak var footerView: UIView!
 
     var viewModel: TagSettingsViewModel? {
         didSet {
@@ -160,6 +175,10 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         temperatureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
         humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
         pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
+
+        claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
+        shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
+        networkOwnerLabel.text = "TagSettings.NetworkInfo.Owner".localized()
 
         tableView.reloadData()
     }
@@ -271,6 +290,7 @@ extension TagSettingsTableViewController {
     }
 
     @IBAction func removeThisRuuviTagButtonTouchUpInside(_ sender: Any) {
+        playImpact()
         output.viewDidAskToRemoveRuuviTag()
     }
 
@@ -297,6 +317,20 @@ extension TagSettingsTableViewController {
             viewModel?.isPressureAlertOn.value = false
             viewModel?.isMovementAlertOn.value = false
         }
+    }
+
+    @IBAction func didTapClaimButton(_ sender: UIButton) {
+        playImpact()
+        output.viewDidTapClaimButton()
+    }
+
+    @IBAction func didTapShareButton(_ sender: UIButton) {
+        playImpact()
+        output.viewDidTapShareButton()
+    }
+
+    private func playImpact() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 }
 
@@ -345,6 +379,9 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? "TagSettings.SectionHeader.Connection.title".localized() : nil
+        case .networkInfo:
+            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+                ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
         default:
             return nil
         }
@@ -398,6 +435,9 @@ extension TagSettingsTableViewController {
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
                 ? super.tableView(tableView, heightForHeaderInSection: section) : .leastNormalMagnitude
+        case .networkInfo:
+            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+                ? 44 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -425,6 +465,10 @@ extension TagSettingsTableViewController {
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         case .connection:
             return TagSettingsTableSection.showConnection(for: viewModel)
+                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+
+        case .networkInfo:
+            return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         default:
             return super.tableView(tableView, numberOfRowsInSection: section)
@@ -646,13 +690,36 @@ extension TagSettingsTableViewController {
         bindPressureAlertCells()
         bindConnectionAlertCells()
         bindMovementAlertCell()
-        guard isViewLoaded, let viewModel = viewModel  else { return }
+        bindTagNetworkActions()
+
+        guard isViewLoaded, let viewModel = viewModel else { return }
+
+        footerView.bind(viewModel.isAuthorized,
+                        block: { (footerView, isAuthorized) in
+            if isAuthorized == true {
+                let size: CGSize = CGSize(width: footerView.frame.width,
+                                          height: 145)
+                footerView.frame = CGRect(origin: footerView.frame.origin,
+                                          size: size)
+            } else {
+                let size: CGSize = CGSize(width: footerView.frame.width,
+                                          height: 82)
+                footerView.frame = CGRect(origin: footerView.frame.origin,
+                                          size: size)
+            }
+        })
 
         dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
             if let isConnected = isConnected, isConnected {
                 label.text = "TagSettings.DataSource.Heartbeat.title".localized()
             } else {
                 label.text = "TagSettings.DataSource.Advertisement.title".localized()
+            }
+        }
+
+        dataSourceValueLabel.bind(viewModel.isNetworkConnected) { (label, isNetworkConnected) in
+            if isNetworkConnected == true {
+                label.text = "TagSettings.DataSource.Network.title".localized()
             }
         }
 
@@ -747,6 +814,10 @@ extension TagSettingsTableViewController {
             } else {
                 label.text = emptyValueString.localized()
             }
+        }
+
+        networkOwnerValueLabel.bind(viewModel.owner) { (label, owner) in
+            label.text = owner
         }
 
         tableView.bind(viewModel.isConnectable) { (tableView, _) in
@@ -1363,6 +1434,33 @@ extension TagSettingsTableViewController {
         }
     }
 
+// MARK: - bind tag network actions
+    func bindTagNetworkActions() {
+        guard isViewLoaded, let viewModel = viewModel else {
+            return
+        }
+        let enabledColor = UIColor(red: 21/255, green: 141/255, blue: 165/255, alpha: 1.0)
+        let disabledColor = UIColor.gray
+        networkTagActionsStackView.bind(viewModel.isAuthorized) { (stack, isAuthorized) in
+            stack.isHidden = !(isAuthorized ?? false)
+        }
+        claimTagButton.bind(viewModel.canClaimTag) { (button, canClaimTag) in
+            let canClaimTag: Bool = canClaimTag ?? false
+            button.isEnabled = canClaimTag
+            button.backgroundColor = canClaimTag ? enabledColor : disabledColor
+        }
+        shareTagButton.bind(viewModel.canShareTag) { (button, canShareTag) in
+            let canShareTag: Bool = canShareTag ?? false
+            button.isEnabled = canShareTag
+            button.backgroundColor = canShareTag ? enabledColor : disabledColor
+        }
+        claimTagButton.bind(viewModel.isClaimedTag) { (button, isClaimedTag) in
+                let title = isClaimedTag ?? false
+                    ? "TagSettings.ClaimTagButton.Unclaim".localized()
+                    : "TagSettings.ClaimTagButton.Claim".localized()
+                button.setTitle(title, for: .normal)
+        }
+    }
     private func bindOffsetCorrectionCells() {
         guard isViewLoaded, let viewModel = viewModel else {
             return
