@@ -5,6 +5,7 @@ import Humidity
 // MARK: - Process Physical Sensors
 extension AlertServiceImpl {
 
+    // swiftlint:disable:next function_body_length
     func process(heartbeat ruuviTag: RuuviTagSensorRecord) {
         var isTriggered = false
         AlertType.allCases.forEach { (type) in
@@ -55,6 +56,10 @@ extension AlertServiceImpl {
 
         if hasRegistrations(for: uuid) {
             notify(uuid: uuid, isTriggered: isTriggered)
+        }
+
+        if let macId = ruuviTag.macId?.mac, hasRegistrations(for: macId) {
+            notify(uuid: macId, isTriggered: isTriggered)
         }
     }
 }
