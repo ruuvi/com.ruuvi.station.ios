@@ -6,10 +6,11 @@ import UIKit
 import Charts
 import Future
 
-class TagChartsPresenter: TagChartsModuleInput {
+class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
     var router: TagChartsRouterInput!
     var interactor: TagChartsInteractorInput!
+
     var errorPresenter: ErrorPresenter!
     var backgroundPersistence: BackgroundPersistence!
     var settings: Settings!
@@ -17,9 +18,12 @@ class TagChartsPresenter: TagChartsModuleInput {
     var ruuviTagTrunk: RuuviTagTrunk!
     var ruuviTagReactor: RuuviTagReactor!
     var activityPresenter: ActivityPresenter!
+    var alertPresenter: AlertPresenter!
+    var mailComposerPresenter: MailComposerPresenter!
+
     var alertService: AlertService!
     var background: BTBackground!
-    var mailComposerPresenter: MailComposerPresenter!
+
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
@@ -49,6 +53,7 @@ class TagChartsPresenter: TagChartsModuleInput {
     private var sensorSettingsToken: RUObservationToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
+    private var exportFileUrl: URL?
     private var ruuviTag: AnyRuuviTagSensor! {
         didSet {
             syncViewModel()
@@ -153,7 +158,15 @@ extension TagChartsPresenter: TagChartsViewOutput {
     func viewDidTriggerExport(for viewModel: TagChartsViewModel) {
         isLoading = true
         interactor.export().on(success: { [weak self] url in
+            #if targetEnvironment(macCatalyst)
+            guard let sSelf = self else {
+                fatalError()
+            }
+            sSelf.exportFileUrl = url
+            sSelf.router.macCatalystExportFile(with: url, delegate: sSelf)
+            #else
             self?.view.showExportSheet(with: url)
+            #endif
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         }, completion: { [weak self] in
@@ -165,7 +178,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         view.showClearConfirmationDialog(for: viewModel)
     }
 
-    func viewDidConfirmToSync(for viewModel: TagChartsViewModel) {
+    func viewDidConfirmToSyncWithTag(for viewModel: TagChartsViewModel) {
         isSyncing = true
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
@@ -176,6 +189,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         }
         op.on(success: { [weak self] _ in
             self?.view.setSync(progress: nil, for: viewModel)
+            self?.interactor.restartObservingData()
         }, failure: { [weak self] error in
             self?.view.setSync(progress: nil, for: viewModel)
             if case .btkit(.logic(.connectionTimedOut)) = error {
@@ -215,9 +229,37 @@ extension TagChartsPresenter: TagChartsInteractorOutput {
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.ruuviTag = sensor
     }
+
+    func interactorDidSyncComplete(_ recordsCount: Int) {
+        let okAction = UIAlertAction(title: "OK".localized(),
+                                     style: .default,
+                                     handler: nil)
+        let title, message: String
+        if recordsCount > 0 {
+            title = "TagCharts.Status.Success".localized()
+            message = String(format: "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork".localized(),
+                             String(recordsCount))
+        } else {
+            title = "TagChartsPresenter.NetworkSync".localized()
+            message = "TagChartsPresenter.NoNewMeasurementsFromNetwork".localized()
+        }
+
+        let alertViewModel: AlertViewModel = AlertViewModel(
+            title: title,
+            message: message,
+            style: .alert,
+            actions: [okAction])
+        alertPresenter.showAlert(alertViewModel)
+    }
 }
 // MARK: - DiscoverModuleOutput
 extension TagChartsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
+        module.dismiss { [weak self] in
+            self?.router.dismiss()
+        }
+    }
+
     func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
         module.dismiss { [weak self] in
             self?.router.dismiss()
@@ -268,7 +310,26 @@ extension TagChartsPresenter: MenuModuleOutput {
                                                 body: "\n\n" + summary)
         }
     }
+
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn(output: self)
+    }
+
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+    }
 }
+
+// MARK: - SignInModuleOutput
+extension TagChartsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+    }
+}
+
+// MARK: - TagsManagerModuleOutput
+extension TagChartsPresenter: TagsManagerModuleOutput {}
 
 // MARK: - AlertServiceObserver
 extension TagChartsPresenter: AlertServiceObserver {
@@ -297,7 +358,7 @@ extension TagChartsPresenter: TagSettingsModuleOutput {
 extension TagChartsPresenter {
 
     private func tryToShowSwipeUpHint() {
-        if UIApplication.shared.statusBarOrientation.isLandscape
+        if UIWindow.isLandscape
             && !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
             view.showSwipeUpInstruction()
@@ -318,11 +379,9 @@ extension TagChartsPresenter {
                 self.sensorSettings = settings
             }
         } else if let macId = ruuviTag.macId {
-            print(macId)
-            // FIXME
-            // viewModel.background.value = backgroundPersistence.background(for: macId)
-            // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
-             viewModel.isConnected.value = false
+            viewModel.background.value = backgroundPersistence.background(for: macId)
+            viewModel.alertState.value = alertService.hasRegistrations(for: macId.value) ? .registered : .empty
+            viewModel.isConnected.value = false
         } else {
             assertionFailure()
         }
@@ -387,6 +446,16 @@ extension TagChartsPresenter {
                             self?.viewModel.uuid.value == luid.value {
                 self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
             }
+
+            if let userInfo = notification.userInfo {
+                if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+                self?.viewModel.uuid.value == luid.value {
+                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
+                    self?.viewModel.mac.value == macId.value {
+                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                }
+            }
         }
     }
 
@@ -426,8 +495,7 @@ extension TagChartsPresenter {
         if let luid = ruuviTag.luid {
             alertService.subscribe(self, to: luid.value)
         } else if let macId = ruuviTag.macId {
-            // FIXME
-            print(macId)
+            alertService.subscribe(self, to: macId.value)
         } else {
             assertionFailure()
         }
@@ -485,6 +553,14 @@ extension TagChartsPresenter {
                                 self?.dismiss()
                             }
             })
+    }
+}
+
+extension TagChartsPresenter: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let url = exportFileUrl {
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 }
 // swiftlint:enable file_length

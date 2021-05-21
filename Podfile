@@ -11,6 +11,7 @@ def shared_pods
   pod 'Firebase/Messaging'
   pod 'Firebase/Analytics'
   pod 'Firebase/Crashlytics'
+  pod 'Firebase/RemoteConfig'
   pod 'Firebase/InAppMessaging'
   pod 'FutureX'
   pod 'GestureInstructions'
@@ -25,6 +26,7 @@ def shared_pods
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
   pod 'SwiftGen', '~> 6.0'
+  pod 'KeychainAccess'
 end
 
 target 'station' do

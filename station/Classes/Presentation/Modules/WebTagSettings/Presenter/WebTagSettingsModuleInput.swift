@@ -1,6 +1,6 @@
 import Foundation
 
-protocol WebTagSettingsModuleInput: class {
+protocol WebTagSettingsModuleInput: AnyObject {
     func configure(webTag: WebTagRealm,
                    temperature: Temperature?)
 }

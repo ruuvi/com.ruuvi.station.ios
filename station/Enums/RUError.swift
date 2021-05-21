@@ -9,9 +9,11 @@ enum RUError: Error {
     case map(Error)
     case bluetooth(BluetoothError)
     case btkit(BTError)
+    case ruuviNetwork(RuuviNetworkError)
     case expected(ExpectedError)
     case unexpected(UnexpectedError)
     case writeToDisk(Error)
+    case userApi(UserApiError)
 }
 
 extension RUError: LocalizedError {
@@ -36,6 +38,10 @@ extension RUError: LocalizedError {
         case .bluetooth(let error):
             return error.localizedDescription
         case .writeToDisk(let error):
+            return error.localizedDescription
+        case .ruuviNetwork(let error):
+            return error.localizedDescription
+        case .userApi(let error):
             return error.localizedDescription
         }
     }
@@ -119,6 +125,9 @@ enum UnexpectedError: Error {
     case failedToFindLogsForTheTag
     case viewModelUUIDIsNil
     case attemptToReadDataFromRealmWithoutLUID
+    case failedToConstructURL
+    case notAHttpResponse
+    case failedToParseHttpResponse
 }
 
 extension UnexpectedError: LocalizedError {
@@ -140,6 +149,49 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.attemptToReadDataFromRealmWithoutLUID".localized()
         case .failedToFindVirtualTag:
             return "UnexpectedError.failedToFindVirtualTag".localized()
+        case .failedToConstructURL:
+            return "UnexpectedError.failedToConstructURL".localized()
+        case .notAHttpResponse:
+            return "UnexpectedError.notAHttpResponse".localized()
+        case .failedToParseHttpResponse:
+            return "UnexpectedError.failedToParseHttpResponse".localized()
         }
+    }
+}
+
+enum RuuviNetworkError: Error {
+    case noSavedApiKeyValue
+    case failedToLogIn
+    case doesNotHaveSensors
+    case noStoredData
+    case tagAlreadyExists
+    case notAuthorized
+}
+extension RuuviNetworkError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .noSavedApiKeyValue:
+            return "RuuviNetworkError.NoSavedApiKeyValue".localized()
+        case .failedToLogIn:
+            return "RuuviNetworkError.FailedToLogIn".localized()
+        case .doesNotHaveSensors:
+            return "RuuviNetworkError.DoesNotHaveSensors".localized()
+        case .noStoredData:
+            return "RuuviNetworkError.NoStoredData".localized()
+        case .tagAlreadyExists:
+            return "RuuviNetworkError.TagAlreadyExists".localized()
+        case .notAuthorized:
+            return "RuuviNetworkError.NotAuthorized".localized()
+        }
+    }
+}
+
+struct UserApiError: Error {
+    static let emptyResponse: UserApiError = UserApiError(description: "Empty response")
+    let description: String
+}
+extension UserApiError: LocalizedError {
+    public var errorDescription: String? {
+        return description.localized()
     }
 }

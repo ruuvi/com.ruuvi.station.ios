@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 protocol TagChartsRouterInput {
     func dismiss(completion: (() -> Void)?)
@@ -6,6 +6,7 @@ protocol TagChartsRouterInput {
     func openSettings()
     func openAbout()
     func openRuuviWebsite()
+    func openSignIn(output: SignInModuleOutput)
     func openMenu(output: MenuModuleOutput)
     func openTagSettings(ruuviTag: RuuviTagSensor,
                          temperature: Temperature?,
@@ -14,6 +15,7 @@ protocol TagChartsRouterInput {
                          output: TagSettingsModuleOutput)
     func openWebTagSettings(webTag: WebTagRealm,
                             temperature: Temperature?)
+    func macCatalystExportFile(with path: URL, delegate: UIDocumentPickerDelegate?)
 }
 extension TagChartsRouterInput {
     func dismiss() {

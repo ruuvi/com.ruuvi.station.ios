@@ -8,6 +8,10 @@ struct RuuviTagSQLite: RuuviTagSensor {
     var name: String
     var version: Int
     var isConnectable: Bool
+    var networkProvider: RuuviNetworkProvider?
+    var isClaimed: Bool
+    var isOwner: Bool
+    var owner: String?
 }
 
 extension RuuviTagSQLite {
@@ -17,16 +21,30 @@ extension RuuviTagSQLite {
     static let nameColumn = Column("name")
     static let versionColumn = Column("version")
     static let isConnectableColumn = Column("isConnectable")
+    static let networkProviderColumn = Column("networkProvider")
+    static let isClaimedColumn = Column("isClaimed")
+    static let isOwnerColumn = Column("isOwner")
+    static let owner = Column("owner")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
     init(row: Row) {
         id = row[RuuviTagSQLite.idColumn]
-        macId = MACIdentifierStruct(value: row[RuuviTagSQLite.macColumn])
-        luid = LocalIdentifierStruct(value: row[RuuviTagSQLite.luidColumn])
+        if let macIdColumn = row[RuuviTagSQLite.macColumn] as? String {
+            macId = MACIdentifierStruct(value: macIdColumn)
+        }
+        if let luidColumn = row[RuuviTagSQLite.luidColumn] as? String {
+            luid = LocalIdentifierStruct(value: luidColumn)
+        }
         name = row[RuuviTagSQLite.nameColumn]
         version = row[RuuviTagSQLite.versionColumn]
         isConnectable = row[RuuviTagSQLite.isConnectableColumn]
+        if row[RuuviTagSQLite.networkProviderColumn] != nil {
+            networkProvider = RuuviNetworkProvider(rawValue: row[RuuviTagSQLite.networkProviderColumn])
+        }
+        isClaimed = row[RuuviTagSQLite.isClaimedColumn]
+        isOwner = row[RuuviTagSQLite.isOwnerColumn]
+        owner = row[RuuviTagSQLite.owner]
     }
 }
 
@@ -42,6 +60,10 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.nameColumn] = name
         container[RuuviTagSQLite.versionColumn] = version
         container[RuuviTagSQLite.isConnectableColumn] = isConnectable
+        container[RuuviTagSQLite.networkProviderColumn] = networkProvider?.rawValue
+        container[RuuviTagSQLite.isClaimedColumn] = isClaimed
+        container[RuuviTagSQLite.isOwnerColumn] = isOwner
+        container[RuuviTagSQLite.owner] = owner
     }
 }
 
@@ -54,6 +76,14 @@ extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
             table.column(RuuviTagSQLite.versionColumn.name, .integer).notNull()
             table.column(RuuviTagSQLite.isConnectableColumn.name, .boolean).notNull()
+            table.column(RuuviTagSQLite.networkProviderColumn.name, .integer)
+            table.column(RuuviTagSQLite.isClaimedColumn.name, .boolean)
+                .notNull()
+                .defaults(to: false)
+            table.column(RuuviTagSQLite.isOwnerColumn.name, .boolean)
+                .notNull()
+                .defaults(to: false)
+            table.column(RuuviTagSQLite.owner.name, .text)
         })
     }
 }

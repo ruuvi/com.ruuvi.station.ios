@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rwY-q3-uN6">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="c5Q-3B-23n">
+            <objects>
+                <navigationController id="rwY-q3-uN6" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dap-dT-577">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="fub-5F-KbL" kind="relationship" relationship="rootViewController" id="bWn-A1-za1"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ygq-sV-WgC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-657" y="113"/>
+        </scene>
+        <!--email-->
+        <scene sceneID="d6b-d3-DcN">
+            <objects>
+                <viewController id="fub-5F-KbL" customClass="TagsManagerViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="R88-os-Y9d">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4S7-AX-g2G">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="sectionIndexBackgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TagManagerTableViewCell" textLabel="4Q4-ka-6dh" detailTextLabel="Lvj-at-yW1" imageView="Re5-tj-V7L" rowHeight="58" style="IBUITableViewCellStyleSubtitle" id="4Uo-hb-i3k" customClass="TagManagerTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="58"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4Uo-hb-i3k" id="v7Y-b6-83M">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="58"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4Q4-ka-6dh">
+                                                    <rect key="frame" x="85" y="9" width="33" height="20.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="no-image" id="Re5-tj-V7L">
+                                                    <rect key="frame" x="20" y="4" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lvj-at-yW1">
+                                                    <rect key="frame" x="85" y="32.5" width="44" height="14.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TagManagerButtonTableViewCell" id="Ud1-GA-EJ9" customClass="TagManagerButtonTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="86" width="414" height="75.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ud1-GA-EJ9" id="0RB-0S-dCA">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="75.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0h1-vf-6Hm">
+                                                    <rect key="frame" x="147.5" y="16" width="119" height="43.5"/>
+                                                    <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                                    <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                    <state key="normal" title="REMOVE"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="22"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="didTapButton:" destination="Ud1-GA-EJ9" eventType="touchUpInside" id="cI3-33-eSg"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="centerX" secondItem="0RB-0S-dCA" secondAttribute="centerX" id="2aq-TM-wtd"/>
+                                                <constraint firstAttribute="bottom" secondItem="0h1-vf-6Hm" secondAttribute="bottom" constant="16" id="9my-r9-UrY"/>
+                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="top" secondItem="0RB-0S-dCA" secondAttribute="top" constant="16" id="EWS-W4-vcE"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0h1-vf-6Hm" secondAttribute="trailing" constant="20" id="Im6-Vb-Myg"/>
+                                                <constraint firstItem="0h1-vf-6Hm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0RB-0S-dCA" secondAttribute="leading" constant="20" id="uDD-s0-OcA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="button" destination="0h1-vf-6Hm" id="wrp-VC-cFB"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="fub-5F-KbL" id="TGD-Bi-mLn"/>
+                                    <outlet property="delegate" destination="fub-5F-KbL" id="7bN-nS-3Kr"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="i1a-sB-Wsk"/>
+                        <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="4S7-AX-g2G" firstAttribute="leading" secondItem="i1a-sB-Wsk" secondAttribute="leading" id="0zQ-QH-MPI"/>
+                            <constraint firstItem="i1a-sB-Wsk" firstAttribute="trailing" secondItem="4S7-AX-g2G" secondAttribute="trailing" id="cUq-C2-ctX"/>
+                            <constraint firstItem="4S7-AX-g2G" firstAttribute="top" secondItem="i1a-sB-Wsk" secondAttribute="top" id="gvm-IO-72A"/>
+                            <constraint firstItem="4S7-AX-g2G" firstAttribute="bottom" secondItem="i1a-sB-Wsk" secondAttribute="bottom" id="s74-SL-yz2"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="email" id="cJq-PJ-HAu">
+                        <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="a46-Go-Irn">
+                            <connections>
+                                <action selector="didCloseButtonTap:" destination="fub-5F-KbL" id="dx6-TJ-w39"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Sign out" id="dSL-32-sAi">
+                            <color key="tintColor" systemColor="systemRedColor"/>
+                            <connections>
+                                <action selector="didSignOutButtonTap:" destination="fub-5F-KbL" id="oWm-dT-KTq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="signOutBarButtonItem" destination="dSL-32-sAi" id="YVq-5W-lxj"/>
+                        <outlet property="tableView" destination="4S7-AX-g2G" id="Cj6-YQ-uLl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iw8-V0-QEk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="hdY-zf-dMO" customClass="TagsManagerInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="fub-5F-KbL" id="jnc-M4-gd2"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="153.62318840579712" y="112.5"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="dismiss-modal-icon" width="17" height="17"/>
+        <image name="no-image" width="50" height="50"/>
+        <systemColor name="secondarySystemGroupedBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

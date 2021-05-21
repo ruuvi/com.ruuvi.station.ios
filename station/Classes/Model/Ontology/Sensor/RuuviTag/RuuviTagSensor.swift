@@ -1,6 +1,6 @@
 import Foundation
 
-protocol RuuviTagSensor: PhysicalSensor, Versionable {}
+protocol RuuviTagSensor: PhysicalSensor, Versionable, Networkable {}
 
 extension RuuviTagSensor {
     var id: String {
@@ -23,7 +23,11 @@ extension RuuviTagSensor {
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
-                                    name: name)
+                                    name: name,
+                                    networkProvider: networkProvider,
+                                    isClaimed: isClaimed,
+                                    isOwner: isOwner,
+                                    owner: owner)
     }
 
     func with(version: Int) -> RuuviTagSensor {
@@ -31,7 +35,10 @@ extension RuuviTagSensor {
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
-                                    name: name)
+                                    name: name,
+                                    isClaimed: isClaimed,
+                                    isOwner: isOwner,
+                                    owner: owner)
     }
 
     func with(macId: MACIdentifier) -> RuuviTagSensor {
@@ -39,7 +46,10 @@ extension RuuviTagSensor {
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
-                                    name: name)
+                                    name: name,
+                                    isClaimed: isClaimed,
+                                    isOwner: isOwner,
+                                    owner: owner)
     }
 
     func withoutMac() -> RuuviTagSensor {
@@ -47,7 +57,10 @@ extension RuuviTagSensor {
                                     luid: luid,
                                     macId: nil,
                                     isConnectable: isConnectable,
-                                    name: name)
+                                    name: name,
+                                    isClaimed: isClaimed,
+                                    isOwner: isOwner,
+                                    owner: owner)
     }
 
     func with(isConnectable: Bool) -> RuuviTagSensor {
@@ -55,7 +68,14 @@ extension RuuviTagSensor {
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
-                                    name: name)
+                                    name: name,
+                                    isClaimed: isClaimed,
+                                    isOwner: isOwner,
+                                    owner: owner)
+    }
+
+    var isNetworkConnectable: Bool {
+        return networkProvider != nil
     }
 }
 
@@ -65,6 +85,10 @@ struct RuuviTagSensorStruct: RuuviTagSensor {
     var macId: MACIdentifier?
     var isConnectable: Bool
     var name: String
+    var networkProvider: RuuviNetworkProvider?
+    var isClaimed: Bool
+    var isOwner: Bool
+    var owner: String?
 }
 
 struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
@@ -88,6 +112,18 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
     }
     var name: String {
         return object.name
+    }
+    var networkProvider: RuuviNetworkProvider? {
+        return object.networkProvider
+    }
+    var isClaimed: Bool {
+        return object.isClaimed
+    }
+    var isOwner: Bool {
+        return object.isOwner
+    }
+    var owner: String? {
+        return object.owner
     }
 
     static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {

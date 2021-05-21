@@ -1,6 +1,7 @@
 import Swinject
 import BTKit
 
+// swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
 
     // swiftlint:disable:next function_body_length
@@ -24,11 +25,14 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
+            service.pullNetworkTagDaemon = r.resolve(PullRuuviNetworkDaemon.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
+            service.keychainService = r.resolve(KeychainService.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
             service.backgroundTaskService = r.resolve(BackgroundTaskService.self)
             service.backgroundProcessService = r.resolve(BackgroundProcessService.self)
             service.userPropertiesService = r.resolve(UserPropertiesService.self)
+            service.universalLinkCoordinator = r.resolve(UniversalLinkCoordinator.self)
             return service
         }.inObjectScope(.container)
 
@@ -48,6 +52,7 @@ class BusinessAssembly: Assembly {
             if #available(iOS 13, *) {
                 let service = BackgroundTaskServiceiOS13()
                 service.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
+                service.ruuviTagNetworkOperationManager = r.resolve(RuuviNetworkTagOperationsManager.self)
                 return service
             } else {
                 let service = BackgroundTaskServiceiOS12()
@@ -79,11 +84,35 @@ class BusinessAssembly: Assembly {
             return service
         }
 
+        container.register(FallbackFeatureToggleProvider.self) { _ in
+            let provider = FallbackFeatureToggleProvider()
+            return provider
+        }.inObjectScope(.container)
+
+        container.register(FeatureToggleService.self) { r in
+            let service = FeatureToggleService()
+            service.firebaseProvider = r.resolve(FirebaseFeatureToggleProvider.self)
+            service.fallbackProvider = r.resolve(FallbackFeatureToggleProvider.self)
+            service.localProvider = r.resolve(LocalFeatureToggleProvider.self)
+            return service
+        }.inObjectScope(.container)
+
+        container.register(FirebaseFeatureToggleProvider.self) { r in
+            let provider = FirebaseFeatureToggleProvider()
+            provider.remoteConfigService = r.resolve(RemoteConfigService.self)
+            return provider
+        }.inObjectScope(.container)
+
         container.register(GATTService.self) { r in
             let service = GATTServiceQueue()
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
             service.background = r.resolve(BTBackground.self)
             return service
+        }.inObjectScope(.container)
+
+        container.register(LocalFeatureToggleProvider.self) { _ in
+            let provider = LocalFeatureToggleProvider()
+            return provider
         }.inObjectScope(.container)
 
         container.register(LocationService.self) { r in
@@ -137,6 +166,19 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
+        container.register(PullRuuviNetworkDaemon.self) { r in
+            let daemon = PullRuuviNetworkDaemonOperation()
+            daemon.settings = r.resolve(Settings.self)
+            daemon.networkPersistance = r.resolve(NetworkPersistence.self)
+            daemon.ruuviTagNetworkOperationsManager = r.resolve(RuuviNetworkTagOperationsManager.self)
+            return daemon
+        }.inObjectScope(.container)
+
+        container.register(RemoteConfigService.self) { _ in
+            let service = FirebaseRemoteConfigService()
+            return service
+        }.inObjectScope(.container)
+
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(Settings.self)
@@ -159,6 +201,18 @@ class BusinessAssembly: Assembly {
             daemon.settings = r.resolve(Settings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
             return daemon
+        }.inObjectScope(.container)
+
+        container.register(NetworkService.self) { r in
+            let service = NetworkServiceQueue()
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            let factory = RuuviNetworkFactory()
+            factory.userApi = r.resolve(RuuviNetworkUserApi.self)
+            service.ruuviNetworkFactory = factory
+            service.networkPersistence = r.resolve(NetworkPersistence.self)
+            service.settings = r.resolve(Settings.self)
+            return service
         }.inObjectScope(.container)
 
         container.register(RuuviTagPropertiesDaemon.self) { r in
@@ -210,5 +264,24 @@ class BusinessAssembly: Assembly {
             service.settings = r.resolve(Settings.self)
             return service
         }
+
+        container.register(RuuviNetworkTagOperationsManager.self) { r in
+            let service = RuuviNetworkTagOperationsManager()
+            service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
+            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.keychainService = r.resolve(KeychainService.self)
+            service.networkPersistance = r.resolve(NetworkPersistence.self)
+            service.settings = r.resolve(Settings.self)
+            return service
+        }
+
+        container.register(UniversalLinkCoordinator.self, factory: { r in
+            let coordinator = UniversalLinkCoordinatorImpl()
+            let router = UniversalLinkRouterImpl()
+            coordinator.keychainService = r.resolve(KeychainService.self)
+            coordinator.router = router
+            return coordinator
+        })
     }
 }

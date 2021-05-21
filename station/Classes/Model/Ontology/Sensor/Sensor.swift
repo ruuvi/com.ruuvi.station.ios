@@ -20,6 +20,13 @@ protocol Locateable {
     var location: Location { get }
 }
 
+protocol Networkable {
+    var networkProvider: RuuviNetworkProvider? { get }
+    var isClaimed: Bool { get }
+    var isOwner: Bool { get }
+    var owner: String? { get }
+}
+
 protocol Sensor: StringIdentifieable {}
 
 protocol PhysicalSensor: Sensor, Connectable, Nameable {

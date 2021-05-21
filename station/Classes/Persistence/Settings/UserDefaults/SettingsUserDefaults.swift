@@ -216,6 +216,13 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])
     var tagsSorting: [String]
 
+    @UserDefault("SettingsUserDefaults.networkPullIntervalMinutes", defaultValue: 300)
+    var networkPullIntervalSeconds: Int
+
+    @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: 240)
+    var networkPruningIntervalHours: Int
+
+// MARK: - Private
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
 
@@ -260,4 +267,7 @@ class SettingsUserDegaults: Settings {
                       userInfo: nil)
         }
     }
+
+    @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
+    var experimentalFeaturesEnabled: Bool
 }

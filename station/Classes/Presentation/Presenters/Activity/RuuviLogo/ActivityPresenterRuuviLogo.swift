@@ -45,7 +45,7 @@ class ActivityPresenterRuuviLogo: ActivityPresenter {
 
     private func show() {
         startTime = CFAbsoluteTimeGetCurrent()
-        appWindow = UIApplication.shared.keyWindow
+        appWindow = UIWindow.key
         window.makeKeyAndVisible()
         hudViewController.spinnerView.animate()
     }

@@ -1,4 +1,4 @@
-// swiftlint:disable file_length
+// swiftlint:disable file_length trailing_whitespace
 import Foundation
 import RealmSwift
 import BTKit
@@ -28,9 +28,8 @@ class CardsPresenter: CardsModuleInput {
     var ruuviTagTrunk: RuuviTagTrunk!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
-
+    var networkPersistance: NetworkPersistence!
     weak var tagCharts: TagChartsModuleInput?
-
     private var ruuviTagToken: RUObservationToken?
     private var ruuviTagObserveLastRecordToken: RUObservationToken?
     private var webTagsToken: NotificationToken?
@@ -73,7 +72,7 @@ class CardsPresenter: CardsModuleInput {
     }
     private var didLoadInitialRuuviTags = false
     private var didLoadInitialWebTags = false
-
+    
     deinit {
         ruuviTagToken?.invalidate()
         webTagsToken?.invalidate()
@@ -120,19 +119,19 @@ extension CardsPresenter: CardsViewOutput {
         startObservingLocalNotificationsManager()
         pushNotificationsManager.registerForRemoteNotifications()
     }
-
+    
     func viewWillAppear() {
         startObservingBluetoothState()
     }
-
+    
     func viewWillDisappear() {
         stopObservingBluetoothState()
     }
-
+    
     func viewDidTriggerMenu() {
         router.openMenu(output: self)
     }
-
+    
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi,
            let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
@@ -141,7 +140,6 @@ extension CardsPresenter: CardsViewOutput {
                 humidity = viewModel.humidity.value?
                     .converted(to: .relative(temperature: temperature))
             }
-
             self.router.openTagSettings(ruuviTag: ruuviTag,
                                         temperature: viewModel.temperature.value,
                                         humidity: humidity,
@@ -153,7 +151,7 @@ extension CardsPresenter: CardsViewOutput {
             router.openWebTagSettings(webTag: webTag, temperature: viewModel.temperature.value)
         }
     }
-
+    
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             if settings.keepConnectionDialogWasShown(for: luid)
@@ -162,11 +160,13 @@ extension CardsPresenter: CardsViewOutput {
             } else {
                 view.showKeepConnectionDialog(for: viewModel)
             }
+        } else if viewModel.mac.value != nil {
+            router.openTagCharts()
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-
+    
     func viewDidDismissKeepConnectionDialog(for viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -175,7 +175,7 @@ extension CardsPresenter: CardsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-
+    
     func viewDidConfirmToKeepConnection(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value {
             connectionPersistence.setKeepConnection(true, for: luid)
@@ -185,10 +185,14 @@ extension CardsPresenter: CardsViewOutput {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
     }
-
+    
     func viewDidScroll(to viewModel: CardsViewModel) {
         if let luid = viewModel.luid.value,
            let sensor = ruuviTags.first(where: { $0.luid?.any == luid }) {
+            restartObservingRuuviTagNetwork(for: sensor)
+            tagCharts?.configure(ruuviTag: sensor)
+        } else if let macId = viewModel.mac.value,
+                  let sensor = ruuviTags.first(where: {$0.macId?.any == macId}) {
             restartObservingRuuviTagNetwork(for: sensor)
             tagCharts?.configure(ruuviTag: sensor)
         }
@@ -197,15 +201,20 @@ extension CardsPresenter: CardsViewOutput {
 
 // MARK: - DiscoverModuleOutput
 extension CardsPresenter: DiscoverModuleOutput {
+    func discover(module: DiscoverModuleInput, didAddNetworkTag mac: String) {
+        module.dismiss()
+        self.startObservingRuuviTags()
+    }
+    
     func discover(module: DiscoverModuleInput, didAdd ruuviTag: RuuviTag) {
         module.dismiss()
         self.startObservingRuuviTags()
     }
-
+    
     func discover(module: DiscoverModuleInput, didAddWebTag location: Location) {
         module.dismiss()
     }
-
+    
     func discover(module: DiscoverModuleInput, didAddWebTag provider: WeatherProvider) {
         module.dismiss()
     }
@@ -217,17 +226,17 @@ extension CardsPresenter: MenuModuleOutput {
         module.dismiss()
         router.openDiscover(output: self)
     }
-
+    
     func menu(module: MenuModuleInput, didSelectSettings sender: Any?) {
         module.dismiss()
         router.openSettings()
     }
-
+    
     func menu(module: MenuModuleInput, didSelectAbout sender: Any?) {
         module.dismiss()
         router.openAbout()
     }
-
+    
     func menu(module: MenuModuleInput, didSelectGetMoreSensors sender: Any?) {
         module.dismiss()
         router.openRuuviWebsite()
@@ -239,19 +248,35 @@ extension CardsPresenter: MenuModuleOutput {
             guard let sSelf = self else { return }
             sSelf.mailComposerPresenter.present(email: sSelf.feedbackEmail,
                                                 subject: sSelf.feedbackSubject,
-                                                body: "\n\n" + summary)
+                                                body: "<br><br>" + summary)
         }
     }
+    func menu(module: MenuModuleInput, didSelectSignIn sender: Any?) {
+        module.dismiss()
+        router.openSignIn(output: self)
+    }
+    func menu(module: MenuModuleInput, didSelectOpenConfig sender: Any?) {
+        module.dismiss()
+    }
 }
+
+// MARK: - SignInModuleOutput
+extension CardsPresenter: SignInModuleOutput {
+    func signIn(module: SignInModuleInput, didSuccessfulyLogin sender: Any?) {
+        module.dismiss()
+    }
+}
+
+// MARK: - TagsManagerModuleOutput
+extension CardsPresenter: TagsManagerModuleOutput {}
 
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
         if let index = viewModels.firstIndex(where: { $0.luid.value?.value == uuid }) {
-            view.scroll(to: index, immediately: true)
+            view.scroll(to: index, immediately: true, animated: false)
         }
     }
-
     func tagChartsDidDeleteTag(module: TagChartsModuleInput) {
         module.dismiss(completion: { [weak self] in
             self?.startObservingRuuviTags()
@@ -291,7 +316,6 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 extension CardsPresenter {
-
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
@@ -302,12 +326,11 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                print(macId)
-                // FIXME viewModel.background.value = backgroundPersistence.background(for: macId)
-                // viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
-                // viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
-                // viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+                viewModel.background.value = backgroundPersistence.background(for: macId)
+                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
+                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
+                viewModel.networkSyncStatus.value = networkPersistance.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
                 viewModel.alertState.value = .empty
             } else {
@@ -320,7 +343,6 @@ extension CardsPresenter {
             }
             return viewModel
         })
-
         var virtualViewModels = [CardsViewModel]()
         if virtualTags != nil {
             virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
@@ -331,8 +353,7 @@ extension CardsPresenter {
                 return viewModel
             }) ?? []
         }
-        viewModels = ruuviViewModels + virtualViewModels
-
+        viewModels = reorder(ruuviViewModels + virtualViewModels)
         // if no tags, open discover
         if didLoadInitialRuuviTags
             && didLoadInitialWebTags
@@ -340,7 +361,12 @@ extension CardsPresenter {
             self.router.openDiscover(output: self)
         }
     }
-
+    private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
+        guard !settings.tagsSorting.isEmpty else {
+            return viewModels
+        }
+        return viewModels.reorder(by: settings.tagsSorting)
+    }
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { (observer, state) in
             if state != .poweredOn {
@@ -348,11 +374,9 @@ extension CardsPresenter {
             }
         })
     }
-
     private func stopObservingBluetoothState() {
         stateToken?.invalidate()
     }
-
     private func startObservingSettingsChanges() {
         readRSSIToken = NotificationCenter
             .default
@@ -377,14 +401,12 @@ extension CardsPresenter {
                             self?.observeRuuviTagRSSI()
                          })
     }
-
     private func observeRuuviTags() {
         observeSensorSettings()
         observeRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
         observeRuuviTagRSSI()
     }
-
     private func observeRuuviTagRSSI() {
         rssiTokens.values.forEach({ $0.invalidate() })
         rssiTimers.values.forEach({ $0.invalidate() })
@@ -423,7 +445,6 @@ extension CardsPresenter {
                 }
             }
     }
-
     private func observeRuuviTagHeartbeats() {
         heartbeatTokens.forEach({ $0.invalidate() })
         heartbeatTokens.removeAll()
@@ -439,7 +460,6 @@ extension CardsPresenter {
             })
         }
     }
-
     private func observeRuuviTagAdvertisements() {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
@@ -458,11 +478,9 @@ extension CardsPresenter {
             }
         }
     }
-
     private func observeSensorSettings() {
         sensorSettingsTokens.forEach({ $0.invalidate() })
         sensorSettingsTokens.removeAll()
-
         for viewModel in viewModels {
             if viewModel.type == .ruuvi,
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
@@ -492,7 +510,6 @@ extension CardsPresenter {
             }
         }
     }
-
     private func restartObservingRuuviTagNetwork(for sensor: AnyRuuviTagSensor) {
         ruuviTagObserveLastRecordToken?.invalidate()
         ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
@@ -506,11 +523,9 @@ extension CardsPresenter {
             }
         }
     }
-
     private func startObservingWebTagsData() {
         webTagsDataTokens.forEach({ $0.invalidate() })
         webTagsDataTokens.removeAll()
-
         virtualTags?.forEach({ webTag in
             webTagsDataTokens.append(webTag.data.observe { [weak self] (change) in
                 switch change {
@@ -532,7 +547,6 @@ extension CardsPresenter {
             })
         })
     }
-
     private func startObservingWebTags() {
         webTagsToken = realmContext.main.objects(WebTagRealm.self).observe({ [weak self] (change) in
             switch change {
@@ -561,7 +575,6 @@ extension CardsPresenter {
             }
         })
     }
-
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
@@ -583,7 +596,10 @@ extension CardsPresenter {
                 self?.syncViewModels()
                 self?.startListeningToRuuviTagsAlertStatus()
                 self?.observeRuuviTags()
-                if let index = self?.viewModels.firstIndex(where: { $0.luid.value == sensor.luid?.any }) {
+                if let index = self?.viewModels.firstIndex(where: {
+                    return $0.luid.value == sensor.luid?.any
+                        || $0.mac.value == sensor.macId?.any
+                }) {
                     self?.view.scroll(to: index)
                     self?.restartObservingRuuviTagNetwork(for: sensor)
                     self?.tagCharts?.configure(ruuviTag: sensor)
@@ -622,21 +638,23 @@ extension CardsPresenter {
             }
         }
     }
-
     private func startObservingBackgroundChanges() {
         backgroundToken = NotificationCenter
             .default
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
                          object: nil,
                          queue: .main) { [weak self] notification in
-                if let userInfo = notification.userInfo,
-                   let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
-                   let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid.any }) {
-                    viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                if let userInfo = notification.userInfo {
+                    if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+                       let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid.any }) {
+                        viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                    } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
+                              let viewModel = self?.view.viewModels.first(where: {$0.mac.value == macId.any }) {
+                        viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                    }
                 }
             }
     }
-
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func startObservingDaemonsErrors() {
         webTagDaemonFailureToken = NotificationCenter
@@ -668,7 +686,6 @@ extension CardsPresenter {
                     }
                 }
             }
-
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagAdvertisementDaemonDidFail,
@@ -680,7 +697,6 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
-
         ruuviTagPropertiesDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagPropertiesDaemonDidFail,
@@ -692,7 +708,6 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
-
         ruuviTagHeartbeatDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagHeartbeatDaemonDidFail,
@@ -704,7 +719,6 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
-
         ruuviTagReadLogsOperationFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagReadLogsOperationDidFail,
@@ -716,9 +730,7 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
-
     }
-
     func startObservingConnectionPersistenceNotifications() {
         startKeepingConnectionToken = NotificationCenter
             .default
@@ -729,7 +741,6 @@ extension CardsPresenter {
                             self?.observeRuuviTagHeartbeats()
                             self?.observeRuuviTagRSSI()
                          })
-
         stopKeepingConnectionToken = NotificationCenter
             .default
             .addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection,
@@ -740,7 +751,6 @@ extension CardsPresenter {
                             self?.observeRuuviTagRSSI()
                          })
     }
-
     func startObservingDidConnectDisconnectNotifications() {
         didConnectToken = NotificationCenter
             .default
@@ -757,7 +767,6 @@ extension CardsPresenter {
                                 }
                             }
                          })
-
         didDisconnectToken = NotificationCenter
             .default
             .addObserver(forName: .BTBackgroundDidDisconnect,
@@ -771,7 +780,6 @@ extension CardsPresenter {
                             }
                          })
     }
-
     private func startObservingAlertChanges() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -791,9 +799,7 @@ extension CardsPresenter {
                                 })
                             }
                          })
-
     }
-
     private func startObservingCalibrationHumidityChanges() {
         calibrationHumidityDidChangeToken = NotificationCenter
             .default
@@ -812,7 +818,6 @@ extension CardsPresenter {
                             }
                          })
     }
-
     private func startObserveMigrationCompletion() {
         didMigrationCompleteToken = NotificationCenter
             .default
@@ -820,7 +825,6 @@ extension CardsPresenter {
                 self?.startObservingRuuviTags()
             })
     }
-
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({
             if let uuid = $0.luid?.value {
@@ -828,11 +832,9 @@ extension CardsPresenter {
             }
         })
     }
-
     private func startListeningToWebTagsAlertStatus() {
         virtualTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
-
     private func startObservingLocalNotificationsManager() {
         lnmDidReceiveToken = NotificationCenter
             .default
@@ -849,4 +851,4 @@ extension CardsPresenter {
                          })
     }
 }
-// swiftlint:enable file_length
+// swiftlint:enable file_length trailing_whitespace

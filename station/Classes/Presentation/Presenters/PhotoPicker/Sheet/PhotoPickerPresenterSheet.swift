@@ -1,4 +1,5 @@
 import UIKit
+import MobileCoreServices
 
 class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     weak var delegate: PhotoPickerPresenterDelegate?
@@ -24,14 +25,35 @@ extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigati
         })
     }
 }
+// MARK: - UIImagePickerControllerDelegate
+extension PhotoPickerPresenterSheet: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard controller.documentPickerMode == .open,
+              let url = urls.first, url.startAccessingSecurityScopedResource()
+        else { return }
+        defer {
+            DispatchQueue.main.async {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        guard let image = UIImage(contentsOfFile: url.path),
+              let jpegData = image.jpegData(compressionQuality: 1.0),
+              let imageCopy = UIImage(data: jpegData) else { return }
+        controller.dismiss(animated: true)
+        self.delegate?.photoPicker(presenter: self, didPick: imageCopy)
+    }
 
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}
 // MARK: - Private
 extension PhotoPickerPresenterSheet {
 
     private func showSourceDialog() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let message = "PhotoPicker.Sheet.message".localized()
-        let sheet = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+        let title = "PhotoPicker.Sheet.message".localized()
+        let sheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
         let libraryTitle = "PhotoPicker.Sheet.library".localized()
         let library = UIAlertAction(title: libraryTitle, style: .default) { [weak self] (_) in
             self?.checkPhotoLibraryPermission()
@@ -41,8 +63,18 @@ extension PhotoPickerPresenterSheet {
             self?.checkCameraPermission()
         }
         let cancel = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
+
         sheet.addAction(library)
         sheet.addAction(camera)
+
+        if #available(iOS 11.0, *) {
+            let filesTitle = "PhotoPicker.Sheet.files".localized()
+            let files = UIAlertAction(title: filesTitle, style: .default) { [weak self] (_) in
+                self?.showDocumentPicker()
+            }
+            sheet.addAction(files)
+        }
+
         sheet.addAction(cancel)
         if let presenter = sheet.popoverPresentationController {
             presenter.sourceView = sourceView
@@ -80,6 +112,17 @@ extension PhotoPickerPresenterSheet {
                 }
             }
         }
+    }
+
+    private func showDocumentPicker() {
+        guard let viewController = UIApplication.shared.topViewController() else { return }
+        let vc = UIDocumentPickerViewController(documentTypes: [String(kUTTypeImage)],
+                                                in: .open)
+        if #available(iOS 11.0, *) {
+            vc.allowsMultipleSelection = false
+        }
+        vc.delegate = self
+        viewController.present(vc, animated: true)
     }
 
     private func showPhotoLibrary() {

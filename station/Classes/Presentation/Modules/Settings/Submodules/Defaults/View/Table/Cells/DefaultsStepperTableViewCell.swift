@@ -1,6 +1,6 @@
 import UIKit
 
-protocol DefaultsStepperTableViewCellDelegate: class {
+protocol DefaultsStepperTableViewCellDelegate: AnyObject {
     func defaultsStepper(cell: DefaultsStepperTableViewCell, didChange value: Int)
 }
 

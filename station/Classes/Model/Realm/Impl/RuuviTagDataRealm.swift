@@ -42,8 +42,12 @@ class RuuviTagDataRealm: Object {
         return "compoundKey"
     }
 
-    // this one is not use anymore, consider to delete
-    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTag) {
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol, date: Date) {
+        self.init(ruuviTag: ruuviTag, data: data)
+        self.date = date
+    }
+
+    convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol) {
         self.init()
         self.ruuviTag = ruuviTag
         self.rssi.value = data.rssi
@@ -58,9 +62,10 @@ class RuuviTagDataRealm: Object {
         self.measurementSequenceNumber.value = data.measurementSequenceNumber
         self.txPower.value = data.txPower
         self.compoundKey = ruuviTag.uuid + "\(date.timeIntervalSince1970)"
-        self.temperatureOffset = data.temperatureOffset
-        self.humidityOffset = data.humidityOffset
-        self.pressureOffset = data.pressureOffset
+        // TODO: fixthis
+        // self.temperatureOffset = data.temperatureOffset
+        // self.humidityOffset = data.humidityOffset
+        // self.pressureOffset = data.pressureOffset
     }
 
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {

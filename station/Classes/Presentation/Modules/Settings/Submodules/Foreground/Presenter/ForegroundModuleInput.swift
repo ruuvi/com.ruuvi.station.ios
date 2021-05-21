@@ -1,5 +1,5 @@
 import Foundation
 
-protocol ForegroundModuleInput: class {
+protocol ForegroundModuleInput: AnyObject {
     func configure()
 }
