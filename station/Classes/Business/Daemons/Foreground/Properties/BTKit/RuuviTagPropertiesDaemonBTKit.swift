@@ -17,13 +17,13 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     private var isTransitioningFromRealmToSQLite = false
 
     @objc private class RuuviTagPropertiesDaemonPair: NSObject {
-       var ruuviTag: AnyRuuviTagSensor
-       var device: RuuviTag
+        var ruuviTag: AnyRuuviTagSensor
+        var device: RuuviTag
 
-       init(ruuviTag: AnyRuuviTagSensor, device: RuuviTag) {
-           self.ruuviTag = ruuviTag
-           self.device = device
-       }
+        init(ruuviTag: AnyRuuviTagSensor, device: RuuviTag) {
+            self.ruuviTag = ruuviTag
+            self.device = device
+        }
     }
 
     deinit {
@@ -35,29 +35,29 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     }
 
     func start() {
-       start { [weak self] in
-                self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
-                    guard let sSelf = self else { return }
-                    switch change {
-                    case .initial(let ruuviTags):
-                        sSelf.ruuviTags = ruuviTags
-                        sSelf.restartObserving()
-                    case .update(let ruuviTag):
-                        if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
-                            sSelf.ruuviTags[index] = ruuviTag
-                        }
-                        sSelf.restartObserving()
-                    case .insert(let ruuviTag):
-                        sSelf.ruuviTags.append(ruuviTag)
-                        sSelf.restartObserving()
-                    case .delete(let ruuviTag):
-                        sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
-                        sSelf.restartObserving()
-                    case .error(let error):
-                        sSelf.post(error: RUError.persistence(error))
+        start { [weak self] in
+            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+                guard let sSelf = self else { return }
+                switch change {
+                case .initial(let ruuviTags):
+                    sSelf.ruuviTags = ruuviTags
+                    sSelf.restartObserving()
+                case .update(let ruuviTag):
+                    if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
+                        sSelf.ruuviTags[index] = ruuviTag
                     }
-                })
-       }
+                    sSelf.restartObserving()
+                case .insert(let ruuviTag):
+                    sSelf.ruuviTags.append(ruuviTag)
+                    sSelf.restartObserving()
+                case .delete(let ruuviTag):
+                    sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
+                    sSelf.restartObserving()
+                case .error(let error):
+                    sSelf.post(error: RUError.persistence(error))
+                }
+            })
+        }
     }
 
     func stop() {
@@ -204,10 +204,10 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     private func post(error: Error) {
         DispatchQueue.main.async {
             NotificationCenter
-             .default
-             .post(name: .RuuviTagPropertiesDaemonDidFail,
-                   object: nil,
-                   userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
+                .default
+                .post(name: .RuuviTagPropertiesDaemonDidFail,
+                      object: nil,
+                      userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error])
         }
     }
 }

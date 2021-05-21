@@ -10,6 +10,7 @@ class TagChartsInteractor {
     var ruuviTagReactor: RuuviTagReactor!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
+    var sensorSettings: SensorSettings?
     var exportService: ExportService!
     var networkService: NetworkService!
     var keychainService: KeychainService!
@@ -86,10 +87,16 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         ruuviTagSensorObservationToken = nil
     }
 
-    func configure(withTag ruuviTag: AnyRuuviTagSensor) {
+    func configure(withTag ruuviTag: AnyRuuviTagSensor,
+                   andSettings settings: SensorSettings?) {
         ruuviTagSensor = ruuviTag
+        sensorSettings = settings
         lastMeasurement = nil
         createChartModules()
+    }
+
+    func updateSensorSettings(settings: SensorSettings?) {
+        sensorSettings = settings
     }
 
     var chartViews: [TagChartView] {
@@ -132,6 +139,7 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = gattService.syncLogs(uuid: luid.value,
                                       mac: ruuviTagSensor.macId?.value,
+                                      settings: sensorSettings,
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)
@@ -300,6 +308,7 @@ extension TagChartsInteractor {
         let serviceTimeout: TimeInterval = settings.serviceTimeout
         let op = gattService.syncLogs(uuid: luid,
                                       mac: ruuviTagSensor.macId?.value,
+                                      settings: sensorSettings,
                                       progress: progress,
                                       connectionTimeout: connectionTimeout,
                                       serviceTimeout: serviceTimeout)

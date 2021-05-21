@@ -84,6 +84,20 @@ extension SQLiteGRDBDatabase {
             }
         }
 
+        // v3
+        migrator.registerMigration("Create SensorSettingsSQLite table") { db in
+            guard try db.tableExists(SensorSettingsSQLite.databaseTableName) == false else { return }
+            try SensorSettingsSQLite.createTable(in: db)
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagDataSQLite.temperatureOffsetColumn.name, .integer)
+                    .notNull().defaults(to: 0.0)
+                t.add(column: RuuviTagDataSQLite.humidityOffsetColumn.name, .integer)
+                    .notNull().defaults(to: 0.0)
+                t.add(column: RuuviTagDataSQLite.pressureOffsetColumn.name, .integer)
+                    .notNull().defaults(to: 0.0)
+            })
+        }
+
         try migrator.migrate(dbPool)
     }
 }
