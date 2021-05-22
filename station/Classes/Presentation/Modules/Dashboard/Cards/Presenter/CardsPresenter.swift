@@ -10,7 +10,7 @@ class CardsPresenter: CardsModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var foreground: BTForeground!
     var background: BTBackground!
     var webTagService: WebTagService!
@@ -320,13 +320,21 @@ extension CardsPresenter {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             if let luid = ruuviTag.luid {
-                viewModel.background.value = backgroundPersistence.background(for: luid)
+                sensorService.background(for: luid).on(success: { image in
+                    viewModel.background.value = image
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                viewModel.background.value = backgroundPersistence.background(for: macId)
+                sensorService.background(for: macId).on(success: { image in
+                    viewModel.background.value = image
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
@@ -347,7 +355,11 @@ extension CardsPresenter {
         if virtualTags != nil {
             virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
-                viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
+                sensorService.background(for: webTag.uuid.luid).on(success: { image in
+                    viewModel.background.value = image
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
                 viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
@@ -647,10 +659,18 @@ extension CardsPresenter {
                 if let userInfo = notification.userInfo {
                     if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
                        let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid.any }) {
-                        viewModel.background.value = self?.backgroundPersistence.background(for: luid)
+                        self?.sensorService.background(for: luid).on(success: { image in
+                            viewModel.background.value = image
+                        }, failure: { [weak self] error in
+                            self?.errorPresenter.present(error: error)
+                        })
                     } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
                               let viewModel = self?.view.viewModels.first(where: {$0.mac.value == macId.any }) {
-                        viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                        self?.sensorService.background(for: macId).on(success: { image in
+                            viewModel.background.value = image
+                        }, failure: { [weak self] error in
+                            self?.errorPresenter.present(error: error)
+                        })
                     }
                 }
             }
