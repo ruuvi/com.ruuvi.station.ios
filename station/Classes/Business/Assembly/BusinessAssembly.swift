@@ -226,6 +226,11 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
+        container.register(SensorService.self) { _ in
+            let service = SensorServiceImpl()
+            return service
+        }
+
         container.register(WeatherProviderService.self) { r in
             let service = WeatherProviderServiceImpl()
             service.owmApi = r.resolve(OpenWeatherMapAPI.self)
