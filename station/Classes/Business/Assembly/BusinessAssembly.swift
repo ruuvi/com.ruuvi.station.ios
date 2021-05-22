@@ -226,8 +226,9 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
-        container.register(SensorService.self) { _ in
+        container.register(SensorService.self) { r in
             let service = SensorServiceImpl()
+            service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             return service
         }
 
