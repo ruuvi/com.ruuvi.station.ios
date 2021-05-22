@@ -131,7 +131,6 @@ class BusinessAssembly: Assembly {
         container.register(MigrationManagerToSQLite.self) { r in
             let manager = MigrationManagerToSQLite()
             manager.alertPersistence = r.resolve(AlertPersistence.self)
-            manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             manager.connectionPersistence = r.resolve(ConnectionPersistence.self)
             manager.idPersistence = r.resolve(IDPersistence.self)
