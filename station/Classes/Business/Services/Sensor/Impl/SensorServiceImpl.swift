@@ -27,4 +27,8 @@ final class SensorServiceImpl: SensorService {
     func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RUError> {
         return backgroundPersistence.setCustomBackground(image: image, for: identifier)
     }
+
+    func setBackground(_ id: Int, for identifier: Identifier) {
+        backgroundPersistence.setBackground(id, for: identifier)
+    }
 }

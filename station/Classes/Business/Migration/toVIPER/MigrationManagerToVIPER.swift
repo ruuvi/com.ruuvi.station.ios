@@ -2,8 +2,7 @@ import RealmSwift
 import Foundation
 
 class MigrationManagerToVIPER: MigrationManager {
-
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var settings: Settings!
 
     func migrateIfNeeded() {
@@ -102,7 +101,7 @@ class MigrationManagerToVIPER: MigrationManager {
             }
 
             if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
-                self.backgroundPersistence.setBackground(id, for: uuid.luid)
+                sensorService.setBackground(id, for: uuid.luid)
             }
 
         })
