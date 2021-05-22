@@ -123,7 +123,7 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerToVIPER.self) { r in
             let manager = MigrationManagerToVIPER()
-            manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            manager.sensorService = r.resolve(SensorService.self)
             manager.settings = r.resolve(Settings.self)
             return manager
         }
