@@ -138,9 +138,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
         } else if let macId = ruuviTag.macId {
             viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
-            print(macId)
-//            FIXME
-//            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
         } else {
             assertionFailure()
         }
@@ -387,16 +384,7 @@ extension TagSettingsPresenter {
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
         } else if let macId = ruuviTag.macId {
-            print(macId)
-            // FIXME
-            // viewModel.background.value = backgroundPersistence.background(for: mac)
-            // viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: macId)
-            // viewModel.relativeHumidityAlertDescription.value = alertService.relativeHumidityDescription(for: macId)
-            // viewModel.absoluteHumidityAlertDescription.value = alertService.absoluteHumidityDescription(for: macId)
-            // viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: macId)
-            // viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: macId)
-            // viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: macId)
-            // viewModel.movementAlertDescription.value = alertService.movementDescription(for: macId)
+            viewModel.background.value = backgroundPersistence.background(for: macId)
         } else {
             assertionFailure()
         }
