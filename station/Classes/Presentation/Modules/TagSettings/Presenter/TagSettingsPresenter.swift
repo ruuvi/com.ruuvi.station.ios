@@ -8,7 +8,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
     var router: TagSettingsRouterInput!
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
@@ -135,9 +135,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToRandomizeBackground() {
         if let luid = ruuviTag.luid {
-            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
+            sensorService.setNextDefaultBackground(for: luid).on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         } else if let macId = ruuviTag.macId {
-            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
+            sensorService.setNextDefaultBackground(for: macId).on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         } else {
             assertionFailure()
         }
@@ -340,20 +348,21 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        let set: Future<URL, RUError>?
         if let luid = ruuviTag.luid {
-            set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
+            sensorService.setCustomBackground(image: photo, for: luid).on(success: { [weak self] _ in
+                self?.viewModel.background.value = photo
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         } else if let macId = ruuviTag.macId {
-            set = backgroundPersistence.setCustomBackground(image: photo, for: macId)
+            sensorService.setCustomBackground(image: photo, for: macId).on(success: { [weak self] _ in
+                self?.viewModel.background.value = photo
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         } else {
-            set = nil
             assertionFailure()
         }
-        set?.on(success: { [weak self] _ in
-            self?.viewModel.background.value = photo
-        }, failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        })
     }
 }
 
@@ -370,13 +379,18 @@ extension TagSettingsPresenter {
             }
     }
 
+    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.pressureUnit.value = settings.pressureUnit
 
         if let luid = ruuviTag.luid {
-            viewModel.background.value = backgroundPersistence.background(for: luid)
+            sensorService.background(for: luid).on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
             viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: luid.value)
             viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: luid.value)
@@ -384,7 +398,12 @@ extension TagSettingsPresenter {
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
         } else if let macId = ruuviTag.macId {
-            viewModel.background.value = backgroundPersistence.background(for: macId)
+            sensorService.background(for: macId).on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
+
         } else {
             assertionFailure()
         }
