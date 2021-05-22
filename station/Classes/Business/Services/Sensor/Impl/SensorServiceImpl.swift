@@ -31,4 +31,8 @@ final class SensorServiceImpl: SensorService {
     func setBackground(_ id: Int, for identifier: Identifier) {
         backgroundPersistence.setBackground(id, for: identifier)
     }
+
+    func deleteCustomBackground(for uuid: Identifier) {
+        backgroundPersistence.deleteCustomBackground(for: uuid)
+    }
 }
