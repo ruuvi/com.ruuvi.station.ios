@@ -71,6 +71,15 @@ You can order RuuviTag sensors [online](https://shop.ruuvi.com). Find more info 
 
 We would love you for the contribution to **Ruuvi Station**, check the ``LICENSE`` file for more info.
 
+## Branches
+
+AppStore build source code is available at `master` branch. 
+
+Public Beta build source code is available at `beta` branch. 
+
+Internal Alpha build source code is available at `alpha` branch. 
+
+Development source code is available at `dev` branch.  
 
 <!-- Please don't remove this: Grab your social icons from https://github.com/carlsednaoui/gitsocial -->
 
