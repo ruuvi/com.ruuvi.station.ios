@@ -2,6 +2,8 @@ import Foundation
 import Future
 
 protocol SensorService {
+    // background
     func background(for identifier: Identifier) -> Future<UIImage, RUError>
     func setNextDefaultBackground(for identifier: Identifier) -> Future<UIImage, RUError>
+    func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RUError>
 }
