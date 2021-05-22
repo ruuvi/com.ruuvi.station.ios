@@ -3,6 +3,7 @@ import Future
 
 final class SensorServiceImpl: SensorService {
     var backgroundPersistence: BackgroundPersistence!
+    var ruuviNetwork: RuuviNetworkUserApi!
 
     func background(for identifier: Identifier) -> Future<UIImage, RUError> {
         let promise = Promise<UIImage, RUError>()

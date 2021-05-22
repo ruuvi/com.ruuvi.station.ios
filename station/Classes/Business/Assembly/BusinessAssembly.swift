@@ -228,6 +228,7 @@ class BusinessAssembly: Assembly {
         container.register(SensorService.self) { r in
             let service = SensorServiceImpl()
             service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            service.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
             return service
         }
 
