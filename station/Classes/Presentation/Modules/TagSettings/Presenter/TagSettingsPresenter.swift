@@ -348,21 +348,11 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        if let luid = ruuviTag.luid {
-            sensorService.setCustomBackground(image: photo, for: luid).on(success: { [weak self] _ in
-                self?.viewModel.background.value = photo
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-        } else if let macId = ruuviTag.macId {
-            sensorService.setCustomBackground(image: photo, for: macId).on(success: { [weak self] _ in
-                self?.viewModel.background.value = photo
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-        } else {
-            assertionFailure()
-        }
+        sensorService.setCustomBackground(image: photo, sensor: ruuviTag).on(success: { [weak self] _ in
+            self?.viewModel.background.value = photo
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 

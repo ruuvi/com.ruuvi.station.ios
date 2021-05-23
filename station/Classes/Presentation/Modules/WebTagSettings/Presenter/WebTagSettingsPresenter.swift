@@ -180,7 +180,7 @@ extension WebTagSettingsPresenter {
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        sensorService.setCustomBackground(image: photo, for: webTag.uuid.luid).on(success: { [weak self] _ in
+        sensorService.setCustomBackground(image: photo, virtualSensor: webTag).on(success: { [weak self] _ in
             self?.view.viewModel.background.value = photo
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)

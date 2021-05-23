@@ -27,8 +27,14 @@ extension RuuviNetworkUserApiURLSession {
         }
     }
 }
-class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
+final class RuuviNetworkUserApiURLSession: NSObject, RuuviNetworkUserApi {
     var keychainService: KeychainService!
+    private lazy var uploadSession = URLSession(
+        configuration: .default,
+        delegate: self,
+        delegateQueue: .main
+    )
+    private var progressHandlersByTaskID = [Int: ProgressHandler]()
 
     func register(_ requestModel: UserApiRegisterRequest) -> Future<UserApiRegisterResponse, RUError> {
         return request(endpoint: Routes.register,
@@ -99,7 +105,29 @@ class RuuviNetworkUserApiURLSession: RuuviNetworkUserApi {
 
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
                      imageData: Data) -> Future<UserApiSensorImageUploadResponse, RUError> {
-        return Promise<UserApiSensorImageUploadResponse, RUError>().future
+        let promise = Promise<UserApiSensorImageUploadResponse, RUError>()
+        request(endpoint: Routes.uploadImage,
+                with: requestModel,
+                method: .post,
+                authorizationRequered: true)
+            .on(success: { [weak self] (response: UserApiSensorImageUploadResponse) in
+                let url = response.uploadURL
+                self?.upload(url: url, with: imageData, mimeType: .png, progress: { percentage in
+                    #if DEBUG
+                    debugPrint(percentage)
+                    #endif
+                }, completion: { result in
+                    switch result {
+                    case .success:
+                        promise.succeed(value: response)
+                    case .failure(let error):
+                        promise.fail(error: error)
+                    }
+                })
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        return promise.future
     }
 }
 
@@ -169,5 +197,70 @@ extension RuuviNetworkUserApiURLSession {
         }
         task.resume()
         return promise.future
+    }
+}
+
+extension RuuviNetworkUserApiURLSession {
+    typealias Percentage = Double
+    typealias ProgressHandler = (Percentage) -> Void
+    typealias CompletionHandler = (Result<Data, RUError>) -> Void
+
+    private func upload(
+        url: URL,
+        with data: Data,
+        mimeType: MimeType,
+        method: HttpMethod = .put,
+        authorizationRequered: Bool = true,
+        progress: @escaping ProgressHandler,
+        completion: @escaping CompletionHandler
+    ) {
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        if authorizationRequered {
+            guard let apiKey = keychainService.ruuviUserApiKey else {
+                completion(.failure(.ruuviNetwork(.notAuthorized)))
+                return
+            }
+            request.setValue(apiKey, forHTTPHeaderField: "Authorization")
+        }
+        request.setValue(mimeType.rawValue, forHTTPHeaderField: "Content-Type")
+
+        let task = uploadSession.uploadTask(
+            with: request,
+            from: data,
+            completionHandler: { data, _, error in
+                if let data = data {
+                    #if DEBUG
+                    if let object = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
+                    let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
+                        debugPrint("📬 Response of request", dump(request), prettyPrintedString)
+                    }
+                    #endif
+                    completion(.success(data))
+                } else if let error = error {
+                    completion(.failure(.networking(error)))
+                } else {
+                    completion(.failure(.core(.failedToGetDataFromResponse)))
+                }
+            }
+        )
+
+        progressHandlersByTaskID[task.taskIdentifier] = progress
+        task.resume()
+    }
+}
+
+extension RuuviNetworkUserApiURLSession: URLSessionTaskDelegate {
+    func urlSession(
+        _ session: URLSession,
+        task: URLSessionTask,
+        didSendBodyData bytesSent: Int64,
+        totalBytesSent: Int64,
+        totalBytesExpectedToSend: Int64
+    ) {
+        let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
+        let handler = progressHandlersByTaskID[task.taskIdentifier]
+        handler?(progress)
     }
 }
