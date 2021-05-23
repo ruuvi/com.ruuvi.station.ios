@@ -369,35 +369,24 @@ extension TagSettingsPresenter {
             }
     }
 
-    // swiftlint:disable:next function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.pressureUnit.value = settings.pressureUnit
-
+        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { [weak self] image in
+            self?.viewModel.background.value = image
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
         if let luid = ruuviTag.luid {
-            sensorService.background(for: luid).on(success: { [weak self] image in
-                self?.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
             viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: luid.value)
             viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: luid.value)
             viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: luid.value)
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
-        } else if let macId = ruuviTag.macId {
-            sensorService.background(for: macId).on(success: { [weak self] image in
-                self?.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-
-        } else {
-            assertionFailure()
         }
-
+        
         viewModel.isAuthorized.value = keychainService.userIsAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner

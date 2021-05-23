@@ -211,6 +211,7 @@ class BusinessAssembly: Assembly {
             service.ruuviNetworkFactory = factory
             service.networkPersistence = r.resolve(NetworkPersistence.self)
             service.settings = r.resolve(Settings.self)
+            service.sensorService = r.resolve(SensorService.self)
             return service
         }.inObjectScope(.container)
 

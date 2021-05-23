@@ -4,13 +4,24 @@ import Future
 final class SensorServiceImpl: SensorService {
     var backgroundPersistence: BackgroundPersistence!
     var ruuviNetwork: RuuviNetworkUserApi!
+    private let backgroundUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
 
-    func background(for identifier: Identifier) -> Future<UIImage, RUError> {
+    func background(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RUError> {
         let promise = Promise<UIImage, RUError>()
-        if let image = backgroundPersistence.background(for: identifier) {
-            promise.succeed(value: image)
+        if let macId = macId {
+            if let image = backgroundPersistence.background(for: macId) {
+                promise.succeed(value: image)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
+            }
+        } else if let luid = luid {
+            if let image = backgroundPersistence.background(for: luid) {
+                promise.succeed(value: image)
+            } else {
+                promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
+            }
         } else {
-            promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
+            promise.fail(error: .unexpected(.bothLuidAndMacAreNil))
         }
         return promise.future
     }
@@ -93,5 +104,36 @@ final class SensorServiceImpl: SensorService {
 
     func deleteCustomBackground(for uuid: Identifier) {
         backgroundPersistence.deleteCustomBackground(for: uuid)
+    }
+
+    @discardableResult
+    func ensureNetworkBackgroundIsLoaded(for macId: MACIdentifier, from url: URL) -> Future<UIImage, RUError> {
+        let promise = Promise<UIImage, RUError>()
+        if let savedUrl = UserDefaults.standard.url(forKey: backgroundUrlPrefix + macId.mac),
+           savedUrl == url,
+           let image = backgroundPersistence.background(for: macId) {
+            promise.succeed(value: image)
+        } else { // need to download image
+            URLSession.shared.dataTask(with: url, completionHandler: { [weak self] data, _, error in
+                guard let sSelf = self else { return }
+                if let error = error {
+                    promise.fail(error: .networking(error))
+                } else if let data = data {
+                    if let image = UIImage(data: data) {
+                        sSelf.backgroundPersistence.setCustomBackground(image: image, for: macId).on(success: { _ in
+                            UserDefaults.standard.set(url, forKey: sSelf.backgroundUrlPrefix + macId.mac)
+                            promise.succeed(value: image)
+                        }, failure: { error in
+                            promise.fail(error: error)
+                        })
+                    } else {
+                        promise.fail(error: .unexpected(.failedToParseHttpResponse))
+                    }
+                } else {
+                    promise.fail(error: .unexpected(.failedToParseHttpResponse))
+                }
+            }).resume()
+        }
+        return promise.future
     }
 }

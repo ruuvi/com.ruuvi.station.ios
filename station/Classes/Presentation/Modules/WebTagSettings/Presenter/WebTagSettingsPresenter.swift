@@ -384,7 +384,7 @@ extension WebTagSettingsPresenter {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
-        sensorService.background(for: webTag.uuid.luid).on(success: { [weak self] image in
+        sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { [weak self] image in
             self?.view.viewModel.background.value = image
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
