@@ -61,6 +61,21 @@ extension RuuviNetworkUserApi {
             })
         return promise.future
     }
+
+    func upload(image: UIImage, for mac: MACIdentifier) -> Future<URL, RUError> {
+        let promise = Promise<URL, RUError>()
+        if let pngData = image.pngData() {
+            let requestModel = UserApiSensorImageUploadRequest(sensor: mac.mac, mimeType: .png)
+            uploadImage(requestModel, imageData: pngData).on(success: { response in
+                promise.succeed(value: response.uploadURL)
+            }, failure: { error in
+                promise.fail(error: .networking(error))
+            })
+        } else {
+            promise.fail(error: .core(.failedToGetPngRepresentation))
+        }
+        return promise.future
+    }
 }
 
 extension RuuviNetworkUserApi {

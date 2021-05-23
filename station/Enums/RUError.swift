@@ -129,6 +129,7 @@ enum UnexpectedError: Error {
     case notAHttpResponse
     case failedToParseHttpResponse
     case failedToFindOrGenerateBackgroundImage
+    case bothLuidAndMacAreNil
 }
 
 extension UnexpectedError: LocalizedError {
@@ -158,6 +159,8 @@ extension UnexpectedError: LocalizedError {
             return "UnexpectedError.failedToParseHttpResponse".localized()
         case .failedToFindOrGenerateBackgroundImage:
             return "UnexpectedError.failedToFindOrGenerateBackgroundImage".localized() // TODO: @rinat localize
+        case .bothLuidAndMacAreNil:
+            return "UnexpectedError.bothLuidAndMacAreNil".localized() // TODO: @rinat localize
         }
     }
 }
