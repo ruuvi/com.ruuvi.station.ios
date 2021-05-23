@@ -11,6 +11,8 @@ final class SensorServiceImpl: SensorService {
         if let macId = macId {
             if let image = backgroundPersistence.background(for: macId) {
                 promise.succeed(value: image)
+            } else if let luid = luid, let image = backgroundPersistence.background(for: luid) {
+                promise.succeed(value: image)
             } else {
                 promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
             }
@@ -51,10 +53,7 @@ final class SensorServiceImpl: SensorService {
         var remote: Future<URL, RUError>?
 
         if isOwner {
-            if let luid = luid, let mac = mac {
-                local = backgroundPersistence.setCustomBackground(image: image, for: luid)
-                remote = ruuviNetwork.upload(image: image, for: mac)
-            } else if let mac = mac {
+            if let mac = mac {
                 remote = ruuviNetwork.upload(image: image, for: mac)
                 local = backgroundPersistence.setCustomBackground(image: image, for: mac)
             } else if let luid = luid {
