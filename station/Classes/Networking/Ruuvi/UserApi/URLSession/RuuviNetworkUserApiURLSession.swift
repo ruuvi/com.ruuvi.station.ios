@@ -112,7 +112,7 @@ final class RuuviNetworkUserApiURLSession: NSObject, RuuviNetworkUserApi {
                 authorizationRequered: true)
             .on(success: { [weak self] (response: UserApiSensorImageUploadResponse) in
                 let url = response.uploadURL
-                self?.upload(url: url, with: imageData, mimeType: .png, progress: { percentage in
+                self?.upload(url: url, with: imageData, mimeType: .jpg, progress: { percentage in
                     #if DEBUG
                     debugPrint(percentage)
                     #endif
@@ -210,42 +210,27 @@ extension RuuviNetworkUserApiURLSession {
         with data: Data,
         mimeType: MimeType,
         method: HttpMethod = .put,
-        authorizationRequered: Bool = true,
         progress: @escaping ProgressHandler,
         completion: @escaping CompletionHandler
     ) {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        if authorizationRequered {
-            guard let apiKey = keychainService.ruuviUserApiKey else {
-                completion(.failure(.ruuviNetwork(.notAuthorized)))
-                return
-            }
-            request.setValue(apiKey, forHTTPHeaderField: "Authorization")
-        }
         request.setValue(mimeType.rawValue, forHTTPHeaderField: "Content-Type")
-
         let task = uploadSession.uploadTask(
             with: request,
             from: data,
-            completionHandler: { data, _, error in
-                if let data = data {
-                    #if DEBUG
-                    if let object = try? JSONSerialization.jsonObject(with: data, options: []),
-                    let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
-                    let prettyPrintedString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) {
-                        debugPrint("📬 Response of request", dump(request), prettyPrintedString)
-                    }
-                    #endif
-                    completion(.success(data))
-                } else if let error = error {
+            completionHandler: { data, response, error in
+                if let error = error {
                     completion(.failure(.networking(error)))
+                } else if (response as? HTTPURLResponse)?.statusCode != 200 {
+                    completion(.failure(.core(.failedToGetDataFromResponse)))
+                } else if let data = data {
+                    completion(.success(data))
                 } else {
                     completion(.failure(.core(.failedToGetDataFromResponse)))
                 }
             }
         )
-
         progressHandlersByTaskID[task.taskIdentifier] = progress
         task.resume()
     }

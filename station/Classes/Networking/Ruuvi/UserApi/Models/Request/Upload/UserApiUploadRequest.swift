@@ -8,5 +8,5 @@ protocol UserApiUploadRequest: Encodable {
 enum MimeType: String, Encodable {
     case png = "image/png"
     case gif = "image/gif"
-    case jpg = "image/jpg"
+    case jpg = "image/jpeg"
 }
