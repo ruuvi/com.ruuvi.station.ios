@@ -33,6 +33,11 @@ class CoreAssembly: Assembly {
             return manager
         }
 
+        container.register(ImageCoreService.self) { _ in
+            let service = ImageCoreServiceImpl()
+            return service
+        }
+
         container.register(PermissionsManager.self) { r in
             let manager = PermissionsManagerImpl()
             manager.locationManager = r.resolve(LocationManager.self)
