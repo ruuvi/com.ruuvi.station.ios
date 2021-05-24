@@ -5,6 +5,7 @@ struct TagSettingsViewModel {
     let name: Observable<String?> = Observable<String?>()
     let uuid: Observable<String?> = Observable<String?>()
     let mac: Observable<String?> = Observable<String?>()
+    let rssi: Observable<Int?> = Observable<Int?>()
     let humidity: Observable<Humidity?> = Observable<Humidity?>()
     let temperature: Observable<Temperature?> = Observable<Temperature?>()
     let humidityOffset: Observable<Double?> = Observable<Double?>()
