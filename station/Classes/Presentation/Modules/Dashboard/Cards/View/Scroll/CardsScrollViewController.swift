@@ -99,11 +99,11 @@ extension CardsScrollViewController: CardsViewInput {
 
             switch viewModel.type {
             case .ruuvi:
-                let rssiUpdate = rssiUpdateBlock(for: viewModel)
-                view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+                let movementUpdate = movementUpdateBlock(for: viewModel)
+                view.movementCityLabel.bind(viewModel.movementCounter, block: movementUpdate)
             case .web:
                 let locationUpdate = locationUpdateBlock(for: viewModel)
-                view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
+                view.movementCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
             }
         }
     }
@@ -295,6 +295,18 @@ extension CardsScrollViewController {
         return humidityBlock
     }
 
+    private func movementUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void {
+        return { label, movementCounter in
+            if let movementCounter = movementCounter {
+                label.text = "\(movementCounter)"
+            } else {
+                label.text = CardsScrollViewController.localizedCache.notAvailable
+            }
+
+        }
+    }
+
+    // TODO: @rinat not used, may be removed
     private func rssiUpdateBlock(for viewModel: CardsViewModel) -> (UILabel, Int?) -> Void {
         let animated = viewModel.animateRSSI
         return {
@@ -406,8 +418,8 @@ extension CardsScrollViewController {
 
         switch viewModel.type {
         case .ruuvi:
-            let rssiUpdate = rssiUpdateBlock(for: viewModel)
-            view.rssiCityLabel.bind(viewModel.rssi, block: rssiUpdate)
+            let movementUpdate = movementUpdateBlock(for: viewModel)
+            view.movementCityLabel.bind(viewModel.movementCounter, block: movementUpdate)
             if let macId = viewModel.mac.value {
                 view.networkTagMacId = macId
                 view.bind(viewModel.networkSyncStatus) { view, syncStatus in
@@ -416,7 +428,7 @@ extension CardsScrollViewController {
             }
         case .web:
             let locationUpdate = locationUpdateBlock(for: viewModel)
-            view.rssiCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
+            view.movementCityLabel.bind(viewModel.currentLocation, block: locationUpdate)
         }
         bindUpdated(view: view, with: viewModel)
         view.backgroundImage.bind(viewModel.background) { $0.image = $1 }
@@ -447,9 +459,9 @@ extension CardsScrollViewController {
 
         switch viewModel.type {
         case .ruuvi:
-            view.rssiCityImageView.image = UIImage(named: "icon-measure-signal")
+            view.movementCityImageView.image = UIImage(named: "icon-measure-movement")
         case .web:
-            view.rssiCityImageView.image = UIImage(named: "icon-measure-location")
+            view.movementCityImageView.image = UIImage(named: "icon-measure-location")
         }
     }
 

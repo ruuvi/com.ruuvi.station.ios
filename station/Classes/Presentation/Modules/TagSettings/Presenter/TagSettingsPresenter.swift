@@ -202,12 +202,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         networkOperation.on()
     }
 
-    func viewDidAskToCalibrateHumidity() {
-        if let humidity = humidity {
-            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity.value)
-        }
-    }
-
     func viewDidAskToSelectBackground(sourceView: UIView) {
         photoPickerPresenter.pick(sourceView: sourceView)
     }
@@ -616,6 +610,9 @@ extension TagSettingsPresenter {
         }
         if let mac = device.mac {
             viewModel.mac.value = mac
+        }
+        if let rssi = device.rssi {
+            viewModel.rssi.value = rssi
         }
         viewModel.updateRecord(record)
         reloadMutedTill()

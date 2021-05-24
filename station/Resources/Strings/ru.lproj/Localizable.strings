@@ -285,6 +285,7 @@
 "hPa" = "гПа";
 "UnitPressure.inchOfMercury.title" = "Дюймов ртутного столба (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Миллиметров ртутного столба (мм.рт.ст.)";
+"TagSettings.rssiTitleLabel.text" = "Сила сигнала (RSSI)";
 "s" = "с";
 "Welcome.scan.title" = "СКАНИРОВАТЬ";
 "Background.Interval.Sec.string" = "сек";
@@ -379,3 +380,5 @@
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Выбрать из файлов";
 "SignIn.EnterVerificationCode" = "Пожалуйста, введите код подтверждения";
+"UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
+"UnexpectedError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
