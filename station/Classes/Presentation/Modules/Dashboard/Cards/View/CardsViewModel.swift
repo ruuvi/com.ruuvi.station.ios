@@ -32,6 +32,7 @@ struct CardsViewModel {
     var isConnected: Observable<Bool?> = Observable<Bool?>()
     var alertState: Observable<AlertState?> = Observable<AlertState?>()
     var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
+    var movementCounter: Observable<Int?> = Observable<Int?>()
 
     private var lastUpdateRssi: Observable<CFTimeInterval?> = Observable<CFTimeInterval?>(CFAbsoluteTimeGetCurrent())
 
@@ -86,6 +87,7 @@ struct CardsViewModel {
         mac.value = record.macId?.any
         date.value = record.date
         rssi.value = record.rssi
+        movementCounter.value = record.movementCounter
     }
 
     func update(with ruuviTag: RuuviTag) {
@@ -98,6 +100,7 @@ struct CardsViewModel {
         version.value = ruuviTag.version
         mac.value = ruuviTag.mac?.mac.any
         date.value = Date()
+        movementCounter.value = ruuviTag.movementCounter
     }
 
     func update(rssi: Int?, animated: Bool = false) {
