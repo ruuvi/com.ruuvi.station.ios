@@ -7,7 +7,7 @@ import Humidity
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
     var router: WebTagSettingsRouterInput!
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var webTagService: WebTagService!
     var settings: Settings!
@@ -73,7 +73,11 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        view.viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: webTag.uuid.luid)
+        sensorService.setNextDefaultBackground(for: webTag.uuid.luid).on(success: { [weak self] image in
+            self?.view.viewModel.background.value = image
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {
@@ -176,10 +180,9 @@ extension WebTagSettingsPresenter {
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        let set = backgroundPersistence.setCustomBackground(image: photo, for: webTag.uuid.luid)
-        set.on(success: { [weak self] _ in
+        sensorService.setCustomBackground(image: photo, virtualSensor: webTag).on(success: { [weak self] _ in
             self?.view.viewModel.background.value = photo
-        }, failure: { [weak self] (error) in
+        }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }
@@ -381,13 +384,17 @@ extension WebTagSettingsPresenter {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
+        sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { [weak self] image in
+            self?.view.viewModel.background.value = image
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
         view.viewModel.isLocationAuthorizedAlways.value
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.currentTemperature.value = webTag.data.last?.record?.temperature
         view.viewModel.temperatureUnit.value = settings.temperatureUnit
         view.viewModel.humidityUnit.value = settings.humidityUnit
         view.viewModel.pressureUnit.value = settings.pressureUnit
-        view.viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
         if webTag.name == WebTagLocationSource.manual.title {
             view.viewModel.name.value = nil
         } else {

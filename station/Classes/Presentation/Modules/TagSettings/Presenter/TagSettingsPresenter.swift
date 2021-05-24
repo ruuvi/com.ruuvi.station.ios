@@ -8,7 +8,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
     var router: TagSettingsRouterInput!
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
@@ -135,9 +135,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToRandomizeBackground() {
         if let luid = ruuviTag.luid {
-            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: luid)
+            sensorService.setNextDefaultBackground(for: luid).on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         } else if let macId = ruuviTag.macId {
-            viewModel.background.value = backgroundPersistence.setNextDefaultBackground(for: macId)
+            sensorService.setNextDefaultBackground(for: macId).on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         } else {
             assertionFailure()
         }
@@ -340,18 +348,9 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        let set: Future<URL, RUError>?
-        if let luid = ruuviTag.luid {
-            set = backgroundPersistence.setCustomBackground(image: photo, for: luid)
-        } else if let macId = ruuviTag.macId {
-            set = backgroundPersistence.setCustomBackground(image: photo, for: macId)
-        } else {
-            set = nil
-            assertionFailure()
-        }
-        set?.on(success: { [weak self] _ in
+        sensorService.setCustomBackground(image: photo, sensor: ruuviTag).on(success: { [weak self] _ in
             self?.viewModel.background.value = photo
-        }, failure: { [weak self] (error) in
+        }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }
@@ -374,21 +373,20 @@ extension TagSettingsPresenter {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.pressureUnit.value = settings.pressureUnit
-
+        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { [weak self] image in
+            self?.viewModel.background.value = image
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
         if let luid = ruuviTag.luid {
-            viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
             viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: luid.value)
             viewModel.dewPointAlertDescription.value = alertService.dewPointDescription(for: luid.value)
             viewModel.pressureAlertDescription.value = alertService.pressureDescription(for: luid.value)
             viewModel.connectionAlertDescription.value = alertService.connectionDescription(for: luid.value)
             viewModel.movementAlertDescription.value = alertService.movementDescription(for: luid.value)
-        } else if let macId = ruuviTag.macId {
-            viewModel.background.value = backgroundPersistence.background(for: macId)
-        } else {
-            assertionFailure()
         }
-
+        
         viewModel.isAuthorized.value = keychainService.userIsAuthorized
         viewModel.canShareTag.value = ruuviTag.isOwner && ruuviTag.isClaimed
         viewModel.canClaimTag.value = ruuviTag.isOwner

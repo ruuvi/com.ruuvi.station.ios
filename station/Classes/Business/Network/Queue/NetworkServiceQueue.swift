@@ -8,6 +8,7 @@ class NetworkServiceQueue: NetworkService {
     var ruuviTagTrunk: RuuviTagTrunk!
     var networkPersistence: NetworkPersistence!
     var settings: Settings!
+    var sensorService: SensorService!
 
     lazy var queue: OperationQueue = {
         var queue = OperationQueue()
@@ -135,6 +136,9 @@ extension NetworkServiceQueue {
                                                  isOwner: networkTag.isOwner,
                                                  owner: networkTag.owner)
         ruuviTagTank.update(updatedSensor)
+        if let pictureUrl = URL(string: networkTag.pictureUrl) {
+            sensorService.ensureNetworkBackgroundIsLoaded(for: networkTag.sensorId.mac, from: pictureUrl)
+        }
     }
 
     private func removeClaimedFlag(for sensor: RuuviTagSensor) {
@@ -162,5 +166,8 @@ extension NetworkServiceQueue {
                                                  isOwner: sensor.isOwner,
                                                  owner: sensor.owner)
         ruuviTagTank.create(sensorStruct)
+        if let pictureUrl = URL(string: sensor.pictureUrl) {
+            sensorService.ensureNetworkBackgroundIsLoaded(for: sensor.sensorId.mac, from: pictureUrl)
+        }
     }
 }
