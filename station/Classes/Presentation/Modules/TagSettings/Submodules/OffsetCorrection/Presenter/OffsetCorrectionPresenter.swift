@@ -4,7 +4,6 @@ import BTKit
 class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     weak var view: OffsetCorrectionViewInput!
     var router: OffsetCorrectionRouter!
-    var backgroundPersistence: BackgroundPersistence!
     var background: BTBackground!
     var foreground: BTForeground!
     var errorPresenter: ErrorPresenter!
