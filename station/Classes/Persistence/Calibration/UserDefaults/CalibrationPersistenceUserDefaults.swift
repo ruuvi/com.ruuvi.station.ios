@@ -18,5 +18,4 @@ class CalibrationPersistenceUserDefaults: CalibrationPersistence {
         UserDefaults.standard.set(date, forKey: humidityOffsetDatePrefixUDKey + identifier.value)
         UserDefaults.standard.set(offset, forKey: humidityOffsetPrefixUDKey + identifier.value)
     }
-
 }
