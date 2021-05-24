@@ -285,6 +285,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Inch of mercury (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimetre of mercury (mmHg)";
+"TagSettings.rssiTitleLabel.text" = "Signal strength (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SCAN";
 "Background.Interval.Sec.string" = "sec";
