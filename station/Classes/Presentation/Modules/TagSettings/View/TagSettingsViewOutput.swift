@@ -6,7 +6,6 @@ protocol TagSettingsViewOutput {
     func viewDidAskToRandomizeBackground()
     func viewDidAskToRemoveRuuviTag()
     func viewDidConfirmTagRemoval()
-    func viewDidAskToCalibrateHumidity()
     func viewDidChangeTag(name: String)
     func viewDidAskToSelectBackground(sourceView: UIView)
     func viewDidTapOnMacAddress()

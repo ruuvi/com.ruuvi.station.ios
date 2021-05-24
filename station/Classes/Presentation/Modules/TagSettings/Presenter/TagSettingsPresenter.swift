@@ -202,12 +202,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         networkOperation.on()
     }
 
-    func viewDidAskToCalibrateHumidity() {
-        if let humidity = humidity {
-            router.openHumidityCalibration(ruuviTag: ruuviTag, humidity: humidity.value)
-        }
-    }
-
     func viewDidAskToSelectBackground(sourceView: UIView) {
         photoPickerPresenter.pick(sourceView: sourceView)
     }
