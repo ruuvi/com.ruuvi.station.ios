@@ -12,7 +12,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var interactor: TagChartsInteractorInput!
 
     var errorPresenter: ErrorPresenter!
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var settings: Settings!
     var foreground: BTForeground!
     var ruuviTagTrunk: RuuviTagTrunk!
@@ -367,9 +367,13 @@ extension TagChartsPresenter {
 
     private func syncViewModel() {
         let viewModel = TagChartsViewModel(ruuviTag)
+        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { image in
+            viewModel.background.value = image
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        })
         if let luid = ruuviTag.luid {
             viewModel.name.value = ruuviTag.name
-            viewModel.background.value = backgroundPersistence.background(for: luid)
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.alertState.value = alertService.hasRegistrations(for: luid.value)
                                                                 ? .registered : .empty
@@ -379,7 +383,6 @@ extension TagChartsPresenter {
                 self.sensorSettings = settings
             }
         } else if let macId = ruuviTag.macId {
-            viewModel.background.value = backgroundPersistence.background(for: macId)
             viewModel.alertState.value = alertService.hasRegistrations(for: macId.value) ? .registered : .empty
             viewModel.isConnected.value = false
         } else {
@@ -442,21 +445,18 @@ extension TagChartsPresenter {
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
                          object: nil,
                          queue: .main) { [weak self] notification in
-            if let userInfo = notification.userInfo,
-                let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
-                            self?.viewModel.uuid.value == luid.value {
-                self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
-            }
-
-            if let userInfo = notification.userInfo {
-                if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
-                self?.viewModel.uuid.value == luid.value {
-                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: luid)
-                } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
-                    self?.viewModel.mac.value == macId.value {
-                    self?.viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                guard let sSelf = self else { return }
+                if let userInfo = notification.userInfo {
+                    let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
+                    let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
+                    if sSelf.viewModel.uuid.value == luid?.value || sSelf.viewModel.mac.value == macId?.value {
+                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { [weak sSelf] image in
+                            sSelf?.viewModel.background.value = image
+                        }, failure: { [weak sSelf] error in
+                            sSelf?.errorPresenter.present(error: error)
+                        })
+                    }
                 }
-            }
         }
     }
 

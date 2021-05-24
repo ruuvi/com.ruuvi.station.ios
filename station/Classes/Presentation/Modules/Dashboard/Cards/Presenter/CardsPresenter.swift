@@ -10,7 +10,7 @@ class CardsPresenter: CardsModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: Settings!
-    var backgroundPersistence: BackgroundPersistence!
+    var sensorService: SensorService!
     var foreground: BTForeground!
     var background: BTBackground!
     var webTagService: WebTagService!
@@ -319,14 +319,17 @@ extension CardsPresenter {
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
+            sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { image in
+                viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
             if let luid = ruuviTag.luid {
-                viewModel.background.value = backgroundPersistence.background(for: luid)
                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                viewModel.background.value = backgroundPersistence.background(for: macId)
                 viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
                 viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
                 // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
@@ -347,7 +350,11 @@ extension CardsPresenter {
         if virtualTags != nil {
             virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
-                viewModel.background.value = backgroundPersistence.background(for: webTag.uuid.luid)
+                sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { image in
+                    viewModel.background.value = image
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
                 viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
@@ -644,13 +651,19 @@ extension CardsPresenter {
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
                          object: nil,
                          queue: .main) { [weak self] notification in
+
+                guard let sSelf = self else { return }
                 if let userInfo = notification.userInfo {
-                    if let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
-                       let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid.any }) {
-                        viewModel.background.value = self?.backgroundPersistence.background(for: luid)
-                    } else if let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier,
-                              let viewModel = self?.view.viewModels.first(where: {$0.mac.value == macId.any }) {
-                        viewModel.background.value = self?.backgroundPersistence.background(for: macId)
+                    let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
+                    let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
+                    let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid?.any })
+                        ?? self?.view.viewModels.first(where: {$0.mac.value == macId?.any })
+                    if let viewModel = viewModel {
+                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { image in
+                            viewModel.background.value = image
+                        }, failure: { [weak sSelf] error in
+                            sSelf?.errorPresenter.present(error: error)
+                        })
                     }
                 }
             }

@@ -11,7 +11,6 @@ class OffsetCorrectionConfigurator {
         let presenter = OffsetCorrectionPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)

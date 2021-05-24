@@ -11,7 +11,7 @@ class TagSettingsTableConfigurator {
         let presenter = TagSettingsPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+        presenter.sensorService = r.resolve(SensorService.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)

@@ -123,7 +123,7 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerToVIPER.self) { r in
             let manager = MigrationManagerToVIPER()
-            manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            manager.sensorService = r.resolve(SensorService.self)
             manager.settings = r.resolve(Settings.self)
             return manager
         }
@@ -131,7 +131,6 @@ class BusinessAssembly: Assembly {
         container.register(MigrationManagerToSQLite.self) { r in
             let manager = MigrationManagerToSQLite()
             manager.alertPersistence = r.resolve(AlertPersistence.self)
-            manager.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             manager.connectionPersistence = r.resolve(ConnectionPersistence.self)
             manager.idPersistence = r.resolve(IDPersistence.self)
@@ -220,6 +219,7 @@ class BusinessAssembly: Assembly {
             service.ruuviNetworkFactory = factory
             service.networkPersistence = r.resolve(NetworkPersistence.self)
             service.settings = r.resolve(Settings.self)
+            service.sensorService = r.resolve(SensorService.self)
             return service
         }.inObjectScope(.container)
 
@@ -237,6 +237,8 @@ class BusinessAssembly: Assembly {
         container.register(SensorService.self) { r in
             let service = SensorServiceImpl()
             service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            service.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
+            service.imageCoreService = r.resolve(ImageCoreService.self)
             return service
         }
 
