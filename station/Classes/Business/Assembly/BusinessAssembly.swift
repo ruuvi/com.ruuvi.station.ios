@@ -158,6 +158,14 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerSensorSettings.self) { r in
+            let manager = MigrationManagerSensorSettings()
+            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
+            manager.errorPresenter = r.resolve(ErrorPresenter.self)
+            return manager
+        }
+
         container.register(PullWebDaemon.self) { r in
             let daemon = PullWebDaemonOperations()
             daemon.settings = r.resolve(Settings.self)

@@ -7,10 +7,9 @@ enum TagSettingsTableSection: Int {
     case name = 1
     case connection = 2
     case alerts = 3
-    case calibration = 4
-    case offsetCorrection = 5
-    case moreInfo = 7
-    case networkInfo = 8
+    case offsetCorrection = 4
+    case moreInfo = 5
+    case networkInfo = 6
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -64,7 +63,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var keepConnectionTitleLabel: UILabel!
     @IBOutlet weak var dataSourceTitleLabel: UILabel!
     @IBOutlet weak var dataSourceValueLabel: UILabel!
-    @IBOutlet weak var humidityLabelTrailing: NSLayoutConstraint!
+
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var mcValueLabelTrailing: NSLayoutConstraint!
@@ -75,7 +74,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
     @IBOutlet weak var tagNameCell: UITableViewCell!
-    @IBOutlet weak var calibrationHumidityCell: UITableViewCell!
     @IBOutlet weak var uuidValueLabel: UILabel!
     @IBOutlet weak var accelerationXValueLabel: UILabel!
     @IBOutlet weak var accelerationYValueLabel: UILabel!
@@ -83,7 +81,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var voltageValueLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
     @IBOutlet weak var rssiValueLabel: UILabel!
-    @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
@@ -92,7 +89,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var txPowerValueLabel: UILabel!
     @IBOutlet weak var backgroundImageLabel: UILabel!
     @IBOutlet weak var tagNameTitleLabel: UILabel!
-    @IBOutlet weak var humidityTitleLabel: UILabel!
     @IBOutlet weak var uuidTitleLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
     @IBOutlet weak var rssiTitleLabel: UILabel!
@@ -144,7 +140,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
         tagNameTitleLabel.text = "TagSettings.tagNameTitleLabel.text".localized()
         rssiTitleLabel.text = "TagSettings.rssiTitleLabel.text".localized()
-        humidityTitleLabel.text = "TagSettings.humidityTitleLabel.text".localized()
         uuidTitleLabel.text = "TagSettings.uuidTitleLabel.text".localized()
         macAddressTitleLabel.text = "TagSettings.macAddressTitleLabel.text".localized()
         dataFormatTitleLabel.text = "TagSettings.dataFormatTitleLabel.text".localized()
@@ -348,8 +343,6 @@ extension TagSettingsTableViewController {
         switch cell {
         case tagNameCell:
             tagNameTextField.becomeFirstResponder()
-        case calibrationHumidityCell:
-            output.viewDidAskToCalibrateHumidity()
         case macAddressCell:
             output.viewDidTapOnMacAddress()
         case uuidCell:
@@ -377,8 +370,6 @@ extension TagSettingsTableViewController {
         switch section {
         case .name:
             return "TagSettings.SectionHeader.Name.title".localized()
-        case .calibration:
-            return "TagSettings.SectionHeader.Calibration.title".localized()
         case .offsetCorrection:
             return "TagSettings.SectionHeader.OffsetCorrection.Title".localized()
         case .connection:
@@ -389,18 +380,6 @@ extension TagSettingsTableViewController {
                 ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
         default:
             return nil
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) else {
-            return
-        }
-        switch cell {
-        case calibrationHumidityCell:
-            output.viewDidTapOnHumidityAccessoryButton()
-        default:
-            break
         }
     }
 
@@ -688,7 +667,6 @@ extension TagSettingsTableViewController {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindViewModel() {
-        bindHumidity()
         bindTemperatureAlertCells()
         bindHumidityAlertCells()
         bindDewPointAlertCells()
@@ -875,47 +853,6 @@ extension TagSettingsTableViewController {
         }
 
         bindOffsetCorrectionCells()
-    }
-
-    private func bindHumidity() {
-        guard isViewLoaded, let viewModel = viewModel else { return }
-        let temperature = viewModel.temperature.value
-        let humidity = viewModel.humidity.value
-        let humidityOffset = viewModel.humidityOffset.value
-        let humidityCell = calibrationHumidityCell
-        let humidityTrailing = humidityLabelTrailing
-
-        let humidityBlock: ((UILabel, Any?) -> Void) = {
-            [weak humidityCell,
-             weak humidityTrailing] label, _ in
-            // TODO with use measurement service
-            if let temperature = temperature,
-               let humidityOffset = humidityOffset,
-               let humidity = humidity?.converted(to: .relative(temperature: temperature)).value {
-                if humidityOffset > 0 {
-                    let shownHumidity = humidity + humidityOffset
-                    if shownHumidity > 100.0 {
-                        label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
-                            + " → " + "\(String.localizedStringWithFormat("%.2f", 100.0))"
-                        humidityCell?.accessoryType = .detailButton
-                        humidityTrailing?.constant = 0
-                    } else {
-                        label.text = "\(String.localizedStringWithFormat("%.2f", humidity))"
-                            + " → " + "\(String.localizedStringWithFormat("%.2f", shownHumidity))"
-                        humidityCell?.accessoryType = .none
-                        humidityTrailing?.constant = 16.0
-                    }
-                } else {
-                    label.text = nil
-                    humidityCell?.accessoryType = .none
-                    humidityTrailing?.constant = 16.0
-                }
-            } else {
-                label.text = nil
-            }
-        }
-        humidityLabel.bind(viewModel.humidity, block: humidityBlock)
-        humidityLabel.bind(viewModel.humidityOffset, block: humidityBlock)
     }
 
     // swiftlint:disable:next function_body_length
