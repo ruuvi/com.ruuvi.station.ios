@@ -285,6 +285,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Tum kvicksilver (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimeter kvicksilver (mmHg)";
+"TagSettings.rssiTitleLabel.text" = "Signalstyrka (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SKANNA";
 "Background.Interval.Sec.string" = "sek";
@@ -379,3 +380,5 @@
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
 "SignIn.EnterVerificationCode" = "Please enter verification code";
+"UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
+"UnexpectedError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";

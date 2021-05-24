@@ -158,9 +158,9 @@ extension UnexpectedError: LocalizedError {
         case .failedToParseHttpResponse:
             return "UnexpectedError.failedToParseHttpResponse".localized()
         case .failedToFindOrGenerateBackgroundImage:
-            return "UnexpectedError.failedToFindOrGenerateBackgroundImage".localized() // TODO: @rinat localize
+            return "UnexpectedError.failedToFindOrGenerateBackgroundImage".localized()
         case .bothLuidAndMacAreNil:
-            return "UnexpectedError.bothLuidAndMacAreNil".localized() // TODO: @rinat localize
+            return "UnexpectedError.bothLuidAndMacAreNil".localized()
         }
     }
 }
