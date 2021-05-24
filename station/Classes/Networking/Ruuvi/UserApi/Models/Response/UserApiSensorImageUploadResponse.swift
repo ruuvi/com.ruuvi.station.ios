@@ -1,5 +1,5 @@
 import Foundation
 
-struct UserApiSensorImageUploadResponse {
-    let uploadURL: String
+struct UserApiSensorImageUploadResponse: Decodable {
+    let uploadURL: URL
 }

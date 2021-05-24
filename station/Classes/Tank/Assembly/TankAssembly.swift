@@ -8,7 +8,7 @@ class TankAssembly: Assembly {
             tank.sqlite = r.resolve(RuuviTagPersistenceSQLite.self)
             tank.idPersistence = r.resolve(IDPersistence.self)
             tank.settings = r.resolve(Settings.self)
-            tank.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            tank.sensorService = r.resolve(SensorService.self)
             tank.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return tank
         }

@@ -16,7 +16,7 @@ class CardsScrollConfigurator {
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(Settings.self)
-        presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+        presenter.sensorService = r.resolve(SensorService.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.webTagService = r.resolve(WebTagService.self)
