@@ -9,7 +9,6 @@ class MigrationManagerToSQLite: MigrationManager {
 
     // persistence
     var alertPersistence: AlertPersistence!
-    var backgroundPersistence: BackgroundPersistence!
     var calibrationPersistence: CalibrationPersistence!
     var connectionPersistence: ConnectionPersistence!
     var idPersistence: IDPersistence!
