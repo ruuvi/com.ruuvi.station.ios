@@ -21,9 +21,9 @@ class CardView: UIView {
     @IBOutlet weak var temperatureUnitLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var pressureLabel: UILabel!
-    @IBOutlet weak var rssiCityLabel: UILabel!
+    @IBOutlet weak var movementCityLabel: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
-    @IBOutlet weak var rssiCityImageView: UIImageView!
+    @IBOutlet weak var movementCityImageView: UIImageView!
 
     var updatedAt: Date?
     var isConnected: Bool?
