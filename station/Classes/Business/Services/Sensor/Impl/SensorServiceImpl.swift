@@ -4,6 +4,7 @@ import Future
 final class SensorServiceImpl: SensorService {
     var backgroundPersistence: BackgroundPersistence!
     var ruuviNetwork: RuuviNetworkUserApi!
+    var imageCoreService: ImageCoreService!
     private let backgroundUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
 
     func background(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RUError> {
