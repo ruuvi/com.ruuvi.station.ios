@@ -21,6 +21,8 @@ class MigrationManagerSensorSettings: MigrationManager {
                             of: ruuviTag,
                             lastOriginalRecord: nil
                         ).on(success: { _ in
+                            self.calibrationPersistence
+                                .setHumidity(date: nil, offset: 0.0, for: luid)
                         })
                     }
                 }
