@@ -4,7 +4,9 @@ import Future
 final class SensorServiceImpl: SensorService {
     var backgroundPersistence: BackgroundPersistence!
     var ruuviNetwork: RuuviNetworkUserApi!
+    var imageCoreService: ImageCoreService!
     private let backgroundUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
+    private let maxImageSize = CGSize(width: 1080, height: 1920)
 
     func background(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RUError> {
         let promise = Promise<UIImage, RUError>()
@@ -54,7 +56,8 @@ final class SensorServiceImpl: SensorService {
 
         if isOwner {
             if let mac = mac {
-                remote = ruuviNetwork.upload(image: image, for: mac)
+                let croppedImage = imageCoreService.cropped(image: image, to: maxImageSize)
+                remote = ruuviNetwork.upload(image: croppedImage, for: mac)
                 local = backgroundPersistence.setCustomBackground(image: image, for: mac)
             } else if let luid = luid {
                 local = backgroundPersistence.setCustomBackground(image: image, for: luid)

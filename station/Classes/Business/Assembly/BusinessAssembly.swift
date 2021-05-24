@@ -230,6 +230,7 @@ class BusinessAssembly: Assembly {
             let service = SensorServiceImpl()
             service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
             service.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
+            service.imageCoreService = r.resolve(ImageCoreService.self)
             return service
         }
 

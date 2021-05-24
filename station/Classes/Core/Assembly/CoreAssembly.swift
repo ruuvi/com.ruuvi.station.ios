@@ -2,8 +2,8 @@ import Swinject
 import BTKit
 
 class CoreAssembly: Assembly {
+    // swiftlint:disable:next function_body_length
     func assemble(container: Container) {
-
         container.register(BTForeground.self) { _ in
             return BTKit.foreground
         }.inObjectScope(.container)
@@ -31,6 +31,11 @@ class CoreAssembly: Assembly {
         container.register(LocationManager.self) { _ in
             let manager = LocationManagerImpl()
             return manager
+        }
+
+        container.register(ImageCoreService.self) { _ in
+            let service = ImageCoreServiceImpl()
+            return service
         }
 
         container.register(PermissionsManager.self) { r in
