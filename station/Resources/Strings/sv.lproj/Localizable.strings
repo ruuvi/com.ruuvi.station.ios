@@ -285,6 +285,7 @@
 "hPa" = "hPa";
 "UnitPressure.inchOfMercury.title" = "Tum kvicksilver (inHg)";
 "UnitPressure.millimetreOfMercury.title" = "Millimeter kvicksilver (mmHg)";
+"TagSettings.rssiTitleLabel.text" = "Signalstyrka (RSSI)";
 "s" = "s";
 "Welcome.scan.title" = "SKANNA";
 "Background.Interval.Sec.string" = "sek";

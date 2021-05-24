@@ -82,6 +82,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var accelerationZValueLabel: UILabel!
     @IBOutlet weak var voltageValueLabel: UILabel!
     @IBOutlet weak var macAddressValueLabel: UILabel!
+    @IBOutlet weak var rssiValueLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var tagNameTextField: UITextField!
@@ -94,6 +95,7 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityTitleLabel: UILabel!
     @IBOutlet weak var uuidTitleLabel: UILabel!
     @IBOutlet weak var macAddressTitleLabel: UILabel!
+    @IBOutlet weak var rssiTitleLabel: UILabel!
     @IBOutlet weak var dataFormatTitleLabel: UILabel!
     @IBOutlet weak var batteryVoltageTitleLabel: UILabel!
     @IBOutlet weak var accelerationXTitleLabel: UILabel!
@@ -141,6 +143,7 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         navigationItem.title = "TagSettings.navigationItem.title".localized()
         backgroundImageLabel.text = "TagSettings.backgroundImageLabel.text".localized()
         tagNameTitleLabel.text = "TagSettings.tagNameTitleLabel.text".localized()
+        rssiTitleLabel.text = "TagSettings.rssiTitleLabel.text".localized()
         humidityTitleLabel.text = "TagSettings.humidityTitleLabel.text".localized()
         uuidTitleLabel.text = "TagSettings.uuidTitleLabel.text".localized()
         macAddressTitleLabel.text = "TagSettings.macAddressTitleLabel.text".localized()
@@ -749,6 +752,14 @@ extension TagSettingsTableViewController {
         macAddressValueLabel.bind(viewModel.mac) { label, mac in
             if let mac = mac {
                 label.text = mac
+            } else {
+                label.text = emptyValueString.localized()
+            }
+        }
+
+        rssiValueLabel.bind(viewModel.rssi) { label, rssi in
+            if let rssi = rssi {
+                label.text = "\(rssi)"
             } else {
                 label.text = emptyValueString.localized()
             }
