@@ -265,7 +265,6 @@
 		0E6BAD8E23856A01003A2D4C /* WelcomeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */; };
 		0E6BAD8F23856A01003A2D4C /* ForegroundModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35A2350618E0061D11B /* ForegroundModuleInput.swift */; };
 		0E6BAD9023856A01003A2D4C /* AboutViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F422B7D1A40015F9E0 /* AboutViewOutput.swift */; };
-		0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5622C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift */; };
 		0E6BAD9223856A01003A2D4C /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */; };
 		0E6BAD9323856A01003A2D4C /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */; };
 		0E6BAD9423856A01003A2D4C /* WebTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */; };
@@ -300,7 +299,6 @@
 		0E6BADB223856A01003A2D4C /* WebTagSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3322F057FC00BD4E9C /* WebTagSettingsModuleInput.swift */; };
 		0E6BADB323856A01003A2D4C /* MenuTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0422B400890032F6CA /* MenuTableConfigurator.swift */; };
 		0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
-		0E6BADB623856A01003A2D4C /* HumidityCalibrationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */; };
 		0E6BADB723856A01003A2D4C /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E6BADB823856A01003A2D4C /* RealmContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9422B3624F0032F6CA /* RealmContext.swift */; };
 		0E6BADB923856A01003A2D4C /* RealmContextImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */; };
@@ -323,7 +321,6 @@
 		0E6BADCD23856A01003A2D4C /* UIApplication+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */; };
 		0E6BADCE23856A01003A2D4C /* WebTagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */; };
 		0E6BADCF23856A01003A2D4C /* DiscoverDeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */; };
-		0E6BADD023856A01003A2D4C /* HumidityCalibrationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5422C5E22500C51D81 /* HumidityCalibrationRouter.swift */; };
 		0E6BADD123856A01003A2D4C /* WebTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979822EB055D0015ADE2 /* WebTagService.swift */; };
 		0E6BADD223856A01003A2D4C /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
 		0E6BADD323856A01003A2D4C /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
@@ -331,7 +328,6 @@
 		0E6BADD523856A01003A2D4C /* LocationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */; };
 		0E6BADD623856A01003A2D4C /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */; };
 		0E6BADD723856A01003A2D4C /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
-		0E6BADD823856A01003A2D4C /* HumidityCalibrationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */; };
 		0E6BADD923856A01003A2D4C /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
 		0E6BADDA23856A01003A2D4C /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
 		0E6BADDB23856A01003A2D4C /* AboutViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F222B7D1900015F9E0 /* AboutViewInput.swift */; };
@@ -350,7 +346,6 @@
 		0E6BADE823856A01003A2D4C /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
 		0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E6BADEA23856A01003A2D4C /* DefaultsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101B2384618700A9CBA6 /* DefaultsInitializer.swift */; };
-		0E6BADEB23856A01003A2D4C /* HumidityCalibrationInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */; };
 		0E6BADEC23856A01003A2D4C /* MainInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */; };
 		0E6BADED23856A01003A2D4C /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
 		0E6BADEE23856A01003A2D4C /* ForegroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */; };
@@ -380,7 +375,6 @@
 		0E6BAE0723856A01003A2D4C /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
 		0E6BAE0823856A01003A2D4C /* LocationPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5222F182AB00BD4E9C /* LocationPickerModuleInput.swift */; };
 		0E6BAE0923856A01003A2D4C /* RuuviTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */; };
-		0E6BAE0A23856A01003A2D4C /* HumidityCalibrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */; };
 		0E6BAE0B23856A01003A2D4C /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */; };
 		0E6BAE0C23856A01003A2D4C /* ImagePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */; };
 		0E6BAE0D23856A01003A2D4C /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */; };
@@ -416,7 +410,6 @@
 		0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0E6BAE3123856A01003A2D4C /* TagChartsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */; };
 		0E6BAE3223856A01003A2D4C /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E6BAE3323856A01003A2D4C /* HumidityCalibrationViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */; };
 		0E6BAE3523856A01003A2D4C /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
 		0E6BAE3623856A01003A2D4C /* ActivityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */; };
 		0E6BAE3723856A01003A2D4C /* MenuViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF422B3FF1D0032F6CA /* MenuViewOutput.swift */; };
@@ -433,7 +426,6 @@
 		0E6BAE4223856A01003A2D4C /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E538363236AE6BA0007956D /* ExportService.swift */; };
 		0E6BAE4423856A01003A2D4C /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
-		0E6BAE4523856A01003A2D4C /* HumidityCalibrationTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */; };
 		0E6BAE4623856A01003A2D4C /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E6BAE4723856A01003A2D4C /* UserDefaults+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */; };
 		0E6BAE4823856A01003A2D4C /* TagChartsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C6233366DC00FFA577 /* TagChartsRouterInput.swift */; };
@@ -483,7 +475,6 @@
 		0E6BAE7723856A01003A2D4C /* RUError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9F22B36C100032F6CA /* RUError.swift */; };
 		0E6BAE7823856A01003A2D4C /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5C22F18EC100BD4E9C /* LocationService.swift */; };
 		0E6BAE7923856A01003A2D4C /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
-		0E6BAE7A23856A01003A2D4C /* HumidityCalibrationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */; };
 		0E6BAE7B23856A01003A2D4C /* WebTagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3E22F0702D00BD4E9C /* WebTagSettingsViewModel.swift */; };
 		0E6BAE7C23856A01003A2D4C /* MainConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214322B8FBC50015F9E0 /* MainConfigurator.swift */; };
 		0E6BAE7D23856A01003A2D4C /* WebTagSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3522F0581E00BD4E9C /* WebTagSettingsPresenter.swift */; };
@@ -491,13 +482,11 @@
 		0E6BAE7F23856A01003A2D4C /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
 		0E6BAE8023856A01003A2D4C /* CardsScrollInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE722B3C2B60032F6CA /* CardsScrollInitializer.swift */; };
 		0E6BAE8123856A01003A2D4C /* DefaultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10112384605A00A9CBA6 /* DefaultsTableViewController.swift */; };
-		0E6BAE8223856A01003A2D4C /* HumidityCalibrationRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5222C5E21300C51D81 /* HumidityCalibrationRouterInput.swift */; };
 		0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */; };
 		0E6BAE8423856A01003A2D4C /* MenuTableTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */; };
 		0E6BAE8523856A01003A2D4C /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */; };
 		0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
 		0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
-		0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5022C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift */; };
 		0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0E6BAE8A23856A01003A2D4C /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
 		0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* ForegroundRow.swift */; };
@@ -533,7 +522,6 @@
 		0E6BAEB023856A01003A2D4C /* Defaults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8A100123845E5100A9CBA6 /* Defaults.storyboard */; };
 		0E6BAEB123856A01003A2D4C /* Cards.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */; };
 		0E6BAEB223856A01003A2D4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D3120B0C45A00CDF4B6 /* LaunchScreen.storyboard */; };
-		0E6BAEB323856A01003A2D4C /* HumidityCalibration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */; };
 		0E6BAEB423856A01003A2D4C /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		0E6BAEB523856A01003A2D4C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		0E6BAEB623856A01003A2D4C /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09672722AE8D7A00E85F48 /* Discover.storyboard */; };
@@ -723,7 +711,6 @@
 		0E8BD2C4238566AB008B31EF /* WelcomeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB215722B8FD800015F9E0 /* WelcomeConfigurator.swift */; };
 		0E8BD2C5238566AB008B31EF /* ForegroundModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF35A2350618E0061D11B /* ForegroundModuleInput.swift */; };
 		0E8BD2C6238566AB008B31EF /* AboutViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F422B7D1A40015F9E0 /* AboutViewOutput.swift */; };
-		0E8BD2C7238566AB008B31EF /* HumidityCalibrationModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5622C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift */; };
 		0E8BD2C8238566AB008B31EF /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2364E234F2EB000CE6AA3 /* AsyncOperation.swift */; };
 		0E8BD2C9238566AB008B31EF /* TagChartsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0DC2333714C00FFA577 /* TagChartsViewModel.swift */; };
 		0E8BD2CA238566AB008B31EF /* WebTagPersistenceRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A122EB0C8B0015ADE2 /* WebTagPersistenceRealm.swift */; };
@@ -758,7 +745,6 @@
 		0E8BD2E8238566AB008B31EF /* WebTagSettingsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3322F057FC00BD4E9C /* WebTagSettingsModuleInput.swift */; };
 		0E8BD2E9238566AB008B31EF /* MenuTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0422B400890032F6CA /* MenuTableConfigurator.swift */; };
 		0E8BD2EA238566AB008B31EF /* WebTagDaemonImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F27235362AF0076FFD8 /* WebTagDaemonImpl.swift */; };
-		0E8BD2EC238566AB008B31EF /* HumidityCalibrationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */; };
 		0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */; };
 		0E8BD2EE238566AB008B31EF /* RealmContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9422B3624F0032F6CA /* RealmContext.swift */; };
 		0E8BD2EF238566AB008B31EF /* RealmContextImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9722B3646A0032F6CA /* RealmContextImpl.swift */; };
@@ -781,7 +767,6 @@
 		0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */; };
 		0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3C22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift */; };
 		0E8BD305238566AB008B31EF /* DiscoverDeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DCC22B3A4DB0032F6CA /* DiscoverDeviceViewModel.swift */; };
-		0E8BD306238566AB008B31EF /* HumidityCalibrationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5422C5E22500C51D81 /* HumidityCalibrationRouter.swift */; };
 		0E8BD307238566AB008B31EF /* WebTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979822EB055D0015ADE2 /* WebTagService.swift */; };
 		0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E62AEC822E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift */; };
 		0E8BD309238566AB008B31EF /* WeatherProviderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDAC96722F2FF8C00D0F6F2 /* WeatherProviderService.swift */; };
@@ -789,7 +774,6 @@
 		0E8BD30B238566AB008B31EF /* LocationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97AD22EB1CF50015ADE2 /* LocationManagerImpl.swift */; };
 		0E8BD30C238566AB008B31EF /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB213B22B8FAD50015F9E0 /* MainRouter.swift */; };
 		0E8BD30D238566AB008B31EF /* TagChartsScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C023335D8400FFA577 /* TagChartsScrollViewController.swift */; };
-		0E8BD30E238566AB008B31EF /* HumidityCalibrationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */; };
 		0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300A22CF629100B52E39 /* PhotoPickerPresenterSheet.swift */; };
 		0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB210222B7D3210015F9E0 /* AboutConfigurator.swift */; };
 		0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20F222B7D1900015F9E0 /* AboutViewInput.swift */; };
@@ -808,7 +792,6 @@
 		0E8BD31E238566AB008B31EF /* ConnectionPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E390FEA23602E4600D600DB /* ConnectionPersistenceUserDefaults.swift */; };
 		0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979122EAF1110015ADE2 /* DiscoverWebTagViewModel.swift */; };
 		0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101B2384618700A9CBA6 /* DefaultsInitializer.swift */; };
-		0E8BD321238566AB008B31EF /* HumidityCalibrationInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */; };
 		0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214122B8FBA50015F9E0 /* MainInitializer.swift */; };
 		0E8BD323238566AB008B31EF /* WebTagDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F252353626B0076FFD8 /* WebTagDaemon.swift */; };
 		0E8BD324238566AB008B31EF /* ForegroundSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9D5F1F2351BE3C0076FFD8 /* ForegroundSwitchTableViewCell.swift */; };
@@ -838,7 +821,6 @@
 		0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3106A232B760100BC8CF5 /* RUObservationToken.swift */; };
 		0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5222F182AB00BD4E9C /* LocationPickerModuleInput.swift */; };
 		0E8BD33F238566AB008B31EF /* RuuviTagDataRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DA522B37F8B0032F6CA /* RuuviTagDataRealm.swift */; };
-		0E8BD340238566AB008B31EF /* HumidityCalibrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */; };
 		0E8BD341238566AB008B31EF /* RuuviTagAdvertisementDaemonBTKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB211122B7E25E0015F9E0 /* RuuviTagAdvertisementDaemonBTKit.swift */; };
 		0E8BD342238566AB008B31EF /* ImagePersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C301E22D0905D00B52E39 /* ImagePersistence.swift */; };
 		0E8BD343238566AB008B31EF /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20D222B7C7AC0015F9E0 /* SettingsTableViewController.swift */; };
@@ -874,7 +856,6 @@
 		0E8BD366238566AB008B31EF /* PushNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECDF1B82313E06500A09ACA /* PushNotificationsManager.swift */; };
 		0E8BD367238566AB008B31EF /* TagChartsModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0CA2333671100FFA577 /* TagChartsModuleInput.swift */; };
 		0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */; };
-		0E8BD369238566AB008B31EF /* HumidityCalibrationViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */; };
 		0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C302722D0B1C600B52E39 /* AppStateServiceImpl.swift */; };
 		0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DAE22B38F780032F6CA /* ActivityPresenter.swift */; };
 		0E8BD36D238566AB008B31EF /* MenuViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DF422B3FF1D0032F6CA /* MenuViewOutput.swift */; };
@@ -891,7 +872,6 @@
 		0E8BD378238566AB008B31EF /* DiscoverRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E502FBD22B2817900E8A6CC /* DiscoverRouterInput.swift */; };
 		0E8BD379238566AB008B31EF /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E538363236AE6BA0007956D /* ExportService.swift */; };
 		0E8BD37A238566AB008B31EF /* DefaultsEnvironmentObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A101F2384633200A9CBA6 /* DefaultsEnvironmentObject.swift */; };
-		0E8BD37B238566AB008B31EF /* HumidityCalibrationTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */; };
 		0E8BD37C238566AB008B31EF /* ViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70A45F22AF9567006CB87C /* ViewInput.swift */; };
 		0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */; };
 		0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8FD0C6233366DC00FFA577 /* TagChartsRouterInput.swift */; };
@@ -941,7 +921,6 @@
 		0E8BD3AD238566AB008B31EF /* RUError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1D9F22B36C100032F6CA /* RUError.swift */; };
 		0E8BD3AE238566AB008B31EF /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F5C22F18EC100BD4E9C /* LocationService.swift */; };
 		0E8BD3AF238566AB008B31EF /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F979322EAF21D0015ADE2 /* WeatherProvider.swift */; };
-		0E8BD3B0238566AB008B31EF /* HumidityCalibrationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */; };
 		0E8BD3B1238566AB008B31EF /* WebTagSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3E22F0702D00BD4E9C /* WebTagSettingsViewModel.swift */; };
 		0E8BD3B2238566AB008B31EF /* MainConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB214322B8FBC50015F9E0 /* MainConfigurator.swift */; };
 		0E8BD3B3238566AB008B31EF /* WebTagSettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E046F3522F0581E00BD4E9C /* WebTagSettingsPresenter.swift */; };
@@ -949,13 +928,11 @@
 		0E8BD3B5238566AB008B31EF /* BackgroundPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB20C022B78EC50015F9E0 /* BackgroundPersistence.swift */; };
 		0E8BD3B6238566AB008B31EF /* CardsScrollInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DE722B3C2B60032F6CA /* CardsScrollInitializer.swift */; };
 		0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A10112384605A00A9CBA6 /* DefaultsTableViewController.swift */; };
-		0E8BD3B8238566AB008B31EF /* HumidityCalibrationRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5222C5E21300C51D81 /* HumidityCalibrationRouterInput.swift */; };
 		0E8BD3B9238566AB008B31EF /* RuuviTagReadLogsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E75661A2361C16100FCA977 /* RuuviTagReadLogsOperation.swift */; };
 		0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1E0822B4024E0032F6CA /* MenuTableTransitioningDelegate.swift */; };
 		0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1C1DC022B3955E0032F6CA /* ErrorPresenter.swift */; };
 		0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBAF08123200B1B0025A191 /* LanguageTableViewCell.swift */; };
 		0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C300E22CF634300B52E39 /* PermissionsManager.swift */; };
-		0E8BD3BE238566AB008B31EF /* HumidityCalibrationViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5022C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift */; };
 		0E8BD3BF238566AB008B31EF /* NetworkingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9F97A722EB1C300015ADE2 /* NetworkingAssembly.swift */; };
 		0E8BD3C0238566AB008B31EF /* CalibrationPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD6D522BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift */; };
 		0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECFF36123506C050061D11B /* ForegroundRow.swift */; };
@@ -991,7 +968,6 @@
 		0E8BD3E6238566AB008B31EF /* Defaults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8A100123845E5100A9CBA6 /* Defaults.storyboard */; };
 		0E8BD3E7238566AB008B31EF /* Cards.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E1C1DD022B3BDFC0032F6CA /* Cards.storyboard */; };
 		0E8BD3E8238566AB008B31EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64333D3120B0C45A00CDF4B6 /* LaunchScreen.storyboard */; };
-		0E8BD3E9238566AB008B31EF /* HumidityCalibration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */; };
 		0E8BD3EA238566AB008B31EF /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		0E8BD3EB238566AB008B31EF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0EEB20C922B7A7200015F9E0 /* Localizable.strings */; };
 		0E8BD3EC238566AB008B31EF /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E09672722AE8D7A00E85F48 /* Discover.storyboard */; };
@@ -1230,18 +1206,6 @@
 		0EEB216322BA61A80015F9E0 /* MigrationManagerToVIPER.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */; };
 		0EEB3E9A2526F03B008CE97B /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3E992526F03B008CE97B /* RxBlocking */; };
 		0EEB3ED42526F148008CE97B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0EEB3ED32526F148008CE97B /* RxSwift */; };
-		0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */; };
-		0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */; };
-		0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */; };
-		0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5022C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift */; };
-		0EEC3F5322C5E21300C51D81 /* HumidityCalibrationRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5222C5E21300C51D81 /* HumidityCalibrationRouterInput.swift */; };
-		0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5422C5E22500C51D81 /* HumidityCalibrationRouter.swift */; };
-		0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5622C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift */; };
-		0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */; };
-		0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */; };
-		0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */; };
-		0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */; };
-		0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */; };
 		0EF2862C22CBAF5D0026C7A5 /* TagSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */; };
 		0EF2862E22CBAFC80026C7A5 /* TagSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */; };
 		0EF2863122CBB00D0026C7A5 /* TagSettingsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */; };
@@ -1289,6 +1253,9 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
+		664A5D13265B8C050035A11F /* MigrationManagerSensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */; };
+		664A5D14265B90E50035A11F /* MigrationManagerSensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */; };
+		664A5D15265B90E60035A11F /* MigrationManagerSensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */; };
 		66BC44762657AE1400A03253 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44752657AE1400A03253 /* SensorSettings.swift */; };
 		66BC44772657AE1400A03253 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44752657AE1400A03253 /* SensorSettings.swift */; };
 		66BC44782657AE1400A03253 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44752657AE1400A03253 /* SensorSettings.swift */; };
@@ -2237,18 +2204,6 @@
 		0EEB215922BA28860015F9E0 /* MenuTableTransitionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableTransitionManager.swift; sourceTree = "<group>"; };
 		0EEB215F22BA61430015F9E0 /* MigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToVIPER.swift; sourceTree = "<group>"; };
-		0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HumidityCalibration.storyboard; sourceTree = "<group>"; };
-		0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationViewController.swift; sourceTree = "<group>"; };
-		0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationViewInput.swift; sourceTree = "<group>"; };
-		0EEC3F5022C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationViewOutput.swift; sourceTree = "<group>"; };
-		0EEC3F5222C5E21300C51D81 /* HumidityCalibrationRouterInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationRouterInput.swift; sourceTree = "<group>"; };
-		0EEC3F5422C5E22500C51D81 /* HumidityCalibrationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationRouter.swift; sourceTree = "<group>"; };
-		0EEC3F5622C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationModuleInput.swift; sourceTree = "<group>"; };
-		0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationPresenter.swift; sourceTree = "<group>"; };
-		0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationInitializer.swift; sourceTree = "<group>"; };
-		0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationConfigurator.swift; sourceTree = "<group>"; };
-		0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationTransitioningDelegate.swift; sourceTree = "<group>"; };
-		0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HumidityCalibrationPresentationController.swift; sourceTree = "<group>"; };
 		0EF2862B22CBAF5D0026C7A5 /* TagSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TagSettings.storyboard; sourceTree = "<group>"; };
 		0EF2862D22CBAFC80026C7A5 /* TagSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsTableViewController.swift; sourceTree = "<group>"; };
 		0EF2863022CBB00D0026C7A5 /* TagSettingsViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsViewInput.swift; sourceTree = "<group>"; };
@@ -2306,6 +2261,7 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerSensorSettings.swift; sourceTree = "<group>"; };
 		66BC44752657AE1400A03253 /* SensorSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorSettings.swift; sourceTree = "<group>"; };
 		66BC44792657AE2500A03253 /* SensorSettingsRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorSettingsRealm.swift; sourceTree = "<group>"; };
 		66BC447D2657AE9700A03253 /* SensorSettingsSQLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorSettingsSQLite.swift; sourceTree = "<group>"; };
@@ -2776,10 +2732,10 @@
 		0E09671522AE74CB00E85F48 /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
 				0E1C1DA722B387A00032F6CA /* AppAssembly.swift */,
-				0E1C1D9022B35D6A0032F6CA /* Worker.swift */,
+				64333D2820B0C45900CDF4B6 /* AppDelegate.swift */,
 				0EEB210F22B7E1D90015F9E0 /* BackgroundWorker.swift */,
+				0E1C1D9022B35D6A0032F6CA /* Worker.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -2862,7 +2818,6 @@
 			isa = PBXGroup;
 			children = (
 				0EEB20E922B7D1350015F9E0 /* About */,
-				0EEC3F4422C5E13800C51D81 /* Calibration */,
 				0E1C1DCE22B3BDAE0032F6CA /* Dashboard */,
 				0E09672622AE8D6A00E85F48 /* Discover */,
 				0E046F4022F17EC600BD4E9C /* LocationPicker */,
@@ -5073,11 +5028,12 @@
 		0EEB215E22BA610E0015F9E0 /* Migration */ = {
 			isa = PBXGroup;
 			children = (
-				A98D997F25175C6100ED3760 /* AlertService */,
-				0EB48D5E26183B34008E0D2D /* toPrune240 */,
-				0EEB216122BA61500015F9E0 /* toVIPER */,
-				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB215F22BA61430015F9E0 /* MigrationManager.swift */,
+				A98D997F25175C6100ED3760 /* AlertService */,
+				664A5D11265B8BAA0035A11F /* SensorSettings */,
+				0EB48D5E26183B34008E0D2D /* toPrune240 */,
+				0E8BACFC2460357400D380FB /* toSQLite */,
+				0EEB216122BA61500015F9E0 /* toVIPER */,
 			);
 			path = Migration;
 			sourceTree = "<group>";
@@ -5088,73 +5044,6 @@
 				0EEB216222BA61A80015F9E0 /* MigrationManagerToVIPER.swift */,
 			);
 			path = toVIPER;
-			sourceTree = "<group>";
-		};
-		0EEC3F4422C5E13800C51D81 /* Calibration */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F4522C5E14B00C51D81 /* Humidity */,
-			);
-			path = Calibration;
-			sourceTree = "<group>";
-		};
-		0EEC3F4522C5E14B00C51D81 /* Humidity */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F4A22C5E1AA00C51D81 /* HumidityCalibration.storyboard */,
-				0EEC3F4922C5E16600C51D81 /* Assembly */,
-				0EEC3F5F22C5EC1500C51D81 /* Transition */,
-				0EEC3F4822C5E15D00C51D81 /* Presenter */,
-				0EEC3F4722C5E15800C51D81 /* Router */,
-				0EEC3F4622C5E15400C51D81 /* View */,
-			);
-			path = Humidity;
-			sourceTree = "<group>";
-		};
-		0EEC3F4622C5E15400C51D81 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F4E22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift */,
-				0EEC3F5022C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift */,
-				0EEC3F4C22C5E1C700C51D81 /* HumidityCalibrationViewController.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		0EEC3F4722C5E15800C51D81 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F5222C5E21300C51D81 /* HumidityCalibrationRouterInput.swift */,
-				0EEC3F5422C5E22500C51D81 /* HumidityCalibrationRouter.swift */,
-			);
-			path = Router;
-			sourceTree = "<group>";
-		};
-		0EEC3F4822C5E15D00C51D81 /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F5622C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift */,
-				0EEC3F5822C5E28200C51D81 /* HumidityCalibrationPresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		0EEC3F4922C5E16600C51D81 /* Assembly */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F5A22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift */,
-				0EEC3F5C22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift */,
-			);
-			path = Assembly;
-			sourceTree = "<group>";
-		};
-		0EEC3F5F22C5EC1500C51D81 /* Transition */ = {
-			isa = PBXGroup;
-			children = (
-				0EEC3F6022C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift */,
-				0EEC3F6222C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift */,
-			);
-			path = Transition;
 			sourceTree = "<group>";
 		};
 		0EF26D172381A12F005BD84E /* Cell */ = {
@@ -5470,6 +5359,14 @@
 				643EEC2A2266435100D4E837 /* Oswald-ExtraLight.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		664A5D11265B8BAA0035A11F /* SensorSettings */ = {
+			isa = PBXGroup;
+			children = (
+				664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */,
+			);
+			path = SensorSettings;
 			sourceTree = "<group>";
 		};
 		66BC44812657AED400A03253 /* Submodules */ = {
@@ -6524,7 +6421,6 @@
 				0E6BAEB023856A01003A2D4C /* Defaults.storyboard in Resources */,
 				0E6BAEB123856A01003A2D4C /* Cards.storyboard in Resources */,
 				0E6BAEB223856A01003A2D4C /* LaunchScreen.storyboard in Resources */,
-				0E6BAEB323856A01003A2D4C /* HumidityCalibration.storyboard in Resources */,
 				0E6BAEB423856A01003A2D4C /* Oswald-Bold.ttf in Resources */,
 				0E6BAEB523856A01003A2D4C /* Localizable.strings in Resources */,
 				0E6BAEB623856A01003A2D4C /* Discover.storyboard in Resources */,
@@ -6574,7 +6470,6 @@
 				0E8BD3E6238566AB008B31EF /* Defaults.storyboard in Resources */,
 				0E8BD3E7238566AB008B31EF /* Cards.storyboard in Resources */,
 				0E8BD3E8238566AB008B31EF /* LaunchScreen.storyboard in Resources */,
-				0E8BD3E9238566AB008B31EF /* HumidityCalibration.storyboard in Resources */,
 				0E8BD3EA238566AB008B31EF /* Oswald-Bold.ttf in Resources */,
 				0E8BD3EB238566AB008B31EF /* Localizable.strings in Resources */,
 				0E8BD3EC238566AB008B31EF /* Discover.storyboard in Resources */,
@@ -6624,7 +6519,6 @@
 				0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */,
 				0E1C1DD122B3BDFC0032F6CA /* Cards.storyboard in Resources */,
 				64333D3320B0C45A00CDF4B6 /* LaunchScreen.storyboard in Resources */,
-				0EEC3F4B22C5E1AA00C51D81 /* HumidityCalibration.storyboard in Resources */,
 				6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */,
 				0EEB20C722B7A7200015F9E0 /* Localizable.strings in Resources */,
 				0E09672822AE8D7A00E85F48 /* Discover.storyboard in Resources */,
@@ -7051,7 +6945,6 @@
 				0E8BAC82245C4E6800D380FB /* RuuviTagSensor.swift in Sources */,
 				0EB48D972619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				0E31B03B23B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */,
-				0E6BAD9123856A01003A2D4C /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E2864282460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0E6BAD9223856A01003A2D4C /* AsyncOperation.swift in Sources */,
 				A9E5994C2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
@@ -7134,7 +7027,6 @@
 				0E6BADB323856A01003A2D4C /* MenuTableConfigurator.swift in Sources */,
 				0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */,
 				0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */,
-				0E6BADB623856A01003A2D4C /* HumidityCalibrationPresenter.swift in Sources */,
 				0E6BADB723856A01003A2D4C /* DefaultsStepperTableViewCell.swift in Sources */,
 				A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */,
 				0E6BADB823856A01003A2D4C /* RealmContext.swift in Sources */,
@@ -7154,6 +7046,7 @@
 				A9B57452253B994900DB7353 /* SignInViewModel.swift in Sources */,
 				A964648C247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
 				0E6BADC023856A01003A2D4C /* TagChartsPresentTransitionAnimation.swift in Sources */,
+				664A5D15265B90E60035A11F /* MigrationManagerSensorSettings.swift in Sources */,
 				0E6BADC123856A01003A2D4C /* TagSettingsViewModel.swift in Sources */,
 				A9B5744E253B994900DB7353 /* SignInViewController.swift in Sources */,
 				0E6BADC223856A01003A2D4C /* CardsPresenter.swift in Sources */,
@@ -7171,7 +7064,6 @@
 				0E6BADCE23856A01003A2D4C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E6BADCF23856A01003A2D4C /* DiscoverDeviceViewModel.swift in Sources */,
 				A98D3F1D256CBD610066588B /* SharePresenter.swift in Sources */,
-				0E6BADD023856A01003A2D4C /* HumidityCalibrationRouter.swift in Sources */,
 				0E6BADD123856A01003A2D4C /* WebTagService.swift in Sources */,
 				A9BB445724E1D44300E8DE03 /* Array+Reorderable.swift in Sources */,
 				A9E599632557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
@@ -7184,7 +7076,6 @@
 				0E6BADD623856A01003A2D4C /* MainRouter.swift in Sources */,
 				A95BA3E92451EE3B00EF923D /* KeychainServiceImpl.swift in Sources */,
 				0E6BADD723856A01003A2D4C /* TagChartsScrollViewController.swift in Sources */,
-				0E6BADD823856A01003A2D4C /* HumidityCalibrationConfigurator.swift in Sources */,
 				A9BB949D25409B060042B190 /* TagsManagerRouterInput.swift in Sources */,
 				0E6BADD923856A01003A2D4C /* PhotoPickerPresenterSheet.swift in Sources */,
 				0E6BADDA23856A01003A2D4C /* AboutConfigurator.swift in Sources */,
@@ -7220,7 +7111,6 @@
 				0E6BADE923856A01003A2D4C /* DiscoverWebTagViewModel.swift in Sources */,
 				A9828E4A24792D6C00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E6BADEA23856A01003A2D4C /* DefaultsInitializer.swift in Sources */,
-				0E6BADEB23856A01003A2D4C /* HumidityCalibrationInitializer.swift in Sources */,
 				A9BB94A625409B060042B190 /* TagsManagerViewOutput.swift in Sources */,
 				A907BB0F24AE60AB009DA3DB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
 				A9E5996C255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
@@ -7291,7 +7181,6 @@
 				A976CA8024A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
 				A9758183249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E6BAE0923856A01003A2D4C /* RuuviTagDataRealm.swift in Sources */,
-				0E6BAE0A23856A01003A2D4C /* HumidityCalibrationViewController.swift in Sources */,
 				A90E16992460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031C25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
 				0E8BAC63245C427000D380FB /* SQLiteContextGRDB.swift in Sources */,
@@ -7365,7 +7254,6 @@
 				0EE98A7B26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				0E6BAE3123856A01003A2D4C /* TagChartsModuleInput.swift in Sources */,
 				0E6BAE3223856A01003A2D4C /* Double+Temperature.swift in Sources */,
-				0E6BAE3323856A01003A2D4C /* HumidityCalibrationViewInput.swift in Sources */,
 				0E6BAE3523856A01003A2D4C /* AppStateServiceImpl.swift in Sources */,
 				0E6BAE3623856A01003A2D4C /* ActivityPresenter.swift in Sources */,
 				0E6BAE3723856A01003A2D4C /* MenuViewOutput.swift in Sources */,
@@ -7393,7 +7281,6 @@
 				0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */,
 				0E6BAE4423856A01003A2D4C /* DefaultsEnvironmentObject.swift in Sources */,
 				0E8BAC6A245C4AE400D380FB /* RuuviTagReactor.swift in Sources */,
-				0E6BAE4523856A01003A2D4C /* HumidityCalibrationTransitioningDelegate.swift in Sources */,
 				0E6BAE4623856A01003A2D4C /* ViewInput.swift in Sources */,
 				0E8BAC59245C3DE300D380FB /* RuuviTagSQLite.swift in Sources */,
 				A93CDCC62565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */,
@@ -7478,7 +7365,6 @@
 				0E45581023E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */,
 				0E6BAE7823856A01003A2D4C /* LocationService.swift in Sources */,
 				0E6BAE7923856A01003A2D4C /* WeatherProvider.swift in Sources */,
-				0E6BAE7A23856A01003A2D4C /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E6BAE7B23856A01003A2D4C /* WebTagSettingsViewModel.swift in Sources */,
 				0E6BAE7C23856A01003A2D4C /* MainConfigurator.swift in Sources */,
 				A90E16AB24609B9B00631E6C /* TagChartAssembler.swift in Sources */,
@@ -7489,7 +7375,6 @@
 				66BC447C2657AE2500A03253 /* SensorSettingsRealm.swift in Sources */,
 				0E6BAE8023856A01003A2D4C /* CardsScrollInitializer.swift in Sources */,
 				0E6BAE8123856A01003A2D4C /* DefaultsTableViewController.swift in Sources */,
-				0E6BAE8223856A01003A2D4C /* HumidityCalibrationRouterInput.swift in Sources */,
 				0E4557FE23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
@@ -7498,7 +7383,6 @@
 				0E6BAE8623856A01003A2D4C /* LanguageTableViewCell.swift in Sources */,
 				A98D3F1C256CBD610066588B /* ShareViewController.swift in Sources */,
 				0E6BAE8723856A01003A2D4C /* PermissionsManager.swift in Sources */,
-				0E6BAE8823856A01003A2D4C /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E6BAE8923856A01003A2D4C /* NetworkingAssembly.swift in Sources */,
 				0E31B04423BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E6BAE8A23856A01003A2D4C /* CalibrationPersistenceUserDefaults.swift in Sources */,
@@ -7602,7 +7486,6 @@
 				66BC44BB2657B08500A03253 /* SensorSettingsRxSwift.swift in Sources */,
 				0E2864272460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
 				0E27D51C2658D824000F66F3 /* SensorServiceImpl.swift in Sources */,
-				0E8BD2C7238566AB008B31EF /* HumidityCalibrationModuleInput.swift in Sources */,
 				0E8BD2C8238566AB008B31EF /* AsyncOperation.swift in Sources */,
 				0E8BD2C9238566AB008B31EF /* TagChartsViewModel.swift in Sources */,
 				A9646485247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
@@ -7685,7 +7568,6 @@
 				0EAD33E22399273D00EC5BAA /* HeartbeatViewModel.swift in Sources */,
 				0E8BD2EA238566AB008B31EF /* WebTagDaemonImpl.swift in Sources */,
 				A949A83C24707FDD006B7F4F /* LocalizedCache.swift in Sources */,
-				0E8BD2EC238566AB008B31EF /* HumidityCalibrationPresenter.swift in Sources */,
 				0E8BD2ED238566AB008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0EB48D962619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A91D0317251124F900694733 /* SelectionItem.swift in Sources */,
@@ -7719,7 +7601,6 @@
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E8BD305238566AB008B31EF /* DiscoverDeviceViewModel.swift in Sources */,
-				0E8BD306238566AB008B31EF /* HumidityCalibrationRouter.swift in Sources */,
 				0E8BD307238566AB008B31EF /* WebTagService.swift in Sources */,
 				0E8BD308238566AB008B31EF /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A975817A249F471900BC150A /* LocationPersistence.swift in Sources */,
@@ -7730,7 +7611,6 @@
 				0E8BD30C238566AB008B31EF /* MainRouter.swift in Sources */,
 				A95BA3E82451EE3A00EF923D /* KeychainServiceImpl.swift in Sources */,
 				0E8BD30D238566AB008B31EF /* TagChartsScrollViewController.swift in Sources */,
-				0E8BD30E238566AB008B31EF /* HumidityCalibrationConfigurator.swift in Sources */,
 				0E8BD30F238566AB008B31EF /* PhotoPickerPresenterSheet.swift in Sources */,
 				0E8BD310238566AB008B31EF /* AboutConfigurator.swift in Sources */,
 				0E8BD311238566AB008B31EF /* AboutViewInput.swift in Sources */,
@@ -7768,7 +7648,6 @@
 				0E8BD31F238566AB008B31EF /* DiscoverWebTagViewModel.swift in Sources */,
 				A9646482247BAE6B0001D55D /* AdvancedModuleInput.swift in Sources */,
 				0E8BD320238566AB008B31EF /* DefaultsInitializer.swift in Sources */,
-				0E8BD321238566AB008B31EF /* HumidityCalibrationInitializer.swift in Sources */,
 				0E8BD322238566AB008B31EF /* MainInitializer.swift in Sources */,
 				0E8BD323238566AB008B31EF /* WebTagDaemon.swift in Sources */,
 				0E8BD324238566AB008B31EF /* ForegroundSwitchTableViewCell.swift in Sources */,
@@ -7818,7 +7697,6 @@
 				0E8BD33D238566AB008B31EF /* RUObservationToken.swift in Sources */,
 				0E8BD33E238566AB008B31EF /* LocationPickerModuleInput.swift in Sources */,
 				0E8BD33F238566AB008B31EF /* RuuviTagDataRealm.swift in Sources */,
-				0E8BD340238566AB008B31EF /* HumidityCalibrationViewController.swift in Sources */,
 				A90E16982460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A9828E4624792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
 				A91D02FB2511207300694733 /* SelectionViewInput.swift in Sources */,
@@ -7890,7 +7768,6 @@
 				A9A67BFB24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E8BD368238566AB008B31EF /* Double+Temperature.swift in Sources */,
 				A98D998225175C9200ED3760 /* MigrationManagerAlertService.swift in Sources */,
-				0E8BD369238566AB008B31EF /* HumidityCalibrationViewInput.swift in Sources */,
 				0E8BD36B238566AB008B31EF /* AppStateServiceImpl.swift in Sources */,
 				0E8BD36C238566AB008B31EF /* ActivityPresenter.swift in Sources */,
 				A980573925807118000D03AB /* AboutViewModel.swift in Sources */,
@@ -7921,7 +7798,6 @@
 				0E8BD37A238566AB008B31EF /* DefaultsEnvironmentObject.swift in Sources */,
 				0E27D5172658D752000F66F3 /* SensorService.swift in Sources */,
 				0E8BAC69245C4AE400D380FB /* RuuviTagReactor.swift in Sources */,
-				0E8BD37B238566AB008B31EF /* HumidityCalibrationTransitioningDelegate.swift in Sources */,
 				0E8BD37C238566AB008B31EF /* ViewInput.swift in Sources */,
 				0E8BAC58245C3DE300D380FB /* RuuviTagSQLite.swift in Sources */,
 				0E8BD37D238566AB008B31EF /* UserDefaults+Optional.swift in Sources */,
@@ -8004,7 +7880,6 @@
 				A964647C247BAE6B0001D55D /* AdvancedConfigurator.swift in Sources */,
 				A9828E4324792D6B00E7E9D4 /* CellChanges.swift in Sources */,
 				0E8BD3AF238566AB008B31EF /* WeatherProvider.swift in Sources */,
-				0E8BD3B0238566AB008B31EF /* HumidityCalibrationPresentationController.swift in Sources */,
 				66BC447F2657AE9700A03253 /* SensorSettingsSQLite.swift in Sources */,
 				0E8BD3B1238566AB008B31EF /* WebTagSettingsViewModel.swift in Sources */,
 				0E8BD3B2238566AB008B31EF /* MainConfigurator.swift in Sources */,
@@ -8014,7 +7889,6 @@
 				0E8BD3B5238566AB008B31EF /* BackgroundPersistence.swift in Sources */,
 				0E8BD3B6238566AB008B31EF /* CardsScrollInitializer.swift in Sources */,
 				0E8BD3B7238566AB008B31EF /* DefaultsTableViewController.swift in Sources */,
-				0E8BD3B8238566AB008B31EF /* HumidityCalibrationRouterInput.swift in Sources */,
 				0E4557FD23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				A98BC876250E4265001CEFDC /* Double+Round.swift in Sources */,
 				0E8BD3B9238566AB008B31EF /* RuuviTagReadLogsOperation.swift in Sources */,
@@ -8026,7 +7900,6 @@
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */,
-				0E8BD3BE238566AB008B31EF /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E8BD3BF238566AB008B31EF /* NetworkingAssembly.swift in Sources */,
 				0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD3C0238566AB008B31EF /* CalibrationPersistenceUserDefaults.swift in Sources */,
@@ -8092,6 +7965,7 @@
 				E8C4E5B85668D51EC22BC75A /* SignInRouterInput.swift in Sources */,
 				D037B55274A07756F884696B /* SignInRouter.swift in Sources */,
 				ABCA915676F9A8C975D9F2A3 /* SignInViewInput.swift in Sources */,
+				664A5D14265B90E50035A11F /* MigrationManagerSensorSettings.swift in Sources */,
 				34238B2C062103E10D2BC65D /* SignInViewOutput.swift in Sources */,
 				74E67721EFA7BF9397D52B1F /* SignInViewModel.swift in Sources */,
 				C8D6714C7E0237B74676EA08 /* SignInViewController.swift in Sources */,
@@ -8172,7 +8046,6 @@
 				0EB48D952619D5E5008E0D2D /* FeatureToggleProvider.swift in Sources */,
 				A92E3C63242644B800D981D5 /* TagChartViewInput.swift in Sources */,
 				0E2864262460644100363DCB /* WebTagRealm+VirtualTagSensor.swift in Sources */,
-				0EEC3F5722C5E26B00C51D81 /* HumidityCalibrationModuleInput.swift in Sources */,
 				A94A883A24D4386D00D2CBA4 /* Ext-UIButton-CommonFormat.swift in Sources */,
 				A9E5994A2557341F00F9E5CC /* ShareDescriptionTableViewCell.swift in Sources */,
 				A91D03092511207300694733 /* SelectionRouterInput.swift in Sources */,
@@ -8255,7 +8128,6 @@
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0E8BACE3245F03F000D380FB /* RuuviTagRecordSubjectRxSwift.swift in Sources */,
 				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
-				0EEC3F5922C5E28200C51D81 /* HumidityCalibrationPresenter.swift in Sources */,
 				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0E1C1D9522B3624F0032F6CA /* RealmContext.swift in Sources */,
 				0E1C1D9822B3646A0032F6CA /* RealmContextImpl.swift in Sources */,
@@ -8273,6 +8145,7 @@
 				0E8A10162384612300A9CBA6 /* DefaultsRouterInput.swift in Sources */,
 				0EEB20FF22B7D2DD0015F9E0 /* AboutPresenter.swift in Sources */,
 				0E8FD0D523336BA300FFA577 /* TagChartsPresentTransitionAnimation.swift in Sources */,
+				664A5D13265B8C050035A11F /* MigrationManagerSensorSettings.swift in Sources */,
 				0E8BACD2245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift in Sources */,
 				0E84BF612397F73100A37E1A /* HeartbeatEnvironmentObject.swift in Sources */,
 				A964648A247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
@@ -8294,7 +8167,6 @@
 				0E046F3D22F05B0900BD4E9C /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E1C1DCD22B3A4DC0032F6CA /* DiscoverDeviceViewModel.swift in Sources */,
 				A9E599612557346600F9E5CC /* ShareSendButtonTableViewCell.swift in Sources */,
-				0EEC3F5522C5E22500C51D81 /* HumidityCalibrationRouter.swift in Sources */,
 				0E9F979922EB055D0015ADE2 /* WebTagService.swift in Sources */,
 				0E62AEC922E065CC00A49BFB /* TagSettingsMoreInfoHeaderFooterView.swift in Sources */,
 				A9BB94A825409B060042B190 /* TagsManagerRouterInput.swift in Sources */,
@@ -8305,7 +8177,6 @@
 				0E9F97AE22EB1CF50015ADE2 /* LocationManagerImpl.swift in Sources */,
 				0EEB213C22B8FAD50015F9E0 /* MainRouter.swift in Sources */,
 				0E8FD0C123335D8400FFA577 /* TagChartsScrollViewController.swift in Sources */,
-				0EEC3F5D22C5E32D00C51D81 /* HumidityCalibrationConfigurator.swift in Sources */,
 				0E5C300B22CF629100B52E39 /* PhotoPickerPresenterSheet.swift in Sources */,
 				0EEB210322B7D3220015F9E0 /* AboutConfigurator.swift in Sources */,
 				0EEB20F322B7D1900015F9E0 /* AboutViewInput.swift in Sources */,
@@ -8341,7 +8212,6 @@
 				0E8BACE7245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift in Sources */,
 				A9828E3E24792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
 				0E8A101C2384618700A9CBA6 /* DefaultsInitializer.swift in Sources */,
-				0EEC3F5B22C5E2FC00C51D81 /* HumidityCalibrationInitializer.swift in Sources */,
 				A9E5996A255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
 				0EEB214222B8FBA50015F9E0 /* MainInitializer.swift in Sources */,
 				0E9D5F262353626B0076FFD8 /* WebTagDaemon.swift in Sources */,
@@ -8407,7 +8277,6 @@
 				0E046F5322F182AB00BD4E9C /* LocationPickerModuleInput.swift in Sources */,
 				A9758181249F4C9600BC150A /* LocationAppleClass.swift in Sources */,
 				0E1C1DA622B37F8B0032F6CA /* RuuviTagDataRealm.swift in Sources */,
-				0EEC3F4D22C5E1C700C51D81 /* HumidityCalibrationViewController.swift in Sources */,
 				A90E16972460504C00631E6C /* TagChartModuleOutput.swift in Sources */,
 				A91D031A25113EAA00694733 /* UnitPressure+Extension.swift in Sources */,
 				A9BB94B025409B060042B190 /* TagsManagerViewInput.swift in Sources */,
@@ -8479,7 +8348,6 @@
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
 				0E28642B2460687200363DCB /* VirtualTagTank.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
-				0EEC3F4F22C5E1DC00C51D81 /* HumidityCalibrationViewInput.swift in Sources */,
 				0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
@@ -8503,7 +8371,6 @@
 				0E502FBE22B2817900E8A6CC /* DiscoverRouterInput.swift in Sources */,
 				0E538364236AE6BA0007956D /* ExportService.swift in Sources */,
 				0E8A10202384633200A9CBA6 /* DefaultsEnvironmentObject.swift in Sources */,
-				0EEC3F6122C5EC3400C51D81 /* HumidityCalibrationTransitioningDelegate.swift in Sources */,
 				0E8BAC84245C4F0900D380FB /* Sensor.swift in Sources */,
 				A98D3F14256CBD600066588B /* ShareModuleOutput.swift in Sources */,
 				A98D3F10256CBD600066588B /* ShareViewModel.swift in Sources */,
@@ -8594,7 +8461,6 @@
 				0E1C1DA022B36C100032F6CA /* RUError.swift in Sources */,
 				0E046F5D22F18EC100BD4E9C /* LocationService.swift in Sources */,
 				0E9F979422EAF21D0015ADE2 /* WeatherProvider.swift in Sources */,
-				0EEC3F6322C5EC9500C51D81 /* HumidityCalibrationPresentationController.swift in Sources */,
 				0E45580E23E935400025AEBF /* BackgroundProcessServiceiOS12.swift in Sources */,
 				0E046F3F22F0702D00BD4E9C /* WebTagSettingsViewModel.swift in Sources */,
 				0EEB214422B8FBC50015F9E0 /* MainConfigurator.swift in Sources */,
@@ -8604,7 +8470,6 @@
 				0EEB20C122B78EC50015F9E0 /* BackgroundPersistence.swift in Sources */,
 				0E1C1DE822B3C2B60032F6CA /* CardsScrollInitializer.swift in Sources */,
 				0E8A10122384605A00A9CBA6 /* DefaultsTableViewController.swift in Sources */,
-				0EEC3F5322C5E21300C51D81 /* HumidityCalibrationRouterInput.swift in Sources */,
 				66BC447A2657AE2500A03253 /* SensorSettingsRealm.swift in Sources */,
 				0E75661B2361C16100FCA977 /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
@@ -8613,7 +8478,6 @@
 				0E28644E2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0EBAF08223200B1B0025A191 /* LanguageTableViewCell.swift in Sources */,
 				0E5C300F22CF634300B52E39 /* PermissionsManager.swift in Sources */,
-				0EEC3F5122C5E1FB00C51D81 /* HumidityCalibrationViewOutput.swift in Sources */,
 				0E9F97A822EB1C300015ADE2 /* NetworkingAssembly.swift in Sources */,
 				A98D3F12256CBD600066588B /* ShareViewController.swift in Sources */,
 				0EFDD6D622BBDA8E00EADFC6 /* CalibrationPersistenceUserDefaults.swift in Sources */,

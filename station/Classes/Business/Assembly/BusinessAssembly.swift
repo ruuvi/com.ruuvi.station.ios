@@ -158,7 +158,7 @@ class BusinessAssembly: Assembly {
             manager.settings = r.resolve(Settings.self)
             return manager
         }
-        
+
         container.register(MigrationManagerSensorSettings.self) { r in
             let manager = MigrationManagerSensorSettings()
             manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
