@@ -380,4 +380,6 @@
 "Advanced.NetworkInterval.title" = "Pull Interval";
 "PhotoPicker.Sheet.files" = "Choose from files";
 "SignIn.EnterVerificationCode" = "Please enter verification code";
+"UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
+"UnexpectedError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
 
