@@ -54,6 +54,7 @@ class RuuviTagDataRealm: Object {
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagProtocol) {
         self.init()
         self.ruuviTag = ruuviTag
+        self.sourceString = data.source.rawValue
         self.rssi.value = data.rssi
         self.celsius.value = data.celsius
         self.humidity.value = data.relativeHumidity
@@ -75,6 +76,7 @@ class RuuviTagDataRealm: Object {
     convenience init(ruuviTag: RuuviTagRealm, data: RuuviTagEnvLogFull) {
         self.init()
         self.ruuviTag = ruuviTag
+        self.sourceString = RuuviTagSensorRecordSource.log.rawValue
         self.date = data.date
         self.celsius.value = data.temperature
         self.humidity.value = data.humidity
@@ -85,6 +87,7 @@ class RuuviTagDataRealm: Object {
     convenience init(ruuviTag: RuuviTagRealm, record: RuuviTagSensorRecord) {
         self.init()
         self.ruuviTag = ruuviTag
+        self.sourceString = record.source.rawValue
         self.rssi.value = record.rssi
         self.celsius.value = record.temperature?.converted(to: .celsius).value
         if let temperature = record.temperature {
