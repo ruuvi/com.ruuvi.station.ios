@@ -28,6 +28,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviTagReactor: RuuviTagReactor!
     var keychainService: KeychainService!
     var ruuviNetwork: RuuviNetworkUserApi!
+    var activityPresenter: ActivityPresenter!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -342,10 +343,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
+        activityPresenter.increment()
         sensorService.setCustomBackground(image: photo, sensor: ruuviTag).on(success: { [weak self] _ in
             self?.viewModel.background.value = photo
+            self?.activityPresenter?.decrement()
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
+            self?.activityPresenter?.decrement()
         })
     }
 }
