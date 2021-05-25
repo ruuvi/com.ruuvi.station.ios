@@ -123,21 +123,24 @@ extension RuuviNetworkUserApi {
                                               networkProvider: .userApi,
                                               isClaimed: false,
                                               isOwner: false)
-                let record = RuuviTagSensorRecordStruct(ruuviTagId: sensor.id,
-                                                        date: log.date,
-                                                        macId: $0.sensor.mac,
-                                                        rssi: log.rssi,
-                                                        temperature: tag.temperature,
-                                                        humidity: tag.humidity,
-                                                        pressure: tag.pressure,
-                                                        acceleration: tag.acceleration,
-                                                        voltage: tag.voltage,
-                                                        movementCounter: tag.movementCounter,
-                                                        measurementSequenceNumber: tag.measurementSequenceNumber,
-                                                        txPower: tag.txPower,
-                                                        temperatureOffset: tag.temperatureOffset,
-                                                        humidityOffset: tag.humidityOffset,
-                                                        pressureOffset: tag.pressureOffset)
+                let record = RuuviTagSensorRecordStruct(
+                    ruuviTagId: sensor.id,
+                    date: log.date,
+                    source: .ruuviNetwork,
+                    macId: $0.sensor.mac,
+                    rssi: log.rssi,
+                    temperature: tag.temperature,
+                    humidity: tag.humidity,
+                    pressure: tag.pressure,
+                    acceleration: tag.acceleration,
+                    voltage: tag.voltage,
+                    movementCounter: tag.movementCounter,
+                    measurementSequenceNumber: tag.measurementSequenceNumber,
+                    txPower: tag.txPower,
+                    temperatureOffset: tag.temperatureOffset,
+                    humidityOffset: tag.humidityOffset,
+                    pressureOffset: tag.pressureOffset
+                )
                 sensors.append((sensor.any, record))
             }
         })
@@ -156,21 +159,24 @@ extension RuuviNetworkUserApi {
                   let tag = device.ruuvi?.tag else {
                 return nil
             }
-            return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
-                                              date: $0.date,
-                                              macId: mac.mac,
-                                              rssi: $0.rssi,
-                                              temperature: tag.temperature,
-                                              humidity: tag.humidity,
-                                              pressure: tag.pressure,
-                                              acceleration: tag.acceleration,
-                                              voltage: tag.voltage,
-                                              movementCounter: tag.movementCounter,
-                                              measurementSequenceNumber: tag.measurementSequenceNumber,
-                                              txPower: tag.txPower,
-                                              temperatureOffset: 0.0,
-                                              humidityOffset: 0.0,
-                                              pressureOffset: 0.0)
+            return RuuviTagSensorRecordStruct(
+                ruuviTagId: ruuviTagId,
+                date: $0.date,
+                source: .ruuviNetwork,
+                macId: mac.mac,
+                rssi: $0.rssi,
+                temperature: tag.temperature,
+                humidity: tag.humidity,
+                pressure: tag.pressure,
+                acceleration: tag.acceleration,
+                voltage: tag.voltage,
+                movementCounter: tag.movementCounter,
+                measurementSequenceNumber: tag.measurementSequenceNumber,
+                txPower: tag.txPower,
+                temperatureOffset: 0.0,
+                humidityOffset: 0.0,
+                pressureOffset: 0.0
+            )
         })
     }
 }
