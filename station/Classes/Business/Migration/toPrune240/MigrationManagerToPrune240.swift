@@ -1,11 +1,3 @@
-//
-//  MigrationManagerToPrune240.swift
-//  station
-//
-//  Created by Rinat Enikeev on 06.03.2021.
-//  Copyright © 2021 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
 
 final class MigrationManagerToPrune240: MigrationManager {
