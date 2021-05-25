@@ -103,6 +103,18 @@ extension SQLiteGRDBDatabase {
             })
         }
 
+        // v4
+        migrator.registerMigration("Create RuuviTagDataSQLite source column") { db in
+            guard try db.columns(in: RuuviTagDataSQLite.databaseTableName)
+                    .contains(where: {$0.name == RuuviTagDataSQLite.sourceColumn.name}) == false else {
+                return
+            }
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { (t) in
+                t.add(column: RuuviTagDataSQLite.sourceColumn.name, .text)
+                    .notNull().defaults(to: "unknown")
+            })
+        }
+
         try migrator.migrate(dbPool)
     }
 }
