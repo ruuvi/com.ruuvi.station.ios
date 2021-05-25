@@ -16,12 +16,10 @@ protocol MeasurementsService {
     func stringWithoutSign(for temperature: Temperature?) -> String
 
     func double(for humidity: Humidity,
-                withOffset offset: Double,
                 temperature: Temperature,
                 isDecimal: Bool) -> Double?
 
     func string(for humidity: Humidity?,
-                withOffset offset: Double?,
                 temperature: Temperature?) -> String
     func double(for pressure: Pressure) -> Double
     func string(for pressure: Pressure?) -> String
@@ -46,7 +44,6 @@ extension MeasurementsService {
     }
 
     func double(for humidity: Humidity?,
-                withOffset offset: Double?,
                 temperature: Temperature?,
                 isDecimal: Bool) -> Double? {
         guard let temperature = temperature,
@@ -54,7 +51,6 @@ extension MeasurementsService {
             return nil
         }
         return double(for: humidity,
-                      withOffset: offset ?? 0.0,
                       temperature: temperature,
                       isDecimal: isDecimal)
     }
