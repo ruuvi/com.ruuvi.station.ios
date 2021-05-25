@@ -569,22 +569,23 @@ extension TagSettingsPresenter {
         }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.sync(device: tag)
+                self?.sync(device: tag, source: .advertisement)
             }
         })
         heartbeatToken?.invalidate()
         heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] (_, device) in
             if let tag = device.ruuvi?.tag {
-                self?.sync(device: tag)
+                self?.sync(device: tag, source: .heartbeat)
             }
         })
     }
 
-    private func sync(device: RuuviTag) {
+    private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.withSensorSettings(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
             ruuviTagId: device.ruuviTagId,
             date: device.date,
+            source: source,
             macId: device.mac?.mac,
             rssi: device.rssi,
             temperature: device.temperature,

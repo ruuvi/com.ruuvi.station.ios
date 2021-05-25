@@ -7,9 +7,9 @@ class RuuviTagDataRealm: Object {
     @objc dynamic var ruuviTag: RuuviTagRealm?
     @objc dynamic var date: Date = Date()
     @objc dynamic var compoundKey: String = UUID().uuidString
+    @objc dynamic var sourceString: String = "unknown"
 
     // all versions
-//    @objc dynamic var rssi: Int = 0
     let rssi = RealmOptional<Int>()
     let celsius = RealmOptional<Double>()
     let humidity = RealmOptional<Double>()
@@ -26,9 +26,9 @@ class RuuviTagDataRealm: Object {
     let measurementSequenceNumber = RealmOptional<Int>()
     let txPower = RealmOptional<Int>()
 
-    @objc dynamic var  temperatureOffset: Double = 0.0
-    @objc dynamic var  humidityOffset: Double = 0.0
-    @objc dynamic var  pressureOffset: Double = 0.0
+    @objc dynamic var temperatureOffset: Double = 0.0
+    @objc dynamic var humidityOffset: Double = 0.0
+    @objc dynamic var pressureOffset: Double = 0.0
 
     var fahrenheit: Double? {
         return celsius.value?.fahrenheit
@@ -36,6 +36,10 @@ class RuuviTagDataRealm: Object {
 
     var kelvin: Double? {
         return celsius.value?.kelvin
+    }
+
+    var source: RuuviTagSensorRecordSource {
+        return RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
     }
 
     override static func primaryKey() -> String? {

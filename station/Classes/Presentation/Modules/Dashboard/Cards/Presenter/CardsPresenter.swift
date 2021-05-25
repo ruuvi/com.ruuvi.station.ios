@@ -462,7 +462,11 @@ extension CardsPresenter {
                 if let ruuviTag = device.ruuvi?.tag,
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                     let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
-                    viewModel.update(ruuviTag.with(sensorSettings: sensorSettings))
+                    viewModel.update(
+                        ruuviTag
+                            .with(source: .heartbeat)
+                            .with(sensorSettings: sensorSettings)
+                    )
                 }
             })
         }
@@ -478,7 +482,11 @@ extension CardsPresenter {
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: { $0.ruuviTagId == viewModel.id.value })
-                        viewModel.update(ruuviTag.with(sensorSettings: sensorSettings))
+                        viewModel.update(
+                            ruuviTag
+                                .with(source: .advertisement)
+                                .with(sensorSettings: sensorSettings)
+                        )
                         viewModel.update(rssi: ruuviTag.rssi)
                     }
                 })

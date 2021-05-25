@@ -1,9 +1,19 @@
 import Foundation
 import Humidity
 
+enum RuuviTagSensorRecordSource: String {
+    case unknown
+    case advertisement
+    case log
+    case heartbeat
+    case ruuviNetwork
+    case weatherProvider
+}
+
 protocol RuuviTagSensorRecord {
     var ruuviTagId: String { get }
     var date: Date { get }
+    var source: RuuviTagSensorRecordSource { get }
     var macId: MACIdentifier? { get }
     var rssi: Int? { get }
     var temperature: Temperature? { get }
@@ -33,47 +43,75 @@ extension RuuviTagSensorRecord {
     }
 
     func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(ruuviTagId: macId.value,
-                                          date: date,
-                                          macId: macId,
-                                          rssi: rssi,
-                                          temperature: temperature,
-                                          humidity: humidity,
-                                          pressure: pressure,
-                                          acceleration: acceleration,
-                                          voltage: voltage,
-                                          movementCounter: movementCounter,
-                                          measurementSequenceNumber: measurementSequenceNumber,
-                                          txPower: txPower,
-                                          temperatureOffset: temperatureOffset,
-                                          humidityOffset: humidityOffset,
-                                          pressureOffset: pressureOffset)
+        return RuuviTagSensorRecordStruct(
+            ruuviTagId: macId.value,
+            date: date,
+            source: source,
+            macId: macId,
+            rssi: rssi,
+            temperature: temperature,
+            humidity: humidity,
+            pressure: pressure,
+            acceleration: acceleration,
+            voltage: voltage,
+            movementCounter: movementCounter,
+            measurementSequenceNumber: measurementSequenceNumber,
+            txPower: txPower,
+            temperatureOffset: temperatureOffset,
+            humidityOffset: humidityOffset,
+            pressureOffset: pressureOffset
+        )
     }
 }
 
 extension RuuviTagSensorRecord {
+    func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
+        return RuuviTagSensorRecordStruct(
+            ruuviTagId: ruuviTagId,
+            date: date,
+            source: source,
+            macId: macId,
+            rssi: rssi,
+            temperature: temperature,
+            humidity: humidity,
+            pressure: pressure,
+            acceleration: acceleration,
+            voltage: voltage,
+            movementCounter: movementCounter,
+            measurementSequenceNumber: measurementSequenceNumber,
+            txPower: txPower,
+            temperatureOffset: temperatureOffset,
+            humidityOffset: humidityOffset,
+            pressureOffset: pressureOffset
+        )
+    }
+
     func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
-        return RuuviTagSensorRecordStruct(ruuviTagId: ruuviTagId,
-                                          date: date,
-                                          macId: macId,
-                                          rssi: rssi,
-                                          temperature: temperature?.withSensorSettings(sensorSettings: sensorSettings),
-                                          humidity: humidity?.withSensorSettings(sensorSettings: sensorSettings),
-                                          pressure: pressure?.withSensorSettings(sensorSettings: sensorSettings),
-                                          acceleration: acceleration,
-                                          voltage: voltage,
-                                          movementCounter: movementCounter,
-                                          measurementSequenceNumber: measurementSequenceNumber,
-                                          txPower: txPower,
-                                          temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
-                                          humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
-                                          pressureOffset: sensorSettings?.pressureOffset ?? 0.0)
+        return RuuviTagSensorRecordStruct(
+            ruuviTagId: ruuviTagId,
+            date: date,
+            source: source,
+            macId: macId,
+            rssi: rssi,
+            temperature: temperature?.withSensorSettings(sensorSettings: sensorSettings),
+            humidity: humidity?.withSensorSettings(sensorSettings: sensorSettings),
+            pressure: pressure?.withSensorSettings(sensorSettings: sensorSettings),
+            acceleration: acceleration,
+            voltage: voltage,
+            movementCounter: movementCounter,
+            measurementSequenceNumber: measurementSequenceNumber,
+            txPower: txPower,
+            temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
+            humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
+            pressureOffset: sensorSettings?.pressureOffset ?? 0.0
+        )
     }
 }
 
 struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     var ruuviTagId: String
     var date: Date
+    var source: RuuviTagSensorRecordSource
     var macId: MACIdentifier?
     var rssi: Int?
     var temperature: Temperature?
@@ -102,6 +140,10 @@ struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
 
     var date: Date {
         return object.date
+    }
+
+    var source: RuuviTagSensorRecordSource {
+        return object.source
     }
 
     var macId: MACIdentifier? {

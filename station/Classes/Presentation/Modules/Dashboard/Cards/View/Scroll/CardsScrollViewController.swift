@@ -27,6 +27,10 @@ class CardsScrollViewController: UIViewController {
     private let alertActiveImage = UIImage(named: "icon-alert-active")
     private let alertOffImage = UIImage(named: "icon-alert-off")
     private let alertOnImage = UIImage(named: "icon-alert-on")
+    private let advertisementImage = UIImage(named: "icon-bluetooth")
+    private let heartbeatImage = UIImage(named: "icon-bluetooth-connected")
+    private let ruuviNetworkImage = UIImage(named: "icon-gateway")
+    private let weatherProviderImage = UIImage(named: "icon-weatherstation")
     private var views = [CardView]()
     var currentPage: Int {
         if isViewLoaded {
@@ -372,6 +376,7 @@ extension CardsScrollViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func bindUpdated(view: CardView, with viewModel: CardsViewModel) {
         let isConnected = viewModel.isConnected
         let date = viewModel.date
@@ -401,6 +406,26 @@ extension CardsScrollViewController {
             }
             view?.updatedAt = date
             view?.isConnected = isConnected?.value
+        }
+        view.dataSourceImageView.bind(viewModel.source) { [weak self] imageView, source in
+            if let source = source {
+                switch source {
+                case .unknown:
+                    imageView.image = nil
+                case .advertisement:
+                    imageView.image = self?.advertisementImage
+                case .heartbeat:
+                    imageView.image = self?.heartbeatImage
+                case .log:
+                    imageView.image = self?.heartbeatImage
+                case .ruuviNetwork:
+                    imageView.image = self?.ruuviNetworkImage
+                case .weatherProvider:
+                    imageView.image = self?.weatherProviderImage
+                }
+            } else {
+                imageView.image = nil
+            }
         }
     }
 
