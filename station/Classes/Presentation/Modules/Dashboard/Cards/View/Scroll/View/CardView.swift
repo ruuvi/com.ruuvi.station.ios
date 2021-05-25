@@ -24,6 +24,7 @@ class CardView: UIView {
     @IBOutlet weak var movementCityLabel: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
     @IBOutlet weak var movementCityImageView: UIImageView!
+    @IBOutlet weak var dataSourceImageView: UIImageView!
 
     var updatedAt: Date?
     var isConnected: Bool?
