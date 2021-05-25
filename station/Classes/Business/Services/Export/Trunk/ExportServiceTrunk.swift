@@ -75,12 +75,6 @@ extension ExportServiceTrunk {
         dateFormatter.dateFormat = "\"yyyy-MM-dd HH:mm:ss\""
         let group = DispatchGroup()
         let units = measurementService.units
-        let offset: Double
-        if let luid = ruuviTag.any.luid {
-            offset = calibrationService.humidityOffset(for: luid).0
-        } else {
-            offset = .zero
-        }
         queue.async {
             autoreleasepool {
                 group.enter()
@@ -112,7 +106,6 @@ extension ExportServiceTrunk {
                         let temperature: String = toString(t, format: "%.2f")
 
                         let h = self.measurementService.double(for: log.humidity,
-                                                               withOffset: offset,
                                                                temperature: log.temperature,
                                                                isDecimal: false)
                         let humidity: String = toString(h, format: "%.2f")
