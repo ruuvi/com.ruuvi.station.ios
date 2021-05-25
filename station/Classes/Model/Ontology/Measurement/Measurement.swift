@@ -59,24 +59,6 @@ extension Humidity {
         return Humidity(value: self.value + (sensorSettings?.humidityOffset ?? 0), unit: self.unit)
     }
 
-    /// Humidity with relative offset
-    /// - Parameters:
-    ///   - value: offset, 0...1.0
-    ///   - temperature: temperature
-    /// - Returns: humidity value
-    func withRelativeOffset(by offset: Double, withTemperature temperature: Temperature) -> Humidity {
-        var relative = self.converted(to: .relative(temperature: temperature)).value
-        var offset = offset
-        if relative > 1.0 {
-            relative /= 100
-        }
-        if offset > 1.0 {
-            offset /= 100
-        }
-        let offseted = max(min(relative + offset, 1.0), 0.0)
-        return Humidity(value: offseted, unit: .relative(temperature: temperature))
-    }
-
     static var zeroAbsolute: Humidity {
         return Humidity(value: 0, unit: .absolute)
     }

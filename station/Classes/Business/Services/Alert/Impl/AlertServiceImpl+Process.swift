@@ -190,10 +190,9 @@ extension AlertServiceImpl {
                          temperature: Temperature?,
                          alertType: AlertType,
                          identifier: Identifier) -> Bool {
-        let ho = calibrationService.humidityOffset(for: identifier).0
         if case .humidity(let lower, let upper) = alert(for: identifier.value, of: alertType),
            let rh = humidity,
-           let sh = rh.offseted(by: ho, temperature: temperature) {
+           let sh = Humidity(relative: rh.value, temperature: temperature) {
             let isLower = sh < lower
             let isUpper = sh > upper
             if isLower {
@@ -215,11 +214,10 @@ extension AlertServiceImpl {
                                  temperature: Temperature?,
                                  alertType: AlertType,
                                  identifier: Identifier) -> Bool {
-        let ho = calibrationService.humidityOffset(for: identifier).0
         if case .dewPoint(let lower, let upper) = alert(for: identifier.value, of: alertType),
            let t = temperature,
-           let rh = humidity?.converted(to: .relative(temperature: t)),
-            let sh = rh.offseted(by: ho, temperature: t),
+           let rh = humidity,
+           let sh = Humidity(relative: rh.value, temperature: t),
             let dp = try? sh.dewPoint(temperature: t) {
             let isLower = dp < Temperature(value: lower, unit: .celsius)
             let isUpper = dp > Temperature(value: upper, unit: .celsius)

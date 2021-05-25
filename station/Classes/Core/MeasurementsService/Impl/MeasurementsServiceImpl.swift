@@ -137,26 +137,26 @@ extension MeasurementsServiceImpl: MeasurementsService {
     }
 
     func double(for humidity: Humidity,
-                withOffset offset: Double,
                 temperature: Temperature,
                 isDecimal: Bool) -> Double? {
-        let offsetedHumidity = humidity.withRelativeOffset(by: offset, withTemperature: temperature)
+        let humidityWithTemperature = Humidity(
+            value: humidity.value,
+            unit: .relative(temperature: temperature)
+        )
         switch units.humidityUnit {
         case .percent:
-            let value = offsetedHumidity
-                .converted(to: .relative(temperature: temperature))
-                .value
+            let value = humidityWithTemperature.value
             return isDecimal
                 ? value
                     .round(to: numberFormatter.maximumFractionDigits)
                 : (value * 100)
                     .round(to: numberFormatter.maximumFractionDigits)
         case .gm3:
-            return offsetedHumidity.converted(to: .absolute)
+            return humidity.converted(to: .absolute)
                 .value
                 .round(to: numberFormatter.maximumFractionDigits)
         case .dew:
-            let dp = try? offsetedHumidity.dewPoint(temperature: temperature)
+            let dp = try? humidity.dewPoint(temperature: temperature)
             return dp?.converted(to: settings.temperatureUnit.unitTemperature)
                 .value
                 .round(to: numberFormatter.maximumFractionDigits)
@@ -164,20 +164,23 @@ extension MeasurementsServiceImpl: MeasurementsService {
     }
 
     func string(for humidity: Humidity?,
-                withOffset offset: Double?,
                 temperature: Temperature?) -> String {
         guard let humidity = humidity,
             let temperature = temperature else {
                 return "N/A".localized()
         }
-        let offsetedHumidity = humidity.withRelativeOffset(by: offset ?? 0.0, withTemperature: temperature)
+
+        let humidityWithTemperature = Humidity(
+            value: humidity.value,
+            unit: .relative(temperature: temperature)
+        )
         switch units.humidityUnit {
         case .percent:
-            return humidityFormatter.string(from: offsetedHumidity.converted(to: .relative(temperature: temperature)))
+            return humidityFormatter.string(from: humidityWithTemperature)
         case .gm3:
-            return humidityFormatter.string(from: offsetedHumidity.converted(to: .absolute))
+            return humidityFormatter.string(from: humidityWithTemperature.converted(to: .absolute))
         case .dew:
-            let dp = try? offsetedHumidity.dewPoint(temperature: temperature)
+            let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
             return string(for: dp)
         }
     }
