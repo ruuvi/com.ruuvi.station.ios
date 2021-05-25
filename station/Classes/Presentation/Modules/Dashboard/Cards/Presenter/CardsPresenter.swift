@@ -524,9 +524,7 @@ extension CardsPresenter {
                let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
                let record = anyRecord?.object {
                 let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
-                if viewModel.needUpdateFromObservingLastRecord {
-                    viewModel.update(record.with(sensorSettings: sensorSettings))
-                }
+                viewModel.update(record.with(sensorSettings: sensorSettings))
             }
         }
     }
