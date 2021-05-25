@@ -4,6 +4,7 @@ extension RuuviTagSensorRecord {
     var sqlite: RuuviTagDataSQLite {
         return RuuviTagDataSQLite(ruuviTagId: ruuviTagId,
                                   date: date,
+                                  source: source,
                                   macId: macId,
                                   rssi: rssi,
                                   temperature: temperature,

@@ -24,6 +24,7 @@ class CardView: UIView {
     @IBOutlet weak var movementCityLabel: UILabel!
     @IBOutlet weak var updatedLabel: UILabel!
     @IBOutlet weak var movementCityImageView: UIImageView!
+    @IBOutlet weak var dataSourceImageView: UIImageView!
 
     var updatedAt: Date?
     var isConnected: Bool?
@@ -77,7 +78,7 @@ class CardView: UIView {
             if let isConnected = self?.isConnected,
                isConnected,
                let date = self?.updatedAt?.ruuviAgo() {
-                self?.updatedLabel.text = "Cards.Connected.title".localized() + " " + "|" + " " + date
+                self?.updatedLabel.text = date
             } else {
                 self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "N/A".localized()
             }
