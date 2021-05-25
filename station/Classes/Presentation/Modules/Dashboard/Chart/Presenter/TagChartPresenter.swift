@@ -302,7 +302,6 @@ extension TagChartPresenter {
             value = measurementService.double(for: data.temperature)
         case .humidity:
             value = measurementService.double(for: data.humidity,
-                                              withOffset: humidityOffset,
                                               temperature: data.temperature,
                                               isDecimal: false)
         case .pressure:

@@ -137,7 +137,6 @@ extension MeasurementsServiceImpl: MeasurementsService {
     }
 
     func double(for humidity: Humidity,
-                withOffset offset: Double,
                 temperature: Temperature,
                 isDecimal: Bool) -> Double? {
         let humidityWithTemperature = Humidity(
@@ -165,7 +164,6 @@ extension MeasurementsServiceImpl: MeasurementsService {
     }
 
     func string(for humidity: Humidity?,
-                withOffset offset: Double?,
                 temperature: Temperature?) -> String {
         guard let humidity = humidity,
             let temperature = temperature else {
