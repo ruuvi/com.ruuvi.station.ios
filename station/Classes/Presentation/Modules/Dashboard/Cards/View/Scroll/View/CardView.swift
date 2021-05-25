@@ -78,7 +78,7 @@ class CardView: UIView {
             if let isConnected = self?.isConnected,
                isConnected,
                let date = self?.updatedAt?.ruuviAgo() {
-                self?.updatedLabel.text = "Cards.Connected.title".localized() + " " + "|" + " " + date
+                self?.updatedLabel.text = date
             } else {
                 self?.updatedLabel.text = self?.updatedAt?.ruuviAgo() ?? "N/A".localized()
             }
