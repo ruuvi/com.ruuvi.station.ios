@@ -19,32 +19,62 @@ class KeychainServiceImpl {
 extension KeychainServiceImpl: KeychainService {
     var ruuviUserApiKey: String? {
         get {
-            return keychain[Account.ruuviUserApi.rawValue]
+            if Bundle.main.isRuuvi {
+                return keychain[Account.ruuviUserApi.rawValue]
+            } else {
+                return UserDefaults.standard
+                    .string(forKey: Account.ruuviUserApi.rawValue)
+            }
         }
         set {
             if let value = newValue {
-                keychain[Account.ruuviUserApi.rawValue] = value
+                if Bundle.main.isRuuvi {
+                    keychain[Account.ruuviUserApi.rawValue] = value
+                } else {
+                    UserDefaults.standard
+                        .setValue(value, forKey: Account.ruuviUserApi.rawValue)
+                }
             } else {
-                try? keychain.remove(
-                    Account.ruuviUserApi.rawValue,
-                    ignoringAttributeSynchronizable: true
-                )
+                if Bundle.main.isRuuvi {
+                    try? keychain.remove(
+                        Account.ruuviUserApi.rawValue,
+                        ignoringAttributeSynchronizable: true
+                    )
+                } else {
+                    UserDefaults.standard
+                        .removeObject(forKey: Account.ruuviUserApi.rawValue)
+                }
             }
         }
     }
 
     var userApiEmail: String? {
         get {
-            return keychain[Account.userApiEmail.rawValue]
+            if Bundle.main.isRuuvi {
+                return keychain[Account.userApiEmail.rawValue]
+            } else {
+                return UserDefaults.standard
+                    .string(forKey: Account.userApiEmail.rawValue)
+            }
         }
         set {
             if let value = newValue {
-                keychain[Account.userApiEmail.rawValue] = value
+                if Bundle.main.isRuuvi {
+                    keychain[Account.userApiEmail.rawValue] = value
+                } else {
+                    UserDefaults.standard
+                        .set(value, forKey: Account.userApiEmail.rawValue)
+                }
             } else {
-                try? keychain.remove(
-                    Account.userApiEmail.rawValue,
-                    ignoringAttributeSynchronizable: true
-                )
+                if Bundle.main.isRuuvi {
+                    try? keychain.remove(
+                        Account.userApiEmail.rawValue,
+                        ignoringAttributeSynchronizable: true
+                    )
+                } else {
+                    UserDefaults.standard
+                        .removeObject(forKey: Account.userApiEmail.rawValue)
+                }
             }
         }
     }
