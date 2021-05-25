@@ -146,11 +146,19 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     let interval = observer.settings.saveHeartbeatsIntervalMinutes
                     if let date = observer.savedDate[uuid] {
                         if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
-                            observer.ruuviTagTank.create(ruuviTag.with(sensorSettings: sensorSettings))
+                            observer.ruuviTagTank.create(
+                                ruuviTag
+                                    .with(source: .heartbeat)
+                                    .with(sensorSettings: sensorSettings)
+                            )
                             observer.savedDate[uuid] = Date()
                         }
                     } else {
-                        observer.ruuviTagTank.create(ruuviTag.with(sensorSettings: sensorSettings))
+                        observer.ruuviTagTank.create(
+                            ruuviTag
+                                .with(source: .heartbeat)
+                                .with(sensorSettings: sensorSettings)
+                        )
                         observer.savedDate[uuid] = Date()
                     }
                 }
