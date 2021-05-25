@@ -51,6 +51,9 @@
 		0E0C19BE23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
 		0E0C19BF23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
 		0E0C19C023D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */; };
+		0E1069E8265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */; };
+		0E1069E9265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */; };
+		0E1069EA265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */; };
 		0E197C6123C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
 		0E197C6323C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */; };
@@ -1863,6 +1866,7 @@
 		0E09672B22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Optional.swift"; sourceTree = "<group>"; };
 		0E0C19BD23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertServiceImpl+Process.swift"; sourceTree = "<group>"; };
+		0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToChartDuration240.swift; sourceTree = "<group>"; };
 		0E197C6023C352380074015B /* TagSettingsAlertDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSettingsAlertDescriptionCell.swift; sourceTree = "<group>"; };
 		0E197C6523C4A47A0074015B /* MailComposerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenter.swift; sourceTree = "<group>"; };
 		0E197C6A23C4A52A0074015B /* MailComposerPresenterMessageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposerPresenterMessageUI.swift; sourceTree = "<group>"; };
@@ -2921,6 +2925,14 @@
 				0E9959BA235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift */,
 			);
 			path = BTKit;
+			sourceTree = "<group>";
+		};
+		0E1069E6265D162600B8F730 /* toChartDuration240 */ = {
+			isa = PBXGroup;
+			children = (
+				0E1069E7265D167400B8F730 /* MigrationManagerToChartDuration240.swift */,
+			);
+			path = toChartDuration240;
 			sourceTree = "<group>";
 		};
 		0E197C6423C4A44C0074015B /* MailComposer */ = {
@@ -5071,6 +5083,7 @@
 				A98D997F25175C6100ED3760 /* AlertService */,
 				664A5D11265B8BAA0035A11F /* SensorSettings */,
 				0EB48D5E26183B34008E0D2D /* toPrune240 */,
+				0E1069E6265D162600B8F730 /* toChartDuration240 */,
 				0E8BACFC2460357400D380FB /* toSQLite */,
 				0EEB216122BA61500015F9E0 /* toVIPER */,
 			);
@@ -7176,6 +7189,7 @@
 				A9100D6E241AC752004007FD /* WPSData.swift in Sources */,
 				0E45580723E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				A9828E4B24792D6C00E7E9D4 /* ReloadableCell.swift in Sources */,
+				0E1069EA265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */,
 				0E6BADF523856A01003A2D4C /* AlertType.swift in Sources */,
 				0E79F285244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0EAD33EE2399273E00EC5BAA /* HeartbeatTableViewController.swift in Sources */,
@@ -8037,6 +8051,7 @@
 				3BA1E7A8054CF95D80BAE3F9 /* ShareViewOutput.swift in Sources */,
 				2BB81E4733D8EC40BECC68EF /* ShareViewModel.swift in Sources */,
 				B2A3FB2578B246F6CBBF0CA9 /* ShareViewController.swift in Sources */,
+				0E1069E9265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8281,6 +8296,7 @@
 				A9646487247BAE6B0001D55D /* AdvancedRouterInput.swift in Sources */,
 				0E45580523E907190025AEBF /* WebTagDataPruningOperation.swift in Sources */,
 				0E02ABC52375A6CE00ED4629 /* AlertType.swift in Sources */,
+				0E1069E8265D167400B8F730 /* MigrationManagerToChartDuration240.swift in Sources */,
 				0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */,
 				0E79F283244202940048BF86 /* RuuviNetworkProvider.swift in Sources */,
 				0E9F97B022EC3FEE0015ADE2 /* OpenWeatherMapAPI.swift in Sources */,

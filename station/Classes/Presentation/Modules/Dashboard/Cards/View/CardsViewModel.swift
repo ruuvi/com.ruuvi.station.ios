@@ -143,16 +143,6 @@ extension CardsViewModel: Equatable {
     }
 }
 
-extension CardsViewModel {
-    var needUpdateFromObservingLastRecord: Bool {
-        return (luid.value == nil
-            && mac.value != nil)
-            || temperature.value == nil
-            || humidity.value == nil
-            || pressure.value == nil
-    }
-}
-
 extension CardsViewModel: Reorderable {
     var orderElement: String {
         return id.value ?? UUID().uuidString
