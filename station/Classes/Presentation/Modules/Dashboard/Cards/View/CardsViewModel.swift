@@ -22,8 +22,6 @@ struct CardsViewModel {
     var version: Observable<Int?> = Observable<Int?>()
     var voltage: Observable<Voltage?> = Observable<Voltage?>()
     var background: Observable<UIImage?> = Observable<UIImage?>()
-    var humidityOffset: Observable<Double?> = Observable<Double?>(0)
-    var humidityOffsetDate: Observable<Date?> = Observable<Date?>()
     var date: Observable<Date?> = Observable<Date?>()
     var location: Observable<Location?> = Observable<Location?>()
     var currentLocation: Observable<Location?> = Observable<Location?>()

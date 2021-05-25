@@ -52,7 +52,6 @@ class CardsPresenter: CardsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
-    private var calibrationHumidityDidChangeToken: NSObjectProtocol?
     private var offsetCorrectionDidChangeToken: NSObjectProtocol?
     private var didMigrationCompleteToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
@@ -98,7 +97,6 @@ class CardsPresenter: CardsModuleInput {
         readRSSIToken?.invalidate()
         readRSSIIntervalToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
-        calibrationHumidityDidChangeToken?.invalidate()
         didMigrationCompleteToken?.invalidate()
     }
 }
@@ -115,7 +113,6 @@ extension CardsPresenter: CardsViewOutput {
         startObservingConnectionPersistenceNotifications()
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
-        startObservingCalibrationHumidityChanges()
         startObservingLocalNotificationsManager()
         pushNotificationsManager.registerForRemoteNotifications()
     }
@@ -325,14 +322,9 @@ extension CardsPresenter {
                 self?.errorPresenter.present(error: error)
             })
             if let luid = ruuviTag.luid {
-                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: luid).0
-                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: luid).1
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                viewModel.humidityOffset.value = calibrationService.humidityOffset(for: macId).0
-                viewModel.humidityOffsetDate.value = calibrationService.humidityOffset(for: macId).1
-                // viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
                 viewModel.networkSyncStatus.value = networkPersistance.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
                 viewModel.alertState.value = .empty
@@ -817,24 +809,6 @@ extension CardsPresenter {
                                     } else {
                                         viewModel.alertState.value = .empty
                                     }
-                                })
-                            }
-                         })
-    }
-    private func startObservingCalibrationHumidityChanges() {
-        calibrationHumidityDidChangeToken = NotificationCenter
-            .default
-            .addObserver(forName: .CalibrationServiceHumidityDidChange,
-                         object: nil,
-                         queue: .main,
-                         using: { [weak self] (notification) in
-                            if let userInfo = notification.userInfo,
-                               let luid = userInfo[CalibrationServiceHumidityDidChangeKey.luid] as? LocalIdentifier {
-                                self?.viewModels.filter({ $0.luid.value == luid.any }).forEach({ (viewModel) in
-                                    viewModel.humidityOffset.value =
-                                        self?.calibrationService.humidityOffset(for: luid).0
-                                    viewModel.humidityOffsetDate.value =
-                                        self?.calibrationService.humidityOffset(for: luid).1
                                 })
                             }
                          })
