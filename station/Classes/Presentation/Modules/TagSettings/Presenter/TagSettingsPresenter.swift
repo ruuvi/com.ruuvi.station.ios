@@ -377,7 +377,8 @@ extension TagSettingsPresenter {
                 sSelf.reloadMutedTill()
             }
     }
-// swiftlint:disable function_body_length
+
+    // swiftlint:disable function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -432,7 +433,7 @@ extension TagSettingsPresenter {
         viewModel.version.value = ruuviTag.version
         syncAlerts()
     }
-// swiftlint:enable function_body_length
+    // swiftlint:enable function_body_length
 
     private func syncOffsetCorrection() {
         // reload offset correction

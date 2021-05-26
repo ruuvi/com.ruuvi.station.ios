@@ -16,7 +16,7 @@ protocol RuuviNetworkUserApi: RuuviNetwork {
     func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError>
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
                      imageData: Data,
-                     updateProgress: ((Double) -> Void)?) -> Future<UserApiSensorImageUploadResponse, RUError>
+                     uploadProgress: ((Double) -> Void)?) -> Future<UserApiSensorImageUploadResponse, RUError>
 }
 
 protocol RuuviNetworkUserApiOutput: AnyObject {
@@ -75,7 +75,7 @@ extension RuuviNetworkUserApi {
             let requestModel = UserApiSensorImageUploadRequest(sensor: mac.mac, mimeType: .jpg)
             uploadImage(requestModel,
                         imageData: pngData,
-                        updateProgress: {(percentage) in
+                        uploadProgress: {(percentage) in
                             output.uploadImageUpdateProgress(mac, percentage: percentage)
                         }).on(success: { response in
                             promise.succeed(value: response.uploadURL)
