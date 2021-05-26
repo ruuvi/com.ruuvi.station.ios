@@ -166,7 +166,7 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
                   ])
         UserDefaults.standard.setValue(percentage, forKey: key)
     }
-    
+
     func deleteBackgroundUploadProgress(for identifier: Identifier) {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
