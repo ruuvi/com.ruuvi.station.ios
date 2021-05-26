@@ -2,6 +2,8 @@ import UIKit
 
 struct TagSettingsViewModel {
     let background: Observable<UIImage?> = Observable<UIImage?>()
+    let isUploadingBackground: Observable<Bool?> = Observable<Bool?>()
+    let uploadingBackgroundPercentage: Observable<Double?> = Observable<Double?>()
     let name: Observable<String?> = Observable<String?>()
     let uuid: Observable<String?> = Observable<String?>()
     let mac: Observable<String?> = Observable<String?>()
