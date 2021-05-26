@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import UIKit
 
 protocol SensorService {
     // background

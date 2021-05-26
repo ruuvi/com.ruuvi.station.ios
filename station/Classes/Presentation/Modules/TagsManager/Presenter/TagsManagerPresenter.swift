@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import UIKit
 
 class TagsManagerPresenter {
     weak var view: TagsManagerViewInput!
