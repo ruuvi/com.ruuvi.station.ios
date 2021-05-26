@@ -1,6 +1,8 @@
 import Foundation
 import Future
+#if canImport(FirebaseAnalytics)
 import FirebaseAnalytics
+#endif
 
 final class UserPropertiesServiceImpl: UserPropertiesService {
 
@@ -113,7 +115,9 @@ final class UserPropertiesServiceImpl: UserPropertiesService {
         case .language(let language):
             value = language.rawValue
         }
+        #if canImport(FirebaseAnalytics)
         Analytics.setUserProperty(value, forName: property.name)
+        #endif
     }
 }
 fileprivate extension HumidityUnit {
