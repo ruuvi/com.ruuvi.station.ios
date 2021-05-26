@@ -1,6 +1,7 @@
 import Foundation
 import BTKit
 import Future
+import RuuviOntology
 
 class GATTServiceQueue: GATTService {
     var ruuviTagTank: RuuviTagTank!

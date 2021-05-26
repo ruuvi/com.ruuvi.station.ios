@@ -3,6 +3,7 @@ import BTKit
 import RealmSwift
 import UIKit
 import Future
+import RuuviOntology
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -103,13 +104,17 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.ruuviTagId == device.id }) {
-            let sensor = RuuviTagSensorStruct(version: ruuviTag.version,
-                                              luid: ruuviTag.uuid.luid,
-                                              macId: ruuviTag.mac?.mac,
-                                              isConnectable: ruuviTag.isConnectable,
-                                              name: displayName,
-                                              isClaimed: false,
-                                              isOwner: true)
+            let sensor = RuuviTagSensorStruct(
+                version: ruuviTag.version,
+                luid: ruuviTag.uuid.luid,
+                macId: ruuviTag.mac?.mac,
+                isConnectable: ruuviTag.isConnectable,
+                name: displayName,
+                networkProvider: nil, // TODO: @rinat check if nil is ok
+                isClaimed: false,
+                isOwner: true,
+                owner: nil // TODO: @rinat check if nil is ok
+            )
             let entity = ruuviTagTank.create(sensor)
             let record = ruuviTagTank.create(ruuviTag)
             Future.zip(entity, record).on(success: { [weak self] _ in

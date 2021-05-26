@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import RuuviOntology
 
 class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 

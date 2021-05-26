@@ -2,6 +2,7 @@
 import Foundation
 import Combine
 import RealmSwift
+import RuuviOntology
 
 @available(iOS 13, *)
 class VirtualTagSubjectCombine {

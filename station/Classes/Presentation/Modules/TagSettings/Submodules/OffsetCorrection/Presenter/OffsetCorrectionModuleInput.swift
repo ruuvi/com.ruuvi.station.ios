@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 enum OffsetCorrectionType: Int {
     case temperature = 0

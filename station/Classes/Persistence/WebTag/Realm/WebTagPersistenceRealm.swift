@@ -1,6 +1,7 @@
 import RealmSwift
 import Future
 import CoreLocation
+import RuuviOntology
 
 class WebTagPersistenceRealm: WebTagPersistence {
 

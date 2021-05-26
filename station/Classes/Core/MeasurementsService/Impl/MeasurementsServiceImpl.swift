@@ -1,5 +1,6 @@
 import Foundation
 import Humidity
+import RuuviOntology
 
 struct MeasurementsServiceSettigsUnit {
     let temperatureUnit: UnitTemperature

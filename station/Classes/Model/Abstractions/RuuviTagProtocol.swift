@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import RuuviOntology
 
 protocol RuuviTagProtocol {
     var uuid: String { get }

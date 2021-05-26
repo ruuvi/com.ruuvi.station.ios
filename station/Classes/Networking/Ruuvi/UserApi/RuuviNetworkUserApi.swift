@@ -2,6 +2,7 @@ import Foundation
 import Future
 import BTKit
 import UIKit
+import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
 protocol RuuviNetworkUserApi: RuuviNetwork {
@@ -127,14 +128,17 @@ extension RuuviNetworkUserApi {
                                                   payload: log.data),
                let tag = device.ruuvi?.tag {
                 let name = $0.name.isEmpty ? $0.sensor : $0.name
-                let sensor = RuuviTagSensorStruct(version: tag.version,
-                                              luid: nil,
-                                              macId: $0.sensor.mac,
-                                              isConnectable: true,
-                                              name: name,
-                                              networkProvider: .userApi,
-                                              isClaimed: false,
-                                              isOwner: false)
+                let sensor = RuuviTagSensorStruct(
+                    version: tag.version,
+                    luid: nil,
+                    macId: $0.sensor.mac,
+                    isConnectable: true,
+                    name: name,
+                    networkProvider: .userApi,
+                    isClaimed: false,
+                    isOwner: false,
+                    owner: nil // TODO: @rinat check if nil is correct
+                )
                 let record = RuuviTagSensorRecordStruct(
                     ruuviTagId: sensor.id,
                     date: log.date,

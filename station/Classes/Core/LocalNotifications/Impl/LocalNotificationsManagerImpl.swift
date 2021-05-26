@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 import UserNotifications
 import UIKit
+import RuuviOntology
 
 struct LocalAlertCategory {
     var id: String

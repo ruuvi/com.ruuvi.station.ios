@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import UIKit
+import RuuviOntology
 
 protocol SensorService {
     // background

@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 enum NetworkSyncStatus: Int {
     case none = 0

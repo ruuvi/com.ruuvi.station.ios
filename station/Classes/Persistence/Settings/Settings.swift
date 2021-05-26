@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 extension Notification.Name {
     static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")

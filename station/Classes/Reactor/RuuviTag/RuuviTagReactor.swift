@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol RuuviTagReactor {
     func observe(_ block: @escaping (ReactorChange<AnyRuuviTagSensor>) -> Void) -> RUObservationToken

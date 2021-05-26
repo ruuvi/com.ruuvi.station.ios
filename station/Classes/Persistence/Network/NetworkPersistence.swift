@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 extension Notification.Name {
     static let NetworkLastSyncDateDidChange = Notification.Name("NetworkPersistence.LastSyncDateDidChange")

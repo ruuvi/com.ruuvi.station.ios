@@ -3,6 +3,7 @@ import Foundation
 import RealmSwift
 import BTKit
 import Humidity
+import RuuviOntology
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -522,7 +523,7 @@ extension CardsPresenter {
         ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
-               let record = anyRecord?.object {
+               let record = anyRecord { // TODO: @rinat check if works without .object
                 let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
                 let previousDate = viewModel.date.value ?? Date.distantPast
                 if previousDate < record.date {

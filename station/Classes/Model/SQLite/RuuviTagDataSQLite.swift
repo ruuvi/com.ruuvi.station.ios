@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import Humidity
+import RuuviOntology
 
 struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     var ruuviTagId: String

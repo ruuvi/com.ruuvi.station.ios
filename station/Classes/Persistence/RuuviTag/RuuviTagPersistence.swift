@@ -1,5 +1,6 @@
 import Future
 import Foundation
+import RuuviOntology
 
 protocol RuuviTagPersistence {
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError>

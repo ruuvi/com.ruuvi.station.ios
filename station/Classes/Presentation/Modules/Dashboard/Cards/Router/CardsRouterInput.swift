@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol CardsRouterInput {
     func openMenu(output: MenuModuleOutput)

@@ -1,6 +1,7 @@
 import Foundation
 import BTKit
 import Humidity
+import RuuviOntology
 
 // MARK: - Process Physical Sensors
 extension AlertServiceImpl {

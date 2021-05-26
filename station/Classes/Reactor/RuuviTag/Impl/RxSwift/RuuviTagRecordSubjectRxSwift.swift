@@ -2,6 +2,7 @@ import Foundation
 import GRDB
 import RxSwift
 import RealmSwift
+import RuuviOntology
 
 class RuuviTagRecordSubjectRxSwift {
     let subject: PublishSubject<[AnyRuuviTagSensorRecord]> = PublishSubject()

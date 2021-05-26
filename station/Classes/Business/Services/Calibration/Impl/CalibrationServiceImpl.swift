@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviOntology
 
 class CalibrationServiceImpl: CalibrationService {
     var calibrationPersistence: CalibrationPersistence!

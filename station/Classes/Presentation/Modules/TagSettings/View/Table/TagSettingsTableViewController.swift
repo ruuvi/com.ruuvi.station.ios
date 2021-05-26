@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 import UIKit
 import RangeSeekSlider
+import RuuviOntology
 
 enum TagSettingsTableSection: Int {
     case image = 0

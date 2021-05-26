@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 class ChartFilterOperation: Operation {
     private var array: [RuuviMeasurement]

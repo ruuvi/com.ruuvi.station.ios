@@ -1,5 +1,6 @@
 import BTKit
 import Foundation
+import RuuviOntology
 
 class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     var ruuviTagTank: RuuviTagTank!

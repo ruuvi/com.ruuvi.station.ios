@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol TagChartModuleOutput: AnyObject {
     var dataSource: [RuuviMeasurement] { get }

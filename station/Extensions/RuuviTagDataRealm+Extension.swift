@@ -1,5 +1,6 @@
 import Foundation
 import Humidity
+import RuuviOntology
 
 extension RuuviTagDataRealm {
     var unitTemperature: Temperature? {

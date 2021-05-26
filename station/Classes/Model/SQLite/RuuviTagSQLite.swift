@@ -1,5 +1,6 @@
 import Foundation
 import GRDB
+import RuuviOntology
 
 struct RuuviTagSQLite: RuuviTagSensor {
     var id: String

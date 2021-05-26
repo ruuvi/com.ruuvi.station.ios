@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 extension RuuviTagRealm: RuuviTagSensor {
     var luid: LocalIdentifier? {
@@ -10,13 +11,19 @@ extension RuuviTagRealm: RuuviTagSensor {
     }
 
     var any: AnyRuuviTagSensor {
-        return AnyRuuviTagSensor(object: RuuviTagSensorStruct(version: version,
-                                                              luid: luid,
-                                                              macId: macId,
-                                                              isConnectable: isConnectable,
-                                                              name: name,
-                                                              isClaimed: isClaimed,
-                                                              isOwner: isOwner))
+        return AnyRuuviTagSensor(
+            object: RuuviTagSensorStruct(
+                version: version,
+                luid: luid,
+                macId: macId,
+                isConnectable: isConnectable,
+                name: name,
+                networkProvider: networkProvider,
+                isClaimed: isClaimed,
+                isOwner: isOwner,
+                owner: owner
+            )
+        )
     }
     var networkProvider: RuuviNetworkProvider? {
         return nil

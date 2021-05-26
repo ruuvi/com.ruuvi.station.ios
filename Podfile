@@ -22,6 +22,8 @@ def shared_pods
   pod 'Nantes'
   pod 'RangeSeekSlider', :git => 'https://github.com/rinat-enikeev/RangeSeekSlider'
   pod 'RealmSwift'
+  pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
+  pod 'RuuviNetwork/Pure', :path => 'Packages/RuuviNetwork/RuuviNetwork.podspec'
   pod 'RxSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'

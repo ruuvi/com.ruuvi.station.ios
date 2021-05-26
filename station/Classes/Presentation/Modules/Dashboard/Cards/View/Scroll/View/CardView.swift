@@ -1,5 +1,6 @@
 import UIKit
 import Localize_Swift
+import RuuviOntology
 
 protocol CardViewDelegate: AnyObject {
     func card(view: CardView, didTriggerSettings sender: Any)

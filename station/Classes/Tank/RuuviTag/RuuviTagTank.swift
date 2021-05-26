@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviOntology
 
 protocol RuuviTagTank {
     // entities
