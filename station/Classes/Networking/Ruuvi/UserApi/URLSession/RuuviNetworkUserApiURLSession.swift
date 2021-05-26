@@ -104,7 +104,8 @@ final class RuuviNetworkUserApiURLSession: NSObject, RuuviNetworkUserApi {
     }
 
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
-                     imageData: Data) -> Future<UserApiSensorImageUploadResponse, RUError> {
+                     imageData: Data,
+                     uploadProgress: ((Double) -> Void)?) -> Future<UserApiSensorImageUploadResponse, RUError> {
         let promise = Promise<UserApiSensorImageUploadResponse, RUError>()
         request(endpoint: Routes.uploadImage,
                 with: requestModel,
@@ -116,6 +117,7 @@ final class RuuviNetworkUserApiURLSession: NSObject, RuuviNetworkUserApi {
                     #if DEBUG
                     debugPrint(percentage)
                     #endif
+                    uploadProgress?(percentage)
                 }, completion: { result in
                     switch result {
                     case .success:
