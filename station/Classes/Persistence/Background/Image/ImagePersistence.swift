@@ -1,5 +1,6 @@
 import UIKit
 import Future
+import RuuviOntology
 
 protocol ImagePersistence {
     func fetchBg(for identifier: Identifier) -> UIImage?

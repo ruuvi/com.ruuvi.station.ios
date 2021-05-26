@@ -1,6 +1,7 @@
 import LightRoute
 import Foundation
 import UIKit
+import RuuviOntology
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!

@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import RuuviOntology
 
 class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     weak var view: OffsetCorrectionViewInput!
@@ -25,13 +26,15 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
 
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
-        self.sensorSettings = sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
-                                                                     temperatureOffset: nil,
-                                                                     temperatureOffsetDate: nil,
-                                                                     humidityOffset: nil,
-                                                                     humidityOffsetDate: nil,
-                                                                     pressureOffset: nil,
-                                                                     pressureOffsetDate: nil)
+        self.sensorSettings = sensorSettings ?? SensorSettingsStruct(
+            ruuviTagId: ruuviTag.id,
+            temperatureOffset: nil,
+            temperatureOffsetDate: nil,
+            humidityOffset: nil,
+            humidityOffsetDate: nil,
+            pressureOffset: nil,
+            pressureOffsetDate: nil
+        )
         self.view.viewModel = {
             let vm = OffsetCorrectionViewModel(
                 type: type, sensorSettings: self.sensorSettings

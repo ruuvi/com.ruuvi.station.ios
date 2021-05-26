@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol TagChartsInteractorOutput: AnyObject {
     var isLoading: Bool { get set }

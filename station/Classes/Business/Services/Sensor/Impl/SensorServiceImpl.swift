@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import UIKit
+import RuuviOntology
 
 final class SensorServiceImpl: SensorService {
     var backgroundPersistence: BackgroundPersistence!

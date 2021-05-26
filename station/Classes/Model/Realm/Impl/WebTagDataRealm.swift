@@ -1,5 +1,6 @@
 import RealmSwift
 import Foundation
+import RuuviOntology
 
 class WebTagDataRealm: Object {
     @objc dynamic var webTag: WebTagRealm?

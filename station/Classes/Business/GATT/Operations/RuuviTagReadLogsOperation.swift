@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import RuuviOntology
 
 extension Notification.Name {
     static let RuuviTagReadLogsOperationDidStart = Notification.Name("RuuviTagReadLogsOperationDidStart")

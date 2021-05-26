@@ -1,5 +1,6 @@
 import UIKit
 import Future
+import RuuviOntology
 
 extension Notification.Name {
     static let BackgroundPersistenceDidChangeBackground = Notification.Name("BackgroundPersistenceDidChangeBackground")

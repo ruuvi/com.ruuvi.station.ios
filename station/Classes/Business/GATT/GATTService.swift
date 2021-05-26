@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import BTKit
+import RuuviOntology
 
 protocol GATTService {
 

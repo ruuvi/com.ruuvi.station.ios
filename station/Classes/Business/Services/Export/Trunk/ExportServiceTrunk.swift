@@ -1,6 +1,7 @@
 import Foundation
 import Humidity
 import Future
+import RuuviOntology
 
 class ExportServiceTrunk: ExportService {
     var ruuviTagTrunk: RuuviTagTrunk!

@@ -1,6 +1,7 @@
 import Foundation
 import RxSwift
 import RealmSwift
+import RuuviOntology
 
 class VirtualTagSubjectRxSwift {
     var realm: RealmContext

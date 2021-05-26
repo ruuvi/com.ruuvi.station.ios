@@ -3,6 +3,7 @@ import Foundation
 import BTKit
 import UIKit
 import Future
+import RuuviOntology
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -293,14 +294,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     private func updateTagInDB(with networkProvider: RuuviNetworkProvider?, isClaimed: Bool) {
-        let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
-                                          luid: self.ruuviTag.luid,
-                                          macId: self.ruuviTag.macId,
-                                          isConnectable: self.ruuviTag.isConnectable,
-                                          name: self.ruuviTag.name,
-                                          networkProvider: networkProvider,
-                                          isClaimed: isClaimed,
-                                          isOwner: true)
+        let sensor = RuuviTagSensorStruct(
+            version: self.ruuviTag.version,
+            luid: self.ruuviTag.luid,
+            macId: self.ruuviTag.macId,
+            isConnectable: self.ruuviTag.isConnectable,
+            name: self.ruuviTag.name,
+            networkProvider: networkProvider,
+            isClaimed: isClaimed,
+            isOwner: true,
+            owner: self.ruuviTag.owner
+        )
         self.updateTag(with: sensor)
     }
 

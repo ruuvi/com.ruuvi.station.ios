@@ -1,4 +1,5 @@
 import LightRoute
+import RuuviOntology
 
 class TagSettingsRouter: TagSettingsRouterInput {
     weak var transitionHandler: TransitionHandler!

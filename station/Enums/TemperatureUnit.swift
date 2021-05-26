@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 enum TemperatureUnit {
     case kelvin

@@ -2,6 +2,7 @@
 import Foundation
 import Charts
 import UIKit
+import RuuviOntology
 
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!

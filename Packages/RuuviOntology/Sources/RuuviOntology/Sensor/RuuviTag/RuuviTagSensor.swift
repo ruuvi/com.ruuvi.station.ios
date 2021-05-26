@@ -1,9 +1,9 @@
 import Foundation
 
-protocol RuuviTagSensor: PhysicalSensor, Versionable, Networkable {}
+public protocol RuuviTagSensor: PhysicalSensor, Versionable, Networkable {}
 
 extension RuuviTagSensor {
-    var id: String {
+    public var id: String {
         if let macId = macId,
             !macId.value.isEmpty {
             return macId.value
@@ -14,11 +14,11 @@ extension RuuviTagSensor {
         }
     }
 
-    var any: AnyRuuviTagSensor {
+    public var any: AnyRuuviTagSensor {
         return AnyRuuviTagSensor(object: self)
     }
 
-    var `struct`: RuuviTagSensorStruct {
+    public var `struct`: RuuviTagSensorStruct {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
                                     macId: macId,
@@ -30,103 +30,132 @@ extension RuuviTagSensor {
                                     owner: owner)
     }
 
-    func with(version: Int) -> RuuviTagSensor {
+    public func with(version: Int) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
+                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
     }
 
-    func with(macId: MACIdentifier) -> RuuviTagSensor {
+    public func with(macId: MACIdentifier) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
+                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
     }
 
-    func withoutMac() -> RuuviTagSensor {
+    public func withoutMac() -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
                                     macId: nil,
                                     isConnectable: isConnectable,
                                     name: name,
+                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
     }
 
-    func with(isConnectable: Bool) -> RuuviTagSensor {
+    public func with(isConnectable: Bool) -> RuuviTagSensor {
         return RuuviTagSensorStruct(version: version,
                                     luid: luid,
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
+                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
     }
 
-    var isNetworkConnectable: Bool {
+    public var isNetworkConnectable: Bool {
         return networkProvider != nil
     }
 }
 
-struct RuuviTagSensorStruct: RuuviTagSensor {
-    var version: Int
-    var luid: LocalIdentifier? // local unqiue id
-    var macId: MACIdentifier?
-    var isConnectable: Bool
-    var name: String
-    var networkProvider: RuuviNetworkProvider?
-    var isClaimed: Bool
-    var isOwner: Bool
-    var owner: String?
+public struct RuuviTagSensorStruct: RuuviTagSensor {
+    public var version: Int
+    public var luid: LocalIdentifier? // local unqiue id
+    public var macId: MACIdentifier?
+    public var isConnectable: Bool
+    public var name: String
+    public var networkProvider: RuuviNetworkProvider?
+    public var isClaimed: Bool
+    public var isOwner: Bool
+    public var owner: String?
+
+    public init(
+        version: Int,
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
+        isConnectable: Bool,
+        name: String,
+        networkProvider: RuuviNetworkProvider?,
+        isClaimed: Bool,
+        isOwner: Bool,
+        owner: String?
+    ) {
+        self.version = version
+        self.luid = luid
+        self.macId = macId
+        self.isConnectable = isConnectable
+        self.name = name
+        self.networkProvider = networkProvider
+        self.isClaimed = isClaimed
+        self.isOwner = isOwner
+        self.owner = owner
+    }
 }
 
-struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
-
+public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
     var object: RuuviTagSensor
 
-    var id: String {
+    public init(object: RuuviTagSensor) {
+        self.object = object
+    }
+
+    public var id: String {
         return object.id
     }
-    var version: Int {
+    public var version: Int {
         return object.version
     }
-    var luid: LocalIdentifier? {
+    public var luid: LocalIdentifier? {
         return object.luid
     }
-    var macId: MACIdentifier? {
+    public var macId: MACIdentifier? {
         return object.macId
     }
-    var isConnectable: Bool {
+    public var isConnectable: Bool {
         return object.isConnectable
     }
-    var name: String {
+    public var name: String {
         return object.name
     }
-    var networkProvider: RuuviNetworkProvider? {
+    public var networkProvider: RuuviNetworkProvider? {
         return object.networkProvider
     }
-    var isClaimed: Bool {
+    public var isClaimed: Bool {
         return object.isClaimed
     }
-    var isOwner: Bool {
+    public var isOwner: Bool {
         return object.isOwner
     }
-    var owner: String? {
+    public var owner: String? {
         return object.owner
     }
 
-    static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
+    public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
         let idIsEqual = lhs.id == rhs.id
         var luidIsEqual = false
         if let lhsLuid = lhs.luid?.value, let rhsLuid = rhs.luid?.value {
@@ -139,11 +168,11 @@ struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderable {
         return idIsEqual || luidIsEqual || macIsEqual
     }
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 
-    var orderElement: String {
+    public var orderElement: String {
         return id
     }
 }

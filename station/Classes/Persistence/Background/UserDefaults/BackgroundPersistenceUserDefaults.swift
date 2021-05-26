@@ -1,5 +1,6 @@
 import UIKit
 import Future
+import RuuviOntology
 
 class BackgroundPersistenceUserDefaults: BackgroundPersistence {
 

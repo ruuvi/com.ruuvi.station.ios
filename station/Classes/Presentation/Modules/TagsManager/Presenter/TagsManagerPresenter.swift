@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import UIKit
+import RuuviOntology
 
 class TagsManagerPresenter {
     weak var view: TagsManagerViewInput!
@@ -152,14 +153,17 @@ extension TagsManagerPresenter {
             guard let userApiSensor = self.userApiSensors.first(where: { $0.sensorId == sensor.0.id }) else {
                 return nil
             }
-            return .init(version: sensor.0.version,
-                         luid: sensor.0.luid,
-                         macId: sensor.0.macId,
-                         isConnectable: sensor.0.isConnectable,
-                         name: userApiSensor.name,
-                         networkProvider: .userApi,
-                         isClaimed: sensor.0.isClaimed,
-                         isOwner: userApiSensor.isOwner)
+            return .init(
+                version: sensor.0.version,
+                luid: sensor.0.luid,
+                macId: sensor.0.macId,
+                isConnectable: sensor.0.isConnectable,
+                name: userApiSensor.name,
+                networkProvider: .userApi,
+                isClaimed: sensor.0.isClaimed,
+                isOwner: userApiSensor.isOwner,
+                owner: userApiSensor.owner
+            )
         })
         let futures = sensorsToSave.map({ruuviTagTank.create($0)})
         activityPresenter.increment()

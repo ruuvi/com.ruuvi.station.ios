@@ -3,6 +3,7 @@ import Foundation
 import GRDB
 import Combine
 import RealmSwift
+import RuuviOntology
 
 @available(iOS 13, *)
 class RuuviTagLastRecordSubjectCombine {

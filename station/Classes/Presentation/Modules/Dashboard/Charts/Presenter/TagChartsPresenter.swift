@@ -5,6 +5,7 @@ import BTKit
 import UIKit
 import Charts
 import Future
+import RuuviOntology
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!

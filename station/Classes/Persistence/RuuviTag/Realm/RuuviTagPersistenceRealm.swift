@@ -6,6 +6,7 @@ import Foundation
 #if canImport(FirebaseCrashlytics)
 import FirebaseCrashlytics
 #endif
+import RuuviOntology
 
 // swiftlint:disable type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {
@@ -162,13 +163,17 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         let promise = Promise<AnyRuuviTagSensor, RUError>()
         context.bgWorker.enqueue {
             if let ruuviTagRealm = self.context.bg.object(ofType: RuuviTagRealm.self, forPrimaryKey: ruuviTagId) {
-                let result = RuuviTagSensorStruct(version: ruuviTagRealm.version,
-                                                  luid: ruuviTagRealm.uuid.luid,
-                                                  macId: ruuviTagRealm.mac?.mac,
-                                                  isConnectable: ruuviTagRealm.isConnectable,
-                                                  name: ruuviTagRealm.name,
-                                                  isClaimed: false,
-                                                  isOwner: false).any
+                let result = RuuviTagSensorStruct(
+                    version: ruuviTagRealm.version,
+                    luid: ruuviTagRealm.uuid.luid,
+                    macId: ruuviTagRealm.mac?.mac,
+                    isConnectable: ruuviTagRealm.isConnectable,
+                    name: ruuviTagRealm.name,
+                    networkProvider: ruuviTagRealm.networkProvider,
+                    isClaimed: false,
+                    isOwner: false,
+                    owner: ruuviTagRealm.owner
+                ).any
                 promise.succeed(value: result)
             } else {
                 promise.fail(error: .unexpected(.failedToFindRuuviTag))
@@ -182,13 +187,17 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
         context.bgWorker.enqueue {
             let realmEntities = self.context.bg.objects(RuuviTagRealm.self)
             let result: [AnyRuuviTagSensor] = realmEntities.map { ruuviTagRealm in
-                return RuuviTagSensorStruct(version: ruuviTagRealm.version,
-                                            luid: ruuviTagRealm.uuid.luid,
-                                            macId: ruuviTagRealm.mac?.mac,
-                                            isConnectable: ruuviTagRealm.isConnectable,
-                                            name: ruuviTagRealm.name,
-                                            isClaimed: false,
-                                            isOwner: false).any
+                return RuuviTagSensorStruct(
+                    version: ruuviTagRealm.version,
+                    luid: ruuviTagRealm.uuid.luid,
+                    macId: ruuviTagRealm.mac?.mac,
+                    isConnectable: ruuviTagRealm.isConnectable,
+                    name: ruuviTagRealm.name,
+                    networkProvider: ruuviTagRealm.networkProvider,
+                    isClaimed: false,
+                    isOwner: false,
+                    owner: ruuviTagRealm.owner
+                ).any
             }
             promise.succeed(value: result)
         }

@@ -1,7 +1,7 @@
 import Foundation
 import Humidity
 
-enum RuuviTagSensorRecordSource: String {
+public enum RuuviTagSensorRecordSource: String {
     case unknown
     case advertisement
     case log
@@ -10,7 +10,7 @@ enum RuuviTagSensorRecordSource: String {
     case weatherProvider
 }
 
-protocol RuuviTagSensorRecord {
+public protocol RuuviTagSensorRecord {
     var ruuviTagId: String { get }
     var date: Date { get }
     var source: RuuviTagSensorRecordSource { get }
@@ -34,15 +34,15 @@ protocol RuuviTagSensorRecord {
 }
 
 extension RuuviTagSensorRecord {
-    var id: String {
+    public var id: String {
         return ruuviTagId + "\(date.timeIntervalSince1970)"
     }
 
-    var any: AnyRuuviTagSensorRecord {
+    public var any: AnyRuuviTagSensorRecord {
         return AnyRuuviTagSensorRecord(object: self)
     }
 
-    func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
+    public func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
             ruuviTagId: macId.value,
             date: date,
@@ -65,7 +65,7 @@ extension RuuviTagSensorRecord {
 }
 
 extension RuuviTagSensorRecord {
-    func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
+    public func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
             ruuviTagId: ruuviTagId,
             date: date,
@@ -86,7 +86,7 @@ extension RuuviTagSensorRecord {
         )
     }
 
-    func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
+    public func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
             ruuviTagId: ruuviTagId,
             date: date,
@@ -108,101 +108,141 @@ extension RuuviTagSensorRecord {
     }
 }
 
-struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
-    var ruuviTagId: String
-    var date: Date
-    var source: RuuviTagSensorRecordSource
-    var macId: MACIdentifier?
-    var rssi: Int?
-    var temperature: Temperature?
-    var humidity: Humidity?
-    var pressure: Pressure?
+public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
+    public var ruuviTagId: String
+    public var date: Date
+    public var source: RuuviTagSensorRecordSource
+    public var macId: MACIdentifier?
+    public var rssi: Int?
+    public var temperature: Temperature?
+    public var humidity: Humidity?
+    public var pressure: Pressure?
     // v3 & v5
-    var acceleration: Acceleration?
-    var voltage: Voltage?
+    public var acceleration: Acceleration?
+    public var voltage: Voltage?
     // v5
-    var movementCounter: Int?
-    var measurementSequenceNumber: Int?
-    var txPower: Int?
+    public var movementCounter: Int?
+    public var measurementSequenceNumber: Int?
+    public var txPower: Int?
 
     // offset correction
-    var temperatureOffset: Double
-    var humidityOffset: Double
-    var pressureOffset: Double
+    public var temperatureOffset: Double
+    public var humidityOffset: Double
+    public var pressureOffset: Double
+
+    public init(
+        ruuviTagId: String,
+        date: Date,
+        source: RuuviTagSensorRecordSource,
+        macId: MACIdentifier?,
+        rssi: Int?,
+        temperature: Temperature?,
+        humidity: Humidity?,
+        pressure: Pressure?,
+        acceleration: Acceleration?,
+        voltage: Voltage?,
+        movementCounter: Int?,
+        measurementSequenceNumber: Int?,
+        txPower: Int?,
+        temperatureOffset: Double,
+        humidityOffset: Double,
+        pressureOffset: Double
+    ) {
+        self.ruuviTagId = ruuviTagId
+        self.date = date
+        self.source = source
+        self.macId = macId
+        self.rssi = rssi
+        self.temperature = temperature
+        self.humidity = humidity
+        self.pressure = pressure
+        self.acceleration = acceleration
+        self.voltage = voltage
+        self.movementCounter = movementCounter
+        self.measurementSequenceNumber = measurementSequenceNumber
+        self.txPower = txPower
+        self.temperatureOffset = temperatureOffset
+        self.humidityOffset = humidityOffset
+        self.pressureOffset = pressureOffset
+    }
 }
 
-struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
+public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable {
     var object: RuuviTagSensorRecord
 
-    var ruuviTagId: String {
+    public init(object: RuuviTagSensorRecord) {
+        self.object = object
+    }
+
+    public var ruuviTagId: String {
         return object.ruuviTagId
     }
 
-    var date: Date {
+    public var date: Date {
         return object.date
     }
 
-    var source: RuuviTagSensorRecordSource {
+    public var source: RuuviTagSensorRecordSource {
         return object.source
     }
 
-    var macId: MACIdentifier? {
+    public var macId: MACIdentifier? {
         return object.macId
     }
 
-    var rssi: Int? {
+    public var rssi: Int? {
         return object.rssi
     }
 
-    var temperature: Temperature? {
+    public var temperature: Temperature? {
         return object.temperature
     }
 
-    var humidity: Humidity? {
+    public var humidity: Humidity? {
         return object.humidity
     }
 
-    var pressure: Pressure? {
+    public var pressure: Pressure? {
         return object.pressure
     }
 
-    var acceleration: Acceleration? {
+    public var acceleration: Acceleration? {
         return object.acceleration
     }
 
-    var voltage: Voltage? {
+    public var voltage: Voltage? {
         return object.voltage
     }
 
-    var movementCounter: Int? {
+    public var movementCounter: Int? {
         return object.movementCounter
     }
 
-    var measurementSequenceNumber: Int? {
+    public var measurementSequenceNumber: Int? {
         return object.measurementSequenceNumber
     }
 
-    var txPower: Int? {
+    public var txPower: Int? {
         return object.txPower
     }
 
-    var temperatureOffset: Double {
+    public var temperatureOffset: Double {
         return object.temperatureOffset
     }
 
-    var humidityOffset: Double {
+    public var humidityOffset: Double {
         return object.humidityOffset
     }
 
-    var pressureOffset: Double {
+    public var pressureOffset: Double {
         return object.pressureOffset
     }
 
-    static func == (lhs: AnyRuuviTagSensorRecord, rhs: AnyRuuviTagSensorRecord) -> Bool {
+    public static func == (lhs: AnyRuuviTagSensorRecord, rhs: AnyRuuviTagSensorRecord) -> Bool {
         return lhs.id == rhs.id
     }
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }

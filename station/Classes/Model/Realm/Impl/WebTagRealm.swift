@@ -1,5 +1,6 @@
 import RealmSwift
 import CoreLocation
+import RuuviOntology
 
 class WebTagRealm: Object {
     @objc dynamic var name: String = ""

@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import BTKit
+import RuuviOntology
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!

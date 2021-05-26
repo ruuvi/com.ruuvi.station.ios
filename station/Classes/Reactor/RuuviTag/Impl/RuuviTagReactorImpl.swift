@@ -1,6 +1,7 @@
 import Foundation
 import GRDB
 import Future
+import RuuviOntology
 
 // swiftlint:disable type_body_length
 class RuuviTagReactorImpl: RuuviTagReactor {
