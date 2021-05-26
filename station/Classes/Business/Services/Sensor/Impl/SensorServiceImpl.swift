@@ -48,16 +48,16 @@ final class SensorServiceImpl: SensorService {
     func setCustomBackground(image: UIImage, sensor: RuuviTagSensor) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
         let luid = sensor.luid
-        let mac = sensor.macId
-        assert(luid != nil || mac != nil)
+        let macId = sensor.macId
+        assert(luid != nil || macId != nil)
         let isOwner = sensor.isOwner
         var local: Future<URL, RUError>?
         var remote: Future<URL, RUError>?
 
         if isOwner {
-            if let mac = mac {
+            if let mac = macId {
                 let croppedImage = imageCoreService.cropped(image: image, to: maxImageSize)
-                remote = ruuviNetwork.upload(image: croppedImage, for: mac)
+                remote = ruuviNetwork.upload(image: croppedImage, for: mac, with: self)
                 local = backgroundPersistence.setCustomBackground(image: image, for: mac)
             } else if let luid = luid {
                 local = backgroundPersistence.setCustomBackground(image: image, for: luid)
@@ -68,7 +68,7 @@ final class SensorServiceImpl: SensorService {
         } else {
             if let luid = luid {
                 local = backgroundPersistence.setCustomBackground(image: image, for: luid)
-            } else if let mac = mac {
+            } else if let mac = macId {
                 local = backgroundPersistence.setCustomBackground(image: image, for: mac)
             } else {
                 promise.fail(error: .unexpected(.bothLuidAndMacAreNil))
@@ -77,7 +77,13 @@ final class SensorServiceImpl: SensorService {
         }
 
         if let local = local, let remote = remote {
-            Future.zip([local, remote]).on(success: { urls in
+            if let mac = macId {
+                backgroundPersistence.setBackgroundUploadProgress(percentage: 0.0, for: mac)
+            }
+            Future.zip([local, remote]).on(success: {[weak self] urls in
+                if let sSelf = self, let mac = macId {
+                    sSelf.backgroundPersistence.deleteBackgroundUploadProgress(for: mac)
+                }
                 if let localUrl = urls.first(where: { $0.isFileURL }) {
                     promise.succeed(value: localUrl)
                 } else {
@@ -137,5 +143,11 @@ final class SensorServiceImpl: SensorService {
             }).resume()
         }
         return promise.future
+    }
+}
+
+extension SensorServiceImpl: RuuviNetworkUserApiOutput {
+    func uploadImageUpdateProgress(_ mac: MACIdentifier, percentage: Double) {
+        backgroundPersistence.setBackgroundUploadProgress(percentage: percentage, for: mac)
     }
 }

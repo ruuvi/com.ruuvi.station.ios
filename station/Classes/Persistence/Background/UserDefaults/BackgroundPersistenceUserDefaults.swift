@@ -11,6 +11,8 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
     private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
 
+    private let uploadBackgroundKeyPrefix = "BackgroundPersistenceUserDefaults.uploadBackground."
+
     private var usedBackgrounds: [Int] {
         if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
             return ub
@@ -134,5 +136,40 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         assert(result - bgMinIndex < array.count)
 
         return result
+    }
+
+    func backgroundUploadProgress(for identifier: Identifier) -> Double? {
+        let uuid = identifier.value
+        let key = uploadBackgroundKeyPrefix + uuid
+        return (UserDefaults.standard.object(forKey: key) as? NSNumber)?.doubleValue
+    }
+
+    func setBackgroundUploadProgress(percentage: Double, for identifier: Identifier) {
+        let uuid = identifier.value
+        let key = uploadBackgroundKeyPrefix + uuid
+        let userInfoKey: BPDidUpdateBackgroundUploadProgressKey
+        if identifier is LocalIdentifier {
+            userInfoKey = .luid
+        } else if identifier is MACIdentifier {
+            userInfoKey = .macId
+        } else {
+            userInfoKey = .luid
+            assertionFailure()
+        }
+        NotificationCenter
+            .default
+            .post(name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
+                  object: nil,
+                  userInfo: [
+                    userInfoKey: identifier,
+                    BPDidUpdateBackgroundUploadProgressKey.progress: percentage
+                  ])
+        UserDefaults.standard.setValue(percentage, forKey: key)
+    }
+
+    func deleteBackgroundUploadProgress(for identifier: Identifier) {
+        let uuid = identifier.value
+        let key = uploadBackgroundKeyPrefix + uuid
+        UserDefaults.standard.removeObject(forKey: key)
     }
 }
