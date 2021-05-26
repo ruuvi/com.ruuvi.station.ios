@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import UIKit
 
 final class SensorServiceImpl: SensorService {
     var backgroundPersistence: BackgroundPersistence!

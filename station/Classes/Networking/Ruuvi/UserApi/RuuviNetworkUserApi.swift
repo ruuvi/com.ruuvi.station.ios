@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import BTKit
+import UIKit
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
 protocol RuuviNetworkUserApi: RuuviNetwork {

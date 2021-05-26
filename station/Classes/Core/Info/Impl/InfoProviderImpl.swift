@@ -67,6 +67,9 @@ class InfoProviderImpl: InfoProvider {
 
     var cameraPermission: String {
         var result = "Camera: "
+        #if targetEnvironment(macCatalyst)
+        result += "unknown"
+        #else
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             result += "authorized"
@@ -79,6 +82,7 @@ class InfoProviderImpl: InfoProvider {
         @unknown default:
             result += "unknown"
         }
+        #endif
         return result
     }
 
