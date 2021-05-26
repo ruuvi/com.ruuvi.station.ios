@@ -1268,9 +1268,6 @@
 		664A5D13265B8C050035A11F /* MigrationManagerSensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */; };
 		664A5D14265B90E50035A11F /* MigrationManagerSensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */; };
 		664A5D15265B90E60035A11F /* MigrationManagerSensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */; };
-		664A5D17265CFFCF0035A11F /* Bundle+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D16265CFFCF0035A11F /* Bundle+Ruuvi.swift */; };
-		664A5D18265CFFCF0035A11F /* Bundle+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D16265CFFCF0035A11F /* Bundle+Ruuvi.swift */; };
-		664A5D19265CFFCF0035A11F /* Bundle+Ruuvi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664A5D16265CFFCF0035A11F /* Bundle+Ruuvi.swift */; };
 		66BC44762657AE1400A03253 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44752657AE1400A03253 /* SensorSettings.swift */; };
 		66BC44772657AE1400A03253 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44752657AE1400A03253 /* SensorSettings.swift */; };
 		66BC44782657AE1400A03253 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BC44752657AE1400A03253 /* SensorSettings.swift */; };
@@ -2281,7 +2278,6 @@
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		664A5D12265B8C050035A11F /* MigrationManagerSensorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerSensorSettings.swift; sourceTree = "<group>"; };
-		664A5D16265CFFCF0035A11F /* Bundle+Ruuvi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Ruuvi.swift"; sourceTree = "<group>"; };
 		66BC44752657AE1400A03253 /* SensorSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorSettings.swift; sourceTree = "<group>"; };
 		66BC44792657AE2500A03253 /* SensorSettingsRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorSettingsRealm.swift; sourceTree = "<group>"; };
 		66BC447D2657AE9700A03253 /* SensorSettingsSQLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorSettingsSQLite.swift; sourceTree = "<group>"; };
@@ -2898,7 +2894,6 @@
 				A98BC874250E4265001CEFDC /* Double+Round.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
 				A9E6774725A33081000B75A3 /* String+Characters.swift */,
-				664A5D16265CFFCF0035A11F /* Bundle+Ruuvi.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -7152,7 +7147,6 @@
 				66BC44B52657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
 				0E45580323E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8BAC77245C4C8E00D380FB /* RuuviTagTank.swift in Sources */,
-				664A5D19265CFFCF0035A11F /* Bundle+Ruuvi.swift in Sources */,
 				A9828E0F24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E6BADE223856A01003A2D4C /* TemperatureUnit.swift in Sources */,
 				0E6BADE323856A01003A2D4C /* LanguageViewOutput.swift in Sources */,
@@ -7531,7 +7525,6 @@
 				0E8BD2BE238566AB008B31EF /* DefaultsViewOutput.swift in Sources */,
 				A9F6681925575151006E2B7D /* UserApiUnshareResponse.swift in Sources */,
 				0E8BD2BF238566AB008B31EF /* MenuPresenter.swift in Sources */,
-				664A5D18265CFFCF0035A11F /* Bundle+Ruuvi.swift in Sources */,
 				0E8BD2C0238566AB008B31EF /* ForegroundRouter.swift in Sources */,
 				0E8BD2C1238566AB008B31EF /* MenuTableViewController.swift in Sources */,
 				0E8BD2C2238566AB008B31EF /* AboutRouterInput.swift in Sources */,
@@ -8261,7 +8254,6 @@
 				66BC44B32657AED400A03253 /* OffsetCorrectionRouter.swift in Sources */,
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				A985B0A72541FE1E0050D744 /* TagManagerButtonTableViewCell.swift in Sources */,
-				664A5D17265CFFCF0035A11F /* Bundle+Ruuvi.swift in Sources */,
 				0E45580123E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,
 				0E79F279244201540048BF86 /* NetworkService.swift in Sources */,
