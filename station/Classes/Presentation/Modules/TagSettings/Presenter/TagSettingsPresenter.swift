@@ -20,6 +20,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var calibrationService: CalibrationService!
     var alertService: AlertService!
     var settings: Settings!
+    var backgroundPersistence: BackgroundPersistence!
     var connectionPersistence: ConnectionPersistence!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
@@ -67,6 +68,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var disconnectToken: NSObjectProtocol?
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
+    private var backgroundUploadProgressToken: NSObjectProtocol?
+    private var backgroundToken: NSObjectProtocol?
     private var mutedTillTimer: Timer?
 
     deinit {
@@ -82,6 +85,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         disconnectToken?.invalidate()
         appDidBecomeActiveToken?.invalidate()
         alertDidChangeToken?.invalidate()
+        backgroundUploadProgressToken?.invalidate()
+        backgroundToken?.invalidate()
     }
 
     func configure(ruuviTag: RuuviTagSensor,
@@ -125,6 +130,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
 // MARK: - TagSettingsViewOutput
 extension TagSettingsPresenter: TagSettingsViewOutput {
+    func viewDidLoad() {
+        startSubscribeToBackgroundUploadProgressChanges()
+    }
+
     func viewWillAppear() {
         checkPushNotificationsStatus()
         checkLastSensorSettings()
@@ -343,14 +352,16 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 // MARK: - PhotoPickerPresenterDelegate
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        activityPresenter.increment()
-        sensorService.setCustomBackground(image: photo, sensor: ruuviTag).on(success: { [weak self] _ in
-            self?.viewModel.background.value = photo
-            self?.activityPresenter?.decrement()
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-            self?.activityPresenter?.decrement()
-        })
+        viewModel.isUploadingBackground.value = true
+        sensorService.setCustomBackground(image: photo,
+                                          sensor: ruuviTag)
+            .on(success: { [weak self] _ in
+                self?.viewModel.isUploadingBackground.value = false
+                self?.viewModel.background.value = photo
+            }, failure: { [weak self] error in
+                self?.viewModel.isUploadingBackground.value = false
+                self?.errorPresenter.present(error: error)
+            })
     }
 }
 
@@ -366,7 +377,7 @@ extension TagSettingsPresenter {
                 sSelf.reloadMutedTill()
             }
     }
-
+// swiftlint:disable function_body_length
     private func syncViewModel() {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
@@ -376,6 +387,14 @@ extension TagSettingsPresenter {
         }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
+        if let mac = ruuviTag.macId,
+           let percentage = backgroundPersistence.backgroundUploadProgress(for: mac) {
+            viewModel.isUploadingBackground.value = percentage < 1.0
+            viewModel.uploadingBackgroundPercentage.value = percentage
+        } else {
+            viewModel.isUploadingBackground.value = false
+            viewModel.uploadingBackgroundPercentage.value = nil
+        }
         if let luid = ruuviTag.luid {
             viewModel.temperatureAlertDescription.value = alertService.temperatureDescription(for: luid.value)
             viewModel.humidityAlertDescription.value = alertService.humidityDescription(for: luid.value)
@@ -413,6 +432,7 @@ extension TagSettingsPresenter {
         viewModel.version.value = ruuviTag.version
         syncAlerts()
     }
+// swiftlint:enable function_body_length
 
     private func syncOffsetCorrection() {
         // reload offset correction
@@ -533,6 +553,48 @@ extension TagSettingsPresenter {
             viewModel.isMovementAlertOn.value = false
         }
         viewModel.movementAlertMutedTill.value = alertService.mutedTill(type: movement, for: uuid)
+    }
+
+    private func startSubscribeToBackgroundUploadProgressChanges() {
+        backgroundUploadProgressToken = NotificationCenter
+            .default
+            .addObserver(forName: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
+                         object: nil,
+                         queue: .main) { [weak self] notification in
+                guard let sSelf = self else { return }
+                if let userInfo = notification.userInfo {
+                    let luid = userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier
+                    let macId = userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier
+                    if sSelf.ruuviTag.luid?.value == luid?.value
+                        || sSelf.ruuviTag.macId?.value == macId?.value {
+                        if let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double {
+                            sSelf.viewModel.uploadingBackgroundPercentage.value = percentage
+                            sSelf.viewModel.isUploadingBackground.value = percentage < 1.0
+                        } else {
+                            sSelf.viewModel.uploadingBackgroundPercentage.value = nil
+                            sSelf.viewModel.isUploadingBackground.value = false
+                        }
+                    }
+                }
+            }
+        backgroundToken = NotificationCenter
+            .default
+            .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
+                         object: nil,
+                         queue: .main) { [weak self] notification in
+
+                guard let sSelf = self else { return }
+                if let userInfo = notification.userInfo {
+                    let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
+                    let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
+                    if sSelf.ruuviTag.luid?.value == luid?.value
+                        || sSelf.ruuviTag.macId?.value == macId?.value {
+                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { image in
+                            sSelf.viewModel.background.value = image
+                        })
+                    }
+                }
+            }
     }
 
     private func startObservingRuuviTag() {

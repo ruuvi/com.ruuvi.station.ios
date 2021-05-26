@@ -28,6 +28,7 @@ class TagSettingsTableConfigurator {
         presenter.keychainService = r.resolve(KeychainService.self)
         presenter.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
+        presenter.backgroundPersistence = r.resolve(BackgroundPersistence.self)
 
         view.measurementService = r.resolve(MeasurementsService.self)
 
