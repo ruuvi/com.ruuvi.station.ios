@@ -293,14 +293,13 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         })
     }
 
-    private func updateTagInDB(with networkProvider: RuuviNetworkProvider?, isClaimed: Bool) {
+    private func updateTagInDB(isClaimed: Bool) {
         let sensor = RuuviTagSensorStruct(
             version: self.ruuviTag.version,
             luid: self.ruuviTag.luid,
             macId: self.ruuviTag.macId,
             isConnectable: self.ruuviTag.isConnectable,
             name: self.ruuviTag.name,
-            networkProvider: networkProvider,
             isClaimed: isClaimed,
             isOwner: true,
             owner: self.ruuviTag.owner
@@ -315,17 +314,17 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         if viewModel.isClaimedTag.value == true {
             ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
                 .on(success: { [weak self] _ in
-                    self?.updateTagInDB(with: nil, isClaimed: false)
+                    self?.updateTagInDB(isClaimed: false)
                 }, failure: { [weak self] (error) in
                     self?.errorPresenter.present(error: error)
                 })
         } else {
             ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
                 .on(success: { [weak self] _ in
-                    self?.updateTagInDB(with: .userApi, isClaimed: true)
+                    self?.updateTagInDB(isClaimed: true)
                 }, failure: { [weak self] (error) in
                     if error.errorDescription == "Sensor already claimed" {
-                        self?.updateTagInDB(with: .userApi, isClaimed: true)
+                        self?.updateTagInDB(isClaimed: true)
                     } else {
                         self?.errorPresenter.present(error: error)
                     }

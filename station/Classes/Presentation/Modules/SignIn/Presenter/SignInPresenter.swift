@@ -167,7 +167,7 @@ extension SignInPresenter {
             .on(success: { [weak self] apiKey in
                 guard let sSelf = self else { return }
                 sSelf.keychainService.ruuviUserApiKey = apiKey
-                sSelf.networkService.updateTagsInfo(for: .userApi).on(success: { [weak sSelf] _ in
+                sSelf.networkService.updateTagsInfo().on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.activityPresenter.decrement()
                     ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)

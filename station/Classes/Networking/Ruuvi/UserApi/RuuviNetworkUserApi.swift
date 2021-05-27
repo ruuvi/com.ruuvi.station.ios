@@ -134,7 +134,6 @@ extension RuuviNetworkUserApi {
                     macId: $0.sensor.mac,
                     isConnectable: true,
                     name: name,
-                    networkProvider: .userApi,
                     isClaimed: false,
                     isOwner: false,
                     owner: nil // TODO: @rinat check if nil is correct

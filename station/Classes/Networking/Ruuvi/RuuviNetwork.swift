@@ -13,10 +13,7 @@ protocol RuuviNetwork {
 class RuuviNetworkFactory {
     var userApi: RuuviNetworkUserApi!
 
-    func network(for provider: RuuviNetworkProvider) -> RuuviNetwork {
-        switch provider {
-        case .userApi:
-            return userApi
-        }
+    func network() -> RuuviNetwork {
+        return userApi
     }
 }

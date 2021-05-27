@@ -21,13 +21,15 @@ public protocol Locateable {
 }
 
 public protocol Networkable {
-    var networkProvider: RuuviNetworkProvider? { get }
     var isClaimed: Bool { get }
     var isOwner: Bool { get }
     var owner: String? { get }
 }
 
 public protocol Sensor: StringIdentifieable {}
+
+public protocol CloudSensor: Sensor, Networkable {
+}
 
 public protocol PhysicalSensor: Sensor, Connectable, Nameable {
     var luid: LocalIdentifier? { get }
@@ -37,7 +39,3 @@ public protocol PhysicalSensor: Sensor, Connectable, Nameable {
 public protocol VirtualSensor: Sensor, Nameable {}
 
 public protocol LocationVirtualSensor: VirtualSensor, Locateable {}
-
-public enum RuuviNetworkProvider: Int {
-    case userApi = 0
-}

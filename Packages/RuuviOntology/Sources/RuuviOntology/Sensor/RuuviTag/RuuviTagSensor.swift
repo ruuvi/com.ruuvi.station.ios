@@ -24,7 +24,6 @@ extension RuuviTagSensor {
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
-                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
@@ -36,7 +35,6 @@ extension RuuviTagSensor {
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
-                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
@@ -48,7 +46,6 @@ extension RuuviTagSensor {
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
-                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
@@ -60,7 +57,6 @@ extension RuuviTagSensor {
                                     macId: nil,
                                     isConnectable: isConnectable,
                                     name: name,
-                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
@@ -72,14 +68,13 @@ extension RuuviTagSensor {
                                     macId: macId,
                                     isConnectable: isConnectable,
                                     name: name,
-                                    networkProvider: networkProvider,
                                     isClaimed: isClaimed,
                                     isOwner: isOwner,
                                     owner: owner)
     }
 
     public var isNetworkConnectable: Bool {
-        return networkProvider != nil
+        return owner != nil
     }
 }
 
@@ -89,7 +84,6 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var macId: MACIdentifier?
     public var isConnectable: Bool
     public var name: String
-    public var networkProvider: RuuviNetworkProvider?
     public var isClaimed: Bool
     public var isOwner: Bool
     public var owner: String?
@@ -100,7 +94,6 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         macId: MACIdentifier?,
         isConnectable: Bool,
         name: String,
-        networkProvider: RuuviNetworkProvider?,
         isClaimed: Bool,
         isOwner: Bool,
         owner: String?
@@ -110,7 +103,6 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.macId = macId
         self.isConnectable = isConnectable
         self.name = name
-        self.networkProvider = networkProvider
         self.isClaimed = isClaimed
         self.isOwner = isOwner
         self.owner = owner
@@ -141,9 +133,6 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
     public var name: String {
         return object.name
-    }
-    public var networkProvider: RuuviNetworkProvider? {
-        return object.networkProvider
     }
     public var isClaimed: Bool {
         return object.isClaimed
