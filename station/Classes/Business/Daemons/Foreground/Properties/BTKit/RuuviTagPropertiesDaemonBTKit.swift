@@ -176,7 +176,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             return
         }
         let scanToken = foreground.scan(self, closure: { [weak self] (_, device) in
-            guard let self = self,
+            guard let sSelf = self,
                   let tag = device.ruuvi?.tag,
                   mac.any == tag.macId?.any,
                   ruuviTag.luid == nil else {
@@ -192,11 +192,12 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 isClaimed: ruuviTag.isClaimed,
                 isOwner: ruuviTag.isClaimed,
                 owner: ruuviTag.owner)
-            self.ruuviTagTank.update(ruuviSensor)
-                .on(failure: { [weak self] error in
-                    self?.post(error: error)
-                }, completion: { [weak self] in
-                    self?.restartObserving()
+            sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
+            sSelf.ruuviTagTank.update(ruuviSensor)
+                .on(failure: { [weak sSelf] error in
+                    sSelf?.post(error: error)
+                }, completion: { [weak sSelf] in
+                    sSelf?.restartObserving()
                 })
         })
         scanTokens.append(scanToken)
