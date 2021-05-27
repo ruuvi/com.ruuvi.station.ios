@@ -29,7 +29,7 @@ extension KeychainServiceImpl: KeychainService {
         set {
             if let value = newValue {
                 do {
-                    try keychain.set(Account.ruuviUserApi.rawValue, key: value)
+                    try keychain.set(value, key: Account.ruuviUserApi.rawValue)
                 } catch {
                     UserDefaults.standard
                         .setValue(value, forKey: Account.ruuviUserApi.rawValue)
@@ -57,7 +57,7 @@ extension KeychainServiceImpl: KeychainService {
         set {
             if let value = newValue {
                 do {
-                    try keychain.set(Account.userApiEmail.rawValue, key: value)
+                    try keychain.set(value, key: Account.userApiEmail.rawValue)
                 } catch {
                     UserDefaults.standard
                         .setValue(value, forKey: Account.userApiEmail.rawValue)
