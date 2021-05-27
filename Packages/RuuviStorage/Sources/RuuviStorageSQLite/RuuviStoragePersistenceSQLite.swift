@@ -4,7 +4,7 @@ import Foundation
 import Future
 import GRDB
 import RuuviOntology
-
+import RuuviContext
 #if canImport(FirebaseCrashlytics)
 import FirebaseCrashlytics
 #endif

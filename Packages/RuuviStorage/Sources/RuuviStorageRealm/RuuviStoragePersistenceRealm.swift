@@ -4,6 +4,7 @@ import Future
 import BTKit
 import Foundation
 import RuuviOntology
+import RuuviContext
 #if canImport(FirebaseCrashlytics) // TODO: @rinat eliminate
 import FirebaseCrashlytics
 #endif
