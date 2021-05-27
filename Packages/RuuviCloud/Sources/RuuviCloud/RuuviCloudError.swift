@@ -1,6 +1,6 @@
 import Foundation
 
-public enum RuuviNetworkError: Error {
+public enum RuuviCloudError: Error {
     case noSavedApiKeyValue
     case failedToLogIn
     case doesNotHaveSensors

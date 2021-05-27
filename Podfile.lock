@@ -138,11 +138,11 @@ PODS:
   - Realm/Headers (10.7.5)
   - RealmSwift (10.7.5):
     - Realm (= 10.7.5)
-  - RuuviNetwork/Contract (0.0.1):
+  - RuuviCloud/Contract (0.0.1):
     - FutureX
-  - RuuviNetwork/Pure (0.0.1):
+  - RuuviCloud/Pure (0.0.1):
     - FutureX
-    - RuuviNetwork/Contract
+    - RuuviCloud/Contract
   - RuuviOntology (0.0.1):
     - RuuviOntology/Contract (= 0.0.1)
   - RuuviOntology/Contract (0.0.1):
@@ -175,7 +175,7 @@ DEPENDENCIES:
   - Quick
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
   - RealmSwift
-  - RuuviNetwork/Pure (from `Packages/RuuviNetwork/RuuviNetwork.podspec`)
+  - RuuviCloud/Pure (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RxSwift
   - SwiftGen (~> 6.0)
@@ -227,8 +227,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/LightRoute.git
   RangeSeekSlider:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
-  RuuviNetwork:
-    :path: Packages/RuuviNetwork/RuuviNetwork.podspec
+  RuuviCloud:
+    :path: Packages/RuuviCloud/RuuviCloud.podspec
   RuuviOntology:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   SwinjectPropertyLoader:
@@ -285,13 +285,13 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 06f5c67f87cb8c5f27b122218ce22e9a77314517
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
-  RuuviNetwork: 5b08c172a5c569325222843c6736490202067d3f
+  RuuviCloud: f7fc31274567a38ba53e4002fe68a49424a63bd2
   RuuviOntology: 6907a58c977f902ea853e2eef0743db56ed13170
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 18a181e4b465ebcc1fdf7513af0f775dfa24718a
+PODFILE CHECKSUM: 719b034c143b9c364cdf070c4288901f3bd41393
 
 COCOAPODS: 1.10.1
