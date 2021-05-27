@@ -15,10 +15,13 @@ class RuuviStoragePersistenceSQLite: RuuviStoragePersistence, DatabaseService {
     typealias Record = RuuviTagDataSQLite
     typealias Settings = SensorSettingsSQLite
 
-    let database: GRDBDatabase
+    var database: GRDBDatabase {
+        return context.database
+    }
+    private let context: SQLiteContext
     private let readQueue: DispatchQueue = DispatchQueue(label: "RuuviTagPersistenceSQLite.readQueue")
-    init(database: GRDBDatabase) {
-        self.database = database
+    init(context: SQLiteContext) {
+        self.context = context
     }
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviStorageError> {
@@ -171,7 +174,10 @@ class RuuviStoragePersistenceSQLite: RuuviStoragePersistence, DatabaseService {
         return promise.future
     }
 
-    func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
+    func readAll(
+        _ ruuviTagId: String,
+        with interval: TimeInterval
+    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviTagSensorRecord]()
@@ -366,10 +372,12 @@ class RuuviStoragePersistenceSQLite: RuuviStoragePersistence, DatabaseService {
     }
 
     // swiftlint:disable:next function_body_length
-    func updateOffsetCorrection(type: OffsetCorrectionType,
-                                with value: Double?,
-                                of ruuviTag: RuuviTagSensor,
-                                lastOriginalRecord record: RuuviTagSensorRecord?) -> Future<SensorSettings, RuuviStorageError> {
+    func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor,
+        lastOriginalRecord record: RuuviTagSensorRecord?
+    ) -> Future<SensorSettings, RuuviStorageError> {
         let promise = Promise<SensorSettings, RuuviStorageError>()
         assert(ruuviTag.macId != nil)
         do {

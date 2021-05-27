@@ -9,7 +9,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "RuuviStorage",
-            targets: ["RuuviStorage"]),
+            targets: ["RuuviStorage"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -20,9 +20,9 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "RuuviStorage",
-            dependencies: []),
+            dependencies: [])
         .testTarget(
             name: "RuuviStorageTests",
-            dependencies: ["RuuviStorage"]),
+            dependencies: ["RuuviStorage"])
     ]
 )
