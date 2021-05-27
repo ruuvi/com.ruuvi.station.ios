@@ -1,3 +1,3 @@
-# RuuviNetwork
+# RuuviCloud
 
 A description of this package.

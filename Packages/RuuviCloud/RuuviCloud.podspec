@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
-  s.name             = 'RuuviNetwork'
+  s.name             = 'RuuviCloud'
   s.version          = '0.0.1'
-  s.summary          = 'Ruuvi Network'
+  s.summary          = 'Ruuvi Cloud'
   s.homepage         = 'https://ruuvi.com'
   s.author           = { 'Rinat Enikeev' => 'rinat@ruuvi.com' }
   s.license          = { :type => 'BSD 3-Clause', :file => '../../LICENSE' }
@@ -15,13 +15,13 @@ Pod::Spec.new do |s|
   s.default_subspecs = 'Contract'
 
   s.subspec 'Contract' do |ss|
-    ss.source_files = 'Sources/RuuviNetwork/**/*.{h,m,swift}', 'Sources/RuuviNetwork/*.{h,m,swift}'
+    ss.source_files = 'Sources/RuuviCloud/**/*.{h,m,swift}', 'Sources/RuuviCloud/*.{h,m,swift}'
     ss.dependency 'FutureX'
   end
 
   s.subspec 'Pure' do |ss|
-    ss.source_files = 'Sources/RuuviNetworkPure/**/*.{h,m,swift}', 'Sources/RuuviNetworkPure/*.{h,m,swift}'
-    ss.dependency 'RuuviNetwork/Contract'
+    ss.source_files = 'Sources/RuuviCloudPure/**/*.{h,m,swift}', 'Sources/RuuviCloudPure/*.{h,m,swift}'
+    ss.dependency 'RuuviCloud/Contract'
     ss.dependency 'FutureX'
   end
 

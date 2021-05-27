@@ -1,11 +1,11 @@
 import Foundation
 import Future
 
-final class RuuviNetworkPure: RuuviNetwork {
+final class RuuviCloudPure: RuuviCloud {
     func load(
         from provider: Any
-    ) -> Future<Bool, RuuviNetworkError> {
-        let promise = Promise<Bool, RuuviNetworkError>()
+    ) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
         return promise.future
     }
 
