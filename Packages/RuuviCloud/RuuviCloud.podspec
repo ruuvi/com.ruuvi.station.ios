@@ -17,11 +17,13 @@ Pod::Spec.new do |s|
   s.subspec 'Contract' do |ss|
     ss.source_files = 'Sources/RuuviCloud/**/*.{h,m,swift}', 'Sources/RuuviCloud/*.{h,m,swift}'
     ss.dependency 'FutureX'
+    ss.dependency 'RuuviOntology'
   end
 
   s.subspec 'Pure' do |ss|
     ss.source_files = 'Sources/RuuviCloudPure/**/*.{h,m,swift}', 'Sources/RuuviCloudPure/*.{h,m,swift}'
     ss.dependency 'RuuviCloud/Contract'
+    ss.dependency 'RuuviOntology'
     ss.dependency 'FutureX'
   end
 

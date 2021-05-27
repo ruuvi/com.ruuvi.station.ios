@@ -1,11 +1,10 @@
 import Foundation
 import Future
+import RuuviOntology
 
 final class RuuviCloudPure: RuuviCloud {
-    func load(
-        from provider: Any
-    ) -> Future<Bool, RuuviCloudError> {
-        let promise = Promise<Bool, RuuviCloudError>()
+    func load() -> Future<[AnyRuuviTagSensor], RuuviCloudError> {
+        let promise = Promise<[AnyRuuviTagSensor], RuuviCloudError>()
         return promise.future
     }
 

@@ -1,11 +1,10 @@
 import Foundation
 import Future
+import RuuviOntology
 
 public protocol RuuviCloud {
     @discardableResult
-    func load(
-        from provider: Any
-    ) -> Future<Bool, RuuviCloudError>
+    func load() -> Future<[AnyRuuviTagSensor], RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
