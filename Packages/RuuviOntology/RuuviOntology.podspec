@@ -26,6 +26,21 @@ Pod::Spec.new do |s|
     ss.dependency 'Humidity'
   end
 
+  s.subspec 'SQLite' do |ss|
+    ss.source_files = 'Sources/RuuviOntologySQLite/**/*.{h,m,swift}', 'Sources/RuuviOntologySQLite/*.{h,m,swift}'
+    ss.dependency 'RuuviOntology/Contract'
+    ss.dependency 'GRDB.swift'
+    ss.dependency 'Humidity'
+  end
+
+  s.subspec 'Realm' do |ss|
+    ss.source_files = 'Sources/RuuviOntologyRealm/**/*.{h,m,swift}', 'Sources/RuuviOntologyRealm/*.{h,m,swift}'
+    ss.dependency 'RuuviOntology/Contract'
+    ss.dependency 'Realm'
+    ss.dependency 'RealmSwift'
+    ss.dependency 'Humidity'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end

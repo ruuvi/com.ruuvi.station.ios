@@ -16,6 +16,12 @@ extension SensorSettings {
     }
 }
 
+public enum OffsetCorrectionType: Int {
+    case temperature = 0
+    case humidity = 1
+    case pressure = 2
+}
+
 public struct SensorSettingsStruct: SensorSettings {
     public var ruuviTagId: String
     public var temperatureOffset: Double?
