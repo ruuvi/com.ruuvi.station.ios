@@ -580,7 +580,6 @@
 		0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6C239802CA00A37E1A /* HeartbeatPresenter.swift */; };
 		0E84BF6F2398031B00A37E1A /* HeartbeatInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF6E2398031B00A37E1A /* HeartbeatInitializer.swift */; };
 		0E84BF712398035C00A37E1A /* HeartbeatConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BF702398035C00A37E1A /* HeartbeatConfigurator.swift */; };
-		0E869E2F265E53A7006F4870 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 0E869E2E265E53A7006F4870 /* FirebaseRemoteConfig */; };
 		0E8A100223845E5100A9CBA6 /* Defaults.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8A100123845E5100A9CBA6 /* Defaults.storyboard */; };
 		0E8A100A23845F3900A9CBA6 /* DefaultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100923845F3900A9CBA6 /* DefaultsViewController.swift */; };
 		0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8A100B23845F7100A9CBA6 /* DefaultsViewInput.swift */; };
@@ -2433,7 +2432,6 @@
 				0E4EAE4823863D4100BBDFBD /* Future in Frameworks */,
 				0E4EAE4223863BA600BBDFBD /* RealmSwift in Frameworks */,
 				0E4EAE4523863CBC00BBDFBD /* Localize_Swift in Frameworks */,
-				0E869E2F265E53A7006F4870 /* FirebaseRemoteConfig in Frameworks */,
 				0E4EAE99238646FF00BBDFBD /* BTKit in Frameworks */,
 				0E8BAC4A245C393000D380FB /* GRDB in Frameworks */,
 				0E4EAE4023863BA600BBDFBD /* Realm in Frameworks */,
@@ -6179,7 +6177,6 @@
 				0EEB3ED32526F148008CE97B /* RxSwift */,
 				A9DDC7132531169200FA4704 /* Humidity */,
 				A9DDC7202531191E00FA4704 /* KeychainAccess */,
-				0E869E2E265E53A7006F4870 /* FirebaseRemoteConfig */,
 			);
 			productName = station;
 			productReference = 0E6BAECE23856A01003A2D4C /* Ruuvi Station.app */;
@@ -6330,7 +6327,6 @@
 				0EEB3E922526F03B008CE97B /* XCRemoteSwiftPackageReference "RxSwift" */,
 				A9DDC7122531169200FA4704 /* XCRemoteSwiftPackageReference "Humidity" */,
 				A9DDC71F2531191E00FA4704 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				0E869E23265E533E006F4870 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 64333D2620B0C45900CDF4B6 /* Products */;
 			projectDirPath = "";
@@ -9137,14 +9133,6 @@
 				minimumVersion = 1.8.2;
 			};
 		};
-		0E869E23265E533E006F4870 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
-			};
-		};
 		0E8BAC48245C393000D380FB /* XCRemoteSwiftPackageReference "GRDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/groue/GRDB.swift";
@@ -9239,11 +9227,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E4EAED523865CB500BBDFBD /* XCRemoteSwiftPackageReference "RangeSeekSlider" */;
 			productName = RangeSeekSlider;
-		};
-		0E869E2E265E53A7006F4870 /* FirebaseRemoteConfig */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0E869E23265E533E006F4870 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseRemoteConfig;
 		};
 		0E8BAC49245C393000D380FB /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
