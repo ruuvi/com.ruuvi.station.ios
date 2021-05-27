@@ -1,5 +1,6 @@
 import RealmSwift
 import Foundation
+import RuuviOntology
 
 class MigrationManagerToVIPER: MigrationManager {
     var sensorService: SensorService!
