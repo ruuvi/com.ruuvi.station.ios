@@ -23,7 +23,17 @@ Pod::Spec.new do |s|
   s.subspec 'Pure' do |ss|
     ss.source_files = 'Sources/RuuviCloudPure/**/*.{h,m,swift}', 'Sources/RuuviCloudPure/*.{h,m,swift}'
     ss.dependency 'RuuviCloud/Contract'
+    ss.dependency 'RuuviCloud/Api'
     ss.dependency 'RuuviOntology'
+    ss.dependency 'FutureX'
+  end
+
+  s.subspec 'Api' do |ss|
+    ss.source_files = 'Sources/RuuviCloudApi/**/*.{h,m,swift}', 'Sources/RuuviCloudApi/*.{h,m,swift}'
+    ss.dependency 'RuuviCloud/Contract'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviOntology/Mappers'
+    ss.dependency 'BTKit'
     ss.dependency 'FutureX'
   end
 

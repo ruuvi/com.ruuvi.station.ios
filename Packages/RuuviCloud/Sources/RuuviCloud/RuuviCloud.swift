@@ -8,5 +8,5 @@ public protocol RuuviCloud {
 }
 
 public protocol RuuviCloudFactory {
-    func create() -> RuuviCloud
+    func create(baseUrl: URL) -> RuuviCloud
 }

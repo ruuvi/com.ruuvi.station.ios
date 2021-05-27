@@ -639,9 +639,6 @@
 		0E8BACBB245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBA245D708400D380FB /* RuuviTagDataSQLite.swift */; };
 		0E8BACBC245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBA245D708400D380FB /* RuuviTagDataSQLite.swift */; };
 		0E8BACBD245D708400D380FB /* RuuviTagDataSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBA245D708400D380FB /* RuuviTagDataSQLite.swift */; };
-		0E8BACBF245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */; };
-		0E8BACC0245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */; };
-		0E8BACC1245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */; };
 		0E8BACCD245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */; };
 		0E8BACCE245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */; };
 		0E8BACCF245EE66A00D380FB /* RuuviTagTrunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */; };
@@ -2013,7 +2010,6 @@
 		0E8BACAC245C87A300D380FB /* ReactorAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactorAssembly.swift; sourceTree = "<group>"; };
 		0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagRealm+RuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E8BACBA245D708400D380FB /* RuuviTagDataSQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagDataSQLite.swift; sourceTree = "<group>"; };
-		0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTag+RuuviTagSensorRecord.swift"; sourceTree = "<group>"; };
 		0E8BACCC245EE66A00D380FB /* RuuviTagTrunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagTrunk.swift; sourceTree = "<group>"; };
 		0E8BACD1245EE69D00D380FB /* RuuviTagTrunkCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuuviTagTrunkCoordinator.swift; sourceTree = "<group>"; };
 		0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrunkAssembly.swift; sourceTree = "<group>"; };
@@ -4009,7 +4005,6 @@
 			children = (
 				0E8BACB6245D5E3F00D380FB /* RuuviTagRealm+RuuviTagSensor.swift */,
 				0E8BACDE245F015C00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift */,
-				0E8BACBE245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift */,
 				0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */,
 				0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */,
 				0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */,
@@ -6934,7 +6929,6 @@
 				0E197C6823C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				0E6BADA023856A01003A2D4C /* MenuTablePresentTransitionAnimation.swift in Sources */,
 				A9828E4924792D6C00E7E9D4 /* CellChanges.swift in Sources */,
-				0E8BACC1245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
 				0E6BADA123856A01003A2D4C /* WebTagSettingsViewInput.swift in Sources */,
 				0E31B03F23BA2DC800660412 /* CurrentWebTagRefreshDataOperation.swift in Sources */,
 				0E6BADA223856A01003A2D4C /* WelcomeRouterInput.swift in Sources */,
@@ -7463,7 +7457,6 @@
 				0E197C6723C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
 				A9A48A5D244CD9EB0004FD50 /* UIWindow+Shake.swift in Sources */,
 				A9FC79002579675100F94604 /* UniversalLinkRouter.swift in Sources */,
-				0E8BACC0245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
 				A9828E4424792D6B00E7E9D4 /* ReloadableSection.swift in Sources */,
 				A9828E1124792CB200E7E9D4 /* DiffCalculator.swift in Sources */,
 				0E8BD2D6238566AB008B31EF /* MenuTablePresentTransitionAnimation.swift in Sources */,
@@ -8021,7 +8014,6 @@
 				0E2864352460741500363DCB /* ExportServiceTrunk.swift in Sources */,
 				0E197C6B23C4A52A0074015B /* MailComposerPresenterMessageUI.swift in Sources */,
 				0E197C6623C4A47A0074015B /* MailComposerPresenter.swift in Sources */,
-				0E8BACBF245D851900D380FB /* RuuviTag+RuuviTagSensorRecord.swift in Sources */,
 				A9828E1224792CB300E7E9D4 /* DiffCalculator.swift in Sources */,
 				A9828E3D24792D6B00E7E9D4 /* CellChanges.swift in Sources */,
 				0E1C1E0B22B403290032F6CA /* MenuTablePresentTransitionAnimation.swift in Sources */,

@@ -19,6 +19,13 @@ Pod::Spec.new do |s|
     ss.dependency 'Humidity'
   end
 
+  s.subspec 'Mappers' do |ss|
+    ss.source_files = 'Sources/RuuviOntologyMappers/**/*.{h,m,swift}', 'Sources/RuuviOntologyMappers/*.{h,m,swift}'
+    ss.dependency 'RuuviOntology/Contract'
+    ss.dependency 'BTKit'
+    ss.dependency 'Humidity'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end
