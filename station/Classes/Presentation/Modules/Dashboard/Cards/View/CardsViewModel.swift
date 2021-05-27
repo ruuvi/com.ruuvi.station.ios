@@ -14,6 +14,7 @@ struct CardsViewModel {
     var luid: Observable<AnyLocalIdentifier?> = Observable<AnyLocalIdentifier?>()
     var mac: Observable<AnyMACIdentifier?> = Observable<AnyMACIdentifier?>()
     var name: Observable<String?> = Observable<String?>()
+    var source: Observable<RuuviTagSensorRecordSource?> = Observable<RuuviTagSensorRecordSource?>()
     var temperature: Observable<Temperature?> = Observable<Temperature?>()
     var humidity: Observable<Humidity?> = Observable<Humidity?>()
     var pressure: Observable<Pressure?> = Observable<Pressure?>()
@@ -47,6 +48,7 @@ struct CardsViewModel {
         date.value = webTag.data.last?.date
         location.value = webTag.location?.location
         provider = webTag.provider
+        source.value = .weatherProvider
     }
 
     func update(_ data: WebTagDataRealm) {
@@ -86,6 +88,7 @@ struct CardsViewModel {
         date.value = record.date
         rssi.value = record.rssi
         movementCounter.value = record.movementCounter
+        source.value = record.source
     }
 
     func update(with ruuviTag: RuuviTag) {
@@ -99,6 +102,7 @@ struct CardsViewModel {
         mac.value = ruuviTag.mac?.mac.any
         date.value = Date()
         movementCounter.value = ruuviTag.movementCounter
+        source.value = ruuviTag.source
     }
 
     func update(rssi: Int?, animated: Bool = false) {
@@ -136,16 +140,6 @@ extension CardsViewModel: Equatable {
             macIsEqual = lhsMac == rhsMac
         }
         return idIsEqual || luidIsEqual || macIsEqual
-    }
-}
-
-extension CardsViewModel {
-    var needUpdateFromObservingLastRecord: Bool {
-        return (luid.value == nil
-            && mac.value != nil)
-            || temperature.value == nil
-            || humidity.value == nil
-            || pressure.value == nil
     }
 }
 

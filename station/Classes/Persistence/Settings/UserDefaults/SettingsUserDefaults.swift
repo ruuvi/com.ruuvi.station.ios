@@ -210,7 +210,7 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 300)
     var chartIntervalSeconds: Int
 
-    @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 72)
+    @UserDefault("SettingsUserDegaults.chartDurationHours", defaultValue: 240)
     var chartDurationHours: Int
 
     @UserDefault("SettingsUserDefaults.TagsSorting", defaultValue: [])

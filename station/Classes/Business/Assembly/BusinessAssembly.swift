@@ -158,6 +158,12 @@ class BusinessAssembly: Assembly {
             return manager
         }
 
+        container.register(MigrationManagerToChartDuration240.self) { r in
+            let manager = MigrationManagerToChartDuration240()
+            manager.settings = r.resolve(Settings.self)
+            return manager
+        }
+
         container.register(MigrationManagerSensorSettings.self) { r in
             let manager = MigrationManagerSensorSettings()
             manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)

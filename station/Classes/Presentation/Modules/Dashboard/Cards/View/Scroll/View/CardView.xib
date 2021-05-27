@@ -197,11 +197,15 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-bluetooth" translatesAutoresizingMaskIntoConstraints="NO" id="bU0-QC-VES">
+                    <rect key="frame" x="287" y="503" width="17" height="28"/>
+                </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="27w-ik-OkD"/>
             <color key="backgroundColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="tya-ss-bXe" firstAttribute="top" secondItem="k0F-ZD-XNB" secondAttribute="top" constant="22" id="2TS-B7-OBD"/>
+                <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="bU0-QC-VES" secondAttribute="bottom" constant="8" symbolic="YES" id="3KM-eY-coN"/>
                 <constraint firstItem="l6K-wF-oLr" firstAttribute="trailing" secondItem="O00-Hz-n75" secondAttribute="trailing" id="3Qd-gf-j3k"/>
                 <constraint firstItem="tnh-8q-eCb" firstAttribute="top" secondItem="Drw-j1-Iq5" secondAttribute="bottom" constant="8" id="3ae-jp-VVQ"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="2Pk-nL-gnn" secondAttribute="trailing" constant="16" id="3eN-Cn-NsE"/>
@@ -219,6 +223,7 @@
                 <constraint firstItem="k0F-ZD-XNB" firstAttribute="centerX" secondItem="O00-Hz-n75" secondAttribute="centerX" id="PNw-fC-fC9"/>
                 <constraint firstItem="IB9-bM-mpw" firstAttribute="leading" secondItem="eca-Uk-3ms" secondAttribute="trailing" id="TNZ-qI-sEn"/>
                 <constraint firstItem="tya-ss-bXe" firstAttribute="leading" secondItem="k0F-ZD-XNB" secondAttribute="trailing" id="ThM-50-tCt"/>
+                <constraint firstItem="bU0-QC-VES" firstAttribute="trailing" secondItem="UNY-cv-I7Q" secondAttribute="trailing" id="TzV-gg-wrB"/>
                 <constraint firstItem="bjH-UG-dwW" firstAttribute="centerX" secondItem="O00-Hz-n75" secondAttribute="centerX" id="Vz2-dY-ye7"/>
                 <constraint firstItem="UNY-cv-I7Q" firstAttribute="top" secondItem="2Pk-nL-gnn" secondAttribute="bottom" constant="8" id="WoG-4F-aYr"/>
                 <constraint firstItem="27w-ik-OkD" firstAttribute="trailing" secondItem="UNY-cv-I7Q" secondAttribute="trailing" constant="16" id="XOY-gT-U3y"/>
@@ -267,6 +272,7 @@
                 <outlet property="backgroundImage" destination="pZx-ro-mwa" id="sld-pS-lHK"/>
                 <outlet property="chartsButtonContainerView" destination="eca-Uk-3ms" id="Njl-47-jzN"/>
                 <outlet property="chartsButtonWidth" destination="Imk-4H-LTV" id="Kkw-9M-rEs"/>
+                <outlet property="dataSourceImageView" destination="bU0-QC-VES" id="eYL-yR-Uzr"/>
                 <outlet property="humidityLabel" destination="XwV-cb-60i" id="ETY-XG-Dbv"/>
                 <outlet property="humidityWarningImageView" destination="XbS-ri-gks" id="JVl-I2-kxW"/>
                 <outlet property="movementCityImageView" destination="tnh-8q-eCb" id="BHv-p6-C6H"/>
@@ -284,6 +290,7 @@
         <image name="baseline_settings_white_48pt" width="48" height="48"/>
         <image name="bg6" width="960" height="1440"/>
         <image name="icon-alert-off" width="17" height="20"/>
+        <image name="icon-bluetooth" width="17" height="28"/>
         <image name="icon-charts-button" width="18" height="18"/>
         <image name="icon-measure-humidity" width="221" height="221"/>
         <image name="icon-measure-movement" width="53" height="53"/>

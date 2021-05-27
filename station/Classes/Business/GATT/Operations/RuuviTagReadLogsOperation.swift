@@ -66,6 +66,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
             switch result {
             case .success(let logs):
                 let records = logs.map({ $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
+                    .with(source: .log)
                     .with(sensorSettings: observer.sensorSettings)
                 })
                 let opLogs = observer.ruuviTagTank.create(records)

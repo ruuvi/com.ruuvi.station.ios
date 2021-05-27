@@ -177,15 +177,18 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
         let sensorSettings = self.sensorSettingsList.first(where: { $0.ruuviTagId == record.ruuviTagId })
-        ruuviTagTank.create(record.with(sensorSettings: sensorSettings))
-            .on(failure: { [weak self] error in
-                if case RUError.unexpected(let unexpectedError) = error,
-                   unexpectedError == .failedToFindRuuviTag {
-                    self?.ruuviTags.removeAll(where: { $0.id == uuid })
-                    self?.restartObserving()
-                }
-                self?.post(error: error)
-            })
+        ruuviTagTank.create(
+            record
+                .with(source: .advertisement)
+                .with(sensorSettings: sensorSettings)
+        ).on(failure: { [weak self] error in
+            if case RUError.unexpected(let unexpectedError) = error,
+               unexpectedError == .failedToFindRuuviTag {
+                self?.ruuviTags.removeAll(where: { $0.id == uuid })
+                self?.restartObserving()
+            }
+            self?.post(error: error)
+        })
         savedDate[uuid] = Date()
     }
 }

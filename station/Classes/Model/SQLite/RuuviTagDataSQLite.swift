@@ -5,6 +5,7 @@ import Humidity
 struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     var ruuviTagId: String
     var date: Date
+    var source: RuuviTagSensorRecordSource
     var macId: MACIdentifier?
     var rssi: Int?
     var temperature: Temperature?
@@ -24,6 +25,7 @@ extension RuuviTagDataSQLite {
     static let idColumn = Column("id")
     static let ruuviTagIdColumn = Column("ruuviTagId")
     static let dateColumn = Column("date")
+    static let sourceColumn = Column("source")
     static let macColumn = Column("mac")
     static let rssiColumn = Column("rssi")
     static let celsiusColumn = Column("celsius")
@@ -51,6 +53,11 @@ extension RuuviTagDataSQLite: FetchableRecord {
     init(row: Row) {
         ruuviTagId = row[RuuviTagDataSQLite.ruuviTagIdColumn]
         date = row[RuuviTagDataSQLite.dateColumn]
+        if let sourceString = String.fromDatabaseValue(row[RuuviTagDataSQLite.sourceColumn]) {
+            source = RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
+        } else {
+            source = .unknown
+        }
         macId = MACIdentifierStruct(value: row[RuuviTagDataSQLite.macColumn])
         rssi = row[RuuviTagDataSQLite.rssiColumn]
         if let celsius = Double.fromDatabaseValue(row[RuuviTagDataSQLite.celsiusColumn]) {
@@ -81,7 +88,6 @@ extension RuuviTagDataSQLite: FetchableRecord {
         temperatureOffset = row[RuuviTagDataSQLite.temperatureOffsetColumn]
         humidityOffset = row[RuuviTagDataSQLite.humidityOffsetColumn]
         pressureOffset = row[RuuviTagDataSQLite.pressureOffsetColumn]
-
     }
 }
 
@@ -94,6 +100,7 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.idColumn] = id
         container[RuuviTagDataSQLite.ruuviTagIdColumn] = ruuviTagId
         container[RuuviTagDataSQLite.dateColumn] = date
+        container[RuuviTagDataSQLite.sourceColumn] = source.rawValue
         container[RuuviTagDataSQLite.macColumn] = macId?.value
         container[RuuviTagDataSQLite.rssiColumn] = rssi
         container[RuuviTagDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
@@ -118,6 +125,7 @@ extension RuuviTagDataSQLite {
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(RuuviTagDataSQLite.ruuviTagIdColumn.name, .text).notNull()
             table.column(RuuviTagDataSQLite.dateColumn.name, .datetime).notNull()
+            table.column(RuuviTagDataSQLite.sourceColumn.name, .text).notNull()
             table.column(RuuviTagDataSQLite.macColumn.name, .text)
             table.column(RuuviTagDataSQLite.rssiColumn.name, .integer)
             table.column(RuuviTagDataSQLite.celsiusColumn.name, .double)

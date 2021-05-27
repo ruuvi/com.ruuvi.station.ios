@@ -26,20 +26,23 @@ extension WebTagDataRealm {
         let t = Temperature(celsius.value)
         let h = Humidity(relative: humidity.value, temperature: t)
         let p = Pressure(pressure.value)
-        return RuuviTagSensorRecordStruct(ruuviTagId: id,
-                                          date: date,
-                                          macId: nil,
-                                          rssi: nil,
-                                          temperature: t,
-                                          humidity: h,
-                                          pressure: p,
-                                          acceleration: nil,
-                                          voltage: nil,
-                                          movementCounter: nil,
-                                          measurementSequenceNumber: nil,
-                                          txPower: nil,
-                                          temperatureOffset: 0.0,
-                                          humidityOffset: 0.0,
-                                          pressureOffset: 0.0)
+        return RuuviTagSensorRecordStruct(
+            ruuviTagId: id,
+            date: date,
+            source: .weatherProvider,
+            macId: nil,
+            rssi: nil,
+            temperature: t,
+            humidity: h,
+            pressure: p,
+            acceleration: nil,
+            voltage: nil,
+            movementCounter: nil,
+            measurementSequenceNumber: nil,
+            txPower: nil,
+            temperatureOffset: 0.0,
+            humidityOffset: 0.0,
+            pressureOffset: 0.0
+        )
     }
 }

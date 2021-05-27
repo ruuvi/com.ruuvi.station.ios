@@ -15,6 +15,10 @@ extension RuuviTag: RuuviTagSensorRecord {
         return Date()
     }
 
+    var source: RuuviTagSensorRecordSource {
+        return .unknown
+    }
+
     var temperature: Temperature? {
         return Temperature(self.celsius)
     }
