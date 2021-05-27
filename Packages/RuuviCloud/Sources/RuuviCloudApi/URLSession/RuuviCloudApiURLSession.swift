@@ -14,17 +14,6 @@ extension RuuviCloudApiURLSession {
         case getSensorData = "get"
         case update
         case uploadImage = "upload"
-
-        static let baseURL: URL = {
-            guard let url = URL(string: "https://network.ruuvi.com") else {
-                fatalError()
-            }
-            return url
-        }()
-
-        var url: URL {
-            return Routes.baseURL.appendingPathComponent(self.rawValue)
-        }
     }
 }
 
@@ -35,6 +24,11 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         delegateQueue: .main
     )
     private var progressHandlersByTaskID = [Int: ProgressHandler]()
+    private let baseUrl: URL
+
+    init(baseUrl: URL) {
+        self.baseUrl = baseUrl
+    }
 
     func register(
         _ requestModel: RuuviCloudApiRegisterRequest
@@ -173,7 +167,7 @@ extension RuuviCloudApiURLSession {
         authorization: String? = nil
     ) -> Future<Response, RuuviCloudApiError> {
         let promise = Promise<Response, RuuviCloudApiError>()
-        var url: URL = endpoint.url
+        var url: URL = self.baseUrl.appendingPathComponent(endpoint.rawValue)
         if method == .get {
             var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
             urlComponents?.queryItems = try? URLQueryItemEncoder().encode(model)

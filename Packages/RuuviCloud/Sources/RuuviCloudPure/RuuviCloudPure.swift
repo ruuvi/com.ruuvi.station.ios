@@ -3,11 +3,47 @@ import Future
 import RuuviOntology
 
 final class RuuviCloudPure: RuuviCloud {
-    func load() -> Future<[AnyRuuviTagSensor], RuuviCloudError> {
-        let promise = Promise<[AnyRuuviTagSensor], RuuviCloudError>()
+    init(api: RuuviCloudApi, apiKey: String?) {
+        self.api = api
+        self.apiKey = apiKey
+    }
+
+    func requestCode(email: String) -> Future<String, RuuviCloudError> {
+        let promise = Promise<String, RuuviCloudError>()
+        let request = RuuviCloudApiRegisterRequest(email: email)
+        api.register(request)
+            .on(success: { response in
+                promise.succeed(value: response.email)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
         return promise.future
     }
 
+    func validateCode(code: String) -> Future<String, RuuviCloudError> {
+        let promise = Promise<String, RuuviCloudError>()
+        let request = RuuviCloudApiVerifyRequest(token: code)
+        api.verify(request)
+            .on(success: { [weak self] response in
+                self?.apiKey = response.accessToken
+                promise.succeed(value: response.accessToken)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    func load() -> Future<[AnyRuuviTagSensor], RuuviCloudError> {
+        let promise = Promise<[AnyRuuviTagSensor], RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        return promise.future
+    }
+
+    private var apiKey: String?
+    private let api: RuuviCloudApi
     private lazy var queue: OperationQueue = {
         var queue = OperationQueue()
         queue.maxConcurrentOperationCount = 3
