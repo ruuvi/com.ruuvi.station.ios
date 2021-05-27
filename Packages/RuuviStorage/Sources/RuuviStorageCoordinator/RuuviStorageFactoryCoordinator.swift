@@ -2,9 +2,10 @@ import Foundation
 
 public final class RuuviStorageFactoryCoordinator: RuuviStorageFactory {
     public func create() -> RuuviStorage {
-        let realm = RuuviStoragePersistenceRealm()
+        let realmContext = RealmContextImpl()
+        let realm = RuuviStoragePersistenceRealm(context: realmContext)
         let sqliteContext = SQLiteContextGRDB()
-        let sqlite = RuuviStoragePersistenceSQLite(database: sqliteContext.database)
+        let sqlite = RuuviStoragePersistenceSQLite(context: sqliteContext)
         return RuuviStorageCoordinator(sqlite: sqlite, realm: realm)
     }
 }

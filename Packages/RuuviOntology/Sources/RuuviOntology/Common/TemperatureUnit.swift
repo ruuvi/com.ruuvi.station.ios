@@ -22,34 +22,6 @@ public enum TemperatureUnit {
     }
 }
 
-//extension TemperatureUnit: SelectionItemProtocol {
-//    public var title: String {
-//        switch self {
-//        case .celsius:
-//            return "TemperatureUnit.Celsius.title".localized()
-//        case .fahrenheit:
-//            return "TemperatureUnit.Fahrenheit.title".localized()
-//        case .kelvin:
-//            return "TemperatureUnit.Kelvin.title".localized()
-//        }
-//    }
-//}
-//
-//extension UnitTemperature: SelectionItemProtocol {
-//    var title: String {
-//        switch self {
-//        case .celsius:
-//            return "TemperatureUnit.Celsius.title".localized()
-//        case .fahrenheit:
-//            return "TemperatureUnit.Fahrenheit.title".localized()
-//        case .kelvin:
-//            return "TemperatureUnit.Kelvin.title".localized()
-//        default:
-//            return "N/A".localized()
-//        }
-//    }
-//}
-
 // defaults range of temperature
 extension TemperatureUnit {
     public var alertRange: Range<Double> {

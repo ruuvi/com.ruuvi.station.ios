@@ -10,7 +10,12 @@ import FirebaseCrashlytics
 
 // swiftlint:disable type_body_length
 class RuuviStoragePersistenceRealm: RuuviStoragePersistence {
-    var context: RealmContext!
+    private let context: RealmContext
+
+    init(context: RealmContext) {
+        self.context = context
+    }
+
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviStorageError> {
         let promise = Promise<Bool, RuuviStorageError>()
         assert(ruuviTag.macId == nil)
@@ -233,7 +238,10 @@ class RuuviStoragePersistenceRealm: RuuviStoragePersistence {
         return promise.future
     }
 
-    func readAll(_ ruuviTagId: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
+    func readAll(
+        _ ruuviTagId: String,
+        with interval: TimeInterval
+    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
         context.bgWorker.enqueue {
             let ruuviTagDataRealms = self.context.bg.objects(RuuviTagDataRealm.self)
@@ -425,10 +433,12 @@ class RuuviStoragePersistenceRealm: RuuviStoragePersistence {
         return promise.future
     }
 
-    func updateOffsetCorrection(type: OffsetCorrectionType,
-                                with value: Double?,
-                                of ruuviTag: RuuviTagSensor,
-                                lastOriginalRecord record: RuuviTagSensorRecord?) -> Future<SensorSettings, RuuviStorageError> {
+    func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor,
+        lastOriginalRecord record: RuuviTagSensorRecord?
+    ) -> Future<SensorSettings, RuuviStorageError> {
         let promise = Promise<SensorSettings, RuuviStorageError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)

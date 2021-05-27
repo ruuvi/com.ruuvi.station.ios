@@ -25,7 +25,7 @@ extension RuuviTagRealm: RuuviTagSensor {
             )
         )
     }
-    
+
     public var isClaimed: Bool {
         return false
     }

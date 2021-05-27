@@ -25,10 +25,18 @@ protocol RuuviStoragePersistence {
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
 
-    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError>
-    func updateOffsetCorrection(type: OffsetCorrectionType,
-                                with value: Double?,
-                                of ruuviTag: RuuviTagSensor,
-                                lastOriginalRecord record: RuuviTagSensorRecord?) -> Future<SensorSettings, RuuviStorageError>
-    func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviStorageError>
+    func readSensorSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<SensorSettings?, RuuviStorageError>
+
+    func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor,
+        lastOriginalRecord record: RuuviTagSensorRecord?
+    ) -> Future<SensorSettings, RuuviStorageError>
+
+    func delelteOffsetCorrection(
+        ruuviTag: RuuviTagSensor
+    ) -> Future<Bool, RuuviStorageError>
 }
