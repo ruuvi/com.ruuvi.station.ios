@@ -6,13 +6,13 @@ class SQLiteContextGRDB: SQLiteContext {
     let database: GRDBDatabase = SQLiteGRDBDatabase.shared
 }
 
-protocol DatabaseService {
+public protocol DatabaseService {
     associatedtype Entity: PersistableRecord
 
     var database: GRDBDatabase { get }
 }
 
-protocol GRDBDatabase {
+public protocol GRDBDatabase {
     var dbPool: DatabasePool { get }
 
     func migrateIfNeeded()

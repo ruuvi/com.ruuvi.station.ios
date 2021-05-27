@@ -1,7 +1,7 @@
 import Foundation
 
 // Performs submitted work items on a dedicated thread
-class Worker {
+public class Worker {
 
     // the worker thread
     private var thread: Thread?

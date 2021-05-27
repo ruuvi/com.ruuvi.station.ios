@@ -1,5 +1,5 @@
 import Foundation
 
-protocol SQLiteContext {
+public protocol SQLiteContext {
     var database: GRDBDatabase { get }
 }
