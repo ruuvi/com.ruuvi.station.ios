@@ -10,7 +10,7 @@ public protocol RuuviCloud {
     func validateCode(code: String) -> Future<String, RuuviCloudError>
 
     @discardableResult
-    func load() -> Future<[AnyRuuviTagSensor], RuuviCloudError>
+    func loadSensors() -> Future<[AnyRuuviTagSensor], RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

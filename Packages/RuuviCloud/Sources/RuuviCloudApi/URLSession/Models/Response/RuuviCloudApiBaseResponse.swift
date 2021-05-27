@@ -1,6 +1,6 @@
 import Foundation
 
-struct UserApiBaseResponse<T: Any>: Decodable where T: Decodable {
+struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
     enum Status: String, Decodable {
         case success
         case error
@@ -20,7 +20,7 @@ struct UserApiBaseResponse<T: Any>: Decodable where T: Decodable {
     }
 }
 
-extension UserApiBaseResponse {
+extension RuuviCloudApiBaseResponse {
     var result: Swift.Result<T, RuuviCloudApiError> {
         switch status {
         case .success:

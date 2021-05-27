@@ -2,10 +2,10 @@ import Foundation
 
 struct RuuviCloudApiUserResponse: Decodable {
     let email: String
-    var sensors: [UserApiUserSensor]
+    var sensors: [RuuviCloudApiSensor]
 }
 
-class UserApiUserSensor: Decodable {
+struct RuuviCloudApiSensor: Decodable {
     let sensorId: String
     let owner: String
     let pictureUrl: String
