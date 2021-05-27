@@ -96,7 +96,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     }
 
     func user(authorization: String) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError> {
-        let requestModel = UserApiUserRequest()
+        let requestModel = RuuviCloudApiUserRequest()
         return request(endpoint: Routes.user,
                        with: requestModel,
                        authorization: authorization)
@@ -199,7 +199,7 @@ extension RuuviCloudApiURLSession {
                     #endif
                     let decoder = JSONDecoder()
                     do {
-                        let baseResponse = try decoder.decode(UserApiBaseResponse<Response>.self, from: data)
+                        let baseResponse = try decoder.decode(RuuviCloudApiBaseResponse<Response>.self, from: data)
                         switch baseResponse.result {
                         case .success(let model):
                             promise.succeed(value: model)
