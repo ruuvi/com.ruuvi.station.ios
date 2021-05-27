@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviCloud
 
 class SignInPresenter: NSObject {
     enum State {
@@ -14,7 +15,7 @@ class SignInPresenter: NSObject {
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
-    var userApi: RuuviNetworkUserApi!
+    var ruuviCloud: RuuviCloud!
     var networkService: NetworkService!
 
     private var state: State = .enterEmail
@@ -147,13 +148,10 @@ extension SignInPresenter {
             viewModel.errorLabelText.value = "SignIn.EnterCorrectEmail".localized()
             return
         }
-        let requestModel = UserApiRegisterRequest(email: email)
         activityPresenter.increment()
-        userApi.register(requestModel)
-            .on(success: { [weak self] (_) in
-                guard let sSelf = self else {
-                    return
-                }
+        ruuviCloud.requestCode(email: email)
+            .on(success: { [weak self] email in
+                guard let sSelf = self else { return }
                 sSelf.keychainService.userApiEmail = email
                 sSelf.router.openEmailConfirmation(output: sSelf)
             }, failure: { [weak self] (error) in
@@ -164,12 +162,11 @@ extension SignInPresenter {
     }
 
     private func verify(_ code: String) {
-        let requestModel = UserApiVerifyRequest(token: code)
         activityPresenter.increment()
-        userApi.verify(requestModel)
-            .on(success: { [weak self] (response) in
+        ruuviCloud.validateCode(code: code)
+            .on(success: { [weak self] apiKey in
                 guard let sSelf = self else { return }
-                sSelf.keychainService.ruuviUserApiKey = response.accessToken
+                sSelf.keychainService.ruuviUserApiKey = apiKey
                 sSelf.networkService.updateTagsInfo(for: .userApi).on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.activityPresenter.decrement()
