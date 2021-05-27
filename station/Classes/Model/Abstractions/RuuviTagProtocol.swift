@@ -19,6 +19,7 @@ protocol RuuviTagProtocol {
     var measurementSequenceNumber: Int? { get }
     var movementCounter: Int? { get }
     var mac: String? { get }
+    var source: RuuviTagSensorRecordSource { get }
     var rssi: Int? { get }
     var txPower: Int? { get }
     var volts: Double? { get }

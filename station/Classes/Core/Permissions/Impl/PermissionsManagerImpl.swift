@@ -14,12 +14,19 @@ class PermissionsManagerImpl: PermissionsManager {
     }
 
     var isCameraPermissionGranted: Bool {
+        #if targetEnvironment(macCatalyst)
+        return false
+        #else
         return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
+        #endif
     }
 
+    #if targetEnvironment(macCatalyst)
+    #else
     var cameraAuthorizationStatus: AVAuthorizationStatus {
         return AVCaptureDevice.authorizationStatus(for: .video)
     }
+    #endif
 
     var isLocationPermissionGranted: Bool {
         return locationManager.isLocationPermissionGranted
@@ -38,11 +45,15 @@ class PermissionsManagerImpl: PermissionsManager {
     }
 
     func requestCameraPermission(completion: ((Bool) -> Void)?) {
+        #if targetEnvironment(macCatalyst)
+        completion?(false)
+        #else
         AVCaptureDevice.requestAccess(for: .video) { (granted) in
             DispatchQueue.main.async {
                 completion?(granted)
             }
         }
+        #endif
     }
 
     func requestLocationPermission(completion: ((Bool) -> Void)?) {

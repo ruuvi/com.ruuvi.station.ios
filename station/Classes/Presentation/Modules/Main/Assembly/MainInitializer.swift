@@ -12,6 +12,7 @@ class MainInitializer: NSObject {
         r.resolve(MigrationManagerToSQLite.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerAlertService.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerToPrune240.self)?.migrateIfNeeded()
+        r.resolve(MigrationManagerToChartDuration240.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerSensorSettings.self)?.migrateIfNeeded()
         r.resolve(NetworkService.self)?.updateTagsInfo(for: .userApi)
         MainConfigurator().configure(navigationController: navigationController)
