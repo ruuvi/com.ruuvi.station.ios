@@ -323,7 +323,7 @@ extension TagChartsInteractor {
 
     private func syncNetworkRecords(for ruuviTagId: String, macId: MACIdentifier) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        let op = networkService.loadData(for: ruuviTagId, mac: macId.value, from: .userApi)
+        let op = networkService.loadData(for: ruuviTagId, mac: macId.value)
         op.on(success: { [weak self] count in
             self?.presenter.interactorDidSyncComplete(count)
             promise.succeed(value: ())

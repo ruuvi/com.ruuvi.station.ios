@@ -87,7 +87,7 @@ extension MenuPresenter: MenuViewOutput {
         timer?.invalidate()
         viewModel?.isSyncing.value = true
         lastSyncDate = CFAbsoluteTimeGetCurrent()
-        networkService.updateTagsInfo(for: .userApi)
+        networkService.updateTagsInfo()
             .on(completion: { [weak self] in
                 if let lastSyncDate = self?.lastSyncDate {
                     let syncLength: CFAbsoluteTime = CFAbsoluteTimeGetCurrent() - lastSyncDate

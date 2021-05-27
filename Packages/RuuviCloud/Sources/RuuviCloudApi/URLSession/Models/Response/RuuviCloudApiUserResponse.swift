@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 struct RuuviCloudApiUserResponse: Decodable {
     let email: String
@@ -7,7 +8,7 @@ struct RuuviCloudApiUserResponse: Decodable {
 
 struct RuuviCloudApiSensor: Decodable {
     let sensorId: String
-    let owner: String
+    let sensorOwner: String
     let pictureUrl: String
     let name: String
     let isPublic: Bool
@@ -15,9 +16,23 @@ struct RuuviCloudApiSensor: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case sensorId = "sensor"
-        case owner
+        case sensorOwner = "owner"
         case name
         case pictureUrl = "picture"
         case isPublic = "public"
+    }
+}
+
+extension RuuviCloudApiSensor: CloudSensor {
+    var owner: String? {
+        return sensorOwner
+    }
+
+    var isClaimed: Bool {
+        return isOwner
+    }
+
+    var id: String {
+        return sensorId
     }
 }

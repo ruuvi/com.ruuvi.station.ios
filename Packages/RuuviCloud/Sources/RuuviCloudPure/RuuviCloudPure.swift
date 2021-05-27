@@ -33,14 +33,14 @@ final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    func loadSensors() -> Future<[AnyRuuviTagSensor], RuuviCloudError> {
-        let promise = Promise<[AnyRuuviTagSensor], RuuviCloudError>()
+    func loadSensors() -> Future<[CloudSensor], RuuviCloudError> {
+        let promise = Promise<[CloudSensor], RuuviCloudError>()
         guard let apiKey = apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
         api.user(authorization: apiKey).on(success: { response in
-            print(response.sensors)
+            promise.succeed(value: response.sensors)
         }, failure: { error in
             promise.fail(error: .api(error))
         })

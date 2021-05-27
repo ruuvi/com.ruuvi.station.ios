@@ -169,7 +169,6 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     macId: ruuviTagRealm.mac?.mac,
                     isConnectable: ruuviTagRealm.isConnectable,
                     name: ruuviTagRealm.name,
-                    networkProvider: ruuviTagRealm.networkProvider,
                     isClaimed: false,
                     isOwner: false,
                     owner: ruuviTagRealm.owner
@@ -193,7 +192,6 @@ class RuuviTagPersistenceRealm: RuuviTagPersistence {
                     macId: ruuviTagRealm.mac?.mac,
                     isConnectable: ruuviTagRealm.isConnectable,
                     name: ruuviTagRealm.name,
-                    networkProvider: ruuviTagRealm.networkProvider,
                     isClaimed: false,
                     isOwner: false,
                     owner: ruuviTagRealm.owner

@@ -18,16 +18,13 @@ extension RuuviTagRealm: RuuviTagSensor {
                 macId: macId,
                 isConnectable: isConnectable,
                 name: name,
-                networkProvider: networkProvider,
                 isClaimed: isClaimed,
                 isOwner: isOwner,
                 owner: owner
             )
         )
     }
-    var networkProvider: RuuviNetworkProvider? {
-        return nil
-    }
+    
     var isClaimed: Bool {
         return false
     }

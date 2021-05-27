@@ -100,7 +100,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                                       modes: [RunLoop.Mode.default.rawValue])
                     }
                 })
-            } else if ruuviTag.networkProvider != nil {
+            } else if ruuviTag.isNetworkConnectable {
                 scanRemoteSensor(ruuviTag: ruuviTag)
             }
         }
@@ -188,7 +188,6 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 macId: mac,
                 isConnectable: device.isConnectable,
                 name: ruuviTag.name,
-                networkProvider: ruuviTag.networkProvider,
                 isClaimed: ruuviTag.isClaimed,
                 isOwner: ruuviTag.isClaimed,
                 owner: ruuviTag.owner)

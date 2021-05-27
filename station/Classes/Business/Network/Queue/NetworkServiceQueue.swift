@@ -18,7 +18,7 @@ class NetworkServiceQueue: NetworkService {
     }()
 
     @discardableResult
-    func loadData(for ruuviTagId: String, mac: String, from provider: RuuviNetworkProvider) -> Future<Int, RUError> {
+    func loadData(for ruuviTagId: String, mac: String) -> Future<Int, RUError> {
         let promise = Promise<Int, RUError>()
         let operation = ruuviTagTrunk.readOne(ruuviTagId)
         let networkPruningOffset = -TimeInterval(settings.networkPruningIntervalHours * 60 * 60)
@@ -34,8 +34,7 @@ class NetworkServiceQueue: NetworkService {
                     ?? networkPuningDate
                 let loadDataOperation = strongSelf.loadDataOperation(for: sensor,
                                                                      mac: mac,
-                                                                     since: since,
-                                                                     from: provider)
+                                                                     since: since)
                 loadDataOperation.on(success: { (result) in
                     promise.succeed(value: result)
                     self?.networkPersistence.lastSyncDate = Date()
@@ -47,8 +46,7 @@ class NetworkServiceQueue: NetworkService {
                     ?? networkPuningDate
                 let loadDataOperation = strongSelf.loadDataOperation(for: sensor,
                                                                      mac: mac,
-                                                                     since: since,
-                                                                     from: provider)
+                                                                     since: since)
                 loadDataOperation.on(success: { (result) in
                     promise.succeed(value: result)
                     self?.networkPersistence.lastSyncDate = Date()
@@ -62,10 +60,10 @@ class NetworkServiceQueue: NetworkService {
         return promise.future
     }
 
-    func updateTagsInfo(for provider: RuuviNetworkProvider) -> Future<Bool, RUError> {
+    func updateTagsInfo() -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
         let fetchPersistedTagsOperation = ruuviTagTrunk.readAll()
-        let fetchNetworkTagsInfoOperation = ruuviNetworkFactory.network(for: provider).user()
+        let fetchNetworkTagsInfoOperation = ruuviNetworkFactory.network().user()
         Future.zip(fetchPersistedTagsOperation, fetchNetworkTagsInfoOperation)
             .on(success: { (ruuviTagSensors, userApiResponse) in
                 // TODO: - backend response with duplicate for claimed tag as not owner and owner access
@@ -91,7 +89,7 @@ class NetworkServiceQueue: NetworkService {
                     if !ruuviTagSensors.contains(where: {$0.macId?.value == sensor.sensorId}) {
                         self.createTag(for: sensor)
                     }
-                    self.loadData(for: sensor.sensorId, mac: sensor.sensorId, from: .userApi)
+                    self.loadData(for: sensor.sensorId, mac: sensor.sensorId)
                         .on(completion: {
                             promise.succeed(value: true)
                         })
@@ -106,10 +104,9 @@ class NetworkServiceQueue: NetworkService {
 extension NetworkServiceQueue {
     private func loadDataOperation(for sensor: AnyRuuviTagSensor,
                                    mac: String,
-                                   since: Date,
-                                   from provider: RuuviNetworkProvider) -> Future<Int, RUError> {
+                                   since: Date) -> Future<Int, RUError> {
         let promise = Promise<Int, RUError>()
-        let network = ruuviNetworkFactory.network(for: provider)
+        let network = ruuviNetworkFactory.network()
         let operation = RuuviTagLoadDataOperation(ruuviTagId: sensor.id,
                                                   mac: mac,
                                                   since: since,
@@ -132,7 +129,6 @@ extension NetworkServiceQueue {
                                                  macId: sensor.macId,
                                                  isConnectable: sensor.isConnectable,
                                                  name: networkTag.name.isEmpty ? networkTag.sensorId : networkTag.name,
-                                                 networkProvider: .userApi,
                                                  isClaimed: networkTag.isOwner,
                                                  isOwner: networkTag.isOwner,
                                                  owner: networkTag.owner)
@@ -148,7 +144,6 @@ extension NetworkServiceQueue {
                                                  macId: sensor.macId,
                                                  isConnectable: sensor.isConnectable,
                                                  name: sensor.name,
-                                                 networkProvider: nil,
                                                  isClaimed: false,
                                                  isOwner: true,
                                                  owner: sensor.owner)
@@ -162,7 +157,6 @@ extension NetworkServiceQueue {
                                                  macId: sensor.sensorId.mac,
                                                  isConnectable: true,
                                                  name: name,
-                                                 networkProvider: .userApi,
                                                  isClaimed: sensor.isOwner,
                                                  isOwner: sensor.isOwner,
                                                  owner: sensor.owner)

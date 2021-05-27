@@ -110,7 +110,6 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 macId: ruuviTag.mac?.mac,
                 isConnectable: ruuviTag.isConnectable,
                 name: displayName,
-                networkProvider: nil, // TODO: @rinat check if nil is ok
                 isClaimed: false,
                 isOwner: true,
                 owner: nil // TODO: @rinat check if nil is ok
