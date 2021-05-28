@@ -1,7 +1,7 @@
 import Foundation
 import Future
 import RuuviOntology
-import RuuviContext
+import RuuviPersistence
 
 public protocol RuuviStorage {
     func read(
@@ -27,5 +27,5 @@ public protocol RuuviStorage {
 }
 
 public protocol RuuviStorageFactory {
-    func create(realm: RealmContext, sqlite: SQLiteContext) -> RuuviStorage
+    func create(realm: RuuviPersistence, sqlite: RuuviPersistence) -> RuuviStorage
 }
