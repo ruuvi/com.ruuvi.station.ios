@@ -35,14 +35,14 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 
-    func readAll() -> Future<[RuuviTagSensor], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensor], RuuviStorageError>()
+    func readAll() -> Future<[AnyRuuviTagSensor], RuuviStorageError> {
+        let promise = Promise<[AnyRuuviTagSensor], RuuviStorageError>()
         let sqliteOperation = sqlite.readAll()
         let realmOperation = realm.readAll()
         Future.zip(sqliteOperation, realmOperation)
             .on(success: { sqliteEntities, realmEntities in
             let combinedValues = sqliteEntities + realmEntities
-            promise.succeed(value: combinedValues)
+                promise.succeed(value: combinedValues.map({ $0.any }))
         }, failure: { error in
             promise.fail(error: .ruuviPersistence(error))
         })

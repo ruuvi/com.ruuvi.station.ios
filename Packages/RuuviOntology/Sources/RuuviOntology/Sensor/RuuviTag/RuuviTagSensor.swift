@@ -73,6 +73,32 @@ extension RuuviTagSensor {
                                     owner: owner)
     }
 
+    public func with(cloudSensor: CloudSensor) -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: cloudSensor.name.isEmpty ? cloudSensor.id : cloudSensor.name,
+            isClaimed: cloudSensor.isOwner,
+            isOwner: cloudSensor.isOwner,
+            owner: cloudSensor.owner
+        )
+    }
+
+    public func unclaimed() -> RuuviTagSensor {
+        return RuuviTagSensorStruct(
+            version: version,
+            luid: luid,
+            macId: macId,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: false,
+            isOwner: true,
+            owner: owner
+        )
+    }
+
     public var isNetworkConnectable: Bool {
         return owner != nil
     }
