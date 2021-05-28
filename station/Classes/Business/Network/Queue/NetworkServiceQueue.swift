@@ -1,12 +1,13 @@
 import Foundation
 import Future
 import RuuviOntology
+import RuuviStorage
 
 class NetworkServiceQueue: NetworkService {
 
     var ruuviNetworkFactory: RuuviNetworkFactory!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var networkPersistence: NetworkPersistence!
     var settings: Settings!
     var sensorService: SensorService!
@@ -20,14 +21,14 @@ class NetworkServiceQueue: NetworkService {
     @discardableResult
     func loadData(for ruuviTagId: String, mac: String) -> Future<Int, RUError> {
         let promise = Promise<Int, RUError>()
-        let operation = ruuviTagTrunk.readOne(ruuviTagId)
+        let operation = ruuviStorage.readOne(ruuviTagId)
         let networkPruningOffset = -TimeInterval(settings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
         operation.on(success: { [weak self] sensor in
             guard let strongSelf = self else {
                 return
             }
-            let lastRecord = strongSelf.ruuviTagTrunk.readLast(sensor)
+            let lastRecord = strongSelf.ruuviStorage.readLast(sensor)
             lastRecord.on(success: { (record) in
                 let since: Date = record?.date
                     ?? self?.networkPersistence.lastSyncDate
@@ -62,10 +63,10 @@ class NetworkServiceQueue: NetworkService {
 
     func updateTagsInfo() -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        let fetchPersistedTagsOperation = ruuviTagTrunk.readAll()
-        let fetchNetworkTagsInfoOperation = ruuviNetworkFactory.network().user()
-        Future.zip(fetchPersistedTagsOperation, fetchNetworkTagsInfoOperation)
-            .on(success: { (ruuviTagSensors, userApiResponse) in
+        ruuviStorage.readAll().on(success: { [weak self] ruuviTagSensors in
+            guard let sSelf = self else { return }
+            sSelf.ruuviNetworkFactory.network().user().on(success: { [weak sSelf] userApiResponse in
+                guard let ssSelf = sSelf else { return }
                 // TODO: - backend response with duplicate for claimed tag as not owner and owner access
                 userApiResponse.sensors.forEach({ sensor in
                     sensor.isOwner = sensor.owner == userApiResponse.email
@@ -80,22 +81,25 @@ class NetworkServiceQueue: NetworkService {
 
                 ruuviTagSensors.forEach({ sensor in
                     if let userApiSensor = filteredUserApiSensors.first(where: {$0.sensorId == sensor.macId?.value}) {
-                        self.updateTag(sensor, with: userApiSensor)
+                        ssSelf.updateTag(sensor, with: userApiSensor)
                     } else {
-                        self.removeClaimedFlag(for: sensor)
+                        ssSelf.removeClaimedFlag(for: sensor)
                     }
                 })
                 filteredUserApiSensors.forEach({ sensor in
                     if !ruuviTagSensors.contains(where: {$0.macId?.value == sensor.sensorId}) {
-                        self.createTag(for: sensor)
+                        ssSelf.createTag(for: sensor)
                     }
-                    self.loadData(for: sensor.sensorId, mac: sensor.sensorId)
+                    ssSelf.loadData(for: sensor.sensorId, mac: sensor.sensorId)
                         .on(completion: {
                             promise.succeed(value: true)
                         })
                 })
-        }, failure: { (error) in
-            promise.fail(error: error)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        }, failure: { error in
+            promise.fail(error: .ruuviStorage(error))
         })
         return promise.future
     }

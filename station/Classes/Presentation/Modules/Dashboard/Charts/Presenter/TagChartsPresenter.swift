@@ -6,6 +6,7 @@ import UIKit
 import Charts
 import Future
 import RuuviOntology
+import RuuviStorage
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -16,7 +17,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var sensorService: SensorService!
     var settings: Settings!
     var foreground: BTForeground!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var ruuviTagReactor: RuuviTagReactor!
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
@@ -380,7 +381,7 @@ extension TagChartsPresenter {
                                                                 ? .registered : .empty
 
             // get lastest sensorSettings
-            ruuviTagTrunk.readSensorSettings(ruuviTag).on { settings in
+            ruuviStorage.readSensorSettings(ruuviTag).on { settings in
                 self.sensorSettings = settings
             }
         } else if let macId = ruuviTag.macId {

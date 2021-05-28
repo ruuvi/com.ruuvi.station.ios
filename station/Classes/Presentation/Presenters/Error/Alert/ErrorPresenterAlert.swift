@@ -6,6 +6,8 @@ class ErrorPresenterAlert: ErrorPresenter {
     func present(error: Error) {
         if let ruError = error as? RUError {
             switch ruError {
+            case .ruuviStorage(let error):
+                presentAlert(error: error)
             case .btkit(let error):
                 presentAlert(error: error)
             case .bluetooth(let error):

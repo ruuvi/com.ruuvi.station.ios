@@ -5,6 +5,7 @@ import BTKit
 import Humidity
 import RuuviOntology
 import RuuviContext
+import RuuviStorage
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -27,7 +28,7 @@ class CardsPresenter: CardsModuleInput {
     var infoProvider: InfoProvider!
     var calibrationService: CalibrationService!
     var ruuviTagReactor: RuuviTagReactor!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
     var networkPersistance: NetworkPersistence!
@@ -333,7 +334,7 @@ extension CardsPresenter {
             } else {
                 assertionFailure()
             }
-            ruuviTagTrunk.readLast(ruuviTag).on { record in
+            ruuviStorage.readLast(ruuviTag).on { record in
                 if let record = record {
                     viewModel.update(record)
                 }

@@ -1,14 +1,15 @@
 import Foundation
 import BTKit
 import RuuviOntology
+import RuuviStorage
 
-class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
+final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var ruuviTagReactor: RuuviTagReactor!
     var alertService: AlertService!
     var settings: Settings!
@@ -204,7 +205,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }.forEach({ disconnect(uuid: $0.value) })
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
+            ruuviStorage.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
                 if let sensorSettings = sensorSettings {
                     self?.sensorSettingsList.append(sensorSettings)
                 }

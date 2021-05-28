@@ -4,6 +4,7 @@ import BTKit
 import UIKit
 import Future
 import RuuviOntology
+import RuuviStorage
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -26,7 +27,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var ruuviTagReactor: RuuviTagReactor!
     var keychainService: KeychainService!
     var ruuviNetwork: RuuviNetworkUserApi!
@@ -869,7 +870,7 @@ extension TagSettingsPresenter {
             guard let strongSelf = self else {
                 return
             }
-            observer.ruuviTagTrunk.readLast(strongSelf.ruuviTag).on(success: { record in
+            observer.ruuviStorage.readLast(strongSelf.ruuviTag).on(success: { record in
                 let last = record?.movementCounter ?? 0
                 let type: AlertType = .movement(last: last)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)
@@ -975,7 +976,7 @@ extension TagSettingsPresenter {
     }
 
     private func checkLastSensorSettings() {
-        ruuviTagTrunk.readSensorSettings(self.ruuviTag).on { settings in
+        ruuviStorage.readSensorSettings(self.ruuviTag).on { settings in
             self.sensorSettings = settings
         }
     }

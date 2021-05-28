@@ -1,5 +1,6 @@
 import Swinject
 import BTKit
+import RuuviStorage
 
 class CoreAssembly: Assembly {
     // swiftlint:disable:next function_body_length
@@ -21,7 +22,7 @@ class CoreAssembly: Assembly {
             let manager = LocalNotificationsManagerImpl()
             manager.alertService = r.resolve(AlertService.self)
             manager.settings = r.resolve(Settings.self)
-            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
             manager.idPersistence = r.resolve(IDPersistence.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
