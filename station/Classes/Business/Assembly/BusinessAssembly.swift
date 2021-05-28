@@ -221,20 +221,7 @@ class BusinessAssembly: Assembly {
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
             return daemon
         }.inObjectScope(.container)
-
-        container.register(NetworkService.self) { r in
-            let service = NetworkServiceQueue()
-            service.ruuviPool = r.resolve(RuuviPool.self)
-            service.ruuviStorage = r.resolve(RuuviStorage.self)
-            let factory = RuuviNetworkFactory()
-            factory.userApi = r.resolve(RuuviNetworkUserApi.self)
-            service.ruuviNetworkFactory = factory
-            service.networkPersistence = r.resolve(NetworkPersistence.self)
-            service.settings = r.resolve(RuuviLocalSettings.self)
-            service.sensorService = r.resolve(SensorService.self)
-            return service
-        }.inObjectScope(.container)
-
+        
         container.register(RuuviTagPropertiesDaemon.self) { r in
             let daemon = RuuviTagPropertiesDaemonBTKit()
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)

@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import RuuviCloud
+import RuuviService
 
 class SignInPresenter: NSObject {
     enum State {
@@ -16,7 +17,7 @@ class SignInPresenter: NSObject {
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
     var ruuviCloud: RuuviCloud!
-    var networkService: NetworkService!
+    var cloudSyncService: RuuviServiceCloudSync!
 
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -167,7 +168,7 @@ extension SignInPresenter {
             .on(success: { [weak self] apiKey in
                 guard let sSelf = self else { return }
                 sSelf.keychainService.ruuviUserApiKey = apiKey
-                sSelf.networkService.updateTagsInfo().on(success: { [weak sSelf] _ in
+                sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.activityPresenter.decrement()
                     ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)

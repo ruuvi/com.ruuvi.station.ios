@@ -1,5 +1,6 @@
 import UIKit
 import RuuviContext
+import RuuviService
 
 class MainInitializer: NSObject {
     @IBOutlet weak var navigationController: UINavigationController!
@@ -15,7 +16,7 @@ class MainInitializer: NSObject {
         r.resolve(MigrationManagerToPrune240.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerToChartDuration240.self)?.migrateIfNeeded()
         r.resolve(MigrationManagerSensorSettings.self)?.migrateIfNeeded()
-        r.resolve(NetworkService.self)?.updateTagsInfo()
+        r.resolve(RuuviServiceCloudSync.self)?.syncAll()
         MainConfigurator().configure(navigationController: navigationController)
     }
 }

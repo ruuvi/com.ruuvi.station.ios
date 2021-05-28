@@ -26,9 +26,26 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviLocalSettings = ruuviLocalSettings
         self.ruuviLocalSyncState = ruuviLocalSyncState
     }
+    @discardableResult
+    func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+        let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
+        let sensors = syncSensors()
+        sensors.on(success: { [weak self] updatedSensors in
+            guard let sSelf = self else { return }
+            let syncs = updatedSensors.map({ sSelf.sync(sensor: $0) })
+            Future.zip(syncs).on(success: { _ in
+                promise.succeed(value: updatedSensors)
+            }, failure: { error in
+                promise.fail(error: error)
+            })
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
 
     @discardableResult
-    func sync() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+    func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         var updatedSensors = Set<AnyRuuviTagSensor>()
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
