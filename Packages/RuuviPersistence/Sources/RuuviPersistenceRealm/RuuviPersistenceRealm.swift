@@ -487,7 +487,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
         return promise.future
     }
 
-    func delelteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
+    func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId == nil)
         assert(ruuviTag.luid != nil)
