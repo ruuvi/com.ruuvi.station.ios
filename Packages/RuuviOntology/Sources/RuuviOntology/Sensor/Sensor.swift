@@ -28,7 +28,7 @@ public protocol Networkable {
 
 public protocol Sensor: StringIdentifieable {}
 
-public protocol CloudSensor: Sensor, Networkable {
+public protocol CloudSensor: Sensor, Nameable, Networkable {
 }
 
 public protocol PhysicalSensor: Sensor, Connectable, Nameable {

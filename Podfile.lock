@@ -254,6 +254,19 @@ PODS:
     - RuuviReactor/Contract
     - RxSwift
   - RuuviReactor/Tests (0.0.1)
+  - RuuviService (0.0.1):
+    - RuuviService/Contract (= 0.0.1)
+  - RuuviService/CloudSync (0.0.1):
+    - FutureX
+    - RuuviCloud
+    - RuuviOntology
+    - RuuviPool
+    - RuuviService/Contract
+    - RuuviStorage
+  - RuuviService/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviService/Tests (0.0.1)
   - RuuviStorage (0.0.1):
     - RuuviStorage/Contract (= 0.0.1)
   - RuuviStorage/Contract (0.0.1):
@@ -309,6 +322,9 @@ DEPENDENCIES:
   - RuuviReactor (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviReactor/Impl (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviReactor/Tests (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviService (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/CloudSync (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/Tests (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviStorage (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Coordinator (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Tests (from `Packages/RuuviStorage/RuuviStorage.podspec`)
@@ -376,6 +392,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviPool/RuuviPool.podspec
   RuuviReactor:
     :path: Packages/RuuviReactor/RuuviReactor.podspec
+  RuuviService:
+    :path: Packages/RuuviService/RuuviService.podspec
   RuuviStorage:
     :path: Packages/RuuviStorage/RuuviStorage.podspec
   SwinjectPropertyLoader:
@@ -439,12 +457,13 @@ SPEC CHECKSUMS:
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
+  RuuviService: 98793a734ea63175fec91c3a36a801073ea9753b
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 320ee4d917c0ab96977b439d1d74aaeef91b7f1e
+PODFILE CHECKSUM: 6e5693ff4107df96793512a67c6430cf97d95809
 
 COCOAPODS: 1.10.1
