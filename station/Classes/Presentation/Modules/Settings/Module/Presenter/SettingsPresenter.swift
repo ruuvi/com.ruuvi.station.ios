@@ -43,6 +43,8 @@ extension SettingsPresenter: SettingsViewOutput {
             guard let sSelf = self else { return }
             switch change {
             case .initial(let sensors):
+                guard let sSelf = self else { return }
+                let sensors = sensors.reordered(by: sSelf.settings)
                 sSelf.sensors = sensors
                 let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
                 sSelf.view.isBackgroundVisible = containsConnectable

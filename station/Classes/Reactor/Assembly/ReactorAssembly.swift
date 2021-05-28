@@ -9,7 +9,6 @@ class ReactorAssembly: Assembly {
             reactor.sqliteContext = r.resolve(SQLiteContext.self)
             reactor.realmPersistence = r.resolve(RuuviTagPersistenceRealm.self)
             reactor.sqlitePersistence = r.resolve(RuuviTagPersistenceSQLite.self)
-            reactor.settings = r.resolve(Settings.self)
             return reactor
         }.inObjectScope(.container)
 

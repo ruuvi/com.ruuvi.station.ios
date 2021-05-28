@@ -63,6 +63,8 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
             switch change {
             case .initial(let sensors):
+                guard let sSelf = self else { return }
+                let sensors = sensors.reordered(by: sSelf.settings)
                 self?.sensors = sensors
                 if let id = self?.ruuviTagSensor.id,
                    let sensor = sensors.first(where: {$0.id == id}) {

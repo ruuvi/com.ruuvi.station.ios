@@ -171,6 +171,9 @@
 		0E290A7D265FCEDD009AAA29 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */; };
 		0E290A7E265FCEDD009AAA29 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */; };
 		0E290A7F265FCEDD009AAA29 /* WebTagRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */; };
+		0E290A852660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
+		0E290A862660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
+		0E290A872660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */; };
 		0E2A2CA5236947F0004993C5 /* GATTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA4236947F0004993C5 /* GATTService.swift */; };
 		0E2A2CA82369481D004993C5 /* GATTServiceQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */; };
 		0E31B03923B9F00700660412 /* BackgroundTaskServiceiOS12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */; };
@@ -1852,6 +1855,7 @@
 		0E28644D2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTagSubjectRxSwift.swift; sourceTree = "<group>"; };
 		0E290A78265FCEDC009AAA29 /* WebTagDataRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebTagDataRealm.swift; sourceTree = "<group>"; };
 		0E290A79265FCEDC009AAA29 /* WebTagRealm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebTagRealm.swift; sourceTree = "<group>"; };
+		0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+AnyRuuviTagSensor.swift"; sourceTree = "<group>"; };
 		0E2A2CA4236947F0004993C5 /* GATTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTService.swift; sourceTree = "<group>"; };
 		0E2A2CA72369481D004993C5 /* GATTServiceQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTServiceQueue.swift; sourceTree = "<group>"; };
 		0E31B03823B9F00700660412 /* BackgroundTaskServiceiOS12.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskServiceiOS12.swift; sourceTree = "<group>"; };
@@ -2782,6 +2786,7 @@
 				A98BC874250E4265001CEFDC /* Double+Round.swift */,
 				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
 				A9E6774725A33081000B75A3 /* String+Characters.swift */,
+				0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -7204,6 +7209,7 @@
 				0E6BAEA423856A01003A2D4C /* WebTagPersistence.swift in Sources */,
 				0E6BAEA523856A01003A2D4C /* AlertPersistenceUserDefaults.swift in Sources */,
 				A91D02F62511207300694733 /* SelectionPresenter.swift in Sources */,
+				0E290A872660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7644,6 +7650,7 @@
 				0E8BD3C0238566AB008B31EF /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */,
 				0E8BD3C2238566AB008B31EF /* SettingsViewOutput.swift in Sources */,
+				0E290A862660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 				0E8BD3C3238566AB008B31EF /* ForegroundPresenter.swift in Sources */,
 				0E79F2802442020E0048BF86 /* NetworkServiceQueue.swift in Sources */,
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
@@ -8259,6 +8266,7 @@
 				0E02ABC82375A77000ED4629 /* AlertPersistenceUserDefaults.swift in Sources */,
 				0E84BF632397F76A00A37E1A /* HeartbeatList.swift in Sources */,
 				A91D02F42511207300694733 /* SelectionPresenter.swift in Sources */,
+				0E290A852660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
