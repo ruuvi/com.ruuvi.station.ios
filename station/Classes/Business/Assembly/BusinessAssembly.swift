@@ -3,6 +3,7 @@ import BTKit
 import RuuviContext
 import RuuviStorage
 import RuuviReactor
+import RuuviPersistence
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -238,8 +239,8 @@ class BusinessAssembly: Assembly {
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.idPersistence = r.resolve(IDPersistence.self)
-            daemon.realmPersistence = r.resolve(RuuviTagPersistenceRealm.self)
-            daemon.sqiltePersistence = r.resolve(RuuviTagPersistenceSQLite.self)
+            daemon.realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")
+            daemon.sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")
             return daemon
         }.inObjectScope(.container)
 

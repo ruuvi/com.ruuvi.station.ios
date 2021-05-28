@@ -1,11 +1,12 @@
 import Swinject
+import RuuviPersistence
 
 class TankAssembly: Assembly {
     func assemble(container: Container) {
         container.register(RuuviTagTank.self) { r in
             let tank = RuuviTagTankCoordinator()
-            tank.realm = r.resolve(RuuviTagPersistenceRealm.self)
-            tank.sqlite = r.resolve(RuuviTagPersistenceSQLite.self)
+            tank.realm = r.resolve(RuuviPersistence.self, name: "realm")
+            tank.sqlite = r.resolve(RuuviPersistence.self, name: "sqlite")
             tank.idPersistence = r.resolve(IDPersistence.self)
             tank.settings = r.resolve(Settings.self)
             tank.sensorService = r.resolve(SensorService.self)

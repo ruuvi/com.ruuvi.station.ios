@@ -105,24 +105,6 @@ class PersistenceAssembly: Assembly {
             return factory.create(realm: realm, sqlite: sqlite)
         }.inObjectScope(.container)
 
-        container.register(RuuviTagPersistence.self) { r in
-            let persistence = RuuviTagPersistenceRealm()
-            persistence.context = r.resolve(RealmContext.self)
-            return persistence
-        }
-
-        container.register(RuuviTagPersistenceSQLite.self) { r in
-            let context = r.resolve(SQLiteContext.self)!
-            let persistence = RuuviTagPersistenceSQLite(database: context.database)
-            return persistence
-        }
-
-        container.register(RuuviTagPersistenceRealm.self) { r in
-            let persistence = RuuviTagPersistenceRealm()
-            persistence.context = r.resolve(RealmContext.self)
-            return persistence
-        }
-
         container.register(Settings.self) { _ in
             let settings = SettingsUserDegaults()
             return settings
