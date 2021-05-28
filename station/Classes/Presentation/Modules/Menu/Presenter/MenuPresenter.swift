@@ -1,10 +1,11 @@
 import UIKit
+import RuuviService
 
 class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
     var router: MenuRouterInput!
     var alertPresenter: AlertPresenter!
-    var networkService: NetworkService!
+    var cloudSyncService: RuuviServiceCloudSync!
     var keychainService: KeychainService!
     var networkPersistence: NetworkPersistence!
     var featureToggleService: FeatureToggleService!
@@ -87,7 +88,7 @@ extension MenuPresenter: MenuViewOutput {
         timer?.invalidate()
         viewModel?.isSyncing.value = true
         lastSyncDate = CFAbsoluteTimeGetCurrent()
-        networkService.updateTagsInfo()
+        cloudSyncService.syncAll()
             .on(completion: { [weak self] in
                 if let lastSyncDate = self?.lastSyncDate {
                     let syncLength: CFAbsoluteTime = CFAbsoluteTimeGetCurrent() - lastSyncDate
