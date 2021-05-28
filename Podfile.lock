@@ -201,6 +201,39 @@ PODS:
     - RuuviOntology/SQLite
     - RuuviPersistence/Contract
   - RuuviPersistence/Tests (0.0.1)
+  - RuuviReactor (0.0.1):
+    - RuuviReactor/Contract (= 0.0.1)
+  - RuuviReactor/Combine (0.0.1):
+    - GRDB.swift
+    - Realm
+    - RealmSwift
+    - RuuviContext/Realm
+    - RuuviContext/SQLite
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviReactor/Contract
+  - RuuviReactor/Contract (0.0.1):
+    - RuuviOntology
+  - RuuviReactor/Impl (0.0.1):
+    - FutureX
+    - GRDB.swift
+    - RuuviContext
+    - RuuviOntology
+    - RuuviReactor/Combine
+    - RuuviReactor/RxSwift
+  - RuuviReactor/RxSwift (0.0.1):
+    - GRDB.swift
+    - Realm
+    - RealmSwift
+    - RuuviContext/Realm
+    - RuuviContext/SQLite
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviReactor/Contract
+    - RxSwift
+  - RuuviReactor/Tests (0.0.1)
   - RuuviStorage (0.0.1):
     - RuuviStorage/Contract (= 0.0.1)
   - RuuviStorage/Contract (0.0.1):
@@ -249,6 +282,9 @@ DEPENDENCIES:
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
+  - RuuviReactor (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviReactor/Impl (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviReactor/Tests (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviStorage (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Coordinator (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RuuviStorage/Tests (from `Packages/RuuviStorage/RuuviStorage.podspec`)
@@ -310,6 +346,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   RuuviPersistence:
     :path: Packages/RuuviPersistence/RuuviPersistence.podspec
+  RuuviReactor:
+    :path: Packages/RuuviReactor/RuuviReactor.podspec
   RuuviStorage:
     :path: Packages/RuuviStorage/RuuviStorage.podspec
   SwinjectPropertyLoader:
@@ -370,12 +408,13 @@ SPEC CHECKSUMS:
   RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
+  RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: c5a99ef6e05a573ef0ca540aa51e15744938b75b
+PODFILE CHECKSUM: 74457da4a2e6ef56f6fa6e8516433a4330f36943
 
 COCOAPODS: 1.10.1
