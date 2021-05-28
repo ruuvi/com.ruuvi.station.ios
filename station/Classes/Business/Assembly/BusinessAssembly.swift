@@ -6,6 +6,8 @@ import RuuviReactor
 import RuuviPersistence
 import RuuviLocal
 import RuuviPool
+import RuuviService
+import RuuviCloud
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -197,6 +199,26 @@ class BusinessAssembly: Assembly {
             let service = FirebaseRemoteConfigService()
             return service
         }.inObjectScope(.container)
+
+        container.register(RuuviServiceFactory.self) { _ in
+            return RuuviServiceFactoryImpl()
+        }
+
+        container.register(RuuviServiceCloudSync.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let storage = r.resolve(RuuviStorage.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let localSettings = r.resolve(RuuviLocalSettings.self)!
+            let localSyncState = r.resolve(RuuviLocalSyncState.self)!
+            return factory.createCloudSync(
+                ruuviStorage: storage,
+                ruuviCloud: cloud,
+                ruuviPool: pool,
+                ruuviLocalSettings: localSettings,
+                ruuviLocalSyncState: localSyncState
+            )
+        }
 
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
