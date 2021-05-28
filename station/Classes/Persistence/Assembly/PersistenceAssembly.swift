@@ -1,5 +1,6 @@
 import Swinject
 import RuuviContext
+import RuuviStorage
 
 class PersistenceAssembly: Assembly {
 // swiftlint:disable:next function_body_length
@@ -54,6 +55,18 @@ class PersistenceAssembly: Assembly {
         container.register(RealmContext.self) { r in
             let factory = r.resolve(RealmContextFactory.self)!
             return factory.create()
+        }.inObjectScope(.container)
+
+        container.register(RuuviStorageFactory.self) { _ in
+            let factory = RuuviStorageFactoryCoordinator()
+            return factory
+        }
+
+        container.register(RuuviStorage.self) { r in
+            let realm = r.resolve(RealmContext.self)!
+            let sqlite = r.resolve(SQLiteContext.self)!
+            let factory = r.resolve(RuuviStorageFactory.self)!
+            return factory.create(realm: realm, sqlite: sqlite)
         }.inObjectScope(.container)
 
         container.register(RuuviTagPersistence.self) { r in
