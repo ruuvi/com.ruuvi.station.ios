@@ -1,9 +1,10 @@
 import Foundation
+import RuuviLocal
 
 class ForegroundPresenter: NSObject, ForegroundModuleInput {
     weak var view: ForegroundViewInput!
     var router: ForegroundRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func configure() {
         let advertisement = ForegroundViewModel()

@@ -8,6 +8,7 @@ import Future
 import RuuviOntology
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -16,7 +17,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
 
     var errorPresenter: ErrorPresenter!
     var sensorService: SensorService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!

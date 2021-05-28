@@ -1,10 +1,11 @@
 import Foundation
 import Future
 import RuuviStorage
+import RuuviLocal
 
 class DataPruningOperationsManager {
 
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var virtualTagTrunk: VirtualTagTrunk!
     var virtualTagTank: VirtualTagTank!
     var ruuviStorage: RuuviStorage!

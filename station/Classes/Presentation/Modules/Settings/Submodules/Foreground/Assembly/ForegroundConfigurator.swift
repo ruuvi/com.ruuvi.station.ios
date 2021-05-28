@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 class ForegroundConfigurator {
     func configure(view: ForegroundViewController) {
@@ -10,7 +11,7 @@ class ForegroundConfigurator {
         let presenter = ForegroundPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter
     }

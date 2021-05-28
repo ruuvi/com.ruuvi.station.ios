@@ -1,12 +1,13 @@
 import Foundation
+import RuuviLocal
 
 class WebTagDataPruningOperation: AsyncOperation {
 
     private var id: String
-    private var settings: Settings
+    private var settings: RuuviLocalSettings
     private var virtualTagTank: VirtualTagTank
 
-    init(id: String, virtualTagTank: VirtualTagTank, settings: Settings) {
+    init(id: String, virtualTagTank: VirtualTagTank, settings: RuuviLocalSettings) {
         self.id = id
         self.virtualTagTank = virtualTagTank
         self.settings = settings

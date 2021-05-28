@@ -2,6 +2,7 @@ import Foundation
 import RealmSwift
 import RuuviOntology
 import RuuviContext
+import RuuviLocal
 
 extension Notification.Name {
     static let DidMigrationComplete = Notification.Name("MigrationManagerToSQLite.DidMigrationComplete")
@@ -14,7 +15,7 @@ class MigrationManagerToSQLite: MigrationManager {
     var calibrationPersistence: CalibrationPersistence!
     var connectionPersistence: ConnectionPersistence!
     var idPersistence: IDPersistence!
-    var settingsPersistence: Settings!
+    var settingsPersistence: RuuviLocalSettings!
 
     // context
     var realmContext: RealmContext!

@@ -1,9 +1,10 @@
 import Foundation
+import RuuviLocal
 
 class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func configure() {
         view.viewModels = [buildWelcomeShown(),

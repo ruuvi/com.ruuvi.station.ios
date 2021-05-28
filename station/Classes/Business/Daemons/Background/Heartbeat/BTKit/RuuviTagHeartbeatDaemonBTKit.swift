@@ -3,6 +3,7 @@ import BTKit
 import RuuviOntology
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
@@ -13,7 +14,7 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var alertService: AlertService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var pullWebDaemon: PullWebDaemon!
 
     private var ruuviTags = [AnyRuuviTagSensor]()

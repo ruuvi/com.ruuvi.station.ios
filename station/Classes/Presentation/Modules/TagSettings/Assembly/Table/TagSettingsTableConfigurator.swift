@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -20,7 +21,7 @@ class TagSettingsTableConfigurator {
         presenter.background = r.resolve(BTBackground.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.alertService = r.resolve(AlertService.self)
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)

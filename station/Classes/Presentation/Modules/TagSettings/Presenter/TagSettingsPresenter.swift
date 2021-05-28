@@ -6,6 +6,7 @@ import Future
 import RuuviOntology
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -22,7 +23,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var background: BTBackground!
     var calibrationService: CalibrationService!
     var alertService: AlertService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var backgroundPersistence: BackgroundPersistence!
     var connectionPersistence: ConnectionPersistence!
     var pushNotificationsManager: PushNotificationsManager!

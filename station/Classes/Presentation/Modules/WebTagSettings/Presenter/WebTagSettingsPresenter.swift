@@ -4,6 +4,7 @@ import RealmSwift
 import CoreLocation
 import Humidity
 import RuuviOntology
+import RuuviLocal
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
@@ -11,7 +12,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var webTagService: WebTagService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var alertService: AlertService!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!

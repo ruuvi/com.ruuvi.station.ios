@@ -7,13 +7,14 @@ import RuuviOntology
 import RuuviContext
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
     var router: CardsRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var sensorService: SensorService!
     var foreground: BTForeground!
     var background: BTBackground!

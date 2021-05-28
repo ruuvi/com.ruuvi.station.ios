@@ -3,6 +3,7 @@ import UserNotifications
 import UIKit
 import RuuviOntology
 import RuuviStorage
+import RuuviLocal
 
 struct LocalAlertCategory {
     var id: String
@@ -35,7 +36,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var virtualTagTrunk: VirtualTagTrunk!
     var idPersistence: IDPersistence!
     var alertService: AlertService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
 
     var lowTemperatureAlerts = [String: Date]()

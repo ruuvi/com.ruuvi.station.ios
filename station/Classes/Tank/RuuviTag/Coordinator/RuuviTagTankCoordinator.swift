@@ -2,13 +2,14 @@ import Foundation
 import Future
 import RuuviOntology
 import RuuviPersistence
+import RuuviLocal
 
 class RuuviTagTankCoordinator: RuuviTagTank {
 
     var sqlite: RuuviPersistence!
     var realm: RuuviPersistence!
     var idPersistence: IDPersistence!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var sensorService: SensorService!
     var connectionPersistence: ConnectionPersistence!
 

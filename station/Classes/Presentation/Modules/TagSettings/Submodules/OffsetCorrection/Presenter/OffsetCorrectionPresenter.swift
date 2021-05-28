@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RuuviOntology
 import RuuviStorage
+import RuuviLocal
 
 final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     weak var view: OffsetCorrectionViewInput!
@@ -10,7 +11,7 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var foreground: BTForeground!
     var errorPresenter: ErrorPresenter!
     var ruuviStorage: RuuviStorage!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     private var ruuviTagObserveToken: ObservationToken?
     private var ruuviTagObserveLastRecordToken: RUObservationToken?

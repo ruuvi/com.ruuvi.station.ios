@@ -6,6 +6,7 @@ import Firebase
 import FLEX
 #endif
 import UserNotifications
+import RuuviLocal
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -33,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         featureToggleService.fetchFeatureToggles()
         #endif
 
-        if let settings = r.resolve(Settings.self),
+        if let settings = r.resolve(RuuviLocalSettings.self),
             settings.welcomeShown {
             let mainRouter = MainRouter.shared
             mainRouter.openCards()

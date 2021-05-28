@@ -2,11 +2,12 @@ import Foundation
 import RuuviOntology
 import RuuviContext
 import RuuviReactor
+import RuuviLocal
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
     var router: SettingsRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
     var ruuviReactor: RuuviReactor!
     var alertService: AlertService!

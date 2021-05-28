@@ -10,7 +10,7 @@ class MeasurementsServiceRuSpec: QuickSpec {
     override func spec() {
         let r = AppAssembly.shared.assembler.resolver
         var service: MeasurementsService! = r.resolve(MeasurementsService.self)
-        var settings: Settings! = r.resolve(Settings.self)
+        var settings: RuuviLocalSettings! = r.resolve(RuuviLocalSettings.self)
         settings.temperatureUnit = .celsius
         beforeEach {
             settings.language = .russian

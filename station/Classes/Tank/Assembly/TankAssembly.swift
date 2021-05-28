@@ -1,5 +1,6 @@
 import Swinject
 import RuuviPersistence
+import RuuviLocal
 
 class TankAssembly: Assembly {
     func assemble(container: Container) {
@@ -8,7 +9,7 @@ class TankAssembly: Assembly {
             tank.realm = r.resolve(RuuviPersistence.self, name: "realm")
             tank.sqlite = r.resolve(RuuviPersistence.self, name: "sqlite")
             tank.idPersistence = r.resolve(IDPersistence.self)
-            tank.settings = r.resolve(Settings.self)
+            tank.settings = r.resolve(RuuviLocalSettings.self)
             tank.sensorService = r.resolve(SensorService.self)
             tank.connectionPersistence = r.resolve(ConnectionPersistence.self)
             return tank

@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
@@ -17,7 +18,7 @@ class TagChartsScrollConfigurator {
         presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.sensorService = r.resolve(SensorService.self)
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
@@ -33,7 +34,7 @@ class TagChartsScrollConfigurator {
         presenter.interactor = interactor
 
         interactor.gattService = r.resolve(GATTService.self)
-        interactor.settings = r.resolve(Settings.self)
+        interactor.settings = r.resolve(RuuviLocalSettings.self)
         interactor.exportService = r.resolve(ExportService.self)
         interactor.keychainService = r.resolve(KeychainService.self)
         interactor.networkService = r.resolve(NetworkService.self)
