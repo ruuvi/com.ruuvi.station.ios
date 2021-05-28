@@ -11,6 +11,13 @@ public protocol RuuviCloud {
 
     @discardableResult
     func loadSensors() -> Future<[CloudSensor], RuuviCloudError>
+
+    @discardableResult
+    func loadRecords(
+        macId: MACIdentifier,
+        since: Date,
+        until: Date?
+    ) -> Future<[AnyRuuviTagSensorRecord], RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
