@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-class IDPersistenceUserDefaults: IDPersistence {
+class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
     func mac(for luid: LocalIdentifier) -> MACIdentifier? {
         return UserDefaults.standard.string(forKey: luid.value)?.mac
     }

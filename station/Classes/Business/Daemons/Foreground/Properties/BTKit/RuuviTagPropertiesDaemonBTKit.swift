@@ -3,13 +3,14 @@ import BTKit
 import RuuviOntology
 import RuuviReactor
 import RuuviPersistence
+import RuuviLocal
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
 
     var ruuviTagTank: RuuviTagTank!
     var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
-    var idPersistence: IDPersistence!
+    var idPersistence: RuuviLocalIDs!
     var realmPersistence: RuuviPersistence!
     var sqiltePersistence: RuuviPersistence!
 

@@ -25,7 +25,7 @@ class CoreAssembly: Assembly {
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
-            manager.idPersistence = r.resolve(IDPersistence.self)
+            manager.idPersistence = r.resolve(RuuviLocalIDs.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             return manager
         }.inObjectScope(.container)

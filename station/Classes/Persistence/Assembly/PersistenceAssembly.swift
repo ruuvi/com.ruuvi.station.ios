@@ -30,10 +30,6 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
-        container.register(IDPersistence.self) { _ in
-            return IDPersistenceUserDefaults()
-        }
-
         container.register(ImagePersistence.self) { _ in
             let persistence = ImagePersistenceDocuments()
             return persistence
@@ -114,6 +110,11 @@ class PersistenceAssembly: Assembly {
         container.register(RuuviLocalSettings.self) { r in
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalSettings()
+        }
+
+        container.register(RuuviLocalIDs.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalIDs()
         }
 
         container.register(SQLiteContextFactory.self) { _ in

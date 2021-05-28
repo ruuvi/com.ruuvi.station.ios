@@ -8,7 +8,7 @@ class TankAssembly: Assembly {
             let tank = RuuviTagTankCoordinator()
             tank.realm = r.resolve(RuuviPersistence.self, name: "realm")
             tank.sqlite = r.resolve(RuuviPersistence.self, name: "sqlite")
-            tank.idPersistence = r.resolve(IDPersistence.self)
+            tank.idPersistence = r.resolve(RuuviLocalIDs.self)
             tank.settings = r.resolve(RuuviLocalSettings.self)
             tank.sensorService = r.resolve(SensorService.self)
             tank.connectionPersistence = r.resolve(ConnectionPersistence.self)

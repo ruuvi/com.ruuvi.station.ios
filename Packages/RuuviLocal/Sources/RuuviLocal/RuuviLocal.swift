@@ -47,3 +47,8 @@ public protocol RuuviLocalSettings {
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
     func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
 }
+
+public protocol RuuviLocalIDs {
+    func mac(for luid: LocalIdentifier) -> MACIdentifier?
+    func set(mac: MACIdentifier, for luid: LocalIdentifier)
+}

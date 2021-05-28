@@ -8,7 +8,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
 
     var sqlite: RuuviPersistence!
     var realm: RuuviPersistence!
-    var idPersistence: IDPersistence!
+    var idPersistence: RuuviLocalIDs!
     var settings: RuuviLocalSettings!
     var sensorService: SensorService!
     var connectionPersistence: ConnectionPersistence!
