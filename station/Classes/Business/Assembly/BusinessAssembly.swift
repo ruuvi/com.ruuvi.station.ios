@@ -1,6 +1,7 @@
 import Swinject
 import BTKit
 import RuuviContext
+import RuuviStorage
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -70,7 +71,7 @@ class BusinessAssembly: Assembly {
         container.register(DataPruningOperationsManager.self) { r in
             let manager = DataPruningOperationsManager()
             manager.settings = r.resolve(Settings.self)
-            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
             manager.virtualTagTank = r.resolve(VirtualTagTank.self)
             manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
@@ -79,7 +80,7 @@ class BusinessAssembly: Assembly {
 
         container.register(ExportService.self) { r in
             let service = ExportServiceTrunk()
-            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.ruuviStorage = r.resolve(RuuviStorage.self)
             service.measurementService = r.resolve(MeasurementsService.self)
             service.calibrationService = r.resolve(CalibrationService.self)
             return service
@@ -148,7 +149,7 @@ class BusinessAssembly: Assembly {
             manager.alertService = r.resolve(AlertService.self)
             manager.alertPersistence = r.resolve(AlertPersistence.self)
             manager.realmContext = r.resolve(RealmContext.self)
-            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.settings = r.resolve(Settings.self)
             return manager
         }
@@ -167,7 +168,7 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerSensorSettings.self) { r in
             let manager = MigrationManagerSensorSettings()
-            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             return manager
@@ -199,7 +200,7 @@ class BusinessAssembly: Assembly {
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-            daemon.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             return daemon
         }.inObjectScope(.container)
 
@@ -210,7 +211,7 @@ class BusinessAssembly: Assembly {
             daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-            daemon.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             daemon.alertService = r.resolve(AlertService.self)
             daemon.settings = r.resolve(Settings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
@@ -220,7 +221,7 @@ class BusinessAssembly: Assembly {
         container.register(NetworkService.self) { r in
             let service = NetworkServiceQueue()
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
-            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.ruuviStorage = r.resolve(RuuviStorage.self)
             let factory = RuuviNetworkFactory()
             factory.userApi = r.resolve(RuuviNetworkUserApi.self)
             service.ruuviNetworkFactory = factory
@@ -283,7 +284,7 @@ class BusinessAssembly: Assembly {
 
         container.register(UserPropertiesService.self) { r in
             let service = UserPropertiesServiceImpl()
-            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.ruuviStorage = r.resolve(RuuviStorage.self)
             service.settings = r.resolve(Settings.self)
             return service
         }
@@ -292,7 +293,7 @@ class BusinessAssembly: Assembly {
             let service = RuuviNetworkTagOperationsManager()
             service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
             service.ruuviTagTank = r.resolve(RuuviTagTank.self)
-            service.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            service.ruuviStorage = r.resolve(RuuviStorage.self)
             service.keychainService = r.resolve(KeychainService.self)
             service.networkPersistance = r.resolve(NetworkPersistence.self)
             service.settings = r.resolve(Settings.self)

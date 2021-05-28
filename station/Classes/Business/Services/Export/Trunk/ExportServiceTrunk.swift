@@ -2,9 +2,10 @@ import Foundation
 import Humidity
 import Future
 import RuuviOntology
+import RuuviStorage
 
 class ExportServiceTrunk: ExportService {
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var measurementService: MeasurementsService!
     var calibrationService: CalibrationService!
 
@@ -21,9 +22,9 @@ class ExportServiceTrunk: ExportService {
 
     func csvLog(for uuid: String) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
-        let ruuviTag = ruuviTagTrunk.readOne(uuid)
+        let ruuviTag = ruuviStorage.readOne(uuid)
         ruuviTag.on(success: { [weak self] ruuviTag in
-            let recordsOperation = self?.ruuviTagTrunk.readAll(uuid)
+            let recordsOperation = self?.ruuviStorage.readAll(uuid)
             recordsOperation?.on(success: { [weak self] records in
                 self?.csvLog(for: ruuviTag, with: records).on(success: { url in
                     promise.succeed(value: url)
@@ -31,10 +32,10 @@ class ExportServiceTrunk: ExportService {
                     promise.fail(error: error)
                 })
             }, failure: { error in
-                promise.fail(error: error)
+                promise.fail(error: .ruuviStorage(error))
             })
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviStorage(error))
         })
 
         return promise.future

@@ -3,14 +3,13 @@ import RealmSwift
 import AVKit
 import RuuviOntology
 import RuuviContext
+import RuuviStorage
 
-class MigrationManagerAlertService: MigrationManager {
-
-    // persistence
+final class MigrationManagerAlertService: MigrationManager {
     var alertService: AlertService!
     var alertPersistence: AlertPersistence!
     var realmContext: RealmContext!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var settings: Settings!
     private let prefs = UserDefaults.standard
 
@@ -137,7 +136,7 @@ extension MigrationManagerAlertService {
         queue.async {
             let group = DispatchGroup()
             group.enter()
-            self.ruuviTagTrunk.readAll().on(success: {sensors in
+            self.ruuviStorage.readAll().on(success: {sensors in
                 sensors.forEach({ sensor in
                     group.enter()
                     self.fetchRecord(for: sensor) {
@@ -158,7 +157,7 @@ extension MigrationManagerAlertService {
 
     private func fetchRecord(for sensor: RuuviTagSensor, complete: @escaping (((String, Temperature?)) -> Void)) {
         let id = sensor.luid?.value ?? sensor.id
-        ruuviTagTrunk.readLast(sensor).on(success: { record in
+        ruuviStorage.readLast(sensor).on(success: { record in
             complete((id, record?.temperature))
         }, failure: { _ in
             complete((id, nil))

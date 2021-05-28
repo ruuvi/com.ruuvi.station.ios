@@ -1,10 +1,11 @@
 import Foundation
 import RealmSwift
 import Future
+import RuuviStorage
 
-class RuuviNetworkTagOperationsManager {
+final class RuuviNetworkTagOperationsManager {
     var ruuviNetworkFactory: RuuviNetworkFactory!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var ruuviTagTank: RuuviTagTank!
     var keychainService: KeychainService!
     var networkPersistance: NetworkPersistence!
@@ -20,7 +21,7 @@ class RuuviNetworkTagOperationsManager {
         let networkPruningOffset = -TimeInterval(settings.networkPruningIntervalHours * 60 * 60)
         let networkPruningDate = Date(timeIntervalSinceNow: networkPruningOffset)
         let since: Date = networkPersistance.lastSyncDate ?? networkPruningDate
-        ruuviTagTrunk.readAll().on { [weak self] (sensors) in
+        ruuviStorage.readAll().on { [weak self] (sensors) in
             sensors.forEach({
                 guard let mac = $0.macId?.mac,
                     let ruuviNetworkFactory = self?.ruuviNetworkFactory,

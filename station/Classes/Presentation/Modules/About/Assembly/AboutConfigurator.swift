@@ -1,5 +1,6 @@
 import Foundation
 import RuuviContext
+import RuuviStorage
 
 class AboutConfigurator {
     func configure(view: AboutViewController) {
@@ -10,7 +11,7 @@ class AboutConfigurator {
         let presenter = AboutPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.sqliteContext = r.resolve(SQLiteContext.self)
         view.output = presenter

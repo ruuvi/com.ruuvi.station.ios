@@ -1,10 +1,11 @@
 import BTKit
 import Foundation
 import RuuviOntology
+import RuuviStorage
 
-class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
+final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var ruuviTagReactor: RuuviTagReactor!
     var foreground: BTForeground!
     var settings: Settings!
@@ -98,7 +99,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     private func reloadSensorSettings() {
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
+            ruuviStorage.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
                 if let sensorSettings = sensorSettings {
                     self?.sensorSettingsList.append(sensorSettings)
                 }

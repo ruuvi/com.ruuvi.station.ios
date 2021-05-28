@@ -2,6 +2,7 @@ import Foundation
 import Future
 import UIKit
 import RuuviOntology
+import RuuviStorage
 
 class TagsManagerPresenter {
     weak var view: TagsManagerViewInput!
@@ -13,7 +14,7 @@ class TagsManagerPresenter {
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var userApiService: RuuviNetworkUserApi!
 
     private var userApiSensorIds: [AnyMACIdentifier] = []
@@ -119,7 +120,7 @@ extension TagsManagerPresenter {
 
     private func addMissingTags() {
         activityPresenter.increment()
-        ruuviTagTrunk.readAll().on(success: { [weak self] (sensors) in
+        ruuviStorage.readAll().on(success: { [weak self] (sensors) in
             guard let userApiIds = self?.userApiSensorIds else {
                 return
             }

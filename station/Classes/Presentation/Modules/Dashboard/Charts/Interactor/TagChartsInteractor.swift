@@ -2,12 +2,13 @@ import Foundation
 import Future
 import BTKit
 import RuuviOntology
+import RuuviStorage
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
     var gattService: GATTService!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var ruuviTagReactor: RuuviTagReactor!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
@@ -223,7 +224,7 @@ extension TagChartsInteractor {
             return
         }
         let interval = TimeInterval(settings.chartIntervalSeconds)
-        let op = ruuviTagTrunk.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
+        let op = ruuviStorage.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
         op.on(success: { [weak self] (results) in
             guard results.count > 0 else { return }
             var lastResults: [RuuviMeasurement] = []
@@ -238,7 +239,7 @@ extension TagChartsInteractor {
             self?.ruuviTagData.append(contentsOf: lastResults)
             self?.insertMeasurements(lastResults)
         }, failure: {[weak self] (error) in
-            self?.presenter.interactorDidError(error)
+            self?.presenter.interactorDidError(.ruuviStorage(error))
         })
     }
 
@@ -248,7 +249,7 @@ extension TagChartsInteractor {
             value: -settings.dataPruningOffsetHours,
             to: Date()
         ) ?? Date.distantPast
-        let op = ruuviTagTrunk.read(
+        let op = ruuviStorage.read(
             ruuviTagSensor.id,
             after: date,
             with: TimeInterval(settings.chartIntervalSeconds)
@@ -256,7 +257,7 @@ extension TagChartsInteractor {
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
-            self?.presenter.interactorDidError(error)
+            self?.presenter.interactorDidError(.ruuviStorage(error))
         }, completion: competion)
     }
 

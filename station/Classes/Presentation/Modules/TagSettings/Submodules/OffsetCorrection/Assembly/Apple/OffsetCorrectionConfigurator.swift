@@ -1,5 +1,6 @@
 import UIKit
 import BTKit
+import RuuviStorage
 
 class OffsetCorrectionConfigurator {
     func configure(view: OffsetCorrectionAppleViewController) {
@@ -14,7 +15,7 @@ class OffsetCorrectionConfigurator {
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(Settings.self)
 
