@@ -10,7 +10,6 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var realm: RuuviPersistence!
     var idPersistence: RuuviLocalIDs!
     var settings: RuuviLocalSettings!
-    var sensorService: SensorService!
     var connectionPersistence: RuuviLocalConnections!
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
@@ -62,12 +61,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
             sqlite.deleteOffsetCorrection(ruuviTag: ruuviTag).on(success: { [weak self] success in
                 self?.sqlite.delete(ruuviTag).on(success: { [weak self] success in
                     if let luid = ruuviTag.luid {
-                        self?.sensorService.deleteCustomBackground(for: luid)
                         self?.connectionPersistence.setKeepConnection(false, for: luid)
-                    } else if let macId = ruuviTag.macId {
-                        self?.sensorService.deleteCustomBackground(for: macId)
-                    } else {
-                        assertionFailure()
                     }
                     self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
                     promise.succeed(value: success)
@@ -80,12 +74,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         } else {
             realm.delete(ruuviTag).on(success: { [weak self] success in
                 if let luid = ruuviTag.luid {
-                    self?.sensorService.deleteCustomBackground(for: luid)
                     self?.connectionPersistence.setKeepConnection(false, for: luid)
-                } else if let macId = ruuviTag.macId {
-                    self?.sensorService.deleteCustomBackground(for: macId)
-                } else {
-                    assertionFailure()
                 }
                 self?.settings.tagsSorting.removeAll(where: {$0 == ruuviTag.id})
                 promise.succeed(value: success)
