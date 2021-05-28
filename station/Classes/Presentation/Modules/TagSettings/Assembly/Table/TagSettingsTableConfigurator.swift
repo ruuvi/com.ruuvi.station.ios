@@ -1,6 +1,7 @@
 import Foundation
 import BTKit
 import RuuviStorage
+import RuuviReactor
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -24,7 +25,7 @@ class TagSettingsTableConfigurator {
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
-        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.keychainService = r.resolve(KeychainService.self)
         presenter.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)

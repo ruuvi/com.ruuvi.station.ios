@@ -2,6 +2,7 @@ import UIKit
 import BTKit
 import RuuviContext
 import RuuviStorage
+import RuuviReactor
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -32,7 +33,7 @@ class CardsScrollConfigurator {
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
-        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.virtualTagReactor = r.resolve(VirtualTagReactor.self)
         presenter.measurementService = r.resolve(MeasurementsService.self)

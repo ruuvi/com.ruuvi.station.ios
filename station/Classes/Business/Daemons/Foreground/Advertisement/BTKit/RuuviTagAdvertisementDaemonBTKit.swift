@@ -2,17 +2,18 @@ import BTKit
 import Foundation
 import RuuviOntology
 import RuuviStorage
+import RuuviReactor
 
 final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
     var settings: Settings!
 
-    private var ruuviTagsToken: RUObservationToken?
+    private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [ObservationToken]()
-    private var sensorSettingsTokens = [RUObservationToken]()
+    private var sensorSettingsTokens = [RuuviReactorToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
     private var savedDate = [String: Date]() // uuid:date
@@ -55,7 +56,7 @@ final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertis
 
     func start() {
         start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
                 case .initial(let ruuviTags):
@@ -129,7 +130,7 @@ final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertis
                                   modes: [RunLoop.Mode.default.rawValue])
                 }
             })
-            sensorSettingsTokens.append(ruuviTagReactor.observe(ruuviTag, { [weak self] change in
+            sensorSettingsTokens.append(ruuviReactor.observe(ruuviTag, { [weak self] change in
                 switch change {
                 case .delete(let sensorSettings):
                     if let dIndex = self?.sensorSettingsList.firstIndex(

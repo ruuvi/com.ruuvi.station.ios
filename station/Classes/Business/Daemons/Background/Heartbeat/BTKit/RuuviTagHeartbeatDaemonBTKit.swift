@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RuuviOntology
 import RuuviStorage
+import RuuviReactor
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
@@ -10,7 +11,7 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     var connectionPersistence: ConnectionPersistence!
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var alertService: AlertService!
     var settings: Settings!
     var pullWebDaemon: PullWebDaemon!
@@ -22,8 +23,8 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
     private var savedDate = [String: Date]() // [luid: date]
-    private var ruuviTagsToken: RUObservationToken?
-    private var sensorSettingsTokens = [String: RUObservationToken]()
+    private var ruuviTagsToken: RuuviReactorToken?
+    private var sensorSettingsTokens = [String: RuuviReactorToken]()
 
     override init() {
         super.init()
@@ -71,7 +72,7 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     func start() {
         start { [weak self] in
             self?.invalidateTokens()
-            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
                 case .initial(let ruuviTags):
@@ -280,7 +281,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         sensorSettingsTokens.removeAll()
 
         ruuviTags.forEach { ruuviTagSensor in
-            sensorSettingsTokens[ruuviTagSensor.id] = ruuviTagReactor.observe(
+            sensorSettingsTokens[ruuviTagSensor.id] = ruuviReactor.observe(
                 ruuviTagSensor, { [weak self] change in
                     switch change {
                     case .update(let updateSensorSettings):

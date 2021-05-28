@@ -3,13 +3,14 @@ import Future
 import BTKit
 import RuuviOntology
 import RuuviStorage
+import RuuviReactor
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
     var gattService: GATTService!
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var settings: Settings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
@@ -17,7 +18,7 @@ class TagChartsInteractor {
     var networkService: NetworkService!
     var keychainService: KeychainService!
     var lastMeasurement: RuuviMeasurement?
-    private var ruuviTagSensorObservationToken: RUObservationToken?
+    private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var didMigrationCompleteToken: NSObjectProtocol?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
@@ -60,7 +61,7 @@ class TagChartsInteractor {
 extension TagChartsInteractor: TagChartsInteractorInput {
     func restartObservingTags() {
         ruuviTagSensorObservationToken?.invalidate()
-        ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
+        ruuviTagSensorObservationToken = ruuviReactor.observe({ [weak self] change in
             switch change {
             case .initial(let sensors):
                 guard let sSelf = self else { return }
