@@ -25,7 +25,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var alertService: AlertService!
     var settings: RuuviLocalSettings!
     var backgroundPersistence: BackgroundPersistence!
-    var connectionPersistence: ConnectionPersistence!
+    var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!

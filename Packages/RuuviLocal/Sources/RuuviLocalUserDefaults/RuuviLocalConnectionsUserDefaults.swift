@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-class ConnectionPersistenceUserDefaults: ConnectionPersistence {
+final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
 
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"

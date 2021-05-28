@@ -25,11 +25,6 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
-        container.register(ConnectionPersistence.self) { _ in
-            let persistence = ConnectionPersistenceUserDefaults()
-            return persistence
-        }
-
         container.register(ImagePersistence.self) { _ in
             let persistence = ImagePersistenceDocuments()
             return persistence
@@ -55,6 +50,11 @@ class PersistenceAssembly: Assembly {
             let factory = r.resolve(RealmContextFactory.self)!
             return factory.create()
         }.inObjectScope(.container)
+
+        container.register(RuuviLocalConnections.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalConnections()
+        }
 
         container.register(RuuviPersistenceFactory.self) { _ in
             return RuuviPersistenceFactoryImpl()

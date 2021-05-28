@@ -22,7 +22,7 @@ class TagSettingsTableConfigurator {
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
-        presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
+        presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)

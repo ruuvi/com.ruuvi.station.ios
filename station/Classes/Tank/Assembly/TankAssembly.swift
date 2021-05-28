@@ -11,7 +11,7 @@ class TankAssembly: Assembly {
             tank.idPersistence = r.resolve(RuuviLocalIDs.self)
             tank.settings = r.resolve(RuuviLocalSettings.self)
             tank.sensorService = r.resolve(SensorService.self)
-            tank.connectionPersistence = r.resolve(ConnectionPersistence.self)
+            tank.connectionPersistence = r.resolve(RuuviLocalConnections.self)
             return tank
         }
 
