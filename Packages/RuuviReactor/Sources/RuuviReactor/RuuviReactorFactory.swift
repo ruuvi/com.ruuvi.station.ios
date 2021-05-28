@@ -12,6 +12,8 @@ public protocol RuuviReactorFactory {
 }
 
 public final class RuuviReactorFactoryImpl: RuuviReactorFactory {
+    public init() {}
+
     public func create(
         sqliteContext: SQLiteContext,
         realmContext: RealmContext,
