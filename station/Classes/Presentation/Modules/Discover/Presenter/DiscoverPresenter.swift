@@ -7,6 +7,7 @@ import RuuviOntology
 import RuuviContext
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -18,7 +19,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviReactor: RuuviReactor!
     var settings: RuuviLocalSettings!
 
@@ -117,8 +118,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
                 isOwner: true,
                 owner: nil // TODO: @rinat check if nil is ok
             )
-            let entity = ruuviTagTank.create(sensor)
-            let record = ruuviTagTank.create(ruuviTag)
+            let entity = ruuviPool.create(sensor)
+            let record = ruuviPool.create(ruuviTag)
             Future.zip(entity, record).on(success: { [weak self] _ in
                 guard let sSelf = self else { return }
                 if sSelf.isOpenedFromWelcome {
@@ -327,7 +328,7 @@ extension DiscoverPresenter {
             errorPresenter.present(error: RUError.ruuviNetwork(.tagAlreadyExists))
             return
         }
-        let operation = ruuviTagTank.create(sensor)
+        let operation = ruuviPool.create(sensor)
         operation.on(success: { [weak self] (_) in
             self?.activityPresenter.decrement()
             guard let sSelf = self else { return }

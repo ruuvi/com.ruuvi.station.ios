@@ -5,11 +5,12 @@ import RuuviOntology
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
     var gattService: GATTService!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var settings: RuuviLocalSettings!
@@ -159,9 +160,9 @@ extension TagChartsInteractor: TagChartsInteractorInput {
 
     func deleteAllRecords(ruuviTagId: String) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        let op = ruuviTagTank.deleteAllRecords(ruuviTagId)
+        let op = ruuviPool.deleteAllRecords(ruuviTagId)
         op.on(failure: {(error) in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPool(error))
         }, completion: { [weak self] in
             self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())

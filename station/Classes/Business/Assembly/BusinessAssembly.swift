@@ -5,6 +5,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviPersistence
 import RuuviLocal
+import RuuviPool
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -77,7 +78,7 @@ class BusinessAssembly: Assembly {
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
             manager.virtualTagTank = r.resolve(VirtualTagTank.self)
-            manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            manager.ruuviPool = r.resolve(RuuviPool.self)
             return manager
         }
 
@@ -110,7 +111,7 @@ class BusinessAssembly: Assembly {
 
         container.register(GATTService.self) { r in
             let service = GATTServiceQueue()
-            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviPool = r.resolve(RuuviPool.self)
             service.background = r.resolve(BTBackground.self)
             return service
         }.inObjectScope(.container)
@@ -143,7 +144,7 @@ class BusinessAssembly: Assembly {
             manager.realmContext = r.resolve(RealmContext.self)
             manager.sqliteContext = r.resolve(SQLiteContext.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
-            manager.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            manager.ruuviPool = r.resolve(RuuviPool.self)
             return manager
         }
 
@@ -201,7 +202,7 @@ class BusinessAssembly: Assembly {
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.foreground = r.resolve(BTForeground.self)
-            daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             return daemon
@@ -212,7 +213,7 @@ class BusinessAssembly: Assembly {
             daemon.background = r.resolve(BTBackground.self)
             daemon.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             daemon.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-            daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             daemon.alertService = r.resolve(AlertService.self)
@@ -223,7 +224,7 @@ class BusinessAssembly: Assembly {
 
         container.register(NetworkService.self) { r in
             let service = NetworkServiceQueue()
-            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviPool = r.resolve(RuuviPool.self)
             service.ruuviStorage = r.resolve(RuuviStorage.self)
             let factory = RuuviNetworkFactory()
             factory.userApi = r.resolve(RuuviNetworkUserApi.self)
@@ -237,7 +238,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviTagPropertiesDaemon.self) { r in
             let daemon = RuuviTagPropertiesDaemonBTKit()
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
-            daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.idPersistence = r.resolve(RuuviLocalIDs.self)
             daemon.realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")
@@ -295,7 +296,7 @@ class BusinessAssembly: Assembly {
         container.register(RuuviNetworkTagOperationsManager.self) { r in
             let service = RuuviNetworkTagOperationsManager()
             service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
-            service.ruuviTagTank = r.resolve(RuuviTagTank.self)
+            service.ruuviPool = r.resolve(RuuviPool.self)
             service.ruuviStorage = r.resolve(RuuviStorage.self)
             service.keychainService = r.resolve(KeychainService.self)
             service.networkPersistance = r.resolve(NetworkPersistence.self)

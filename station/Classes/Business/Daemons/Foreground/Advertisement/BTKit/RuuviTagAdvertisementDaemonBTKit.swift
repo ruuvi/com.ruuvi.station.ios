@@ -4,9 +4,11 @@ import RuuviOntology
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
+import RuuviPersistence
 
 final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
@@ -181,15 +183,19 @@ final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertis
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
         let sensorSettings = self.sensorSettingsList.first(where: { $0.ruuviTagId == record.ruuviTagId })
-        ruuviTagTank.create(
+        ruuviPool.create(
             record
                 .with(source: .advertisement)
                 .with(sensorSettings: sensorSettings)
         ).on(failure: { [weak self] error in
-            if case RUError.unexpected(let unexpectedError) = error,
-               unexpectedError == .failedToFindRuuviTag {
-                self?.ruuviTags.removeAll(where: { $0.id == uuid })
-                self?.restartObserving()
+            if case RuuviPoolError.ruuviPersistence(let persistenceError) = error {
+                switch persistenceError {
+                case .failedToFindRuuviTag:
+                    self?.ruuviTags.removeAll(where: { $0.id == uuid })
+                    self?.restartObserving()
+                default:
+                    break
+                }
             }
             self?.post(error: error)
         })

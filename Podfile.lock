@@ -163,6 +163,8 @@ PODS:
   - RuuviContext/SQLite (0.0.1):
     - GRDB.swift
     - RuuviOntology/SQLite
+  - RuuviLocal (0.0.1):
+    - RuuviLocal/Contract (= 0.0.1)
   - RuuviLocal/Contract (0.0.1):
     - RuuviOntology
   - RuuviLocal/UserDefaults (0.0.1):
@@ -206,6 +208,19 @@ PODS:
     - RuuviOntology/SQLite
     - RuuviPersistence/Contract
   - RuuviPersistence/Tests (0.0.1)
+  - RuuviPool (0.0.1):
+    - RuuviPool/Contract (= 0.0.1)
+  - RuuviPool/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviPool/Coordinator (0.0.1):
+    - FutureX
+    - RuuviLocal
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviPool/Contract
+  - RuuviPool/Tests (0.0.1)
   - RuuviReactor (0.0.1):
     - RuuviReactor/Contract (= 0.0.1)
   - RuuviReactor/Combine (0.0.1):
@@ -288,6 +303,9 @@ DEPENDENCIES:
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
   - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
+  - RuuviPool (from `Packages/RuuviPool/RuuviPool.podspec`)
+  - RuuviPool/Coordinator (from `Packages/RuuviPool/RuuviPool.podspec`)
+  - RuuviPool/Tests (from `Packages/RuuviPool/RuuviPool.podspec`)
   - RuuviReactor (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviReactor/Impl (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviReactor/Tests (from `Packages/RuuviReactor/RuuviReactor.podspec`)
@@ -354,6 +372,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviOntology/RuuviOntology.podspec
   RuuviPersistence:
     :path: Packages/RuuviPersistence/RuuviPersistence.podspec
+  RuuviPool:
+    :path: Packages/RuuviPool/RuuviPool.podspec
   RuuviReactor:
     :path: Packages/RuuviReactor/RuuviReactor.podspec
   RuuviStorage:
@@ -417,6 +437,7 @@ SPEC CHECKSUMS:
   RuuviLocal: 6429c7255412e56ab69336e757630a5324b00379
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
+  RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
@@ -424,6 +445,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 251bb6d07bde5a66c9d19a20b8dda9ee1fd1c2c8
+PODFILE CHECKSUM: 320ee4d917c0ab96977b439d1d74aaeef91b7f1e
 
 COCOAPODS: 1.10.1

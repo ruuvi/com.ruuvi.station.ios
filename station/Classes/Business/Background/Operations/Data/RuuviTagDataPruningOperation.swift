@@ -1,15 +1,16 @@
 import Foundation
 import RuuviLocal
+import RuuviPool
 
 class RuuviTagDataPruningOperation: AsyncOperation {
 
     private var id: String
     private var settings: RuuviLocalSettings
-    private var ruuviTagTank: RuuviTagTank
+    private var ruuviPool: RuuviPool
 
-    init(id: String, ruuviTagTank: RuuviTagTank, settings: RuuviLocalSettings) {
+    init(id: String, ruuviPool: RuuviPool, settings: RuuviLocalSettings) {
         self.id = id
-        self.ruuviTagTank = ruuviTagTank
+        self.ruuviPool = ruuviPool
         self.settings = settings
     }
 
@@ -18,7 +19,7 @@ class RuuviTagDataPruningOperation: AsyncOperation {
         let date = Calendar.current.date(byAdding: .hour,
                                          value: -offset,
                                          to: Date()) ?? Date()
-        ruuviTagTank.deleteAllRecords(id, before: date).on(failure: { error in
+        ruuviPool.deleteAllRecords(id, before: date).on(failure: { error in
             print(error.localizedDescription)
         }, completion: {
             self.state = .finished

@@ -7,6 +7,7 @@ import RuuviOntology
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -28,7 +29,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var keychainService: KeychainService!
@@ -176,24 +177,29 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
-        let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
-        let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
-        var operations = [deleteTagOperation, deleteRecordsOperation]
+        let deleteTagOperation = ruuviPool.delete(ruuviTag)
+        let deleteRecordsOperation = ruuviPool.deleteAllRecords(ruuviTag.id)
+        var unclainOrUnshareOperation: Future<Bool, RUError>?
         if let mac = ruuviTag.macId?.value,
            ruuviTag.isNetworkConnectable {
             if ruuviTag.isOwner {
-                let unclaimOperation = ruuviNetwork.unclaim(mac)
-                operations.append(unclaimOperation)
+                unclainOrUnshareOperation = ruuviNetwork.unclaim(mac)
             } else {
-                let unshareOperation = ruuviNetwork.unshare(mac, for: nil)
-                operations.append(unshareOperation)
+                unclainOrUnshareOperation = ruuviNetwork.unshare(mac, for: nil)
             }
         }
-        Future.zip(operations).on(success: { [weak self] _ in
-            guard let self = self else {
-                return
+        Future.zip([deleteTagOperation, deleteRecordsOperation]).on(success: { [weak self] _ in
+            guard let sSelf = self else { return }
+            if let unclainOrUnshareOperation = unclainOrUnshareOperation {
+                unclainOrUnshareOperation.on(success: { [weak sSelf] _ in
+                    guard let ssSelf = sSelf else { return }
+                    ssSelf.output.tagSettingsDidDeleteTag(module: ssSelf, ruuviTag: ssSelf.ruuviTag)
+                }, failure: { [weak sSelf] error in
+                    sSelf?.errorPresenter.present(error: error)
+                })
+            } else {
+                sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
             }
-            self.output.tagSettingsDidDeleteTag(module: self, ruuviTag: self.ruuviTag)
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
@@ -203,7 +209,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
         var sensor = ruuviTag.struct
         sensor.name = finalName
-        let operation = ruuviTagTank.update(sensor)
+        let operation = ruuviPool.update(sensor)
         operation.on(failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)
         })
@@ -286,7 +292,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     private func updateTag(with sensor: RuuviTagSensorStruct) {
-        self.ruuviTagTank.update(sensor).on(success: { [weak self] _ in
+        self.ruuviPool.update(sensor).on(success: { [weak self] _ in
             guard let self = self else {
                 return
             }

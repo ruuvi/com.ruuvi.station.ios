@@ -4,16 +4,29 @@ import RuuviOntology
 import RuuviPersistence
 import RuuviLocal
 
-class RuuviTagTankCoordinator: RuuviTagTank {
+final class RuuviPoolCoordinator: RuuviPool {
+    private var sqlite: RuuviPersistence
+    private var realm: RuuviPersistence
+    private var idPersistence: RuuviLocalIDs
+    private var settings: RuuviLocalSettings
+    private var connectionPersistence: RuuviLocalConnections
 
-    var sqlite: RuuviPersistence!
-    var realm: RuuviPersistence!
-    var idPersistence: RuuviLocalIDs!
-    var settings: RuuviLocalSettings!
-    var connectionPersistence: RuuviLocalConnections!
+    init(
+        sqlite: RuuviPersistence,
+        realm: RuuviPersistence,
+        idPersistence: RuuviLocalIDs,
+        settings: RuuviLocalSettings,
+        connectionPersistence: RuuviLocalConnections
+    ) {
+        self.sqlite = sqlite
+        self.realm = realm
+        self.idPersistence = idPersistence
+        self.settings = settings
+        self.connectionPersistence = connectionPersistence
+    }
 
-    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         if let macId = ruuviTag.macId,
             let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
@@ -37,8 +50,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         return promise.future
     }
 
-    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         if ruuviTag.macId != nil {
             sqlite.update(ruuviTag).on(success: { success in
                 promise.succeed(value: success)
@@ -55,8 +68,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         return promise.future
     }
 
-    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         if ruuviTag.macId != nil {
             sqlite.deleteOffsetCorrection(ruuviTag: ruuviTag).on(success: { [weak self] success in
                 self?.sqlite.delete(ruuviTag).on(success: { [weak self] success in
@@ -86,8 +99,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
 
     }
 
-    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         if record.macId != nil {
             sqlite.create(record).on(success: { success in
                 promise.succeed(value: success)
@@ -110,8 +123,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         return promise.future
     }
 
-    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         let sqliteRecords = records.filter({ $0.macId != nil })
         let realmRecords = records.filter({ $0.macId == nil })
         let sqliteOperation = sqlite.create(sqliteRecords)
@@ -124,8 +137,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         return promise.future
     }
 
-    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId)
         let realmOpearion = realm.deleteAllRecords(ruuviTagId)
         Future.zip(sqliteOperation, realmOpearion).on(success: { _ in
@@ -136,8 +149,8 @@ class RuuviTagTankCoordinator: RuuviTagTank {
         return promise.future
     }
 
-     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
+     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
         let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId, before: date)
         let realmOpearion = realm.deleteAllRecords(ruuviTagId, before: date)
         Future.zip(sqliteOperation, realmOpearion).on(success: { _ in

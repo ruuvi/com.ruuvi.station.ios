@@ -3,6 +3,7 @@ import Future
 import UIKit
 import RuuviOntology
 import RuuviStorage
+import RuuviPool
 
 class TagsManagerPresenter {
     weak var view: TagsManagerViewInput!
@@ -13,7 +14,7 @@ class TagsManagerPresenter {
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var userApiService: RuuviNetworkUserApi!
 
@@ -165,7 +166,7 @@ extension TagsManagerPresenter {
                 owner: userApiSensor.owner
             )
         })
-        let futures = sensorsToSave.map({ruuviTagTank.create($0)})
+        let futures = sensorsToSave.map({ruuviPool.create($0)})
         activityPresenter.increment()
         Future.zip(futures).on(success: { [weak self]  (results) in
             if results.allSatisfy({$0 == true}) {
@@ -180,7 +181,7 @@ extension TagsManagerPresenter {
 
     private func storeRecords(_ records: [RuuviTagSensorRecord]) {
         activityPresenter.increment()
-        ruuviTagTank.create(records).on(success: { [weak self] _ in
+        ruuviPool.create(records).on(success: { [weak self] _ in
             self?.createSuccessAddMissingTagAlert()
         }, failure: { [weak self] (error) in
             self?.errorPresenter.present(error: error)

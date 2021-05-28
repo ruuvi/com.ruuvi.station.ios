@@ -1,4 +1,5 @@
 import Foundation
+import RuuviPool
 
 class RuuviTagLoadDataOperation: AsyncOperation {
 
@@ -9,7 +10,7 @@ class RuuviTagLoadDataOperation: AsyncOperation {
     private var since: Date
     private var until: Date?
     private var network: RuuviNetwork
-    private var ruuviTagTank: RuuviTagTank
+    private var ruuviPool: RuuviPool
     private var networkPersistance: NetworkPersistence
 
     init(ruuviTagId: String,
@@ -17,14 +18,14 @@ class RuuviTagLoadDataOperation: AsyncOperation {
          since: Date,
          until: Date? = nil,
          network: RuuviNetwork,
-         ruuviTagTank: RuuviTagTank,
+         ruuviPool: RuuviPool,
          networkPersistance: NetworkPersistence) {
         self.ruuviTagId = ruuviTagId
         self.mac = mac
         self.since = since
         self.until = until
         self.network = network
-        self.ruuviTagTank = ruuviTagTank
+        self.ruuviPool = ruuviPool
         self.networkPersistance = networkPersistance
     }
 
@@ -38,13 +39,13 @@ class RuuviTagLoadDataOperation: AsyncOperation {
                 self?.networkPersistance.setSyncStatus(.complete, for: macId)
                 return
             }
-            let persist = self?.ruuviTagTank.create(records)
+            let persist = self?.ruuviPool.create(records)
             persist?.on(success: { _ in
                 self?.recordsCount = records.count
                 self?.networkPersistance.setSyncStatus(.complete, for: macId)
                 self?.state = .finished
             }, failure: { error in
-                self?.error = error
+                self?.error = .ruuviPool(error)
                 self?.networkPersistance.setSyncStatus(.onError, for: macId)
                 self?.state = .finished
             })
