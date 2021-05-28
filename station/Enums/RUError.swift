@@ -1,9 +1,11 @@
 import Foundation
 import BTKit
 import RuuviStorage
+import RuuviPersistence
 
 enum RUError: Error {
     case ruuviStorage(RuuviStorageError)
+    case ruuviPersistence(RuuviPersistenceError)
     case core(CoreError)
     case persistence(Error)
     case networking(Error)
@@ -21,6 +23,8 @@ enum RUError: Error {
 extension RUError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .ruuviPersistence(let error):
+            return error.localizedDescription
         case .ruuviStorage(let error):
             return error.localizedDescription
         case .core(let error):

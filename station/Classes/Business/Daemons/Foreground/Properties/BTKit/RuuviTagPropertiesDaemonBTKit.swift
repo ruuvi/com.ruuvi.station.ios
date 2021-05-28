@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RuuviOntology
 import RuuviReactor
+import RuuviPersistence
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
 
@@ -9,8 +10,8 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
     var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
     var idPersistence: IDPersistence!
-    var realmPersistence: RuuviTagPersistenceRealm!
-    var sqiltePersistence: RuuviTagPersistenceSQLite!
+    var realmPersistence: RuuviPersistence!
+    var sqiltePersistence: RuuviPersistence!
 
     private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [ObservationToken]()
