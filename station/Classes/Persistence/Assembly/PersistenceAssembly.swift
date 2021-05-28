@@ -1,4 +1,5 @@
 import Swinject
+import RuuviContext
 
 class PersistenceAssembly: Assembly {
 // swiftlint:disable:next function_body_length
@@ -45,9 +46,14 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
-        container.register(RealmContext.self) { _ in
-            let context = RealmContextImpl()
-            return context
+        container.register(RealmContextFactory.self) { _ in
+            let factory = RealmContextFactoryImpl()
+            return factory
+        }.inObjectScope(.container)
+
+        container.register(RealmContext.self) { r in
+            let factory = r.resolve(RealmContextFactory.self)!
+            return factory.create()
         }.inObjectScope(.container)
 
         container.register(RuuviTagPersistence.self) { r in
@@ -73,9 +79,14 @@ class PersistenceAssembly: Assembly {
             return settings
         }.inObjectScope(.container)
 
-        container.register(SQLiteContext.self) { _ in
-            let context = SQLiteContextGRDB()
-            return context
+        container.register(SQLiteContextFactory.self) { _ in
+            let factory = SQLiteContextFactoryGRDB()
+            return factory
+        }
+
+        container.register(SQLiteContext.self) { r in
+            let factory = r.resolve(SQLiteContextFactory.self)!
+            return factory.create()
         }.inObjectScope(.container)
 
         container.register(WebTagPersistence.self) { r in

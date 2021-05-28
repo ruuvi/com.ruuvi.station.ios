@@ -3,6 +3,7 @@ import GRDB
 import RxSwift
 import RealmSwift
 import RuuviOntology
+import RuuviContext
 
 class SensorSettingsRxSwift {
     var ruuviTagId: String

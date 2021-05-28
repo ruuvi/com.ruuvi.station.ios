@@ -1,4 +1,5 @@
 import Swinject
+import RuuviContext
 
 class ReactorAssembly: Assembly {
     func assemble(container: Container) {

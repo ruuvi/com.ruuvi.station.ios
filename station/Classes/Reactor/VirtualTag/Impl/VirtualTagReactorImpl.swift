@@ -2,6 +2,7 @@ import Foundation
 import GRDB
 import Future
 import RuuviOntology
+import RuuviContext
 
 class VirtualTagReactorImpl: VirtualTagReactor {
 

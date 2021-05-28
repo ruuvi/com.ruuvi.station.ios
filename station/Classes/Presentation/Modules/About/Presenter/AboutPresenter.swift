@@ -1,10 +1,12 @@
 import Foundation
+import RuuviContext
 
 class AboutPresenter: AboutModuleInput {
     weak var view: AboutViewInput!
     var router: AboutRouterInput!
     var ruuviTagTrunk: RuuviTagTrunk!
     var realmContext: RealmContext!
+    var sqliteContext: SQLiteContext!
 
     private var viewModel: AboutViewModel {
         return view.viewModel
@@ -70,7 +72,7 @@ extension AboutPresenter {
     }
 
     func getSQLiteFileSize() -> Int64 {
-        return fileSize(at: SQLiteGRDBDatabase.databasePath)
+        return fileSize(at: sqliteContext.database.dbPath)
     }
 
     func fileSize(at path: String) -> Int64 {

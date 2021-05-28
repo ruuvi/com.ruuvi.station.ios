@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import RuuviOntology
+import RuuviContext
 
 extension Notification.Name {
     static let DidMigrationComplete = Notification.Name("MigrationManagerToSQLite.DidMigrationComplete")

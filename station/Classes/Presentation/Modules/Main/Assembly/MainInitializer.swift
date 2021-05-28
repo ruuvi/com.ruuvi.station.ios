@@ -1,4 +1,5 @@
 import UIKit
+import RuuviContext
 
 class MainInitializer: NSObject {
     @IBOutlet weak var navigationController: UINavigationController!

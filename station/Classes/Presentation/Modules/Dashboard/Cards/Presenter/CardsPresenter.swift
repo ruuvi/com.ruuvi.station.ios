@@ -4,6 +4,7 @@ import RealmSwift
 import BTKit
 import Humidity
 import RuuviOntology
+import RuuviContext
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!

@@ -1,4 +1,5 @@
 import Foundation
+import RuuviContext
 
 class SettingsTableConfigurator {
     func configure(view: SettingsTableViewController) {

@@ -14,6 +14,7 @@ public protocol DatabaseService {
 
 public protocol GRDBDatabase {
     var dbPool: DatabasePool { get }
+    var dbPath: String { get }
 
     func migrateIfNeeded()
 }
@@ -30,6 +31,10 @@ class SQLiteGRDBDatabase: GRDBDatabase {
                                                                 .userDomainMask, true).first! as NSString
         let databasePath = documentsPath.appendingPathComponent("grdb.sqlite")
         return databasePath
+    }
+
+    var dbPath: String {
+        return Self.databasePath
     }
 
     private(set) var dbPool: DatabasePool

@@ -1,5 +1,6 @@
 import Foundation
 import RuuviOntology
+import RuuviContext
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!

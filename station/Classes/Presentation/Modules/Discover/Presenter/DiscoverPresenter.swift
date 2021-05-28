@@ -4,6 +4,7 @@ import RealmSwift
 import UIKit
 import Future
 import RuuviOntology
+import RuuviContext
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!

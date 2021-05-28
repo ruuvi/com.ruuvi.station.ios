@@ -1,5 +1,6 @@
 import Swinject
 import BTKit
+import RuuviContext
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {

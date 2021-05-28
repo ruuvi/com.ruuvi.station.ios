@@ -2,6 +2,7 @@ import Foundation
 import RealmSwift
 import AVKit
 import RuuviOntology
+import RuuviContext
 
 class MigrationManagerAlertService: MigrationManager {
 

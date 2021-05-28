@@ -4,6 +4,7 @@ import GRDB
 import Combine
 import RealmSwift
 import RuuviOntology
+import RuuviContext
 
 @available(iOS 13, *)
 class RuuviTagSubjectCombine {
