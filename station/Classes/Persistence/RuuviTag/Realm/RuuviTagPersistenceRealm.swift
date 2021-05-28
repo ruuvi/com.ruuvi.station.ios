@@ -7,6 +7,7 @@ import Foundation
 import FirebaseCrashlytics
 #endif
 import RuuviOntology
+import RuuviContext
 
 // swiftlint:disable type_body_length
 class RuuviTagPersistenceRealm: RuuviTagPersistence {

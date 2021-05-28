@@ -5,3 +5,7 @@ public protocol RealmContext {
     var main: Realm { get }
     var bgWorker: Worker { get }
 }
+
+public protocol RealmContextFactory {
+    func create() -> RealmContext
+}

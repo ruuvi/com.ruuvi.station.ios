@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import RuuviContext
 
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {

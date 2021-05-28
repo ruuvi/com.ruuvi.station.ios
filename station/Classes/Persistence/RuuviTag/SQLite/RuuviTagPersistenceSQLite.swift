@@ -7,6 +7,7 @@ import GRDB
 import FirebaseCrashlytics
 #endif
 import RuuviOntology
+import RuuviContext
 
 // swiftlint:disable type_body_length
 class RuuviTagPersistenceSQLite: RuuviTagPersistence, DatabaseService {

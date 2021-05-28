@@ -1,5 +1,6 @@
 import UIKit
 import BTKit
+import RuuviContext
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
