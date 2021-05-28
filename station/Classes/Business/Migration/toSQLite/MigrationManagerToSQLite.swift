@@ -14,7 +14,7 @@ class MigrationManagerToSQLite: MigrationManager {
     var alertPersistence: AlertPersistence!
     var calibrationPersistence: CalibrationPersistence!
     var connectionPersistence: ConnectionPersistence!
-    var idPersistence: IDPersistence!
+    var idPersistence: RuuviLocalIDs!
     var settingsPersistence: RuuviLocalSettings!
 
     // context

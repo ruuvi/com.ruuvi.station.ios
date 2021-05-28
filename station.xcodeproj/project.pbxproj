@@ -616,12 +616,6 @@
 		0E8BACEF245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
 		0E8BACF0245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
 		0E8BACF1245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */; };
-		0E8BACF4245F62F000D380FB /* IDPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF3245F62F000D380FB /* IDPersistence.swift */; };
-		0E8BACF5245F62F000D380FB /* IDPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF3245F62F000D380FB /* IDPersistence.swift */; };
-		0E8BACF6245F62F000D380FB /* IDPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF3245F62F000D380FB /* IDPersistence.swift */; };
-		0E8BACF9245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */; };
-		0E8BACFA245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */; };
-		0E8BACFB245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */; };
 		0E8BACFE2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */; };
 		0E8BACFF2460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */; };
 		0E8BAD002460358F00D380FB /* MigrationManagerToSQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */; };
@@ -1914,8 +1908,6 @@
 		0E8BACE6245F0EDD00D380FB /* RuuviTagSensorRecord+RuuviMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagSensorRecord+RuuviMeasurement.swift"; sourceTree = "<group>"; };
 		0E8BACEA245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagSensorRecord+RuuviTagDataSQLite.swift"; sourceTree = "<group>"; };
 		0E8BACEE245F166000D380FB /* RuuviTagEnvLogFull+RuuviTagSensorRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RuuviTagEnvLogFull+RuuviTagSensorRecord.swift"; sourceTree = "<group>"; };
-		0E8BACF3245F62F000D380FB /* IDPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDPersistence.swift; sourceTree = "<group>"; };
-		0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDPersistenceUserDefaults.swift; sourceTree = "<group>"; };
 		0E8BACFD2460358F00D380FB /* MigrationManagerToSQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationManagerToSQLite.swift; sourceTree = "<group>"; };
 		0E8BD2AA23851CF2008B31EF /* DefaultsStepperTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsStepperTableViewCell.swift; sourceTree = "<group>"; };
 		0E8BD404238566AB008B31EF /* station_dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = station_dev.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2810,7 +2802,6 @@
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
 				0E390FE623602E0D00D600DB /* Connection */,
-				0E8BACF2245F62CD00D380FB /* ID */,
 				A95BA3E22451EC3E00EF923D /* Keychain */,
 				A9758176249F46D100BC150A /* Locations */,
 				A93CDCB325658FF600018C6C /* Network */,
@@ -3783,23 +3774,6 @@
 				0E8BACD6245EE72500D380FB /* TrunkAssembly.swift */,
 			);
 			path = Assembly;
-			sourceTree = "<group>";
-		};
-		0E8BACF2245F62CD00D380FB /* ID */ = {
-			isa = PBXGroup;
-			children = (
-				0E8BACF7245F631B00D380FB /* UserDefaults */,
-				0E8BACF3245F62F000D380FB /* IDPersistence.swift */,
-			);
-			path = ID;
-			sourceTree = "<group>";
-		};
-		0E8BACF7245F631B00D380FB /* UserDefaults */ = {
-			isa = PBXGroup;
-			children = (
-				0E8BACF8245F632C00D380FB /* IDPersistenceUserDefaults.swift */,
-			);
-			path = UserDefaults;
 			sourceTree = "<group>";
 		};
 		0E8BACFC2460357400D380FB /* toSQLite */ = {
@@ -6603,7 +6577,6 @@
 				A9BB949F25409B060042B190 /* TagsManagerPresenter.swift in Sources */,
 				0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E6BAD9823856A01003A2D4C /* Language.swift in Sources */,
-				0E8BACFB245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
 				A90E16A224606B0500631E6C /* TagChartsInteractorInput.swift in Sources */,
 				0E6BAD9923856A01003A2D4C /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E6BAD9A23856A01003A2D4C /* WebTagSettingsRouter.swift in Sources */,
@@ -6903,7 +6876,6 @@
 				0E6BAE4923856A01003A2D4C /* CardsViewInput.swift in Sources */,
 				A9BB95192540C6170042B190 /* TagManagerTableViewCell.swift in Sources */,
 				0E6BAE4A23856A01003A2D4C /* DiscoverPresenter.swift in Sources */,
-				0E8BACF6245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E6BAE4B23856A01003A2D4C /* LanguageViewInput.swift in Sources */,
 				0E6BAE4C23856A01003A2D4C /* AboutRouter.swift in Sources */,
 				0E6BAE4D23856A01003A2D4C /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
@@ -7104,7 +7076,6 @@
 				0E197C7E23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0E9E775B238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				A91D02FE2511207300694733 /* SelectionTableViewCell.swift in Sources */,
-				0E8BACFA245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
 				A90E16A124606B0500631E6C /* TagChartsInteractorInput.swift in Sources */,
 				0E8BD2CE238566AB008B31EF /* Language.swift in Sources */,
 				A91D02F82511207300694733 /* SelectionModuleInput.swift in Sources */,
@@ -7379,7 +7350,6 @@
 				0E8BD37E238566AB008B31EF /* TagChartsRouterInput.swift in Sources */,
 				0E8BD37F238566AB008B31EF /* CardsViewInput.swift in Sources */,
 				0E8BD380238566AB008B31EF /* DiscoverPresenter.swift in Sources */,
-				0E8BACF5245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E8BD381238566AB008B31EF /* LanguageViewInput.swift in Sources */,
 				0E8BD382238566AB008B31EF /* AboutRouter.swift in Sources */,
 				0E8BD383238566AB008B31EF /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
@@ -7632,7 +7602,6 @@
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language.swift in Sources */,
-				0E8BACF9245F632C00D380FB /* IDPersistenceUserDefaults.swift in Sources */,
 				A90E16A024606B0500631E6C /* TagChartsInteractorInput.swift in Sources */,
 				66BC44982657AED400A03253 /* OffsetCorrectionAppleInitializer.swift in Sources */,
 				0E84BF592397F3C600A37E1A /* HeartbeatViewModel.swift in Sources */,
@@ -7928,7 +7897,6 @@
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				A9BB95172540C6170042B190 /* TagManagerTableViewCell.swift in Sources */,
 				0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
-				0E8BACF4245F62F000D380FB /* IDPersistence.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
 				0E8FD0C9233366F000FFA577 /* TagChartsRouter.swift in Sources */,
 				0E70A47B22AF9BE2006CB87C /* DiscoverTableInitializer.swift in Sources */,

@@ -138,7 +138,7 @@ class BusinessAssembly: Assembly {
             manager.alertPersistence = r.resolve(AlertPersistence.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             manager.connectionPersistence = r.resolve(ConnectionPersistence.self)
-            manager.idPersistence = r.resolve(IDPersistence.self)
+            manager.idPersistence = r.resolve(RuuviLocalIDs.self)
             manager.settingsPersistence = r.resolve(RuuviLocalSettings.self)
             manager.realmContext = r.resolve(RealmContext.self)
             manager.sqliteContext = r.resolve(SQLiteContext.self)
@@ -239,7 +239,7 @@ class BusinessAssembly: Assembly {
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.foreground = r.resolve(BTForeground.self)
-            daemon.idPersistence = r.resolve(IDPersistence.self)
+            daemon.idPersistence = r.resolve(RuuviLocalIDs.self)
             daemon.realmPersistence = r.resolve(RuuviPersistence.self, name: "realm")
             daemon.sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")
             return daemon
