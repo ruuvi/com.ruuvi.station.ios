@@ -2868,7 +2868,6 @@
 		0E1C1D9222B360160032F6CA /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				A93CDCB325658FF600018C6C /* Network */,
 				0E1C1DA922B387BE0032F6CA /* Assembly */,
 				0E02ABC12375A6A500ED4629 /* Alert */,
 				0EEB20BF22B78EAB0015F9E0 /* Background */,
@@ -2876,10 +2875,11 @@
 				0E390FE623602E0D00D600DB /* Connection */,
 				0E8BACF2245F62CD00D380FB /* ID */,
 				A95BA3E22451EC3E00EF923D /* Keychain */,
+				A9758176249F46D100BC150A /* Locations */,
+				A93CDCB325658FF600018C6C /* Network */,
 				0E1C1D9922B364FC0032F6CA /* RuuviTag */,
 				0E1C1E1522B76F400032F6CA /* Settings */,
 				0E9F979D22EB0AF80015ADE2 /* WebTag */,
-				A9758176249F46D100BC150A /* Locations */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
