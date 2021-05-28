@@ -3,6 +3,7 @@ import Foundation
 public protocol RuuviLocalFactory {
     func createLocalSettings() -> RuuviLocalSettings
     func createLocalIDs() -> RuuviLocalIDs
+    func createLocalConnections() -> RuuviLocalConnections
 }
 
 public final class RuuviLocalFactoryImpl: RuuviLocalFactory {
@@ -14,5 +15,9 @@ public final class RuuviLocalFactoryImpl: RuuviLocalFactory {
 
     public func createLocalIDs() -> RuuviLocalIDs {
         return RuuviLocalIDsUserDefaults()
+    }
+
+    public func createLocalConnections() -> RuuviLocalConnections {
+        return RuuviLocalConnectionsUserDefaults()
     }
 }

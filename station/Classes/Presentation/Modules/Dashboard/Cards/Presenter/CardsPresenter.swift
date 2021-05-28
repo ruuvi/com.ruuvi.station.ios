@@ -22,7 +22,7 @@ class CardsPresenter: CardsModuleInput {
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
-    var connectionPersistence: ConnectionPersistence!
+    var connectionPersistence: RuuviLocalConnections!
     var alertService: AlertService!
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!

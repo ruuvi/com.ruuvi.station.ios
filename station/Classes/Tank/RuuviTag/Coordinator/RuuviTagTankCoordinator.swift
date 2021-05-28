@@ -11,7 +11,7 @@ class RuuviTagTankCoordinator: RuuviTagTank {
     var idPersistence: RuuviLocalIDs!
     var settings: RuuviLocalSettings!
     var sensorService: SensorService!
-    var connectionPersistence: ConnectionPersistence!
+    var connectionPersistence: RuuviLocalConnections!
 
     func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()

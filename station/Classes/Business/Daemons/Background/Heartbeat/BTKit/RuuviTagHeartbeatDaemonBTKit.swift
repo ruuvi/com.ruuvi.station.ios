@@ -9,7 +9,7 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
 
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
-    var connectionPersistence: ConnectionPersistence!
+    var connectionPersistence: RuuviLocalConnections!
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
