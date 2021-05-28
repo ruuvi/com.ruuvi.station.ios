@@ -4,6 +4,7 @@ import RuuviStorage
 import RuuviPersistence
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
 
 class PersistenceAssembly: Assembly {
 // swiftlint:disable:next function_body_length
@@ -58,6 +59,26 @@ class PersistenceAssembly: Assembly {
 
         container.register(RuuviPersistenceFactory.self) { _ in
             return RuuviPersistenceFactoryImpl()
+        }
+
+        container.register(RuuviPoolFactory.self) { _ in
+            return RuuviPoolFactoryCoordinator()
+        }
+
+        container.register(RuuviPool.self) { r in
+            let factory = r.resolve(RuuviPoolFactory.self)!
+            let realm = r.resolve(RuuviPersistence.self, name: "realm")!
+            let sqlite = r.resolve(RuuviPersistence.self, name: "sqlite")!
+            let localIDs = r.resolve(RuuviLocalIDs.self)!
+            let localSettings = r.resolve(RuuviLocalSettings.self)!
+            let localConnections = r.resolve(RuuviLocalConnections.self)!
+            return factory.create(
+                sqlite: sqlite,
+                realm: realm,
+                idPersistence: localIDs,
+                settings: localSettings,
+                connectionPersistence: localConnections
+            )
         }
 
         container.register(RuuviReactorFactory.self) { _ in

@@ -2,6 +2,7 @@ import Foundation
 import Future
 import RuuviStorage
 import RuuviLocal
+import RuuviPool
 
 class DataPruningOperationsManager {
 
@@ -9,7 +10,7 @@ class DataPruningOperationsManager {
     var virtualTagTrunk: VirtualTagTrunk!
     var virtualTagTank: VirtualTagTank!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
 
     func webTagPruningOperations() -> Future<[Operation], RUError> {
         let promise = Promise<[Operation], RUError>()
@@ -32,9 +33,11 @@ class DataPruningOperationsManager {
         ruuviStorage.readAll().on(success: { [weak self] ruuviTags in
             guard let sSelf = self else { return }
             let ops = ruuviTags.map({
-                RuuviTagDataPruningOperation(id: $0.id,
-                                             ruuviTagTank: sSelf.ruuviTagTank,
-                                             settings: sSelf.settings)
+                RuuviTagDataPruningOperation(
+                    id: $0.id,
+                    ruuviPool: sSelf.ruuviPool,
+                    settings: sSelf.settings
+                )
             })
             promise.succeed(value: ops)
         }, failure: { error in

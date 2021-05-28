@@ -3,6 +3,7 @@ import BTKit
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
@@ -39,7 +40,7 @@ class TagChartsScrollConfigurator {
         interactor.keychainService = r.resolve(KeychainService.self)
         interactor.networkService = r.resolve(NetworkService.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
-        interactor.ruuviTagTank = r.resolve(RuuviTagTank.self)
+        interactor.ruuviPool = r.resolve(RuuviPool.self)
         interactor.ruuviStorage = r.resolve(RuuviStorage.self)
         interactor.presenter = presenter
 

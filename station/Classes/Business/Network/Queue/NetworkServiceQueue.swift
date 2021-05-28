@@ -3,11 +3,12 @@ import Future
 import RuuviOntology
 import RuuviStorage
 import RuuviLocal
+import RuuviPool
 
 class NetworkServiceQueue: NetworkService {
 
     var ruuviNetworkFactory: RuuviNetworkFactory!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var networkPersistence: NetworkPersistence!
     var settings: RuuviLocalSettings!
@@ -116,7 +117,7 @@ extension NetworkServiceQueue {
                                                   mac: mac,
                                                   since: since,
                                                   network: network,
-                                                  ruuviTagTank: ruuviTagTank, networkPersistance: networkPersistence)
+                                                  ruuviPool: ruuviPool, networkPersistance: networkPersistence)
         operation.completionBlock = { [unowned operation] in
             if let error = operation.error {
                 promise.fail(error: error)
@@ -137,7 +138,7 @@ extension NetworkServiceQueue {
                                                  isClaimed: networkTag.isOwner,
                                                  isOwner: networkTag.isOwner,
                                                  owner: networkTag.owner)
-        ruuviTagTank.update(updatedSensor)
+        ruuviPool.update(updatedSensor)
         if let pictureUrl = URL(string: networkTag.pictureUrl) {
             sensorService.ensureNetworkBackgroundIsLoaded(for: networkTag.sensorId.mac, from: pictureUrl)
         }
@@ -152,7 +153,7 @@ extension NetworkServiceQueue {
                                                  isClaimed: false,
                                                  isOwner: true,
                                                  owner: sensor.owner)
-        ruuviTagTank.update(updatedSensor)
+        ruuviPool.update(updatedSensor)
     }
 
     private func createTag(for sensor: UserApiUserSensor) {
@@ -165,7 +166,7 @@ extension NetworkServiceQueue {
                                                  isClaimed: sensor.isOwner,
                                                  isOwner: sensor.isOwner,
                                                  owner: sensor.owner)
-        ruuviTagTank.create(sensorStruct)
+        ruuviPool.create(sensorStruct)
         if let pictureUrl = URL(string: sensor.pictureUrl) {
             sensorService.ensureNetworkBackgroundIsLoaded(for: sensor.sensorId.mac, from: pictureUrl)
         }

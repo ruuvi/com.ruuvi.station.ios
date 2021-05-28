@@ -1,5 +1,6 @@
 import Foundation
 import RuuviStorage
+import RuuviPool
 
 class TagsManagerConfigurator {
     func configure(view: TagsManagerViewController) {
@@ -16,7 +17,7 @@ class TagsManagerConfigurator {
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.keychainService = r.resolve(KeychainService.self)
-        presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
+        presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.userApiService = r.resolve(RuuviNetworkUserApi.self)
 

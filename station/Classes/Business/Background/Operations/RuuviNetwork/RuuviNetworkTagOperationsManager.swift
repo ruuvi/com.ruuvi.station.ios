@@ -3,11 +3,12 @@ import RealmSwift
 import Future
 import RuuviStorage
 import RuuviLocal
+import RuuviPool
 
 final class RuuviNetworkTagOperationsManager {
     var ruuviNetworkFactory: RuuviNetworkFactory!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var keychainService: KeychainService!
     var networkPersistance: NetworkPersistence!
     var settings: RuuviLocalSettings!
@@ -26,7 +27,7 @@ final class RuuviNetworkTagOperationsManager {
             sensors.forEach({
                 guard let mac = $0.macId?.mac,
                     let ruuviNetworkFactory = self?.ruuviNetworkFactory,
-                    let ruuviTagTank = self?.ruuviTagTank,
+                    let ruuviPool = self?.ruuviPool,
                     let networkPersistance = self?.networkPersistance else {
                     return
                 }
@@ -36,7 +37,7 @@ final class RuuviNetworkTagOperationsManager {
                         mac: mac,
                         since: since,
                         network: ruuviNetworkFactory.userApi,
-                        ruuviTagTank: ruuviTagTank,
+                        ruuviPool: ruuviPool,
                         networkPersistance: networkPersistance
                     )
                 )

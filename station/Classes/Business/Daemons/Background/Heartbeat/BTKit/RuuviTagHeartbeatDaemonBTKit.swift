@@ -4,13 +4,14 @@ import RuuviOntology
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviPool
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
     var connectionPersistence: RuuviLocalConnections!
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var alertService: AlertService!
@@ -150,7 +151,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     let interval = observer.settings.saveHeartbeatsIntervalMinutes
                     if let date = observer.savedDate[uuid] {
                         if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
-                            observer.ruuviTagTank.create(
+                            observer.ruuviPool.create(
                                 ruuviTag
                                     .with(source: .heartbeat)
                                     .with(sensorSettings: sensorSettings)
@@ -158,7 +159,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                             observer.savedDate[uuid] = Date()
                         }
                     } else {
-                        observer.ruuviTagTank.create(
+                        observer.ruuviPool.create(
                             ruuviTag
                                 .with(source: .heartbeat)
                                 .with(sensorSettings: sensorSettings)
