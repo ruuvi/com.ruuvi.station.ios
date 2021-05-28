@@ -4,6 +4,7 @@ import RuuviContext
 import RuuviStorage
 import RuuviReactor
 import RuuviPersistence
+import RuuviLocal
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -25,7 +26,7 @@ class BusinessAssembly: Assembly {
 
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()
-            service.settings = r.resolve(Settings.self)
+            service.settings = r.resolve(RuuviLocalSettings.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
@@ -72,7 +73,7 @@ class BusinessAssembly: Assembly {
 
         container.register(DataPruningOperationsManager.self) { r in
             let manager = DataPruningOperationsManager()
-            manager.settings = r.resolve(Settings.self)
+            manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
             manager.virtualTagTank = r.resolve(VirtualTagTank.self)
@@ -128,7 +129,7 @@ class BusinessAssembly: Assembly {
         container.register(MigrationManagerToVIPER.self) { r in
             let manager = MigrationManagerToVIPER()
             manager.sensorService = r.resolve(SensorService.self)
-            manager.settings = r.resolve(Settings.self)
+            manager.settings = r.resolve(RuuviLocalSettings.self)
             return manager
         }
 
@@ -138,7 +139,7 @@ class BusinessAssembly: Assembly {
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             manager.connectionPersistence = r.resolve(ConnectionPersistence.self)
             manager.idPersistence = r.resolve(IDPersistence.self)
-            manager.settingsPersistence = r.resolve(Settings.self)
+            manager.settingsPersistence = r.resolve(RuuviLocalSettings.self)
             manager.realmContext = r.resolve(RealmContext.self)
             manager.sqliteContext = r.resolve(SQLiteContext.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
@@ -152,19 +153,19 @@ class BusinessAssembly: Assembly {
             manager.alertPersistence = r.resolve(AlertPersistence.self)
             manager.realmContext = r.resolve(RealmContext.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
-            manager.settings = r.resolve(Settings.self)
+            manager.settings = r.resolve(RuuviLocalSettings.self)
             return manager
         }
 
         container.register(MigrationManagerToPrune240.self) { r in
             let manager = MigrationManagerToPrune240()
-            manager.settings = r.resolve(Settings.self)
+            manager.settings = r.resolve(RuuviLocalSettings.self)
             return manager
         }
 
         container.register(MigrationManagerToChartDuration240.self) { r in
             let manager = MigrationManagerToChartDuration240()
-            manager.settings = r.resolve(Settings.self)
+            manager.settings = r.resolve(RuuviLocalSettings.self)
             return manager
         }
 
@@ -178,14 +179,14 @@ class BusinessAssembly: Assembly {
 
         container.register(PullWebDaemon.self) { r in
             let daemon = PullWebDaemonOperations()
-            daemon.settings = r.resolve(Settings.self)
+            daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
             return daemon
         }.inObjectScope(.container)
 
         container.register(PullRuuviNetworkDaemon.self) { r in
             let daemon = PullRuuviNetworkDaemonOperation()
-            daemon.settings = r.resolve(Settings.self)
+            daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.networkPersistance = r.resolve(NetworkPersistence.self)
             daemon.ruuviTagNetworkOperationsManager = r.resolve(RuuviNetworkTagOperationsManager.self)
             return daemon
@@ -198,7 +199,7 @@ class BusinessAssembly: Assembly {
 
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
-            daemon.settings = r.resolve(Settings.self)
+            daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
@@ -215,7 +216,7 @@ class BusinessAssembly: Assembly {
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             daemon.alertService = r.resolve(AlertService.self)
-            daemon.settings = r.resolve(Settings.self)
+            daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
             return daemon
         }.inObjectScope(.container)
@@ -228,7 +229,7 @@ class BusinessAssembly: Assembly {
             factory.userApi = r.resolve(RuuviNetworkUserApi.self)
             service.ruuviNetworkFactory = factory
             service.networkPersistence = r.resolve(NetworkPersistence.self)
-            service.settings = r.resolve(Settings.self)
+            service.settings = r.resolve(RuuviLocalSettings.self)
             service.sensorService = r.resolve(SensorService.self)
             return service
         }.inObjectScope(.container)
@@ -263,7 +264,7 @@ class BusinessAssembly: Assembly {
         container.register(WebTagDaemon.self) { r in
             let daemon = WebTagDaemonImpl()
             daemon.webTagService = r.resolve(WebTagService.self)
-            daemon.settings = r.resolve(Settings.self)
+            daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.webTagPersistence = r.resolve(WebTagPersistence.self)
             daemon.alertService = r.resolve(AlertService.self)
             return daemon
@@ -287,7 +288,7 @@ class BusinessAssembly: Assembly {
         container.register(UserPropertiesService.self) { r in
             let service = UserPropertiesServiceImpl()
             service.ruuviStorage = r.resolve(RuuviStorage.self)
-            service.settings = r.resolve(Settings.self)
+            service.settings = r.resolve(RuuviLocalSettings.self)
             return service
         }
 
@@ -298,7 +299,7 @@ class BusinessAssembly: Assembly {
             service.ruuviStorage = r.resolve(RuuviStorage.self)
             service.keychainService = r.resolve(KeychainService.self)
             service.networkPersistance = r.resolve(NetworkPersistence.self)
-            service.settings = r.resolve(Settings.self)
+            service.settings = r.resolve(RuuviLocalSettings.self)
             return service
         }
 

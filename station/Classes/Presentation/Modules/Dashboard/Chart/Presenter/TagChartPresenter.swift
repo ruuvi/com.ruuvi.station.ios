@@ -3,10 +3,11 @@ import Foundation
 import Charts
 import UIKit
 import RuuviOntology
+import RuuviLocal
 
 class TagChartPresenter: NSObject {
     var view: TagChartViewInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var viewModel: TagChartViewModel! {
         didSet {
             self.view.configure(with: viewModel)

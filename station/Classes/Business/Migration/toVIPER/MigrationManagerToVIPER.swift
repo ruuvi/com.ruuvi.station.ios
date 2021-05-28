@@ -1,10 +1,11 @@
 import RealmSwift
 import Foundation
 import RuuviOntology
+import RuuviLocal
 
 class MigrationManagerToVIPER: MigrationManager {
     var sensorService: SensorService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func migrateIfNeeded() {
         let config = Realm.Configuration(

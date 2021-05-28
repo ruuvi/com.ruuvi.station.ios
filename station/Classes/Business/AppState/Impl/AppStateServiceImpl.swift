@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocal
 
 class AppStateServiceImpl: AppStateService {
 
@@ -10,7 +11,7 @@ class AppStateServiceImpl: AppStateService {
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var pullWebDaemon: PullWebDaemon!
     var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var userPropertiesService: UserPropertiesService!
     var universalLinkCoordinator: UniversalLinkCoordinator!
     var webTagDaemon: WebTagDaemon!

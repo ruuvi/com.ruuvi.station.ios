@@ -2,20 +2,20 @@ import Foundation
 import RuuviOntology
 
 extension Notification.Name {
-    static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
-    static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
-    static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
-    static let LanguageDidChange = Notification.Name("LanguageDidChange")
-    static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
-    static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
-    static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
-    static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
-    static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
-    static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
-    static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
+    public static let TemperatureUnitDidChange = Notification.Name("Settings.TemperatureUnitDidChange")
+    public static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
+    public static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
+    public static let LanguageDidChange = Notification.Name("LanguageDidChange")
+    public static let isAdvertisementDaemonOnDidChange = Notification.Name("isAdvertisementDaemonOnDidChange")
+    public static let isWebTagDaemonOnDidChange = Notification.Name("isWebTagDaemonOnDidChange")
+    public static let WebTagDaemonIntervalDidChange = Notification.Name("WebTagDaemonIntervalDidChange")
+    public static let ReadRSSIDidChange = Notification.Name("ReadRSSIDidChange")
+    public static let ReadRSSIIntervalDidChange = Notification.Name("ReadRSSIIntervalDidChange")
+    public static let DownsampleOnDidChange = Notification.Name("DownsampleOnDidChange")
+    public static let ChartIntervalDidChange = Notification.Name("ChartIntervalDidChange")
 }
 
-protocol Settings {
+public protocol RuuviLocalSettings {
     var temperatureUnit: TemperatureUnit { get set }
     var humidityUnit: HumidityUnit { get set }
     var pressureUnit: UnitPressure { get set }

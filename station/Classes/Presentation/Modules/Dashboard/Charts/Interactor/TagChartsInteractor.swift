@@ -4,6 +4,7 @@ import BTKit
 import RuuviOntology
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
@@ -11,7 +12,7 @@ class TagChartsInteractor {
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
     var exportService: ExportService!

@@ -5,6 +5,7 @@ import FirebaseAnalytics
 #endif
 import RuuviStorage
 import RuuviOntology
+import RuuviLocal
 
 final class UserPropertiesServiceImpl: UserPropertiesService {
 
@@ -69,7 +70,7 @@ final class UserPropertiesServiceImpl: UserPropertiesService {
     }
 
     var ruuviStorage: RuuviStorage!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func update() {
         guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,

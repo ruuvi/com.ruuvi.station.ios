@@ -2,6 +2,7 @@ import Foundation
 import RealmSwift
 import Future
 import RuuviStorage
+import RuuviLocal
 
 final class RuuviNetworkTagOperationsManager {
     var ruuviNetworkFactory: RuuviNetworkFactory!
@@ -9,7 +10,7 @@ final class RuuviNetworkTagOperationsManager {
     var ruuviTagTank: RuuviTagTank!
     var keychainService: KeychainService!
     var networkPersistance: NetworkPersistence!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func pullNetworkTagOperations() -> Future<[Operation], RUError> {
         let promise: Promise<[Operation], RUError> = .init()

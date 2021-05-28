@@ -3,6 +3,7 @@ import BTKit
 import RuuviContext
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -11,14 +12,14 @@ class CardsScrollConfigurator {
 
         let router = CardsRouter()
         router.transitionHandler = view
-        router.settings = r.resolve(Settings.self)
+        router.settings = r.resolve(RuuviLocalSettings.self)
 
         let presenter = CardsPresenter()
         presenter.router = router
         presenter.view = view
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.sensorService = r.resolve(SensorService.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)

@@ -4,13 +4,14 @@ import AVKit
 import RuuviOntology
 import RuuviContext
 import RuuviStorage
+import RuuviLocal
 
 final class MigrationManagerAlertService: MigrationManager {
     var alertService: AlertService!
     var alertPersistence: AlertPersistence!
     var realmContext: RealmContext!
     var ruuviStorage: RuuviStorage!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     private let prefs = UserDefaults.standard
 
     @UserDefault("MigrationManagerAlertService.persistanceVersion", defaultValue: 0)

@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-class SettingsUserDegaults: Settings {
+final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
 
@@ -223,7 +223,7 @@ class SettingsUserDegaults: Settings {
     @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: 240)
     var networkPruningIntervalHours: Int
 
-// MARK: - Private
+    // MARK: - Private
     @UserDefault("SettingsUserDegaults.useFahrenheit", defaultValue: false)
     private var useFahrenheit: Bool
 

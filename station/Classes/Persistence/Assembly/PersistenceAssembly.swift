@@ -3,6 +3,7 @@ import RuuviContext
 import RuuviStorage
 import RuuviPersistence
 import RuuviReactor
+import RuuviLocal
 
 class PersistenceAssembly: Assembly {
 // swiftlint:disable:next function_body_length
@@ -40,7 +41,7 @@ class PersistenceAssembly: Assembly {
 
         container.register(KeychainService.self) { r in
             let persistence = KeychainServiceImpl()
-            persistence.settings = r.resolve(Settings.self)
+            persistence.settings = r.resolve(RuuviLocalSettings.self)
             return persistence
         }.inObjectScope(.container)
 
@@ -105,10 +106,15 @@ class PersistenceAssembly: Assembly {
             return factory.create(realm: realm, sqlite: sqlite)
         }.inObjectScope(.container)
 
-        container.register(Settings.self) { _ in
-            let settings = SettingsUserDegaults()
-            return settings
-        }.inObjectScope(.container)
+        container.register(RuuviLocalFactory.self) { _ in
+            let factory = RuuviLocalFactoryImpl()
+            return factory
+        }
+
+        container.register(RuuviLocalSettings.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalSettings()
+        }
 
         container.register(SQLiteContextFactory.self) { _ in
             let factory = SQLiteContextFactoryGRDB()
@@ -123,7 +129,7 @@ class PersistenceAssembly: Assembly {
         container.register(WebTagPersistence.self) { r in
             let persistence = WebTagPersistenceRealm()
             persistence.context = r.resolve(RealmContext.self)
-            persistence.settings = r.resolve(Settings.self)
+            persistence.settings = r.resolve(RuuviLocalSettings.self)
             return persistence
         }
 

@@ -6,6 +6,7 @@ import Future
 import RuuviOntology
 import RuuviContext
 import RuuviReactor
+import RuuviLocal
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -19,7 +20,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
     var ruuviReactor: RuuviReactor!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedWebTags: Results<WebTagRealm>! {

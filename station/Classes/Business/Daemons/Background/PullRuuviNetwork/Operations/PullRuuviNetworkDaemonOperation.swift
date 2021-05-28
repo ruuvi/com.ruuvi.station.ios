@@ -1,8 +1,9 @@
 import Foundation
+import RuuviLocal
 
 class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon {
 
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var ruuviTagNetworkOperationsManager: RuuviNetworkTagOperationsManager!
     var networkPersistance: NetworkPersistence!
     var needToRefreshImmediately: Bool = false

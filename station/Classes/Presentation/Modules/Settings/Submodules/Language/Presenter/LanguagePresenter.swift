@@ -1,10 +1,11 @@
 import Foundation
 import RuuviOntology
+import RuuviLocal
 
 class LanguagePresenter: LanguageModuleInput {
     weak var view: LanguageViewInput!
     var router: LanguageRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 }
 
 extension LanguagePresenter: LanguageViewOutput {

@@ -2,6 +2,7 @@ import Foundation
 import BTKit
 import RuuviContext
 import RuuviReactor
+import RuuviLocal
 
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {
@@ -22,7 +23,7 @@ class DiscoverTableConfigurator {
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter
     }

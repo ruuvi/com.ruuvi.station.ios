@@ -3,13 +3,14 @@ import Foundation
 import RuuviOntology
 import RuuviStorage
 import RuuviReactor
+import RuuviLocal
 
 final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [ObservationToken]()

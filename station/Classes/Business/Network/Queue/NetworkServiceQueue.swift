@@ -2,6 +2,7 @@ import Foundation
 import Future
 import RuuviOntology
 import RuuviStorage
+import RuuviLocal
 
 class NetworkServiceQueue: NetworkService {
 
@@ -9,7 +10,7 @@ class NetworkServiceQueue: NetworkService {
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
     var networkPersistence: NetworkPersistence!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var sensorService: SensorService!
 
     lazy var queue: OperationQueue = {

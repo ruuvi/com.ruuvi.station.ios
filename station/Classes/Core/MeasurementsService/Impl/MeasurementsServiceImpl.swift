@@ -1,6 +1,7 @@
 import Foundation
 import Humidity
 import RuuviOntology
+import RuuviLocal
 
 struct MeasurementsServiceSettigsUnit {
     let temperatureUnit: UnitTemperature
@@ -9,7 +10,7 @@ struct MeasurementsServiceSettigsUnit {
 }
 
 class MeasurementsServiceImpl: NSObject {
-    var settings: Settings! {
+    var settings: RuuviLocalSettings! {
         didSet {
             units = MeasurementsServiceSettigsUnit(temperatureUnit: settings.temperatureUnit.unitTemperature,
                                                    humidityUnit: settings.humidityUnit,
