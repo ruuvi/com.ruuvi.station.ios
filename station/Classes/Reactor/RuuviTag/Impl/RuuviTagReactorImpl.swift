@@ -13,7 +13,6 @@ class RuuviTagReactorImpl: RuuviTagReactor {
     var realmContext: RealmContext!
     var sqlitePersistence: RuuviTagPersistence!
     var realmPersistence: RuuviTagPersistence!
-    var settings: Settings!
 
     private lazy var entityRxSwift = RuuviTagSubjectRxSwift(sqlite: sqliteContext, realm: realmContext)
     private lazy var recordRxSwifts = [String: RuuviTagRecordSubjectRxSwift]()
@@ -101,13 +100,9 @@ class RuuviTagReactorImpl: RuuviTagReactor {
         let sqliteOperation = sqlitePersistence.readAll()
         let realmOperation = realmPersistence.readAll()
         Future.zip(realmOperation, sqliteOperation)
-            .on(success: { [weak self] realmEntities, sqliteEntities in
+            .on(success: { realmEntities, sqliteEntities in
             let combinedValues = sqliteEntities + realmEntities
-            if let strongSelf = self {
-                block(.initial(strongSelf.reorder(combinedValues)))
-            } else {
-                block(.initial(combinedValues))
-            }
+            block(.initial(combinedValues))
         }, failure: { error in
             block(.error(error))
         })
@@ -325,15 +320,5 @@ class RuuviTagReactorImpl: RuuviTagReactor {
             delete.dispose()
         }
         #endif
-    }
-}
-extension RuuviTagReactorImpl {
-    private func reorder(_ sensors: [AnyRuuviTagSensor]) -> [AnyRuuviTagSensor] {
-        if settings.tagsSorting.isEmpty {
-            settings.tagsSorting = sensors.map({$0.id})
-            return sensors
-        } else {
-            return sensors.reorder(by: settings.tagsSorting)
-        }
     }
 }

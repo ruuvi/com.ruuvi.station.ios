@@ -1,9 +1,14 @@
-//
-//  Array+AnyRuuviTagSensor.swift
-//  station
-//
-//  Created by Rinat Enikeev on 28.05.2021.
-//  Copyright © 2021 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
 import Foundation
+import RuuviOntology
+
+extension Array where Element == AnyRuuviTagSensor {
+    func reordered(by settings: Settings) -> Self {
+        var settings = settings
+        if settings.tagsSorting.isEmpty {
+            settings.tagsSorting = self.map({$0.id})
+            return self
+        } else {
+            return self.reorder(by: settings.tagsSorting)
+        }
+    }
+}

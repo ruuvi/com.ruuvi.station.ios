@@ -225,6 +225,8 @@ extension DiscoverPresenter {
         persistedReactorToken = ruuviTagReactor.observe({ [weak self] (change) in
             switch change {
             case .initial(let sensors):
+                guard let sSelf = self else { return }
+                let sensors = sensors.reordered(by: sSelf.settings)
                 self?.persistedSensors = sensors
             case .insert(let sensor):
                 self?.persistedSensors.append(sensor)

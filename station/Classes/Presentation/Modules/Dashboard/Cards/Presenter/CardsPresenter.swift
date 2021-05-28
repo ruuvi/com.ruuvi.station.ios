@@ -592,6 +592,8 @@ extension CardsPresenter {
         ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
+                guard let sSelf = self else { return }
+                let ruuviTags = ruuviTags.reordered(by: sSelf.settings)
                 let isInitialLoad = (self?.ruuviTags.count ?? 0) == 0
                 self?.didLoadInitialRuuviTags = true
                 self?.ruuviTags = ruuviTags.map({ $0.any })
