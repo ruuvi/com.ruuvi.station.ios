@@ -1,19 +1,26 @@
 import Foundation
 import RuuviOntology
 import Future
+import RuuviPersistence
 
 final class RuuviStorageCoordinator: RuuviStorage {
-    private let sqlite: RuuviStoragePersistence
-    private let realm: RuuviStoragePersistence
+    private let sqlite: RuuviPersistence
+    private let realm: RuuviPersistence
 
-    init(sqlite: RuuviStoragePersistence, realm: RuuviStoragePersistence) {
+    init(sqlite: RuuviPersistence, realm: RuuviPersistence) {
         self.sqlite = sqlite
         self.realm = realm
     }
 
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviStorageError> {
-        // MARK: - respect realm
-        return sqlite.readOne(ruuviTagId)
+        // TODO: @rinat respect realm
+        let promise = Promise<AnyRuuviTagSensor, RuuviStorageError>()
+        sqlite.readOne(ruuviTagId).on(success: { sensor in
+            promise.succeed(value: sensor)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
     }
 
     func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
@@ -23,7 +30,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
@@ -37,7 +44,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
             let combinedValues = sqliteEntities + realmEntities
             promise.succeed(value: combinedValues)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
@@ -53,7 +60,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
@@ -68,7 +75,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
@@ -80,17 +87,27 @@ final class RuuviStorageCoordinator: RuuviStorage {
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
 
     func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError> {
+        let promise = Promise<RuuviTagSensorRecord?, RuuviStorageError>()
         if ruuviTag.macId != nil {
-            return sqlite.readLast(ruuviTag)
+            sqlite.readLast(ruuviTag).on(success: { record in
+                promise.succeed(value: record)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         } else {
-            return realm.readLast(ruuviTag)
+            realm.readLast(ruuviTag).on(success: { record in
+                promise.succeed(value: record)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         }
+        return promise.future
     }
 
     func getStoredTagsCount() -> Future<Int, RuuviStorageError> {
@@ -100,7 +117,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
@@ -112,17 +129,27 @@ final class RuuviStorageCoordinator: RuuviStorage {
         Future.zip(sqliteOperation, realmOperation).on(success: { sqliteEntities, realmEntities in
             promise.succeed(value: sqliteEntities + realmEntities)
         }, failure: { error in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPersistence(error))
         })
         return promise.future
     }
 
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError> {
+        let promise = Promise<SensorSettings?, RuuviStorageError>()
         if ruuviTag.macId != nil {
-            return sqlite.readSensorSettings(ruuviTag)
+            sqlite.readSensorSettings(ruuviTag).on(success: { settings in
+                promise.succeed(value: settings)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         } else {
-            return realm.readSensorSettings(ruuviTag)
+            realm.readSensorSettings(ruuviTag).on(success: { settings in
+                promise.succeed(value: settings)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
         }
+        return promise.future
     }
 
     func updateOffsetCorrection(
@@ -131,10 +158,30 @@ final class RuuviStorageCoordinator: RuuviStorage {
         of ruuviTag: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviStorageError> {
+        let promise = Promise<SensorSettings, RuuviStorageError>()
         if ruuviTag.macId != nil {
-            return sqlite.updateOffsetCorrection(type: type, with: value, of: ruuviTag, lastOriginalRecord: record)
+            sqlite.updateOffsetCorrection(
+                type: type,
+                with: value,
+                of: ruuviTag,
+                lastOriginalRecord: record)
+                .on(success: { settings in
+                    promise.succeed(value: settings)
+                }, failure: { error in
+                    promise.fail(error: .ruuviPersistence(error))
+                })
         } else {
-            return realm.updateOffsetCorrection(type: type, with: value, of: ruuviTag, lastOriginalRecord: record)
+            realm.updateOffsetCorrection(
+                type: type,
+                with: value,
+                of: ruuviTag,
+                lastOriginalRecord: record)
+                .on(success: { settings in
+                    promise.succeed(value: settings)
+                }, failure: { error in
+                    promise.fail(error: .ruuviPersistence(error))
+                })
         }
+        return promise.future
     }
 }

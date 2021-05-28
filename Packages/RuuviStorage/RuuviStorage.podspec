@@ -23,30 +23,9 @@ Pod::Spec.new do |s|
   s.subspec 'Coordinator' do |ss|
     ss.source_files = 'Sources/RuuviStorageCoordinator/**/*.{h,m,swift}', 'Sources/RuuviStorageCoordinator/*.{h,m,swift}'
     ss.dependency 'RuuviStorage/Contract'
-    ss.dependency 'RuuviStorage/Realm'
-    ss.dependency 'RuuviStorage/SQLite'
+    ss.dependency 'RuuviPersistence/Realm'
+    ss.dependency 'RuuviPersistence/SQLite'
     ss.dependency 'RuuviOntology'
-    ss.dependency 'FutureX'
-  end
-
-  s.subspec 'Realm' do |ss|
-    ss.source_files = 'Sources/RuuviStorageRealm/**/*.{h,m,swift}', 'Sources/RuuviStorageRealm/*.{h,m,swift}'
-    ss.dependency 'RuuviStorage/Contract'
-    ss.dependency 'RuuviContext/Realm'
-    ss.dependency 'RuuviOntology/Realm'
-    ss.dependency 'RuuviOntology'
-    ss.dependency 'Realm'
-    ss.dependency 'RealmSwift'
-    ss.dependency 'FutureX'
-  end
-
-  s.subspec 'SQLite' do |ss|
-    ss.source_files = 'Sources/RuuviStorageSQLite/**/*.{h,m,swift}', 'Sources/RuuviStorageSQLite/*.{h,m,swift}'
-    ss.dependency 'RuuviStorage/Contract'
-    ss.dependency 'RuuviContext/SQLite'
-    ss.dependency 'RuuviOntology/SQLite'
-    ss.dependency 'RuuviOntology'
-    ss.dependency 'GRDB.swift'
     ss.dependency 'FutureX'
   end
 
