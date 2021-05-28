@@ -57,6 +57,11 @@ class PersistenceAssembly: Assembly {
             return factory.createLocalConnections()
         }
 
+        container.register(RuuviLocalSyncState.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalSyncState()
+        }
+
         container.register(RuuviPersistenceFactory.self) { _ in
             return RuuviPersistenceFactoryImpl()
         }
