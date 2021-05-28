@@ -38,7 +38,6 @@ class TagChartsScrollConfigurator {
         interactor.settings = r.resolve(RuuviLocalSettings.self)
         interactor.exportService = r.resolve(ExportService.self)
         interactor.keychainService = r.resolve(KeychainService.self)
-        interactor.networkService = r.resolve(NetworkService.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
         interactor.ruuviPool = r.resolve(RuuviPool.self)
         interactor.ruuviStorage = r.resolve(RuuviStorage.self)

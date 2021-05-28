@@ -17,7 +17,6 @@ class TagChartsInteractor {
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
     var exportService: ExportService!
-    var networkService: NetworkService!
     var keychainService: KeychainService!
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
@@ -322,18 +321,6 @@ extension TagChartsInteractor {
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
-            promise.fail(error: error)
-        })
-        return promise.future
-    }
-
-    private func syncNetworkRecords(for ruuviTagId: String, macId: MACIdentifier) -> Future<Void, RUError> {
-        let promise = Promise<Void, RUError>()
-        let op = networkService.loadData(for: ruuviTagId, mac: macId.value)
-        op.on(success: { [weak self] count in
-            self?.presenter.interactorDidSyncComplete(count)
-            promise.succeed(value: ())
-        }, failure: { error in
             promise.fail(error: error)
         })
         return promise.future
