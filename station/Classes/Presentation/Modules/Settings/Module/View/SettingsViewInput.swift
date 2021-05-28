@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol SettingsViewInput: ViewInput {
     var temperatureUnit: TemperatureUnit { get set }

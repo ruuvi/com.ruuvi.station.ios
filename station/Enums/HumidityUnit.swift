@@ -1,10 +1,5 @@
 import Foundation
-
-enum HumidityUnit {
-    case percent
-    case gm3
-    case dew
-}
+import RuuviOntology
 
 extension HumidityUnit: SelectionItemProtocol {
     var title: String {

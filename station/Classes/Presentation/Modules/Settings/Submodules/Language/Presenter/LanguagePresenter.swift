@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 class LanguagePresenter: LanguageModuleInput {
     weak var view: LanguageViewInput!

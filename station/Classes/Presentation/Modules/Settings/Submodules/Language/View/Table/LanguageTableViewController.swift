@@ -1,4 +1,5 @@
 import UIKit
+import RuuviOntology
 
 class LanguageTableViewController: UITableViewController {
     var output: LanguageViewOutput!

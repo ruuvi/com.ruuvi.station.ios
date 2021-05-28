@@ -4,6 +4,7 @@ import Future
 import FirebaseAnalytics
 #endif
 import RuuviStorage
+import RuuviOntology
 
 final class UserPropertiesServiceImpl: UserPropertiesService {
 

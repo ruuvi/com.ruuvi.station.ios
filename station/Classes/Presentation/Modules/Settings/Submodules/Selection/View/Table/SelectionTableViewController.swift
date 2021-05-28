@@ -1,4 +1,5 @@
 import UIKit
+import RuuviOntology
 
 class SelectionTableViewController: UITableViewController {
     var output: SelectionViewOutput!
