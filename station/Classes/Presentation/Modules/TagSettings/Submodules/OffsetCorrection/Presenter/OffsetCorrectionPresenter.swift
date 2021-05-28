@@ -9,7 +9,6 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var background: BTBackground!
     var foreground: BTForeground!
     var errorPresenter: ErrorPresenter!
-    var ruuviTagReactor: RuuviTagReactor!
     var ruuviStorage: RuuviStorage!
     var settings: Settings!
 

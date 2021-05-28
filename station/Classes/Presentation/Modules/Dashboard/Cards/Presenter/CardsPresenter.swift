@@ -6,6 +6,7 @@ import Humidity
 import RuuviOntology
 import RuuviContext
 import RuuviStorage
+import RuuviReactor
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -27,19 +28,19 @@ class CardsPresenter: CardsModuleInput {
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
     var calibrationService: CalibrationService!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var ruuviStorage: RuuviStorage!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
     var networkPersistance: NetworkPersistence!
     weak var tagCharts: TagChartsModuleInput?
-    private var ruuviTagToken: RUObservationToken?
-    private var ruuviTagObserveLastRecordToken: RUObservationToken?
+    private var ruuviTagToken: RuuviReactorToken?
+    private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
     private var advertisementTokens = [ObservationToken]()
     private var heartbeatTokens = [ObservationToken]()
-    private var sensorSettingsTokens = [RUObservationToken]()
+    private var sensorSettingsTokens = [RuuviReactorToken]()
     private var rssiTokens = [AnyLocalIdentifier: ObservationToken]()
     private var rssiTimers = [AnyLocalIdentifier: Timer]()
     private var backgroundToken: NSObjectProtocol?
@@ -495,7 +496,7 @@ extension CardsPresenter {
             if viewModel.type == .ruuvi,
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
-                    ruuviTagReactor.observe(ruuviTagSensor, { [weak self] change in
+                    ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
@@ -522,7 +523,7 @@ extension CardsPresenter {
     }
     private func restartObservingRuuviTagNetwork(for sensor: AnyRuuviTagSensor) {
         ruuviTagObserveLastRecordToken?.invalidate()
-        ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
+        ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
                let record = anyRecord { // TODO: @rinat check if works without .object
@@ -589,7 +590,7 @@ extension CardsPresenter {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
+        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
                 guard let sSelf = self else { return }

@@ -2,6 +2,7 @@ import Swinject
 import BTKit
 import RuuviContext
 import RuuviStorage
+import RuuviReactor
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -199,7 +200,7 @@ class BusinessAssembly: Assembly {
             daemon.settings = r.resolve(Settings.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
-            daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             return daemon
         }.inObjectScope(.container)
@@ -210,7 +211,7 @@ class BusinessAssembly: Assembly {
             daemon.localNotificationsManager = r.resolve(LocalNotificationsManager.self)
             daemon.connectionPersistence = r.resolve(ConnectionPersistence.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
-            daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
             daemon.alertService = r.resolve(AlertService.self)
             daemon.settings = r.resolve(Settings.self)
@@ -233,7 +234,7 @@ class BusinessAssembly: Assembly {
 
         container.register(RuuviTagPropertiesDaemon.self) { r in
             let daemon = RuuviTagPropertiesDaemonBTKit()
-            daemon.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+            daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviTagTank = r.resolve(RuuviTagTank.self)
             daemon.foreground = r.resolve(BTForeground.self)
             daemon.idPersistence = r.resolve(IDPersistence.self)

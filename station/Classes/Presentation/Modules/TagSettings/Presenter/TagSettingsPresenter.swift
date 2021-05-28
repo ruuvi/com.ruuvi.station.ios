@@ -5,6 +5,7 @@ import UIKit
 import Future
 import RuuviOntology
 import RuuviStorage
+import RuuviReactor
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -28,7 +29,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var keychainService: KeychainService!
     var ruuviNetwork: RuuviNetworkUserApi!
     var activityPresenter: ActivityPresenter!
@@ -59,8 +60,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             view.viewModel = viewModel
         }
     }
-    private var ruuviTagToken: RUObservationToken?
-    private var ruuviTagSensorRecordToken: RUObservationToken?
+    private var ruuviTagToken: RuuviReactorToken?
+    private var ruuviTagSensorRecordToken: RuuviReactorToken?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
@@ -604,7 +605,7 @@ extension TagSettingsPresenter {
 
     private func startObservingRuuviTag() {
         ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
+        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
             case .update(let sensor):
                 if sensor.id == self?.ruuviTag.id {
@@ -620,7 +621,7 @@ extension TagSettingsPresenter {
 
     private func startObservingRuuviTagSensor(ruuviTag: RuuviTagSensor) {
         ruuviTagSensorRecordToken?.invalidate()
-        ruuviTagSensorRecordToken = ruuviTagReactor.observeLast(ruuviTag, { [weak self] (changes) in
+        ruuviTagSensorRecordToken = ruuviReactor.observeLast(ruuviTag, { [weak self] (changes) in
             switch changes {
             case .update(let record):
                 if let lastRecord = record {

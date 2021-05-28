@@ -1,17 +1,18 @@
 import Foundation
 import BTKit
 import RuuviOntology
+import RuuviReactor
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
 
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
     var idPersistence: IDPersistence!
     var realmPersistence: RuuviTagPersistenceRealm!
     var sqiltePersistence: RuuviTagPersistenceSQLite!
 
-    private var ruuviTagsToken: RUObservationToken?
+    private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [ObservationToken]()
     private var scanTokens = [ObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
@@ -37,7 +38,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
 
     func start() {
         start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
                 case .initial(let ruuviTags):

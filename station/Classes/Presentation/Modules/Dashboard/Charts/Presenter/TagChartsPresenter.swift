@@ -7,6 +7,7 @@ import Charts
 import Future
 import RuuviOntology
 import RuuviStorage
+import RuuviReactor
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -18,7 +19,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var settings: Settings!
     var foreground: BTForeground!
     var ruuviStorage: RuuviStorage!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
     var mailComposerPresenter: MailComposerPresenter!
@@ -52,7 +53,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartIntervalDidChangeToken: NSObjectProtocol?
-    private var sensorSettingsToken: RUObservationToken?
+    private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var exportFileUrl: URL?
@@ -533,7 +534,7 @@ extension TagChartsPresenter {
     }
 
     private func startObservingSensorSettingsChanges() {
-        sensorSettingsToken = ruuviTagReactor.observe(ruuviTag, { (reactorChange) in
+        sensorSettingsToken = ruuviReactor.observe(ruuviTag, { (reactorChange) in
             switch reactorChange {
             case .update(let settings):
                 self.sensorSettings = settings

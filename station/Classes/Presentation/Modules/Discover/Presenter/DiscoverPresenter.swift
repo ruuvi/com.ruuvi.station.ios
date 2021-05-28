@@ -5,6 +5,7 @@ import UIKit
 import Future
 import RuuviOntology
 import RuuviContext
+import RuuviReactor
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -17,7 +18,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
     var ruuviTagTank: RuuviTagTank!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var settings: Settings!
 
     private var ruuviTags = Set<RuuviTag>()
@@ -38,7 +39,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     private var stateToken: ObservationToken?
     private var lostToken: ObservationToken?
     private var persistedWebTagsToken: NotificationToken?
-    private var persistedReactorToken: RUObservationToken?
+    private var persistedReactorToken: RuuviReactorToken?
     private let ruuviLogoImage = UIImage(named: "ruuvi_logo")
     private var isOpenedFromWelcome: Bool = true
     private var lastSelectedWebTag: DiscoverWebTagViewModel?
@@ -222,7 +223,7 @@ extension DiscoverPresenter {
     }
 
     private func startObservingPersistedRuuviSensors() {
-        persistedReactorToken = ruuviTagReactor.observe({ [weak self] (change) in
+        persistedReactorToken = ruuviReactor.observe({ [weak self] (change) in
             switch change {
             case .initial(let sensors):
                 guard let sSelf = self else { return }
