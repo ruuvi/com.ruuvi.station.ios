@@ -70,9 +70,6 @@ extension SignInPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - TagsManagerModuleOutput
-extension SignInPresenter: TagsManagerModuleOutput {}
-
 // MARK: - SignInModuleInput
 extension SignInPresenter: SignInModuleInput {
     func configure(with state: SignInPresenter.State, output: SignInModuleOutput?) {
