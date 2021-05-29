@@ -332,9 +332,6 @@ extension TagChartsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - TagsManagerModuleOutput
-extension TagChartsPresenter: TagsManagerModuleOutput {}
-
 // MARK: - AlertServiceObserver
 extension TagChartsPresenter: AlertServiceObserver {
     func alert(service: AlertService, isTriggered: Bool, for uuid: String) {

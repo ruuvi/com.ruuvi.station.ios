@@ -269,9 +269,6 @@ extension CardsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - TagsManagerModuleOutput
-extension CardsPresenter: TagsManagerModuleOutput {}
-
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
