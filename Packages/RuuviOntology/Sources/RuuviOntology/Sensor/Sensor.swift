@@ -20,7 +20,7 @@ public protocol Locateable {
     var location: Location { get }
 }
 
-public protocol Networkable {
+public protocol Claimable {
     var isClaimed: Bool { get }
     var isOwner: Bool { get }
     var owner: String? { get }
@@ -28,7 +28,11 @@ public protocol Networkable {
 
 public protocol Sensor: StringIdentifieable {}
 
-public protocol CloudSensor: Sensor, Nameable, Networkable {
+public protocol HasRemotePicture {
+    var picture: URL? { get }
+}
+
+public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture {
 }
 
 public protocol PhysicalSensor: Sensor, Connectable, Nameable {

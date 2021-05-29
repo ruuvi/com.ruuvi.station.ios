@@ -212,12 +212,14 @@ class BusinessAssembly: Assembly {
             let pool = r.resolve(RuuviPool.self)!
             let localSettings = r.resolve(RuuviLocalSettings.self)!
             let localSyncState = r.resolve(RuuviLocalSyncState.self)!
+            let localImages = r.resolve(RuuviLocalImages.self)!
             return factory.createCloudSync(
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
                 ruuviPool: pool,
                 ruuviLocalSettings: localSettings,
-                ruuviLocalSyncState: localSyncState
+                ruuviLocalSyncState: localSyncState,
+                ruuviLocalImages: localImages
             )
         }
 

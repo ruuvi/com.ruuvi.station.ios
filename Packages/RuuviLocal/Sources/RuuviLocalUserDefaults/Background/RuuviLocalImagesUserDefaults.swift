@@ -15,6 +15,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
 
     private let uploadBackgroundKeyPrefix = "BackgroundPersistenceUserDefaults.uploadBackground."
+    private let cloudSensorPictureUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
 
     private var usedBackgrounds: [Int] {
         if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int] {
@@ -174,5 +175,19 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
         UserDefaults.standard.removeObject(forKey: key)
+    }
+
+    func isPictureCached(for cloudSensor: CloudSensor) -> Bool {
+        guard let url = cloudSensor.picture else { return false }
+        return UserDefaults.standard.url(
+            forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
+        ) == url
+    }
+
+    func setPictureIsCached(for cloudSensor: CloudSensor) {
+        UserDefaults.standard.set(
+            cloudSensor.picture,
+            forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
+        )
     }
 }

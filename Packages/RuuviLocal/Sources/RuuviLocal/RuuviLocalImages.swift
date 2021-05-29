@@ -30,4 +30,7 @@ public protocol RuuviLocalImages {
     func backgroundUploadProgress(for identifier: Identifier) -> Double?
     func setBackgroundUploadProgress(percentage: Double, for identifier: Identifier)
     func deleteBackgroundUploadProgress(for identifier: Identifier)
+
+    func isPictureCached(for cloudSensor: CloudSensor) -> Bool
+    func setPictureIsCached(for cloudSensor: CloudSensor)
 }
