@@ -8,6 +8,7 @@ import RuuviLocal
 import RuuviPool
 import RuuviService
 import RuuviCloud
+import RuuviCore
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -259,7 +260,7 @@ class BusinessAssembly: Assembly {
             let service = SensorServiceImpl()
             service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
             service.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
-            service.imageCoreService = r.resolve(ImageCoreService.self)
+            service.ruuviCoreImage = r.resolve(RuuviCoreImage.self)
             return service
         }
 

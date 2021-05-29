@@ -1,5 +1,5 @@
 import UIKit
 
-protocol ImageCoreService {
+public protocol RuuviCoreImage {
     func cropped(image: UIImage, to maxSize: CGSize) -> UIImage
 }

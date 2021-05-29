@@ -25,6 +25,8 @@ def shared_pods
   pod 'RealmSwift'
   pod 'RuuviOntology', :path => 'Packages/RuuviOntology/RuuviOntology.podspec'
   pod 'RuuviContext', :path => 'Packages/RuuviContext/RuuviContext.podspec'
+  pod 'RuuviCore', :path => 'Packages/RuuviCore/RuuviCore.podspec', :testspecs => ['Tests']
+  pod 'RuuviCore/Image', :path => 'Packages/RuuviCore/RuuviCore.podspec'
   pod 'RuuviCloud', :path => 'Packages/RuuviCloud/RuuviCloud.podspec', :testspecs => ['Tests']
   pod 'RuuviCloud/Pure', :path => 'Packages/RuuviCloud/RuuviCloud.podspec'
   pod 'RuuviLocal/UserDefaults', :path => 'Packages/RuuviLocal/RuuviLocal.podspec'

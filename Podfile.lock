@@ -163,6 +163,14 @@ PODS:
   - RuuviContext/SQLite (0.0.1):
     - GRDB.swift
     - RuuviOntology/SQLite
+  - RuuviCore (0.0.1):
+    - RuuviCore/Contract (= 0.0.1)
+  - RuuviCore/Contract (0.0.1):
+    - FutureX
+  - RuuviCore/Image (0.0.1):
+    - FutureX
+    - RuuviCore/Contract
+  - RuuviCore/Tests (0.0.1)
   - RuuviLocal (0.0.1):
     - RuuviLocal/Contract (= 0.0.1)
   - RuuviLocal/Contract (0.0.1):
@@ -314,6 +322,9 @@ DEPENDENCIES:
   - RuuviCloud/Pure (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviCloud/Tests (from `Packages/RuuviCloud/RuuviCloud.podspec`)
   - RuuviContext (from `Packages/RuuviContext/RuuviContext.podspec`)
+  - RuuviCore (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Image (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Tests (from `Packages/RuuviCore/RuuviCore.podspec`)
   - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
   - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
   - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
@@ -384,6 +395,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviCloud/RuuviCloud.podspec
   RuuviContext:
     :path: Packages/RuuviContext/RuuviContext.podspec
+  RuuviCore:
+    :path: Packages/RuuviCore/RuuviCore.podspec
   RuuviLocal:
     :path: Packages/RuuviLocal/RuuviLocal.podspec
   RuuviOntology:
@@ -454,6 +467,7 @@ SPEC CHECKSUMS:
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
   RuuviCloud: f4583874401a5c7c458eaac2842788ca1a348a57
   RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
+  RuuviCore: ed8326e13481473dc92e5a0810b60211dfbb8a75
   RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
@@ -466,6 +480,6 @@ SPEC CHECKSUMS:
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 6e5693ff4107df96793512a67c6430cf97d95809
+PODFILE CHECKSUM: 7dfa35b74e59f0e9b9cca2401736801850704208
 
 COCOAPODS: 1.10.1
