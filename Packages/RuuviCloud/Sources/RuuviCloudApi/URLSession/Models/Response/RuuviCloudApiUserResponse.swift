@@ -24,6 +24,10 @@ struct RuuviCloudApiSensor: Decodable {
 }
 
 extension RuuviCloudApiSensor: CloudSensor {
+    var picture: URL? {
+        return URL(string: pictureUrl)
+    }
+
     var owner: String? {
         return sensorOwner
     }

@@ -12,20 +12,58 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviPool: RuuviPool
     private let ruuviLocalSettings: RuuviLocalSettings
     private var ruuviLocalSyncState: RuuviLocalSyncState
+    private let ruuviLocalImages: RuuviLocalImages
 
     init(
         ruuviStorage: RuuviStorage,
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
         ruuviLocalSettings: RuuviLocalSettings,
-        ruuviLocalSyncState: RuuviLocalSyncState
+        ruuviLocalSyncState: RuuviLocalSyncState,
+        ruuviLocalImages: RuuviLocalImages
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
         self.ruuviPool = ruuviPool
         self.ruuviLocalSettings = ruuviLocalSettings
         self.ruuviLocalSyncState = ruuviLocalSyncState
+        self.ruuviLocalImages = ruuviLocalImages
     }
+
+    @discardableResult
+    func syncImage(sensor: CloudSensor) -> Future<URL, RuuviServiceError> {
+        let promise = Promise<URL, RuuviServiceError>()
+        guard let pictureUrl = sensor.picture else {
+            promise.fail(error: .pictureUrlIsNil)
+            return promise.future
+        }
+        URLSession
+            .shared
+            .dataTask(with: pictureUrl, completionHandler: { [weak self] data, _, error in
+                guard let sSelf = self else { return }
+                if let error = error {
+                    promise.fail(error: .networking(error))
+                } else if let data = data {
+                    if let image = UIImage(data: data) {
+                        sSelf.ruuviLocalImages
+                            .setCustomBackground(image: image, for: sensor.id.mac)
+                            .on(success: { [weak sSelf] fileUrl in
+                                guard let ssSelf = sSelf else { return }
+                                ssSelf.ruuviLocalImages.setPictureIsCached(for: sensor)
+                                promise.succeed(value: fileUrl)
+                            }, failure: { error in
+                                promise.fail(error: .ruuviLocal(error))
+                            })
+                    } else {
+                        promise.fail(error: .failedToParseNetworkResponse)
+                    }
+                } else {
+                    promise.fail(error: .failedToParseNetworkResponse)
+                }
+            }).resume()
+        return promise.future
+    }
+
     @discardableResult
     func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
@@ -51,26 +89,43 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
             sSelf.ruuviCloud.loadSensors().on(success: { cloudSensors in
-                localSensors.forEach({ localSensor in
-                    if let cloudSensor = cloudSensors.first(where: {$0.id == localSensor.id }) {
-                        sSelf.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
-                        updatedSensors.insert(localSensor)
-                    } else {
-                        let unclaimed = localSensor.unclaimed()
-                        if unclaimed.any != localSensor {
-                            sSelf.ruuviPool.update(unclaimed)
+                let updateSensors: [Future<Bool, RuuviPoolError>] = localSensors
+                    .compactMap({ localSensor in
+                        if let cloudSensor = cloudSensors.first(where: {$0.id == localSensor.id }) {
                             updatedSensors.insert(localSensor)
+                            return sSelf.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
+                        } else {
+                            let unclaimed = localSensor.unclaimed()
+                            if unclaimed.any != localSensor {
+                                updatedSensors.insert(localSensor)
+                                return sSelf.ruuviPool.update(unclaimed)
+                            } else {
+                                return nil
+                            }
                         }
+                    })
+                let createSensors: [Future<Bool, RuuviPoolError>] = cloudSensors
+                    .filter { cloudSensor in
+                        !localSensors.contains(where: { $0.id == cloudSensor.id })
+                    }.map { newCloudSensor in
+                        let newLocalSensor = newCloudSensor.ruuviTagSensor
+                        updatedSensors.insert(newLocalSensor.any)
+                        return sSelf.ruuviPool.create(newLocalSensor)
                     }
+
+                let syncImages = cloudSensors
+                    .filter({ !sSelf.ruuviLocalImages.isPictureCached(for: $0) })
+                    .map({ sSelf.syncImage(sensor: $0) })
+
+                Future.zip([Future.zip(createSensors), Future.zip(updateSensors)]).on(success: { _ in
+                    Future.zip(syncImages).on(success: { _ in
+                        promise.succeed(value: updatedSensors)
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
+                }, failure: { error in
+                    promise.fail(error: .ruuviPool(error))
                 })
-                cloudSensors.filter { cloudSensor in
-                    !localSensors.contains(where: { $0.id == cloudSensor.id })
-                }.forEach { newCloudSensor in
-                    let newLocalSensor = newCloudSensor.ruuviTagSensor
-                    sSelf.ruuviPool.create(newLocalSensor)
-                    updatedSensors.insert(newLocalSensor.any)
-                }
-                promise.succeed(value: updatedSensors)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
