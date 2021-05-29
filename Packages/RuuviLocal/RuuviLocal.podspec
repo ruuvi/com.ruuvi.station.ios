@@ -17,12 +17,14 @@ Pod::Spec.new do |s|
   s.subspec 'Contract' do |ss|
     ss.source_files = 'Sources/RuuviLocal/**/*.{h,m,swift}', 'Sources/RuuviLocal/*.{h,m,swift}'
     ss.dependency 'RuuviOntology'
+    ss.dependency 'FutureX'
   end
 
   s.subspec 'UserDefaults' do |ss|
     ss.source_files = 'Sources/RuuviLocalUserDefaults/**/*.{h,m,swift}', 'Sources/RuuviLocalUserDefaults/*.{h,m,swift}'
     ss.dependency 'RuuviLocal/Contract'
     ss.dependency 'RuuviOntology'
+    ss.dependency 'FutureX'
   end
 
   s.test_spec 'Tests' do |test_spec|

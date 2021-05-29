@@ -5,6 +5,7 @@ public protocol RuuviLocalFactory {
     func createLocalIDs() -> RuuviLocalIDs
     func createLocalConnections() -> RuuviLocalConnections
     func createLocalSyncState() -> RuuviLocalSyncState
+    func createLocalImages() -> RuuviLocalImages
 }
 
 public final class RuuviLocalFactoryImpl: RuuviLocalFactory {
@@ -24,5 +25,9 @@ public final class RuuviLocalFactoryImpl: RuuviLocalFactory {
 
     public func createLocalSyncState() -> RuuviLocalSyncState {
         return RuuviLocalSyncStateUserDefaults()
+    }
+
+    public func createLocalImages() -> RuuviLocalImages {
+        return RuuviLocalImagesUserDefaults(imagePersistence: ImagePersistenceDocuments())
     }
 }

@@ -2,9 +2,10 @@ import Foundation
 import Future
 import UIKit
 import RuuviOntology
+import RuuviLocal
 
 final class SensorServiceImpl: SensorService {
-    var backgroundPersistence: BackgroundPersistence!
+    var ruuviLocalImages: RuuviLocalImages!
     var ruuviNetwork: RuuviNetworkUserApi!
     var imageCoreService: ImageCoreService!
     private let backgroundUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
@@ -13,15 +14,15 @@ final class SensorServiceImpl: SensorService {
     func background(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RUError> {
         let promise = Promise<UIImage, RUError>()
         if let macId = macId {
-            if let image = backgroundPersistence.background(for: macId) {
+            if let image = ruuviLocalImages.background(for: macId) {
                 promise.succeed(value: image)
-            } else if let luid = luid, let image = backgroundPersistence.background(for: luid) {
+            } else if let luid = luid, let image = ruuviLocalImages.background(for: luid) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
             }
         } else if let luid = luid {
-            if let image = backgroundPersistence.background(for: luid) {
+            if let image = ruuviLocalImages.background(for: luid) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
@@ -34,7 +35,7 @@ final class SensorServiceImpl: SensorService {
 
     func setNextDefaultBackground(for identifier: Identifier) -> Future<UIImage, RUError> {
         let promise = Promise<UIImage, RUError>()
-        if let image = backgroundPersistence.setNextDefaultBackground(for: identifier) {
+        if let image = ruuviLocalImages.setNextDefaultBackground(for: identifier) {
             promise.succeed(value: image)
         } else {
             promise.fail(error: .unexpected(.failedToFindOrGenerateBackgroundImage))
@@ -43,35 +44,44 @@ final class SensorServiceImpl: SensorService {
     }
 
     func setCustomBackground(image: UIImage, virtualSensor: VirtualTagSensor) -> Future<URL, RUError> {
-        return backgroundPersistence.setCustomBackground(image: image, for: virtualSensor.id.luid)
+        let promise = Promise<URL, RUError>()
+        ruuviLocalImages.setCustomBackground(
+            image: image,
+            for: virtualSensor.id.luid
+        ).on(success: { url in
+            promise.succeed(value: url)
+        }, failure: { error in
+            promise.fail(error: .ruuviLocal(error))
+        })
+        return promise.future
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func setCustomBackground(image: UIImage, sensor: RuuviTagSensor) -> Future<URL, RUError> {
         let promise = Promise<URL, RUError>()
         let luid = sensor.luid
         let macId = sensor.macId
         assert(luid != nil || macId != nil)
         let isOwner = sensor.isOwner
-        var local: Future<URL, RUError>?
+        var local: Future<URL, RuuviLocalError>?
         var remote: Future<URL, RUError>?
 
         if isOwner {
             if let mac = macId {
                 let croppedImage = imageCoreService.cropped(image: image, to: maxImageSize)
                 remote = ruuviNetwork.upload(image: croppedImage, for: mac, with: self)
-                local = backgroundPersistence.setCustomBackground(image: image, for: mac)
+                local = ruuviLocalImages.setCustomBackground(image: image, for: mac)
             } else if let luid = luid {
-                local = backgroundPersistence.setCustomBackground(image: image, for: luid)
+                local = ruuviLocalImages.setCustomBackground(image: image, for: luid)
             } else {
                 promise.fail(error: .unexpected(.bothLuidAndMacAreNil))
                 return promise.future
             }
         } else {
             if let luid = luid {
-                local = backgroundPersistence.setCustomBackground(image: image, for: luid)
+                local = ruuviLocalImages.setCustomBackground(image: image, for: luid)
             } else if let mac = macId {
-                local = backgroundPersistence.setCustomBackground(image: image, for: mac)
+                local = ruuviLocalImages.setCustomBackground(image: image, for: mac)
             } else {
                 promise.fail(error: .unexpected(.bothLuidAndMacAreNil))
                 return promise.future
@@ -80,17 +90,19 @@ final class SensorServiceImpl: SensorService {
 
         if let local = local, let remote = remote {
             if let mac = macId {
-                backgroundPersistence.setBackgroundUploadProgress(percentage: 0.0, for: mac)
+                ruuviLocalImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
             }
-            Future.zip([local, remote]).on(success: {[weak self] urls in
-                if let sSelf = self, let mac = macId {
-                    sSelf.backgroundPersistence.deleteBackgroundUploadProgress(for: mac)
-                }
-                if let localUrl = urls.first(where: { $0.isFileURL }) {
+            remote.on(success: { [weak self] _ in
+                guard let sSelf = self else { return }
+                local.on(success: { [weak sSelf] localUrl in
+                    guard let ssSelf = sSelf else { return }
+                    if let mac = macId {
+                        ssSelf.ruuviLocalImages.deleteBackgroundUploadProgress(for: mac)
+                    }
                     promise.succeed(value: localUrl)
-                } else {
-                    promise.fail(error: .unexpected(.failedToConstructURL))
-                }
+                }, failure: { error in
+                    promise.fail(error: .ruuviLocal(error))
+                })
             }, failure: { error in
                 promise.fail(error: error)
             })
@@ -98,7 +110,7 @@ final class SensorServiceImpl: SensorService {
             local.on(success: { url in
                 promise.succeed(value: url)
             }, failure: { error in
-                promise.fail(error: error)
+                promise.fail(error: .ruuviLocal(error))
             })
         } else {
             promise.fail(error: .unexpected(.bothLuidAndMacAreNil))
@@ -109,11 +121,11 @@ final class SensorServiceImpl: SensorService {
     }
 
     func setBackground(_ id: Int, for identifier: Identifier) {
-        backgroundPersistence.setBackground(id, for: identifier)
+        ruuviLocalImages.setBackground(id, for: identifier)
     }
 
     func deleteCustomBackground(for uuid: Identifier) {
-        backgroundPersistence.deleteCustomBackground(for: uuid)
+        ruuviLocalImages.deleteCustomBackground(for: uuid)
     }
 
     @discardableResult
@@ -121,7 +133,7 @@ final class SensorServiceImpl: SensorService {
         let promise = Promise<UIImage, RUError>()
         if let savedUrl = UserDefaults.standard.url(forKey: backgroundUrlPrefix + macId.mac),
            savedUrl == url,
-           let image = backgroundPersistence.background(for: macId) {
+           let image = ruuviLocalImages.background(for: macId) {
             promise.succeed(value: image)
         } else { // need to download image
             URLSession.shared.dataTask(with: url, completionHandler: { [weak self] data, _, error in
@@ -130,11 +142,11 @@ final class SensorServiceImpl: SensorService {
                     promise.fail(error: .networking(error))
                 } else if let data = data {
                     if let image = UIImage(data: data) {
-                        sSelf.backgroundPersistence.setCustomBackground(image: image, for: macId).on(success: { _ in
+                        sSelf.ruuviLocalImages.setCustomBackground(image: image, for: macId).on(success: { _ in
                             UserDefaults.standard.set(url, forKey: sSelf.backgroundUrlPrefix + macId.mac)
                             promise.succeed(value: image)
                         }, failure: { error in
-                            promise.fail(error: error)
+                            promise.fail(error: .ruuviLocal(error))
                         })
                     } else {
                         promise.fail(error: .unexpected(.failedToParseHttpResponse))
@@ -150,6 +162,6 @@ final class SensorServiceImpl: SensorService {
 
 extension SensorServiceImpl: RuuviNetworkUserApiOutput {
     func uploadImageUpdateProgress(_ mac: MACIdentifier, percentage: Double) {
-        backgroundPersistence.setBackgroundUploadProgress(percentage: percentage, for: mac)
+        ruuviLocalImages.setBackgroundUploadProgress(percentage: percentage, for: mac)
     }
 }

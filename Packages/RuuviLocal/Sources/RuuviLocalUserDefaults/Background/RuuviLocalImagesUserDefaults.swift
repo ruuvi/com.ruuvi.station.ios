@@ -2,10 +2,12 @@ import UIKit
 import Future
 import RuuviOntology
 
-class BackgroundPersistenceUserDefaults: BackgroundPersistence {
+final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
+    init(imagePersistence: ImagePersistence) {
+        self.imagePersistence = imagePersistence
+    }
 
-    var imagePersistence: ImagePersistence!
-
+    private let imagePersistence: ImagePersistence
     private let bgMinIndex = 1 // must be > 0, 0 means custom background
     private let bgMaxIndex = 9
 
@@ -59,8 +61,8 @@ class BackgroundPersistenceUserDefaults: BackgroundPersistence {
         }
     }
 
-    func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RUError> {
-        let promise = Promise<URL, RUError>()
+    func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RuuviLocalError> {
+        let promise = Promise<URL, RuuviLocalError>()
         let persist = imagePersistence.persistBg(image: image, for: identifier)
         persist.on(success: { url in
             self.setBackground(0, for: identifier)
