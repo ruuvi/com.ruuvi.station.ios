@@ -5,7 +5,7 @@ import UIKit
 import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
-protocol RuuviNetworkUserApi: RuuviNetwork {
+protocol RuuviNetworkUserApi {
     func register(_ requestModel: UserApiRegisterRequest) -> Future<UserApiRegisterResponse, RUError>
     func verify(_ requestModel: UserApiVerifyRequest) -> Future<UserApiVerifyResponse, RUError>
     func claim(_ requestModel: UserApiClaimRequest) -> Future<UserApiClaimResponse, RUError>
