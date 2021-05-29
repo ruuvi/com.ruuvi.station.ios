@@ -1,6 +1,6 @@
 import Foundation
 
-protocol PullRuuviNetworkDaemon {
+public protocol RuuviDaemonCloudSync {
     func start()
     func stop()
     func wakeUp()

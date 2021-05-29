@@ -9,6 +9,7 @@ import RuuviPool
 import RuuviService
 import RuuviCloud
 import RuuviCore
+import RuuviDaemon
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -34,7 +35,7 @@ class BusinessAssembly: Assembly {
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.webTagDaemon = r.resolve(WebTagDaemon.self)
-            service.pullNetworkTagDaemon = r.resolve(PullRuuviNetworkDaemon.self)
+            service.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
             service.heartbeatDaemon = r.resolve(RuuviTagHeartbeatDaemon.self)
             service.keychainService = r.resolve(KeychainService.self)
             service.pullWebDaemon = r.resolve(PullWebDaemon.self)
@@ -61,7 +62,6 @@ class BusinessAssembly: Assembly {
             if #available(iOS 13, *) {
                 let service = BackgroundTaskServiceiOS13()
                 service.webTagOperationsManager = r.resolve(WebTagOperationsManager.self)
-                service.ruuviTagNetworkOperationManager = r.resolve(RuuviNetworkTagOperationsManager.self)
                 return service
             } else {
                 let service = BackgroundTaskServiceiOS12()
@@ -188,17 +188,25 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
-        container.register(PullRuuviNetworkDaemon.self) { r in
-            let daemon = PullRuuviNetworkDaemonOperation()
-            daemon.settings = r.resolve(RuuviLocalSettings.self)
-            daemon.networkPersistance = r.resolve(NetworkPersistence.self)
-            daemon.ruuviTagNetworkOperationsManager = r.resolve(RuuviNetworkTagOperationsManager.self)
-            return daemon
-        }.inObjectScope(.container)
-
         container.register(RemoteConfigService.self) { _ in
             let service = FirebaseRemoteConfigService()
             return service
+        }.inObjectScope(.container)
+
+        container.register(RuuviDaemonFactory.self) { _ in
+            return RuuviDaemonFactoryImpl()
+        }
+
+        container.register(RuuviDaemonCloudSync.self) { r in
+            let factory = r.resolve(RuuviDaemonFactory.self)!
+            let localSettings = r.resolve(RuuviLocalSettings.self)!
+            let localSyncState = r.resolve(RuuviLocalSyncState.self)!
+            let cloudSyncService = r.resolve(RuuviServiceCloudSync.self)!
+            return factory.createCloudSync(
+                localSettings: localSettings,
+                localSyncState: localSyncState,
+                cloudSyncService: cloudSyncService
+            )
         }.inObjectScope(.container)
 
         container.register(RuuviServiceFactory.self) { _ in
@@ -301,17 +309,6 @@ class BusinessAssembly: Assembly {
         container.register(UserPropertiesService.self) { r in
             let service = UserPropertiesServiceImpl()
             service.ruuviStorage = r.resolve(RuuviStorage.self)
-            service.settings = r.resolve(RuuviLocalSettings.self)
-            return service
-        }
-
-        container.register(RuuviNetworkTagOperationsManager.self) { r in
-            let service = RuuviNetworkTagOperationsManager()
-            service.ruuviNetworkFactory = r.resolve(RuuviNetworkFactory.self)
-            service.ruuviPool = r.resolve(RuuviPool.self)
-            service.ruuviStorage = r.resolve(RuuviStorage.self)
-            service.keychainService = r.resolve(KeychainService.self)
-            service.networkPersistance = r.resolve(NetworkPersistence.self)
             service.settings = r.resolve(RuuviLocalSettings.self)
             return service
         }

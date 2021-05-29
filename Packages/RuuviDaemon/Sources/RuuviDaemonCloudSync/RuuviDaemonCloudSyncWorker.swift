@@ -1,19 +1,29 @@
 import Foundation
 import RuuviLocal
+import RuuviService
 
-class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon {
+class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
+    private var localSettings: RuuviLocalSettings
+    private var localSyncState: RuuviLocalSyncState
+    private let cloudSyncService: RuuviServiceCloudSync
+    private var needToRefreshImmediately: Bool = false
 
-    var settings: RuuviLocalSettings!
-    var ruuviTagNetworkOperationsManager: RuuviNetworkTagOperationsManager!
-    var networkPersistance: NetworkPersistence!
-    var needToRefreshImmediately: Bool = false
+    init(
+        localSettings: RuuviLocalSettings,
+        localSyncState: RuuviLocalSyncState,
+        cloudSyncService: RuuviServiceCloudSync
+    ) {
+        self.localSettings = localSettings
+        self.localSyncState = localSyncState
+        self.cloudSyncService = cloudSyncService
+    }
 
     private var pullTimer: Timer?
 
     @objc func wakeUp() {
         if needToRefreshImmediately || needsToPullNetworkTagData {
             pullNetworkTagData()
-            networkPersistance.lastSyncDate = Date()
+            localSyncState.lastSyncDate = Date()
             needToRefreshImmediately = false
         }
     }
@@ -28,7 +38,7 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
             guard let sSelf = self else { return }
             let timer = Timer.scheduledTimer(timeInterval: 60,
                                              target: sSelf,
-                                             selector: #selector(PullRuuviNetworkDaemonOperation.wakeUp),
+                                             selector: #selector(RuuviDaemonCloudSyncWorker.wakeUp),
                                              userInfo: nil,
                                              repeats: true)
             RunLoop.current.add(timer, forMode: .common)
@@ -42,7 +52,7 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
         guard let thread = thread else {
             return
         }
-        perform(#selector(PullRuuviNetworkDaemonOperation.stopDaemon),
+        perform(#selector(RuuviDaemonCloudSyncWorker.stopDaemon),
                 on: thread,
                 with: nil,
                 waitUntilDone: false,
@@ -55,18 +65,12 @@ class PullRuuviNetworkDaemonOperation: BackgroundWorker, PullRuuviNetworkDaemon 
     }
 
     private var needsToPullNetworkTagData: Bool {
-        guard let lastPullDate = networkPersistance.lastSyncDate else {
-            return true
-        }
+        guard let lastPullDate = localSyncState.lastSyncDate else { return true }
         let elapsed = Int(Date().timeIntervalSince(lastPullDate))
-        return elapsed >= settings.networkPullIntervalSeconds
+        return elapsed >= localSettings.networkPullIntervalSeconds
     }
 
     private func pullNetworkTagData() {
-        ruuviTagNetworkOperationsManager.pullNetworkTagOperations().on { (operations) in
-            let queue = OperationQueue()
-            queue.maxConcurrentOperationCount = 1
-            queue.addOperations(operations, waitUntilFinished: false)
-        }
+        cloudSyncService.syncAllRecords()
     }
 }
