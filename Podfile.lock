@@ -166,8 +166,10 @@ PODS:
   - RuuviLocal (0.0.1):
     - RuuviLocal/Contract (= 0.0.1)
   - RuuviLocal/Contract (0.0.1):
+    - FutureX
     - RuuviOntology
   - RuuviLocal/UserDefaults (0.0.1):
+    - FutureX
     - RuuviLocal/Contract
     - RuuviOntology
   - RuuviOntology (0.0.1):
@@ -452,7 +454,7 @@ SPEC CHECKSUMS:
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
   RuuviCloud: f4583874401a5c7c458eaac2842788ca1a348a57
   RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
-  RuuviLocal: 6429c7255412e56ab69336e757630a5324b00379
+  RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
   RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b

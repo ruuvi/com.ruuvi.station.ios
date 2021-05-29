@@ -25,7 +25,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var calibrationService: CalibrationService!
     var alertService: AlertService!
     var settings: RuuviLocalSettings!
-    var backgroundPersistence: BackgroundPersistence!
+    var ruuviLocalImages: RuuviLocalImages!
     var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
@@ -401,7 +401,7 @@ extension TagSettingsPresenter {
             self?.errorPresenter.present(error: error)
         })
         if let mac = ruuviTag.macId,
-           let percentage = backgroundPersistence.backgroundUploadProgress(for: mac) {
+           let percentage = ruuviLocalImages.backgroundUploadProgress(for: mac) {
             viewModel.isUploadingBackground.value = percentage < 1.0
             viewModel.uploadingBackgroundPercentage.value = percentage
         } else {

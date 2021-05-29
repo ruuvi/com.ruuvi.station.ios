@@ -20,9 +20,9 @@ class ImagePersistenceDocuments: ImagePersistence {
         try? FileManager.default.removeItem(at: url)
     }
 
-    func persistBg(image: UIImage, for identifier: Identifier) -> Future<URL, RUError> {
+    func persistBg(image: UIImage, for identifier: Identifier) -> Future<URL, RuuviLocalError> {
         let uuid = identifier.value
-        let promise = Promise<URL, RUError>()
+        let promise = Promise<URL, RuuviLocalError>()
         DispatchQueue.global().async {
             if let data = image.jpegData(compressionQuality: 1.0) {
                 do {
@@ -30,10 +30,10 @@ class ImagePersistenceDocuments: ImagePersistence {
                     try data.write(to: url)
                     promise.succeed(value: url)
                 } catch {
-                    promise.fail(error: .persistence(error))
+                    promise.fail(error: .disk(error))
                 }
             } else {
-                promise.fail(error: .core(.failedToGetPngRepresentation))
+                promise.fail(error: .failedToGetJpegRepresentation)
             }
         }
         return promise.future
@@ -41,7 +41,7 @@ class ImagePersistenceDocuments: ImagePersistence {
 
     private func getBgDirectory() throws -> URL {
         guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            throw CoreError.failedToGetDocumentsDirectory
+            throw RuuviLocalError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)
         if !isBgDirCreated {

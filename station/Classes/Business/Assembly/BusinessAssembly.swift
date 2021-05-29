@@ -243,7 +243,7 @@ class BusinessAssembly: Assembly {
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
             return daemon
         }.inObjectScope(.container)
-        
+
         container.register(RuuviTagPropertiesDaemon.self) { r in
             let daemon = RuuviTagPropertiesDaemonBTKit()
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
@@ -257,7 +257,7 @@ class BusinessAssembly: Assembly {
 
         container.register(SensorService.self) { r in
             let service = SensorServiceImpl()
-            service.backgroundPersistence = r.resolve(BackgroundPersistence.self)
+            service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
             service.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
             service.imageCoreService = r.resolve(ImageCoreService.self)
             return service

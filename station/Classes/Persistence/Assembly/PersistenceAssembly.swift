@@ -15,19 +15,8 @@ class PersistenceAssembly: Assembly {
             return persistence
         }
 
-        container.register(BackgroundPersistence.self) { r in
-            let persistence = BackgroundPersistenceUserDefaults()
-            persistence.imagePersistence = r.resolve(ImagePersistence.self)
-            return persistence
-        }
-
         container.register(CalibrationPersistence.self) { _ in
             let persistence = CalibrationPersistenceUserDefaults()
-            return persistence
-        }
-
-        container.register(ImagePersistence.self) { _ in
-            let persistence = ImagePersistenceDocuments()
             return persistence
         }
 
@@ -55,6 +44,11 @@ class PersistenceAssembly: Assembly {
         container.register(RuuviLocalConnections.self) { r in
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalConnections()
+        }
+
+        container.register(RuuviLocalImages.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalImages()
         }
 
         container.register(RuuviLocalSyncState.self) { r in
