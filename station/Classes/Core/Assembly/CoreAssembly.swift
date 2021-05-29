@@ -2,6 +2,7 @@ import Swinject
 import BTKit
 import RuuviStorage
 import RuuviLocal
+import RuuviCore
 
 class CoreAssembly: Assembly {
     // swiftlint:disable:next function_body_length
@@ -35,11 +36,6 @@ class CoreAssembly: Assembly {
             return manager
         }
 
-        container.register(ImageCoreService.self) { _ in
-            let service = ImageCoreServiceImpl()
-            return service
-        }
-
         container.register(PermissionsManager.self) { r in
             let manager = PermissionsManagerImpl()
             manager.locationManager = r.resolve(LocationManager.self)
@@ -49,6 +45,15 @@ class CoreAssembly: Assembly {
         container.register(PushNotificationsManager.self) { _ in
             let manager = PushNotificationsManagerImpl()
             return manager
+        }
+
+        container.register(RuuviCoreFactory.self) { _ in
+            return RuuviCoreFactoryImpl()
+        }
+
+        container.register(RuuviCoreImage.self) { r in
+            let factory = r.resolve(RuuviCoreFactory.self)!
+            return factory.createImage()
         }
 
         container.register(DiffCalculator.self) { _ in

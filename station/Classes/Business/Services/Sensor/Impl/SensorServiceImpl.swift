@@ -3,11 +3,12 @@ import Future
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviCore
 
 final class SensorServiceImpl: SensorService {
     var ruuviLocalImages: RuuviLocalImages!
     var ruuviNetwork: RuuviNetworkUserApi!
-    var imageCoreService: ImageCoreService!
+    var ruuviCoreImage: RuuviCoreImage!
     private let backgroundUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
     private let maxImageSize = CGSize(width: 1080, height: 1920)
 
@@ -68,7 +69,7 @@ final class SensorServiceImpl: SensorService {
 
         if isOwner {
             if let mac = macId {
-                let croppedImage = imageCoreService.cropped(image: image, to: maxImageSize)
+                let croppedImage = ruuviCoreImage.cropped(image: image, to: maxImageSize)
                 remote = ruuviNetwork.upload(image: croppedImage, for: mac, with: self)
                 local = ruuviLocalImages.setCustomBackground(image: image, for: mac)
             } else if let luid = luid {

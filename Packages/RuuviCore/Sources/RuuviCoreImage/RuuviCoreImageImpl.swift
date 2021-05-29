@@ -3,12 +3,12 @@ import CoreGraphics
 import Foundation
 import AVFoundation
 
-final class ImageCoreServiceImpl: ImageCoreService {
+final class RuuviCoreImageImpl: RuuviCoreImage {
     func cropped(image: UIImage, to maxSize: CGSize) -> UIImage {
         if image.size.width > maxSize.width || image.size.height > maxSize.height {
             let boundingRect = CGRect(origin: CGPoint(x: 0, y: 0), size: maxSize)
             let croppedRect = AVMakeRect(aspectRatio: image.size, insideRect: boundingRect)
-            return image.ruuvi_imageAspectScaled(toFit: croppedRect.size)
+            return image.ruuviCoreImageAspectScaled(toFit: croppedRect.size)
         } else {
             return image
         }
@@ -16,7 +16,7 @@ final class ImageCoreServiceImpl: ImageCoreService {
 }
 
 extension UIImage {
-    func ruuvi_imageAspectScaled(toFit size: CGSize) -> UIImage {
+    func ruuviCoreImageAspectScaled(toFit size: CGSize) -> UIImage {
         assert(size.width > 0 && size.height > 0, "You cannot safely scale an image to a zero width or height")
 
         let imageAspectRatio = self.size.width / self.size.height
