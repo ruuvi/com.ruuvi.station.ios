@@ -63,3 +63,9 @@ protocol RuuviCloudApi {
 protocol RuuviCloudApiFactory {
     func create(baseUrl: URL) -> RuuviCloudApi
 }
+
+public enum MimeType: String, Encodable {
+    case png = "image/png"
+    case gif = "image/gif"
+    case jpg = "image/jpeg"
+}

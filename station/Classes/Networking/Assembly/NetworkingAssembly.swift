@@ -25,11 +25,5 @@ class NetworkingAssembly: Assembly {
         container.register(RuuviCloudFactory.self) { _ in
             return RuuviCloudFactoryPure()
         }
-
-        container.register(RuuviNetworkUserApi.self) { r in
-            let service = RuuviNetworkUserApiURLSession()
-            service.keychainService = r.resolve(KeychainService.self)
-            return service
-        }
     }
 }

@@ -297,6 +297,7 @@ PODS:
   - RuuviService/SensorProperties (0.0.1):
     - FutureX
     - RuuviCloud
+    - RuuviCore
     - RuuviOntology
     - RuuviPool
     - RuuviService/Contract
@@ -506,7 +507,7 @@ SPEC CHECKSUMS:
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
-  RuuviService: 48499d8f867cc2040ed50cf3cb2eef8a64dbd76e
+  RuuviService: bc83d9b825010b7d11b98cb435d9643b0ef4bb28
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
