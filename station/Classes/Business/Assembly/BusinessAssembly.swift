@@ -289,8 +289,8 @@ class BusinessAssembly: Assembly {
 
         container.register(SensorService.self) { r in
             let service = SensorServiceImpl()
-            service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
-            service.ruuviCoreImage = r.resolve(RuuviCoreImage.self)
+            service.localImages = r.resolve(RuuviLocalImages.self)
+            service.coreImage = r.resolve(RuuviCoreImage.self)
             return service
         }
 

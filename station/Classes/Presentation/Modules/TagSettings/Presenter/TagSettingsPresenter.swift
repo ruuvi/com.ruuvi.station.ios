@@ -367,11 +367,12 @@ extension TagSettingsPresenter {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.pressureUnit.value = settings.pressureUnit
-        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { [weak self] image in
-            self?.viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.getImage(for: ruuviTag)
+            .on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         if let mac = ruuviTag.macId,
            let percentage = ruuviLocalImages.backgroundUploadProgress(for: mac) {
             viewModel.isUploadingBackground.value = percentage < 1.0
@@ -574,9 +575,12 @@ extension TagSettingsPresenter {
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if sSelf.ruuviTag.luid?.value == luid?.value
                         || sSelf.ruuviTag.macId?.value == macId?.value {
-                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { image in
-                            sSelf.viewModel.background.value = image
-                        })
+                        sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
+                            .on(success: { [weak sSelf] image in
+                                sSelf?.viewModel.background.value = image
+                            }, failure: { [weak sSelf] error in
+                                sSelf?.errorPresenter.present(error: error)
+                            })
                     }
                 }
             }

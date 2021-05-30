@@ -15,4 +15,5 @@ public enum RuuviServiceError: Error {
     case failedToParseNetworkResponse
     case bothLuidAndMacAreNil
     case failedToGetJpegRepresentation
+    case failedToFindOrGenerateBackgroundImage
 }

@@ -5,6 +5,7 @@ import CoreLocation
 import Humidity
 import RuuviOntology
 import RuuviLocal
+import RuuviService
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
@@ -17,6 +18,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
             photoPickerPresenter.delegate = self
@@ -386,11 +388,12 @@ extension WebTagSettingsPresenter {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
-        sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { [weak self] image in
-            self?.view.viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.getImage(for: webTag)
+            .on(success: { [weak self] image in
+                self?.view.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         view.viewModel.isLocationAuthorizedAlways.value
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.currentTemperature.value = webTag.data.last?.record?.temperature

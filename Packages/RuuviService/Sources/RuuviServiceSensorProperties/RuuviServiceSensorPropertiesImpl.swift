@@ -135,4 +135,36 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         }
         return promise.future
     }
+
+    func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
+        let luid = sensor.id.luid
+        let macId: MACIdentifier? = nil
+        return getImage(luid: luid, macId: macId)
+    }
+
+    func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
+        return getImage(luid: sensor.luid, macId: sensor.macId)
+    }
+
+    private func getImage(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
+        let promise = Promise<UIImage, RuuviServiceError>()
+        if let macId = macId {
+            if let image = localImages.background(for: macId) {
+                promise.succeed(value: image)
+            } else if let luid = luid, let image = localImages.background(for: luid) {
+                promise.succeed(value: image)
+            } else {
+                promise.fail(error: .failedToFindOrGenerateBackgroundImage)
+            }
+        } else if let luid = luid {
+            if let image = localImages.background(for: luid) {
+                promise.succeed(value: image)
+            } else {
+                promise.fail(error: .failedToFindOrGenerateBackgroundImage)
+            }
+        } else {
+            promise.fail(error: .bothLuidAndMacAreNil)
+        }
+        return promise.future
+    }
 }
