@@ -8,4 +8,25 @@ public protocol RuuviServiceSensorProperties {
         name: String,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+
+    func set(
+        image: UIImage,
+        for sensor: RuuviTagSensor,
+        progress: ((MACIdentifier, Double) -> Void)?,
+        maxSize: CGSize
+    ) -> Future<URL, RuuviServiceError>
+}
+
+extension RuuviServiceSensorProperties {
+    public func set(
+        image: UIImage,
+        for sensor: RuuviTagSensor
+    ) -> Future<URL, RuuviServiceError> {
+        return set(
+            image: image,
+            for: sensor,
+            progress: nil,
+            maxSize: CGSize(width: 1080, height: 1920)
+        )
+    }
 }

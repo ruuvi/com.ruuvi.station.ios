@@ -40,10 +40,19 @@ public protocol RuuviCloud {
     @discardableResult
     func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError>
 
+    @discardableResult
     func update(
         name: String,
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
+
+    @discardableResult
+    func upload(
+        imageData: Data,
+        mimeType: MimeType,
+        progress: ((MACIdentifier, Double) -> Void)?,
+        for macId: MACIdentifier
+    ) -> Future<URL, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

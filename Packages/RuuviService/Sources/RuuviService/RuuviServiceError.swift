@@ -13,4 +13,6 @@ public enum RuuviServiceError: Error {
     case macIdIsNil
     case pictureUrlIsNil
     case failedToParseNetworkResponse
+    case bothLuidAndMacAreNil
+    case failedToGetJpegRepresentation
 }

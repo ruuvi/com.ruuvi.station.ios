@@ -9,6 +9,35 @@ final class RuuviCloudPure: RuuviCloud {
         self.apiKey = apiKey
     }
 
+    func upload(
+        imageData: Data,
+        mimeType: MimeType,
+        progress: ((MACIdentifier, Double) -> Void)?,
+        for macId: MACIdentifier
+    ) -> Future<URL, RuuviCloudError> {
+        let promise = Promise<URL, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let requestModel = RuuviCloudApiSensorImageUploadRequest(
+            sensor: macId.value,
+            mimeType: mimeType
+        )
+        api.uploadImage(
+            requestModel,
+            imageData: imageData,
+            authorization: apiKey,
+            uploadProgress: { percentage in
+                progress?(macId, percentage)
+            }).on(success: { response in
+                promise.succeed(value: response.uploadURL)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     func update(
         name: String,
         for sensor: RuuviTagSensor

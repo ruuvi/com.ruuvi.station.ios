@@ -242,7 +242,14 @@ class BusinessAssembly: Assembly {
             let factory = r.resolve(RuuviServiceFactory.self)!
             let pool = r.resolve(RuuviPool.self)!
             let cloud = r.resolve(RuuviCloud.self)!
-            return factory.createSensorProperties(ruuviPool: pool, ruuviCloud: cloud)
+            let coreImage = r.resolve(RuuviCoreImage.self)!
+            let localImages = r.resolve(RuuviLocalImages.self)!
+            return factory.createSensorProperties(
+                ruuviPool: pool,
+                ruuviCloud: cloud,
+                ruuviCoreImage: coreImage,
+                ruuviLocalImages: localImages
+            )
         }
 
         container.register(RuuviTagAdvertisementDaemon.self) { r in
@@ -283,7 +290,6 @@ class BusinessAssembly: Assembly {
         container.register(SensorService.self) { r in
             let service = SensorServiceImpl()
             service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
-            service.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
             service.ruuviCoreImage = r.resolve(RuuviCoreImage.self)
             return service
         }

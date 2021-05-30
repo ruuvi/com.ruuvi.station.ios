@@ -11,7 +11,6 @@ class SharePresenter {
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
-    var networkService: RuuviNetworkUserApi!
     var ruuviOwnershipService: RuuviServiceOwnership!
 
     private var ruuviTagId: String!

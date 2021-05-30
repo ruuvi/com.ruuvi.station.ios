@@ -31,7 +31,6 @@ class TagSettingsTableConfigurator {
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.keychainService = r.resolve(KeychainService.self)
-        presenter.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)

@@ -48,6 +48,7 @@ Pod::Spec.new do |s|
     ss.dependency 'RuuviPool'
     ss.dependency 'RuuviStorage'
     ss.dependency 'RuuviCloud'
+    ss.dependency 'RuuviCore'
     ss.dependency 'FutureX'
   end
 

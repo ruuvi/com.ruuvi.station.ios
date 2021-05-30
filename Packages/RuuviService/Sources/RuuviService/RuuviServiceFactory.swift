@@ -3,6 +3,7 @@ import RuuviStorage
 import RuuviCloud
 import RuuviPool
 import RuuviLocal
+import RuuviCore
 
 public protocol RuuviServiceFactory {
     // swiftlint:disable:next function_parameter_count
@@ -22,7 +23,9 @@ public protocol RuuviServiceFactory {
 
     func createSensorProperties(
         ruuviPool: RuuviPool,
-        ruuviCloud: RuuviCloud
+        ruuviCloud: RuuviCloud,
+        ruuviCoreImage: RuuviCoreImage,
+        ruuviLocalImages: RuuviLocalImages
     ) -> RuuviServiceSensorProperties
 }
 
@@ -57,8 +60,15 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
 
     public func createSensorProperties(
         ruuviPool: RuuviPool,
-        ruuviCloud: RuuviCloud
+        ruuviCloud: RuuviCloud,
+        ruuviCoreImage: RuuviCoreImage,
+        ruuviLocalImages: RuuviLocalImages
     ) -> RuuviServiceSensorProperties {
-        return RuuviServiceSensorPropertiesImpl(pool: ruuviPool, cloud: ruuviCloud)
+        return RuuviServiceSensorPropertiesImpl(
+            pool: ruuviPool,
+            cloud: ruuviCloud,
+            coreImage: ruuviCoreImage,
+            localImages: ruuviLocalImages
+        )
     }
 }

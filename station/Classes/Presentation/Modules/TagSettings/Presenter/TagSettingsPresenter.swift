@@ -34,7 +34,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var keychainService: KeychainService!
-    var ruuviNetwork: RuuviNetworkUserApi!
     var activityPresenter: ActivityPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
@@ -337,15 +336,16 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
         viewModel.isUploadingBackground.value = true
-        sensorService.setCustomBackground(image: photo,
-                                          sensor: ruuviTag)
-            .on(success: { [weak self] _ in
-                self?.viewModel.isUploadingBackground.value = false
-                self?.viewModel.background.value = photo
-            }, failure: { [weak self] error in
-                self?.viewModel.isUploadingBackground.value = false
-                self?.errorPresenter.present(error: error)
-            })
+        ruuviSensorPropertiesService.set(
+            image: photo,
+            for: ruuviTag
+        ).on(success: { [weak self] _ in
+            self?.viewModel.isUploadingBackground.value = false
+            self?.viewModel.background.value = photo
+        }, failure: { [weak self] error in
+            self?.viewModel.isUploadingBackground.value = false
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
