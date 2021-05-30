@@ -231,6 +231,13 @@ class BusinessAssembly: Assembly {
             )
         }
 
+        container.register(RuuviServiceOwnership.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            return factory.createOwnership(ruuviCloud: cloud, ruuviPool: pool)
+        }
+
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(RuuviLocalSettings.self)

@@ -18,6 +18,12 @@ public protocol RuuviCloud {
         since: Date,
         until: Date?
     ) -> Future<[AnyRuuviTagSensorRecord], RuuviCloudError>
+
+    @discardableResult
+    func claim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
+
+    @discardableResult
+    func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
