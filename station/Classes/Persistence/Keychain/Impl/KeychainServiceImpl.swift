@@ -1,8 +1,9 @@
 import Foundation
 import KeychainAccess
+import RuuviLocal
 
 class KeychainServiceImpl {
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     private let keychain: Keychain = Keychain(service: "com.ruuvi.station",
                                               accessGroup: "4MUYJ4YYH4.com.ruuvi.station")
@@ -19,32 +20,56 @@ class KeychainServiceImpl {
 extension KeychainServiceImpl: KeychainService {
     var ruuviUserApiKey: String? {
         get {
-            return keychain[Account.ruuviUserApi.rawValue]
+            do {
+                return try keychain.get(Account.ruuviUserApi.rawValue)
+            } catch {
+                return UserDefaults.standard
+                    .string(forKey: Account.ruuviUserApi.rawValue)
+            }
         }
         set {
             if let value = newValue {
-                keychain[Account.ruuviUserApi.rawValue] = value
+                do {
+                    try keychain.set(value, key: Account.ruuviUserApi.rawValue)
+                } catch {
+                    UserDefaults.standard
+                        .setValue(value, forKey: Account.ruuviUserApi.rawValue)
+                }
             } else {
-                try? keychain.remove(
-                    Account.ruuviUserApi.rawValue,
-                    ignoringAttributeSynchronizable: true
-                )
+                do {
+                    try keychain.remove(Account.ruuviUserApi.rawValue)
+                } catch {
+                    UserDefaults.standard
+                        .removeObject(forKey: Account.ruuviUserApi.rawValue)
+                }
             }
         }
     }
 
     var userApiEmail: String? {
         get {
-            return keychain[Account.userApiEmail.rawValue]
+            do {
+                return try keychain.get(Account.userApiEmail.rawValue)
+            } catch {
+                return UserDefaults.standard
+                    .string(forKey: Account.userApiEmail.rawValue)
+            }
         }
         set {
             if let value = newValue {
-                keychain[Account.userApiEmail.rawValue] = value
+                do {
+                    try keychain.set(value, key: Account.userApiEmail.rawValue)
+                } catch {
+                    UserDefaults.standard
+                        .setValue(value, forKey: Account.userApiEmail.rawValue)
+                }
             } else {
-                try? keychain.remove(
-                    Account.userApiEmail.rawValue,
-                    ignoringAttributeSynchronizable: true
-                )
+                do {
+                    try keychain.remove(Account.userApiEmail.rawValue)
+                } catch {
+                    UserDefaults.standard
+                        .removeObject(forKey: Account.userApiEmail.rawValue)
+                }
             }
         }
     }

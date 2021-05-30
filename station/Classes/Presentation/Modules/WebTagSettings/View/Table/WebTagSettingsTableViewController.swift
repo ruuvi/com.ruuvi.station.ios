@@ -1,5 +1,6 @@
 // swiftlint:disable file_length
 import UIKit
+import RuuviOntology
 
 private enum WebTagSettingsTableSection: Int {
     case name = 0

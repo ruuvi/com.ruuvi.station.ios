@@ -3,6 +3,8 @@ import UIKit
 import Localize_Swift
 import GestureInstructions
 import Humidity
+import RuuviOntology
+import RuuviLocal
 
 class CardsScrollViewController: UIViewController {
     var output: CardsViewOutput!

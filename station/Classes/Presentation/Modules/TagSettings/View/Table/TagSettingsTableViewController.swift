@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 import UIKit
 import RangeSeekSlider
+import RuuviOntology
 
 enum TagSettingsTableSection: Int {
     case image = 0
@@ -82,6 +83,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var macAddressValueLabel: UILabel!
     @IBOutlet weak var rssiValueLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var uploadBackgroundIndicatorView: UIView!
+    @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
     @IBOutlet weak var mcValueLabel: UILabel!
@@ -273,6 +276,7 @@ extension TagSettingsTableViewController {
         configureViews()
         bindViewModels()
         updateUI()
+        output.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -715,6 +719,18 @@ extension TagSettingsTableViewController {
         }
 
         backgroundImageView.bind(viewModel.background) { $0.image = $1 }
+        uploadBackgroundIndicatorView.bind(viewModel.isUploadingBackground) { v, isUploading in
+            if let isUploading = isUploading {
+                v.isHidden = !isUploading
+            } else {
+                v.isHidden = true
+            }
+        }
+        uploadBackgroundProgressLabel.bind(viewModel.uploadingBackgroundPercentage) { lb, percentage in
+            if let percentage = percentage {
+                lb.text = String(format: "%.2f%@", percentage * 100.0, "%")
+            }
+        }
         tagNameTextField.bind(viewModel.name) { $0.text = $1 }
 
         let emptyValueString = "TagSettings.EmptyValue.sign"

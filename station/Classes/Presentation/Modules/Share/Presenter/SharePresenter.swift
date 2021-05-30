@@ -1,5 +1,8 @@
 import Foundation
 import Future
+import UIKit
+import RuuviService
+import RuuviOntology
 
 class SharePresenter {
     weak var view: ShareViewInput!
@@ -8,7 +11,7 @@ class SharePresenter {
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
-    var networkService: RuuviNetworkUserApi!
+    var ruuviOwnershipService: RuuviServiceOwnership!
 
     private var ruuviTagId: String!
     private let maxShareCount: Int = 3
@@ -29,33 +32,30 @@ extension SharePresenter: ShareViewOutput {
               !email.isEmpty else {
             return
         }
-        let requestModel = UserApiShareRequest(user: email, sensor: ruuviTagId)
+
         activityPresenter.increment()
-        networkService.share(requestModel).on(success: { [weak self] _ in
-            self?.fetchShared()
-        }, failure: { [weak self] error in
-            guard let self = self else {
-                return
-            }
-            self.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.decrement()
-        })
+        ruuviOwnershipService
+            .share(macId: ruuviTagId.mac, with: email)
+            .on(success: { [weak self] _ in
+                self?.fetchShared()
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.activityPresenter.decrement()
+            })
     }
 
     private func unshareTag(_ email: String) {
-        let requestModel = UserApiShareRequest(user: email, sensor: ruuviTagId)
         activityPresenter.increment()
-        networkService.unshare(requestModel).on(success: { [weak self] _ in
-            self?.fetchShared()
-        }, failure: { [weak self] error in
-            guard let self = self else {
-                return
-            }
-            self.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.decrement()
-        })
+        ruuviOwnershipService
+            .unshare(macId: ruuviTagId.mac, with: email)
+            .on(success: { [weak self] _ in
+                self?.fetchShared()
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.activityPresenter.decrement()
+            })
     }
 
     func viewDidTapUnshareEmail(_ email: String?) {
@@ -99,28 +99,23 @@ extension SharePresenter: ShareModuleInput {
 extension SharePresenter {
     private func fetchShared() {
         activityPresenter.increment()
-        networkService.shared(.init())
-            .on(success: { [weak self] response in
-                guard let self = self else {
-                    return
-                }
-                self.filterEmails(response.sensors)
-                self.view.clearInput()
+        ruuviOwnershipService
+            .loadShared()
+            .on(success: { [weak self] shareableSensors in
+                self?.filterEmails(shareableSensors)
+                self?.view.clearInput()
             }, failure: { [weak self] error in
-                guard let self = self else {
-                    return
-                }
-                self.errorPresenter.present(error: error)
+                self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
                 self?.activityPresenter.decrement()
             })
     }
 
-    private func filterEmails(_ sensors: [UserApiSharedResponse.Sensor]) {
+    private func filterEmails(_ sensors: Set<AnyShareableSensor>) {
         let oldCount = viewModel.sharedEmails.value?.count
 
         viewModel.sharedEmails.value = sensors.compactMap({
-            if $0.sensor == self.ruuviTagId {
+            if $0.id == self.ruuviTagId {
                 return $0.sharedTo
             } else {
                 return nil

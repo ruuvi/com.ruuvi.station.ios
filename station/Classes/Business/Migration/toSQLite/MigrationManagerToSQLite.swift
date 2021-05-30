@@ -1,5 +1,9 @@
 import Foundation
 import RealmSwift
+import RuuviOntology
+import RuuviContext
+import RuuviLocal
+import RuuviPool
 
 extension Notification.Name {
     static let DidMigrationComplete = Notification.Name("MigrationManagerToSQLite.DidMigrationComplete")
@@ -10,9 +14,9 @@ class MigrationManagerToSQLite: MigrationManager {
     // persistence
     var alertPersistence: AlertPersistence!
     var calibrationPersistence: CalibrationPersistence!
-    var connectionPersistence: ConnectionPersistence!
-    var idPersistence: IDPersistence!
-    var settingsPersistence: Settings!
+    var connectionPersistence: RuuviLocalConnections!
+    var idPersistence: RuuviLocalIDs!
+    var settingsPersistence: RuuviLocalSettings!
 
     // context
     var realmContext: RealmContext!
@@ -22,7 +26,7 @@ class MigrationManagerToSQLite: MigrationManager {
     var errorPresenter: ErrorPresenter!
 
     // car
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
 
     @UserDefault("MigrationManagerToSQLite.didMigrateRuuviTagRealmWithMAC", defaultValue: false)
     private var didMigrateRuuviTagRealmWithMAC: Bool
@@ -49,7 +53,7 @@ class MigrationManagerToSQLite: MigrationManager {
     private func migrate(realmTag: RuuviTagRealm, group: DispatchGroup) {
         if let mac = realmTag.mac, !mac.isEmpty {
             idPersistence.set(mac: mac.mac, for: realmTag.uuid.luid)
-            ruuviTagTank.create(realmTag)
+            ruuviPool.create(realmTag)
                 .on(failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
@@ -61,7 +65,7 @@ class MigrationManagerToSQLite: MigrationManager {
                     }
                 }
             }
-            ruuviTagTank?.create(records)
+            ruuviPool?.create(records)
                 .on(failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 }, completion: {

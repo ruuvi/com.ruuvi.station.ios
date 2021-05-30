@@ -1,17 +1,21 @@
 import Foundation
+import RuuviOntology
+import RuuviContext
+import RuuviReactor
+import RuuviLocal
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
     var router: SettingsRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviReactor: RuuviReactor!
     var alertService: AlertService!
     var realmContext: RealmContext!
     var featureToggleService: FeatureToggleService!
 
     private var languageToken: NSObjectProtocol?
-    private var ruuviTagsToken: RUObservationToken?
+    private var ruuviTagsToken: RuuviReactorToken?
     private var sensors: [AnyRuuviTagSensor] = []
     deinit {
         ruuviTagsToken?.invalidate()
@@ -37,10 +41,12 @@ extension SettingsPresenter: SettingsViewOutput {
 
         ruuviTagsToken?.invalidate()
         // TODO: this logic doesn't hide the background if no connectable tags, fix it
-        ruuviTagsToken = ruuviTagReactor.observe({ [weak self] change in
+        ruuviTagsToken = ruuviReactor.observe({ [weak self] change in
             guard let sSelf = self else { return }
             switch change {
             case .initial(let sensors):
+                guard let sSelf = self else { return }
+                let sensors = sensors.reordered(by: sSelf.settings)
                 sSelf.sensors = sensors
                 let containsConnectable = sensors.contains(where: { $0.isConnectable == true })
                 sSelf.view.isBackgroundVisible = containsConnectable

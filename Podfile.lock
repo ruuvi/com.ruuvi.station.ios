@@ -138,6 +138,183 @@ PODS:
   - Realm/Headers (10.7.5)
   - RealmSwift (10.7.5):
     - Realm (= 10.7.5)
+  - RuuviCloud (0.0.1):
+    - RuuviCloud/Contract (= 0.0.1)
+  - RuuviCloud/Api (0.0.1):
+    - BTKit
+    - FutureX
+    - RuuviCloud/Contract
+    - RuuviOntology
+    - RuuviOntology/Mappers
+  - RuuviCloud/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviCloud/Pure (0.0.1):
+    - FutureX
+    - RuuviCloud/Api
+    - RuuviCloud/Contract
+    - RuuviOntology
+  - RuuviCloud/Tests (0.0.1)
+  - RuuviContext (0.0.1):
+    - RuuviContext/SQLite (= 0.0.1)
+  - RuuviContext/Realm (0.0.1):
+    - Realm
+    - RealmSwift
+  - RuuviContext/SQLite (0.0.1):
+    - GRDB.swift
+    - RuuviOntology/SQLite
+  - RuuviCore (0.0.1):
+    - RuuviCore/Contract (= 0.0.1)
+  - RuuviCore/Contract (0.0.1):
+    - FutureX
+  - RuuviCore/Image (0.0.1):
+    - FutureX
+    - RuuviCore/Contract
+  - RuuviCore/Tests (0.0.1)
+  - RuuviDaemon (0.0.1):
+    - RuuviDaemon/Contract (= 0.0.1)
+  - RuuviDaemon/CloudSync (0.0.1):
+    - RuuviDaemon/Contract
+    - RuuviDaemon/Worker
+    - RuuviLocal
+    - RuuviService
+  - RuuviDaemon/Contract (0.0.1)
+  - RuuviDaemon/Tests (0.0.1)
+  - RuuviDaemon/Worker (0.0.1)
+  - RuuviLocal (0.0.1):
+    - RuuviLocal/Contract (= 0.0.1)
+  - RuuviLocal/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviLocal/UserDefaults (0.0.1):
+    - FutureX
+    - RuuviLocal/Contract
+    - RuuviOntology
+  - RuuviOntology (0.0.1):
+    - RuuviOntology/Contract (= 0.0.1)
+  - RuuviOntology/Contract (0.0.1):
+    - Humidity
+  - RuuviOntology/Mappers (0.0.1):
+    - BTKit
+    - Humidity
+    - RuuviOntology/Contract
+  - RuuviOntology/Realm (0.0.1):
+    - Humidity
+    - Realm
+    - RealmSwift
+    - RuuviOntology/Contract
+  - RuuviOntology/SQLite (0.0.1):
+    - GRDB.swift
+    - Humidity
+    - RuuviOntology/Contract
+  - RuuviPersistence (0.0.1):
+    - RuuviPersistence/Contract (= 0.0.1)
+  - RuuviPersistence/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviPersistence/Realm (0.0.1):
+    - FutureX
+    - Realm
+    - RealmSwift
+    - RuuviContext/Realm
+    - RuuviOntology
+    - RuuviOntology/Realm
+    - RuuviPersistence/Contract
+  - RuuviPersistence/SQLite (0.0.1):
+    - FutureX
+    - GRDB.swift
+    - RuuviContext/SQLite
+    - RuuviOntology
+    - RuuviOntology/SQLite
+    - RuuviPersistence/Contract
+  - RuuviPersistence/Tests (0.0.1)
+  - RuuviPool (0.0.1):
+    - RuuviPool/Contract (= 0.0.1)
+  - RuuviPool/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviPool/Coordinator (0.0.1):
+    - FutureX
+    - RuuviLocal
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviPool/Contract
+  - RuuviPool/Tests (0.0.1)
+  - RuuviReactor (0.0.1):
+    - RuuviReactor/Contract (= 0.0.1)
+  - RuuviReactor/Combine (0.0.1):
+    - GRDB.swift
+    - Realm
+    - RealmSwift
+    - RuuviContext/Realm
+    - RuuviContext/SQLite
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviReactor/Contract
+  - RuuviReactor/Contract (0.0.1):
+    - RuuviOntology
+  - RuuviReactor/Impl (0.0.1):
+    - FutureX
+    - GRDB.swift
+    - RuuviContext
+    - RuuviOntology
+    - RuuviReactor/Combine
+    - RuuviReactor/RxSwift
+  - RuuviReactor/RxSwift (0.0.1):
+    - GRDB.swift
+    - Realm
+    - RealmSwift
+    - RuuviContext/Realm
+    - RuuviContext/SQLite
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviReactor/Contract
+    - RxSwift
+  - RuuviReactor/Tests (0.0.1)
+  - RuuviService (0.0.1):
+    - RuuviService/Contract (= 0.0.1)
+  - RuuviService/CloudSync (0.0.1):
+    - FutureX
+    - RuuviCloud
+    - RuuviLocal
+    - RuuviOntology
+    - RuuviPool
+    - RuuviService/Contract
+    - RuuviStorage
+  - RuuviService/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviService/Ownership (0.0.1):
+    - FutureX
+    - RuuviCloud
+    - RuuviOntology
+    - RuuviPool
+    - RuuviService/Contract
+    - RuuviStorage
+  - RuuviService/SensorProperties (0.0.1):
+    - FutureX
+    - RuuviCloud
+    - RuuviCore
+    - RuuviOntology
+    - RuuviPool
+    - RuuviService/Contract
+    - RuuviStorage
+  - RuuviService/Tests (0.0.1)
+  - RuuviStorage (0.0.1):
+    - RuuviStorage/Contract (= 0.0.1)
+  - RuuviStorage/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviStorage/Coordinator (0.0.1):
+    - FutureX
+    - RuuviOntology
+    - RuuviPersistence/Realm
+    - RuuviPersistence/SQLite
+    - RuuviStorage/Contract
+  - RuuviStorage/Tests (0.0.1)
   - RxSwift (5.1.1)
   - SwiftGen (6.4.0)
   - Swinject (2.6.2)
@@ -165,7 +342,36 @@ DEPENDENCIES:
   - Nimble
   - Quick
   - RangeSeekSlider (from `https://github.com/rinat-enikeev/RangeSeekSlider`)
+  - Realm
   - RealmSwift
+  - RuuviCloud (from `Packages/RuuviCloud/RuuviCloud.podspec`)
+  - RuuviCloud/Pure (from `Packages/RuuviCloud/RuuviCloud.podspec`)
+  - RuuviCloud/Tests (from `Packages/RuuviCloud/RuuviCloud.podspec`)
+  - RuuviContext (from `Packages/RuuviContext/RuuviContext.podspec`)
+  - RuuviCore (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Image (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviCore/Tests (from `Packages/RuuviCore/RuuviCore.podspec`)
+  - RuuviDaemon (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDaemon/CloudSync (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviDaemon/Tests (from `Packages/RuuviDaemon/RuuviDaemon.podspec`)
+  - RuuviLocal/UserDefaults (from `Packages/RuuviLocal/RuuviLocal.podspec`)
+  - RuuviOntology (from `Packages/RuuviOntology/RuuviOntology.podspec`)
+  - RuuviPersistence (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
+  - RuuviPersistence/Tests (from `Packages/RuuviPersistence/RuuviPersistence.podspec`)
+  - RuuviPool (from `Packages/RuuviPool/RuuviPool.podspec`)
+  - RuuviPool/Coordinator (from `Packages/RuuviPool/RuuviPool.podspec`)
+  - RuuviPool/Tests (from `Packages/RuuviPool/RuuviPool.podspec`)
+  - RuuviReactor (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviReactor/Impl (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviReactor/Tests (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviService (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/CloudSync (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/Ownership (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/SensorProperties (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/Tests (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviStorage (from `Packages/RuuviStorage/RuuviStorage.podspec`)
+  - RuuviStorage/Coordinator (from `Packages/RuuviStorage/RuuviStorage.podspec`)
+  - RuuviStorage/Tests (from `Packages/RuuviStorage/RuuviStorage.podspec`)
   - RxSwift
   - SwiftGen (~> 6.0)
   - Swinject
@@ -216,6 +422,28 @@ EXTERNAL SOURCES:
     :git: https://github.com/rinat-enikeev/LightRoute.git
   RangeSeekSlider:
     :git: https://github.com/rinat-enikeev/RangeSeekSlider
+  RuuviCloud:
+    :path: Packages/RuuviCloud/RuuviCloud.podspec
+  RuuviContext:
+    :path: Packages/RuuviContext/RuuviContext.podspec
+  RuuviCore:
+    :path: Packages/RuuviCore/RuuviCore.podspec
+  RuuviDaemon:
+    :path: Packages/RuuviDaemon/RuuviDaemon.podspec
+  RuuviLocal:
+    :path: Packages/RuuviLocal/RuuviLocal.podspec
+  RuuviOntology:
+    :path: Packages/RuuviOntology/RuuviOntology.podspec
+  RuuviPersistence:
+    :path: Packages/RuuviPersistence/RuuviPersistence.podspec
+  RuuviPool:
+    :path: Packages/RuuviPool/RuuviPool.podspec
+  RuuviReactor:
+    :path: Packages/RuuviReactor/RuuviReactor.podspec
+  RuuviService:
+    :path: Packages/RuuviService/RuuviService.podspec
+  RuuviStorage:
+    :path: Packages/RuuviStorage/RuuviStorage.podspec
   SwinjectPropertyLoader:
     :git: https://github.com/rinat-enikeev/SwinjectPropertyLoader
 
@@ -270,11 +498,22 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 0c26866bb2f59eea808d486ec3b990bcfae1b938
   Realm: 06f5c67f87cb8c5f27b122218ce22e9a77314517
   RealmSwift: b46535b52e69b9ed33912f0fcb3182ab0a5743ee
+  RuuviCloud: f4583874401a5c7c458eaac2842788ca1a348a57
+  RuuviContext: 02e8ee3655d348af701d3115c5ff0b10405d48f5
+  RuuviCore: ed8326e13481473dc92e5a0810b60211dfbb8a75
+  RuuviDaemon: 26454500ff75a513b8ee4a2b85f76273413a44cc
+  RuuviLocal: 70bbfba8be88dfde8d7b11fb3e99e304cbd81ee0
+  RuuviOntology: 1f7ceb7a9bb7ecb5f413073405a49fe2b94d84d0
+  RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
+  RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
+  RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
+  RuuviService: bc83d9b825010b7d11b98cb435d9643b0ef4bb28
+  RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: f4fc504b18db5d0d98bd81cccf1930907052aa2c
+PODFILE CHECKSUM: 0592b187a01f9086a6d50eafbb6ae790e16862b4
 
 COCOAPODS: 1.10.1

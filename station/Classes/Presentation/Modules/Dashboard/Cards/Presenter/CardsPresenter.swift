@@ -3,40 +3,46 @@ import Foundation
 import RealmSwift
 import BTKit
 import Humidity
+import RuuviOntology
+import RuuviContext
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviService
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
     var router: CardsRouterInput!
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
-    var settings: Settings!
-    var sensorService: SensorService!
+    var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var background: BTBackground!
     var webTagService: WebTagService!
     var permissionPresenter: PermissionPresenter!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
-    var connectionPersistence: ConnectionPersistence!
+    var connectionPersistence: RuuviLocalConnections!
     var alertService: AlertService!
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
     var calibrationService: CalibrationService!
-    var ruuviTagReactor: RuuviTagReactor!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviReactor: RuuviReactor!
+    var ruuviStorage: RuuviStorage!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
-    var networkPersistance: NetworkPersistence!
+    var localSyncState: RuuviLocalSyncState!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     weak var tagCharts: TagChartsModuleInput?
-    private var ruuviTagToken: RUObservationToken?
-    private var ruuviTagObserveLastRecordToken: RUObservationToken?
+    private var ruuviTagToken: RuuviReactorToken?
+    private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
     private var webTagsToken: NotificationToken?
     private var webTagsDataTokens = [NotificationToken]()
     private var advertisementTokens = [ObservationToken]()
     private var heartbeatTokens = [ObservationToken]()
-    private var sensorSettingsTokens = [RUObservationToken]()
+    private var sensorSettingsTokens = [RuuviReactorToken]()
     private var rssiTokens = [AnyLocalIdentifier: ObservationToken]()
     private var rssiTimers = [AnyLocalIdentifier: Timer]()
     private var backgroundToken: NSObjectProtocol?
@@ -264,9 +270,6 @@ extension CardsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - TagsManagerModuleOutput
-extension CardsPresenter: TagsManagerModuleOutput {}
-
 // MARK: - TagChartsModuleOutput
 extension CardsPresenter: TagChartsModuleOutput {
     func tagCharts(module: TagChartsModuleInput, didScrollTo uuid: String) {
@@ -316,22 +319,23 @@ extension CardsPresenter {
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
-            sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { image in
-                viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+            ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                .on(success: { image in
+                    viewModel.background.value = image
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus.value = networkPersistance.getSyncStatus(for: macId)
+                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
                 viewModel.alertState.value = .empty
             } else {
                 assertionFailure()
             }
-            ruuviTagTrunk.readLast(ruuviTag).on { record in
+            ruuviStorage.readLast(ruuviTag).on { record in
                 if let record = record {
                     viewModel.update(record)
                 }
@@ -342,11 +346,12 @@ extension CardsPresenter {
         if virtualTags != nil {
             virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
-                sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { image in
-                    viewModel.background.value = image
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
+                ruuviSensorPropertiesService.getImage(for: webTag)
+                    .on(success: { image in
+                        viewModel.background.value = image
+                    }, failure: { [weak self] error in
+                        self?.errorPresenter.present(error: error)
+                    })
                 viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
@@ -492,7 +497,7 @@ extension CardsPresenter {
             if viewModel.type == .ruuvi,
                let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
                 sensorSettingsTokens.append(
-                    ruuviTagReactor.observe(ruuviTagSensor, { [weak self] change in
+                    ruuviReactor.observe(ruuviTagSensor, { [weak self] change in
                         switch change {
                         case .insert(let sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
@@ -519,10 +524,10 @@ extension CardsPresenter {
     }
     private func restartObservingRuuviTagNetwork(for sensor: AnyRuuviTagSensor) {
         ruuviTagObserveLastRecordToken?.invalidate()
-        ruuviTagObserveLastRecordToken = ruuviTagReactor.observeLast(sensor) { [weak self] (changes) in
+        ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
                let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
-               let record = anyRecord?.object {
+               let record = anyRecord { // TODO: @rinat check if works without .object
                 let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
                 let previousDate = viewModel.date.value ?? Date.distantPast
                 if previousDate < record.date {
@@ -586,9 +591,11 @@ extension CardsPresenter {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
+        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
             case .initial(let ruuviTags):
+                guard let sSelf = self else { return }
+                let ruuviTags = ruuviTags.reordered(by: sSelf.settings)
                 let isInitialLoad = (self?.ruuviTags.count ?? 0) == 0
                 self?.didLoadInitialRuuviTags = true
                 self?.ruuviTags = ruuviTags.map({ $0.any })
@@ -657,14 +664,27 @@ extension CardsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid?.any })
-                        ?? self?.view.viewModels.first(where: {$0.mac.value == macId?.any })
+                    let viewModel = sSelf.view.viewModels.first(where: { $0.luid.value == luid?.any })
+                        ?? sSelf.view.viewModels.first(where: {$0.mac.value == macId?.any })
                     if let viewModel = viewModel {
-                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { image in
-                            viewModel.background.value = image
-                        }, failure: { [weak sSelf] error in
-                            sSelf?.errorPresenter.present(error: error)
-                        })
+                        let ruuviTag = sSelf.ruuviTags.first(where: { $0.luid?.any == luid?.any })
+                            ?? sSelf.ruuviTags.first(where: {$0.macId?.any == macId?.any })
+                        let webTag = sSelf.virtualTags?.first(where: { $0.id == luid?.value })
+                        if let ruuviTag = ruuviTag {
+                            sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                                .on(success: { image in
+                                    viewModel.background.value = image
+                                }, failure: { [weak self] error in
+                                    self?.errorPresenter.present(error: error)
+                                })
+                        } else if let webTag = webTag {
+                            sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
+                                .on(success: { image in
+                                    viewModel.background.value = image
+                                }, failure: { [weak sSelf] error in
+                                    sSelf?.errorPresenter.present(error: error)
+                                })
+                        }
                     }
                 }
             }

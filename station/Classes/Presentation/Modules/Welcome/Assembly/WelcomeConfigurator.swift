@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 class WelcomeConfigurator {
     func configure(view: WelcomeViewController) {
@@ -10,7 +11,7 @@ class WelcomeConfigurator {
         let presenter = WelcomePresenter()
         presenter.view = view
         presenter.router = router
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter
     }

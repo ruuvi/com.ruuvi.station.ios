@@ -1,16 +1,22 @@
 import BTKit
 import Foundation
+import RuuviOntology
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviPool
+import RuuviPersistence
 
-class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
-    var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var ruuviTagReactor: RuuviTagReactor!
+final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementDaemon {
+    var ruuviPool: RuuviPool!
+    var ruuviStorage: RuuviStorage!
+    var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
-    private var ruuviTagsToken: RUObservationToken?
+    private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [ObservationToken]()
-    private var sensorSettingsTokens = [RUObservationToken]()
+    private var sensorSettingsTokens = [RuuviReactorToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
     private var savedDate = [String: Date]() // uuid:date
@@ -53,7 +59,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
 
     func start() {
         start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
                 case .initial(let ruuviTags):
@@ -97,7 +103,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
     private func reloadSensorSettings() {
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
+            ruuviStorage.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
                 if let sensorSettings = sensorSettings {
                     self?.sensorSettingsList.append(sensorSettings)
                 }
@@ -127,7 +133,7 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
                                   modes: [RunLoop.Mode.default.rawValue])
                 }
             })
-            sensorSettingsTokens.append(ruuviTagReactor.observe(ruuviTag, { [weak self] change in
+            sensorSettingsTokens.append(ruuviReactor.observe(ruuviTag, { [weak self] change in
                 switch change {
                 case .delete(let sensorSettings):
                     if let dIndex = self?.sensorSettingsList.firstIndex(
@@ -177,15 +183,19 @@ class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertisementD
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
         let sensorSettings = self.sensorSettingsList.first(where: { $0.ruuviTagId == record.ruuviTagId })
-        ruuviTagTank.create(
+        ruuviPool.create(
             record
                 .with(source: .advertisement)
                 .with(sensorSettings: sensorSettings)
         ).on(failure: { [weak self] error in
-            if case RUError.unexpected(let unexpectedError) = error,
-               unexpectedError == .failedToFindRuuviTag {
-                self?.ruuviTags.removeAll(where: { $0.id == uuid })
-                self?.restartObserving()
+            if case RuuviPoolError.ruuviPersistence(let persistenceError) = error {
+                switch persistenceError {
+                case .failedToFindRuuviTag:
+                    self?.ruuviTags.removeAll(where: { $0.id == uuid })
+                    self?.restartObserving()
+                default:
+                    break
+                }
             }
             self?.post(error: error)
         })

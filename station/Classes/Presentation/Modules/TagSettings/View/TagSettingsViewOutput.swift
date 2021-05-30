@@ -1,6 +1,7 @@
 import UIKit
 
 protocol TagSettingsViewOutput {
+    func viewDidLoad()
     func viewWillAppear()
     func viewDidAskToDismiss()
     func viewDidAskToRandomizeBackground()

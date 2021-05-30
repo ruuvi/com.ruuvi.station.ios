@@ -5,6 +5,11 @@ import BTKit
 import UIKit
 import Charts
 import Future
+import RuuviOntology
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviService
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -12,14 +17,14 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var interactor: TagChartsInteractorInput!
 
     var errorPresenter: ErrorPresenter!
-    var sensorService: SensorService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var foreground: BTForeground!
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviStorage: RuuviStorage!
+    var ruuviReactor: RuuviReactor!
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
     var mailComposerPresenter: MailComposerPresenter!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     var alertService: AlertService!
     var background: BTBackground!
@@ -50,7 +55,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var lnmDidReceiveToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartIntervalDidChangeToken: NSObjectProtocol?
-    private var sensorSettingsToken: RUObservationToken?
+    private var sensorSettingsToken: RuuviReactorToken?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
     private var exportFileUrl: URL?
@@ -328,9 +333,6 @@ extension TagChartsPresenter: SignInModuleOutput {
     }
 }
 
-// MARK: - TagsManagerModuleOutput
-extension TagChartsPresenter: TagsManagerModuleOutput {}
-
 // MARK: - AlertServiceObserver
 extension TagChartsPresenter: AlertServiceObserver {
     func alert(service: AlertService, isTriggered: Bool, for uuid: String) {
@@ -367,11 +369,12 @@ extension TagChartsPresenter {
 
     private func syncViewModel() {
         let viewModel = TagChartsViewModel(ruuviTag)
-        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { image in
-            viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.getImage(for: ruuviTag)
+            .on(success: { image in
+                viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         if let luid = ruuviTag.luid {
             viewModel.name.value = ruuviTag.name
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -379,7 +382,7 @@ extension TagChartsPresenter {
                                                                 ? .registered : .empty
 
             // get lastest sensorSettings
-            ruuviTagTrunk.readSensorSettings(ruuviTag).on { settings in
+            ruuviStorage.readSensorSettings(ruuviTag).on { settings in
                 self.sensorSettings = settings
             }
         } else if let macId = ruuviTag.macId {
@@ -450,11 +453,12 @@ extension TagChartsPresenter {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if sSelf.viewModel.uuid.value == luid?.value || sSelf.viewModel.mac.value == macId?.value {
-                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { [weak sSelf] image in
-                            sSelf?.viewModel.background.value = image
-                        }, failure: { [weak sSelf] error in
-                            sSelf?.errorPresenter.present(error: error)
-                        })
+                        sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
+                            .on(success: { [weak sSelf] image in
+                                sSelf?.viewModel.background.value = image
+                            }, failure: { [weak sSelf] error in
+                                sSelf?.errorPresenter.present(error: error)
+                            })
                     }
                 }
         }
@@ -531,7 +535,7 @@ extension TagChartsPresenter {
     }
 
     private func startObservingSensorSettingsChanges() {
-        sensorSettingsToken = ruuviTagReactor.observe(ruuviTag, { (reactorChange) in
+        sensorSettingsToken = ruuviReactor.observe(ruuviTag, { (reactorChange) in
             switch reactorChange {
             case .update(let settings):
                 self.sensorSettings = settings

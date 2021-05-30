@@ -1,12 +1,14 @@
 import LightRoute
 import Foundation
 import UIKit
+import RuuviOntology
+import RuuviLocal
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController!
     weak var delegate: CardsRouterDelegate!
     weak var tagCharts: UIViewController!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!

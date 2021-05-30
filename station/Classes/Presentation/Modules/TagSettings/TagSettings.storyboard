@@ -129,16 +129,42 @@ IMAGE</string>
                                                 <constraint firstItem="w0P-tL-iSc" firstAttribute="width" secondItem="TKu-0P-GT3" secondAttribute="width" id="hbK-9v-Pgc"/>
                                             </constraints>
                                         </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jx5-RA-Avc">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="240"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Kmi-Lt-Urx">
+                                                    <rect key="frame" x="197" y="110" width="20" height="20"/>
+                                                    <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </activityIndicatorView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="10%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yWG-EZ-Hp2">
+                                                    <rect key="frame" x="190.5" y="140" width="33.5" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstItem="Kmi-Lt-Urx" firstAttribute="centerY" secondItem="jx5-RA-Avc" secondAttribute="centerY" id="YPV-FJ-6ht"/>
+                                                <constraint firstItem="yWG-EZ-Hp2" firstAttribute="centerX" secondItem="Kmi-Lt-Urx" secondAttribute="centerX" id="dIW-7Z-cpV"/>
+                                                <constraint firstItem="yWG-EZ-Hp2" firstAttribute="top" secondItem="Kmi-Lt-Urx" secondAttribute="bottom" constant="10" id="fM9-eX-Tc9"/>
+                                                <constraint firstItem="Kmi-Lt-Urx" firstAttribute="centerX" secondItem="jx5-RA-Avc" secondAttribute="centerX" id="o9E-mf-070"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstItem="jx5-RA-Avc" firstAttribute="top" secondItem="DtU-h9-zYy" secondAttribute="top" id="1XE-tW-L6R"/>
                                         <constraint firstItem="sEu-tr-nrh" firstAttribute="width" secondItem="PPK-KZ-0TC" secondAttribute="width" id="8a3-J0-0I5"/>
                                         <constraint firstItem="sEu-tr-nrh" firstAttribute="centerY" secondItem="PPK-KZ-0TC" secondAttribute="centerY" id="8lc-Tg-eJQ"/>
+                                        <constraint firstAttribute="trailing" secondItem="jx5-RA-Avc" secondAttribute="trailing" id="Bhb-t6-bcT"/>
+                                        <constraint firstAttribute="bottom" secondItem="jx5-RA-Avc" secondAttribute="bottom" id="IDW-Vp-2fJ"/>
                                         <constraint firstItem="sEu-tr-nrh" firstAttribute="centerX" secondItem="PPK-KZ-0TC" secondAttribute="centerX" id="ITo-kd-iaE"/>
                                         <constraint firstItem="Q2i-w5-k1y" firstAttribute="centerX" secondItem="DtU-h9-zYy" secondAttribute="centerX" id="NXw-kG-XjC"/>
                                         <constraint firstAttribute="trailing" secondItem="PPK-KZ-0TC" secondAttribute="trailing" id="QCo-8f-uDf"/>
                                         <constraint firstItem="PPK-KZ-0TC" firstAttribute="top" secondItem="DtU-h9-zYy" secondAttribute="top" id="TGN-qh-3Cq"/>
                                         <constraint firstAttribute="bottom" secondItem="PPK-KZ-0TC" secondAttribute="bottom" id="Zaf-zR-qHY"/>
+                                        <constraint firstItem="jx5-RA-Avc" firstAttribute="leading" secondItem="DtU-h9-zYy" secondAttribute="leading" id="ayG-7Y-Kcf"/>
                                         <constraint firstItem="PPK-KZ-0TC" firstAttribute="leading" secondItem="DtU-h9-zYy" secondAttribute="leading" id="dYm-VM-7of"/>
                                         <constraint firstItem="sEu-tr-nrh" firstAttribute="height" secondItem="PPK-KZ-0TC" secondAttribute="height" id="fge-fD-jiv"/>
                                         <constraint firstItem="Q2i-w5-k1y" firstAttribute="centerY" secondItem="DtU-h9-zYy" secondAttribute="centerY" id="n4Q-Ec-lBe"/>
@@ -1600,6 +1626,8 @@ IMAGE</string>
                         <outlet property="txPowerTitleLabel" destination="9z1-8W-BSJ" id="2UL-jA-tVG"/>
                         <outlet property="txPowerValueLabel" destination="fKD-IO-Ovr" id="2gL-vR-F92"/>
                         <outlet property="txPowerValueLabelTrailing" destination="mlt-cl-6Rz" id="wGy-rQ-ZQv"/>
+                        <outlet property="uploadBackgroundIndicatorView" destination="jx5-RA-Avc" id="DXb-jZ-gzu"/>
+                        <outlet property="uploadBackgroundProgressLabel" destination="yWG-EZ-Hp2" id="5Wr-jK-AtY"/>
                         <outlet property="uuidCell" destination="gsA-fe-X4K" id="ejM-Gn-9Ht"/>
                         <outlet property="uuidTitleLabel" destination="CsF-ma-M4T" id="EFC-GP-EmK"/>
                         <outlet property="uuidValueLabel" destination="LK1-u4-1tB" id="IPY-v8-jxD"/>

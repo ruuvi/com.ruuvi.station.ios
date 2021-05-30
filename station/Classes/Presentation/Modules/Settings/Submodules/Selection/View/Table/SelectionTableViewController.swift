@@ -1,8 +1,10 @@
 import UIKit
+import RuuviOntology
+import RuuviLocal
 
 class SelectionTableViewController: UITableViewController {
     var output: SelectionViewOutput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     @IBOutlet weak var descriptionTextView: UITextView!
 
     var viewModel: SelectionViewModel? {

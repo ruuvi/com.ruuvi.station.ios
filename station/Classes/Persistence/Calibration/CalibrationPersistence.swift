@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol CalibrationPersistence {
     func humidityOffset(for identifier: Identifier) -> (Double, Date?)

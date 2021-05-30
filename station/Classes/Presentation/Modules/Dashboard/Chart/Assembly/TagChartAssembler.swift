@@ -1,12 +1,13 @@
 import Foundation
+import RuuviLocal
 
 final class TagChartAssembler {
     static func createModule() -> TagChartModuleInput {
         let r = AppAssembly.shared.assembler.resolver
         let view = TagChartView(frame: .zero)
-        view.settings = r.resolve(Settings.self)
+        view.settings = r.resolve(RuuviLocalSettings.self)
         let presenter = TagChartPresenter()
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
         presenter.view = view
         presenter.measurementService = r.resolve(MeasurementsService.self)
