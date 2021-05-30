@@ -10,6 +10,9 @@ public protocol RuuviServiceOwnership {
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
+    func remove(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+
+    @discardableResult
     func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
