@@ -159,7 +159,7 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
 
 // MARK: - Private
 extension RuuviCloudApiURLSession {
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func request<Request: Encodable, Response: Decodable>(
         endpoint: Routes,
         with model: Request,
@@ -185,7 +185,11 @@ extension RuuviCloudApiURLSession {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
+        let config = URLSessionConfiguration.default
+        if #available(iOS 11.0, *) {
+            config.waitsForConnectivity = true
+        }
+        let task = URLSession(configuration: config).dataTask(with: request) { (data, _, error) in
             if let error = error {
                 promise.fail(error: .networking(error))
             } else {
