@@ -184,11 +184,12 @@ extension WebTagSettingsPresenter {
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        sensorService.setCustomBackground(image: photo, virtualSensor: webTag).on(success: { [weak self] _ in
-            self?.view.viewModel.background.value = photo
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.set(image: photo, for: webTag)
+            .on(success: { [weak self] _ in
+                self?.view.viewModel.background.value = photo
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 }
 

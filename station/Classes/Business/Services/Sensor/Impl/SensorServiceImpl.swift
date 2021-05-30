@@ -19,24 +19,7 @@ final class SensorServiceImpl: SensorService {
         return promise.future
     }
 
-    func setCustomBackground(image: UIImage, virtualSensor: VirtualTagSensor) -> Future<URL, RUError> {
-        let promise = Promise<URL, RUError>()
-        localImages.setCustomBackground(
-            image: image,
-            for: virtualSensor.id.luid
-        ).on(success: { url in
-            promise.succeed(value: url)
-        }, failure: { error in
-            promise.fail(error: .ruuviLocal(error))
-        })
-        return promise.future
-    }
-
     func setBackground(_ id: Int, for identifier: Identifier) {
         localImages.setBackground(id, for: identifier)
-    }
-
-    func deleteCustomBackground(for uuid: Identifier) {
-        localImages.deleteCustomBackground(for: uuid)
     }
 }
