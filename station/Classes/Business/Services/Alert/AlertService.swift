@@ -1,5 +1,6 @@
 import Foundation
 import BTKit
+import RuuviOntology
 
 protocol AlertService {
     func process(heartbeat ruuviTag: RuuviTagSensorRecord)

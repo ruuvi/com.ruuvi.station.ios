@@ -1,5 +1,6 @@
 import LightRoute
 import UIKit
+import RuuviOntology
 
 class TagChartsRouter: TagChartsRouterInput {
     weak var transitionHandler: UIViewController!

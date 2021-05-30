@@ -1,5 +1,10 @@
 import UIKit
 import BTKit
+import RuuviContext
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviService
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -8,34 +13,33 @@ class CardsScrollConfigurator {
 
         let router = CardsRouter()
         router.transitionHandler = view
-        router.settings = r.resolve(Settings.self)
+        router.settings = r.resolve(RuuviLocalSettings.self)
 
         let presenter = CardsPresenter()
         presenter.router = router
         presenter.view = view
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.settings = r.resolve(Settings.self)
-        presenter.sensorService = r.resolve(SensorService.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.webTagService = r.resolve(WebTagService.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
-        presenter.connectionPersistence = r.resolve(ConnectionPersistence.self)
+        presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.alertService = r.resolve(AlertService.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.calibrationService = r.resolve(CalibrationService.self)
-        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.virtualTagReactor = r.resolve(VirtualTagReactor.self)
         presenter.measurementService = r.resolve(MeasurementsService.self)
-        presenter.networkPersistance = r.resolve(NetworkPersistence.self)
-
+        presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
+        presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         router.delegate = presenter
 
         // swiftlint:disable force_cast

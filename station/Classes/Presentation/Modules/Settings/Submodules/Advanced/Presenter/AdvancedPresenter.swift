@@ -1,9 +1,10 @@
 import Foundation
+import RuuviLocal
 
 class AdvancedPresenter: NSObject, AdvancedModuleInput {
     weak var view: AdvancedViewInput!
     var router: AdvancedRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var featureToggleService: FeatureToggleService!
 
     private var chartIntervalDidChanged: Bool = false

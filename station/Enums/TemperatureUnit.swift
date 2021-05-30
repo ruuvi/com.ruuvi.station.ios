@@ -1,25 +1,5 @@
 import Foundation
-
-enum TemperatureUnit {
-    case kelvin
-    case celsius
-    case fahrenheit
-
-    var unitTemperature: UnitTemperature {
-        switch self {
-        case .celsius:
-            return .celsius
-        case .fahrenheit:
-            return .fahrenheit
-        case .kelvin:
-            return .kelvin
-        }
-    }
-
-    var symbol: String {
-        return unitTemperature.symbol
-    }
-}
+import RuuviOntology
 
 extension TemperatureUnit: SelectionItemProtocol {
     var title: String {

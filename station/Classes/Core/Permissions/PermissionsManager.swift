@@ -8,7 +8,10 @@ protocol PermissionsManager {
     var photoLibraryAuthorizationStatus: PHAuthorizationStatus { get }
 
     var isCameraPermissionGranted: Bool { get }
+    #if targetEnvironment(macCatalyst)
+    #else
     var cameraAuthorizationStatus: AVAuthorizationStatus { get }
+    #endif
     var isLocationPermissionGranted: Bool { get }
     var locationAuthorizationStatus: CLAuthorizationStatus { get }
 

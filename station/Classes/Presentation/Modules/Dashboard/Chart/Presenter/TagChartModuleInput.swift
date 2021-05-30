@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol TagChartModuleInput: AnyObject {
     var chartView: TagChartView { get }

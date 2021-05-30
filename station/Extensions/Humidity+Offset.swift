@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 extension Humidity {
     func offseted(by offset: Double?, temperature: Temperature?) -> Humidity? {

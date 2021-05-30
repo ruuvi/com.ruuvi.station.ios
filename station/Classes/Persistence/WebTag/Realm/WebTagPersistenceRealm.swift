@@ -1,11 +1,14 @@
 import RealmSwift
 import Future
 import CoreLocation
+import RuuviOntology
+import RuuviContext
+import RuuviLocal
 
 class WebTagPersistenceRealm: WebTagPersistence {
 
     var context: RealmContext!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func readAll() -> Future<[AnyVirtualTagSensor], RUError> {
         let promise = Promise<[AnyVirtualTagSensor], RUError>()

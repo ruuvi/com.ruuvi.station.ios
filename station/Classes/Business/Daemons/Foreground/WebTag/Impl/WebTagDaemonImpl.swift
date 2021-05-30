@@ -1,11 +1,12 @@
 import Foundation
 import RealmSwift
 import CoreLocation
+import RuuviLocal
 
 class WebTagDaemonImpl: BackgroundWorker, WebTagDaemon {
 
     var webTagService: WebTagService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var webTagPersistence: WebTagPersistence!
     var alertService: AlertService!
     private var realm: Realm?

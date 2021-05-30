@@ -1,5 +1,6 @@
 import Foundation
 import Charts
+import RuuviOntology
 
 public class DateValueFormatter: NSObject, IAxisValueFormatter {
     private let dateFormatter = DateFormatter()

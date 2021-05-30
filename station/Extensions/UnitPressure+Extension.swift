@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 extension UnitPressure: SelectionItemProtocol {
     var title: String {

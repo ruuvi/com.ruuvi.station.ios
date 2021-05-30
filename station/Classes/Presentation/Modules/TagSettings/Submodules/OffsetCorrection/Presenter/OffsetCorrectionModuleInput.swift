@@ -1,10 +1,5 @@
 import Foundation
-
-enum OffsetCorrectionType: Int {
-    case temperature = 0
-    case humidity = 1
-    case pressure = 2
-}
+import RuuviOntology
 
 protocol OffsetCorrectionModuleInput: AnyObject {
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?)

@@ -1,10 +1,13 @@
 import Foundation
+import RuuviContext
+import RuuviStorage
 
-class AboutPresenter: AboutModuleInput {
+final class AboutPresenter: AboutModuleInput {
     weak var view: AboutViewInput!
     var router: AboutRouterInput!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var realmContext: RealmContext!
+    var sqliteContext: SQLiteContext!
 
     private var viewModel: AboutViewModel {
         return view.viewModel
@@ -41,14 +44,14 @@ extension AboutPresenter {
     }
 
     private func obtainTagsCount() {
-        ruuviTagTrunk.getStoredTagsCount().on(success: { [weak self] count in
+        ruuviStorage.getStoredTagsCount().on(success: { [weak self] count in
             let tagsCount = String(format: "About.TagsCount.text".localized(), count)
             self?.viewModel.addedTags.value = tagsCount
         })
     }
 
     private func obtainMeasurementsCount() {
-        ruuviTagTrunk.getStoredMeasurementsCount().on(success: { [weak self] count in
+        ruuviStorage.getStoredMeasurementsCount().on(success: { [weak self] count in
             let measurementsCount = String(format: "About.MeasurementsCount.text".localized(), count)
             self?.viewModel.storedMeasurements.value = measurementsCount
         })
@@ -70,7 +73,7 @@ extension AboutPresenter {
     }
 
     func getSQLiteFileSize() -> Int64 {
-        return fileSize(at: SQLiteGRDBDatabase.databasePath)
+        return fileSize(at: sqliteContext.database.dbPath)
     }
 
     func fileSize(at path: String) -> Int64 {

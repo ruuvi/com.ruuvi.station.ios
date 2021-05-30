@@ -1,5 +1,9 @@
 import Foundation
 import BTKit
+import RuuviContext
+import RuuviReactor
+import RuuviLocal
+import RuuviService
 
 class DiscoverTableConfigurator {
     func configure(view: DiscoverTableViewController) {
@@ -18,9 +22,9 @@ class DiscoverTableConfigurator {
         presenter.permissionsManager = r.resolve(PermissionsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.foreground = r.resolve(BTForeground.self)
-        presenter.ruuviTagTank = r.resolve(RuuviTagTank.self)
-        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-        presenter.settings = r.resolve(Settings.self)
+        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
 
         view.output = presenter
     }

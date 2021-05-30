@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 class HeartbeatConfigurator {
     func configure(view: HeartbeatViewController) {
@@ -10,7 +11,7 @@ class HeartbeatConfigurator {
         let presenter = HeartbeatPresenter()
         presenter.router = router
         presenter.view = view
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter
     }
