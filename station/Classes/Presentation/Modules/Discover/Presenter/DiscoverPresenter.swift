@@ -7,7 +7,7 @@ import RuuviOntology
 import RuuviContext
 import RuuviReactor
 import RuuviLocal
-import RuuviPool
+import RuuviService
 
 class DiscoverPresenter: NSObject, DiscoverModuleInput {
     weak var view: DiscoverViewInput!
@@ -19,9 +19,9 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     var foreground: BTForeground!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
-    var ruuviPool: RuuviPool!
     var ruuviReactor: RuuviReactor!
     var settings: RuuviLocalSettings!
+    var ruuviOwnershipService: RuuviServiceOwnership!
 
     private var ruuviTags = Set<RuuviTag>()
     private var persistedWebTags: Results<WebTagRealm>! {
@@ -108,28 +108,17 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.ruuviTagId == device.id }) {
-            let sensor = RuuviTagSensorStruct(
-                version: ruuviTag.version,
-                luid: ruuviTag.uuid.luid,
-                macId: ruuviTag.mac?.mac,
-                isConnectable: ruuviTag.isConnectable,
-                name: displayName,
-                isClaimed: false,
-                isOwner: true,
-                owner: nil // TODO: @rinat check if nil is ok
-            )
-            let entity = ruuviPool.create(sensor)
-            let record = ruuviPool.create(ruuviTag)
-            Future.zip(entity, record).on(success: { [weak self] _ in
-                guard let sSelf = self else { return }
-                if sSelf.isOpenedFromWelcome {
-                    sSelf.router.openCards()
-                } else {
-                    sSelf.output?.discover(module: sSelf, didAdd: ruuviTag)
-                }
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+            ruuviOwnershipService.add(sensor: ruuviTag.with(name: displayName), record: ruuviTag)
+                .on(success: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    if sSelf.isOpenedFromWelcome {
+                        sSelf.router.openCards()
+                    } else {
+                        sSelf.output?.discover(module: sSelf, didAdd: ruuviTag)
+                    }
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
         }
     }
 
@@ -320,26 +309,5 @@ extension DiscoverPresenter {
 
     private func updateCloseButtonVisibilityState() {
         view.isCloseEnabled = true
-    }
-
-    private func saveSensor(sensor: AnyRuuviTagSensor, mac: String) {
-        guard !persistedSensors.contains(where: {$0.any == sensor}) else {
-            activityPresenter.decrement()
-            errorPresenter.present(error: RUError.ruuviNetwork(.tagAlreadyExists))
-            return
-        }
-        let operation = ruuviPool.create(sensor)
-        operation.on(success: { [weak self] (_) in
-            self?.activityPresenter.decrement()
-            guard let sSelf = self else { return }
-            if sSelf.isOpenedFromWelcome {
-                sSelf.router.openCards()
-            } else {
-                sSelf.output?.discover(module: sSelf, didAddNetworkTag: mac)
-            }
-        }, failure: { [weak self] (error) in
-            self?.activityPresenter.decrement()
-            self?.errorPresenter.present(error: error)
-        })
     }
 }
