@@ -35,6 +35,13 @@ public protocol HasRemotePicture {
 public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture {
 }
 
+public protocol Shareable {
+    var sharedTo: String { get }
+}
+
+public protocol ShareableSensor: Sensor, Shareable {
+}
+
 public protocol PhysicalSensor: Sensor, Connectable, Nameable {
     var luid: LocalIdentifier? { get }
     var macId: MACIdentifier? { get }

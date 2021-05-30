@@ -18,6 +18,18 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
+    func loadShared() -> Future<Set<AnyShareableSensor>, RuuviServiceError> {
+        let promise = Promise<Set<AnyShareableSensor>, RuuviServiceError>()
+        cloud.loadShared()
+            .on(success: { shareableSensors in
+                promise.succeed(value: shareableSensors)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviServiceError> {
         let promise = Promise<MACIdentifier, RuuviServiceError>()
         cloud.share(macId: macId, with: email)
