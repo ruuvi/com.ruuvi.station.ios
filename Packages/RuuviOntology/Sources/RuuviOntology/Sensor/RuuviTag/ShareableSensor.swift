@@ -20,7 +20,7 @@ extension ShareableSensor {
 }
 
 public struct AnyShareableSensor: ShareableSensor, Equatable, Hashable, Reorderable {
-    var object: ShareableSensor
+    private let object: ShareableSensor
 
     public init(object: ShareableSensor) {
         self.object = object

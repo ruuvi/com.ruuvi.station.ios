@@ -10,7 +10,7 @@ public protocol RuuviCloud {
     func validateCode(code: String) -> Future<String, RuuviCloudError>
 
     @discardableResult
-    func loadSensors() -> Future<[CloudSensor], RuuviCloudError>
+    func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult
     func loadRecords(
@@ -26,13 +26,24 @@ public protocol RuuviCloud {
     func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
-    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviCloudError>
+    func share(
+        macId: MACIdentifier,
+        with email: String
+    ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
-    func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviCloudError>
+    func unshare(
+        macId: MACIdentifier,
+        with email: String?
+    ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
     func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError>
+
+    func update(
+        name: String,
+        for sensor: RuuviTagSensor
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

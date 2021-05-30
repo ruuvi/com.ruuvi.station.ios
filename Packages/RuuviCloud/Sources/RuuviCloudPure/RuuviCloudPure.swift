@@ -9,6 +9,25 @@ final class RuuviCloudPure: RuuviCloud {
         self.apiKey = apiKey
     }
 
+    func update(
+        name: String,
+        for sensor: RuuviTagSensor
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiSensorUpdateRequest(sensor: sensor.id, name: name)
+        api.update(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: sensor.with(name: name).any)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
         let promise = Promise<Set<AnyShareableSensor>, RuuviCloudError>()
         guard let apiKey = apiKey else {
@@ -24,8 +43,6 @@ final class RuuviCloudPure: RuuviCloud {
             }, failure: { error in
                 promise.fail(error: .api(error))
             })
-        return promise.future
-
         return promise.future
     }
 
@@ -118,14 +135,16 @@ final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    func loadSensors() -> Future<[CloudSensor], RuuviCloudError> {
-        let promise = Promise<[CloudSensor], RuuviCloudError>()
+    func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError> {
+        let promise = Promise<[AnyCloudSensor], RuuviCloudError>()
         guard let apiKey = apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
         api.user(authorization: apiKey).on(success: { response in
-            promise.succeed(value: response.sensors)
+            let email = response.email
+            let sensors = response.sensors.map({ $0.with(email: email).any })
+            promise.succeed(value: sensors)
         }, failure: { error in
             promise.fail(error: .api(error))
         })
