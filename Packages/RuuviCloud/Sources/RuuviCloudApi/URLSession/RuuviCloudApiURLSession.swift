@@ -18,11 +18,17 @@ extension RuuviCloudApiURLSession {
 }
 
 final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
-    private lazy var uploadSession = URLSession(
-        configuration: .default,
-        delegate: self,
-        delegateQueue: .main
-    )
+    private lazy var uploadSession: URLSession = {
+        let config = URLSessionConfiguration.default
+        if #available(iOS 11.0, *) {
+            config.waitsForConnectivity = true
+        }
+        return URLSession(
+            configuration: config,
+            delegate: self,
+            delegateQueue: .main
+        )
+    }()
     private var progressHandlersByTaskID = [Int: ProgressHandler]()
     private let baseUrl: URL
 
