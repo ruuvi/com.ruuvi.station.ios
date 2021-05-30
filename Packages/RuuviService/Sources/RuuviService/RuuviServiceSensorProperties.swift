@@ -17,6 +17,12 @@ public protocol RuuviServiceSensorProperties {
         maxSize: CGSize
     ) -> Future<URL, RuuviServiceError>
 
+    @discardableResult
+    func set(
+        image: UIImage,
+        for sensor: VirtualSensor
+    ) -> Future<URL, RuuviServiceError>
+
     func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
 
     func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError>

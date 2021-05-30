@@ -55,6 +55,22 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return promise.future
     }
 
+    func set(
+        image: UIImage,
+        for sensor: VirtualSensor
+    ) -> Future<URL, RuuviServiceError> {
+        let promise = Promise<URL, RuuviServiceError>()
+        localImages.setCustomBackground(
+            image: image,
+            for: sensor.id.luid
+        ).on(success: { url in
+            promise.succeed(value: url)
+        }, failure: { error in
+            promise.fail(error: .ruuviLocal(error))
+        })
+        return promise.future
+    }
+
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func set(
         image: UIImage,
