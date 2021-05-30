@@ -132,7 +132,7 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerToVIPER.self) { r in
             let manager = MigrationManagerToVIPER()
-            manager.sensorService = r.resolve(SensorService.self)
+            manager.localImages = r.resolve(RuuviLocalImages.self)
             manager.settings = r.resolve(RuuviLocalSettings.self)
             return manager
         }
