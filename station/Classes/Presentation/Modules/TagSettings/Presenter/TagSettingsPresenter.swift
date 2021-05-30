@@ -3,12 +3,16 @@ import Foundation
 import BTKit
 import UIKit
 import Future
+import RuuviOntology
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviService
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
     var router: TagSettingsRouterInput!
-    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
@@ -19,17 +23,17 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var background: BTBackground!
     var calibrationService: CalibrationService!
     var alertService: AlertService!
-    var settings: Settings!
-    var backgroundPersistence: BackgroundPersistence!
-    var connectionPersistence: ConnectionPersistence!
+    var settings: RuuviLocalSettings!
+    var ruuviLocalImages: RuuviLocalImages!
+    var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
-    var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviStorage: RuuviStorage!
+    var ruuviReactor: RuuviReactor!
     var keychainService: KeychainService!
-    var ruuviNetwork: RuuviNetworkUserApi!
     var activityPresenter: ActivityPresenter!
+    var ruuviOwnershipService: RuuviServiceOwnership!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -57,8 +61,8 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             view.viewModel = viewModel
         }
     }
-    private var ruuviTagToken: RUObservationToken?
-    private var ruuviTagSensorRecordToken: RUObservationToken?
+    private var ruuviTagToken: RuuviReactorToken?
+    private var ruuviTagSensorRecordToken: RuuviReactorToken?
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
@@ -144,21 +148,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        if let luid = ruuviTag.luid {
-            sensorService.setNextDefaultBackground(for: luid).on(success: { [weak self] image in
+        ruuviSensorPropertiesService.setNextDefaultBackground(for: ruuviTag)
+            .on(success: { [weak self] image in
                 self?.viewModel.background.value = image
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
-        } else if let macId = ruuviTag.macId {
-            sensorService.setNextDefaultBackground(for: macId).on(success: { [weak self] image in
-                self?.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-        } else {
-            assertionFailure()
-        }
     }
 
     func viewDidAskToRemoveRuuviTag() {
@@ -172,44 +167,20 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
-        let deleteTagOperation = ruuviTagTank.delete(ruuviTag)
-        let deleteRecordsOperation = ruuviTagTank.deleteAllRecords(ruuviTag.id)
-        var operations = [deleteTagOperation, deleteRecordsOperation]
-        if let mac = ruuviTag.macId?.value,
-           ruuviTag.isNetworkConnectable {
-            if ruuviTag.isOwner {
-                let unclaimOperation = ruuviNetwork.unclaim(mac)
-                operations.append(unclaimOperation)
-            } else {
-                let unshareOperation = ruuviNetwork.unshare(mac, for: nil)
-                operations.append(unshareOperation)
-            }
-        }
-        Future.zip(operations).on(success: { [weak self] _ in
-            guard let self = self else {
-                return
-            }
-            self.output.tagSettingsDidDeleteTag(module: self, ruuviTag: self.ruuviTag)
-        }, failure: { [weak self] (error) in
+        ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
+        }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }
 
     func viewDidChangeTag(name: String) {
         let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
-        var sensor = ruuviTag.struct
-        sensor.name = finalName
-        let operation = ruuviTagTank.update(sensor)
-        operation.on(failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        })
-        guard keychainService.userIsAuthorized,
-              let mac = ruuviTag.macId?.value else {
-            return
-        }
-        let requestModel = UserApiSensorUpdateRequest(sensor: mac, name: finalName)
-        let networkOperation = ruuviNetwork.update(requestModel)
-        networkOperation.on()
+        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+            .on(failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {
@@ -281,50 +252,22 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         viewModel?.keepConnection.value = true
     }
 
-    private func updateTag(with sensor: RuuviTagSensorStruct) {
-        self.ruuviTagTank.update(sensor).on(success: { [weak self] _ in
-            guard let self = self else {
-                return
-            }
-            self.ruuviTag = sensor
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func updateTagInDB(with networkProvider: RuuviNetworkProvider?, isClaimed: Bool) {
-        let sensor = RuuviTagSensorStruct(version: self.ruuviTag.version,
-                                          luid: self.ruuviTag.luid,
-                                          macId: self.ruuviTag.macId,
-                                          isConnectable: self.ruuviTag.isConnectable,
-                                          name: self.ruuviTag.name,
-                                          networkProvider: networkProvider,
-                                          isClaimed: isClaimed,
-                                          isOwner: true)
-        self.updateTag(with: sensor)
-    }
-
     func viewDidTapClaimButton() {
-        guard let mac = ruuviTag.macId?.value else {
-            return
-        }
         if viewModel.isClaimedTag.value == true {
-            ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
-                .on(success: { [weak self] _ in
-                    self?.updateTagInDB(with: nil, isClaimed: false)
-                }, failure: { [weak self] (error) in
+            ruuviOwnershipService
+                .unclaim(sensor: ruuviTag)
+                .on(success: { [weak self] unclaimedSensor in
+                    self?.ruuviTag = unclaimedSensor
+                }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
         } else {
-            ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
-                .on(success: { [weak self] _ in
-                    self?.updateTagInDB(with: .userApi, isClaimed: true)
-                }, failure: { [weak self] (error) in
-                    if error.errorDescription == "Sensor already claimed" {
-                        self?.updateTagInDB(with: .userApi, isClaimed: true)
-                    } else {
-                        self?.errorPresenter.present(error: error)
-                    }
+            ruuviOwnershipService
+                .claim(sensor: ruuviTag)
+                .on(success: { [weak self] claimedSensor in
+                    self?.ruuviTag = claimedSensor
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
                 })
         }
     }
@@ -353,15 +296,16 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 extension TagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
         viewModel.isUploadingBackground.value = true
-        sensorService.setCustomBackground(image: photo,
-                                          sensor: ruuviTag)
-            .on(success: { [weak self] _ in
-                self?.viewModel.isUploadingBackground.value = false
-                self?.viewModel.background.value = photo
-            }, failure: { [weak self] error in
-                self?.viewModel.isUploadingBackground.value = false
-                self?.errorPresenter.present(error: error)
-            })
+        ruuviSensorPropertiesService.set(
+            image: photo,
+            for: ruuviTag
+        ).on(success: { [weak self] _ in
+            self?.viewModel.isUploadingBackground.value = false
+            self?.viewModel.background.value = photo
+        }, failure: { [weak self] error in
+            self?.viewModel.isUploadingBackground.value = false
+            self?.errorPresenter.present(error: error)
+        })
     }
 }
 
@@ -383,13 +327,14 @@ extension TagSettingsPresenter {
         viewModel.temperatureUnit.value = settings.temperatureUnit
         viewModel.humidityUnit.value = settings.humidityUnit
         viewModel.pressureUnit.value = settings.pressureUnit
-        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { [weak self] image in
-            self?.viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.getImage(for: ruuviTag)
+            .on(success: { [weak self] image in
+                self?.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         if let mac = ruuviTag.macId,
-           let percentage = backgroundPersistence.backgroundUploadProgress(for: mac) {
+           let percentage = ruuviLocalImages.backgroundUploadProgress(for: mac) {
             viewModel.isUploadingBackground.value = percentage < 1.0
             viewModel.uploadingBackgroundPercentage.value = percentage
         } else {
@@ -590,9 +535,12 @@ extension TagSettingsPresenter {
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if sSelf.ruuviTag.luid?.value == luid?.value
                         || sSelf.ruuviTag.macId?.value == macId?.value {
-                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { image in
-                            sSelf.viewModel.background.value = image
-                        })
+                        sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
+                            .on(success: { [weak sSelf] image in
+                                sSelf?.viewModel.background.value = image
+                            }, failure: { [weak sSelf] error in
+                                sSelf?.errorPresenter.present(error: error)
+                            })
                     }
                 }
             }
@@ -600,7 +548,7 @@ extension TagSettingsPresenter {
 
     private func startObservingRuuviTag() {
         ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviTagReactor.observe { [weak self] (change) in
+        ruuviTagToken = ruuviReactor.observe { [weak self] (change) in
             switch change {
             case .update(let sensor):
                 if sensor.id == self?.ruuviTag.id {
@@ -616,7 +564,7 @@ extension TagSettingsPresenter {
 
     private func startObservingRuuviTagSensor(ruuviTag: RuuviTagSensor) {
         ruuviTagSensorRecordToken?.invalidate()
-        ruuviTagSensorRecordToken = ruuviTagReactor.observeLast(ruuviTag, { [weak self] (changes) in
+        ruuviTagSensorRecordToken = ruuviReactor.observeLast(ruuviTag, { [weak self] (changes) in
             switch changes {
             case .update(let record):
                 if let lastRecord = record {
@@ -866,7 +814,7 @@ extension TagSettingsPresenter {
             guard let strongSelf = self else {
                 return
             }
-            observer.ruuviTagTrunk.readLast(strongSelf.ruuviTag).on(success: { record in
+            observer.ruuviStorage.readLast(strongSelf.ruuviTag).on(success: { record in
                 let last = record?.movementCounter ?? 0
                 let type: AlertType = .movement(last: last)
                 let currentState = observer.alertService.isOn(type: type, for: uuid)
@@ -972,7 +920,7 @@ extension TagSettingsPresenter {
     }
 
     private func checkLastSensorSettings() {
-        ruuviTagTrunk.readSensorSettings(self.ruuviTag).on { settings in
+        ruuviStorage.readSensorSettings(self.ruuviTag).on { settings in
             self.sensorSettings = settings
         }
     }

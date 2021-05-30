@@ -1,5 +1,8 @@
 import Swinject
 import BTKit
+import RuuviStorage
+import RuuviLocal
+import RuuviCore
 
 class CoreAssembly: Assembly {
     // swiftlint:disable:next function_body_length
@@ -20,10 +23,10 @@ class CoreAssembly: Assembly {
         container.register(LocalNotificationsManager.self) { r in
             let manager = LocalNotificationsManagerImpl()
             manager.alertService = r.resolve(AlertService.self)
-            manager.settings = r.resolve(Settings.self)
-            manager.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+            manager.settings = r.resolve(RuuviLocalSettings.self)
+            manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
-            manager.idPersistence = r.resolve(IDPersistence.self)
+            manager.idPersistence = r.resolve(RuuviLocalIDs.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             return manager
         }.inObjectScope(.container)
@@ -31,11 +34,6 @@ class CoreAssembly: Assembly {
         container.register(LocationManager.self) { _ in
             let manager = LocationManagerImpl()
             return manager
-        }
-
-        container.register(ImageCoreService.self) { _ in
-            let service = ImageCoreServiceImpl()
-            return service
         }
 
         container.register(PermissionsManager.self) { r in
@@ -49,13 +47,22 @@ class CoreAssembly: Assembly {
             return manager
         }
 
+        container.register(RuuviCoreFactory.self) { _ in
+            return RuuviCoreFactoryImpl()
+        }
+
+        container.register(RuuviCoreImage.self) { r in
+            let factory = r.resolve(RuuviCoreFactory.self)!
+            return factory.createImage()
+        }
+
         container.register(DiffCalculator.self) { _ in
             let diffCalculator = DiffCalculatorImpl()
             return diffCalculator
         }
 
         container.register(MeasurementsService.self, factory: { r in
-            let settings = r.resolve(Settings.self)
+            let settings = r.resolve(RuuviLocalSettings.self)
             let service = MeasurementsServiceImpl()
             service.settings = settings
             return service

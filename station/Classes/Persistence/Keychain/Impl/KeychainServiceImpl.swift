@@ -1,8 +1,9 @@
 import Foundation
 import KeychainAccess
+import RuuviLocal
 
 class KeychainServiceImpl {
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     private let keychain: Keychain = Keychain(service: "com.ruuvi.station",
                                               accessGroup: "4MUYJ4YYH4.com.ruuvi.station")

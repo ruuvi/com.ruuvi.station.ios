@@ -1,21 +1,25 @@
 import Foundation
 import Future
 import BTKit
+import RuuviOntology
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviPool
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
     var gattService: GATTService!
-    var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var ruuviTagReactor: RuuviTagReactor!
-    var settings: Settings!
+    var ruuviPool: RuuviPool!
+    var ruuviStorage: RuuviStorage!
+    var ruuviReactor: RuuviReactor!
+    var settings: RuuviLocalSettings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
     var exportService: ExportService!
-    var networkService: NetworkService!
     var keychainService: KeychainService!
     var lastMeasurement: RuuviMeasurement?
-    private var ruuviTagSensorObservationToken: RUObservationToken?
+    private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var didMigrationCompleteToken: NSObjectProtocol?
     private var timer: Timer?
     private var chartModules: [TagChartModuleInput] = []
@@ -58,9 +62,11 @@ class TagChartsInteractor {
 extension TagChartsInteractor: TagChartsInteractorInput {
     func restartObservingTags() {
         ruuviTagSensorObservationToken?.invalidate()
-        ruuviTagSensorObservationToken = ruuviTagReactor.observe({ [weak self] change in
+        ruuviTagSensorObservationToken = ruuviReactor.observe({ [weak self] change in
             switch change {
             case .initial(let sensors):
+                guard let sSelf = self else { return }
+                let sensors = sensors.reordered(by: sSelf.settings)
                 self?.sensors = sensors
                 if let id = self?.ruuviTagSensor.id,
                    let sensor = sensors.first(where: {$0.id == id}) {
@@ -153,9 +159,9 @@ extension TagChartsInteractor: TagChartsInteractorInput {
 
     func deleteAllRecords(ruuviTagId: String) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        let op = ruuviTagTank.deleteAllRecords(ruuviTagId)
+        let op = ruuviPool.deleteAllRecords(ruuviTagId)
         op.on(failure: {(error) in
-            promise.fail(error: error)
+            promise.fail(error: .ruuviPool(error))
         }, completion: { [weak self] in
             self?.clearChartsAndRestartObserving()
             promise.succeed(value: ())
@@ -222,7 +228,7 @@ extension TagChartsInteractor {
             return
         }
         let interval = TimeInterval(settings.chartIntervalSeconds)
-        let op = ruuviTagTrunk.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
+        let op = ruuviStorage.readLast(ruuviTagSensor.id, from: lastDate.timeIntervalSince1970)
         op.on(success: { [weak self] (results) in
             guard results.count > 0 else { return }
             var lastResults: [RuuviMeasurement] = []
@@ -237,7 +243,7 @@ extension TagChartsInteractor {
             self?.ruuviTagData.append(contentsOf: lastResults)
             self?.insertMeasurements(lastResults)
         }, failure: {[weak self] (error) in
-            self?.presenter.interactorDidError(error)
+            self?.presenter.interactorDidError(.ruuviStorage(error))
         })
     }
 
@@ -247,7 +253,7 @@ extension TagChartsInteractor {
             value: -settings.dataPruningOffsetHours,
             to: Date()
         ) ?? Date.distantPast
-        let op = ruuviTagTrunk.read(
+        let op = ruuviStorage.read(
             ruuviTagSensor.id,
             after: date,
             with: TimeInterval(settings.chartIntervalSeconds)
@@ -255,7 +261,7 @@ extension TagChartsInteractor {
         op.on(success: { [weak self] (results) in
             self?.ruuviTagData = results.map({ $0.measurement })
         }, failure: {[weak self] (error) in
-            self?.presenter.interactorDidError(error)
+            self?.presenter.interactorDidError(.ruuviStorage(error))
         }, completion: competion)
     }
 
@@ -315,18 +321,6 @@ extension TagChartsInteractor {
         op.on(success: { _ in
             promise.succeed(value: ())
         }, failure: {error in
-            promise.fail(error: error)
-        })
-        return promise.future
-    }
-
-    private func syncNetworkRecords(for ruuviTagId: String, macId: MACIdentifier) -> Future<Void, RUError> {
-        let promise = Promise<Void, RUError>()
-        let op = networkService.loadData(for: ruuviTagId, mac: macId.value, from: .userApi)
-        op.on(success: { [weak self] count in
-            self?.presenter.interactorDidSyncComplete(count)
-            promise.succeed(value: ())
-        }, failure: { error in
             promise.fail(error: error)
         })
         return promise.future

@@ -1,21 +1,21 @@
 import Foundation
+import RuuviStorage
 
 class MigrationManagerSensorSettings: MigrationManager {
-    // persistence
     var calibrationPersistence: CalibrationPersistence!
     var errorPresenter: ErrorPresenter!
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
 
     @UserDefault("MigrationManagerSensorSettings.didMigrateSensorSettings", defaultValue: false)
     private var didMigrateSensorSettings: Bool
 
     func migrateIfNeeded() {
         if !didMigrateSensorSettings {
-            ruuviTagTrunk.readAll().on(success: { ruuviTags in
+            ruuviStorage.readAll().on(success: { ruuviTags in
                 ruuviTags.forEach { ruuviTag in
                     if let luid = ruuviTag.luid {
                         let pair = self.calibrationPersistence.humidityOffset(for: luid)
-                        self.ruuviTagTrunk.updateOffsetCorrection(
+                        self.ruuviStorage.updateOffsetCorrection(
                             type: .humidity,
                             with: pair.0 / 100.0, // have to divide to 100
                             of: ruuviTag,

@@ -1,6 +1,9 @@
 // swiftlint:disable file_length
 import UserNotifications
 import UIKit
+import RuuviOntology
+import RuuviStorage
+import RuuviLocal
 
 struct LocalAlertCategory {
     var id: String
@@ -29,11 +32,11 @@ enum BlastNotificationType: String {
 
 class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
-    var ruuviTagTrunk: RuuviTagTrunk!
+    var ruuviStorage: RuuviStorage!
     var virtualTagTrunk: VirtualTagTrunk!
-    var idPersistence: IDPersistence!
+    var idPersistence: RuuviLocalIDs!
     var alertService: AlertService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
 
     var lowTemperatureAlerts = [String: Date]()
@@ -94,7 +97,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.userInfo = [blast.uuidKey: uuid, blast.typeKey: BlastNotificationType.connection.rawValue]
         content.categoryIdentifier = blast.id
 
-        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+        ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
             content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
@@ -117,7 +120,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
         content.categoryIdentifier = blast.id
         content.title = "LocalNotificationsManager.DidDisconnect.title".localized()
 
-        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+        ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
             content.body = sSelf.alertService.connectionDescription(for: uuid) ?? ""
@@ -142,7 +145,7 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
 
         content.title = "LocalNotificationsManager.DidMove.title".localized()
 
-        ruuviTagTrunk.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
+        ruuviStorage.readOne(id(for: uuid)).on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
             content.subtitle = ruuviTag.name
             content.body = sSelf.alertService.movementDescription(for: uuid) ?? ""
@@ -245,7 +248,7 @@ extension LocalNotificationsManagerImpl {
             }
             content.body = body
 
-            ruuviTagTrunk.readOne(id(for: uuid)).on(success: { ruuviTag in
+            ruuviStorage.readOne(id(for: uuid)).on(success: { ruuviTag in
                 content.subtitle = ruuviTag.name
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
                 let request = UNNotificationRequest(identifier: uuid + type.rawValue,

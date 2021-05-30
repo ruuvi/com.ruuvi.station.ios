@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 class AdvancedConfigurator {
     func configure(view: AdvancedTableViewController) {
@@ -10,7 +11,7 @@ class AdvancedConfigurator {
         let presenter = AdvancedPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         view.output = presenter
     }

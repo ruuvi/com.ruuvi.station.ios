@@ -1,6 +1,7 @@
 import UIKit
 import BTKit
 import Humidity
+import RuuviOntology
 
 class OffsetCorrectionViewModel {
     var type: OffsetCorrectionType = .temperature

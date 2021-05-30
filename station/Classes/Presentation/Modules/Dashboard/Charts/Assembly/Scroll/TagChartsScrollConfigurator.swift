@@ -1,5 +1,10 @@
 import Foundation
 import BTKit
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviPool
+import RuuviService
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
@@ -14,11 +19,10 @@ class TagChartsScrollConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.sensorService = r.resolve(SensorService.self)
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
-        presenter.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
-        presenter.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
+        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
@@ -29,15 +33,15 @@ class TagChartsScrollConfigurator {
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.interactor = interactor
+        presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
 
         interactor.gattService = r.resolve(GATTService.self)
-        interactor.settings = r.resolve(Settings.self)
+        interactor.settings = r.resolve(RuuviLocalSettings.self)
         interactor.exportService = r.resolve(ExportService.self)
         interactor.keychainService = r.resolve(KeychainService.self)
-        interactor.networkService = r.resolve(NetworkService.self)
-        interactor.ruuviTagReactor = r.resolve(RuuviTagReactor.self)
-        interactor.ruuviTagTank = r.resolve(RuuviTagTank.self)
-        interactor.ruuviTagTrunk = r.resolve(RuuviTagTrunk.self)
+        interactor.ruuviReactor = r.resolve(RuuviReactor.self)
+        interactor.ruuviPool = r.resolve(RuuviPool.self)
+        interactor.ruuviStorage = r.resolve(RuuviStorage.self)
         interactor.presenter = presenter
 
         view.output = presenter

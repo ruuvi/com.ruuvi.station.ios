@@ -1,6 +1,7 @@
 import Foundation
 import Future
 import CoreLocation
+import RuuviOntology
 
 protocol WebTagPersistence {
     func readAll() -> Future<[AnyVirtualTagSensor], RUError>

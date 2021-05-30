@@ -1,4 +1,5 @@
 import UIKit
+import RuuviOntology
 
 protocol TagChartsRouterInput {
     func dismiss(completion: (() -> Void)?)

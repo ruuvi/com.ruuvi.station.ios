@@ -1,4 +1,6 @@
 import UIKit
+import RuuviLocal
+import RuuviDaemon
 
 class AppStateServiceImpl: AppStateService {
 
@@ -9,8 +11,8 @@ class AppStateServiceImpl: AppStateService {
     var keychainService: KeychainService!
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var pullWebDaemon: PullWebDaemon!
-    var pullNetworkTagDaemon: PullRuuviNetworkDaemon!
-    var settings: Settings!
+    var cloudSyncDaemon: RuuviDaemonCloudSync!
+    var settings: RuuviLocalSettings!
     var userPropertiesService: UserPropertiesService!
     var universalLinkCoordinator: UniversalLinkCoordinator!
     var webTagDaemon: WebTagDaemon!
@@ -24,7 +26,7 @@ class AppStateServiceImpl: AppStateService {
             webTagDaemon.start()
         }
         if keychainService.userIsAuthorized {
-            pullNetworkTagDaemon.start()
+            cloudSyncDaemon.start()
         } else if keychainService.ruuviUserApiKey != nil
                     && keychainService.userApiEmail != nil {
             keychainService.userApiLogOut()
@@ -55,7 +57,7 @@ class AppStateServiceImpl: AppStateService {
             webTagDaemon.stop()
         }
         if keychainService.userIsAuthorized {
-            pullNetworkTagDaemon.stop()
+            cloudSyncDaemon.stop()
         }
         propertiesDaemon.stop()
         pullWebDaemon.stop()
@@ -71,8 +73,8 @@ class AppStateServiceImpl: AppStateService {
             webTagDaemon.start()
         }
         if keychainService.userIsAuthorized {
-            pullNetworkTagDaemon.start()
-            pullNetworkTagDaemon.refreshImmediately()
+            cloudSyncDaemon.start()
+            cloudSyncDaemon.refreshImmediately()
         }
         propertiesDaemon.start()
         pullWebDaemon.start()

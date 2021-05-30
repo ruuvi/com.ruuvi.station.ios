@@ -1,13 +1,6 @@
 import Foundation
 import Humidity
-
-enum Language: String, CaseIterable {
-    case english = "en"
-    case russian = "ru"
-    case finnish = "fi"
-    case french = "fr"
-    case swedish = "sv"
-}
+import RuuviOntology
 
 extension Language {
     var name: String {

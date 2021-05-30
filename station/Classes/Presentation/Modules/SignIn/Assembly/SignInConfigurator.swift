@@ -1,4 +1,6 @@
 import Foundation
+import RuuviCloud
+import RuuviService
 
 class SignInConfigurator {
     func configure(view: SignInViewController) {
@@ -15,8 +17,8 @@ class SignInConfigurator {
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.keychainService = r.resolve(KeychainService.self)
-        presenter.userApi = r.resolve(RuuviNetworkUserApi.self)
-        presenter.networkService = r.resolve(NetworkService.self)
+        presenter.ruuviCloud = r.resolve(RuuviCloud.self)
+        presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
 
         view.output = presenter
     }

@@ -1,4 +1,5 @@
 import UIKit
+import RuuviOntology
 
 struct WebTagSettingsViewModel {
     let background: Observable<UIImage?> = Observable<UIImage?>()

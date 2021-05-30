@@ -1,6 +1,7 @@
 import UIKit
 import Humidity
 import Charts
+import RuuviOntology
 
 enum TagChartsType {
     case ruuvi

@@ -1,8 +1,9 @@
 import Foundation
+import RuuviLocal
 
 class PullWebDaemonOperations: BackgroundWorker, PullWebDaemon {
 
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var webTagOperationsManager: WebTagOperationsManager!
 
     @UserDefault("PullWebDaemonOperations.webTagLastPullDate", defaultValue: Date())

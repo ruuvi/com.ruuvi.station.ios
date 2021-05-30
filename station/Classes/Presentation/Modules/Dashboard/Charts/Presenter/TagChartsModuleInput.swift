@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol TagChartsModuleInput: AnyObject {
     func configure(output: TagChartsModuleOutput)

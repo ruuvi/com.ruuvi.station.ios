@@ -1,4 +1,5 @@
 import UIKit
+import RuuviOntology
 
 class OffsetCorrectionAppleViewController: UIViewController {
     var output: OffsetCorrectionViewOutput!

@@ -1,15 +1,17 @@
 import Foundation
 import BTKit
+import RuuviOntology
+import RuuviStorage
+import RuuviLocal
 
-class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
+final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     weak var view: OffsetCorrectionViewInput!
     var router: OffsetCorrectionRouter!
     var background: BTBackground!
     var foreground: BTForeground!
     var errorPresenter: ErrorPresenter!
-    var ruuviTagReactor: RuuviTagReactor!
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var settings: Settings!
+    var ruuviStorage: RuuviStorage!
+    var settings: RuuviLocalSettings!
 
     private var ruuviTagObserveToken: ObservationToken?
     private var ruuviTagObserveLastRecordToken: RUObservationToken?
@@ -25,18 +27,20 @@ class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
 
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
-        self.sensorSettings = sensorSettings ?? SensorSettingsStruct(ruuviTagId: ruuviTag.id,
-                                                                     temperatureOffset: nil,
-                                                                     temperatureOffsetDate: nil,
-                                                                     humidityOffset: nil,
-                                                                     humidityOffsetDate: nil,
-                                                                     pressureOffset: nil,
-                                                                     pressureOffsetDate: nil)
+        self.sensorSettings = sensorSettings ?? SensorSettingsStruct(
+            ruuviTagId: ruuviTag.id,
+            temperatureOffset: nil,
+            temperatureOffsetDate: nil,
+            humidityOffset: nil,
+            humidityOffsetDate: nil,
+            pressureOffset: nil,
+            pressureOffsetDate: nil
+        )
         self.view.viewModel = {
             let vm = OffsetCorrectionViewModel(
                 type: type, sensorSettings: self.sensorSettings
             )
-            ruuviTagTrunk.readLast(ruuviTag).on {[weak self] record in
+            ruuviStorage.readLast(ruuviTag).on {[weak self] record in
                 if let record = record {
                     self?.lastSensorRecord = record
                     vm.update(ruuviTagRecord: record)
@@ -74,7 +78,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         default:
             offset = correctValue - view.viewModel.originalValue.value.bound
         }
-        ruuviTagTrunk.updateOffsetCorrection(
+        ruuviStorage.updateOffsetCorrection(
             type: view.viewModel.type,
             with: offset,
             of: self.ruuviTag,
@@ -92,7 +96,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     }
 
     func viewDidClearOffsetValue() {
-        ruuviTagTrunk.updateOffsetCorrection(
+        ruuviStorage.updateOffsetCorrection(
             type: view.viewModel.type,
             with: nil,
             of: self.ruuviTag,

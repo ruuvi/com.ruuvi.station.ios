@@ -2,6 +2,8 @@ import Foundation
 import RealmSwift
 import Humidity
 import Future
+import RuuviOntology
+import RuuviContext
 
 class ExportServiceTemp: ExportService {
     var realmContext: RealmContext!

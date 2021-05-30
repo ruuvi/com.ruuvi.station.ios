@@ -1,5 +1,7 @@
 import Foundation
 import Future
+import RuuviCloud
+import RuuviService
 
 class SignInPresenter: NSObject {
     enum State {
@@ -14,8 +16,8 @@ class SignInPresenter: NSObject {
     var activityPresenter: ActivityPresenter!
     var errorPresenter: ErrorPresenter!
     var keychainService: KeychainService!
-    var userApi: RuuviNetworkUserApi!
-    var networkService: NetworkService!
+    var ruuviCloud: RuuviCloud!
+    var cloudSyncService: RuuviServiceCloudSync!
 
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -67,9 +69,6 @@ extension SignInPresenter: SignInModuleOutput {
         }
     }
 }
-
-// MARK: - TagsManagerModuleOutput
-extension SignInPresenter: TagsManagerModuleOutput {}
 
 // MARK: - SignInModuleInput
 extension SignInPresenter: SignInModuleInput {
@@ -147,13 +146,10 @@ extension SignInPresenter {
             viewModel.errorLabelText.value = "SignIn.EnterCorrectEmail".localized()
             return
         }
-        let requestModel = UserApiRegisterRequest(email: email)
         activityPresenter.increment()
-        userApi.register(requestModel)
-            .on(success: { [weak self] (_) in
-                guard let sSelf = self else {
-                    return
-                }
+        ruuviCloud.requestCode(email: email)
+            .on(success: { [weak self] email in
+                guard let sSelf = self else { return }
                 sSelf.keychainService.userApiEmail = email
                 sSelf.router.openEmailConfirmation(output: sSelf)
             }, failure: { [weak self] (error) in
@@ -164,13 +160,12 @@ extension SignInPresenter {
     }
 
     private func verify(_ code: String) {
-        let requestModel = UserApiVerifyRequest(token: code)
         activityPresenter.increment()
-        userApi.verify(requestModel)
-            .on(success: { [weak self] (response) in
+        ruuviCloud.validateCode(code: code)
+            .on(success: { [weak self] apiKey in
                 guard let sSelf = self else { return }
-                sSelf.keychainService.ruuviUserApiKey = response.accessToken
-                sSelf.networkService.updateTagsInfo(for: .userApi).on(success: { [weak sSelf] _ in
+                sSelf.keychainService.ruuviUserApiKey = apiKey
+                sSelf.cloudSyncService.syncAll().on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.activityPresenter.decrement()
                     ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)

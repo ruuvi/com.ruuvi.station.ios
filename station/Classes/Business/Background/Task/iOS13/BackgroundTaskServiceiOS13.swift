@@ -5,7 +5,6 @@ import BackgroundTasks
 class BackgroundTaskServiceiOS13: BackgroundTaskService {
 
     var webTagOperationsManager: WebTagOperationsManager!
-    var ruuviTagNetworkOperationManager: RuuviNetworkTagOperationsManager!
 
     private let networkTagRefresh = "com.ruuvi.station.BackgroundTaskServiceiOS13.webTagRefresh"
 
@@ -32,12 +31,8 @@ class BackgroundTaskServiceiOS13: BackgroundTaskService {
     private func handleWebTagRefresh(task: BGAppRefreshTask) {
         schedule()
 
-        var operations = webTagOperationsManager.alertsPullOperations()
-        ruuviTagNetworkOperationManager.pullNetworkTagOperations()
-            .on {[weak self] (networkTagOperations) in
-            operations.append(contentsOf: networkTagOperations)
-                self?.enqueueOperations(operations, task: task)
-        }
+        let operations = webTagOperationsManager.alertsPullOperations()
+        enqueueOperations(operations, task: task)
     }
 
     private func enqueueOperations(_ operations: [Operation], task: BGAppRefreshTask) {
