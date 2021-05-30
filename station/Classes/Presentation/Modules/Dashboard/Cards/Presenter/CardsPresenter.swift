@@ -33,7 +33,7 @@ class CardsPresenter: CardsModuleInput {
     var ruuviStorage: RuuviStorage!
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
-    var networkPersistance: NetworkPersistence!
+    var localSyncState: RuuviLocalSyncState!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
@@ -329,7 +329,7 @@ extension CardsPresenter {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus.value = networkPersistance.getSyncStatus(for: macId)
+                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
                 viewModel.isConnected.value = false
                 viewModel.alertState.value = .empty
             } else {

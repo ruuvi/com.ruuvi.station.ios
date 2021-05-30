@@ -26,11 +26,6 @@ class PersistenceAssembly: Assembly {
             return persistence
         }.inObjectScope(.container)
 
-        container.register(NetworkPersistence.self) { _ in
-            let persistence = NetworkPersistenceImpl()
-            return persistence
-        }
-
         container.register(RealmContextFactory.self) { _ in
             let factory = RealmContextFactoryImpl()
             return factory
@@ -54,7 +49,7 @@ class PersistenceAssembly: Assembly {
         container.register(RuuviLocalSyncState.self) { r in
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalSyncState()
-        }
+        }.inObjectScope(.container)
 
         container.register(RuuviPersistenceFactory.self) { _ in
             return RuuviPersistenceFactoryImpl()

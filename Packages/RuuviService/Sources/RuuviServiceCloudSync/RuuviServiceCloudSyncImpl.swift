@@ -135,11 +135,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     .map({ sSelf.syncImage(sensor: $0) })
 
                 Future.zip([Future.zip(createSensors), Future.zip(updateSensors)]).on(success: { _ in
-                    Future.zip(syncImages).on(success: { _ in
-                        promise.succeed(value: updatedSensors)
-                    }, failure: { error in
-                        promise.fail(error: error)
-                    })
+                    Future.zip(syncImages).on()
+                    promise.succeed(value: updatedSensors)
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
@@ -165,8 +162,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 ?? networkPuningDate
             let syncOperation = sSelf.syncRecordsOperation(for: sensor, since: since)
             syncOperation.on(success: { [weak sSelf] result in
-                promise.succeed(value: result)
                 sSelf?.ruuviLocalSyncState.lastSyncDate = Date()
+                promise.succeed(value: result)
              }, failure: { error in
                 promise.fail(error: error)
              })
@@ -175,8 +172,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             let since: Date = sSelf.ruuviLocalSyncState.lastSyncDate ?? networkPuningDate
             let syncOperation = sSelf.syncRecordsOperation(for: sensor, since: since)
             syncOperation.on(success: { [weak sSelf] result in
-                promise.succeed(value: result)
                 sSelf?.ruuviLocalSyncState.lastSyncDate = Date()
+                promise.succeed(value: result)
              }, failure: { (error) in
                 promise.fail(error: error)
              })
