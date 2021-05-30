@@ -8,6 +8,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviService
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
@@ -35,6 +36,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var keychainService: KeychainService!
     var ruuviNetwork: RuuviNetworkUserApi!
     var activityPresenter: ActivityPresenter!
+    var ruuviOwnershipService: RuuviServiceOwnership!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -317,26 +319,21 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidTapClaimButton() {
-        guard let mac = ruuviTag.macId?.value else {
-            return
-        }
         if viewModel.isClaimedTag.value == true {
-            ruuviNetwork.unclaim(.init(name: nil, sensor: mac))
-                .on(success: { [weak self] _ in
-                    self?.updateTagInDB(isClaimed: false)
-                }, failure: { [weak self] (error) in
+            ruuviOwnershipService
+                .unclaim(sensor: ruuviTag)
+                .on(success: { [weak self] unclaimedSensor in
+                    self?.ruuviTag = unclaimedSensor
+                }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
         } else {
-            ruuviNetwork.claim(.init(name: ruuviTag.name, sensor: mac))
-                .on(success: { [weak self] _ in
-                    self?.updateTagInDB(isClaimed: true)
-                }, failure: { [weak self] (error) in
-                    if error.errorDescription == "Sensor already claimed" {
-                        self?.updateTagInDB(isClaimed: true)
-                    } else {
-                        self?.errorPresenter.present(error: error)
-                    }
+            ruuviOwnershipService
+                .claim(sensor: ruuviTag)
+                .on(success: { [weak self] claimedSensor in
+                    self?.ruuviTag = claimedSensor
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
                 })
         }
     }

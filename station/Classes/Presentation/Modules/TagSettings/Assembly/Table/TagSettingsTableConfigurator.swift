@@ -4,6 +4,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviService
 
 class TagSettingsTableConfigurator {
     func configure(view: TagSettingsTableViewController) {
@@ -33,6 +34,7 @@ class TagSettingsTableConfigurator {
         presenter.ruuviNetwork = r.resolve(RuuviNetworkUserApi.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
+        presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
 
         view.measurementService = r.resolve(MeasurementsService.self)
 
