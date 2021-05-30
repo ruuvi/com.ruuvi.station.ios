@@ -29,20 +29,16 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        if sensor.isOwner { // TODO: @rinat check if always true for own tags
-            cloud.update(name: name, for: sensor)
-                .on(success: { [weak self] updatedSensor in
-                    guard let sSelf = self else { return }
-                    sSelf.pool
-                        .update(updatedSensor)
-                        .on(success: { _ in
-                            promise.succeed(value: updatedSensor)
-                        }, failure: { error in
-                            promise.fail(error: .ruuviPool(error))
-                        })
+        if sensor.isOwner {
+            let namedSensor = sensor.with(name: name)
+            pool.update(namedSensor)
+                .on(success: { [weak self] _ in
+                    self?.cloud.update(name: name, for: sensor)
+                    promise.succeed(value: namedSensor.any)
                 }, failure: { error in
-                    promise.fail(error: .ruuviCloud(error))
+                    promise.fail(error: .ruuviPool(error))
                 })
+
         } else {
             let namedSensor = sensor.with(name: name)
             pool.update(namedSensor)
