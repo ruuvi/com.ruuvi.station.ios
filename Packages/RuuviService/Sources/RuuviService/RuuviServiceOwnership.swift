@@ -4,6 +4,12 @@ import RuuviOntology
 
 public protocol RuuviServiceOwnership {
     @discardableResult
+    func add(
+        sensor: RuuviTagSensor,
+        record: RuuviTagSensorRecord
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+
+    @discardableResult
     func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
