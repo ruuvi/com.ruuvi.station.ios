@@ -1,4 +1,5 @@
 import Foundation
+import RuuviService
 
 class ShareConfigurator {
     func configure(view: ShareViewController) {
@@ -10,6 +11,7 @@ class ShareConfigurator {
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.networkService = r.resolve(RuuviNetworkUserApi.self)
+        presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
 
         router.transitionHandler = view
 

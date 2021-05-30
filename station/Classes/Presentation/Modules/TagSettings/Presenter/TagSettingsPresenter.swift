@@ -181,19 +181,27 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
         let deleteTagOperation = ruuviPool.delete(ruuviTag)
         let deleteRecordsOperation = ruuviPool.deleteAllRecords(ruuviTag.id)
-        var unclainOrUnshareOperation: Future<Bool, RUError>?
-        if let mac = ruuviTag.macId?.value,
+        var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
+        var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
+        if let macId = ruuviTag.macId,
            ruuviTag.isNetworkConnectable {
             if ruuviTag.isOwner {
-                unclainOrUnshareOperation = ruuviNetwork.unclaim(mac)
+                unclaimOperation = ruuviOwnershipService.unclaim(sensor: ruuviTag)
             } else {
-                unclainOrUnshareOperation = ruuviNetwork.unshare(mac, for: nil)
+                unshareOperation = ruuviOwnershipService.unshare(macId: macId, with: nil)
             }
         }
         Future.zip([deleteTagOperation, deleteRecordsOperation]).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
-            if let unclainOrUnshareOperation = unclainOrUnshareOperation {
-                unclainOrUnshareOperation.on(success: { [weak sSelf] _ in
+            if let unclaimOperation = unclaimOperation {
+                unclaimOperation.on(success: { [weak sSelf] _ in
+                    guard let ssSelf = sSelf else { return }
+                    ssSelf.output.tagSettingsDidDeleteTag(module: ssSelf, ruuviTag: ssSelf.ruuviTag)
+                }, failure: { [weak sSelf] error in
+                    sSelf?.errorPresenter.present(error: error)
+                })
+            } else if let unshareOperation = unshareOperation {
+                unshareOperation.on(success: { [weak sSelf] _ in
                     guard let ssSelf = sSelf else { return }
                     ssSelf.output.tagSettingsDidDeleteTag(module: ssSelf, ruuviTag: ssSelf.ruuviTag)
                 }, failure: { [weak sSelf] error in
