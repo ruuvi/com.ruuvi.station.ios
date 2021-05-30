@@ -63,35 +63,4 @@ final class SensorServiceImpl: SensorService {
     func deleteCustomBackground(for uuid: Identifier) {
         ruuviLocalImages.deleteCustomBackground(for: uuid)
     }
-
-    @discardableResult
-    func ensureNetworkBackgroundIsLoaded(for macId: MACIdentifier, from url: URL) -> Future<UIImage, RUError> {
-        let promise = Promise<UIImage, RUError>()
-        if let savedUrl = UserDefaults.standard.url(forKey: backgroundUrlPrefix + macId.mac),
-           savedUrl == url,
-           let image = ruuviLocalImages.background(for: macId) {
-            promise.succeed(value: image)
-        } else { // need to download image
-            URLSession.shared.dataTask(with: url, completionHandler: { [weak self] data, _, error in
-                guard let sSelf = self else { return }
-                if let error = error {
-                    promise.fail(error: .networking(error))
-                } else if let data = data {
-                    if let image = UIImage(data: data) {
-                        sSelf.ruuviLocalImages.setCustomBackground(image: image, for: macId).on(success: { _ in
-                            UserDefaults.standard.set(url, forKey: sSelf.backgroundUrlPrefix + macId.mac)
-                            promise.succeed(value: image)
-                        }, failure: { error in
-                            promise.fail(error: .ruuviLocal(error))
-                        })
-                    } else {
-                        promise.fail(error: .unexpected(.failedToParseHttpResponse))
-                    }
-                } else {
-                    promise.fail(error: .unexpected(.failedToParseHttpResponse))
-                }
-            }).resume()
-        }
-        return promise.future
-    }
 }

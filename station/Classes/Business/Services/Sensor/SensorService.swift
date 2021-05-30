@@ -10,6 +10,4 @@ protocol SensorService {
     func setNextDefaultBackground(for identifier: Identifier) -> Future<UIImage, RUError>
     func setCustomBackground(image: UIImage, virtualSensor: VirtualTagSensor) -> Future<URL, RUError>
     func deleteCustomBackground(for uuid: Identifier)
-    @discardableResult
-    func ensureNetworkBackgroundIsLoaded(for macId: MACIdentifier, from url: URL) -> Future<UIImage, RUError>
 }
