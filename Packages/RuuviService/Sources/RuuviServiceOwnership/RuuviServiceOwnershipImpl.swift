@@ -137,17 +137,11 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         Future.zip([deleteTagOperation, deleteRecordsOperation])
             .on(success: { _ in
                 if let unclaimOperation = unclaimOperation {
-                    unclaimOperation.on(success: { _ in
-                        promise.succeed(value: sensor.any)
-                    }, failure: { error in
-                        promise.fail(error: error)
-                    })
+                    unclaimOperation.on()
+                    promise.succeed(value: sensor.any)
                 } else if let unshareOperation = unshareOperation {
-                    unshareOperation.on(success: { _ in
-                        promise.succeed(value: sensor.any)
-                    }, failure: { error in
-                        promise.fail(error: error)
-                    })
+                    unshareOperation.on()
+                    promise.succeed(value: sensor.any)
                 } else {
                     promise.succeed(value: sensor.any)
                 }
