@@ -6,7 +6,6 @@ import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
 protocol RuuviNetworkUserApi {
-    func update(_ requestModel: UserApiSensorUpdateRequest) -> Future<UserApiSensorUpdateResponse, RUError>
     func uploadImage(_ requestModel: UserApiSensorImageUploadRequest,
                      imageData: Data,
                      uploadProgress: ((Double) -> Void)?) -> Future<UserApiSensorImageUploadResponse, RUError>
