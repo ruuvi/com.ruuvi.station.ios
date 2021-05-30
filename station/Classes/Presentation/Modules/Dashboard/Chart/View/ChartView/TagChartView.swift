@@ -1,9 +1,10 @@
 import UIKit
 import Charts
+import RuuviLocal
 
 class TagChartView: LineChartView {
 
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     lazy var unitLabel: UILabel = {
         let label = UILabel()

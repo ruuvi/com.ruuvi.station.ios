@@ -1,5 +1,6 @@
 import Foundation
 import Humidity
+import RuuviOntology
 
 protocol MeasurementsServiceDelegate: AnyObject {
     func measurementServiceDidUpdateUnit()

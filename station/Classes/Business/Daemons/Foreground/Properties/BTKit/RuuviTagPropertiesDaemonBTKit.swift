@@ -1,16 +1,21 @@
 import Foundation
 import BTKit
+import RuuviOntology
+import RuuviReactor
+import RuuviPersistence
+import RuuviLocal
+import RuuviPool
 
 class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon {
 
-    var ruuviTagTank: RuuviTagTank!
-    var ruuviTagReactor: RuuviTagReactor!
+    var ruuviPool: RuuviPool!
+    var ruuviReactor: RuuviReactor!
     var foreground: BTForeground!
-    var idPersistence: IDPersistence!
-    var realmPersistence: RuuviTagPersistenceRealm!
-    var sqiltePersistence: RuuviTagPersistenceSQLite!
+    var idPersistence: RuuviLocalIDs!
+    var realmPersistence: RuuviPersistence!
+    var sqiltePersistence: RuuviPersistence!
 
-    private var ruuviTagsToken: RUObservationToken?
+    private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [ObservationToken]()
     private var scanTokens = [ObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
@@ -36,7 +41,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
 
     func start() {
         start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
                 case .initial(let ruuviTags):
@@ -99,7 +104,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                                       modes: [RunLoop.Mode.default.rawValue])
                     }
                 })
-            } else if ruuviTag.networkProvider != nil {
+            } else if ruuviTag.isNetworkConnectable {
                 scanRemoteSensor(ruuviTag: ruuviTag)
             }
         }
@@ -111,7 +116,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             // either by pressing B or by upgrading firmware
             if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
                 // tag is already saved to SQLite
-                ruuviTagTank.update(pair.ruuviTag.with(macId: mac))
+                ruuviPool.update(pair.ruuviTag.with(macId: mac))
                     .on(failure: { [weak self] error in
                         self?.post(error: error)
                     })
@@ -136,7 +141,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
             if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-                ruuviTagTank.update(pair.ruuviTag.with(macId: mac))
+                ruuviPool.update(pair.ruuviTag.with(macId: mac))
                     .on(failure: { [weak self] error in
                         self?.post(error: error)
                     })
@@ -152,7 +157,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
         // the tag is in SQLite and has MAC
         if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
             if pair.device.version != pair.ruuviTag.version {
-                ruuviTagTank.update(pair.ruuviTag.with(version: pair.device.version).with(macId: mac))
+                ruuviPool.update(pair.ruuviTag.with(version: pair.device.version).with(macId: mac))
                     .on(failure: { [weak self] error in
                         self?.post(error: error)
                     })
@@ -161,7 +166,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             if !pair.device.isConnected,
                pair.device.isConnectable != pair.ruuviTag.isConnectable,
                pair.device.isConnectable {
-                ruuviTagTank.update(pair.ruuviTag.with(isConnectable: pair.device.isConnectable).with(macId: mac))
+                ruuviPool.update(pair.ruuviTag.with(isConnectable: pair.device.isConnectable).with(macId: mac))
                     .on(failure: { [weak self] error in
                         self?.post(error: error)
                     })
@@ -175,7 +180,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
             return
         }
         let scanToken = foreground.scan(self, closure: { [weak self] (_, device) in
-            guard let self = self,
+            guard let sSelf = self,
                   let tag = device.ruuvi?.tag,
                   mac.any == tag.macId?.any,
                   ruuviTag.luid == nil else {
@@ -187,15 +192,15 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 macId: mac,
                 isConnectable: device.isConnectable,
                 name: ruuviTag.name,
-                networkProvider: ruuviTag.networkProvider,
                 isClaimed: ruuviTag.isClaimed,
                 isOwner: ruuviTag.isClaimed,
                 owner: ruuviTag.owner)
-            self.ruuviTagTank.update(ruuviSensor)
-                .on(failure: { [weak self] error in
-                    self?.post(error: error)
-                }, completion: { [weak self] in
-                    self?.restartObserving()
+            sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
+            sSelf.ruuviPool.update(ruuviSensor)
+                .on(failure: { [weak sSelf] error in
+                    sSelf?.post(error: error)
+                }, completion: { [weak sSelf] in
+                    sSelf?.restartObserving()
                 })
         })
         scanTokens.append(scanToken)

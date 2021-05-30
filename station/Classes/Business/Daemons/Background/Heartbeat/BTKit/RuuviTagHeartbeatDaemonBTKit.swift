@@ -1,16 +1,21 @@
 import Foundation
 import BTKit
+import RuuviOntology
+import RuuviStorage
+import RuuviReactor
+import RuuviLocal
+import RuuviPool
 
-class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
+final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
     var background: BTBackground!
     var localNotificationsManager: LocalNotificationsManager!
-    var connectionPersistence: ConnectionPersistence!
-    var ruuviTagTank: RuuviTagTank!
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var ruuviTagReactor: RuuviTagReactor!
+    var connectionPersistence: RuuviLocalConnections!
+    var ruuviPool: RuuviPool!
+    var ruuviStorage: RuuviStorage!
+    var ruuviReactor: RuuviReactor!
     var alertService: AlertService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var pullWebDaemon: PullWebDaemon!
 
     private var ruuviTags = [AnyRuuviTagSensor]()
@@ -20,8 +25,8 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
     private var savedDate = [String: Date]() // [luid: date]
-    private var ruuviTagsToken: RUObservationToken?
-    private var sensorSettingsTokens = [String: RUObservationToken]()
+    private var ruuviTagsToken: RuuviReactorToken?
+    private var sensorSettingsTokens = [String: RuuviReactorToken]()
 
     override init() {
         super.init()
@@ -69,7 +74,7 @@ class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
     func start() {
         start { [weak self] in
             self?.invalidateTokens()
-            self?.ruuviTagsToken = self?.ruuviTagReactor.observe({ [weak self] change in
+            self?.ruuviTagsToken = self?.ruuviReactor.observe({ [weak self] change in
                 guard let sSelf = self else { return }
                 switch change {
                 case .initial(let ruuviTags):
@@ -146,7 +151,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     let interval = observer.settings.saveHeartbeatsIntervalMinutes
                     if let date = observer.savedDate[uuid] {
                         if Date().timeIntervalSince(date) > TimeInterval(interval * 60) {
-                            observer.ruuviTagTank.create(
+                            observer.ruuviPool.create(
                                 ruuviTag
                                     .with(source: .heartbeat)
                                     .with(sensorSettings: sensorSettings)
@@ -154,7 +159,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                             observer.savedDate[uuid] = Date()
                         }
                     } else {
-                        observer.ruuviTagTank.create(
+                        observer.ruuviPool.create(
                             ruuviTag
                                 .with(source: .heartbeat)
                                 .with(sensorSettings: sensorSettings)
@@ -203,7 +208,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }.forEach({ disconnect(uuid: $0.value) })
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviTagTrunk.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
+            ruuviStorage.readSensorSettings(ruuviTag).on {[weak self] sensorSettings in
                 if let sensorSettings = sensorSettings {
                     self?.sensorSettingsList.append(sensorSettings)
                 }
@@ -278,7 +283,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         sensorSettingsTokens.removeAll()
 
         ruuviTags.forEach { ruuviTagSensor in
-            sensorSettingsTokens[ruuviTagSensor.id] = ruuviTagReactor.observe(
+            sensorSettingsTokens[ruuviTagSensor.id] = ruuviReactor.observe(
                 ruuviTagSensor, { [weak self] change in
                     switch change {
                     case .update(let updateSensorSettings):

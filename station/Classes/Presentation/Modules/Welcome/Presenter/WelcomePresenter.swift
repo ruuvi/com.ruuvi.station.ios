@@ -1,9 +1,10 @@
 import Foundation
+import RuuviLocal
 
 class WelcomePresenter: WelcomeModuleInput {
     weak var view: WelcomeViewInput!
     var router: WelcomeRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 }
 
 extension WelcomePresenter: WelcomeViewOutput {

@@ -1,9 +1,11 @@
 import Foundation
 import BTKit
 import Future
+import RuuviOntology
+import RuuviPool
 
 class GATTServiceQueue: GATTService {
-    var ruuviTagTank: RuuviTagTank!
+    var ruuviPool: RuuviPool!
     var background: BTBackground!
 
     lazy var queue: OperationQueue = {
@@ -24,14 +26,16 @@ class GATTServiceQueue: GATTService {
         if isSyncingLogs(with: uuid) {
             promise.fail(error: .expected(.isAlreadySyncingLogsWithThisTag))
         } else {
-            let operation = RuuviTagReadLogsOperation(uuid: uuid,
-                                                      mac: mac,
-                                                      settings: settings,
-                                                      ruuviTagTank: ruuviTagTank,
-                                                      background: background,
-                                                      progress: progress,
-                                                      connectionTimeout: connectionTimeout,
-                                                      serviceTimeout: serviceTimeout)
+            let operation = RuuviTagReadLogsOperation(
+                uuid: uuid,
+                mac: mac,
+                settings: settings,
+                ruuviPool: ruuviPool,
+                background: background,
+                progress: progress,
+                connectionTimeout: connectionTimeout,
+                serviceTimeout: serviceTimeout
+            )
             operation.completionBlock = { [unowned operation] in
                 if let error = operation.error {
                     promise.fail(error: error)

@@ -1,4 +1,5 @@
 import UIKit
+import RuuviOntology
 
 private enum SettingsTableSection: Int {
     case general = 0

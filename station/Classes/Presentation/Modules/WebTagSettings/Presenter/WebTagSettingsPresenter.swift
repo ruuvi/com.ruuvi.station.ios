@@ -3,18 +3,21 @@ import UIKit
 import RealmSwift
 import CoreLocation
 import Humidity
+import RuuviOntology
+import RuuviLocal
+import RuuviService
 
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
     var router: WebTagSettingsRouterInput!
-    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var webTagService: WebTagService!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
     var alertService: AlertService!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
             photoPickerPresenter.delegate = self
@@ -73,11 +76,12 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        sensorService.setNextDefaultBackground(for: webTag.uuid.luid).on(success: { [weak self] image in
-            self?.view.viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.setNextDefaultBackground(for: webTag)
+            .on(success: { [weak self] image in
+                self?.view.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {
@@ -180,11 +184,12 @@ extension WebTagSettingsPresenter {
 // MARK: - PhotoPickerPresenterDelegate
 extension WebTagSettingsPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter: PhotoPickerPresenter, didPick photo: UIImage) {
-        sensorService.setCustomBackground(image: photo, virtualSensor: webTag).on(success: { [weak self] _ in
-            self?.view.viewModel.background.value = photo
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.set(image: photo, for: webTag)
+            .on(success: { [weak self] _ in
+                self?.view.viewModel.background.value = photo
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 }
 
@@ -384,11 +389,12 @@ extension WebTagSettingsPresenter {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncViewModel() {
-        sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { [weak self] image in
-            self?.view.viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.getImage(for: webTag)
+            .on(success: { [weak self] image in
+                self?.view.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         view.viewModel.isLocationAuthorizedAlways.value
             = permissionsManager.locationAuthorizationStatus == .authorizedAlways
         view.viewModel.currentTemperature.value = webTag.data.last?.record?.temperature

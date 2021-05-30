@@ -1,6 +1,8 @@
 import UIKit
 import BTKit
 import Humidity
+import RuuviOntology
+import RuuviLocal
 
 enum CardType {
     case ruuvi

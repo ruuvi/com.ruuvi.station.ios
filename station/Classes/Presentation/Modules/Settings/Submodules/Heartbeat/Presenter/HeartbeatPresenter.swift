@@ -1,9 +1,10 @@
 import Foundation
+import RuuviLocal
 
 class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
     weak var view: HeartbeatViewInput!
     var router: HeartbeatRouterInput!
-    var settings: Settings!
+    var settings: RuuviLocalSettings!
 
     func configure() {
         let viewModel = HeartbeatViewModel()

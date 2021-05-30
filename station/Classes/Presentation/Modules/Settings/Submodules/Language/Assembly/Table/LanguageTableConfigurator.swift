@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 class LanguageTableConfigurator {
     func configure(view: LanguageTableViewController) {
@@ -10,7 +11,7 @@ class LanguageTableConfigurator {
         let presenter = LanguagePresenter()
         presenter.view = view
         presenter.router = router
-        presenter.settings = r.resolve(Settings.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter
     }

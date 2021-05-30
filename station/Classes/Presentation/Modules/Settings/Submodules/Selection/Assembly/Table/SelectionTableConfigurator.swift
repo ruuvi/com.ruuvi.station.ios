@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 
 class SelectionTableConfigurator {
     func configure(view: SelectionTableViewController) {
@@ -11,6 +12,6 @@ class SelectionTableConfigurator {
         presenter.router = router
 
         view.output = presenter
-        view.settings = r.resolve(Settings.self)
+        view.settings = r.resolve(RuuviLocalSettings.self)
     }
 }

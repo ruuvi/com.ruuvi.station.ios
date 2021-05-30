@@ -3,6 +3,9 @@ import Future
 #if canImport(FirebaseAnalytics)
 import FirebaseAnalytics
 #endif
+import RuuviStorage
+import RuuviOntology
+import RuuviLocal
 
 final class UserPropertiesServiceImpl: UserPropertiesService {
 
@@ -66,15 +69,15 @@ final class UserPropertiesServiceImpl: UserPropertiesService {
         }
     }
 
-    var ruuviTagTrunk: RuuviTagTrunk!
-    var settings: Settings!
+    var ruuviStorage: RuuviStorage!
+    var settings: RuuviLocalSettings!
 
     func update() {
         guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,
               bundleName != "station_dev" else {
             return
         }
-        ruuviTagTrunk.readAll().on(success: { tags in
+        ruuviStorage.readAll().on(success: { tags in
             self.set(.addedTags(tags.count))
         })
         set(.backgroundScanEnabled(settings.saveHeartbeats))

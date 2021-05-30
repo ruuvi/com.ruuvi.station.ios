@@ -1,5 +1,7 @@
 import Foundation
 import BTKit
+import RuuviOntology
+import RuuviPool
 
 extension Notification.Name {
     static let RuuviTagReadLogsOperationDidStart = Notification.Name("RuuviTagReadLogsOperationDidStart")
@@ -30,7 +32,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     var error: RUError?
 
     private var background: BTBackground
-    private var ruuviTagTank: RuuviTagTank
+    private var ruuviPool: RuuviPool
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
@@ -38,7 +40,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
     init(uuid: String,
          mac: String?,
          settings: SensorSettings?,
-         ruuviTagTank: RuuviTagTank,
+         ruuviPool: RuuviPool,
          background: BTBackground,
          progress: ((BTServiceProgress) -> Void)? = nil,
          connectionTimeout: TimeInterval? = 0,
@@ -46,7 +48,7 @@ class RuuviTagReadLogsOperation: AsyncOperation {
         self.uuid = uuid
         self.mac = mac
         self.sensorSettings = settings
-        self.ruuviTagTank = ruuviTagTank
+        self.ruuviPool = ruuviPool
         self.background = background
         self.progress = progress
         self.connectionTimeout = connectionTimeout
@@ -69,13 +71,13 @@ class RuuviTagReadLogsOperation: AsyncOperation {
                     .with(source: .log)
                     .with(sensorSettings: observer.sensorSettings)
                 })
-                let opLogs = observer.ruuviTagTank.create(records)
+                let opLogs = observer.ruuviPool.create(records)
                 opLogs.on(success: { _ in
                     observer.post(logs: logs, with: observer.uuid)
                     observer.state = .finished
                 }, failure: { error in
                     observer.post(error: error, with: observer.uuid)
-                    observer.error = error
+                    observer.error = .ruuviPool(error)
                     observer.state = .finished
                 })
             case .failure(let error):

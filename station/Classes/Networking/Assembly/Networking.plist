@@ -4,5 +4,7 @@
 <dict>
 	<key>Open Weather Map API Key</key>
 	<string>{ set your API key here }</string>
+	<key>Ruuvi Cloud URL</key>
+	<string>https://network.ruuvi.com</string>
 </dict>
 </plist>

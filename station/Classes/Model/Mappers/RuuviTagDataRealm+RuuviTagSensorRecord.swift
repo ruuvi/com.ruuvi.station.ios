@@ -1,7 +1,7 @@
 import Foundation
+import RuuviOntology
 
 extension RuuviTagDataRealm {
-
     var any: AnyRuuviTagSensorRecord? {
         guard let ruuviTagId = ruuviTag?.uuid else { return nil }
         let inner = RuuviTagSensorRecordStruct(
@@ -22,7 +22,6 @@ extension RuuviTagDataRealm {
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset
         )
-
         return AnyRuuviTagSensorRecord(object: inner)
     }
 }

@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 struct WPSData {
     var celsius: Double?
