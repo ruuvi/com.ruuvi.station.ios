@@ -17,7 +17,6 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var interactor: TagChartsInteractorInput!
 
     var errorPresenter: ErrorPresenter!
-    var sensorService: SensorService!
     var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var ruuviStorage: RuuviStorage!

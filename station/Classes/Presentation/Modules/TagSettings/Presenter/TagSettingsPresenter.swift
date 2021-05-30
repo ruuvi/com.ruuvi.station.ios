@@ -14,7 +14,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     weak var view: TagSettingsViewInput!
     weak var output: TagSettingsModuleOutput!
     var router: TagSettingsRouterInput!
-    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
@@ -151,21 +150,12 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        if let luid = ruuviTag.luid {
-            sensorService.setNextDefaultBackground(for: luid).on(success: { [weak self] image in
+        ruuviSensorPropertiesService.setNextDefaultBackground(for: ruuviTag)
+            .on(success: { [weak self] image in
                 self?.viewModel.background.value = image
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             })
-        } else if let macId = ruuviTag.macId {
-            sensorService.setNextDefaultBackground(for: macId).on(success: { [weak self] image in
-                self?.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
-        } else {
-            assertionFailure()
-        }
     }
 
     func viewDidAskToRemoveRuuviTag() {

@@ -23,6 +23,12 @@ public protocol RuuviServiceSensorProperties {
         for sensor: VirtualSensor
     ) -> Future<URL, RuuviServiceError>
 
+    @discardableResult
+    func setNextDefaultBackground(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError>
+
+    @discardableResult
+    func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
+
     func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
 
     func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError>
