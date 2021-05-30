@@ -134,25 +134,26 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 unshareOperation = unshare(macId: macId, with: nil)
             }
         }
-        Future.zip([deleteTagOperation, deleteRecordsOperation]).on(success: { _ in
-            if let unclaimOperation = unclaimOperation {
-                unclaimOperation.on(success: { _ in
+        Future.zip([deleteTagOperation, deleteRecordsOperation])
+            .on(success: { _ in
+                if let unclaimOperation = unclaimOperation {
+                    unclaimOperation.on(success: { _ in
+                        promise.succeed(value: sensor.any)
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
+                } else if let unshareOperation = unshareOperation {
+                    unshareOperation.on(success: { _ in
+                        promise.succeed(value: sensor.any)
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
+                } else {
                     promise.succeed(value: sensor.any)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-            } else if let unshareOperation = unshareOperation {
-                unshareOperation.on(success: { _ in
-                    promise.succeed(value: sensor.any)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-            } else {
-                promise.succeed(value: sensor.any)
-            }
-        }, failure: { error in
-            promise.fail(error: .ruuviPool(error))
-        })
+                }
+            }, failure: { error in
+                promise.fail(error: .ruuviPool(error))
+            })
         return promise.future
     }
 }
