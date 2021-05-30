@@ -37,6 +37,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var ruuviNetwork: RuuviNetworkUserApi!
     var activityPresenter: ActivityPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -217,19 +218,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidChangeTag(name: String) {
         let finalName = name.isEmpty ? (ruuviTag.macId?.value ?? ruuviTag.id) : name
-        var sensor = ruuviTag.struct
-        sensor.name = finalName
-        let operation = ruuviPool.update(sensor)
-        operation.on(failure: { [weak self] (error) in
-            self?.errorPresenter.present(error: error)
-        })
-        guard keychainService.userIsAuthorized,
-              let mac = ruuviTag.macId?.value else {
-            return
-        }
-        let requestModel = UserApiSensorUpdateRequest(sensor: mac, name: finalName)
-        let networkOperation = ruuviNetwork.update(requestModel)
-        networkOperation.on()
+        ruuviSensorPropertiesService.set(name: finalName, for: ruuviTag)
+            .on(failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {
@@ -299,31 +291,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
     func viewDidAskToConnectFromAlertsDisabledDialog() {
         viewModel?.keepConnection.value = true
-    }
-
-    private func updateTag(with sensor: RuuviTagSensorStruct) {
-        self.ruuviPool.update(sensor).on(success: { [weak self] _ in
-            guard let self = self else {
-                return
-            }
-            self.ruuviTag = sensor
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
-    }
-
-    private func updateTagInDB(isClaimed: Bool) {
-        let sensor = RuuviTagSensorStruct(
-            version: self.ruuviTag.version,
-            luid: self.ruuviTag.luid,
-            macId: self.ruuviTag.macId,
-            isConnectable: self.ruuviTag.isConnectable,
-            name: self.ruuviTag.name,
-            isClaimed: isClaimed,
-            isOwner: true,
-            owner: self.ruuviTag.owner
-        )
-        self.updateTag(with: sensor)
     }
 
     func viewDidTapClaimButton() {
