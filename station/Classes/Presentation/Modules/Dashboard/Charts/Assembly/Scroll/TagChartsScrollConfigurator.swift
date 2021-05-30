@@ -4,6 +4,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviService
 
 class TagChartsScrollConfigurator {
     func configure(view: TagChartsScrollViewController) {
@@ -33,6 +34,7 @@ class TagChartsScrollConfigurator {
         presenter.feedbackSubject = r.property("Feedback Subject")!
         presenter.infoProvider = r.resolve(InfoProvider.self)
         presenter.interactor = interactor
+        presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
 
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)

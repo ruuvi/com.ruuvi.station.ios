@@ -9,6 +9,7 @@ import RuuviOntology
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviService
 
 class TagChartsPresenter: NSObject, TagChartsModuleInput {
     weak var view: TagChartsViewInput!
@@ -24,6 +25,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
     var mailComposerPresenter: MailComposerPresenter!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
 
     var alertService: AlertService!
     var background: BTBackground!
@@ -368,11 +370,12 @@ extension TagChartsPresenter {
 
     private func syncViewModel() {
         let viewModel = TagChartsViewModel(ruuviTag)
-        sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { image in
-            viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.getImage(for: ruuviTag)
+            .on(success: { image in
+                viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
         if let luid = ruuviTag.luid {
             viewModel.name.value = ruuviTag.name
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
@@ -451,11 +454,12 @@ extension TagChartsPresenter {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if sSelf.viewModel.uuid.value == luid?.value || sSelf.viewModel.mac.value == macId?.value {
-                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { [weak sSelf] image in
-                            sSelf?.viewModel.background.value = image
-                        }, failure: { [weak sSelf] error in
-                            sSelf?.errorPresenter.present(error: error)
-                        })
+                        sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
+                            .on(success: { [weak sSelf] image in
+                                sSelf?.viewModel.background.value = image
+                            }, failure: { [weak sSelf] error in
+                                sSelf?.errorPresenter.present(error: error)
+                            })
                     }
                 }
         }

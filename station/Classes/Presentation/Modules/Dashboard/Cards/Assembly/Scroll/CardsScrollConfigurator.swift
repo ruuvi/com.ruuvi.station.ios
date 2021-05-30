@@ -4,6 +4,7 @@ import RuuviContext
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviService
 
 class CardsScrollConfigurator {
     // swiftlint:disable:next function_body_length
@@ -39,7 +40,7 @@ class CardsScrollConfigurator {
         presenter.virtualTagReactor = r.resolve(VirtualTagReactor.self)
         presenter.measurementService = r.resolve(MeasurementsService.self)
         presenter.networkPersistance = r.resolve(NetworkPersistence.self)
-
+        presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         router.delegate = presenter
 
         // swiftlint:disable force_cast

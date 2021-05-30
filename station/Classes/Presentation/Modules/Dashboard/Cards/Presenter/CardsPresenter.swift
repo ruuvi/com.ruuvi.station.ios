@@ -8,6 +8,7 @@ import RuuviContext
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
+import RuuviService
 
 class CardsPresenter: CardsModuleInput {
     weak var view: CardsViewInput!
@@ -34,6 +35,7 @@ class CardsPresenter: CardsModuleInput {
     var virtualTagReactor: VirtualTagReactor!
     var measurementService: MeasurementsService!
     var networkPersistance: NetworkPersistence!
+    var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     weak var tagCharts: TagChartsModuleInput?
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
@@ -318,11 +320,12 @@ extension CardsPresenter {
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap({ (ruuviTag) -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
-            sensorService.background(luid: ruuviTag.luid, macId: ruuviTag.macId).on(success: { image in
-                viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+            ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                .on(success: { image in
+                    viewModel.background.value = image
+                }, failure: { [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })
             if let luid = ruuviTag.luid {
                 viewModel.isConnected.value = background.isConnected(uuid: luid.value)
                 viewModel.alertState.value = alertService.hasRegistrations(for: luid.value) ? .registered : .empty
@@ -344,11 +347,12 @@ extension CardsPresenter {
         if virtualTags != nil {
             virtualViewModels = virtualTags?.compactMap({ (webTag) -> CardsViewModel in
                 let viewModel = CardsViewModel(webTag)
-                sensorService.background(luid: webTag.uuid.luid, macId: nil).on(success: { image in
-                    viewModel.background.value = image
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
+                ruuviSensorPropertiesService.getImage(for: webTag)
+                    .on(success: { image in
+                        viewModel.background.value = image
+                    }, failure: { [weak self] error in
+                        self?.errorPresenter.present(error: error)
+                    })
                 viewModel.alertState.value = alertService.hasRegistrations(for: webTag.uuid) ? .registered : .empty
                 viewModel.isConnected.value = false
                 return viewModel
@@ -661,14 +665,27 @@ extension CardsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    let viewModel = self?.view.viewModels.first(where: { $0.luid.value == luid?.any })
-                        ?? self?.view.viewModels.first(where: {$0.mac.value == macId?.any })
+                    let viewModel = sSelf.view.viewModels.first(where: { $0.luid.value == luid?.any })
+                        ?? sSelf.view.viewModels.first(where: {$0.mac.value == macId?.any })
                     if let viewModel = viewModel {
-                        sSelf.sensorService.background(luid: luid, macId: macId).on(success: { image in
-                            viewModel.background.value = image
-                        }, failure: { [weak sSelf] error in
-                            sSelf?.errorPresenter.present(error: error)
-                        })
+                        let ruuviTag = sSelf.ruuviTags.first(where: { $0.luid?.any == luid?.any })
+                            ?? sSelf.ruuviTags.first(where: {$0.macId?.any == macId?.any })
+                        let webTag = sSelf.virtualTags?.first(where: { $0.id == luid?.value })
+                        if let ruuviTag = ruuviTag {
+                            sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                                .on(success: { image in
+                                    viewModel.background.value = image
+                                }, failure: { [weak self] error in
+                                    self?.errorPresenter.present(error: error)
+                                })
+                        } else if let webTag = webTag {
+                            sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
+                                .on(success: { image in
+                                    viewModel.background.value = image
+                                }, failure: { [weak sSelf] error in
+                                    sSelf?.errorPresenter.present(error: error)
+                                })
+                        }
                     }
                 }
             }
