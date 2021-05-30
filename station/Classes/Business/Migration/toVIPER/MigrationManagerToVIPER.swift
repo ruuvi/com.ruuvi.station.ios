@@ -4,7 +4,7 @@ import RuuviOntology
 import RuuviLocal
 
 class MigrationManagerToVIPER: MigrationManager {
-    var sensorService: SensorService!
+    var localImages: RuuviLocalImages!
     var settings: RuuviLocalSettings!
 
     func migrateIfNeeded() {
@@ -103,9 +103,8 @@ class MigrationManagerToVIPER: MigrationManager {
             }
 
             if let uuid = oldObject?["uuid"] as? String, let id = oldObject?["defaultBackground"] as? Int {
-                sensorService.setBackground(id, for: uuid.luid)
+                localImages.setBackground(id, for: uuid.luid)
             }
-
         })
     }
 

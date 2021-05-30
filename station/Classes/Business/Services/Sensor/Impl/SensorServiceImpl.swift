@@ -18,8 +18,4 @@ final class SensorServiceImpl: SensorService {
         }
         return promise.future
     }
-
-    func setBackground(_ id: Int, for identifier: Identifier) {
-        localImages.setBackground(id, for: identifier)
-    }
 }
