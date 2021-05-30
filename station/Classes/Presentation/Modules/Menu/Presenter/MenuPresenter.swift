@@ -1,5 +1,6 @@
 import UIKit
 import RuuviService
+import RuuviLocal
 
 class MenuPresenter: MenuModuleInput {
     weak var view: MenuViewInput!
@@ -7,7 +8,7 @@ class MenuPresenter: MenuModuleInput {
     var alertPresenter: AlertPresenter!
     var cloudSyncService: RuuviServiceCloudSync!
     var keychainService: KeychainService!
-    var networkPersistence: NetworkPersistence!
+    var localSyncState: RuuviLocalSyncState!
     var featureToggleService: FeatureToggleService!
 
     var viewModel: MenuViewModel? {
@@ -138,9 +139,9 @@ extension MenuPresenter {
     @objc private func syncViewModel() {
         let viewModel = MenuViewModel()
         viewModel.username.value = keychainService.userApiEmail
-        viewModel.isSyncing.value = networkPersistence.syncStatus == .syncing
+        viewModel.isSyncing.value = localSyncState.syncStatus == .syncing
         self.viewModel = viewModel
-        guard networkPersistence.syncStatus != .syncing else {
+        guard localSyncState.syncStatus != .syncing else {
             return
         }
         setSyncStatus()
@@ -153,10 +154,10 @@ extension MenuPresenter {
 
     private func setSyncStatus() {
         let prefix = "Synchronized".localized()
-        if let date = networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) {
+        if let date = localSyncState.lastSyncDate?.ruuviAgo(prefix: prefix) {
             viewModel?.status.value = date
         } else {
-            viewModel?.status.value = networkPersistence.lastSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
+            viewModel?.status.value = localSyncState.lastSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
         }
     }
 

@@ -38,7 +38,7 @@ class CardsScrollConfigurator {
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.virtualTagReactor = r.resolve(VirtualTagReactor.self)
         presenter.measurementService = r.resolve(MeasurementsService.self)
-        presenter.networkPersistance = r.resolve(NetworkPersistence.self)
+        presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         router.delegate = presenter
 

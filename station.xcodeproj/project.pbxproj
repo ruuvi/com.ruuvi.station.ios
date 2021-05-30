@@ -1271,12 +1271,6 @@
 		A93CDCAB25657C1D00018C6C /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCAA25657C1D00018C6C /* MenuViewModel.swift */; };
 		A93CDCAC25657C1D00018C6C /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCAA25657C1D00018C6C /* MenuViewModel.swift */; };
 		A93CDCAD25657C1D00018C6C /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCAA25657C1D00018C6C /* MenuViewModel.swift */; };
-		A93CDCB52565900D00018C6C /* NetworkPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCB42565900D00018C6C /* NetworkPersistence.swift */; };
-		A93CDCB62565900D00018C6C /* NetworkPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCB42565900D00018C6C /* NetworkPersistence.swift */; };
-		A93CDCB72565900D00018C6C /* NetworkPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCB42565900D00018C6C /* NetworkPersistence.swift */; };
-		A93CDCC42565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCC32565907B00018C6C /* NetworkPersistenceImpl.swift */; };
-		A93CDCC52565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCC32565907B00018C6C /* NetworkPersistenceImpl.swift */; };
-		A93CDCC62565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCC32565907B00018C6C /* NetworkPersistenceImpl.swift */; };
 		A93CDCCF25659BA600018C6C /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCCE25659BA600018C6C /* AlertPresenter.swift */; };
 		A93CDCD025659BA600018C6C /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCCE25659BA600018C6C /* AlertPresenter.swift */; };
 		A93CDCD125659BA600018C6C /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93CDCCE25659BA600018C6C /* AlertPresenter.swift */; };
@@ -1995,8 +1989,6 @@
 		A935E47525A49E8F009538C4 /* MeasurementsServiceFiSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceFiSpec.swift; sourceTree = "<group>"; };
 		A935E47C25A49E9E009538C4 /* MeasurementsServiceRuSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementsServiceRuSpec.swift; sourceTree = "<group>"; };
 		A93CDCAA25657C1D00018C6C /* MenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewModel.swift; sourceTree = "<group>"; };
-		A93CDCB42565900D00018C6C /* NetworkPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPersistence.swift; sourceTree = "<group>"; };
-		A93CDCC32565907B00018C6C /* NetworkPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPersistenceImpl.swift; sourceTree = "<group>"; };
 		A93CDCCE25659BA600018C6C /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		A93CDCDD25659BF600018C6C /* AlertPresenterImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenterImpl.swift; sourceTree = "<group>"; };
 		A949A83A24707FD0006B7F4F /* LocalizedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedCache.swift; sourceTree = "<group>"; };
@@ -2577,7 +2569,6 @@
 				0EFDD6CD22BBD95700EADFC6 /* Calibration */,
 				A95BA3E22451EC3E00EF923D /* Keychain */,
 				A9758176249F46D100BC150A /* Locations */,
-				A93CDCB325658FF600018C6C /* Network */,
 				0E9F979D22EB0AF80015ADE2 /* WebTag */,
 			);
 			path = Persistence;
@@ -4956,23 +4947,6 @@
 			path = URLQueryItemEncoder;
 			sourceTree = "<group>";
 		};
-		A93CDCB325658FF600018C6C /* Network */ = {
-			isa = PBXGroup;
-			children = (
-				A93CDCC22565904600018C6C /* Impl */,
-				A93CDCB42565900D00018C6C /* NetworkPersistence.swift */,
-			);
-			path = Network;
-			sourceTree = "<group>";
-		};
-		A93CDCC22565904600018C6C /* Impl */ = {
-			isa = PBXGroup;
-			children = (
-				A93CDCC32565907B00018C6C /* NetworkPersistenceImpl.swift */,
-			);
-			path = Impl;
-			sourceTree = "<group>";
-		};
 		A93CDCCC25659B8600018C6C /* Alert */ = {
 			isa = PBXGroup;
 			children = (
@@ -6029,7 +6003,6 @@
 				0EAD33E62399273E00EC5BAA /* HeartbeatInitializer.swift in Sources */,
 				0E6BAD9723856A01003A2D4C /* LocationPickerRouterInput.swift in Sources */,
 				0E197C7F23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
-				A93CDCB72565900D00018C6C /* NetworkPersistence.swift in Sources */,
 				0E9E775C238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E6BAD9823856A01003A2D4C /* Language.swift in Sources */,
 				A90E16A224606B0500631E6C /* TagChartsInteractorInput.swift in Sources */,
@@ -6294,7 +6267,6 @@
 				0E6BAE4323856A01003A2D4C /* ExportService.swift in Sources */,
 				0E6BAE4423856A01003A2D4C /* DefaultsEnvironmentObject.swift in Sources */,
 				0E6BAE4623856A01003A2D4C /* ViewInput.swift in Sources */,
-				A93CDCC62565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */,
 				0E6BAE4723856A01003A2D4C /* UserDefaults+Optional.swift in Sources */,
 				0E6BAE4823856A01003A2D4C /* TagChartsRouterInput.swift in Sources */,
 				0E6BAE4923856A01003A2D4C /* CardsViewInput.swift in Sources */,
@@ -6508,7 +6480,6 @@
 				A94A884D24D4386D00D2CBA4 /* HexadecimalKeyboard.swift in Sources */,
 				0EE98A7A26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				66BC449C2657AED400A03253 /* OffsetCorrectionConfigurator.swift in Sources */,
-				A93CDCC52565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */,
 				0E8BD2DD238566AB008B31EF /* Localizable.swift in Sources */,
 				0E197C6223C352380074015B /* TagSettingsAlertDescriptionCell.swift in Sources */,
 				0E8BD2DE238566AB008B31EF /* LocationPickerAppleInitializer.swift in Sources */,
@@ -6748,7 +6719,6 @@
 				0E8BD38F238566AB008B31EF /* RuuviTagAdvertisementDaemon.swift in Sources */,
 				0E8BD390238566AB008B31EF /* TagSettingsPresenter.swift in Sources */,
 				0E8BD391238566AB008B31EF /* TagChartsModuleOutput.swift in Sources */,
-				A93CDCB62565900D00018C6C /* NetworkPersistence.swift in Sources */,
 				0E8BD392238566AB008B31EF /* HumidityUnit.swift in Sources */,
 				0E8BD393238566AB008B31EF /* SwipeDownToDismissInteractiveTransition.swift in Sources */,
 				0EB48E07261B1095008E0D2D /* FirebaseRemoteConfigService.swift in Sources */,
@@ -6944,7 +6914,6 @@
 				A976CA7E24A928C20099BDC1 /* AdvancedDisclosureTableViewCell.swift in Sources */,
 				0E0C19BE23D1FA3600A75EF5 /* AlertServiceImpl+Process.swift in Sources */,
 				0E046F4F22F1827800BD4E9C /* LocationPickerRouterInput.swift in Sources */,
-				A93CDCB52565900D00018C6C /* NetworkPersistence.swift in Sources */,
 				0E9E775A238CCE5F006D7013 /* String+Replace.swift in Sources */,
 				0E197C7D23C5CD7C0074015B /* UIDevice+ReadableModel.swift in Sources */,
 				0EBAF065232002A00025A191 /* Language.swift in Sources */,
@@ -7208,7 +7177,6 @@
 				0E1C1DD322B3BF180032F6CA /* CardsViewInput.swift in Sources */,
 				0E70A47522AF9978006CB87C /* DiscoverPresenter.swift in Sources */,
 				0EBAF06E232007510025A191 /* LanguageViewInput.swift in Sources */,
-				A93CDCC42565907B00018C6C /* NetworkPersistenceImpl.swift in Sources */,
 				0EEB20FB22B7D2990015F9E0 /* AboutRouter.swift in Sources */,
 				0E9959BB235EF40E001C37D8 /* RuuviTagHeartbeatDaemonBTKit.swift in Sources */,
 				0E84BF6D239802CA00A37E1A /* HeartbeatPresenter.swift in Sources */,
