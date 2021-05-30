@@ -287,13 +287,6 @@ class BusinessAssembly: Assembly {
             return daemon
         }.inObjectScope(.container)
 
-        container.register(SensorService.self) { r in
-            let service = SensorServiceImpl()
-            service.localImages = r.resolve(RuuviLocalImages.self)
-            service.coreImage = r.resolve(RuuviCoreImage.self)
-            return service
-        }
-
         container.register(WeatherProviderService.self) { r in
             let service = WeatherProviderServiceImpl()
             service.owmApi = r.resolve(OpenWeatherMapAPI.self)

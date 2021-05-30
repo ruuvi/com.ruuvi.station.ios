@@ -71,6 +71,33 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return promise.future
     }
 
+    func setNextDefaultBackground(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError> {
+        let luid = sensor.id.luid
+        let macId: MACIdentifier? = nil
+        return setNextDefaultBackground(luid: luid, macId: macId)
+    }
+
+    func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
+        let luid = sensor.luid
+        let macId = sensor.macId
+        return setNextDefaultBackground(luid: luid, macId: macId)
+    }
+
+    func setNextDefaultBackground(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
+        let promise = Promise<UIImage, RuuviServiceError>()
+        let identifier = luid ?? macId
+        if let identifier = identifier {
+            if let image = localImages.setNextDefaultBackground(for: identifier) {
+                promise.succeed(value: image)
+            } else {
+                promise.fail(error: .failedToFindOrGenerateBackgroundImage)
+            }
+        } else {
+            promise.fail(error: .bothLuidAndMacAreNil)
+        }
+        return promise.future
+    }
+
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func set(
         image: UIImage,

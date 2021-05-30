@@ -10,7 +10,6 @@ import RuuviService
 class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     weak var view: WebTagSettingsViewInput!
     var router: WebTagSettingsRouterInput!
-    var sensorService: SensorService!
     var errorPresenter: ErrorPresenter!
     var webTagService: WebTagService!
     var settings: RuuviLocalSettings!
@@ -77,11 +76,12 @@ extension WebTagSettingsPresenter: WebTagSettingsViewOutput {
     }
 
     func viewDidAskToRandomizeBackground() {
-        sensorService.setNextDefaultBackground(for: webTag.uuid.luid).on(success: { [weak self] image in
-            self?.view.viewModel.background.value = image
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        ruuviSensorPropertiesService.setNextDefaultBackground(for: webTag)
+            .on(success: { [weak self] image in
+                self?.view.viewModel.background.value = image
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            })
     }
 
     func viewDidAskToSelectBackground(sourceView: UIView) {

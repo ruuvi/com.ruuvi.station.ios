@@ -19,7 +19,6 @@ class TagChartsScrollConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.sensorService = r.resolve(SensorService.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)

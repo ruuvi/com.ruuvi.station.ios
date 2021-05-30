@@ -16,7 +16,6 @@ class CardsPresenter: CardsModuleInput {
     var realmContext: RealmContext!
     var errorPresenter: ErrorPresenter!
     var settings: RuuviLocalSettings!
-    var sensorService: SensorService!
     var foreground: BTForeground!
     var background: BTBackground!
     var webTagService: WebTagService!
