@@ -117,8 +117,8 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
                 remote = cloud.upload(
                     imageData: jpegData,
                     mimeType: .jpg,
-                    progress: { [weak self] macId, percentage in
-                        self?.localImages.setBackgroundUploadProgress(
+                    progress: { macId, percentage in
+                        self.localImages.setBackgroundUploadProgress(
                             percentage: percentage,
                             for: macId
                         )
@@ -148,12 +148,10 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
             if let mac = macId {
                 localImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
             }
-            remote.on(success: { [weak self] _ in
-                guard let sSelf = self else { return }
-                local.on(success: { [weak sSelf] localUrl in
-                    guard let ssSelf = sSelf else { return }
+            remote.on(success: {_ in
+                local.on(success: { localUrl in
                     if let mac = macId {
-                        ssSelf.localImages.deleteBackgroundUploadProgress(for: mac)
+                        self.localImages.deleteBackgroundUploadProgress(for: mac)
                     }
                     promise.succeed(value: localUrl)
                 }, failure: { error in
