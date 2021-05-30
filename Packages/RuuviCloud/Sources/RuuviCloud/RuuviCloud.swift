@@ -30,6 +30,9 @@ public protocol RuuviCloud {
 
     @discardableResult
     func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviCloudError>
+
+    @discardableResult
+    func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
