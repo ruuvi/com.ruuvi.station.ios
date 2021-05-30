@@ -7,7 +7,6 @@ import RuuviOntology
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
-import RuuviPool
 import RuuviService
 
 class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
@@ -29,7 +28,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionPresenter: PermissionPresenter!
-    var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var keychainService: KeychainService!
@@ -169,38 +167,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             errorPresenter.present(error: RUError.expected(.failedToDeleteTag))
             return
         }
-        let deleteTagOperation = ruuviPool.delete(ruuviTag)
-        let deleteRecordsOperation = ruuviPool.deleteAllRecords(ruuviTag.id)
-        var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
-        var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
-        if let macId = ruuviTag.macId,
-           ruuviTag.isNetworkConnectable {
-            if ruuviTag.isOwner {
-                unclaimOperation = ruuviOwnershipService.unclaim(sensor: ruuviTag)
-            } else {
-                unshareOperation = ruuviOwnershipService.unshare(macId: macId, with: nil)
-            }
-        }
-        Future.zip([deleteTagOperation, deleteRecordsOperation]).on(success: { [weak self] _ in
+        ruuviOwnershipService.remove(sensor: ruuviTag).on(success: { [weak self] _ in
             guard let sSelf = self else { return }
-            if let unclaimOperation = unclaimOperation {
-                unclaimOperation.on(success: { [weak sSelf] _ in
-                    guard let ssSelf = sSelf else { return }
-                    ssSelf.output.tagSettingsDidDeleteTag(module: ssSelf, ruuviTag: ssSelf.ruuviTag)
-                }, failure: { [weak sSelf] error in
-                    sSelf?.errorPresenter.present(error: error)
-                })
-            } else if let unshareOperation = unshareOperation {
-                unshareOperation.on(success: { [weak sSelf] _ in
-                    guard let ssSelf = sSelf else { return }
-                    ssSelf.output.tagSettingsDidDeleteTag(module: ssSelf, ruuviTag: ssSelf.ruuviTag)
-                }, failure: { [weak sSelf] error in
-                    sSelf?.errorPresenter.present(error: error)
-                })
-            } else {
-                sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
-            }
-        }, failure: { [weak self] (error) in
+            sSelf.output.tagSettingsDidDeleteTag(module: sSelf, ruuviTag: sSelf.ruuviTag)
+        }, failure: { [weak self] error in
             self?.errorPresenter.present(error: error)
         })
     }

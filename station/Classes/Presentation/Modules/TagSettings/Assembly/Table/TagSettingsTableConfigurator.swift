@@ -3,7 +3,6 @@ import BTKit
 import RuuviStorage
 import RuuviReactor
 import RuuviLocal
-import RuuviPool
 import RuuviService
 
 class TagSettingsTableConfigurator {
@@ -26,7 +25,6 @@ class TagSettingsTableConfigurator {
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.pushNotificationsManager = r.resolve(PushNotificationsManager.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
-        presenter.ruuviPool = r.resolve(RuuviPool.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.keychainService = r.resolve(KeychainService.self)
