@@ -18,6 +18,30 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
+    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviServiceError> {
+        let promise = Promise<MACIdentifier, RuuviServiceError>()
+        cloud.share(macId: macId, with: email)
+            .on(success: { macId in
+                promise.succeed(value: macId)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviServiceError> {
+        let promise = Promise<MACIdentifier, RuuviServiceError>()
+        cloud.unshare(macId: macId, with: email)
+            .on(success: { macId in
+                promise.succeed(value: macId)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         guard let macId = sensor.macId else {
@@ -36,7 +60,7 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                         promise.fail(error: .ruuviPool(error))
                     })
             }, failure: { error in
-                // TODO: @rinat check login on use cases
+                // TODO: @rinat check on use cases
                 // if error.errorDescription == "Sensor already claimed" {
                 promise.fail(error: .ruuviCloud(error))
             })

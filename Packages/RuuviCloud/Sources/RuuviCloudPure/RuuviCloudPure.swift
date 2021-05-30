@@ -9,6 +9,38 @@ final class RuuviCloudPure: RuuviCloud {
         self.apiKey = apiKey
     }
 
+    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviCloudError> {
+        let promise = Promise<MACIdentifier, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiShareRequest(user: email, sensor: macId.value)
+        api.share(request, authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.sensor.mac)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviCloudError> {
+        let promise = Promise<MACIdentifier, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiShareRequest(user: email, sensor: macId.value)
+        api.unshare(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: macId)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     func claim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError> {
         let promise = Promise<MACIdentifier, RuuviCloudError>()
         guard let apiKey = apiKey else {

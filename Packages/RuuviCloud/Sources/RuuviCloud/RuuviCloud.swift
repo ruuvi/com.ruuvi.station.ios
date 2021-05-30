@@ -24,6 +24,12 @@ public protocol RuuviCloud {
 
     @discardableResult
     func unclaim(macId: MACIdentifier) -> Future<MACIdentifier, RuuviCloudError>
+
+    @discardableResult
+    func share(macId: MACIdentifier, with email: String) -> Future<MACIdentifier, RuuviCloudError>
+
+    @discardableResult
+    func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {
