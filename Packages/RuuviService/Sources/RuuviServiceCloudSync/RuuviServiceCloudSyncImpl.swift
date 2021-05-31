@@ -87,7 +87,9 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
-            let syncs = localSensors.map({ sSelf.sync(sensor: $0) })
+            let syncs = localSensors
+                .filter({ $0.isCloud })
+                .map({ sSelf.sync(sensor: $0) })
             Future.zip(syncs).on(success: { remoteSensorRecords in
                 promise.succeed(value: remoteSensorRecords.reduce([], +))
             }, failure: { error in
@@ -154,30 +156,15 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
-        let lastRecord = ruuviStorage.readLast(sensor)
-        lastRecord.on(success: { [weak self] record in
-            guard let sSelf = self else { return }
-            let since: Date = record?.date
-                ?? sSelf.ruuviLocalSyncState.getSyncDate(for: sensor.macId)
-                ?? networkPuningDate
-            let syncOperation = sSelf.syncRecordsOperation(for: sensor, since: since)
-            syncOperation.on(success: { [weak sSelf] result in
-                sSelf?.ruuviLocalSyncState.setSyncDate(Date(), for: sensor.macId)
+        let since: Date = ruuviLocalSyncState.getSyncDate(for: sensor.macId)
+            ?? networkPuningDate
+        syncRecordsOperation(for: sensor, since: since)
+            .on(success: { [weak self] result in
+                self?.ruuviLocalSyncState.setSyncDate(Date(), for: sensor.macId)
                 promise.succeed(value: result)
              }, failure: { error in
                 promise.fail(error: error)
              })
-        }, failure: { [weak self] _ in
-            guard let sSelf = self else { return }
-            let since: Date = sSelf.ruuviLocalSyncState.getSyncDate(for: sensor.macId) ?? networkPuningDate
-            let syncOperation = sSelf.syncRecordsOperation(for: sensor, since: since)
-            syncOperation.on(success: { [weak sSelf] result in
-                sSelf?.ruuviLocalSyncState.setSyncDate(Date(), for: sensor.macId)
-                promise.succeed(value: result)
-             }, failure: { (error) in
-                promise.fail(error: error)
-             })
-        })
         return promise.future
     }
 
