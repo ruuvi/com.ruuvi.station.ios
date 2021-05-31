@@ -696,17 +696,24 @@ extension TagSettingsTableViewController {
             }
         })
 
-        dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
-            if let isConnected = isConnected, isConnected {
-                label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+        dataSourceValueLabel.bind(viewModel.source) { label, source in
+            if let source = source {
+                switch source {
+                case .unknown:
+                    label.text = "N/A".localized()
+                case .advertisement:
+                    label.text = "TagSettings.DataSource.Advertisement.title".localized()
+                case .heartbeat:
+                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+                case .log:
+                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+                case .ruuviNetwork:
+                    label.text = "TagSettings.DataSource.Network.title".localized()
+                case .weatherProvider:
+                    label.text = "N/A".localized()
+                }
             } else {
-                label.text = "TagSettings.DataSource.Advertisement.title".localized()
-            }
-        }
-
-        dataSourceValueLabel.bind(viewModel.isNetworkConnected) { (label, isNetworkConnected) in
-            if isNetworkConnected == true {
-                label.text = "TagSettings.DataSource.Network.title".localized()
+                label.text = "N/A".localized()
             }
         }
 
