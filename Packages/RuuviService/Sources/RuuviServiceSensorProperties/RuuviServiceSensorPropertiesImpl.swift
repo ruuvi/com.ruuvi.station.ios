@@ -94,7 +94,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return promise.future
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     func set(
         image: UIImage,
         for sensor: RuuviTagSensor,
