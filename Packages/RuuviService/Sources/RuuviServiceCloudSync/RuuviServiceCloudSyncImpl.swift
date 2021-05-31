@@ -158,21 +158,21 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         lastRecord.on(success: { [weak self] record in
             guard let sSelf = self else { return }
             let since: Date = record?.date
-                ?? sSelf.ruuviLocalSyncState.lastSyncDate
+                ?? sSelf.ruuviLocalSyncState.getSyncDate(for: sensor.macId)
                 ?? networkPuningDate
             let syncOperation = sSelf.syncRecordsOperation(for: sensor, since: since)
             syncOperation.on(success: { [weak sSelf] result in
-                sSelf?.ruuviLocalSyncState.lastSyncDate = Date()
+                sSelf?.ruuviLocalSyncState.setSyncDate(Date(), for: sensor.macId)
                 promise.succeed(value: result)
              }, failure: { error in
                 promise.fail(error: error)
              })
         }, failure: { [weak self] _ in
             guard let sSelf = self else { return }
-            let since: Date = sSelf.ruuviLocalSyncState.lastSyncDate ?? networkPuningDate
+            let since: Date = sSelf.ruuviLocalSyncState.getSyncDate(for: sensor.macId) ?? networkPuningDate
             let syncOperation = sSelf.syncRecordsOperation(for: sensor, since: since)
             syncOperation.on(success: { [weak sSelf] result in
-                sSelf?.ruuviLocalSyncState.lastSyncDate = Date()
+                sSelf?.ruuviLocalSyncState.setSyncDate(Date(), for: sensor.macId)
                 promise.succeed(value: result)
              }, failure: { (error) in
                 promise.fail(error: error)

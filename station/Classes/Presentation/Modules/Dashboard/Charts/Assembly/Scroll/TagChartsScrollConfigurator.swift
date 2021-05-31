@@ -42,6 +42,7 @@ class TagChartsScrollConfigurator {
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
         interactor.ruuviPool = r.resolve(RuuviPool.self)
         interactor.ruuviStorage = r.resolve(RuuviStorage.self)
+        interactor.ruuviSensorRecords = r.resolve(RuuviServiceSensorRecords.self)
         interactor.presenter = presenter
 
         view.output = presenter

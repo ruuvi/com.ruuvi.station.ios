@@ -2,12 +2,13 @@ import Foundation
 import RuuviOntology
 
 final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
-
-    private let networkSyncStatusPrefix = "NetworkPersistence.syncState."
+    private let syncStatusPrefix = "RuuviLocalSyncStateUserDefaults.syncState."
+    private let syncDatePrefix = "RuuviLocalSyncStateUserDefaults.syncDate."
+    private let latestSyncDateUDKey = "RuuviLocalSyncStateUserDefaults.latestSyncDate."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
     func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier) {
-        UserDefaults.standard.set(status.rawValue, forKey: networkSyncStatusPrefix + macId.mac)
+        UserDefaults.standard.set(status.rawValue, forKey: syncStatusPrefix + macId.mac)
         DispatchQueue.main.async {
             NotificationCenter
                 .default
@@ -36,22 +37,33 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     }
 
     func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus {
-        let value = UserDefaults.standard.integer(forKey: networkSyncStatusPrefix + macId.mac)
+        let value = UserDefaults.standard.integer(forKey: syncStatusPrefix + macId.mac)
         return NetworkSyncStatus(rawValue: value) ?? .none
     }
 
-    @UserDefault("NetworkPersistence.lastSyncDate", defaultValue: nil)
-    var lastSyncDate: Date? {
-        didSet {
-            NotificationCenter
-                .default
-                .post(name: .NetworkLastSyncDateDidChange,
-                      object: self,
-                      userInfo: nil)
+    func setSyncDate(_ date: Date?, for macId: MACIdentifier?) {
+        guard let macId = macId else { assertionFailure(); return }
+        UserDefaults.standard.set(date, forKey: syncDatePrefix + macId.mac)
+        if let date = date {
+            if let latestSyncDate = latestSyncDate {
+                if date > latestSyncDate {
+                    self.latestSyncDate = date
+                }
+            } else {
+                self.latestSyncDate = date
+            }
         }
     }
 
-    @UserDefault("NetworkPersistence.syncStatus", defaultValue: 0)
+    func getSyncDate(for macId: MACIdentifier?) -> Date? {
+        guard let macId = macId else { assertionFailure(); return nil }
+        return UserDefaults.standard.value(forKey: syncDatePrefix + macId.mac) as? Date
+    }
+
+    @UserDefault("RuuviLocalSyncStateUserDefaults.latestSyncDate", defaultValue: nil)
+    var latestSyncDate: Date?
+
+    @UserDefault("RuuviLocalSyncStateUserDefaults.syncStatus", defaultValue: 0)
     private var syncStatusInt: Int
 
     var syncStatus: NetworkSyncStatus {
