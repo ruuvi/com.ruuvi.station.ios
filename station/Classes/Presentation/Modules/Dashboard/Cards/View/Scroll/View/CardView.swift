@@ -92,11 +92,11 @@ class CardView: UIView {
             .default
             .addObserver(forName: .NetworkSyncDidChangeStatus,
                          object: nil,
-                         queue: nil,
+                         queue: .main,
                          using: { [weak self] notification in
-            guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? AnyMACIdentifier,
+            guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
                   let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                  mac == macId else {
+                  mac.any == macId else {
                 return
             }
             self?.updateSyncLabel(with: status)

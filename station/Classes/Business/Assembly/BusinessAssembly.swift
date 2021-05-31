@@ -252,6 +252,16 @@ class BusinessAssembly: Assembly {
             )
         }
 
+        container.register(RuuviServiceSensorRecords.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let syncState = r.resolve(RuuviLocalSyncState.self)!
+            return factory.createSensorRecords(
+                ruuviPool: pool,
+                ruuviLocalSyncState: syncState
+            )
+        }
+
         container.register(RuuviTagAdvertisementDaemon.self) { r in
             let daemon = RuuviTagAdvertisementDaemonBTKit()
             daemon.settings = r.resolve(RuuviLocalSettings.self)
