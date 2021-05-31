@@ -104,7 +104,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                                       modes: [RunLoop.Mode.default.rawValue])
                     }
                 })
-            } else if ruuviTag.isNetworkConnectable {
+            } else if ruuviTag.isCloud {
                 scanRemoteSensor(ruuviTag: ruuviTag)
             }
         }
