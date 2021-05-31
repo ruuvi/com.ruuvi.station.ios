@@ -382,3 +382,16 @@
 "SignIn.EnterVerificationCode" = "Please enter verification code";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
 "UnexpectedError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
+"RuuviCloudApiError.emptyResponse" = "Empty response";
+"RuuviCloudApiError.failedToGetDataFromResponse" = "Vastaus ei sisällä tietoa";
+"RuuviCloudApiError.unexpectedHTTPStatusCode" = "Unexpected HTTP status code";
+"RuuviCloudError.NotAuthorized" = "Not authorized";
+"RuuviLocalError.failedToGetJpegRepresentation" = "JPG-muunnosta ei voida tehdä";
+"RuuviLocalError.failedToGetDocumentsDirectory" = "Taustakuvahakemistoa ei löydy";
+"RuuviPersistenceError.failedToFindRuuviTag" = "Anturia ei löydetty";
+"RuuviServiceError.pictureUrlIsNil" = "Picture URL is nil";
+"RuuviServiceError.macIdIsNil" = "MAC identifier is nil";
+"RuuviServiceError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
+"RuuviServiceError.failedToParseNetworkResponse" = "Failed to parse response.";
+"RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
+"RuuviServiceError.failedToGetJpegRepresentation" = "JPG-muunnosta ei voida tehdä";
