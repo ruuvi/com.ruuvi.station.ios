@@ -73,7 +73,7 @@ struct TagSettingsViewModel {
     let pressureOffsetCorrection: Observable<Double?> = Observable<Double?>()
 
     var source: Observable<RuuviTagSensorRecordSource?> = Observable<RuuviTagSensorRecordSource?>()
-    
+
     func updateRecord(_ record: RuuviTagSensorRecord) {
         humidity.value = record.humidity
         temperature.value = record.temperature

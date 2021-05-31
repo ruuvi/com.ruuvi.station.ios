@@ -67,10 +67,8 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
-    @IBOutlet weak var mcValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnCell: UITableViewCell!
-    @IBOutlet weak var mcCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
     @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
@@ -87,7 +85,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
-    @IBOutlet weak var mcValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
     @IBOutlet weak var txPowerValueLabel: UILabel!
     @IBOutlet weak var backgroundImageLabel: UILabel!
@@ -101,7 +98,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var accelerationYTitleLabel: UILabel!
     @IBOutlet weak var accelerationZTitleLabel: UILabel!
     @IBOutlet weak var txPowerTitleLabel: UILabel!
-    @IBOutlet weak var mcTitleLabel: UILabel!
     @IBOutlet weak var msnTitleLabel: UILabel!
 
     @IBOutlet weak var temperatureOffsetCorrectionCell: UITableViewCell!
@@ -151,7 +147,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         accelerationYTitleLabel.text = "TagSettings.accelerationYTitleLabel.text".localized()
         accelerationZTitleLabel.text = "TagSettings.accelerationZTitleLabel.text".localized()
         txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
-        mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
@@ -338,7 +333,6 @@ extension TagSettingsTableViewController {
 
 // MARK: - UITableViewDelegate
 extension TagSettingsTableViewController {
-    // swiftlint:disable cyclomatic_complexity
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         guard let cell = tableView.cellForRow(at: indexPath) else {
@@ -353,8 +347,6 @@ extension TagSettingsTableViewController {
             output.viewDidTapOnUUID()
         case txPowerCell:
             output.viewDidTapOnTxPower()
-        case mcCell:
-            output.viewDidTapOnMovementCounter()
         case msnCell:
             output.viewDidTapOnMeasurementSequenceNumber()
         case temperatureOffsetCorrectionCell:
@@ -801,14 +793,6 @@ extension TagSettingsTableViewController {
         dataFormatValueLabel.bind(viewModel.version) { (label, version) in
             if let version = version {
                 label.text = "\(version)"
-            } else {
-                label.text = emptyValueString.localized()
-            }
-        }
-
-        mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
-            if let mc = mc {
-                label.text = "\(mc)"
             } else {
                 label.text = emptyValueString.localized()
             }

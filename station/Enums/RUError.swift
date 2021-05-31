@@ -4,12 +4,14 @@ import RuuviStorage
 import RuuviPersistence
 import RuuviPool
 import RuuviLocal
+import RuuviService
 
 enum RUError: Error {
     case ruuviLocal(RuuviLocalError)
     case ruuviPool(RuuviPoolError)
     case ruuviStorage(RuuviStorageError)
     case ruuviPersistence(RuuviPersistenceError)
+    case ruuviService(RuuviServiceError)
     case core(CoreError)
     case persistence(Error)
     case networking(Error)
@@ -33,6 +35,8 @@ extension RUError: LocalizedError {
         case .ruuviPersistence(let error):
             return error.localizedDescription
         case .ruuviStorage(let error):
+            return error.localizedDescription
+        case .ruuviService(let error):
             return error.localizedDescription
         case .core(let error):
             return error.localizedDescription

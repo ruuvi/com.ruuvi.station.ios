@@ -127,7 +127,7 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
         if let macId = sensor.macId,
-           sensor.isNetworkConnectable {
+           sensor.isCloud {
             if sensor.isOwner {
                 unclaimOperation = unclaim(sensor: sensor)
             } else {

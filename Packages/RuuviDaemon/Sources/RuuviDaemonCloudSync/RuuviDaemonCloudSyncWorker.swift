@@ -23,7 +23,6 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     @objc func wakeUp() {
         if needToRefreshImmediately || needsToPullNetworkTagData {
             pullNetworkTagData()
-            localSyncState.lastSyncDate = Date()
             needToRefreshImmediately = false
         }
     }
@@ -65,8 +64,8 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     }
 
     private var needsToPullNetworkTagData: Bool {
-        guard let lastPullDate = localSyncState.lastSyncDate else { return true }
-        let elapsed = Int(Date().timeIntervalSince(lastPullDate))
+        guard let latestSyncDate = localSyncState.latestSyncDate else { return true }
+        let elapsed = Int(Date().timeIntervalSince(latestSyncDate))
         return elapsed >= localSettings.networkPullIntervalSeconds
     }
 
