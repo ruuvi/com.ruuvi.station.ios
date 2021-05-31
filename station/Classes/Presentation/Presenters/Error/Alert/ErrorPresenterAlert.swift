@@ -14,6 +14,8 @@ class ErrorPresenterAlert: ErrorPresenter {
                 presentAlert(error: error)
             case .ruuviStorage(let error):
                 presentAlert(error: error)
+            case .ruuviService(let error):
+                presentAlert(error: error)
             case .btkit(let error):
                 presentAlert(error: error)
             case .bluetooth(let error):

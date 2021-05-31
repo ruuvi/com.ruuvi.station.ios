@@ -14,14 +14,15 @@ public enum NetworkSyncStatusKey: String {
 }
 
 extension Notification.Name {
-    public static let NetworkLastSyncDateDidChange = Notification.Name("NetworkPersistence.LastSyncDateDidChange")
     public static let NetworkSyncDidChangeStatus = Notification.Name("NetworkPersistence.DidChangeStatus")
     public static let NetworkSyncDidChangeCommonStatus = Notification.Name("NetworkPersistence.DidChangeCommonStatus")
 }
 
 public protocol RuuviLocalSyncState {
-    var lastSyncDate: Date? { get set }
     var syncStatus: NetworkSyncStatus { get set }
+    var latestSyncDate: Date? { get }
     func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier)
     func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus
+    func setSyncDate(_ date: Date?, for macId: MACIdentifier?)
+    func getSyncDate(for macId: MACIdentifier?) -> Date?
 }
