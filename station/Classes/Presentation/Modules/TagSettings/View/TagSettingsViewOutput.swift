@@ -13,7 +13,6 @@ protocol TagSettingsViewOutput {
     func viewDidTapOnUUID()
     func viewDidAskToLearnMoreAboutFirmwareUpdate()
     func viewDidTapOnTxPower()
-    func viewDidTapOnMovementCounter()
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
     func viewDidTapOnHumidityAccessoryButton()

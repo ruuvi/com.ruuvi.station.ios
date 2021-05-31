@@ -209,12 +209,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
     }
 
-    func viewDidTapOnMovementCounter() {
-        if viewModel.movementCounter.value == nil {
-            view.showUpdateFirmwareDialog()
-        }
-    }
-
     func viewDidTapOnMeasurementSequenceNumber() {
         if viewModel.measurementSequenceNumber.value == nil {
             view.showUpdateFirmwareDialog()
