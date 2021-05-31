@@ -53,6 +53,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
     private var lnmDidReceiveToken: NSObjectProtocol?
+    private var cloudSyncToken: NSObjectProtocol?
     private var downsampleDidChangeToken: NSObjectProtocol?
     private var chartIntervalDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
@@ -86,6 +87,7 @@ class TagChartsPresenter: NSObject, TagChartsModuleInput {
         didConnectToken?.invalidate()
         didDisconnectToken?.invalidate()
         lnmDidReceiveToken?.invalidate()
+        cloudSyncToken?.invalidate()
         downsampleDidChangeToken?.invalidate()
         chartIntervalDidChangeToken?.invalidate()
     }
@@ -112,6 +114,7 @@ extension TagChartsPresenter: TagChartsViewOutput {
         startObservingDidConnectDisconnectNotifications()
         startObservingLocalNotificationsManager()
         startObservingSensorSettingsChanges()
+        startObservingCloudSyncNotification()
     }
 
     func viewWillAppear() {
@@ -558,6 +561,23 @@ extension TagChartsPresenter {
                                 self?.dismiss()
                             }
             })
+    }
+
+    private func startObservingCloudSyncNotification() {
+        cloudSyncToken = NotificationCenter
+            .default
+            .addObserver(forName: .NetworkSyncDidChangeStatus,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] notification in
+            guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                  let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                  status == .complete,
+                  mac.any == self?.ruuviTag.macId?.any else {
+                return
+            }
+            self?.interactor.restartObservingData()
+        })
     }
 }
 
