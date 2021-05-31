@@ -27,6 +27,11 @@ public protocol RuuviServiceFactory {
         ruuviCoreImage: RuuviCoreImage,
         ruuviLocalImages: RuuviLocalImages
     ) -> RuuviServiceSensorProperties
+
+    func createSensorRecords(
+        ruuviPool: RuuviPool,
+        ruuviLocalSyncState: RuuviLocalSyncState
+    ) -> RuuviServiceSensorRecords
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -69,6 +74,16 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             cloud: ruuviCloud,
             coreImage: ruuviCoreImage,
             localImages: ruuviLocalImages
+        )
+    }
+
+    public func createSensorRecords(
+        ruuviPool: RuuviPool,
+        ruuviLocalSyncState: RuuviLocalSyncState
+    ) -> RuuviServiceSensorRecords {
+        return RuuviServiceSensorRecordsImpl(
+            pool: ruuviPool,
+            localSyncState: ruuviLocalSyncState
         )
     }
 }

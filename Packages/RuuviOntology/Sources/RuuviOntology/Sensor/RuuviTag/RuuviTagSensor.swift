@@ -135,7 +135,7 @@ extension RuuviTagSensor {
         )
     }
 
-    public var isNetworkConnectable: Bool {
+    public var isCloud: Bool {
         return owner != nil
     }
 }
