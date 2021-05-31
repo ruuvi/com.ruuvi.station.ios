@@ -382,3 +382,16 @@
 "SignIn.EnterVerificationCode" = "Пожалуйста, введите код подтверждения";
 "UnexpectedError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
 "UnexpectedError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
+"RuuviCloudApiError.emptyResponse" = "Empty response";
+"RuuviCloudApiError.failedToGetDataFromResponse" = "Не удалось получить данные из ответа";
+"RuuviCloudApiError.unexpectedHTTPStatusCode" = "Unexpected HTTP status code";
+"RuuviCloudError.NotAuthorized" = "Not authorized";
+"RuuviLocalError.failedToGetJpegRepresentation" = "Не удалось получить данные в формате JPG";
+"RuuviLocalError.failedToGetDocumentsDirectory" = "Не удалось получить директорию для фоновых изображений";
+"RuuviPersistenceError.failedToFindRuuviTag" = "Не удалось найти сенсор";
+"RuuviServiceError.pictureUrlIsNil" = "Picture URL is nil";
+"RuuviServiceError.macIdIsNil" = "MAC identifier is nil";
+"RuuviServiceError.bothLuidAndMacAreNil" = "Both local and MAC identifiers are nil";
+"RuuviServiceError.failedToParseNetworkResponse" = "Failed to parse response.";
+"RuuviServiceError.failedToFindOrGenerateBackgroundImage" = "Failed to find or generate background image";
+"RuuviServiceError.failedToGetJpegRepresentation" = "Не удалось получить данные в формате JPG";
