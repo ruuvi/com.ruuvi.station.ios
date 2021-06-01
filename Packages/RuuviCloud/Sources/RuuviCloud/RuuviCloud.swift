@@ -53,6 +53,11 @@ public protocol RuuviCloud {
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
     ) -> Future<URL, RuuviCloudError>
+
+    @discardableResult
+    func resetImage(
+        for macId: MACIdentifier
+    ) -> Future<Void, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

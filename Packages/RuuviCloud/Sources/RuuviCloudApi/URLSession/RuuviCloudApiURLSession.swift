@@ -130,6 +130,18 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
+    func resetImage(
+        _ requestModel: RuuviCloudApiSensorImageUploadRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiSensorImageResetResponse, RuuviCloudApiError> {
+        return request(
+            endpoint: Routes.uploadImage,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
+    }
+
     func uploadImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         imageData: Data,
