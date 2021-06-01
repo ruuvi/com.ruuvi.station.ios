@@ -170,10 +170,11 @@ class WebTagPersistenceRealm: WebTagPersistence {
         if webTag.realm == context.bg {
             context.bgWorker.enqueue {
                 do {
+                    let webTagId = webTag.id
                     try self.context.bg.write {
                         self.context.bg.delete(webTag)
                     }
-                    self.settings.tagsSorting.removeAll(where: {$0 == webTag.id})
+                    self.settings.tagsSorting.removeAll(where: { $0 == webTagId })
                     promise.succeed(value: true)
                 } catch {
                     promise.fail(error: .persistence(error))
@@ -181,10 +182,11 @@ class WebTagPersistenceRealm: WebTagPersistence {
             }
         } else {
             do {
+                let webTagId = webTag.id
                 try context.main.write {
                     self.context.main.delete(webTag)
                 }
-                self.settings.tagsSorting.removeAll(where: {$0 == webTag.id})
+                self.settings.tagsSorting.removeAll(where: { $0 == webTagId })
                 promise.succeed(value: true)
             } catch {
                 promise.fail(error: .persistence(error))

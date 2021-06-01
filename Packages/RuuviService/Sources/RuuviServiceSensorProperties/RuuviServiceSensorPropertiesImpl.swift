@@ -183,6 +183,19 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         return getImage(luid: sensor.luid, macId: sensor.macId)
     }
 
+    func removeImage(for sensor: RuuviTagSensor) {
+        if let macId = sensor.macId {
+            localImages.deleteCustomBackground(for: macId)
+        }
+        if let luid = sensor.luid {
+            localImages.deleteCustomBackground(for: luid)
+        }
+    }
+
+    func removeImage(for sensor: VirtualSensor) {
+        localImages.deleteCustomBackground(for: sensor.id.luid)
+    }
+
     private func getImage(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
         if let macId = macId {

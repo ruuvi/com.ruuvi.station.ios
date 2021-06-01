@@ -32,6 +32,10 @@ public protocol RuuviServiceSensorProperties {
     func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
 
     func getImage(for sensor: VirtualSensor) -> Future<UIImage, RuuviServiceError>
+
+    func removeImage(for sensor: RuuviTagSensor)
+
+    func removeImage(for sensor: VirtualSensor)
 }
 
 extension RuuviServiceSensorProperties {
