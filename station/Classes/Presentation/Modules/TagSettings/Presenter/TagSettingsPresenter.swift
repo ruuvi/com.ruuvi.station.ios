@@ -284,6 +284,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidTapOnPressureOffsetCorrection() {
         router.openOffsetCorrection(type: .pressure, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
     }
+
+    func viewDidTapOnBackgroundIndicator() {
+        viewModel.isUploadingBackground.value = false
+        viewModel.uploadingBackgroundPercentage.value = nil
+        if let macId = ruuviTag.macId {
+            ruuviLocalImages.deleteBackgroundUploadProgress(for: macId)
+        }
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
