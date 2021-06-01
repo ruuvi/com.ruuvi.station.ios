@@ -111,7 +111,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
         assert(luid != nil || macId != nil)
         var local: Future<URL, RuuviLocalError>?
         var remote: Future<URL, RuuviCloudError>?
-        if sensor.isOwner {
+        if sensor.isClaimed {
             if let mac = macId {
                 let croppedImage = coreImage.cropped(image: image, to: maxSize)
                 remote = cloud.upload(
@@ -134,10 +134,10 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
                 return promise.future
             }
         } else {
-            if let luid = luid {
-                local = localImages.setCustomBackground(image: image, for: luid)
-            } else if let mac = macId {
+            if let mac = macId {
                 local = localImages.setCustomBackground(image: image, for: mac)
+            } else if let luid = luid {
+                local = localImages.setCustomBackground(image: image, for: luid)
             } else {
                 promise.fail(error: .bothLuidAndMacAreNil)
                 return promise.future
@@ -181,6 +181,19 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
 
     func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
         return getImage(luid: sensor.luid, macId: sensor.macId)
+    }
+
+    func removeImage(for sensor: RuuviTagSensor) {
+        if let macId = sensor.macId {
+            localImages.deleteCustomBackground(for: macId)
+        }
+        if let luid = sensor.luid {
+            localImages.deleteCustomBackground(for: luid)
+        }
+    }
+
+    func removeImage(for sensor: VirtualSensor) {
+        localImages.deleteCustomBackground(for: sensor.id.luid)
     }
 
     private func getImage(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {

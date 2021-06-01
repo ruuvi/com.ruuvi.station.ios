@@ -8,13 +8,16 @@ import RuuviPool
 final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
+    private let propertiesService: RuuviServiceSensorProperties
 
     init(
         cloud: RuuviCloud,
-        pool: RuuviPool
+        pool: RuuviPool,
+        propertiesService: RuuviServiceSensorProperties
     ) {
         self.cloud = cloud
         self.pool = pool
+        self.propertiesService = propertiesService
     }
 
     @discardableResult
@@ -134,6 +137,7 @@ final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                 unshareOperation = unshare(macId: macId, with: nil)
             }
         }
+        propertiesService.removeImage(for: sensor)
         Future.zip([deleteTagOperation, deleteRecordsOperation])
             .on(success: { _ in
                 if let unclaimOperation = unclaimOperation {

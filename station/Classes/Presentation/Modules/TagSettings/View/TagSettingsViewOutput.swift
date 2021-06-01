@@ -21,6 +21,7 @@ protocol TagSettingsViewOutput {
     func viewDidAskToConnectFromAlertsDisabledDialog()
     func viewDidTapClaimButton()
     func viewDidTapShareButton()
+    func viewDidTapOnBackgroundIndicator()
 
     // Offset Correction
     func viewDidTapTemperatureOffsetCorrection()
