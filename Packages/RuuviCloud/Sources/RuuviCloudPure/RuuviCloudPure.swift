@@ -3,6 +3,7 @@ import Future
 import RuuviOntology
 import BTKit
 
+// swiftlint:disable:next type_body_length
 final class RuuviCloudPure: RuuviCloud {
     init(api: RuuviCloudApi, apiKey: String?) {
         self.api = api

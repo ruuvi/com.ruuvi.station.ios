@@ -18,7 +18,8 @@ public protocol RuuviServiceFactory {
 
     func createOwnership(
         ruuviCloud: RuuviCloud,
-        ruuviPool: RuuviPool
+        ruuviPool: RuuviPool,
+        propertiesService: RuuviServiceSensorProperties
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -58,9 +59,14 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
 
     public func createOwnership(
         ruuviCloud: RuuviCloud,
-        ruuviPool: RuuviPool
+        ruuviPool: RuuviPool,
+        propertiesService: RuuviServiceSensorProperties
     ) -> RuuviServiceOwnership {
-        return RuuviServiceOwnershipImpl(cloud: ruuviCloud, pool: ruuviPool)
+        return RuuviServiceOwnershipImpl(
+            cloud: ruuviCloud,
+            pool: ruuviPool,
+            propertiesService: propertiesService
+        )
     }
 
     public func createSensorProperties(

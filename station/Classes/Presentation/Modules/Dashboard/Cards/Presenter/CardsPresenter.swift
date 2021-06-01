@@ -664,11 +664,15 @@ extension CardsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    let viewModel = sSelf.view.viewModels.first(where: { $0.luid.value == luid?.any })
-                        ?? sSelf.view.viewModels.first(where: {$0.mac.value == macId?.any })
+                    let viewModel = sSelf.view.viewModels
+                        .first(where: { $0.luid.value != nil && $0.luid.value == luid?.any })
+                        ?? sSelf.view.viewModels
+                        .first(where: { $0.mac.value != nil && $0.mac.value == macId?.any })
                     if let viewModel = viewModel {
-                        let ruuviTag = sSelf.ruuviTags.first(where: { $0.luid?.any == luid?.any })
-                            ?? sSelf.ruuviTags.first(where: {$0.macId?.any == macId?.any })
+                        let ruuviTag = sSelf.ruuviTags
+                            .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
+                            ?? sSelf.ruuviTags
+                            .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
                         let webTag = sSelf.virtualTags?.first(where: { $0.id == luid?.value })
                         if let ruuviTag = ruuviTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
@@ -677,7 +681,8 @@ extension CardsPresenter {
                                 }, failure: { [weak self] error in
                                     self?.errorPresenter.present(error: error)
                                 })
-                        } else if let webTag = webTag {
+                        }
+                        if let webTag = webTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
                                 .on(success: { image in
                                     viewModel.background.value = image
