@@ -187,29 +187,62 @@ final class RuuviCloudPure: RuuviCloud {
         until: Date?
     ) -> Future<[AnyRuuviTagSensorRecord], RuuviCloudError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviCloudError>()
-        guard let apiKey = apiKey else {
-            promise.fail(error: .notAuthorized)
-            return promise.future
-        }
-        let request = RuuviCloudApiGetSensorRequest(
-            sensor: macId.value,
-            until: until?.timeIntervalSince1970,
-            since: since.timeIntervalSince1970,
-            limit: 5000,
-            sort: nil
+        loadRecordsByChunk(
+            macId: macId,
+            since: since,
+            until: until,
+            records: [],
+            chunkSize: 5000, // TODO: @rinat replace with setting
+            promise: promise
         )
-        api.getSensorData(request, authorization: apiKey).on(success: { [weak self] response in
-            guard let sSelf = self else { return }
-            let records = sSelf.decodeSensorRecords(macId: macId, response: response)
-            promise.succeed(value: records)
-        }, failure: { (error) in
-            promise.fail(error: .api(error))
-        })
         return promise.future
     }
 
     private var apiKey: String?
     private let api: RuuviCloudApi
+
+    // swiftlint:disable:next function_parameter_count
+    private func loadRecordsByChunk(
+        macId: MACIdentifier,
+        since: Date,
+        until: Date?,
+        records: [AnyRuuviTagSensorRecord],
+        chunkSize: Int,
+        promise: Promise<[AnyRuuviTagSensorRecord], RuuviCloudError>
+    ) {
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return
+        }
+        let request = RuuviCloudApiGetSensorRequest(
+            sensor: macId.value,
+            until: until?.timeIntervalSince1970,
+            since: since.timeIntervalSince1970,
+            limit: chunkSize,
+            sort: .asc
+        )
+        api.getSensorData(request, authorization: apiKey)
+            .on(success: { [weak self] response in
+                guard let sSelf = self else { return }
+                let fetchedRecords = sSelf.decodeSensorRecords(macId: macId, response: response)
+                if let lastRecord = fetchedRecords.last,
+                   !records.contains(lastRecord),
+                   lastRecord.date < until ?? Date.distantFuture {
+                    sSelf.loadRecordsByChunk(
+                        macId: macId,
+                        since: lastRecord.date,
+                        until: until,
+                        records: records + fetchedRecords,
+                        chunkSize: chunkSize,
+                        promise: promise
+                    )
+                } else {
+                    promise.succeed(value: records + fetchedRecords)
+                }
+            }, failure: { (error) in
+                promise.fail(error: .api(error))
+            })
+    }
 
     private func decodeSensorRecords(
         macId: MACIdentifier,
