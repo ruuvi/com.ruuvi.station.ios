@@ -10,6 +10,28 @@ final class RuuviCloudPure: RuuviCloud {
         self.apiKey = apiKey
     }
 
+    @discardableResult
+    func resetImage(
+        for macId: MACIdentifier
+    ) -> Future<Void, RuuviCloudError> {
+        let promise = Promise<Void, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiSensorImageUploadRequest(
+            sensor: macId.value,
+            action: .reset
+        )
+        api.resetImage(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: ())
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
     func upload(
         imageData: Data,
         mimeType: MimeType,
@@ -23,6 +45,7 @@ final class RuuviCloudPure: RuuviCloud {
         }
         let requestModel = RuuviCloudApiSensorImageUploadRequest(
             sensor: macId.value,
+            action: .upload,
             mimeType: mimeType
         )
         api.uploadImage(

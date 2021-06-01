@@ -58,6 +58,11 @@ protocol RuuviCloudApi {
         authorization: String,
         uploadProgress: ((Double) -> Void)?
     ) -> Future<RuuviCloudApiSensorImageUploadResponse, RuuviCloudApiError>
+
+    func resetImage(
+        _ requestModel: RuuviCloudApiSensorImageUploadRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiSensorImageResetResponse, RuuviCloudApiError>
 }
 
 protocol RuuviCloudApiFactory {
