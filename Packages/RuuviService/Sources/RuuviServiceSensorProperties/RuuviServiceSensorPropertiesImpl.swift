@@ -81,7 +81,7 @@ final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
 
     func setNextDefaultBackground(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
-        let identifier = luid ?? macId
+        let identifier = macId ?? luid
         if let identifier = identifier {
             if let image = localImages.setNextDefaultBackground(for: identifier) {
                 promise.succeed(value: image)
