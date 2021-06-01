@@ -635,6 +635,20 @@ extension TagSettingsTableViewController {
         movementAlertHeaderCell.delegate = self
         movementAlertDescriptionCell.delegate = self
         configureMinMaxForSliders()
+        addGestureRecognizerOnUploadBackgroundIndicatorView()
+    }
+
+    private func addGestureRecognizerOnUploadBackgroundIndicatorView() {
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(Self.uploadBackgroundIndicatorViewTapHandler(_:))
+        )
+        uploadBackgroundIndicatorView.addGestureRecognizer(tap)
+    }
+
+    @objc
+    private func uploadBackgroundIndicatorViewTapHandler(_ sender: Any) {
+        output.viewDidTapOnBackgroundIndicator()
     }
 
     private func configureMinMaxForSliders() {
