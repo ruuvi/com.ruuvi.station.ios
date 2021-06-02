@@ -290,6 +290,10 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidTapOnPressureOffsetCorrection() {
         router.openOffsetCorrection(type: .pressure, ruuviTag: ruuviTag, sensorSettings: sensorSettings)
     }
+
+    func viewDidTapOnUpdateFirmware() {
+        router.openUpdateFirmware(ruuviTag: ruuviTag)
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate

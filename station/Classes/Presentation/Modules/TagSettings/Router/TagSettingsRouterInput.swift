@@ -7,6 +7,7 @@ protocol TagSettingsRouterInput {
     func openOffsetCorrection(type: OffsetCorrectionType,
                               ruuviTag: RuuviTagSensor,
                               sensorSettings: SensorSettings?)
+    func openUpdateFirmware(ruuviTag: RuuviTagSensor)
 }
 extension TagSettingsRouterInput {
     func dismiss() {
