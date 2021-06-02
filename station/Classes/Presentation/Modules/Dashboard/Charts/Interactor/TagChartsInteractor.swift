@@ -6,6 +6,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviService
 
 class TagChartsInteractor {
     weak var presenter: TagChartsInteractorOutput!
@@ -18,6 +19,7 @@ class TagChartsInteractor {
     var sensorSettings: SensorSettings?
     var exportService: ExportService!
     var keychainService: KeychainService!
+    var ruuviSensorRecords: RuuviServiceSensorRecords!
     var lastMeasurement: RuuviMeasurement?
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var didMigrationCompleteToken: NSObjectProtocol?
@@ -157,15 +159,15 @@ extension TagChartsInteractor: TagChartsInteractorInput {
         return promise.future
     }
 
-    func deleteAllRecords(ruuviTagId: String) -> Future<Void, RUError> {
+    func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        let op = ruuviPool.deleteAllRecords(ruuviTagId)
-        op.on(failure: {(error) in
-            promise.fail(error: .ruuviPool(error))
-        }, completion: { [weak self] in
-            self?.clearChartsAndRestartObserving()
-            promise.succeed(value: ())
-        })
+        ruuviSensorRecords.clear(for: sensor)
+            .on(failure: {(error) in
+                promise.fail(error: .ruuviService(error))
+            }, completion: { [weak self] in
+                self?.clearChartsAndRestartObserving()
+                promise.succeed(value: ())
+            })
         return promise.future
     }
 

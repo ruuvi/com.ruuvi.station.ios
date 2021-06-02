@@ -235,7 +235,12 @@ class BusinessAssembly: Assembly {
             let factory = r.resolve(RuuviServiceFactory.self)!
             let pool = r.resolve(RuuviPool.self)!
             let cloud = r.resolve(RuuviCloud.self)!
-            return factory.createOwnership(ruuviCloud: cloud, ruuviPool: pool)
+            let propertiesService = r.resolve(RuuviServiceSensorProperties.self)!
+            return factory.createOwnership(
+                ruuviCloud: cloud,
+                ruuviPool: pool,
+                propertiesService: propertiesService
+            )
         }
 
         container.register(RuuviServiceSensorProperties.self) { r in
@@ -249,6 +254,16 @@ class BusinessAssembly: Assembly {
                 ruuviCloud: cloud,
                 ruuviCoreImage: coreImage,
                 ruuviLocalImages: localImages
+            )
+        }
+
+        container.register(RuuviServiceSensorRecords.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let syncState = r.resolve(RuuviLocalSyncState.self)!
+            return factory.createSensorRecords(
+                ruuviPool: pool,
+                ruuviLocalSyncState: syncState
             )
         }
 
@@ -316,6 +331,7 @@ class BusinessAssembly: Assembly {
             let service = WebTagServiceImpl()
             service.webTagPersistence = r.resolve(WebTagPersistence.self)
             service.weatherProviderService = r.resolve(WeatherProviderService.self)
+            service.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
             return service
         }
 

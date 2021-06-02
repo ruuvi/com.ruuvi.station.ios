@@ -407,7 +407,7 @@ extension CardsPresenter {
     }
     private func observeRuuviTags() {
         observeSensorSettings()
-        observeRuuviTagAdvertisements()
+        restartObserveRuuviTagAdvertisements()
         observeRuuviTagHeartbeats()
         observeRuuviTagRSSI()
     }
@@ -468,7 +468,7 @@ extension CardsPresenter {
             })
         }
     }
-    private func observeRuuviTagAdvertisements() {
+    private func restartObserveRuuviTagAdvertisements() {
         advertisementTokens.forEach({ $0.invalidate() })
         advertisementTokens.removeAll()
         for viewModel in viewModels {
@@ -561,6 +561,7 @@ extension CardsPresenter {
         })
     }
     private func startObservingWebTags() {
+        webTagsToken?.invalidate()
         webTagsToken = realmContext.main.objects(WebTagRealm.self).observe({ [weak self] (change) in
             switch change {
             case .initial(let webTags):
@@ -646,14 +647,21 @@ extension CardsPresenter {
                 self?.errorPresenter.present(error: error)
             case .update(let sensor):
                 guard let sSelf = self else { return }
-                if let index = sSelf.ruuviTags.firstIndex(where: { $0.id == sensor.id }) {
+                if let index = sSelf.ruuviTags
+                    .firstIndex(
+                        where: {
+                            ($0.macId != nil && $0.macId?.any == sensor.macId?.any)
+                            || ($0.luid != nil && $0.luid?.any == sensor.luid?.any)
+                        }) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
+                    sSelf.restartObserveRuuviTagAdvertisements()
                 }
             }
         }
     }
     private func startObservingBackgroundChanges() {
+        backgroundToken?.invalidate()
         backgroundToken = NotificationCenter
             .default
             .addObserver(forName: .BackgroundPersistenceDidChangeBackground,
@@ -664,11 +672,15 @@ extension CardsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    let viewModel = sSelf.view.viewModels.first(where: { $0.luid.value == luid?.any })
-                        ?? sSelf.view.viewModels.first(where: {$0.mac.value == macId?.any })
+                    let viewModel = sSelf.view.viewModels
+                        .first(where: { $0.luid.value != nil && $0.luid.value == luid?.any })
+                        ?? sSelf.view.viewModels
+                        .first(where: { $0.mac.value != nil && $0.mac.value == macId?.any })
                     if let viewModel = viewModel {
-                        let ruuviTag = sSelf.ruuviTags.first(where: { $0.luid?.any == luid?.any })
-                            ?? sSelf.ruuviTags.first(where: {$0.macId?.any == macId?.any })
+                        let ruuviTag = sSelf.ruuviTags
+                            .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
+                            ?? sSelf.ruuviTags
+                            .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
                         let webTag = sSelf.virtualTags?.first(where: { $0.id == luid?.value })
                         if let ruuviTag = ruuviTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
@@ -677,7 +689,8 @@ extension CardsPresenter {
                                 }, failure: { [weak self] error in
                                     self?.errorPresenter.present(error: error)
                                 })
-                        } else if let webTag = webTag {
+                        }
+                        if let webTag = webTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: webTag)
                                 .on(success: { image in
                                     viewModel.background.value = image
@@ -691,6 +704,7 @@ extension CardsPresenter {
     }
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func startObservingDaemonsErrors() {
+        webTagDaemonFailureToken?.invalidate()
         webTagDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .WebTagDaemonDidFail,
@@ -720,6 +734,7 @@ extension CardsPresenter {
                     }
                 }
             }
+        ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagAdvertisementDaemonDidFail,
@@ -731,6 +746,7 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
+        ruuviTagPropertiesDaemonFailureToken?.invalidate()
         ruuviTagPropertiesDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagPropertiesDaemonDidFail,
@@ -742,6 +758,7 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
+        ruuviTagHeartbeatDaemonFailureToken?.invalidate()
         ruuviTagHeartbeatDaemonFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagHeartbeatDaemonDidFail,
@@ -753,6 +770,7 @@ extension CardsPresenter {
                                 self?.errorPresenter.present(error: error)
                             }
                          })
+        ruuviTagReadLogsOperationFailureToken?.invalidate()
         ruuviTagReadLogsOperationFailureToken = NotificationCenter
             .default
             .addObserver(forName: .RuuviTagReadLogsOperationDidFail,
@@ -766,6 +784,7 @@ extension CardsPresenter {
                          })
     }
     func startObservingConnectionPersistenceNotifications() {
+        startKeepingConnectionToken?.invalidate()
         startKeepingConnectionToken = NotificationCenter
             .default
             .addObserver(forName: .ConnectionPersistenceDidStartToKeepConnection,
@@ -775,6 +794,7 @@ extension CardsPresenter {
                             self?.observeRuuviTagHeartbeats()
                             self?.observeRuuviTagRSSI()
                          })
+        stopKeepingConnectionToken?.invalidate()
         stopKeepingConnectionToken = NotificationCenter
             .default
             .addObserver(forName: .ConnectionPersistenceDidStopToKeepConnection,
@@ -786,6 +806,7 @@ extension CardsPresenter {
                          })
     }
     func startObservingDidConnectDisconnectNotifications() {
+        didConnectToken?.invalidate()
         didConnectToken = NotificationCenter
             .default
             .addObserver(forName: .BTBackgroundDidConnect,
@@ -801,6 +822,7 @@ extension CardsPresenter {
                                 }
                             }
                          })
+        didDisconnectToken?.invalidate()
         didDisconnectToken = NotificationCenter
             .default
             .addObserver(forName: .BTBackgroundDidDisconnect,
@@ -815,6 +837,7 @@ extension CardsPresenter {
                          })
     }
     private func startObservingAlertChanges() {
+        alertDidChangeToken?.invalidate()
         alertDidChangeToken = NotificationCenter
             .default
             .addObserver(forName: .AlertServiceAlertDidChange,
@@ -835,6 +858,7 @@ extension CardsPresenter {
                          })
     }
     private func startObserveMigrationCompletion() {
+        didMigrationCompleteToken?.invalidate()
         didMigrationCompleteToken = NotificationCenter
             .default
             .addObserver(forName: .DidMigrationComplete, object: nil, queue: .main, using: { [weak self] (_) in
@@ -852,6 +876,7 @@ extension CardsPresenter {
         virtualTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
     }
     private func startObservingLocalNotificationsManager() {
+        lnmDidReceiveToken?.invalidate()
         lnmDidReceiveToken = NotificationCenter
             .default
             .addObserver(forName: .LNMDidReceive,
