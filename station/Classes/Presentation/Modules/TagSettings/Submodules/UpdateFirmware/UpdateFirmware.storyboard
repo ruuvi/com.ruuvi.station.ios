@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3SA-WC-0Xr">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Update Firmware Apple View Controller-->
+        <scene sceneID="0y5-ON-fnt">
+            <objects>
+                <viewController storyboardIdentifier="UpdateFirmwareAppleViewController" id="3SA-WC-0Xr" customClass="UpdateFirmwareAppleViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kty-0E-Klt">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DMN-1f-hKd">
+                                <rect key="frame" x="20" y="54" width="374" height="725"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="tintColor" red="0.41568627450000001" green="0.91764705879999997" blue="0.88235294119999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <attributedString key="attributedText">
+                                    <fragment>
+                                        <string key="content">To start with the updating process, download first the latest software package on that device you're going to use for updating. 
+Latest version is available on ruuvi.com/software-update
+
+Open the RuuviTag's enclosure by pulling it open by fingers or gently with a flat head screw driver.
+Set RuuviTag to bootloader mode by holding down button B and pressing reset button R. Red indicator LED light will light up and stay on. If your device has only 1 button, keep it pressed 10 seconds to enter the bootloader.</string>
+                                        <attributes>
+                                            <color key="NSColor" systemColor="labelColor"/>
+                                            <font key="NSFont" metaFont="system" size="14"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="LnD-Uz-1BU">
+                                <rect key="frame" x="161" y="799" width="92" height="43"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wf2-b2-hx4">
+                                        <rect key="frame" x="0.0" y="0.0" width="92" height="43"/>
+                                        <color key="backgroundColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                        <state key="normal" title="NEXT"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="22"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="nextButtonAction:" destination="3SA-WC-0Xr" eventType="touchUpInside" id="0EM-x3-3ZD"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="hb7-CX-vdM"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="DMN-1f-hKd" firstAttribute="top" secondItem="hb7-CX-vdM" secondAttribute="top" constant="10" id="2VA-Gc-eeI"/>
+                            <constraint firstItem="hb7-CX-vdM" firstAttribute="bottom" secondItem="LnD-Uz-1BU" secondAttribute="bottom" constant="20" id="LGk-wR-RsX"/>
+                            <constraint firstItem="LnD-Uz-1BU" firstAttribute="top" secondItem="DMN-1f-hKd" secondAttribute="bottom" constant="20" id="V73-c7-t29"/>
+                            <constraint firstItem="hb7-CX-vdM" firstAttribute="trailing" secondItem="DMN-1f-hKd" secondAttribute="trailing" constant="20" id="cVG-iE-uAk"/>
+                            <constraint firstItem="LnD-Uz-1BU" firstAttribute="centerX" secondItem="hb7-CX-vdM" secondAttribute="centerX" id="qeb-sc-7N4"/>
+                            <constraint firstItem="DMN-1f-hKd" firstAttribute="leading" secondItem="hb7-CX-vdM" secondAttribute="leading" constant="20" id="wXy-AV-51u"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="descriptionTextView" destination="DMN-1f-hKd" id="Yie-ne-Sk0"/>
+                        <outlet property="nextButton" destination="Wf2-b2-hx4" id="Rlw-BA-Lkk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="znH-Ys-G5N" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="lcu-y4-3HC" customClass="UpdateFirmwareAppleInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="3SA-WC-0Xr" id="4Kl-ac-Y6W"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-801.44927536231887" y="-35.491071428571423"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

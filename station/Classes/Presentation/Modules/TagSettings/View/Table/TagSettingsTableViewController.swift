@@ -10,7 +10,8 @@ enum TagSettingsTableSection: Int {
     case alerts = 3
     case offsetCorrection = 4
     case moreInfo = 5
-    case networkInfo = 6
+    case firmware = 6
+    case networkInfo = 7
 
     static func showConnection(for viewModel: TagSettingsViewModel?) -> Bool {
         return viewModel?.isConnectable.value ?? false
@@ -113,6 +114,8 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var humidityOffsetValueLabel: UILabel!
     @IBOutlet weak var pressureOffsetTitleLabel: UILabel!
     @IBOutlet weak var pressureOffsetValueLabel: UILabel!
+    @IBOutlet weak var updateFirmwareCell: UITableViewCell!
+    @IBOutlet weak var updateFirmwareTitleLabel: UILabel!
 
     @IBOutlet weak var removeThisRuuviTagButton: UIButton!
     @IBOutlet weak var footerView: UIView!
@@ -176,6 +179,8 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         temperatureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Temperature".localized()
         humidityOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Humidity".localized()
         pressureOffsetTitleLabel.text = "TagSettings.OffsetCorrection.Pressure".localized()
+
+        updateFirmwareTitleLabel.text = "TagSettings.Firmware.UpdateFirmware".localized()
 
         claimTagButton.setTitle("TagSettings.ClaimTagButton.Claim".localized(), for: .normal)
         shareTagButton.setTitle("TagSettings.ShareButton".localized(), for: .normal)
@@ -363,6 +368,8 @@ extension TagSettingsTableViewController {
             output.viewDidTapHumidityOffsetCorrection()
         case pressureOffsetCorrectionCell:
             output.viewDidTapOnPressureOffsetCorrection()
+        case updateFirmwareCell:
+            output.viewDidTapOnUpdateFirmware()
         default:
             break
         }
@@ -382,6 +389,8 @@ extension TagSettingsTableViewController {
         case .networkInfo:
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
+        case .firmware:
+            return "TagSettings.SectionHeader.Firmware.title".localized()
         default:
             return nil
         }
