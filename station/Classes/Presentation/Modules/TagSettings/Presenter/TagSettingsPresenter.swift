@@ -209,12 +209,6 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         }
     }
 
-    func viewDidTapOnMovementCounter() {
-        if viewModel.movementCounter.value == nil {
-            view.showUpdateFirmwareDialog()
-        }
-    }
-
     func viewDidTapOnMeasurementSequenceNumber() {
         if viewModel.measurementSequenceNumber.value == nil {
             view.showUpdateFirmwareDialog()
@@ -294,6 +288,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     func viewDidTapOnUpdateFirmware() {
         router.openUpdateFirmware(ruuviTag: ruuviTag)
     }
+
+    func viewDidTapOnBackgroundIndicator() {
+        viewModel.isUploadingBackground.value = false
+        viewModel.uploadingBackgroundPercentage.value = nil
+        if let macId = ruuviTag.macId {
+            ruuviLocalImages.deleteBackgroundUploadProgress(for: macId)
+        }
+    }
 }
 
 // MARK: - PhotoPickerPresenterDelegate
@@ -362,14 +364,14 @@ extension TagSettingsPresenter {
 
         if (ruuviTag.name == ruuviTag.luid?.value
             || ruuviTag.name == ruuviTag.macId?.value)
-            && !ruuviTag.isNetworkConnectable {
+            && !ruuviTag.isCloud {
             viewModel.name.value = nil
         } else {
             viewModel.name.value = ruuviTag.name
         }
 
         viewModel.isConnectable.value = ruuviTag.isConnectable
-        viewModel.isNetworkConnected.value = ruuviTag.any.isNetworkConnectable
+        viewModel.isNetworkConnected.value = ruuviTag.any.isCloud
         if let luid = ruuviTag.luid {
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
             viewModel.keepConnection.value = connectionPersistence.keepConnection(to: luid)
@@ -652,7 +654,7 @@ extension TagSettingsPresenter {
             bindConnectionAlert(uuid: identifier.value)
             bindMovementAlert(uuid: identifier.value)
             viewModel.isConnectable.value = identifier.value != ruuviTag.macId?.value
-            viewModel.isNetworkConnected.value = ruuviTag.isNetworkConnectable
+            viewModel.isNetworkConnected.value = ruuviTag.isCloud
         }
 
         bindOffsetCorrection()

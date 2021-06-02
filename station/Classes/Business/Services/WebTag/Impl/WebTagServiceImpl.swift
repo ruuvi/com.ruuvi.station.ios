@@ -1,9 +1,10 @@
 import Foundation
 import Future
 import CoreLocation
+import RuuviLocal
 
 class WebTagServiceImpl: WebTagService {
-
+    var ruuviLocalImages: RuuviLocalImages!
     var webTagPersistence: WebTagPersistence!
     var weatherProviderService: WeatherProviderService!
 
@@ -16,6 +17,7 @@ class WebTagServiceImpl: WebTagService {
     }
 
     func remove(webTag: WebTagRealm) -> Future<Bool, RUError> {
+        ruuviLocalImages.deleteCustomBackground(for: webTag.id.luid)
         return webTagPersistence.remove(webTag: webTag)
     }
 

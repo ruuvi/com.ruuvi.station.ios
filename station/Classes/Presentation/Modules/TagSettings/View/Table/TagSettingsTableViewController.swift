@@ -68,10 +68,8 @@ class TagSettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var macValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var txPowerValueLabelTrailing: NSLayoutConstraint!
-    @IBOutlet weak var mcValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnValueLabelTrailing: NSLayoutConstraint!
     @IBOutlet weak var msnCell: UITableViewCell!
-    @IBOutlet weak var mcCell: UITableViewCell!
     @IBOutlet weak var txPowerCell: UITableViewCell!
     @IBOutlet weak var uuidCell: UITableViewCell!
     @IBOutlet weak var macAddressCell: UITableViewCell!
@@ -88,7 +86,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var uploadBackgroundProgressLabel: UILabel!
     @IBOutlet weak var tagNameTextField: UITextField!
     @IBOutlet weak var dataFormatValueLabel: UILabel!
-    @IBOutlet weak var mcValueLabel: UILabel!
     @IBOutlet weak var msnValueLabel: UILabel!
     @IBOutlet weak var txPowerValueLabel: UILabel!
     @IBOutlet weak var backgroundImageLabel: UILabel!
@@ -102,7 +99,6 @@ class TagSettingsTableViewController: UITableViewController {
     @IBOutlet weak var accelerationYTitleLabel: UILabel!
     @IBOutlet weak var accelerationZTitleLabel: UILabel!
     @IBOutlet weak var txPowerTitleLabel: UILabel!
-    @IBOutlet weak var mcTitleLabel: UILabel!
     @IBOutlet weak var msnTitleLabel: UILabel!
 
     @IBOutlet weak var temperatureOffsetCorrectionCell: UITableViewCell!
@@ -154,7 +150,6 @@ extension TagSettingsTableViewController: TagSettingsViewInput {
         accelerationYTitleLabel.text = "TagSettings.accelerationYTitleLabel.text".localized()
         accelerationZTitleLabel.text = "TagSettings.accelerationZTitleLabel.text".localized()
         txPowerTitleLabel.text = "TagSettings.txPowerTitleLabel.text".localized()
-        mcTitleLabel.text = "TagSettings.mcTitleLabel.text".localized()
         msnTitleLabel.text = "TagSettings.msnTitleLabel.text".localized()
         dataSourceTitleLabel.text = "TagSettings.dataSourceTitleLabel.text".localized()
         removeThisRuuviTagButton.setTitle("TagSettings.removeThisRuuviTagButton.text".localized(), for: .normal)
@@ -358,8 +353,6 @@ extension TagSettingsTableViewController {
             output.viewDidTapOnUUID()
         case txPowerCell:
             output.viewDidTapOnTxPower()
-        case mcCell:
-            output.viewDidTapOnMovementCounter()
         case msnCell:
             output.viewDidTapOnMeasurementSequenceNumber()
         case temperatureOffsetCorrectionCell:
@@ -652,6 +645,20 @@ extension TagSettingsTableViewController {
         movementAlertHeaderCell.delegate = self
         movementAlertDescriptionCell.delegate = self
         configureMinMaxForSliders()
+        addGestureRecognizerOnUploadBackgroundIndicatorView()
+    }
+
+    private func addGestureRecognizerOnUploadBackgroundIndicatorView() {
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(Self.uploadBackgroundIndicatorViewTapHandler(_:))
+        )
+        uploadBackgroundIndicatorView.addGestureRecognizer(tap)
+    }
+
+    @objc
+    private func uploadBackgroundIndicatorViewTapHandler(_ sender: Any) {
+        output.viewDidTapOnBackgroundIndicator()
     }
 
     private func configureMinMaxForSliders() {
@@ -705,17 +712,24 @@ extension TagSettingsTableViewController {
             }
         })
 
-        dataSourceValueLabel.bind(viewModel.isConnected) { (label, isConnected) in
-            if let isConnected = isConnected, isConnected {
-                label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+        dataSourceValueLabel.bind(viewModel.source) { label, source in
+            if let source = source {
+                switch source {
+                case .unknown:
+                    label.text = "N/A".localized()
+                case .advertisement:
+                    label.text = "TagSettings.DataSource.Advertisement.title".localized()
+                case .heartbeat:
+                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+                case .log:
+                    label.text = "TagSettings.DataSource.Heartbeat.title".localized()
+                case .ruuviNetwork:
+                    label.text = "TagSettings.DataSource.Network.title".localized()
+                case .weatherProvider:
+                    label.text = "N/A".localized()
+                }
             } else {
-                label.text = "TagSettings.DataSource.Advertisement.title".localized()
-            }
-        }
-
-        dataSourceValueLabel.bind(viewModel.isNetworkConnected) { (label, isNetworkConnected) in
-            if isNetworkConnected == true {
-                label.text = "TagSettings.DataSource.Network.title".localized()
+                label.text = "N/A".localized()
             }
         }
 
@@ -803,14 +817,6 @@ extension TagSettingsTableViewController {
         dataFormatValueLabel.bind(viewModel.version) { (label, version) in
             if let version = version {
                 label.text = "\(version)"
-            } else {
-                label.text = emptyValueString.localized()
-            }
-        }
-
-        mcValueLabel.bind(viewModel.movementCounter) { (label, mc) in
-            if let mc = mc {
-                label.text = "\(mc)"
             } else {
                 label.text = emptyValueString.localized()
             }

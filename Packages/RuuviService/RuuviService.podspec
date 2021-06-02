@@ -52,6 +52,15 @@ Pod::Spec.new do |s|
     ss.dependency 'FutureX'
   end
 
+  s.subspec 'SensorRecords' do |ss|
+    ss.source_files = 'Sources/RuuviServiceSensorRecords/**/*.{h,m,swift}', 'Sources/RuuviServiceSensorRecords/*.{h,m,swift}'
+    ss.dependency 'RuuviService/Contract'
+    ss.dependency 'RuuviOntology'
+    ss.dependency 'RuuviPool'
+    ss.dependency 'RuuviLocal'
+    ss.dependency 'FutureX'
+  end
+
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*.{swift}', 'Tests/*.{swift}'
   end

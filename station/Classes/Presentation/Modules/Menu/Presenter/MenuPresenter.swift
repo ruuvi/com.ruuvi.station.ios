@@ -154,10 +154,10 @@ extension MenuPresenter {
 
     private func setSyncStatus() {
         let prefix = "Synchronized".localized()
-        if let date = localSyncState.lastSyncDate?.ruuviAgo(prefix: prefix) {
+        if let date = localSyncState.latestSyncDate?.ruuviAgo(prefix: prefix) {
             viewModel?.status.value = date
         } else {
-            viewModel?.status.value = localSyncState.lastSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
+            viewModel?.status.value = localSyncState.latestSyncDate?.ruuviAgo(prefix: prefix) ?? "N/A".localized()
         }
     }
 
