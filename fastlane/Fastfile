@@ -163,8 +163,7 @@ platform :ios do
     release_notes = last_pr_body
 
     upload_to_testflight(
-      ipa: "./Build/" + SCHEME + ".ipa",
-      changelog: release_notes
+      ipa: "./Build/" + SCHEME + ".ipa"
     )
 
     skip_docs
