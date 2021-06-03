@@ -164,7 +164,7 @@ platform :ios do
 
     upload_to_testflight(
       ipa: "./Build/" + SCHEME + ".ipa",
-      skip_waiting_for_build_processing: true
+      changelog: release_notes
     )
 
     skip_docs
