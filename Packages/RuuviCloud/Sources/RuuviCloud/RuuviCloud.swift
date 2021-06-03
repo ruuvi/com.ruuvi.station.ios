@@ -58,6 +58,18 @@ public protocol RuuviCloud {
     func resetImage(
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError>
+
+    @discardableResult
+    func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError>
+
+    @discardableResult
+    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError>
+
+    @discardableResult
+    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError>
+
+    @discardableResult
+    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

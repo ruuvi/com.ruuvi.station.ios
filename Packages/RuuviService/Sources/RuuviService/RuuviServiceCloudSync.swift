@@ -14,4 +14,7 @@ public protocol RuuviServiceCloudSync {
 
     @discardableResult
     func syncAllRecords() -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError>
+
+    @discardableResult
+    func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError>
 }
