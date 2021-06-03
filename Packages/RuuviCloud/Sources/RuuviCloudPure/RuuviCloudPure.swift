@@ -11,6 +11,23 @@ final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError> {
+        let promise = Promise<RuuviCloudSettings, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiGetSettingsRequest()
+        api.getSettings(request, authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.settings)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     func resetImage(
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {

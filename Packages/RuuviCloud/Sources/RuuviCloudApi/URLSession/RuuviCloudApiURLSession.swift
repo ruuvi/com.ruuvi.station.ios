@@ -14,6 +14,7 @@ extension RuuviCloudApiURLSession {
         case getSensorData = "get"
         case update
         case uploadImage = "upload"
+        case settings
     }
 }
 
@@ -138,6 +139,18 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
             endpoint: Routes.uploadImage,
             with: requestModel,
             method: .post,
+            authorization: authorization
+        )
+    }
+
+    func getSettings(
+        _ requestModel: RuuviCloudApiGetSettingsRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetSettingsResponse, RuuviCloudApiError> {
+        return request(
+            endpoint: Routes.settings,
+            with: requestModel,
+            method: .get,
             authorization: authorization
         )
     }
