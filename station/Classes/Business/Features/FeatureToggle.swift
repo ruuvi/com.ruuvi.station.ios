@@ -2,6 +2,7 @@ import Foundation
 
 public enum Feature: String, CaseIterable, Decodable {
     case network = "ios_network"
+    case updateFirmware = "ios_update_firmware"
 }
 
 public enum FeatureSource: String, Decodable {
