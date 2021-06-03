@@ -68,6 +68,11 @@ protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiGetSettingsRequest,
         authorization: String
     ) -> Future<RuuviCloudApiGetSettingsResponse, RuuviCloudApiError>
+
+    func postSetting(
+        _ requestModel: RuuviCloudApiPostSettingRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError>
 }
 
 protocol RuuviCloudApiFactory {
