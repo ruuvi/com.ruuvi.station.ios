@@ -43,6 +43,7 @@ extension UnitPressure {
         case .inchesOfMercury:
             return "3"
         default:
+            assertionFailure()
             return ""
         }
     }
