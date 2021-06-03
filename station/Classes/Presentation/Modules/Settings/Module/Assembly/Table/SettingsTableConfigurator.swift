@@ -2,6 +2,7 @@ import Foundation
 import RuuviContext
 import RuuviReactor
 import RuuviLocal
+import RuuviService
 
 class SettingsTableConfigurator {
     func configure(view: SettingsTableViewController) {
@@ -19,6 +20,7 @@ class SettingsTableConfigurator {
         presenter.alertService = r.resolve(AlertService.self)
         presenter.realmContext = r.resolve(RealmContext.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
+        presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
 
         view.output = presenter
     }
