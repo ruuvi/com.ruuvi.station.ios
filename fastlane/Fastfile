@@ -117,6 +117,52 @@ platform :ios do
     skip_docs
   end
 
+  desc """
+  Upload to TestFlight
+
+  fastlane submit_to_testflight
+  """
+  lane :submit_to_testflight do |options|
+    SCHEME = "station"
+    configuration = "Release"
+    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
+    build_app(
+      scheme: SCHEME,
+      export_xcargs: "-allowProvisioningUpdates",
+      configuration: configuration,
+      output_directory: "./Build",
+      export_options: {
+        method: "ad-hoc",
+        provisioningProfiles: {
+          "com.ruuvi.station" => "match AdHoc com.ruuvi.station"
+        }
+      }
+    )
+
+    changelog = changelog_from_git_commits(
+      commits_count: 1,
+      pretty: "%s",
+      merge_commit_filtering: "only_include_merges"
+    )
+
+    last_pr_number = changelog[/\d+/]
+    result = github_api(
+      server_url: "https://api.github.com",
+      http_method: "GET",
+      path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
+    )
+
+    last_pr_body = result[:json]['body']
+    release_notes = last_pr_body
+
+    upload_to_testflight(
+      ipa: "./Build/" + SCHEME + ".ipa",
+      changelog: release_notes
+    )
+
+    skip_docs
+  end
+
   error do |lane, exception|
     remove_artifacts()
   end
