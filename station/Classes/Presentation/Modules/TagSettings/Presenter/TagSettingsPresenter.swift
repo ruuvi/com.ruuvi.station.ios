@@ -34,6 +34,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var activityPresenter: ActivityPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
+    var featureToggleService: FeatureToggleService!
 
     private var ruuviTag: RuuviTagSensor! {
         didSet {
@@ -115,6 +116,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
                                                        pressureOffset: nil,
                                                        pressureOffsetDate: nil)
         }
+        self.viewModel.canShowUpdateFirmware.value = featureToggleService.isEnabled(.updateFirmware)
 
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()

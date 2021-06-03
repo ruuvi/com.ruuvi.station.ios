@@ -29,6 +29,10 @@ enum TagSettingsTableSection: Int {
         return viewModel?.isAuthorized.value == true
             && viewModel?.owner.value?.isEmpty == false
     }
+
+    static func showUpdateFirmware(for viewModel: TagSettingsViewModel?) -> Bool {
+        return viewModel?.canShowUpdateFirmware.value ?? false
+    }
 }
 
 class TagSettingsTableViewController: UITableViewController {
@@ -383,7 +387,8 @@ extension TagSettingsTableViewController {
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? "TagSettings.SectionHeader.NetworkInfo.title".localized() : nil
         case .firmware:
-            return "TagSettings.SectionHeader.Firmware.title".localized()
+            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
+                ? "TagSettings.SectionHeader.Firmware.title".localized() : nil
         default:
             return nil
         }
@@ -428,6 +433,9 @@ extension TagSettingsTableViewController {
         case .networkInfo:
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
                 ? 44 : .leastNormalMagnitude
+        case .firmware:
+            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
+                ? 44 : .leastNormalMagnitude
         default:
             return super.tableView(tableView, heightForHeaderInSection: section)
         }
@@ -459,6 +467,9 @@ extension TagSettingsTableViewController {
 
         case .networkInfo:
             return TagSettingsTableSection.showNetworkInfo(for: viewModel)
+                ? super.tableView(tableView, numberOfRowsInSection: section) : 0
+        case .firmware:
+            return TagSettingsTableSection.showUpdateFirmware(for: viewModel)
                 ? super.tableView(tableView, numberOfRowsInSection: section) : 0
         default:
             return super.tableView(tableView, numberOfRowsInSection: section)
