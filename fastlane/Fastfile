@@ -125,6 +125,13 @@ platform :ios do
   lane :submit_to_testflight do |options|
     SCHEME = "station"
     configuration = "Release"
+
+    BUILD_NUMBER = options[:build_number]
+    UI.crash!('build_number parameter is required') unless BUILD_NUMBER
+    SRC_ROOT = File.expand_path("#{ENV['PWD']}")
+    PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/Info.plist"
+    set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
+
     match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
     build_app(
       scheme: SCHEME,
