@@ -144,10 +144,10 @@ extension SettingsPresenter: SelectionModuleOutput {
             view.temperatureUnit = temperatureUnit
         case let humidityUnit as HumidityUnit:
             unregisterHumidityAlertsIfNeeded(humidityUnit)
-            settings.humidityUnit = humidityUnit
+            ruuviAppSettingsService.set(humidityUnit: humidityUnit)
             view.humidityUnit = humidityUnit
         case let pressureUnit as UnitPressure:
-            settings.pressureUnit = pressureUnit
+            ruuviAppSettingsService.set(pressureUnit: pressureUnit)
             view.pressureUnit = pressureUnit
         default:
             break

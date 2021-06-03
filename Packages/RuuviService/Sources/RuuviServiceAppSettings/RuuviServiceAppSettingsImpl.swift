@@ -28,4 +28,30 @@ final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
+
+    @discardableResult
+    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError> {
+        let promise = Promise<HumidityUnit, RuuviServiceError>()
+        localSettings.humidityUnit = humidityUnit
+        cloud.set(humidityUnit: humidityUnit)
+            .on(success: { humidityUnit in
+                promise.succeed(value: humidityUnit)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError> {
+        let promise = Promise<UnitPressure, RuuviServiceError>()
+        localSettings.pressureUnit = pressureUnit
+        cloud.set(pressureUnit: pressureUnit)
+            .on(success: { pressureUnit in
+                promise.succeed(value: pressureUnit)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }
