@@ -132,16 +132,16 @@ platform :ios do
     PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/Info.plist"
     set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
 
-    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
+    match(type: "appstore", app_identifier: "com.ruuvi.station", readonly: true)
     build_app(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
       configuration: configuration,
       output_directory: "./Build",
       export_options: {
-        method: "ad-hoc",
+        method: "appstore",
         provisioningProfiles: {
-          "com.ruuvi.station" => "match AdHoc com.ruuvi.station"
+          "com.ruuvi.station" => "match AppStore com.ruuvi.station"
         }
       }
     )
