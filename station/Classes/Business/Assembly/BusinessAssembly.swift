@@ -213,6 +213,16 @@ class BusinessAssembly: Assembly {
             return RuuviServiceFactoryImpl()
         }
 
+        container.register(RuuviServiceAppSettings.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            let localSettings = r.resolve(RuuviLocalSettings.self)!
+            return factory.createAppSettings(
+                ruuviCloud: cloud,
+                ruuviLocalSettings: localSettings
+            )
+        }
+
         container.register(RuuviServiceCloudSync.self) { r in
             let factory = r.resolve(RuuviServiceFactory.self)!
             let storage = r.resolve(RuuviStorage.self)!

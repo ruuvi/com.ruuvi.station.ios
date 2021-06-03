@@ -3,6 +3,7 @@ import RuuviOntology
 import RuuviContext
 import RuuviReactor
 import RuuviLocal
+import RuuviService
 
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
@@ -13,6 +14,7 @@ class SettingsPresenter: SettingsModuleInput {
     var alertService: AlertService!
     var realmContext: RealmContext!
     var featureToggleService: FeatureToggleService!
+    var ruuviAppSettingsService: RuuviServiceAppSettings!
 
     private var languageToken: NSObjectProtocol?
     private var ruuviTagsToken: RuuviReactorToken?
@@ -138,7 +140,7 @@ extension SettingsPresenter: SelectionModuleOutput {
     func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol) {
         switch item {
         case let temperatureUnit as TemperatureUnit:
-            settings.temperatureUnit = temperatureUnit
+            ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
             view.temperatureUnit = temperatureUnit
         case let humidityUnit as HumidityUnit:
             unregisterHumidityAlertsIfNeeded(humidityUnit)
