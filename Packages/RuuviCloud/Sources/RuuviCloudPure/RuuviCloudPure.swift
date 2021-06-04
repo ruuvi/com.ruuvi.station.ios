@@ -158,14 +158,14 @@ final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
+    func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
         let promise = Promise<Set<AnyShareableSensor>, RuuviCloudError>()
         guard let apiKey = apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiSharedRequest()
-        api.shared(request, authorization: apiKey)
+        let request = RuuviCloudApiGetSensorsRequest(sensor: sensor.id)
+        api.sensors(request, authorization: apiKey)
             .on(success: { response in
                 let arrayOfAny = response.sensors.map({ $0.shareableSensor.any })
                 let setOfAny = Set<AnyShareableSensor>(arrayOfAny)

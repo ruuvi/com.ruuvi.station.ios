@@ -38,7 +38,9 @@ public protocol RuuviCloud {
     ) -> Future<MACIdentifier, RuuviCloudError>
 
     @discardableResult
-    func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError>
+    func loadShared(
+        for sensor: RuuviTagSensor
+    ) -> Future<Set<AnyShareableSensor>, RuuviCloudError>
 
     @discardableResult
     func update(
