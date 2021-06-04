@@ -267,10 +267,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidTapShareButton() {
-        guard let mac = ruuviTag.macId?.value else {
-            return
-        }
-        router.openShare(for: mac)
+        router.openShare(for: ruuviTag)
     }
 
     func viewDidTapTemperatureOffsetCorrection() {
