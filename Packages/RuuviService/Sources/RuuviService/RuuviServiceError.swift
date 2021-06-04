@@ -3,8 +3,10 @@ import RuuviStorage
 import RuuviCloud
 import RuuviPool
 import RuuviLocal
+import RuuviRepository
 
 public enum RuuviServiceError: Error {
+    case ruuviRepository(RuuviRepositoryError)
     case ruuviStorage(RuuviStorageError)
     case ruuviCloud(RuuviCloudError)
     case ruuviPool(RuuviPoolError)
