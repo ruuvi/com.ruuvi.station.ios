@@ -33,6 +33,11 @@ public protocol RuuviServiceFactory {
         ruuviPool: RuuviPool,
         ruuviLocalSyncState: RuuviLocalSyncState
     ) -> RuuviServiceSensorRecords
+
+    func createAppSettings(
+        ruuviCloud: RuuviCloud,
+        ruuviLocalSettings: RuuviLocalSettings
+    ) -> RuuviServiceAppSettings
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -90,6 +95,16 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         return RuuviServiceSensorRecordsImpl(
             pool: ruuviPool,
             localSyncState: ruuviLocalSyncState
+        )
+    }
+
+    public func createAppSettings(
+        ruuviCloud: RuuviCloud,
+        ruuviLocalSettings: RuuviLocalSettings
+    ) -> RuuviServiceAppSettings {
+        return RuuviServiceAppSettingsImpl(
+            cloud: ruuviCloud,
+            localSettings: ruuviLocalSettings
         )
     }
 }

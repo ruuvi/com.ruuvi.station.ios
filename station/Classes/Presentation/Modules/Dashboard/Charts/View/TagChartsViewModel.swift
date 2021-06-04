@@ -27,7 +27,9 @@ struct TagChartsViewModel {
         type = .ruuvi
         uuid.value = ruuviTag.uuid
         name.value = ruuviTag.name
-        mac.value = ruuviTag.mac
+        if let macId = ruuviTag.mac {
+            mac.value = macId
+        }
         isConnectable.value = ruuviTag.isConnectable
     }
 
@@ -41,7 +43,9 @@ struct TagChartsViewModel {
     init(_ ruuviTag: RuuviTagSensor) {
         type = .ruuvi
         uuid.value = ruuviTag.luid?.value
-        mac.value = ruuviTag.macId?.value
+        if let macId = ruuviTag.macId?.value {
+            mac.value = macId
+        }
         name.value = ruuviTag.name
         isConnectable.value = ruuviTag.isConnectable
     }

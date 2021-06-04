@@ -1,6 +1,7 @@
 import Foundation
+import RuuviOntology
 
 protocol ShareModuleInput: AnyObject {
-    func configure(ruuviTagId: String)
+    func configure(sensor: RuuviTagSensor)
     func dismiss()
 }
