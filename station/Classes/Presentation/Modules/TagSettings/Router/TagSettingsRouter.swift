@@ -9,7 +9,7 @@ class TagSettingsRouter: TagSettingsRouterInput {
         completion?()
     }
 
-    func openShare(for ruuviTagId: String) {
+    func openShare(for sensor: RuuviTagSensor) {
         let restorationId = "ShareViewController"
         let factory = StoryboardFactory(storyboardName: "Share", bundle: .main, restorationId: restorationId)
         try! transitionHandler
@@ -17,7 +17,7 @@ class TagSettingsRouter: TagSettingsRouterInput {
                            to: ShareModuleInput.self)
             .to(preferred: .navigation(style: .push))
             .then({ (module) -> Any? in
-                module.configure(ruuviTagId: ruuviTagId)
+                module.configure(sensor: sensor)
             })
     }
 

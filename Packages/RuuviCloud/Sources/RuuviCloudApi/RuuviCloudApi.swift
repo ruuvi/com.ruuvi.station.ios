@@ -33,10 +33,10 @@ protocol RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiUnshareResponse, RuuviCloudApiError>
 
-    func shared(
-        _ requestModel: RuuviCloudApiSharedRequest,
+    func sensors(
+        _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiSharedResponse, RuuviCloudApiError>
+    ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError>
 
     func user(
         authorization: String
@@ -63,6 +63,16 @@ protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         authorization: String
     ) -> Future<RuuviCloudApiSensorImageResetResponse, RuuviCloudApiError>
+
+    func getSettings(
+        _ requestModel: RuuviCloudApiGetSettingsRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiGetSettingsResponse, RuuviCloudApiError>
+
+    func postSetting(
+        _ requestModel: RuuviCloudApiPostSettingRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError>
 }
 
 protocol RuuviCloudApiFactory {

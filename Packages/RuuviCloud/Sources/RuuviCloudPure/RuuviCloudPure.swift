@@ -11,6 +11,83 @@ final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
+    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
+        let promise = Promise<TemperatureUnit, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .unitTemperature,
+            value: temperatureUnit.ruuviCloudApiSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: temperatureUnit)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
+        let promise = Promise<HumidityUnit, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .unitHumidity,
+            value: humidityUnit.ruuviCloudApiSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: humidityUnit)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
+        let promise = Promise<UnitPressure, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiPostSettingRequest(
+            name: .unitPressure,
+            value: pressureUnit.ruuviCloudApiSettingString
+        )
+        api.postSetting(request, authorization: apiKey)
+            .on(success: { _ in
+                promise.succeed(value: pressureUnit)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    func getCloudSettings() -> Future<RuuviCloudSettings, RuuviCloudError> {
+        let promise = Promise<RuuviCloudSettings, RuuviCloudError>()
+        guard let apiKey = apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let request = RuuviCloudApiGetSettingsRequest()
+        api.getSettings(request, authorization: apiKey)
+            .on(success: { response in
+                promise.succeed(value: response.settings)
+            }, failure: { error in
+                promise.fail(error: .api(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     func resetImage(
         for macId: MACIdentifier
     ) -> Future<Void, RuuviCloudError> {
@@ -81,14 +158,14 @@ final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    func loadShared() -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
+    func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
         let promise = Promise<Set<AnyShareableSensor>, RuuviCloudError>()
         guard let apiKey = apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
-        let request = RuuviCloudApiSharedRequest()
-        api.shared(request, authorization: apiKey)
+        let request = RuuviCloudApiGetSensorsRequest(sensor: sensor.id)
+        api.sensors(request, authorization: apiKey)
             .on(success: { response in
                 let arrayOfAny = response.sensors.map({ $0.shareableSensor.any })
                 let setOfAny = Set<AnyShareableSensor>(arrayOfAny)
