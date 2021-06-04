@@ -5,6 +5,7 @@ import RuuviStorage
 import RuuviCloud
 import RuuviPool
 import RuuviLocal
+import RuuviRepository
 
 // swiftlint:disable:next type_body_length
 final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
@@ -14,6 +15,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private var ruuviLocalSettings: RuuviLocalSettings
     private var ruuviLocalSyncState: RuuviLocalSyncState
     private let ruuviLocalImages: RuuviLocalImages
+    private let ruuviRepository: RuuviRepository
 
     init(
         ruuviStorage: RuuviStorage,
@@ -21,7 +23,8 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviPool: RuuviPool,
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
-        ruuviLocalImages: RuuviLocalImages
+        ruuviLocalImages: RuuviLocalImages,
+        ruuviRepository: RuuviRepository
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
@@ -29,6 +32,7 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviLocalSettings = ruuviLocalSettings
         self.ruuviLocalSyncState = ruuviLocalSyncState
         self.ruuviLocalImages = ruuviLocalImages
+        self.ruuviRepository = ruuviRepository
     }
 
     @discardableResult
@@ -269,15 +273,11 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         since: Date
     ) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
-        guard let macId = sensor.macId else {
-            promise.fail(error: .macIdIsNil)
-            return promise.future
-        }
         let operation = RuuviServiceCloudSyncRecordsOperation(
-            macId: macId,
+            sensor: sensor,
             since: since,
             ruuviCloud: ruuviCloud,
-            ruuviPool: ruuviPool,
+            ruuviRepository: ruuviRepository,
             syncState: ruuviLocalSyncState
         )
         operation.completionBlock = { [unowned operation] in

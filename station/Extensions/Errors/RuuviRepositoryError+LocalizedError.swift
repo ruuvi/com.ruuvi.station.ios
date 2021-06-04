@@ -1,9 +1,14 @@
-//
-//  RuuviRepositoryError+LocalizedError.swift
-//  station
-//
-//  Created by Rinat Enikeev on 04.06.2021.
-//  Copyright © 2021 Ruuvi Innovations Oy. BSD-3-Clause.
-//
-
+import RuuviRepository
 import Foundation
+import Localize_Swift
+
+extension RuuviRepositoryError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .ruuviStorage(let error):
+            return error.errorDescription
+        case .ruuviPool(let error):
+            return error.errorDescription
+        }
+    }
+}

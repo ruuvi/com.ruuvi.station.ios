@@ -4,6 +4,7 @@ import RuuviCloud
 import RuuviPool
 import RuuviLocal
 import RuuviCore
+import RuuviRepository
 
 public protocol RuuviServiceFactory {
     // swiftlint:disable:next function_parameter_count
@@ -13,7 +14,8 @@ public protocol RuuviServiceFactory {
         ruuviPool: RuuviPool,
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
-        ruuviLocalImages: RuuviLocalImages
+        ruuviLocalImages: RuuviLocalImages,
+        ruuviRepository: RuuviRepository
     ) -> RuuviServiceCloudSync
 
     func createOwnership(
@@ -55,7 +57,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviPool: RuuviPool,
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
-        ruuviLocalImages: RuuviLocalImages
+        ruuviLocalImages: RuuviLocalImages,
+        ruuviRepository: RuuviRepository
     ) -> RuuviServiceCloudSync {
         return RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
@@ -63,7 +66,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             ruuviPool: ruuviPool,
             ruuviLocalSettings: ruuviLocalSettings,
             ruuviLocalSyncState: ruuviLocalSyncState,
-            ruuviLocalImages: ruuviLocalImages
+            ruuviLocalImages: ruuviLocalImages,
+            ruuviRepository: ruuviRepository
         )
     }
 

@@ -46,6 +46,8 @@ def shared_pods
   pod 'RuuviService/OffsetCalibration', :path => 'Packages/RuuviService/RuuviService.podspec'
   pod 'RuuviPool', :path => 'Packages/RuuviPool/RuuviPool.podspec', :testspecs => ['Tests']
   pod 'RuuviPool/Coordinator', :path => 'Packages/RuuviPool/RuuviPool.podspec'
+  pod 'RuuviRepository', :path => 'Packages/RuuviRepository/RuuviRepository.podspec', :testspecs => ['Tests']
+  pod 'RuuviRepository/Coordinator', :path => 'Packages/RuuviRepository/RuuviRepository.podspec'
   pod 'RxSwift'
   pod 'Swinject'
   pod 'SwinjectPropertyLoader', :git => 'https://github.com/rinat-enikeev/SwinjectPropertyLoader'
