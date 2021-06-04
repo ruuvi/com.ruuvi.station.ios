@@ -1,10 +1,12 @@
 import Foundation
 import RuuviStorage
+import RuuviService
 
 class MigrationManagerSensorSettings: MigrationManager {
     var calibrationPersistence: CalibrationPersistence!
     var errorPresenter: ErrorPresenter!
     var ruuviStorage: RuuviStorage!
+    var ruuviOffsetCalibrationService: RuuviServiceOffsetCalibration!
 
     @UserDefault("MigrationManagerSensorSettings.didMigrateSensorSettings", defaultValue: false)
     private var didMigrateSensorSettings: Bool
@@ -15,15 +17,15 @@ class MigrationManagerSensorSettings: MigrationManager {
                 ruuviTags.forEach { ruuviTag in
                     if let luid = ruuviTag.luid {
                         let pair = self.calibrationPersistence.humidityOffset(for: luid)
-                        self.ruuviStorage.updateOffsetCorrection(
-                            type: .humidity,
-                            with: pair.0 / 100.0, // have to divide to 100
-                            of: ruuviTag,
-                            lastOriginalRecord: nil
-                        ).on(success: { _ in
-                            self.calibrationPersistence
-                                .setHumidity(date: nil, offset: 0.0, for: luid)
-                        })
+                        self.ruuviOffsetCalibrationService.set(
+                            offset: pair.0 / 100.0,
+                            of: .humidity,
+                            for: ruuviTag,
+                            lastOriginalRecord: nil)
+                            .on(success: { _ in
+                                self.calibrationPersistence
+                                    .setHumidity(date: nil, offset: 0.0, for: luid)
+                            })
                     }
                 }
             }, failure: {[weak self] error in

@@ -38,6 +38,11 @@ public protocol RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviLocalSettings: RuuviLocalSettings
     ) -> RuuviServiceAppSettings
+
+    func createOffsetCalibration(
+        ruuviCloud: RuuviCloud,
+        ruuviPool: RuuviPool
+    ) -> RuuviServiceOffsetCalibration
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -105,6 +110,16 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         return RuuviServiceAppSettingsImpl(
             cloud: ruuviCloud,
             localSettings: ruuviLocalSettings
+        )
+    }
+
+    public func createOffsetCalibration(
+        ruuviCloud: RuuviCloud,
+        ruuviPool: RuuviPool
+    ) -> RuuviServiceOffsetCalibration {
+        return RuuviServiceAppOffsetCalibrationImpl(
+            cloud: ruuviCloud,
+            pool: ruuviPool
         )
     }
 }
