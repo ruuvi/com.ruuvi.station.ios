@@ -10,5 +10,12 @@ class UpdateFirmwareRouter: UpdateFirmwareRouterInput {
     }
 
     func openDfuDevicesScanner(_ ruuviTag: RuuviTagSensor) {
+        let factory = StoryboardFactory(storyboardName: "DfuDevicesScanner")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: DfuDevicesScannerModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(ruuviTag: ruuviTag)
+            })
     }
 }

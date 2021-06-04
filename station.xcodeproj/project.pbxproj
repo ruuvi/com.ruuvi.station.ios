@@ -1145,6 +1145,69 @@
 		64678192225D03330072856A /* Muli-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6467818F225CFB170072856A /* Muli-Regular.ttf */; };
 		6486971020E0436A00CCD7C1 /* Oswald-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486970F20E042E000CCD7C1 /* Oswald-Bold.ttf */; };
 		6486971220E0439200CCD7C1 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */; };
+		660EB2582669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */; };
+		660EB2592669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */; };
+		660EB25A2669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */; };
+		660EB25B2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2472669278E000FD22B /* DfuDevicesScannerInitializer.swift */; };
+		660EB25C2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2472669278E000FD22B /* DfuDevicesScannerInitializer.swift */; };
+		660EB25D2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2472669278E000FD22B /* DfuDevicesScannerInitializer.swift */; };
+		660EB25E2669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2492669278E000FD22B /* DfuDevicesScannerPresenter.swift */; };
+		660EB25F2669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2492669278E000FD22B /* DfuDevicesScannerPresenter.swift */; };
+		660EB2602669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2492669278E000FD22B /* DfuDevicesScannerPresenter.swift */; };
+		660EB2612669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24A2669278E000FD22B /* DfuDevicesScannerModuleInput.swift */; };
+		660EB2622669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24A2669278E000FD22B /* DfuDevicesScannerModuleInput.swift */; };
+		660EB2632669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24A2669278E000FD22B /* DfuDevicesScannerModuleInput.swift */; };
+		660EB2642669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24B2669278E000FD22B /* DfuDevicesScannerModuleOutput.swift */; };
+		660EB2652669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24B2669278E000FD22B /* DfuDevicesScannerModuleOutput.swift */; };
+		660EB2662669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24B2669278E000FD22B /* DfuDevicesScannerModuleOutput.swift */; };
+		660EB2672669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24E2669278E000FD22B /* DfuNoDeviceTableViewCell.swift */; };
+		660EB2682669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24E2669278E000FD22B /* DfuNoDeviceTableViewCell.swift */; };
+		660EB2692669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24E2669278E000FD22B /* DfuNoDeviceTableViewCell.swift */; };
+		660EB26A2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24F2669278E000FD22B /* DfuDeviceTableViewCell.swift */; };
+		660EB26B2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24F2669278E000FD22B /* DfuDeviceTableViewCell.swift */; };
+		660EB26C2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB24F2669278E000FD22B /* DfuDeviceTableViewCell.swift */; };
+		660EB26D2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2502669278E000FD22B /* DfuDevicesScannerViewInput.swift */; };
+		660EB26E2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2502669278E000FD22B /* DfuDevicesScannerViewInput.swift */; };
+		660EB26F2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2502669278E000FD22B /* DfuDevicesScannerViewInput.swift */; };
+		660EB2702669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2512669278E000FD22B /* DfuDevicesScannerTableViewController.swift */; };
+		660EB2712669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2512669278E000FD22B /* DfuDevicesScannerTableViewController.swift */; };
+		660EB2722669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2512669278E000FD22B /* DfuDevicesScannerTableViewController.swift */; };
+		660EB2732669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2522669278E000FD22B /* DfuDevicesScannerViewModel.swift */; };
+		660EB2742669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2522669278E000FD22B /* DfuDevicesScannerViewModel.swift */; };
+		660EB2752669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2522669278E000FD22B /* DfuDevicesScannerViewModel.swift */; };
+		660EB2762669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2532669278E000FD22B /* DfuDevicesScannerViewOutput.swift */; };
+		660EB2772669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2532669278E000FD22B /* DfuDevicesScannerViewOutput.swift */; };
+		660EB2782669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2532669278E000FD22B /* DfuDevicesScannerViewOutput.swift */; };
+		660EB2792669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */; };
+		660EB27A2669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */; };
+		660EB27B2669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */; };
+		660EB27C2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */; };
+		660EB27D2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */; };
+		660EB27E2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */; };
+		660EB27F2669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */; };
+		660EB2802669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */; };
+		660EB2812669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */; };
+		660EB28926692806000FD22B /* RuuviDfu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28326692806000FD22B /* RuuviDfu.swift */; };
+		660EB28A26692806000FD22B /* RuuviDfu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28326692806000FD22B /* RuuviDfu.swift */; };
+		660EB28B26692806000FD22B /* RuuviDfu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28326692806000FD22B /* RuuviDfu.swift */; };
+		660EB28C26692806000FD22B /* DfuDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28426692806000FD22B /* DfuDevice.swift */; };
+		660EB28D26692806000FD22B /* DfuDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28426692806000FD22B /* DfuDevice.swift */; };
+		660EB28E26692806000FD22B /* DfuDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28426692806000FD22B /* DfuDevice.swift */; };
+		660EB28F26692806000FD22B /* DfuAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28526692806000FD22B /* DfuAssembly.swift */; };
+		660EB29026692806000FD22B /* DfuAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28526692806000FD22B /* DfuAssembly.swift */; };
+		660EB29126692806000FD22B /* DfuAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28526692806000FD22B /* DfuAssembly.swift */; };
+		660EB29226692806000FD22B /* DfuScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28626692806000FD22B /* DfuScanner.swift */; };
+		660EB29326692806000FD22B /* DfuScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28626692806000FD22B /* DfuScanner.swift */; };
+		660EB29426692806000FD22B /* DfuScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28626692806000FD22B /* DfuScanner.swift */; };
+		660EB29526692806000FD22B /* DfuFlasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28726692806000FD22B /* DfuFlasher.swift */; };
+		660EB29626692806000FD22B /* DfuFlasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28726692806000FD22B /* DfuFlasher.swift */; };
+		660EB29726692806000FD22B /* DfuFlasher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28726692806000FD22B /* DfuFlasher.swift */; };
+		660EB29826692806000FD22B /* DfuLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28826692806000FD22B /* DfuLog.swift */; };
+		660EB29926692806000FD22B /* DfuLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28826692806000FD22B /* DfuLog.swift */; };
+		660EB29A26692806000FD22B /* DfuLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB28826692806000FD22B /* DfuLog.swift */; };
+		660EB29C266928E6000FD22B /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB29B266928E6000FD22B /* UIViewController+Alert.swift */; };
+		660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB29B266928E6000FD22B /* UIViewController+Alert.swift */; };
+		660EB29E266928E6000FD22B /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660EB29B266928E6000FD22B /* UIViewController+Alert.swift */; };
 		663155DD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663155CD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift */; };
 		663155DE2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663155CD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift */; };
 		663155DF2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663155CD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift */; };
@@ -1988,6 +2051,27 @@
 		6486971120E0439200CCD7C1 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		64A2DAE224310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		64A2DAE324310B2900DE6699 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerConfigurator.swift; sourceTree = "<group>"; };
+		660EB2472669278E000FD22B /* DfuDevicesScannerInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerInitializer.swift; sourceTree = "<group>"; };
+		660EB2492669278E000FD22B /* DfuDevicesScannerPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerPresenter.swift; sourceTree = "<group>"; };
+		660EB24A2669278E000FD22B /* DfuDevicesScannerModuleInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerModuleInput.swift; sourceTree = "<group>"; };
+		660EB24B2669278E000FD22B /* DfuDevicesScannerModuleOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerModuleOutput.swift; sourceTree = "<group>"; };
+		660EB24E2669278E000FD22B /* DfuNoDeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuNoDeviceTableViewCell.swift; sourceTree = "<group>"; };
+		660EB24F2669278E000FD22B /* DfuDeviceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDeviceTableViewCell.swift; sourceTree = "<group>"; };
+		660EB2502669278E000FD22B /* DfuDevicesScannerViewInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerViewInput.swift; sourceTree = "<group>"; };
+		660EB2512669278E000FD22B /* DfuDevicesScannerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerTableViewController.swift; sourceTree = "<group>"; };
+		660EB2522669278E000FD22B /* DfuDevicesScannerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerViewModel.swift; sourceTree = "<group>"; };
+		660EB2532669278E000FD22B /* DfuDevicesScannerViewOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerViewOutput.swift; sourceTree = "<group>"; };
+		660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DfuDevicesScanner.storyboard; sourceTree = "<group>"; };
+		660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerRouterInput.swift; sourceTree = "<group>"; };
+		660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevicesScannerRouter.swift; sourceTree = "<group>"; };
+		660EB28326692806000FD22B /* RuuviDfu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RuuviDfu.swift; sourceTree = "<group>"; };
+		660EB28426692806000FD22B /* DfuDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuDevice.swift; sourceTree = "<group>"; };
+		660EB28526692806000FD22B /* DfuAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuAssembly.swift; sourceTree = "<group>"; };
+		660EB28626692806000FD22B /* DfuScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuScanner.swift; sourceTree = "<group>"; };
+		660EB28726692806000FD22B /* DfuFlasher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuFlasher.swift; sourceTree = "<group>"; };
+		660EB28826692806000FD22B /* DfuLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuLog.swift; sourceTree = "<group>"; };
+		660EB29B266928E6000FD22B /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		663155CD2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateFirmwareAppleInitializer.swift; sourceTree = "<group>"; };
 		663155CE2667F40C005B90A6 /* UpdateFirmwareConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateFirmwareConfigurator.swift; sourceTree = "<group>"; };
 		663155D02667F40C005B90A6 /* UpdateFirmwarePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateFirmwarePresenter.swift; sourceTree = "<group>"; };
@@ -2431,13 +2515,14 @@
 				0E09671522AE74CB00E85F48 /* Application */,
 				0EEB210722B7D8020015F9E0 /* Business */,
 				0E5C300C22CF632500B52E39 /* Core */,
+				660EB28226692806000FD22B /* Dfu */,
 				0E1C1DA122B36CE70032F6CA /* Model */,
 				0E9F97A322EB1B290015ADE2 /* Networking */,
 				0E1C1D9222B360160032F6CA /* Persistence */,
+				0E09671922AE764200E85F48 /* Presentation */,
 				0E8BAC65245C4AB900D380FB /* Reactor */,
 				0E8BAC70245C4C6800D380FB /* Tank */,
 				0E8BACCA245EE62E00D380FB /* Trunk */,
-				0E09671922AE764200E85F48 /* Presentation */,
 				0EA31069232B75E700BC8CF5 /* Util */,
 			);
 			path = Classes;
@@ -2544,25 +2629,26 @@
 		0E09672322AE895600E85F48 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0EA7966F2664A7B3002BA25D /* Errors */,
-				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
-				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
-				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
-				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
-				0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */,
-				0E9E7759238CCE5F006D7013 /* String+Replace.swift */,
-				0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */,
-				A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */,
-				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
-				A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */,
-				A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */,
-				A9E58CF72459F7A7000C38DA /* Array+Extension.swift */,
-				A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */,
-				A9BD38B924F6108300904BBE /* Humidity+Offset.swift */,
-				A98BC874250E4265001CEFDC /* Double+Round.swift */,
-				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
-				A9E6774725A33081000B75A3 /* String+Characters.swift */,
 				0E290A842660E5DF009AAA29 /* Array+AnyRuuviTagSensor.swift */,
+				A9E58CF72459F7A7000C38DA /* Array+Extension.swift */,
+				0E09672422AE897000E85F48 /* CALayer+IB.swift */,
+				0EF5B72A22D62CD900D9D14A /* Date+Ruuvi.swift */,
+				A98BC874250E4265001CEFDC /* Double+Round.swift */,
+				0E02ABCA2379483A00ED4629 /* Double+Temperature.swift */,
+				A9BD38B924F6108300904BBE /* Humidity+Offset.swift */,
+				A9A67BF924C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift */,
+				A92E3C5724263BCF00D981D5 /* RuuviTagDataRealm+Extension.swift */,
+				A9E6774725A33081000B75A3 /* String+Characters.swift */,
+				0E9E7759238CCE5F006D7013 /* String+Replace.swift */,
+				0E1C1DBA22B3919F0032F6CA /* UIApplication+ViewController.swift */,
+				0E197C7C23C5CD7C0074015B /* UIDevice+ReadableModel.swift */,
+				A92A66BC2450C640002918E7 /* UITableViewCell+ReusableView.swift */,
+				660EB29B266928E6000FD22B /* UIViewController+Alert.swift */,
+				A907BB1024AE620A009DA3DB /* UIWindow+Orientation.swift */,
+				A9A48A5B244CD9E70004FD50 /* UIWindow+Shake.swift */,
+				A91D031925113EAA00694733 /* UnitPressure+Extension.swift */,
+				0E0A381823616AC3003A0364 /* UserDefaults+Optional.swift */,
+				0EA7966F2664A7B3002BA25D /* Errors */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -4677,6 +4763,88 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		660EB2432669278E000FD22B /* Submodules */ = {
+			isa = PBXGroup;
+			children = (
+				660EB2442669278E000FD22B /* DfuDevicesScanner */,
+			);
+			path = Submodules;
+			sourceTree = "<group>";
+		};
+		660EB2442669278E000FD22B /* DfuDevicesScanner */ = {
+			isa = PBXGroup;
+			children = (
+				660EB2542669278E000FD22B /* DfuDevicesScanner.storyboard */,
+				660EB2452669278E000FD22B /* Assembly */,
+				660EB2482669278E000FD22B /* Presenter */,
+				660EB2552669278E000FD22B /* Router */,
+				660EB24C2669278E000FD22B /* View */,
+			);
+			path = DfuDevicesScanner;
+			sourceTree = "<group>";
+		};
+		660EB2452669278E000FD22B /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				660EB2462669278E000FD22B /* DfuDevicesScannerConfigurator.swift */,
+				660EB2472669278E000FD22B /* DfuDevicesScannerInitializer.swift */,
+			);
+			path = Assembly;
+			sourceTree = "<group>";
+		};
+		660EB2482669278E000FD22B /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				660EB2492669278E000FD22B /* DfuDevicesScannerPresenter.swift */,
+				660EB24A2669278E000FD22B /* DfuDevicesScannerModuleInput.swift */,
+				660EB24B2669278E000FD22B /* DfuDevicesScannerModuleOutput.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		660EB24C2669278E000FD22B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				660EB24D2669278E000FD22B /* Cells */,
+				660EB2502669278E000FD22B /* DfuDevicesScannerViewInput.swift */,
+				660EB2512669278E000FD22B /* DfuDevicesScannerTableViewController.swift */,
+				660EB2522669278E000FD22B /* DfuDevicesScannerViewModel.swift */,
+				660EB2532669278E000FD22B /* DfuDevicesScannerViewOutput.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		660EB24D2669278E000FD22B /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				660EB24E2669278E000FD22B /* DfuNoDeviceTableViewCell.swift */,
+				660EB24F2669278E000FD22B /* DfuDeviceTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		660EB2552669278E000FD22B /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				660EB2562669278E000FD22B /* DfuDevicesScannerRouterInput.swift */,
+				660EB2572669278E000FD22B /* DfuDevicesScannerRouter.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		660EB28226692806000FD22B /* Dfu */ = {
+			isa = PBXGroup;
+			children = (
+				660EB28326692806000FD22B /* RuuviDfu.swift */,
+				660EB28426692806000FD22B /* DfuDevice.swift */,
+				660EB28526692806000FD22B /* DfuAssembly.swift */,
+				660EB28626692806000FD22B /* DfuScanner.swift */,
+				660EB28726692806000FD22B /* DfuFlasher.swift */,
+				660EB28826692806000FD22B /* DfuLog.swift */,
+			);
+			path = Dfu;
+			sourceTree = "<group>";
+		};
 		663155CA2667F40C005B90A6 /* UpdateFirmware */ = {
 			isa = PBXGroup;
 			children = (
@@ -4684,6 +4852,7 @@
 				663155CB2667F40C005B90A6 /* Assembly */,
 				663155CF2667F40C005B90A6 /* Presenter */,
 				663155DA2667F40C005B90A6 /* Router */,
+				660EB2432669278E000FD22B /* Submodules */,
 				663155D32667F40C005B90A6 /* View */,
 			);
 			path = UpdateFirmware;
@@ -5646,6 +5815,7 @@
 				0EAD33E52399273E00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E6BAEBD23856A01003A2D4C /* InfoPlist.strings in Resources */,
 				A9E5994225572CF700F9E5CC /* Share.storyboard in Resources */,
+				660EB27B2669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */,
 				0E6BAEBE23856A01003A2D4C /* ActivityRuuviLogo.storyboard in Resources */,
 				0E6BAEBF23856A01003A2D4C /* Assets.xcassets in Resources */,
 				A91D030F251121C800694733 /* Selection.storyboard in Resources */,
@@ -5695,6 +5865,7 @@
 				0EAD33D72399273D00EC5BAA /* Heartbeat.storyboard in Resources */,
 				0E8BD3F3238566AB008B31EF /* InfoPlist.strings in Resources */,
 				A9E5994125572CF700F9E5CC /* Share.storyboard in Resources */,
+				660EB27A2669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */,
 				0E8BD3F4238566AB008B31EF /* ActivityRuuviLogo.storyboard in Resources */,
 				0E8BD3F5238566AB008B31EF /* Assets.xcassets in Resources */,
 				A91D030E251121C800694733 /* Selection.storyboard in Resources */,
@@ -5744,6 +5915,7 @@
 				0E53A3F1232DFC6200ACED49 /* InfoPlist.strings in Resources */,
 				0E84BF552397F29800A37E1A /* Heartbeat.storyboard in Resources */,
 				A9E5994025572CF700F9E5CC /* Share.storyboard in Resources */,
+				660EB2792669278E000FD22B /* DfuDevicesScanner.storyboard in Resources */,
 				0E1C1DB522B3903B0032F6CA /* ActivityRuuviLogo.storyboard in Resources */,
 				64333D3020B0C45A00CDF4B6 /* Assets.xcassets in Resources */,
 				A91D030D251121C800694733 /* Selection.storyboard in Resources */,
@@ -6119,15 +6291,18 @@
 				0EA7967B2664B37F002BA25D /* RuuviLocalError+LocalizedError.swift in Sources */,
 				66BC44A92657AED400A03253 /* OffsetCorrectionAppleViewController.swift in Sources */,
 				A92E3C5C2426428E00D981D5 /* TagChartView.swift in Sources */,
+				660EB2602669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */,
 				0EA7967F2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
 				0E6BAD7B23856A01003A2D4C /* LocationServiceApple.swift in Sources */,
 				0E6BAD7C23856A01003A2D4C /* DiscoverTableViewController.swift in Sources */,
 				A9B5744C253B994900DB7353 /* SignInRouter.swift in Sources */,
 				0E8BACE1245F015D00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift in Sources */,
 				0EB48D6226183B35008E0D2D /* MigrationManagerToPrune240.swift in Sources */,
+				660EB2752669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				66BC44A62657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
 				0E6BAD7D23856A01003A2D4C /* Optional.swift in Sources */,
 				0E6BAD8223856A01003A2D4C /* CALayer+IB.swift in Sources */,
+				660EB2722669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
 				0E6BAD8423856A01003A2D4C /* MenuTablePresentationController.swift in Sources */,
 				A93CDCE025659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
 				0E6BAD8523856A01003A2D4C /* RuuviTagPropertiesDaemonBTKit.swift in Sources */,
@@ -6141,6 +6316,7 @@
 				0E6BAD8923856A01003A2D4C /* MenuPresenter.swift in Sources */,
 				A91D03082511207300694733 /* SelectionRouter.swift in Sources */,
 				0E6BAD8A23856A01003A2D4C /* ForegroundRouter.swift in Sources */,
+				660EB26F2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */,
 				0E6BAD8B23856A01003A2D4C /* MenuTableViewController.swift in Sources */,
 				0E6BAD8C23856A01003A2D4C /* AboutRouterInput.swift in Sources */,
 				0E6BAD8D23856A01003A2D4C /* MigrationManager.swift in Sources */,
@@ -6214,6 +6390,7 @@
 				A91D02F32511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				0E6BADAB23856A01003A2D4C /* LocalNotificationsManager.swift in Sources */,
 				0E6BADAC23856A01003A2D4C /* WelcomePresenter.swift in Sources */,
+				660EB29726692806000FD22B /* DfuFlasher.swift in Sources */,
 				A97A5AF12426C1E900AC92A3 /* RuuviTagDataRealm+Extension.swift in Sources */,
 				0E6BADAD23856A01003A2D4C /* PersistenceAssembly.swift in Sources */,
 				0E6BADAE23856A01003A2D4C /* CardsViewOutput.swift in Sources */,
@@ -6221,16 +6398,21 @@
 				0E6BADB023856A01003A2D4C /* DefaultsViewInput.swift in Sources */,
 				0E290A7C265FCEDD009AAA29 /* WebTagDataRealm.swift in Sources */,
 				0E6BADB123856A01003A2D4C /* LocationPickerRouter.swift in Sources */,
+				660EB29126692806000FD22B /* DfuAssembly.swift in Sources */,
 				A9828E4C24792D6C00E7E9D4 /* ReloadableSectionData.swift in Sources */,
+				660EB29426692806000FD22B /* DfuScanner.swift in Sources */,
 				0E6BADB223856A01003A2D4C /* WebTagSettingsModuleInput.swift in Sources */,
 				0E6BADB323856A01003A2D4C /* MenuTableConfigurator.swift in Sources */,
 				0EAD33F02399273E00EC5BAA /* HeartbeatViewModel.swift in Sources */,
 				0E6BADB423856A01003A2D4C /* WebTagDaemonImpl.swift in Sources */,
+				660EB29E266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
 				0E6BADB723856A01003A2D4C /* DefaultsStepperTableViewCell.swift in Sources */,
 				A94FFD44241C2D7200888017 /* CalibrationService.swift in Sources */,
 				0E6BADBA23856A01003A2D4C /* SettingsRouter.swift in Sources */,
 				0EE49B9B23B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
+				660EB28E26692806000FD22B /* DfuDevice.swift in Sources */,
 				0EA92FDD2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
+				660EB25D2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
 				0E6BADBC23856A01003A2D4C /* WeatherProviderServiceImpl.swift in Sources */,
 				A9B57440253B993200DB7353 /* SignInConfigurator.swift in Sources */,
 				0E4557F923E820920025AEBF /* BackgroundProcessService.swift in Sources */,
@@ -6252,6 +6434,7 @@
 				0E6BADC623856A01003A2D4C /* Observable.swift in Sources */,
 				0E6BADC723856A01003A2D4C /* ForegroundTableViewController.swift in Sources */,
 				0E28641F2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
+				660EB29A26692806000FD22B /* DfuLog.swift in Sources */,
 				0E6BADC923856A01003A2D4C /* CalibrationPersistence.swift in Sources */,
 				0E6BADCA23856A01003A2D4C /* TagSettingsViewOutput.swift in Sources */,
 				0E6BADCB23856A01003A2D4C /* ForegroundViewModel.swift in Sources */,
@@ -6288,6 +6471,7 @@
 				A9828E0F24792CAD00E7E9D4 /* DiffCalculatorImpl.swift in Sources */,
 				0E6BADE223856A01003A2D4C /* TemperatureUnit.swift in Sources */,
 				0E6BADE323856A01003A2D4C /* LanguageViewOutput.swift in Sources */,
+				660EB26C2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */,
 				0E6BADE423856A01003A2D4C /* DefaultsConfigurator.swift in Sources */,
 				0E6BADE523856A01003A2D4C /* MenuRouter.swift in Sources */,
 				0E6BADE623856A01003A2D4C /* ForegroundRouterInput.swift in Sources */,
@@ -6330,6 +6514,7 @@
 				A93CDCAD25657C1D00018C6C /* MenuViewModel.swift in Sources */,
 				0E6BADF823856A01003A2D4C /* TagSettingsRouter.swift in Sources */,
 				0E6BADF923856A01003A2D4C /* DiscoverDeviceTableViewCell.swift in Sources */,
+				660EB2662669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */,
 				0E6BADFA23856A01003A2D4C /* AboutInitializer.swift in Sources */,
 				0E6BADFB23856A01003A2D4C /* ForegroundEnvironmentObject.swift in Sources */,
 				0E6BADFC23856A01003A2D4C /* MenuTableEmbededViewController.swift in Sources */,
@@ -6350,9 +6535,11 @@
 				0E6BAE0323856A01003A2D4C /* CardsScrollViewController.swift in Sources */,
 				A980573A25807118000D03AB /* AboutViewModel.swift in Sources */,
 				663155F12667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
+				660EB25A2669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
 				0E6BAE0423856A01003A2D4C /* LanguagePresenter.swift in Sources */,
 				A9A67BFC24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E28641A246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
+				660EB2632669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */,
 				A964647A247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A9646486247BAE6B0001D55D /* AdvancedPresenter.swift in Sources */,
 				0E6BAE0623856A01003A2D4C /* TagSettingsTableViewController.swift in Sources */,
@@ -6389,6 +6576,7 @@
 				0E197C7623C5C7A20074015B /* InfoProvider.swift in Sources */,
 				0E6BAE1823856A01003A2D4C /* WebTagSettingsRouterInput.swift in Sources */,
 				0EA7968B2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
+				660EB27E2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				A98D3F16256CBD610066588B /* ShareConfigurator.swift in Sources */,
 				0E6BAE1D23856A01003A2D4C /* LocalizationService.swift in Sources */,
 				663155E52667F40C005B90A6 /* UpdateFirmwarePresenter.swift in Sources */,
@@ -6418,12 +6606,14 @@
 				66BC44AF2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
 				0E6BAE2E23856A01003A2D4C /* MenuRouterInput.swift in Sources */,
 				0E6BAE2F23856A01003A2D4C /* LanguageRouter.swift in Sources */,
+				660EB28B26692806000FD22B /* RuuviDfu.swift in Sources */,
 				0E6BAE3023856A01003A2D4C /* PushNotificationsManager.swift in Sources */,
 				0E28642D2460687200363DCB /* VirtualTagTank.swift in Sources */,
 				0EB48D8D2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE98A7B26493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				0E6BAE3123856A01003A2D4C /* TagChartsModuleInput.swift in Sources */,
 				0E6BAE3223856A01003A2D4C /* Double+Temperature.swift in Sources */,
+				660EB2782669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */,
 				0E6BAE3523856A01003A2D4C /* AppStateServiceImpl.swift in Sources */,
 				0E6BAE3623856A01003A2D4C /* ActivityPresenter.swift in Sources */,
 				0E6BAE3723856A01003A2D4C /* MenuViewOutput.swift in Sources */,
@@ -6522,6 +6712,7 @@
 				0E6BAE7E23856A01003A2D4C /* MenuModuleInput.swift in Sources */,
 				0E6BAE8023856A01003A2D4C /* CardsScrollInitializer.swift in Sources */,
 				0E6BAE8123856A01003A2D4C /* DefaultsTableViewController.swift in Sources */,
+				660EB2692669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E4557FE23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				0E6BAE8323856A01003A2D4C /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E2864502461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
@@ -6536,6 +6727,7 @@
 				A91D0313251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				0E6BAE8B23856A01003A2D4C /* ForegroundRow.swift in Sources */,
 				0E6BAE8C23856A01003A2D4C /* SettingsViewOutput.swift in Sources */,
+				660EB2812669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0E6BAE8D23856A01003A2D4C /* ForegroundPresenter.swift in Sources */,
 				A9B57454253B994900DB7353 /* SignInViewOutput.swift in Sources */,
 				0E6BAE8E23856A01003A2D4C /* DiscoverNoDevicesTableViewCell.swift in Sources */,
@@ -6592,6 +6784,7 @@
 				0E8BD2B2238566AB008B31EF /* DiscoverTableViewController.swift in Sources */,
 				0E8BACE0245F015D00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift in Sources */,
 				0E8BD2B3238566AB008B31EF /* Optional.swift in Sources */,
+				660EB26B2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */,
 				0EA7968A2664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
 				0E8BD2B7238566AB008B31EF /* CalibrationService.swift in Sources */,
 				0E8BD2B8238566AB008B31EF /* CALayer+IB.swift in Sources */,
@@ -6636,6 +6829,7 @@
 				A91D02F82511207300694733 /* SelectionModuleInput.swift in Sources */,
 				0E8BD2CF238566AB008B31EF /* TagChartsTransitioningDelegate.swift in Sources */,
 				0E8BD2D0238566AB008B31EF /* WebTagSettingsRouter.swift in Sources */,
+				660EB26E2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */,
 				663155DE2667F40C005B90A6 /* UpdateFirmwareAppleInitializer.swift in Sources */,
 				A92A66BE2450C64A002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				0E8BD2D1238566AB008B31EF /* DefaultsPresenter.swift in Sources */,
@@ -6703,13 +6897,16 @@
 				0E8BD2F8238566AB008B31EF /* CardsPresenter.swift in Sources */,
 				0E8BD2F9238566AB008B31EF /* DiscoverWebTagsInfoHeaderFooterView.swift in Sources */,
 				0E8BD2FA238566AB008B31EF /* CoreAssembly.swift in Sources */,
+				660EB29326692806000FD22B /* DfuScanner.swift in Sources */,
 				0E8BD2FC238566AB008B31EF /* Observable.swift in Sources */,
 				0E8BD2FD238566AB008B31EF /* ForegroundTableViewController.swift in Sources */,
 				0E28641E2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
 				0E8BD2FF238566AB008B31EF /* CalibrationPersistence.swift in Sources */,
 				0E8BD300238566AB008B31EF /* TagSettingsViewOutput.swift in Sources */,
+				660EB2622669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */,
 				0E8BD301238566AB008B31EF /* ForegroundViewModel.swift in Sources */,
 				0E8BD302238566AB008B31EF /* CardsViewModel.swift in Sources */,
+				660EB2802669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0E8BD303238566AB008B31EF /* UIApplication+ViewController.swift in Sources */,
 				0E8BD304238566AB008B31EF /* WebTagSettingsTableConfigurator.swift in Sources */,
 				0E8BD305238566AB008B31EF /* DiscoverDeviceViewModel.swift in Sources */,
@@ -6743,6 +6940,7 @@
 				0E8BD31C238566AB008B31EF /* ForegroundRouterInput.swift in Sources */,
 				0EAD33D92399273D00EC5BAA /* HeartbeatConfigurator.swift in Sources */,
 				A9E599592557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
+				660EB2652669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */,
 				0EB48D8C2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE49BB723B8C8C0003012C2 /* BackgroundTaskService.swift in Sources */,
 				0E8BD31D238566AB008B31EF /* GATTServiceQueue.swift in Sources */,
@@ -6775,6 +6973,7 @@
 				0E8BD32D238566AB008B31EF /* OpenWeatherMapAPI.swift in Sources */,
 				A91D02F22511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				A93CDCDF25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
+				660EB2682669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E8BD32E238566AB008B31EF /* TagSettingsRouter.swift in Sources */,
 				0E8BD32F238566AB008B31EF /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0E8BD330238566AB008B31EF /* AboutInitializer.swift in Sources */,
@@ -6782,8 +6981,10 @@
 				0E8BD332238566AB008B31EF /* MenuTableEmbededViewController.swift in Sources */,
 				0E8BD333238566AB008B31EF /* AlertService.swift in Sources */,
 				A907BB1224AE620D009DA3DB /* UIWindow+Orientation.swift in Sources */,
+				660EB29026692806000FD22B /* DfuAssembly.swift in Sources */,
 				0EAD33DD2399273D00EC5BAA /* HeartbeatRouter.swift in Sources */,
 				0E8BD334238566AB008B31EF /* TagChartsDismissTransitionAnimation.swift in Sources */,
+				660EB29D266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
 				0E8BD335238566AB008B31EF /* Date+Ruuvi.swift in Sources */,
 				0E8BD337238566AB008B31EF /* ExportServiceTemp.swift in Sources */,
 				0EA796862664B84D002BA25D /* RuuviReactorError+LocalizedError.swift in Sources */,
@@ -6803,8 +7004,11 @@
 				66BC449F2657AED400A03253 /* OffsetCorrectionModuleOutput.swift in Sources */,
 				0EE49BBC23B8C8ED003012C2 /* BackgroundTaskServiceiOS13.swift in Sources */,
 				0EAD33DF2399273D00EC5BAA /* HeartbeatEnvironmentObject.swift in Sources */,
+				660EB2712669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
+				660EB29926692806000FD22B /* DfuLog.swift in Sources */,
 				0E8BD345238566AB008B31EF /* SwipeDownToDismissTransitionAnimation.swift in Sources */,
 				A9E5996B255734A000F9E5CC /* ShareEmailTableViewCell.swift in Sources */,
+				660EB2742669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				A9F0F29C2534EF3700DE9F70 /* HTTPMethod.swift in Sources */,
 				0E8BD346238566AB008B31EF /* LocationManager.swift in Sources */,
 				0E8BD348238566AB008B31EF /* SettingsRouterInput.swift in Sources */,
@@ -6931,6 +7135,8 @@
 				0E8BD39F238566AB008B31EF /* RuuviTagPropertiesDaemon.swift in Sources */,
 				0E31B04C23BDED3C00660412 /* PullWebDaemon.swift in Sources */,
 				0E8BD3A0238566AB008B31EF /* LanguageTableInitializer.swift in Sources */,
+				660EB2772669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */,
+				660EB27D2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E2864472461BABF00363DCB /* VirtualTagReactorImpl.swift in Sources */,
 				0E8BD3A1238566AB008B31EF /* LocationPickerModuleOutput.swift in Sources */,
 				0E8BD3A2238566AB008B31EF /* DiscoverTableConfigurator.swift in Sources */,
@@ -6938,6 +7144,7 @@
 				0E8BD3A3238566AB008B31EF /* AlertServiceImpl.swift in Sources */,
 				0E8BACEC245F131100D380FB /* RuuviTagSensorRecord+RuuviTagDataSQLite.swift in Sources */,
 				0E8BD3A4238566AB008B31EF /* LocationPickerViewInput.swift in Sources */,
+				660EB25C2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
 				0E8BD3A5238566AB008B31EF /* SettingsTableInitializer.swift in Sources */,
 				0E8BD3A6238566AB008B31EF /* TagChartsTransitionManager.swift in Sources */,
 				0E8BD3A7238566AB008B31EF /* ActivityRuuviLogoViewController.swift in Sources */,
@@ -6969,11 +7176,13 @@
 				0E28644F2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
 				0E8BD3BA238566AB008B31EF /* MenuTableTransitioningDelegate.swift in Sources */,
 				0E8BD3BB238566AB008B31EF /* ErrorPresenter.swift in Sources */,
+				660EB2592669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
 				A933E038253FF7B70007A49C /* URLQueryItemEncoder.swift in Sources */,
 				0E8BD3BC238566AB008B31EF /* LanguageTableViewCell.swift in Sources */,
 				A9FC78EA2579671B00F94604 /* UniversalLinkCoordinator.swift in Sources */,
 				0E8BD3BD238566AB008B31EF /* PermissionsManager.swift in Sources */,
 				0E8BD3BF238566AB008B31EF /* NetworkingAssembly.swift in Sources */,
+				660EB29626692806000FD22B /* DfuFlasher.swift in Sources */,
 				0E31B04323BBA37C00660412 /* WebTagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0E8BD3C0238566AB008B31EF /* CalibrationPersistenceUserDefaults.swift in Sources */,
 				0E8BD3C1238566AB008B31EF /* ForegroundRow.swift in Sources */,
@@ -6983,6 +7192,7 @@
 				0E8BD3C4238566AB008B31EF /* DiscoverNoDevicesTableViewCell.swift in Sources */,
 				0EAD33D52399271C00EC5BAA /* DiscoverModuleOutput.swift in Sources */,
 				A9646476247BAE6B0001D55D /* AdvancedViewOutput.swift in Sources */,
+				660EB25F2669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */,
 				A97FDD772519343A00B12820 /* KeyedArchiver.swift in Sources */,
 				0E8BD3C5238566AB008B31EF /* SettingsModuleInput.swift in Sources */,
 				0E8BD3C6238566AB008B31EF /* CardsScrollConfigurator.swift in Sources */,
@@ -7014,6 +7224,7 @@
 				0E8BD3D2238566AB008B31EF /* CardsRouterDelegate.swift in Sources */,
 				A90E169424604FD100631E6C /* TagChartModuleInput.swift in Sources */,
 				0E8BD3D3238566AB008B31EF /* OpenWeatherMapAPIURLSession.swift in Sources */,
+				660EB28D26692806000FD22B /* DfuDevice.swift in Sources */,
 				A9020043244E1500001882C3 /* ChartFilterOperation.swift in Sources */,
 				66BC44A82657AED400A03253 /* OffsetCorrectionAppleViewController.swift in Sources */,
 				A964648B247BAE6B0001D55D /* AdvancedRouter.swift in Sources */,
@@ -7023,6 +7234,7 @@
 				0E8BD3D6238566AB008B31EF /* ForegroundViewController.swift in Sources */,
 				66BC44B72657AED400A03253 /* OffsetCorrectionRouterInput.swift in Sources */,
 				0E290A7E265FCEDD009AAA29 /* WebTagRealm.swift in Sources */,
+				660EB28A26692806000FD22B /* RuuviDfu.swift in Sources */,
 				0E8BD3D8238566AB008B31EF /* ForegroundInitializer.swift in Sources */,
 				0E8BD3DA238566AB008B31EF /* WebTagPersistence.swift in Sources */,
 				0E8BD3DB238566AB008B31EF /* AlertPersistenceUserDefaults.swift in Sources */,
@@ -7064,15 +7276,18 @@
 				0EA796792664B37F002BA25D /* RuuviLocalError+LocalizedError.swift in Sources */,
 				66BC44A72657AED400A03253 /* OffsetCorrectionAppleViewController.swift in Sources */,
 				0E046F6022F18EF900BD4E9C /* LocationServiceApple.swift in Sources */,
+				660EB25E2669278E000FD22B /* DfuDevicesScannerPresenter.swift in Sources */,
 				0EA7967D2664B50A002BA25D /* RuuviPersistenceError+LocalizedError.swift in Sources */,
 				0E70A46C22AF9705006CB87C /* DiscoverTableViewController.swift in Sources */,
 				0EC50F5622CCE46D00172EEB /* Optional.swift in Sources */,
 				A9B57442253B994700DB7353 /* SignInRouter.swift in Sources */,
 				0E8BACDF245F015D00D380FB /* RuuviTagDataRealm+RuuviTagSensorRecord.swift in Sources */,
 				0EB48D6026183B34008E0D2D /* MigrationManagerToPrune240.swift in Sources */,
+				660EB2732669278E000FD22B /* DfuDevicesScannerViewModel.swift in Sources */,
 				66BC44A42657AED400A03253 /* OffsetCorrectionModuleInput.swift in Sources */,
 				0EFDD6D422BBD9D600EADFC6 /* CalibrationService.swift in Sources */,
 				0E09672522AE897000E85F48 /* CALayer+IB.swift in Sources */,
+				660EB2702669278E000FD22B /* DfuDevicesScannerTableViewController.swift in Sources */,
 				A92A66BD2450C640002918E7 /* UITableViewCell+ReusableView.swift in Sources */,
 				A93CDCDE25659BF600018C6C /* AlertPresenterImpl.swift in Sources */,
 				0E1C1E0F22B4049F0032F6CA /* MenuTablePresentationController.swift in Sources */,
@@ -7086,6 +7301,7 @@
 				0E1C1E0022B400130032F6CA /* MenuPresenter.swift in Sources */,
 				0EF6F5BE235E01170052BA25 /* ForegroundRouter.swift in Sources */,
 				A91D03062511207300694733 /* SelectionRouter.swift in Sources */,
+				660EB26D2669278E000FD22B /* DfuDevicesScannerViewInput.swift in Sources */,
 				0E1C1DF822B3FF480032F6CA /* MenuTableViewController.swift in Sources */,
 				0EEB20F922B7D28C0015F9E0 /* AboutRouterInput.swift in Sources */,
 				0EEB216022BA61430015F9E0 /* MigrationManager.swift in Sources */,
@@ -7159,6 +7375,7 @@
 				0E8FD0CD2333672F00FFA577 /* TagChartsPresenter.swift in Sources */,
 				A9E599582557345200F9E5CC /* ShareEmailInputTableViewCell.swift in Sources */,
 				A90E16A424606B2000631E6C /* TagChartsInteractorOutput.swift in Sources */,
+				660EB29526692806000FD22B /* DfuFlasher.swift in Sources */,
 				A91D02F12511207200694733 /* SelectionTableInitializer.swift in Sources */,
 				0E8A10222384637F00A9CBA6 /* DefaultsList.swift in Sources */,
 				0E390FE2236021DE00D600DB /* LocalNotificationsManager.swift in Sources */,
@@ -7166,16 +7383,21 @@
 				0E1C1DAB22B387D30032F6CA /* PersistenceAssembly.swift in Sources */,
 				0E1C1DD522B3BF3A0032F6CA /* CardsViewOutput.swift in Sources */,
 				0E290A7A265FCEDD009AAA29 /* WebTagDataRealm.swift in Sources */,
+				660EB28F26692806000FD22B /* DfuAssembly.swift in Sources */,
 				0E8A102523846CEB00A9CBA6 /* DefaultsSwitchTableViewCell.swift in Sources */,
+				660EB29226692806000FD22B /* DfuScanner.swift in Sources */,
 				0E8A100C23845F7100A9CBA6 /* DefaultsViewInput.swift in Sources */,
 				0E046F5122F1828900BD4E9C /* LocationPickerRouter.swift in Sources */,
 				A9828E4024792D6B00E7E9D4 /* ReloadableSectionData.swift in Sources */,
 				0E046F3422F057FC00BD4E9C /* WebTagSettingsModuleInput.swift in Sources */,
+				660EB29C266928E6000FD22B /* UIViewController+Alert.swift in Sources */,
 				0E1C1E0522B400890032F6CA /* MenuTableConfigurator.swift in Sources */,
 				0E9D5F28235362AF0076FFD8 /* WebTagDaemonImpl.swift in Sources */,
 				0E8BD2AB23851CF2008B31EF /* DefaultsStepperTableViewCell.swift in Sources */,
 				0EEB20DF22B7C8790015F9E0 /* SettingsRouter.swift in Sources */,
+				660EB28C26692806000FD22B /* DfuDevice.swift in Sources */,
 				A9B5743F253B993100DB7353 /* SignInConfigurator.swift in Sources */,
+				660EB25B2669278E000FD22B /* DfuDevicesScannerInitializer.swift in Sources */,
 				0EA92FDB2387E734008F1558 /* TagSettingsAlertsHeaderFooterView.swift in Sources */,
 				0EE49B9923B877CF003012C2 /* WebTagSettingsAlertControlsCell.swift in Sources */,
 				0EDAC96B22F2FFAA00D0F6F2 /* WeatherProviderServiceImpl.swift in Sources */,
@@ -7197,6 +7419,7 @@
 				0E5C301622CF640000B52E39 /* CoreAssembly.swift in Sources */,
 				0EC50F5022CCB92000172EEB /* Observable.swift in Sources */,
 				A9BD38BA24F6108300904BBE /* Humidity+Offset.swift in Sources */,
+				660EB29826692806000FD22B /* DfuLog.swift in Sources */,
 				0EF6F5C2235E02000052BA25 /* ForegroundTableViewController.swift in Sources */,
 				0EFDD6CF22BBD96C00EADFC6 /* CalibrationPersistence.swift in Sources */,
 				0E28641D2460631600363DCB /* VirtualTagTrunkCoordinator.swift in Sources */,
@@ -7233,6 +7456,7 @@
 				0E8A101023845FAE00A9CBA6 /* DefaultsViewModel.swift in Sources */,
 				0E45580123E906DF0025AEBF /* DataPruningOperationsManager.swift in Sources */,
 				0E8FD0D12333679800FFA577 /* TagChartsScrollConfigurator.swift in Sources */,
+				660EB26A2669278E000FD22B /* DfuDeviceTableViewCell.swift in Sources */,
 				0E502FBA22B27D4800E8A6CC /* TemperatureUnit.swift in Sources */,
 				0EBAF070232007740025A191 /* LanguageViewOutput.swift in Sources */,
 				0E8A101E238461D400A9CBA6 /* DefaultsConfigurator.swift in Sources */,
@@ -7275,6 +7499,7 @@
 				0EF2863722CBB04E0026C7A5 /* TagSettingsRouter.swift in Sources */,
 				0E09672C22AE94F000E85F48 /* DiscoverDeviceTableViewCell.swift in Sources */,
 				0EEB210122B7D2F50015F9E0 /* AboutInitializer.swift in Sources */,
+				660EB2642669278E000FD22B /* DfuDevicesScannerModuleOutput.swift in Sources */,
 				A92E3C5A2426415100D981D5 /* TagChartView.swift in Sources */,
 				0EE5B47D23508F6D00D5ED32 /* ForegroundEnvironmentObject.swift in Sources */,
 				0EEB20CB22B7B37C0015F9E0 /* MenuTableEmbededViewController.swift in Sources */,
@@ -7295,9 +7520,11 @@
 				0EBAF07B232008420025A191 /* LanguagePresenter.swift in Sources */,
 				A980573825807118000D03AB /* AboutViewModel.swift in Sources */,
 				663155EF2667F40C005B90A6 /* UpdateFirmwareViewOutput.swift in Sources */,
+				660EB2582669278E000FD22B /* DfuDevicesScannerConfigurator.swift in Sources */,
 				A9A67BFA24C5C8A500C710D6 /* NSObjectProtocol+Invalidation.swift in Sources */,
 				0E286418246062F000363DCB /* VirtualTagTrunk.swift in Sources */,
 				A94A886D24D6B5CE00D2CBA4 /* RUColor.swift in Sources */,
+				660EB2612669278E000FD22B /* DfuDevicesScannerModuleInput.swift in Sources */,
 				0E84BF4D239795B000A37E1A /* DiscoverModuleOutput.swift in Sources */,
 				A9646478247BAE6B0001D55D /* AdvancedViewModel.swift in Sources */,
 				A9B57441253B994700DB7353 /* SignInRouterInput.swift in Sources */,
@@ -7334,6 +7561,7 @@
 				0E9D0AB1231EBEFD00C6BDA7 /* LocalizationService.swift in Sources */,
 				0E02ABBA237598C600ED4629 /* RURangeSeekSlider.swift in Sources */,
 				0EA796892664B8CB002BA25D /* RuuviServiceError+LocalizedError.swift in Sources */,
+				660EB27C2669278E000FD22B /* DfuDevicesScannerRouterInput.swift in Sources */,
 				0E1C1DDD22B3C2160032F6CA /* CardsModuleInput.swift in Sources */,
 				A91D02FA2511207300694733 /* SelectionViewInput.swift in Sources */,
 				663155E32667F40C005B90A6 /* UpdateFirmwarePresenter.swift in Sources */,
@@ -7363,12 +7591,14 @@
 				0ECDF1B92313E06500A09ACA /* PushNotificationsManager.swift in Sources */,
 				66BC44AD2657AED400A03253 /* OffsetCorrectionViewModel.swift in Sources */,
 				0E8FD0CB2333671100FFA577 /* TagChartsModuleInput.swift in Sources */,
+				660EB28926692806000FD22B /* RuuviDfu.swift in Sources */,
 				0E28642B2460687200363DCB /* VirtualTagTank.swift in Sources */,
 				0E02ABCB2379483A00ED4629 /* Double+Temperature.swift in Sources */,
 				0EB48D8B2619D5AC008E0D2D /* FeatureToggleService.swift in Sources */,
 				0EE98A7926493C5000AAB3ED /* FLEXFeatureTogglesViewController.swift in Sources */,
 				0E5C302822D0B1C600B52E39 /* AppStateServiceImpl.swift in Sources */,
 				0E1C1DAF22B38F780032F6CA /* ActivityPresenter.swift in Sources */,
+				660EB2762669278E000FD22B /* DfuDevicesScannerViewOutput.swift in Sources */,
 				0E1C1DF522B3FF1D0032F6CA /* MenuViewOutput.swift in Sources */,
 				0E70A46E22AF9763006CB87C /* DiscoverViewInput.swift in Sources */,
 				0E046F4D22F1823C00BD4E9C /* LocationPickerAppleViewController.swift in Sources */,
@@ -7467,6 +7697,7 @@
 				0E8A10122384605A00A9CBA6 /* DefaultsTableViewController.swift in Sources */,
 				0E75661B2361C16100FCA977 /* RuuviTagReadLogsOperation.swift in Sources */,
 				0E1C1E0922B4024E0032F6CA /* MenuTableTransitioningDelegate.swift in Sources */,
+				660EB2672669278E000FD22B /* DfuNoDeviceTableViewCell.swift in Sources */,
 				0E1C1DC122B3955E0032F6CA /* ErrorPresenter.swift in Sources */,
 				0E4557FC23E820D30025AEBF /* BackgroundProcessServiceiOS13.swift in Sources */,
 				0E28644E2461BD3800363DCB /* VirtualTagSubjectRxSwift.swift in Sources */,
@@ -7481,6 +7712,7 @@
 				A91D0311251123B400694733 /* SelectionModuleOutput.swift in Sources */,
 				0ECFF366235079F50061D11B /* ForegroundPresenter.swift in Sources */,
 				0E53A3FB232F4D5000ACED49 /* DiscoverNoDevicesTableViewCell.swift in Sources */,
+				660EB27F2669278E000FD22B /* DfuDevicesScannerRouter.swift in Sources */,
 				0EEB20E122B7C8A90015F9E0 /* SettingsModuleInput.swift in Sources */,
 				A9B5744A253B994700DB7353 /* SignInViewOutput.swift in Sources */,
 				0E1C1DEA22B3C2E60032F6CA /* CardsScrollConfigurator.swift in Sources */,

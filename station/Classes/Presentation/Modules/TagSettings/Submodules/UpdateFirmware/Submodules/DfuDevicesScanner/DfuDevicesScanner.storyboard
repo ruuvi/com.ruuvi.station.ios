@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2kQ-DM-bxN">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Dfu Devices Scanner Table View Controller-->
+        <scene sceneID="w5I-gM-EHp">
+            <objects>
+                <tableViewController storyboardIdentifier="DfuDevicesScannerTableViewController" id="2kQ-DM-bxN" customClass="DfuDevicesScannerTableViewController" customModule="Ruuvi_Station" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="MNx-HD-m9g">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="FLz-g8-ns6">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Find and select sensor &quot;RuuviBoot&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pbk-IV-s4d">
+                                    <rect key="frame" x="20" y="10" width="374" height="24"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="Pbk-IV-s4d" secondAttribute="trailing" constant="20" symbolic="YES" id="RLg-TB-TLg"/>
+                                <constraint firstAttribute="bottom" secondItem="Pbk-IV-s4d" secondAttribute="bottom" constant="10" id="VdZ-j0-zE1"/>
+                                <constraint firstItem="Pbk-IV-s4d" firstAttribute="top" secondItem="FLz-g8-ns6" secondAttribute="top" constant="10" id="Wko-yb-Nbs"/>
+                                <constraint firstItem="Pbk-IV-s4d" firstAttribute="leading" secondItem="FLz-g8-ns6" secondAttribute="leading" constant="20" symbolic="YES" id="m9m-kG-zXm"/>
+                            </constraints>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DfuNoDeviceTableViewCell" id="8lA-Yz-EZZ" customClass="DfuNoDeviceTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="93.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8lA-Yz-EZZ" id="5yh-e7-s0c">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(No devices on Bluetooth range)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUn-qk-Zx4">
+                                            <rect key="frame" x="20" y="11.5" width="374" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="AUn-qk-Zx4" secondAttribute="trailing" constant="20" id="1hI-bU-F9Q"/>
+                                        <constraint firstItem="AUn-qk-Zx4" firstAttribute="leading" secondItem="5yh-e7-s0c" secondAttribute="leading" constant="20" id="XXI-B0-hvl"/>
+                                        <constraint firstItem="AUn-qk-Zx4" firstAttribute="centerY" secondItem="5yh-e7-s0c" secondAttribute="centerY" id="wb5-Hn-HeS"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="AUn-qk-Zx4" id="PUm-Mx-jYY"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DfuDeviceTableViewCell" id="NTi-RL-Obr" customClass="DfuDeviceTableViewCell" customModule="Ruuvi_Station" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="137" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NTi-RL-Obr" id="96G-uE-dHR">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UUID or MAC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U8w-n9-gvN">
+                                            <rect key="frame" x="20" y="11.5" width="102" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qd2-kP-iX8">
+                                            <rect key="frame" x="368" y="9" width="26" height="26"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="26" id="aeA-dn-543"/>
+                                                <constraint firstAttribute="height" constant="26" id="jbH-lm-LzW"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="-70 dBm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AI-Qa-xPE">
+                                            <rect key="frame" x="158" y="13" width="202" height="18"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bluetooth-connected" translatesAutoresizingMaskIntoConstraints="NO" id="cJU-En-UuG">
+                                            <rect key="frame" x="130" y="12" width="20" height="20"/>
+                                            <color key="tintColor" red="0.08235294118" green="0.55294117649999996" blue="0.64705882349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="20" id="EVu-nB-fa2"/>
+                                                <constraint firstAttribute="height" constant="20" id="mr3-9t-RUi"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="4AI-Qa-xPE" firstAttribute="centerY" secondItem="Qd2-kP-iX8" secondAttribute="centerY" id="1ej-D3-nJc"/>
+                                        <constraint firstAttribute="trailing" secondItem="Qd2-kP-iX8" secondAttribute="trailing" constant="20" id="1jL-Nj-5Qg"/>
+                                        <constraint firstItem="cJU-En-UuG" firstAttribute="centerY" secondItem="U8w-n9-gvN" secondAttribute="centerY" id="89c-1B-FvJ"/>
+                                        <constraint firstItem="U8w-n9-gvN" firstAttribute="leading" secondItem="96G-uE-dHR" secondAttribute="leading" constant="20" id="AZW-Kt-KDv"/>
+                                        <constraint firstItem="4AI-Qa-xPE" firstAttribute="leading" secondItem="cJU-En-UuG" secondAttribute="trailing" constant="8" id="Dcg-cy-SmU"/>
+                                        <constraint firstItem="Qd2-kP-iX8" firstAttribute="centerY" secondItem="96G-uE-dHR" secondAttribute="centerY" id="OPV-Ok-P5o"/>
+                                        <constraint firstItem="Qd2-kP-iX8" firstAttribute="leading" secondItem="4AI-Qa-xPE" secondAttribute="trailing" constant="8" id="SrE-YF-wTy"/>
+                                        <constraint firstItem="cJU-En-UuG" firstAttribute="leading" secondItem="U8w-n9-gvN" secondAttribute="trailing" constant="8" id="YK5-2h-td6"/>
+                                        <constraint firstItem="U8w-n9-gvN" firstAttribute="centerY" secondItem="96G-uE-dHR" secondAttribute="centerY" id="iqC-H5-Bre"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="identifierLabel" destination="U8w-n9-gvN" id="uwd-9E-WXL"/>
+                                    <outlet property="isConnectableImageView" destination="cJU-En-UuG" id="9tu-Yl-N5Z"/>
+                                    <outlet property="rssiImageView" destination="Qd2-kP-iX8" id="fNX-JZ-fRG"/>
+                                    <outlet property="rssiLabel" destination="4AI-Qa-xPE" id="ng7-Np-GBW"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="2kQ-DM-bxN" id="SZ9-zc-YzC"/>
+                            <outlet property="delegate" destination="2kQ-DM-bxN" id="AlB-h3-iOT"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="descriptionLabel" destination="Pbk-IV-s4d" id="cJO-Xz-PMv"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="grh-G6-LNu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <customObject id="Ok7-8L-pez" customClass="DfuDevicesScannerInitializer" customModule="Ruuvi_Station" customModuleProvider="target">
+                    <connections>
+                        <outlet property="viewController" destination="2kQ-DM-bxN" id="0Zu-SF-xyy"/>
+                    </connections>
+                </customObject>
+            </objects>
+            <point key="canvasLocation" x="-749" y="629"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="bluetooth-connected" width="24" height="24"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGroupedBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

@@ -81,9 +81,7 @@ extension TagChartsScrollViewController: TagChartsViewInput {
     func showBluetoothDisabled() {
         let title = "TagCharts.BluetoothDisabledAlert.title".localized()
         let message = "TagCharts.BluetoothDisabledAlert.message".localized()
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK".localized(), style: .cancel, handler: nil))
-        present(alertVC, animated: true)
+        showAlert(title: title, message: message)
     }
 
     func showSyncConfirmationDialog(for viewModel: TagChartsViewModel) {
