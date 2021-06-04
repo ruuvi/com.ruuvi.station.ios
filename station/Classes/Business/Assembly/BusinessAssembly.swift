@@ -10,6 +10,7 @@ import RuuviService
 import RuuviCloud
 import RuuviCore
 import RuuviDaemon
+import RuuviRepository
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -210,6 +211,20 @@ class BusinessAssembly: Assembly {
             )
         }.inObjectScope(.container)
 
+        container.register(RuuviRepositoryFactory.self) { _ in
+            return RuuviRepositoryFactoryCoordinator()
+        }
+
+        container.register(RuuviRepository.self) { r in
+            let factory = r.resolve(RuuviRepositoryFactory.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let storage = r.resolve(RuuviStorage.self)!
+            return factory.create(
+                pool: pool,
+                storage: storage
+            )
+        }
+
         container.register(RuuviServiceFactory.self) { _ in
             return RuuviServiceFactoryImpl()
         }
@@ -242,13 +257,15 @@ class BusinessAssembly: Assembly {
             let localSettings = r.resolve(RuuviLocalSettings.self)!
             let localSyncState = r.resolve(RuuviLocalSyncState.self)!
             let localImages = r.resolve(RuuviLocalImages.self)!
+            let repository = r.resolve(RuuviRepository.self)!
             return factory.createCloudSync(
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
                 ruuviPool: pool,
                 ruuviLocalSettings: localSettings,
                 ruuviLocalSyncState: localSyncState,
-                ruuviLocalImages: localImages
+                ruuviLocalImages: localImages,
+                ruuviRepository: repository
             )
         }
 

@@ -6,7 +6,7 @@ extension RuuviReactorError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .ruuviPersistence(let error):
-            return error.localizedDescription
+            return error.errorDescription
         }
     }
 }
