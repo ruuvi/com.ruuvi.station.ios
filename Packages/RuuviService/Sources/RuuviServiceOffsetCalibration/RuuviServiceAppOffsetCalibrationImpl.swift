@@ -40,7 +40,11 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
         return promise.future
     }
 
-    private func updateOnCloud(offset: Double?, of type: OffsetCorrectionType, for sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+    private func updateOnCloud(
+        offset: Double?,
+        of type: OffsetCorrectionType,
+        for sensor: RuuviTagSensor
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
         let cloudUpdate: Future<AnyRuuviTagSensor, RuuviCloudError>
         switch type {
         case .temperature:

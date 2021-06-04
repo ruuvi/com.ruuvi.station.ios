@@ -29,3 +29,18 @@ public protocol RuuviPool {
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviPoolError>
 }
+
+extension RuuviPool {
+    public func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor
+    ) -> Future<SensorSettings, RuuviPoolError> {
+        return updateOffsetCorrection(
+            type: type,
+            with: value,
+            of: ruuviTag,
+            lastOriginalRecord: nil
+        )
+    }
+}
