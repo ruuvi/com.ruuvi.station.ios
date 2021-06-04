@@ -6,6 +6,7 @@ import RuuviCloud
 import RuuviPool
 import RuuviLocal
 
+// swiftlint:disable:next type_body_length
 final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviStorage: RuuviStorage
     private let ruuviCloud: RuuviCloud
@@ -129,22 +130,22 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
+    // swiftlint:disable:next function_body_length
     func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         var updatedSensors = Set<AnyRuuviTagSensor>()
-        ruuviStorage.readAll().on(success: { [weak self] localSensors in
-            guard let sSelf = self else { return }
-            sSelf.ruuviCloud.loadSensors().on(success: { cloudSensors in
+        ruuviStorage.readAll().on(success: { localSensors in
+            self.ruuviCloud.loadSensors().on(success: { cloudSensors in
                 let updateSensors: [Future<Bool, RuuviPoolError>] = localSensors
                     .compactMap({ localSensor in
                         if let cloudSensor = cloudSensors.first(where: {$0.id == localSensor.id }) {
                             updatedSensors.insert(localSensor)
-                            return sSelf.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
+                            return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
                         } else {
                             let unclaimed = localSensor.unclaimed()
                             if unclaimed.any != localSensor {
                                 updatedSensors.insert(localSensor)
-                                return sSelf.ruuviPool.update(unclaimed)
+                                return self.ruuviPool.update(unclaimed)
                             } else {
                                 return nil
                             }
@@ -156,19 +157,32 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     }.map { newCloudSensor in
                         let newLocalSensor = newCloudSensor.ruuviTagSensor
                         updatedSensors.insert(newLocalSensor.any)
-                        return sSelf.ruuviPool.create(newLocalSensor)
+                        return self.ruuviPool.create(newLocalSensor)
                     }
 
                 let syncImages = cloudSensors
-                    .filter({ !sSelf.ruuviLocalImages.isPictureCached(for: $0) })
-                    .map({ sSelf.syncImage(sensor: $0) })
+                    .filter({ !self.ruuviLocalImages.isPictureCached(for: $0) })
+                    .map({ self.syncImage(sensor: $0) })
 
-                Future.zip([Future.zip(createSensors), Future.zip(updateSensors)]).on(success: { _ in
-                    Future.zip(syncImages).on()
-                    promise.succeed(value: updatedSensors)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPool(error))
-                })
+                Future.zip([Future.zip(createSensors), Future.zip(updateSensors)])
+                    .on(success: { _ in
+
+                        Future.zip(syncImages).on()
+                        let syncOffsets = self.offsetSyncs(
+                            cloudSensors: cloudSensors,
+                            updatedSensors: updatedSensors
+                        )
+
+                        Future.zip(syncOffsets)
+                            .on(success: { _ in
+                                promise.succeed(value: updatedSensors)
+                            }, failure: { error in
+                                promise.fail(error: .ruuviPool(error))
+                            })
+
+                    }, failure: { error in
+                        promise.fail(error: .ruuviPool(error))
+                    })
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
@@ -176,6 +190,55 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             promise.fail(error: .ruuviStorage(error))
         })
         return promise.future
+    }
+
+    private func offsetSyncs(
+        cloudSensors: [CloudSensor],
+        updatedSensors: Set<AnyRuuviTagSensor>
+    ) -> [Future<SensorSettings, RuuviPoolError>] {
+        let temperatureSyncs: [Future<SensorSettings, RuuviPoolError>]
+            = cloudSensors.compactMap { cloudSensor in
+            if let updatedSensor = updatedSensors
+                .first(where: { $0.id == cloudSensor.id }) {
+                return self.ruuviPool.updateOffsetCorrection(
+                    type: .temperature,
+                    with: cloudSensor.offsetTemperature,
+                    of: updatedSensor
+                )
+            } else {
+                return nil
+            }
+        }
+
+        let humiditySyncs: [Future<SensorSettings, RuuviPoolError>]
+            = cloudSensors.compactMap { cloudSensor in
+            if let updatedSensor = updatedSensors
+                .first(where: { $0.id == cloudSensor.id }) {
+                return self.ruuviPool.updateOffsetCorrection(
+                    type: .humidity,
+                    with: cloudSensor.offsetHumidity,
+                    of: updatedSensor
+                )
+            } else {
+                return nil
+            }
+        }
+
+        let pressureSyncs: [Future<SensorSettings, RuuviPoolError>]
+            = cloudSensors.compactMap { cloudSensor in
+            if let updatedSensor = updatedSensors
+                .first(where: { $0.id == cloudSensor.id }) {
+                return self.ruuviPool.updateOffsetCorrection(
+                    type: .pressure,
+                    with: cloudSensor.offsetPressure,
+                    of: updatedSensor
+                )
+            } else {
+                return nil
+            }
+        }
+
+        return temperatureSyncs + humiditySyncs + pressureSyncs
     }
 
     @discardableResult

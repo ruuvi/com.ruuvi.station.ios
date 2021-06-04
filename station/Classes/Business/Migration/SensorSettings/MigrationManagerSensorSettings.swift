@@ -20,12 +20,11 @@ class MigrationManagerSensorSettings: MigrationManager {
                         self.ruuviOffsetCalibrationService.set(
                             offset: pair.0 / 100.0,
                             of: .humidity,
-                            for: ruuviTag,
-                            lastOriginalRecord: nil)
-                            .on(success: { _ in
-                                self.calibrationPersistence
-                                    .setHumidity(date: nil, offset: 0.0, for: luid)
-                            })
+                            for: ruuviTag
+                        ).on(success: { _ in
+                            self.calibrationPersistence
+                                .setHumidity(date: nil, offset: 0.0, for: luid)
+                        })
                     }
                 }
             }, failure: {[weak self] error in
