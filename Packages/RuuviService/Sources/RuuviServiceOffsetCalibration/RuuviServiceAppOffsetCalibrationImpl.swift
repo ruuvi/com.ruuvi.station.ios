@@ -49,7 +49,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
         switch type {
         case .temperature:
             cloudUpdate = cloud.update(
-                temperatureOffset: offset,
+                temperatureOffset: offset ?? 0,
                 humidityOffset: nil,
                 pressureOffset: nil,
                 for: sensor
@@ -57,7 +57,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
         case .humidity:
             cloudUpdate = cloud.update(
                 temperatureOffset: nil,
-                humidityOffset: offset,
+                humidityOffset: offset ?? 0,
                 pressureOffset: nil,
                 for: sensor
             )
@@ -65,7 +65,7 @@ final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalibration 
             cloudUpdate = cloud.update(
                 temperatureOffset: nil,
                 humidityOffset: nil,
-                pressureOffset: offset,
+                pressureOffset: offset ?? 0,
                 for: sensor
             )
         }
