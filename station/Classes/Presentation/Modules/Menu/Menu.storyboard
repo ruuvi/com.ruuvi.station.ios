@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18092"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -210,6 +210,7 @@
                     <connections>
                         <outlet property="networkContainer" destination="3ew-Bj-Hn4" id="Lky-z7-KQu"/>
                         <outlet property="refreshIcon" destination="Hjt-0p-nnr" id="PQN-6r-dha"/>
+                        <outlet property="ruuviNetworkStatusLabel" destination="OiX-6j-CQJ" id="jGj-WQ-PPC"/>
                         <outlet property="syncContainer" destination="Ig5-eH-QD7" id="UWe-ST-YPE"/>
                         <outlet property="syncStatusLabel" destination="DDc-zK-ELP" id="4xP-EK-5CV"/>
                         <outlet property="usernameLabel" destination="i6k-hS-nEp" id="LhB-fc-Ksh"/>

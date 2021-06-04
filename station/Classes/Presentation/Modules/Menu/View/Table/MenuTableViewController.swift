@@ -10,6 +10,7 @@ class MenuTableViewController: UIViewController {
         }
     }
 
+    @IBOutlet weak var ruuviNetworkStatusLabel: UILabel!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var refreshIcon: UIImageView!
     @IBOutlet weak var syncStatusLabel: UILabel!
@@ -31,13 +32,14 @@ class MenuTableViewController: UIViewController {
 
 extension MenuTableViewController: MenuViewInput {
     func localize() {
-        // do nothing
+        ruuviNetworkStatusLabel.text = "Menu.RuuviNetworkStatus.text".localized()
     }
 }
 
 extension MenuTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        localize()
         configureViews()
         updateUI()
         output.viewDidLoad()
