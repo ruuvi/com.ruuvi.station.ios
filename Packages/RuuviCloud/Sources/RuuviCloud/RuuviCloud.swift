@@ -72,6 +72,14 @@ public protocol RuuviCloud {
 
     @discardableResult
     func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError>
+
+    @discardableResult
+    func update(
+        temperatureOffset: Double?,
+        humidityOffset: Double?,
+        pressureOffset: Double?,
+        for sensor: RuuviTagSensor
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
 }
 
 public protocol RuuviCloudFactory {

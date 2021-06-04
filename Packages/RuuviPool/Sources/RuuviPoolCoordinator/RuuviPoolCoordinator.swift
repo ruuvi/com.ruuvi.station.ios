@@ -160,4 +160,38 @@ final class RuuviPoolCoordinator: RuuviPool {
         })
         return promise.future
     }
+
+    func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor,
+        lastOriginalRecord record: RuuviTagSensorRecord?
+    ) -> Future<SensorSettings, RuuviPoolError> {
+        let promise = Promise<SensorSettings, RuuviPoolError>()
+        if ruuviTag.macId != nil {
+            sqlite.updateOffsetCorrection(
+                type: type,
+                with: value,
+                of: ruuviTag,
+                lastOriginalRecord: record)
+                .on(success: { settings in
+                    promise.succeed(value: settings)
+                }, failure: { error in
+                    promise.fail(error: .ruuviPersistence(error))
+                })
+        } else {
+            realm.updateOffsetCorrection(
+                type: type,
+                with: value,
+                of: ruuviTag,
+                lastOriginalRecord: record)
+                .on(success: { settings in
+                    promise.succeed(value: settings)
+                }, failure: { error in
+                    promise.fail(error: .ruuviPersistence(error))
+                })
+        }
+        return promise.future
+    }
+
 }

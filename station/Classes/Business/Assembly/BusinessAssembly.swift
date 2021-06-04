@@ -177,6 +177,7 @@ class BusinessAssembly: Assembly {
             let manager = MigrationManagerSensorSettings()
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
+            manager.ruuviOffsetCalibrationService = r.resolve(RuuviServiceOffsetCalibration.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             return manager
         }
@@ -211,6 +212,16 @@ class BusinessAssembly: Assembly {
 
         container.register(RuuviServiceFactory.self) { _ in
             return RuuviServiceFactoryImpl()
+        }
+
+        container.register(RuuviServiceOffsetCalibration.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            return factory.createOffsetCalibration(
+                ruuviCloud: cloud,
+                ruuviPool: pool
+            )
         }
 
         container.register(RuuviServiceAppSettings.self) { r in
