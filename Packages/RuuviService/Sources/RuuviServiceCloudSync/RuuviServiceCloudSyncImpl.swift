@@ -66,17 +66,15 @@ final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         }
         URLSession
             .shared
-            .dataTask(with: pictureUrl, completionHandler: { [weak self] data, _, error in
-                guard let sSelf = self else { return }
+            .dataTask(with: pictureUrl, completionHandler: { data, _, error in
                 if let error = error {
                     promise.fail(error: .networking(error))
                 } else if let data = data {
                     if let image = UIImage(data: data) {
-                        sSelf.ruuviLocalImages
+                        self.ruuviLocalImages
                             .setCustomBackground(image: image, for: sensor.id.mac)
-                            .on(success: { [weak sSelf] fileUrl in
-                                guard let ssSelf = sSelf else { return }
-                                ssSelf.ruuviLocalImages.setPictureIsCached(for: sensor)
+                            .on(success: { fileUrl in
+                                self.ruuviLocalImages.setPictureIsCached(for: sensor)
                                 promise.succeed(value: fileUrl)
                             }, failure: { error in
                                 promise.fail(error: .ruuviLocal(error))
