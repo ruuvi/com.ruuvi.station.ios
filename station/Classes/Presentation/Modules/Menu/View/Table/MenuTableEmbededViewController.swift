@@ -55,8 +55,8 @@ extension MenuTableEmbededViewController {
                             forRowAt indexPath: IndexPath) {
         if cell == accountCell {
             accountAuthLabel.text = output.userIsAuthorized
-                ? "Sign out".localized()
-                : "Sign in".localized()
+                ? "Menu.SignOut.text".localized()
+                : "SignIn.Title.text".localized()
             betaLabel.isHidden = output.userIsAuthorized
         }
     }
