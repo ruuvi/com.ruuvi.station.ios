@@ -76,7 +76,9 @@ struct CardsViewModel {
         type = .ruuvi
         id.value = ruuviTag.id
         luid.value = ruuviTag.luid?.any
-        mac.value = ruuviTag.macId?.any
+        if let macId = ruuviTag.macId?.any {
+            mac.value = macId
+        }
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
@@ -86,7 +88,9 @@ struct CardsViewModel {
         temperature.value = record.temperature
         humidity.value = record.humidity
         pressure.value = record.pressure
-        mac.value = record.macId?.any
+        if let macId = record.macId?.any {
+            mac.value = macId
+        }
         date.value = record.date
         rssi.value = record.rssi
         movementCounter.value = record.movementCounter
@@ -101,7 +105,9 @@ struct CardsViewModel {
         humidity.value = ruuviTag.humidity
         pressure.value = ruuviTag.pressure
         version.value = ruuviTag.version
-        mac.value = ruuviTag.mac?.mac.any
+        if let macId = ruuviTag.mac?.mac.any {
+            mac.value = macId
+        }
         date.value = Date()
         movementCounter.value = ruuviTag.movementCounter
         source.value = ruuviTag.source
