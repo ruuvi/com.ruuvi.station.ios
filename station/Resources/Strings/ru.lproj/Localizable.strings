@@ -318,7 +318,7 @@
 "LocalNotificationsManager.Mute.button" = "Отключить на час";
 "Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
 "SignIn.Title.text" = "Войти";
-"TagsManager.SignOutButton" = "Выйти из сети";
+"Menu.SignOut.text" = "Выйти из сети";
 "SignIn.SignInBenefits" = "После входа в систему вы будете автоматически отмечены как владелец ближайших сенсоров Ruuvi. Заявленные сенсоры будут восстановлены после повторной установки приложения.\n\nС помощью Ruuvi Gateway вы сможете удаленно контролировать заявленные сенсоры и делиться ими со своими друзьями.";
 "SignIn.EmailPlaceholder" = "Email";
 "SignIn.RequestCode" = "Запросить код";
@@ -330,6 +330,7 @@
 "TagSettings.ClaimTagButton.Claim" = "Мой сенсор";
 "TagSettings.ClaimTagButton.Unclaim" = "Отвязать";
 "TagSettings.ShareButton" = "Поделиться";
+"Syncing..." = "Синхронизация…";
 "Synchronized" = "Синхронизировано";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Синхронизировано: %@";
 "MenuTableViewController.None" = "нет";
@@ -342,6 +343,7 @@
 "SharePresenter.UnshareSensor.Message" = "Хотите перестать делиться показаниями датчика с %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "Данные сети";
 "TagSettings.NetworkInfo.Owner" = "Владелец";
+"Menu.RuuviNetworkStatus.text" = "Статус сети Ruuvi";
 "SignIn.TitleLabel.text" = "Войти в\nRuuvi\nNetwork";
 "SignIn.SubtitleLabel.text" = "Чтобы воспользоваться всеми функциями, создайте аккаунт или войдите в существующий. Пожалуйста, введите ваш email.";
 "SignIn.VerificationCodePlaceholder" = "код подтверждения в формате: CJSM";
