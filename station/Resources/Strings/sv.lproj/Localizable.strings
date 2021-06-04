@@ -281,6 +281,7 @@
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "MER INFO";
 "TagSettings.SectionHeader.Name.title" = "NAMN";
+"No" = "Nej";
 "OK" = "OK";
 "TagSettings.PressureAlert.title" = "Lufttryck (%@)";
 "UnitPressure.hectopascal.title" = "Hektopascal (hPa)";
@@ -313,6 +314,7 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Uppdaterad";
 "V" = "V";
+"Yes" = "Ja";
 "LocalNotificationsManager.Mute.button" = "Pausa alarmet i en timme";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";
