@@ -112,6 +112,8 @@ extension FLEXFeatureTogglesViewController {
         switch feature {
         case .network:
             return "Network"
+        case .syncZoom:
+            return "Sync Zoom"
         }
     }
 }
