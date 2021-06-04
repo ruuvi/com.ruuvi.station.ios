@@ -318,7 +318,7 @@
 "LocalNotificationsManager.Mute.button" = "Mykistä tunniksi";
 "Defaults.AlertsMuteInterval.title" = "Hälytysten mykistysväli";
 "SignIn.Title.text" = "Kirjaudu sisään";
-"TagsManager.SignOutButton" = "Kirjaudu ulos";
+"Menu.SignOut.text" = "Kirjaudu ulos";
 "SignIn.SignInBenefits" = "Sinut merkitään lähelläsi olevien Ruuvi-anturien omistajaksi sisäänkirjautumisen yhteydessä. Kaikki omistajan vaatimat anturit palautetaan verkosta sovelluksen uudelleenasennuksen yhteydessä.\n\nRuuvi Gatewayn avulla voit tarkastella omistamiasi antureita etänä ja jakaa niitä ystävillesi verkossa.";
 "SignIn.EmailPlaceholder" = "Sähköposti";
 "SignIn.RequestCode" = "Pyydä kirjautumiskoodi";
@@ -330,9 +330,10 @@
 "TagSettings.ClaimTagButton.Claim" = "Vaadi";
 "TagSettings.ClaimTagButton.Unclaim" = "Vapauta";
 "TagSettings.ShareButton" = "Jaa";
+"Syncing..." = "Synkronoidaan…";
 "Synchronized" = "Synkronointi valmis";
 "TagChartsPresenter.NumberOfPointsSynchronizedOverNetwork" = "Synkronoitu: %@";
-"MenuTableViewController.None" = "ei valittu";
+"MenuTableViewController.None" = "ei kirjautunut";
 "MenuTableViewController.User" = "Käyttäjä: %@";
 "ShareViewController.Title" = "Jaa anturi";
 "ShareViewController.Description" = "Jaa anturitiedot verkossa lisäämällä ystäväsi sähköpostiosoite (maks. 10)";
@@ -342,6 +343,7 @@
 "SharePresenter.UnshareSensor.Message" = "Haluatko lopettaa anturin jakamisen käyttäjälle %@?";
 "TagSettings.SectionHeader.NetworkInfo.title" = "VERKON TIEDOT";
 "TagSettings.NetworkInfo.Owner" = "Omistaja";
+"Menu.RuuviNetworkStatus.text" = "Ruuvi Networkin tila";
 "SignIn.TitleLabel.text" = "Kirjaudu\nRuuvi\nNetworkiin";
 "SignIn.SubtitleLabel.text" = "Hyödynnä kaikki Ruuvi Network mahdollisuudet! Kirjaudu sisään tai luo uusi Ruuvi-käyttäjätili antamalla sähköpostiosoitteesi.";
 "SignIn.VerificationCodePlaceholder" = "vahvistuskoodi muodossa: CJSM";
