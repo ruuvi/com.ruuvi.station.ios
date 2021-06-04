@@ -36,7 +36,7 @@ public protocol CloudSensor: Sensor, Nameable, Claimable, HasRemotePicture {
 }
 
 public protocol Shareable {
-    var sharedTo: String { get }
+    var sharedTo: [String] { get } // emails
 }
 
 public protocol ShareableSensor: Sensor, Shareable {

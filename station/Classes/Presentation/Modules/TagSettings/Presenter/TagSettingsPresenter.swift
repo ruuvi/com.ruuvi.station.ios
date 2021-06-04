@@ -269,10 +269,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidTapShareButton() {
-        guard let mac = ruuviTag.macId?.value else {
-            return
-        }
-        router.openShare(for: mac)
+        router.openShare(for: ruuviTag)
     }
 
     func viewDidTapTemperatureOffsetCorrection() {
@@ -381,7 +378,9 @@ extension TagSettingsPresenter {
             viewModel.isConnected.value = false
             viewModel.keepConnection.value = false
         }
-        viewModel.mac.value = ruuviTag.macId?.value
+        if let macId = ruuviTag.macId?.value {
+            viewModel.mac.value = macId
+        }
         viewModel.uuid.value = ruuviTag.luid?.value
         viewModel.version.value = ruuviTag.version
         syncAlerts()
