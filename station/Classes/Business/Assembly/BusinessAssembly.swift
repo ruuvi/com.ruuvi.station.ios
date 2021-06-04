@@ -10,6 +10,7 @@ import RuuviService
 import RuuviCloud
 import RuuviCore
 import RuuviDaemon
+import RuuviRepository
 
 // swiftlint:disable:next type_body_length
 class BusinessAssembly: Assembly {
@@ -177,6 +178,7 @@ class BusinessAssembly: Assembly {
             let manager = MigrationManagerSensorSettings()
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
+            manager.ruuviOffsetCalibrationService = r.resolve(RuuviServiceOffsetCalibration.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
             return manager
         }
@@ -209,8 +211,32 @@ class BusinessAssembly: Assembly {
             )
         }.inObjectScope(.container)
 
+        container.register(RuuviRepositoryFactory.self) { _ in
+            return RuuviRepositoryFactoryCoordinator()
+        }
+
+        container.register(RuuviRepository.self) { r in
+            let factory = r.resolve(RuuviRepositoryFactory.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            let storage = r.resolve(RuuviStorage.self)!
+            return factory.create(
+                pool: pool,
+                storage: storage
+            )
+        }
+
         container.register(RuuviServiceFactory.self) { _ in
             return RuuviServiceFactoryImpl()
+        }
+
+        container.register(RuuviServiceOffsetCalibration.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            let pool = r.resolve(RuuviPool.self)!
+            return factory.createOffsetCalibration(
+                ruuviCloud: cloud,
+                ruuviPool: pool
+            )
         }
 
         container.register(RuuviServiceAppSettings.self) { r in
@@ -231,13 +257,15 @@ class BusinessAssembly: Assembly {
             let localSettings = r.resolve(RuuviLocalSettings.self)!
             let localSyncState = r.resolve(RuuviLocalSyncState.self)!
             let localImages = r.resolve(RuuviLocalImages.self)!
+            let repository = r.resolve(RuuviRepository.self)!
             return factory.createCloudSync(
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
                 ruuviPool: pool,
                 ruuviLocalSettings: localSettings,
                 ruuviLocalSyncState: localSyncState,
-                ruuviLocalImages: localImages
+                ruuviLocalImages: localImages,
+                ruuviRepository: repository
             )
         }
 

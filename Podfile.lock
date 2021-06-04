@@ -274,6 +274,18 @@ PODS:
     - RuuviReactor/Contract
     - RxSwift
   - RuuviReactor/Tests (0.0.1)
+  - RuuviRepository (0.0.1):
+    - RuuviRepository/Contract (= 0.0.1)
+  - RuuviRepository/Contract (0.0.1):
+    - FutureX
+    - RuuviOntology
+  - RuuviRepository/Coordinator (0.0.1):
+    - FutureX
+    - RuuviOntology
+    - RuuviPool
+    - RuuviRepository/Contract
+    - RuuviStorage
+  - RuuviRepository/Tests (0.0.1)
   - RuuviService (0.0.1):
     - RuuviService/Contract (= 0.0.1)
   - RuuviService/AppSettings (0.0.1):
@@ -288,11 +300,18 @@ PODS:
     - RuuviLocal
     - RuuviOntology
     - RuuviPool
+    - RuuviRepository
     - RuuviService/Contract
     - RuuviStorage
   - RuuviService/Contract (0.0.1):
     - FutureX
     - RuuviOntology
+  - RuuviService/OffsetCalibration (0.0.1):
+    - FutureX
+    - RuuviCloud
+    - RuuviOntology
+    - RuuviPool
+    - RuuviService/Contract
   - RuuviService/Ownership (0.0.1):
     - FutureX
     - RuuviCloud
@@ -376,9 +395,13 @@ DEPENDENCIES:
   - RuuviReactor (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviReactor/Impl (from `Packages/RuuviReactor/RuuviReactor.podspec`)
   - RuuviReactor/Tests (from `Packages/RuuviReactor/RuuviReactor.podspec`)
+  - RuuviRepository (from `Packages/RuuviRepository/RuuviRepository.podspec`)
+  - RuuviRepository/Coordinator (from `Packages/RuuviRepository/RuuviRepository.podspec`)
+  - RuuviRepository/Tests (from `Packages/RuuviRepository/RuuviRepository.podspec`)
   - RuuviService (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/AppSettings (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/CloudSync (from `Packages/RuuviService/RuuviService.podspec`)
+  - RuuviService/OffsetCalibration (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/Ownership (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/SensorProperties (from `Packages/RuuviService/RuuviService.podspec`)
   - RuuviService/SensorRecords (from `Packages/RuuviService/RuuviService.podspec`)
@@ -454,6 +477,8 @@ EXTERNAL SOURCES:
     :path: Packages/RuuviPool/RuuviPool.podspec
   RuuviReactor:
     :path: Packages/RuuviReactor/RuuviReactor.podspec
+  RuuviRepository:
+    :path: Packages/RuuviRepository/RuuviRepository.podspec
   RuuviService:
     :path: Packages/RuuviService/RuuviService.podspec
   RuuviStorage:
@@ -521,13 +546,14 @@ SPEC CHECKSUMS:
   RuuviPersistence: a96bcb392aec074177a0a262fecefe522eb494dd
   RuuviPool: 3fd04d034b3a77177e3832de3fe8d0242aa1e41b
   RuuviReactor: 5630e5efa7c84db08b431c7975b3311f0fc4882c
-  RuuviService: 74122d4ea23b8ad365b2e00f648356451695fd9c
+  RuuviRepository: 2a98401ff527bc19ec488281e5bbe5a820c405ca
+  RuuviService: 8fc372dbfc5a96139e67daed1598aa5ca51c718f
   RuuviStorage: b7f0d9e11fdc0bb73317b70464cc04e8b5b5d6d7
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SwiftGen: 67860cc7c3cfc2ed25b9b74cfd55495fc89f9108
   Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
   SwinjectPropertyLoader: c1dc88e20b0a62209002b057067779279b99afe6
 
-PODFILE CHECKSUM: 340da483c07d4cbda24942ea0615bc6f789f14ef
+PODFILE CHECKSUM: 388f2ff629f7e0b234bd66ef6d5e7fa88fb8ba02
 
 COCOAPODS: 1.10.1

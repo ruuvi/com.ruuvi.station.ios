@@ -21,7 +21,10 @@ extension CloudSensor {
             isClaimed: email == owner,
             isOwner: email == owner,
             owner: owner,
-            picture: picture
+            picture: picture,
+            offsetTemperature: offsetTemperature,
+            offsetHumidity: offsetHumidity,
+            offsetPressure: offsetPressure
         )
     }
 }
@@ -33,6 +36,9 @@ public struct CloudSensorStruct: CloudSensor {
     public var isOwner: Bool
     public var owner: String?
     public var picture: URL?
+    public var offsetTemperature: Double?
+    public var offsetHumidity: Double?
+    public var offsetPressure: Double?
 
     public init(
         id: String,
@@ -40,7 +46,10 @@ public struct CloudSensorStruct: CloudSensor {
         isClaimed: Bool,
         isOwner: Bool,
         owner: String?,
-        picture: URL?
+        picture: URL?,
+        offsetTemperature: Double?,
+        offsetHumidity: Double?,
+        offsetPressure: Double?
     ) {
         self.id = id
         self.name = name
@@ -48,6 +57,9 @@ public struct CloudSensorStruct: CloudSensor {
         self.isOwner = isOwner
         self.owner = owner
         self.picture = picture
+        self.offsetTemperature = offsetTemperature
+        self.offsetHumidity = offsetHumidity
+        self.offsetPressure = offsetPressure
     }
 }
 
@@ -86,6 +98,18 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
 
     public var picture: URL? {
         return object.picture
+    }
+
+    public var offsetTemperature: Double? {
+        return object.offsetTemperature
+    }
+
+    public var offsetHumidity: Double? {
+        return object.offsetHumidity
+    }
+
+    public var offsetPressure: Double? {
+        return object.offsetPressure
     }
 
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {

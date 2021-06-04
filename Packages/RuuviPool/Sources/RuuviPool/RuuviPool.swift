@@ -20,4 +20,27 @@ public protocol RuuviPool {
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError>
     @discardableResult
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError>
+
+    // offset calibration
+    func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor,
+        lastOriginalRecord record: RuuviTagSensorRecord?
+    ) -> Future<SensorSettings, RuuviPoolError>
+}
+
+extension RuuviPool {
+    public func updateOffsetCorrection(
+        type: OffsetCorrectionType,
+        with value: Double?,
+        of ruuviTag: RuuviTagSensor
+    ) -> Future<SensorSettings, RuuviPoolError> {
+        return updateOffsetCorrection(
+            type: type,
+            with: value,
+            of: ruuviTag,
+            lastOriginalRecord: nil
+        )
+    }
 }
