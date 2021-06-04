@@ -281,6 +281,7 @@
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "PLUS D'INFOS";
 "TagSettings.SectionHeader.Name.title" = "NOM";
+"No" = "Non";
 "OK" = "OK";
 "TagSettings.PressureAlert.title" = "Pression de l'air (%@)";
 "UnitPressure.hectopascal.title" = "Hectopascal (hPa)";
@@ -313,6 +314,7 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Mis à jour il y'a";
 "V" = "V";
+"Yes" = "Oui";
 "LocalNotificationsManager.Mute.button" = "Désactiver les notifications pendant une heure";
 "Defaults.AlertsMuteInterval.title" = "Alerts Mute Interval";
 "SignIn.Title.text" = "Sign in";

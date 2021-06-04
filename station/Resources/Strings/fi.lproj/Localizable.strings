@@ -281,6 +281,7 @@
 "min" = "min";
 "TagSettings.Label.moreInfo.text" = "LISÄTIETOA";
 "TagSettings.SectionHeader.Name.title" = "NIMI";
+"No" = "Ei";
 "OK" = "OK";
 "TagSettings.PressureAlert.title" = "Ilmanpaine (%@)";
 "UnitPressure.hectopascal.title" = "Hehtopascal (hPa)";
@@ -313,6 +314,7 @@
 "TemperatureUnit.Kelvin.title" = "Kelvin (K)";
 "Updated" = "Päivitetty";
 "V" = "V";
+"Yes" = "Kyllä";
 "LocalNotificationsManager.Mute.button" = "Mykistä tunniksi";
 "Defaults.AlertsMuteInterval.title" = "Hälytysten mykistysväli";
 "SignIn.Title.text" = "Kirjaudu sisään";

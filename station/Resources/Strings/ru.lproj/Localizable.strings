@@ -281,6 +281,7 @@
 "min" = "мин";
 "TagSettings.Label.moreInfo.text" = "ДОПОЛНИТЕЛЬНО";
 "TagSettings.SectionHeader.Name.title" = "ИМЯ";
+"No" = "Нет";
 "OK" = "OK";
 "TagSettings.PressureAlert.title" = "Атмосферное Давление (%@)";
 "UnitPressure.hectopascal.title" = "Гектопаскаль (гПа)";
@@ -313,6 +314,7 @@
 "TemperatureUnit.Kelvin.title" = "Кельвин (K)";
 "Updated" = "Обновлено";
 "V" = "В";
+"Yes" = "Да";
 "LocalNotificationsManager.Mute.button" = "Отключить на час";
 "Defaults.AlertsMuteInterval.title" = "Интервал Отключения Уведомлений";
 "SignIn.Title.text" = "Войти";

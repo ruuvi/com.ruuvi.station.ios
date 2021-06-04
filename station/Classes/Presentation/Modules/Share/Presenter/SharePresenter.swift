@@ -63,11 +63,10 @@ extension SharePresenter: ShareViewOutput {
               !email.isEmpty else {
             return
         }
-        let title = "SharePresenter.UnshareSensor.Title".localized()
+        let title: String? = nil
         let message = String(format: "SharePresenter.UnshareSensor.Message".localized(), email)
-
-        let confirmActionTitle = "SharePresenter.UnshareSensor.ConfirmAction".localized()
-        let cancelActionTitle = "SharePresenter.UnshareSensor.CancelAction".localized()
+        let confirmActionTitle = "Yes".localized()
+        let cancelActionTitle = "No".localized()
         let confirmAction = UIAlertAction(title: confirmActionTitle,
                                           style: .default) { [weak self] (_) in
             self?.unshareTag(email)
