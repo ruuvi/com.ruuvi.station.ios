@@ -23,7 +23,6 @@ class CoreAssembly: Assembly {
 
         container.register(LocalNotificationsManager.self) { r in
             let manager = LocalNotificationsManagerImpl()
-            manager.alertService = r.resolve(AlertService.self)
             manager.settings = r.resolve(RuuviLocalSettings.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
