@@ -602,7 +602,7 @@ extension TagSettingsPresenter {
     private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.withSensorSettings(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
-            ruuviTagId: device.luid,
+            luid: device.luid,
             date: device.date,
             source: source,
             macId: device.mac?.mac,

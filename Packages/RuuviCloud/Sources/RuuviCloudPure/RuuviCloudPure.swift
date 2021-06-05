@@ -397,7 +397,7 @@ final class RuuviCloudPure: RuuviCloud {
                 return nil
             }
             return RuuviTagSensorRecordStruct(
-                ruuviTagId: nil,
+                luid: nil,
                 date: $0.date,
                 source: .ruuviNetwork,
                 macId: macId,

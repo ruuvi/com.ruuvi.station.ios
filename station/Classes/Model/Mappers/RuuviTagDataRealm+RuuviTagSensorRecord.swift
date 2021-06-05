@@ -4,7 +4,7 @@ import RuuviOntology
 extension RuuviTagDataRealm {
     var any: AnyRuuviTagSensorRecord? {
         let inner = RuuviTagSensorRecordStruct(
-            ruuviTagId: ruuviTag?.luid,
+            luid: ruuviTag?.luid,
             date: date,
             source: source,
             macId: ruuviTag?.mac?.mac,
