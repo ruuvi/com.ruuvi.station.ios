@@ -108,7 +108,9 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
         if let ruuviTag = ruuviTags.first(where: { $0.luid?.any == device.luid?.any }) {
-            ruuviOwnershipService.add(sensor: ruuviTag.with(name: displayName), record: ruuviTag)
+            ruuviOwnershipService.add(
+                sensor: ruuviTag.with(name: displayName),
+                record: ruuviTag.with(source: .advertisement))
                 .on(success: { [weak self] _ in
                     guard let sSelf = self else { return }
                     if sSelf.isOpenedFromWelcome {
