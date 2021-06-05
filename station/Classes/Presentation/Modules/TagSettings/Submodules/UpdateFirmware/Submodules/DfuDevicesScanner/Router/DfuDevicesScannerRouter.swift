@@ -10,5 +10,12 @@ class DfuDevicesScannerRouter: DfuDevicesScannerRouterInput {
     }
 
     func openFlashFirmware(_ dfuDevice: DfuDevice) {
+        let factory = StoryboardFactory(storyboardName: "DfuFlash")
+        try! transitionHandler
+            .forStoryboard(factory: factory, to: DfuFlashModuleInput.self)
+            .to(preferred: .navigation(style: .push))
+            .then({ (module) -> Any? in
+                module.configure(dfuDevice: dfuDevice)
+            })
     }
 }

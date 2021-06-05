@@ -27,6 +27,10 @@ struct RuuviDfu {
                        output: DfuFlasherOutputProtocol) {
         flasher.flashFirmware(device: device, with: firmware, output: output)
     }
+
+    func stopFlashFirmware(device: DfuDevice) -> Bool {
+        return flasher.stopFlashFirmware(device: device)
+    }
 }
 
 extension DFUFirmware {
