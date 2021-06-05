@@ -216,7 +216,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { realmRecord in
                 return RuuviTagSensorRecordStruct(
-                    ruuviTagId: ruuviTagId,
+                    ruuviTagId: realmRecord.ruuviTag?.luid,
                     date: realmRecord.date,
                     source: realmRecord.source,
                     macId: nil,
@@ -258,7 +258,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                     previousDate = tagDataRealm.date
                     results.append(
                         RuuviTagSensorRecordStruct(
-                            ruuviTagId: ruuviTagId,
+                            ruuviTagId: tagDataRealm.ruuviTag?.luid,
                             date: tagDataRealm.date,
                             source: tagDataRealm.source,
                             macId: nil,
@@ -303,7 +303,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                     previousDate = realmRecord.date
                     results.append(
                         RuuviTagSensorRecordStruct(
-                            ruuviTagId: ruuviTagId,
+                            ruuviTagId: realmRecord.ruuviTag?.luid,
                             date: realmRecord.date,
                             source: realmRecord.source,
                             macId: nil,
@@ -339,7 +339,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 .sorted(byKeyPath: "date")
             let result: [RuuviTagSensorRecord] = realmRecords.map { record in
                 return RuuviTagSensorRecordStruct(
-                    ruuviTagId: ruuviTagId,
+                    ruuviTagId: record.ruuviTag?.luid,
                     date: record.date,
                     source: record.source,
                     macId: nil,
@@ -375,7 +375,7 @@ class RuuviPersistenceRealm: RuuviPersistence {
                 .first {
                 let sequenceNumber = lastRecord.measurementSequenceNumber.value
                 let lastRecordResult = RuuviTagSensorRecordStruct(
-                    ruuviTagId: luid.value,
+                    ruuviTagId: luid,
                     date: lastRecord.date,
                     source: lastRecord.source,
                     macId: nil,

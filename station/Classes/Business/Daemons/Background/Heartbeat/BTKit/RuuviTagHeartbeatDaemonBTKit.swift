@@ -143,7 +143,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             if let ruuviTag = device.ruuvi?.tag {
                 var sensorSettings: SensorSettings?
                 if let ruuviTagSensor = observer.ruuviTags
-                    .first(where: { $0.macId?.value == ruuviTag.ruuviTagId || $0.luid?.value == ruuviTag.ruuviTagId }),
+                    .first(where: { $0.macId?.value == ruuviTag.mac || $0.luid?.any == ruuviTag.ruuviTagId?.any }),
                    let settings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id }) {
                     sensorSettings = settings
                 }

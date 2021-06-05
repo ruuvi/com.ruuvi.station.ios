@@ -527,7 +527,7 @@ extension CardsPresenter {
         ruuviTagObserveLastRecordToken?.invalidate()
         ruuviTagObserveLastRecordToken = ruuviReactor.observeLast(sensor) { [weak self] (changes) in
             if case .update(let anyRecord) = changes,
-               let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.ruuviTagId }),
+               let viewModel = self?.viewModels.first(where: { $0.id.value == anyRecord?.id }),
                let record = anyRecord {
                 let previousDate = viewModel.date.value ?? Date.distantPast
                 if previousDate < record.date {

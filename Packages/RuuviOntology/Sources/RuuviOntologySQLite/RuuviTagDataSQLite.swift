@@ -4,7 +4,7 @@ import Humidity
 import RuuviOntology
 
 public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
-    public var ruuviTagId: String
+    public var ruuviTagId: LocalIdentifier?
     public var date: Date
     public var source: RuuviTagSensorRecordSource
     public var macId: MACIdentifier?
@@ -22,7 +22,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     public var pressureOffset: Double
 
     public init(
-        ruuviTagId: String,
+        ruuviTagId: LocalIdentifier?,
         date: Date,
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
@@ -61,6 +61,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
 extension RuuviTagDataSQLite {
     public static let idColumn = Column("id")
     public static let ruuviTagIdColumn = Column("ruuviTagId")
+    public static let luidColumn = Column("luid")
     public static let dateColumn = Column("date")
     public static let sourceColumn = Column("source")
     public static let macColumn = Column("mac")
@@ -88,7 +89,7 @@ extension RuuviTagDataSQLite: Equatable {
 
 extension RuuviTagDataSQLite: FetchableRecord {
     public init(row: Row) {
-        ruuviTagId = row[RuuviTagDataSQLite.ruuviTagIdColumn]
+        ruuviTagId = LocalIdentifierStruct(value: row[RuuviTagDataSQLite.ruuviTagIdColumn])
         date = row[RuuviTagDataSQLite.dateColumn]
         if let sourceString = String.fromDatabaseValue(row[RuuviTagDataSQLite.sourceColumn]) {
             source = RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
@@ -135,7 +136,8 @@ extension RuuviTagDataSQLite: PersistableRecord {
 
     public func encode(to container: inout PersistenceContainer) {
         container[RuuviTagDataSQLite.idColumn] = id
-        container[RuuviTagDataSQLite.ruuviTagIdColumn] = ruuviTagId
+        container[RuuviTagDataSQLite.ruuviTagIdColumn] = macId?.value ?? ruuviTagId?.value ?? ""
+        container[RuuviTagDataSQLite.luidColumn] = ruuviTagId?.value
         container[RuuviTagDataSQLite.dateColumn] = date
         container[RuuviTagDataSQLite.sourceColumn] = source.rawValue
         container[RuuviTagDataSQLite.macColumn] = macId?.value
@@ -160,7 +162,7 @@ extension RuuviTagDataSQLite {
     public static func createTable(in db: Database) throws {
         try db.create(table: RuuviTagDataSQLite.databaseTableName, body: { table in
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
-            table.column(RuuviTagDataSQLite.ruuviTagIdColumn.name, .text).notNull()
+            table.column(RuuviTagDataSQLite.luidColumn.name, .text)
             table.column(RuuviTagDataSQLite.dateColumn.name, .datetime).notNull()
             table.column(RuuviTagDataSQLite.sourceColumn.name, .text).notNull()
             table.column(RuuviTagDataSQLite.macColumn.name, .text)

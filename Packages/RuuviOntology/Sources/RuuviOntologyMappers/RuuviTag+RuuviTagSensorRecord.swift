@@ -4,8 +4,8 @@ import Humidity
 import RuuviOntology
 
 extension RuuviTag: RuuviTagSensorRecord {
-    public var ruuviTagId: String {
-        return mac ?? uuid
+    public var ruuviTagId: LocalIdentifier? {
+        return uuid.luid
     }
 
     public var macId: MACIdentifier? {

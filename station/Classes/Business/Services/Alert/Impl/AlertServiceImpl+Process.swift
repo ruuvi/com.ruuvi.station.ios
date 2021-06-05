@@ -14,7 +14,7 @@ extension AlertServiceImpl {
                 let isTemperature = process(
                     temperature: ruuviTag.temperature,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId.luid
+                    identifier: ruuviTag.ruuviTagId
                 )
                 isTriggered = isTriggered || isTemperature
             case .humidity:
@@ -22,7 +22,7 @@ extension AlertServiceImpl {
                     humidity: ruuviTag.humidity,
                     temperature: ruuviTag.temperature,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId.luid
+                    identifier: ruuviTag.ruuviTagId
                 )
                 isTriggered = isTriggered || isHumidity
             case .dewPoint:
@@ -30,14 +30,14 @@ extension AlertServiceImpl {
                     humidity: ruuviTag.humidity,
                     temperature: ruuviTag.temperature,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId.luid
+                    identifier: ruuviTag.ruuviTagId
                 )
                 isTriggered = isTriggered || isDewPoint
             case .pressure:
                 let isPressure = process(
                     pressure: ruuviTag.pressure,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId.luid
+                    identifier: ruuviTag.ruuviTagId
                 )
                 isTriggered = isTriggered || isPressure
             case .movement:
@@ -49,7 +49,7 @@ extension AlertServiceImpl {
             }
         }
 
-        let uuid = ruuviTag.ruuviTagId
+        let uuid = ruuviTag.id
         if let movementCounter = ruuviTag.movementCounter {
             ruuviAlertService.setMovement(counter: movementCounter, for: uuid)
         }
@@ -162,9 +162,12 @@ extension AlertServiceImpl {
 }
 // MARK: - Private
 extension AlertServiceImpl {
-    private func process(temperature: Temperature?,
-                         alertType: AlertType,
-                         identifier: Identifier) -> Bool {
+    private func process(
+        temperature: Temperature?,
+        alertType: AlertType,
+        identifier: Identifier?
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
         if case .temperature(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let l = Temperature(lower),
            let u = Temperature(upper),
@@ -186,10 +189,13 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(humidity: Humidity?,
-                         temperature: Temperature?,
-                         alertType: AlertType,
-                         identifier: Identifier) -> Bool {
+    private func process(
+        humidity: Humidity?,
+        temperature: Temperature?,
+        alertType: AlertType,
+        identifier: Identifier?
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
         if case .humidity(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let rh = humidity,
            let sh = Humidity(relative: rh.value, temperature: temperature) {
@@ -210,10 +216,13 @@ extension AlertServiceImpl {
         }
     }
 
-    private func processDewPoint(humidity: Humidity?,
-                                 temperature: Temperature?,
-                                 alertType: AlertType,
-                                 identifier: Identifier) -> Bool {
+    private func processDewPoint(
+        humidity: Humidity?,
+        temperature: Temperature?,
+        alertType: AlertType,
+        identifier: Identifier?
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
         if case .dewPoint(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let t = temperature,
            let rh = humidity,
@@ -236,9 +245,12 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(pressure: Pressure?,
-                         alertType: AlertType,
-                         identifier: Identifier) -> Bool {
+    private func process(
+        pressure: Pressure?,
+        alertType: AlertType,
+        identifier: Identifier?
+    ) -> Bool {
+        guard let identifier = identifier else { return false }
         if case .pressure(let lower, let upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
            let l = Pressure(lower),
            let u = Pressure(upper),
@@ -260,14 +272,17 @@ extension AlertServiceImpl {
         }
     }
 
-    private func process(movement: AlertType, ruuviTag: RuuviTagSensorRecord) -> Bool {
-        if case .movement(let last) = ruuviAlertService.alert(for: ruuviTag.ruuviTagId, of: movement),
+    private func process(
+        movement: AlertType,
+        ruuviTag: RuuviTagSensorRecord
+    ) -> Bool {
+        if case .movement(let last) = ruuviAlertService.alert(for: ruuviTag.id, of: movement),
             let movementCounter = ruuviTag.movementCounter {
             let isGreater = movementCounter > last
             if isGreater {
                 DispatchQueue.main.async { [weak self] in
                     self?.localNotificationsManager
-                        .notifyDidMove(for: ruuviTag.ruuviTagId, counter: movementCounter)
+                        .notifyDidMove(for: ruuviTag.id, counter: movementCounter)
                 }
             }
             return isGreater
