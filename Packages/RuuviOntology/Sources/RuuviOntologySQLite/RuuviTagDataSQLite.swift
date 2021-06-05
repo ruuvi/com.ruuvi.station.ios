@@ -22,7 +22,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     public var pressureOffset: Double
 
     public init(
-        ruuviTagId: LocalIdentifier?,
+        luid: LocalIdentifier?,
         date: Date,
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
@@ -39,7 +39,7 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
         humidityOffset: Double,
         pressureOffset: Double
     ) {
-        self.luid = ruuviTagId
+        self.luid = luid
         self.date = date
         self.source = source
         self.macId = macId

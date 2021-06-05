@@ -4,7 +4,7 @@ import RuuviOntology
 extension RuuviTagSensorRecord {
     var sqlite: RuuviTagDataSQLite {
         return RuuviTagDataSQLite(
-            ruuviTagId: luid,
+            luid: luid,
             date: date,
             source: source,
             macId: macId,
