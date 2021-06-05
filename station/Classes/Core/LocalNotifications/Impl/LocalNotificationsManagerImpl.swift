@@ -36,7 +36,6 @@ class LocalNotificationsManagerImpl: NSObject, LocalNotificationsManager {
     var ruuviStorage: RuuviStorage!
     var virtualTagTrunk: VirtualTagTrunk!
     var idPersistence: RuuviLocalIDs!
-    var alertService: AlertService!
     var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
     var ruuviAlertService: RuuviServiceAlert!
