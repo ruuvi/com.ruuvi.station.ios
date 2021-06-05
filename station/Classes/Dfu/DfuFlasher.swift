@@ -15,6 +15,7 @@ class DfuFlasher: NSObject {
     private var firmware: DFUFirmware!
     private var partsCompleted: Int = 0
     private var currentFirmwarePartsCompleted: Int = 0
+    private var dfuServiceController: DFUServiceController?
 
     override init() {
         super.init()
@@ -37,8 +38,15 @@ class DfuFlasher: NSObject {
         dfuServiceInitiator.delegate = self
         dfuServiceInitiator.progressDelegate = self
         dfuServiceInitiator.logger = self
-        _ = dfuServiceInitiator.with(firmware: firmware)
+        dfuServiceController = dfuServiceInitiator.with(firmware: firmware)
             .start(targetWithIdentifier: uuid)
+    }
+
+    func stopFlashFirmware(device: DfuDevice) -> Bool {
+        guard let serviceController = dfuServiceController else {
+            return false
+        }
+        return serviceController.abort()
     }
 }
 
