@@ -13,7 +13,7 @@ class WebTagSettingsPresenter: NSObject, WebTagSettingsModuleInput {
     var errorPresenter: ErrorPresenter!
     var webTagService: WebTagService!
     var settings: RuuviLocalSettings!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     var permissionPresenter: PermissionPresenter!

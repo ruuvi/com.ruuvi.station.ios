@@ -9,12 +9,13 @@ extension RuuviCloudApiURLSession {
         case unclaim
         case share
         case unshare
-        case shared
         case user
         case getSensorData = "get"
         case update
         case uploadImage = "upload"
         case settings
+        case sensors
+        case alerts
     }
 }
 
@@ -92,11 +93,11 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
                        authorization: authorization)
     }
 
-    func shared(
-        _ requestModel: RuuviCloudApiSharedRequest,
+    func sensors(
+        _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiSharedResponse, RuuviCloudApiError> {
-        return request(endpoint: Routes.shared,
+    ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError> {
+        return request(endpoint: Routes.sensors,
                        with: requestModel,
                        method: .get,
                        authorization: authorization)
@@ -161,6 +162,18 @@ final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError> {
         return request(
             endpoint: Routes.settings,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
+    }
+
+    func postAlert(
+        _ requestModel: RuuviCloudApiPostAlertRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiPostAlertResponse, RuuviCloudApiError> {
+        return request(
+            endpoint: Routes.alerts,
             with: requestModel,
             method: .post,
             authorization: authorization

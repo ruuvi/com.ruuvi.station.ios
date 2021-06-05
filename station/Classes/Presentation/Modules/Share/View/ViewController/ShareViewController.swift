@@ -110,10 +110,6 @@ extension ShareViewController: ShareViewInput {
         tableView.reloadData()
     }
 
-    func reloadSharedEmailsSection() {
-        tableView.reloadSections(IndexSet([Section.sharedEmails.rawValue]), with: .automatic)
-    }
-
     func clearInput() {
         let indexPath: IndexPath = IndexPath(row: 0, section: Section.addFriend.rawValue)
         guard let cell = tableView.cellForRow(at: indexPath) as? ShareEmailInputTableViewCell else {
@@ -177,6 +173,8 @@ extension ShareViewController {
             return
         }
         cell.emailTextField.endEditing(true)
-        output.viewDidTapSendButton(email: cell.emailTextField.text)
+        output.viewDidTapSendButton(
+            email: cell.emailTextField.text?.trimmingCharacters(in: .whitespaces)
+        )
     }
 }

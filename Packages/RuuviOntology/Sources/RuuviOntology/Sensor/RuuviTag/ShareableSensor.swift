@@ -2,11 +2,11 @@ import Foundation
 
 public struct ShareableSensorStruct: ShareableSensor {
     public var id: String
-    public var sharedTo: String
+    public var sharedTo: [String]
 
     public init(
         id: String,
-        sharedTo: String
+        sharedTo: [String]
     ) {
         self.id = id
         self.sharedTo = sharedTo
@@ -30,7 +30,7 @@ public struct AnyShareableSensor: ShareableSensor, Equatable, Hashable, Reordera
         return object.id
     }
 
-    public var sharedTo: String {
+    public var sharedTo: [String] {
         return object.sharedTo
     }
 

@@ -26,7 +26,8 @@ class TagChartsScrollConfigurator {
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
         presenter.alertPresenter = r.resolve(AlertPresenter.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
-        presenter.alertService = r.resolve(AlertService.self)
+        presenter.alertService = r.resolve(RuuviServiceAlert.self)
+        presenter.alertHandler = r.resolve(AlertService.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.feedbackEmail = r.property("Feedback Email")!
@@ -43,6 +44,7 @@ class TagChartsScrollConfigurator {
         interactor.ruuviPool = r.resolve(RuuviPool.self)
         interactor.ruuviStorage = r.resolve(RuuviStorage.self)
         interactor.ruuviSensorRecords = r.resolve(RuuviServiceSensorRecords.self)
+        interactor.featureToggleService = r.resolve(FeatureToggleService.self)
         interactor.presenter = presenter
 
         view.output = presenter
