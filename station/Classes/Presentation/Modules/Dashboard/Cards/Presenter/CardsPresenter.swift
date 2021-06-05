@@ -23,7 +23,8 @@ class CardsPresenter: CardsModuleInput {
     var pushNotificationsManager: PushNotificationsManager!
     var permissionsManager: PermissionsManager!
     var connectionPersistence: RuuviLocalConnections!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
+    var alertHandler: AlertService!
     var mailComposerPresenter: MailComposerPresenter!
     var feedbackEmail: String!
     var feedbackSubject: String!
@@ -867,12 +868,12 @@ extension CardsPresenter {
     private func startListeningToRuuviTagsAlertStatus() {
         ruuviTags.forEach({
             if let uuid = $0.luid?.value {
-                alertService.subscribe(self, to: uuid)
+                alertHandler.subscribe(self, to: uuid)
             }
         })
     }
     private func startListeningToWebTagsAlertStatus() {
-        virtualTags?.forEach({ alertService.subscribe(self, to: $0.uuid) })
+        virtualTags?.forEach({ alertHandler.subscribe(self, to: $0.uuid) })
     }
     private func startObservingLocalNotificationsManager() {
         lnmDidReceiveToken?.invalidate()

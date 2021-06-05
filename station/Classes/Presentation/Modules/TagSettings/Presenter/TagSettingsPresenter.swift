@@ -22,7 +22,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var foreground: BTForeground!
     var background: BTBackground!
     var calibrationService: CalibrationService!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
     var settings: RuuviLocalSettings!
     var ruuviLocalImages: RuuviLocalImages!
     var connectionPersistence: RuuviLocalConnections!

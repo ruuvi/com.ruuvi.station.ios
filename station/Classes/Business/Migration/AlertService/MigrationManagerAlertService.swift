@@ -5,13 +5,14 @@ import RuuviOntology
 import RuuviContext
 import RuuviStorage
 import RuuviLocal
+import RuuviService
 
 final class MigrationManagerAlertService: MigrationManager {
-    var alertService: AlertService!
-    var alertPersistence: AlertPersistence!
     var realmContext: RealmContext!
     var ruuviStorage: RuuviStorage!
     var settings: RuuviLocalSettings!
+    var ruuviAlertService: RuuviServiceAlert!
+
     private let prefs = UserDefaults.standard
 
     @UserDefault("MigrationManagerAlertService.persistanceVersion", defaultValue: 0)
@@ -101,7 +102,7 @@ extension MigrationManagerAlertService {
                                                    unit: .relative(temperature: temperature))
             let upperHumidity: Humidity = Humidity(value: upper / 100,
                                                    unit: .relative(temperature: temperature))
-            alertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
+            ruuviAlertService.register(type: .humidity(lower: lowerHumidity, upper: upperHumidity),
                                   for: id)
         } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
                   let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
@@ -111,7 +112,7 @@ extension MigrationManagerAlertService {
                                                    unit: .absolute)
             let upperHumidity: Humidity = Humidity(value: upper,
                                                    unit: .absolute)
-            alertService.register(type: .humidity(lower: lowerHumidity,
+            ruuviAlertService.register(type: .humidity(lower: lowerHumidity,
                                                   upper: upperHumidity),
                                   for: id)
         } else {
@@ -121,7 +122,7 @@ extension MigrationManagerAlertService {
         // pick one description, relative preffered
         let humidityDescription = prefs.string(forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + id)
             ?? prefs.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + id)
-        alertService.setHumidity(description: humidityDescription, for: id)
+        ruuviAlertService.setHumidity(description: humidityDescription, for: id)
 
         completion()
     }
