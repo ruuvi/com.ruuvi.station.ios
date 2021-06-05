@@ -144,7 +144,7 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.idColumn] = id
         container[RuuviTagDataSQLite.luidColumn] = luid?.value
         container[RuuviTagDataSQLite.macColumn] = macId?.value
-        container[RuuviTagDataSQLite.ruuviTagIdColumn] = id
+        container[RuuviTagDataSQLite.ruuviTagIdColumn] = macId?.value ?? luid?.value ?? ""
         container[RuuviTagDataSQLite.dateColumn] = date
         container[RuuviTagDataSQLite.sourceColumn] = source.rawValue
         container[RuuviTagDataSQLite.rssiColumn] = rssi

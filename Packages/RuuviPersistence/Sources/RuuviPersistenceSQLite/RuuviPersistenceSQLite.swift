@@ -106,7 +106,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             var entity: Entity?
             do {
                 try self?.database.dbPool.read { db in
-                    let request = Entity.filter(Entity.idColumn == ruuviTagId)
+                    let request = Entity.filter(Entity.luidColumn == ruuviTagId || Entity.macColumn == ruuviTagId)
                     entity = try request.fetchOne(db)
                 }
                 if let entity = entity {
@@ -129,7 +129,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             do {
                 try self?.database.dbPool.read { db in
                     let request = Record.order(Record.dateColumn)
-                        .filter(Record.ruuviTagIdColumn == ruuviTagId)
+                        .filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                     sqliteEntities = try request.fetchAll(db)
                 }
                 promise.succeed(value: sqliteEntities.map({ $0.any }))
@@ -155,7 +155,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     SELECT
                         *
                     FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.ruuviTagId = '\(ruuviTagId)' AND rtsr.date > ?
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
                     ORDER BY date
                     """
@@ -187,7 +187,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     SELECT
                         *
                     FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.ruuviTagId = '\(ruuviTagId)'
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)'
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
                     ORDER BY date
                     """
@@ -209,7 +209,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             do {
                 try self?.database.dbPool.read { db in
                     let request = Record.order(Record.dateColumn)
-                        .filter(Record.ruuviTagIdColumn == ruuviTagId
+                        .filter((Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                                     && Record.dateColumn > Date(timeIntervalSince1970: from))
                     sqliteEntities = try request.fetchAll(db)
                 }
@@ -228,7 +228,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 var sqliteRecord: Record?
                 try self?.database.dbPool.read { db in
                     let request = Record.order(Record.dateColumn.desc)
-                        .filter(Record.ruuviTagIdColumn == ruuviTag.id)
+                        .filter(Record.luidColumn == ruuviTag.luid?.value || Record.macColumn == ruuviTag.macId?.value)
                     sqliteRecord = try request.fetchOne(db)
                 }
                 promise.succeed(value: sqliteRecord)
@@ -295,7 +295,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         let promise = Promise<Bool, RuuviPersistenceError>()
         do {
             var deletedCount = 0
-            let request = Record.filter(Record.ruuviTagIdColumn == ruuviTagId)
+            let request = Record.filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
@@ -311,7 +311,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         let promise = Promise<Bool, RuuviPersistenceError>()
         do {
             var deletedCount = 0
-            let request = Record.filter(Record.ruuviTagIdColumn == ruuviTagId).filter(Record.dateColumn < date)
+            let request = Record.filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId).filter(Record.dateColumn < date)
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
