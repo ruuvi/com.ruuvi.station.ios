@@ -101,7 +101,7 @@ class RuuviReactorImpl: RuuviReactor {
                 sqlite: sqliteContext,
                 realm: realmContext
             )
-            recordRxSwifts[ruuviTagId] = rxSwift
+            recordRxSwifts[luid.value] = rxSwift
             recordRxSwift = rxSwift
         }
         let cancellable = recordRxSwift.subject.subscribe(onNext: { values in

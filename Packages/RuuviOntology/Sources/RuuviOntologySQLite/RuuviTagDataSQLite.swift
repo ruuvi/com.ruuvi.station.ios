@@ -89,14 +89,20 @@ extension RuuviTagDataSQLite: Equatable {
 
 extension RuuviTagDataSQLite: FetchableRecord {
     public init(row: Row) {
-        luid = LocalIdentifierStruct(value: row[RuuviTagDataSQLite.ruuviTagIdColumn])
+        if let luidValue = String.fromDatabaseValue(row[RuuviTagDataSQLite.luidColumn]) {
+            luid = LocalIdentifierStruct(value: luidValue)
+        } else if let luidValue =  String.fromDatabaseValue(row[RuuviTagDataSQLite.ruuviTagIdColumn]) {
+            luid = LocalIdentifierStruct(value: luidValue)
+        }
         date = row[RuuviTagDataSQLite.dateColumn]
         if let sourceString = String.fromDatabaseValue(row[RuuviTagDataSQLite.sourceColumn]) {
             source = RuuviTagSensorRecordSource(rawValue: sourceString) ?? .unknown
         } else {
             source = .unknown
         }
-        macId = MACIdentifierStruct(value: row[RuuviTagDataSQLite.macColumn])
+        if let macIdValue = String.fromDatabaseValue(row[RuuviTagDataSQLite.macColumn]) {
+            macId = MACIdentifierStruct(value: macIdValue)
+        }
         rssi = row[RuuviTagDataSQLite.rssiColumn]
         if let celsius = Double.fromDatabaseValue(row[RuuviTagDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)

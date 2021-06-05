@@ -36,7 +36,7 @@ class RuuviTagRecordSubjectCombine {
     func start() {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
-            .filter(RuuviTagDataSQLite.ruuviTagIdColumn == luid.value)
+            .filter(RuuviTagDataSQLite.luidColumn == luid.value)
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
         }.removeDuplicates()
