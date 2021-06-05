@@ -142,7 +142,7 @@ extension RuuviTagDataSQLite: PersistableRecord {
 
     public func encode(to container: inout PersistenceContainer) {
         container[RuuviTagDataSQLite.idColumn] = id
-        container[RuuviTagDataSQLite.ruuviTagIdColumn] = macId?.value ?? luid?.value ?? ""
+        container[RuuviTagDataSQLite.ruuviTagIdColumn] = id
         container[RuuviTagDataSQLite.luidColumn] = luid?.value
         container[RuuviTagDataSQLite.dateColumn] = date
         container[RuuviTagDataSQLite.sourceColumn] = source.rawValue
