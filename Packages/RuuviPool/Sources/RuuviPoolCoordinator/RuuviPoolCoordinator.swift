@@ -47,6 +47,10 @@ final class RuuviPoolCoordinator: RuuviPool {
                 promise.fail(error: .ruuviPersistence(error))
             })
         }
+        if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
+            idPersistence.set(mac: macId, for: luid)
+            idPersistence.set(luid: luid, for: macId)
+        }
         return promise.future
     }
 
@@ -64,6 +68,10 @@ final class RuuviPoolCoordinator: RuuviPool {
             }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))
             })
+        }
+        if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
+            idPersistence.set(mac: macId, for: luid)
+            idPersistence.set(luid: luid, for: macId)
         }
         return promise.future
     }

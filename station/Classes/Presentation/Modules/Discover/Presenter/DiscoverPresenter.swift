@@ -32,7 +32,7 @@ class DiscoverPresenter: NSObject, DiscoverModuleInput {
     }
     private var persistedSensors: [RuuviTagSensor]! {
         didSet {
-            view.savedDevicesIds = persistedSensors.map({ $0.luid?.value ?? $0.id })
+            view.savedDevicesIds = persistedSensors.map({ $0.luid?.any })
             updateCloseButtonVisibilityState()
         }
     }
@@ -107,7 +107,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidChoose(device: DiscoverDeviceViewModel, displayName: String) {
-        if let ruuviTag = ruuviTags.first(where: { $0.luid?.any == device.id.luid.any }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.luid?.any == device.luid?.any }) {
             ruuviOwnershipService.add(sensor: ruuviTag.with(name: displayName), record: ruuviTag)
                 .on(success: { [weak self] _ in
                     guard let sSelf = self else { return }
@@ -292,7 +292,7 @@ extension DiscoverPresenter {
             if let persistedRuuviTag = persistedSensors
                 .first(where: { $0.luid?.any == ruuviTag.luid?.any }) {
                 return DiscoverDeviceViewModel(
-                    id: ruuviTag.luid?.value ?? ruuviTag.id,
+                    luid: ruuviTag.luid?.any,
                     isConnectable: ruuviTag.isConnectable,
                     rssi: ruuviTag.rssi,
                     mac: ruuviTag.mac,
@@ -301,7 +301,7 @@ extension DiscoverPresenter {
                 )
             } else {
                 return DiscoverDeviceViewModel(
-                    id: ruuviTag.luid?.value ?? ruuviTag.id,
+                    luid: ruuviTag.luid?.any,
                     isConnectable: ruuviTag.isConnectable,
                     rssi: ruuviTag.rssi,
                     mac: ruuviTag.mac,
