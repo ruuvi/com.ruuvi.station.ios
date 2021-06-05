@@ -45,6 +45,10 @@ public protocol RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool
     ) -> RuuviServiceOffsetCalibration
+
+    func createAlert(
+        ruuviCloud: RuuviCloud
+    ) -> RuuviServiceAlert
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -125,5 +129,11 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             cloud: ruuviCloud,
             pool: ruuviPool
         )
+    }
+
+    public func createAlert(
+        ruuviCloud: RuuviCloud
+    ) -> RuuviServiceAlert {
+        return RuuviServiceAlertImpl(cloud: ruuviCloud)
     }
 }

@@ -3,6 +3,7 @@ import BTKit
 import RuuviStorage
 import RuuviLocal
 import RuuviCore
+import RuuviService
 
 class CoreAssembly: Assembly {
     // swiftlint:disable:next function_body_length
@@ -28,6 +29,7 @@ class CoreAssembly: Assembly {
             manager.virtualTagTrunk = r.resolve(VirtualTagTrunk.self)
             manager.idPersistence = r.resolve(RuuviLocalIDs.self)
             manager.errorPresenter = r.resolve(ErrorPresenter.self)
+            manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
             return manager
         }.inObjectScope(.container)
 

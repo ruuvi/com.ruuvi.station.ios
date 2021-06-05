@@ -19,7 +19,7 @@ class BusinessAssembly: Assembly {
     func assemble(container: Container) {
         container.register(AlertService.self) { r in
             let service = AlertServiceImpl()
-            service.alertPersistence = r.resolve(AlertPersistence.self)
+            service.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
             return service
         }.inObjectScope(.container).initCompleted { (r, service) in
             // swiftlint:disable force_cast
@@ -138,7 +138,6 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerToSQLite.self) { r in
             let manager = MigrationManagerToSQLite()
-            manager.alertPersistence = r.resolve(AlertPersistence.self)
             manager.calibrationPersistence = r.resolve(CalibrationPersistence.self)
             manager.connectionPersistence = r.resolve(RuuviLocalConnections.self)
             manager.idPersistence = r.resolve(RuuviLocalIDs.self)
@@ -152,11 +151,10 @@ class BusinessAssembly: Assembly {
 
         container.register(MigrationManagerAlertService.self) { r in
             let manager = MigrationManagerAlertService()
-            manager.alertService = r.resolve(AlertService.self)
-            manager.alertPersistence = r.resolve(AlertPersistence.self)
             manager.realmContext = r.resolve(RealmContext.self)
             manager.ruuviStorage = r.resolve(RuuviStorage.self)
             manager.settings = r.resolve(RuuviLocalSettings.self)
+            manager.ruuviAlertService = r.resolve(RuuviServiceAlert.self)
             return manager
         }
 
@@ -225,6 +223,12 @@ class BusinessAssembly: Assembly {
 
         container.register(RuuviServiceFactory.self) { _ in
             return RuuviServiceFactoryImpl()
+        }
+
+        container.register(RuuviServiceAlert.self) { r in
+            let factory = r.resolve(RuuviServiceFactory.self)!
+            let cloud = r.resolve(RuuviCloud.self)!
+            return factory.createAlert(ruuviCloud: cloud)
         }
 
         container.register(RuuviServiceOffsetCalibration.self) { r in
@@ -321,7 +325,8 @@ class BusinessAssembly: Assembly {
             daemon.ruuviPool = r.resolve(RuuviPool.self)
             daemon.ruuviReactor = r.resolve(RuuviReactor.self)
             daemon.ruuviStorage = r.resolve(RuuviStorage.self)
-            daemon.alertService = r.resolve(AlertService.self)
+            daemon.alertHandler = r.resolve(AlertService.self)
+            daemon.alertService = r.resolve(RuuviServiceAlert.self)
             daemon.settings = r.resolve(RuuviLocalSettings.self)
             daemon.pullWebDaemon = r.resolve(PullWebDaemon.self)
             return daemon
@@ -357,7 +362,8 @@ class BusinessAssembly: Assembly {
 
         container.register(WebTagOperationsManager.self) { r in
             let manager = WebTagOperationsManager()
-            manager.alertService = r.resolve(AlertService.self)
+            manager.alertService = r.resolve(RuuviServiceAlert.self)
+            manager.alertHandler = r.resolve(AlertService.self)
             manager.weatherProviderService = r.resolve(WeatherProviderService.self)
             manager.webTagPersistence = r.resolve(WebTagPersistence.self)
             return manager

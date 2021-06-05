@@ -11,7 +11,7 @@ class SettingsPresenter: SettingsModuleInput {
     var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
     var ruuviReactor: RuuviReactor!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
     var realmContext: RealmContext!
     var featureToggleService: FeatureToggleService!
     var ruuviAppSettingsService: RuuviServiceAppSettings!

@@ -5,6 +5,7 @@ import RuuviStorage
 import RuuviReactor
 import RuuviLocal
 import RuuviPool
+import RuuviService
 
 final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDaemon {
 
@@ -14,7 +15,8 @@ final class RuuviTagHeartbeatDaemonBTKit: BackgroundWorker, RuuviTagHeartbeatDae
     var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
-    var alertService: AlertService!
+    var alertService: RuuviServiceAlert!
+    var alertHandler: AlertService!
     var settings: RuuviLocalSettings!
     var pullWebDaemon: PullWebDaemon!
 
@@ -145,7 +147,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                    let settings = observer.sensorSettingsList.first(where: { $0.ruuviTagId == ruuviTagSensor.id }) {
                     sensorSettings = settings
                 }
-                observer.alertService.process(heartbeat: ruuviTag.with(sensorSettings: sensorSettings))
+                observer.alertHandler.process(heartbeat: ruuviTag.with(sensorSettings: sensorSettings))
                 if observer.settings.saveHeartbeats {
                     let uuid = ruuviTag.uuid
                     let interval = observer.settings.saveHeartbeatsIntervalMinutes
