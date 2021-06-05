@@ -93,11 +93,11 @@ class RuuviReactorImpl: RuuviReactor {
         }
         #else
         var recordRxSwift: RuuviTagRecordSubjectRxSwift
-        if let rxSwift = recordRxSwifts[ruuviTagId] {
+        if let rxSwift = recordRxSwifts[luid.value] {
             recordRxSwift = rxSwift
         } else {
             let rxSwift = RuuviTagRecordSubjectRxSwift(
-                ruuviTagId: ruuviTagId,
+                luid: luid,
                 sqlite: sqliteContext,
                 realm: realmContext
             )
@@ -115,7 +115,8 @@ class RuuviReactorImpl: RuuviReactor {
         }
         #endif
     }
-// swiftlint:disable:next function_body_length
+
+    // swiftlint:disable:next function_body_length
     func observe(_ block: @escaping (RuuviReactorChange<AnyRuuviTagSensor>) -> Void) -> RuuviReactorToken {
         let sqliteOperation = sqlitePersistence.readAll()
         let realmOperation = realmPersistence.readAll()
@@ -236,9 +237,11 @@ class RuuviReactorImpl: RuuviReactor {
         if let rxSwift = lastRecordRxSwifts[ruuviTag.id] {
             recordRxSwift = rxSwift
         } else {
-            let rxSwift = RuuviTagLastRecordSubjectRxSwift(ruuviTagId: ruuviTag.id,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
+            let rxSwift = RuuviTagLastRecordSubjectRxSwift(
+                luid: ruuviTag.luid ?? ruuviTag.id.luid,
+                sqlite: sqliteContext,
+                realm: realmContext
+            )
             lastRecordRxSwifts[ruuviTag.id] = rxSwift
             recordRxSwift = rxSwift
         }
@@ -327,7 +330,7 @@ class RuuviReactorImpl: RuuviReactor {
             sensorSettingsRxSwift = rxSwift
         } else {
             let rxSwift = SensorSettingsRxSwift(
-                ruuviTagId: ruuviTag.id,
+                luid: ruuviTag.luid ?? ruuviTag.id.luid,
                 sqlite: sqliteContext,
                 realm: realmContext
             )
