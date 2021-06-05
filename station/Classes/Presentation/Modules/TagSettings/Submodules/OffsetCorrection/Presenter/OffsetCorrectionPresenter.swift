@@ -30,7 +30,8 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
         self.sensorSettings = sensorSettings ?? SensorSettingsStruct(
-            ruuviTagId: ruuviTag.id,
+            luid: ruuviTag.luid,
+            macId: ruuviTag.macId,
             temperatureOffset: nil,
             temperatureOffsetDate: nil,
             humidityOffset: nil,
@@ -126,7 +127,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             if let ruuviTag = device.ruuvi?.tag {
                 self?.lastSensorRecord = ruuviTag
                 self?.view.viewModel.update(
-                    ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings)
+                    ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings).with(source: .advertisement)
                 )
             }
         }
