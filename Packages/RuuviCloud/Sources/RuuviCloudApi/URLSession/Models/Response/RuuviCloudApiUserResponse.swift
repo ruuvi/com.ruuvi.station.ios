@@ -13,6 +13,9 @@ struct RuuviCloudApiSensor: Decodable {
     let name: String
     let isPublic: Bool
     var isOwner: Bool = false
+    let offsetTemperature: Double?
+    let offsetHumidity: Double?
+    let offsetPressure: Double?
 
     enum CodingKeys: String, CodingKey {
         case sensorId = "sensor"
@@ -20,6 +23,9 @@ struct RuuviCloudApiSensor: Decodable {
         case name
         case pictureUrl = "picture"
         case isPublic = "public"
+        case offsetTemperature
+        case offsetHumidity
+        case offsetPressure
     }
 }
 

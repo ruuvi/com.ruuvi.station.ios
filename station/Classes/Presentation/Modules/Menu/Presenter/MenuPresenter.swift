@@ -168,7 +168,7 @@ extension MenuPresenter {
     }
 
     private func createSignOutAlert() {
-        let title = "TagsManager.SignOutButton".localized()
+        let title = "Menu.SignOut.text".localized()
         let message = "TagsManagerPresenter.SignOutConfirmAlert.Message".localized()
         let confirmActionTitle = "OK".localized()
         let cancelActionTitle = "Cancel".localized()
