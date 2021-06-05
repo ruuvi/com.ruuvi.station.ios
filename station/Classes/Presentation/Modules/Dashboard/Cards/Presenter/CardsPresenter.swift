@@ -460,7 +460,11 @@ extension CardsPresenter {
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                    let sensorSettings = self?.sensorSettingsList.first(where: { ($0.luid?.any == viewModel.luid.value) || ($0.macId?.any == viewModel.mac.value) })
+                    let sensorSettings = self?.sensorSettingsList
+                        .first(where: {
+                                ($0.luid?.any == viewModel.luid.value)
+                                    || ($0.macId?.any == viewModel.mac.value)
+                        })
                     viewModel.update(
                         ruuviTag
                             .with(source: .heartbeat)
@@ -480,7 +484,10 @@ extension CardsPresenter {
                     if let ruuviTag = device.ruuvi?.tag,
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
-                            .first(where: { ($0.luid?.any == viewModel.luid.value) || ($0.macId?.any == viewModel.mac.value) })
+                            .first(where: {
+                                    ($0.luid?.any == viewModel.luid.value)
+                                        || ($0.macId?.any == viewModel.mac.value)
+                            })
                         viewModel.update(
                             ruuviTag
                                 .with(source: .advertisement)
