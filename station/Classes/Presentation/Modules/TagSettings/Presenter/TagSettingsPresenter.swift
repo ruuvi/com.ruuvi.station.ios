@@ -107,13 +107,16 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         if let sensorSettings = sensor {
             self.sensorSettings = sensorSettings
         } else {
-            self.sensorSettings = SensorSettingsStruct(ruuviTagId: ruuviTag.id,
-                                                       temperatureOffset: nil,
-                                                       temperatureOffsetDate: nil,
-                                                       humidityOffset: nil,
-                                                       humidityOffsetDate: nil,
-                                                       pressureOffset: nil,
-                                                       pressureOffsetDate: nil)
+            self.sensorSettings = SensorSettingsStruct(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                temperatureOffset: nil,
+                temperatureOffsetDate: nil,
+                humidityOffset: nil,
+                humidityOffsetDate: nil,
+                pressureOffset: nil,
+                pressureOffsetDate: nil
+            )
         }
 
         bindViewModel(to: ruuviTag)
@@ -599,7 +602,7 @@ extension TagSettingsPresenter {
     private func sync(device: RuuviTag, source: RuuviTagSensorRecordSource) {
         humidity = device.humidity?.withSensorSettings(sensorSettings: sensorSettings)
         let record = RuuviTagSensorRecordStruct(
-            ruuviTagId: device.ruuviTagId,
+            ruuviTagId: device.luid,
             date: device.date,
             source: source,
             macId: device.mac?.mac,

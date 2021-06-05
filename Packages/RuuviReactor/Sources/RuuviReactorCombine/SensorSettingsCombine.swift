@@ -8,7 +8,7 @@ import RuuviContext
 
 @available(iOS 13, *)
 class SensorSettingsCombine {
-    var ruuviTagId: String
+    var luid: LocalIdentifier
     var sqlite: SQLiteContext
     var realm: RealmContext
 
@@ -25,12 +25,17 @@ class SensorSettingsCombine {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
-        self.ruuviTagId = ruuviTagId
+    init(
+        luid: LocalIdentifier,
+        sqlite: SQLiteContext,
+        realm: RealmContext
+    ) {
+        self.luid = luid
         self.sqlite = sqlite
         self.realm = realm
 
-        let request = SensorSettingsSQLite.filter(SensorSettingsSQLite.ruuviTagIdColumn == ruuviTagId)
+        let request = SensorSettingsSQLite
+            .filter(SensorSettingsSQLite.luidColumn == luid.value)
         self.ruuviTagController = try! FetchedRecordsController(sqlite.database.dbPool, request: request)
         try! self.ruuviTagController.performFetch()
 
@@ -50,7 +55,7 @@ class SensorSettingsCombine {
 
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
-            let results = sSelf.realm.main.objects(SensorSettingsRealm.self)
+            let results = sSelf.realm.main.objects(SensorSettingsRealm.self).filter("luid == %@", luid.value)
             sSelf.ruuviTagRealmCache = results.map({ $0.sensorSettings })
             sSelf.ruuviTagsRealmToken = results.observe { [weak self] (change) in
                 guard let sSelf = self else { return }

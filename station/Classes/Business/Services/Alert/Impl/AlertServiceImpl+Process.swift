@@ -14,7 +14,7 @@ extension AlertServiceImpl {
                 let isTemperature = process(
                     temperature: ruuviTag.temperature,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId
+                    identifier: ruuviTag.luid
                 )
                 isTriggered = isTriggered || isTemperature
             case .humidity:
@@ -22,7 +22,7 @@ extension AlertServiceImpl {
                     humidity: ruuviTag.humidity,
                     temperature: ruuviTag.temperature,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId
+                    identifier: ruuviTag.luid
                 )
                 isTriggered = isTriggered || isHumidity
             case .dewPoint:
@@ -30,14 +30,14 @@ extension AlertServiceImpl {
                     humidity: ruuviTag.humidity,
                     temperature: ruuviTag.temperature,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId
+                    identifier: ruuviTag.luid
                 )
                 isTriggered = isTriggered || isDewPoint
             case .pressure:
                 let isPressure = process(
                     pressure: ruuviTag.pressure,
                     alertType: type,
-                    identifier: ruuviTag.ruuviTagId
+                    identifier: ruuviTag.luid
                 )
                 isTriggered = isTriggered || isPressure
             case .movement:

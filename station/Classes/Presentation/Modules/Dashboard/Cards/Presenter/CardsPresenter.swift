@@ -144,12 +144,13 @@ extension CardsPresenter: CardsViewOutput {
                 humidity = viewModel.humidity.value?
                     .converted(to: .relative(temperature: temperature))
             }
-            self.router.openTagSettings(ruuviTag: ruuviTag,
-                                        temperature: viewModel.temperature.value,
-                                        humidity: humidity,
-                                        sensorSettings: sensorSettingsList.first(
-                                            where: { $0.ruuviTagId == viewModel.id.value }),
-                                        output: self)
+            self.router.openTagSettings(
+                ruuviTag: ruuviTag,
+                temperature: viewModel.temperature.value,
+                humidity: humidity,
+                sensorSettings: sensorSettingsList
+                    .first(where: { $0.id == viewModel.id.value }),
+                output: self)
         } else if viewModel.type == .web,
                   let webTag = virtualTags?.first(where: { $0.uuid == viewModel.luid.value?.value }) {
             router.openWebTagSettings(webTag: webTag, temperature: viewModel.temperature.value)
@@ -459,7 +460,7 @@ extension CardsPresenter {
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] (_, device) in
                 if let ruuviTag = device.ruuvi?.tag,
                    let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
-                    let sensorSettings = self?.sensorSettingsList.first(where: { $0.ruuviTagId == viewModel.id.value })
+                    let sensorSettings = self?.sensorSettingsList.first(where: { $0.id == viewModel.id.value })
                     viewModel.update(
                         ruuviTag
                             .with(source: .heartbeat)
@@ -479,7 +480,7 @@ extension CardsPresenter {
                     if let ruuviTag = device.ruuvi?.tag,
                        let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
-                            .first(where: { $0.ruuviTagId == viewModel.id.value })
+                            .first(where: { $0.id == viewModel.id.value })
                         viewModel.update(
                             ruuviTag
                                 .with(source: .advertisement)
@@ -504,7 +505,7 @@ extension CardsPresenter {
                             self?.sensorSettingsList.append(sensorSettings)
                         case .update(let updateSensorSettings):
                             if let updateIndex = self?.sensorSettingsList.firstIndex(
-                                where: { $0.ruuviTagId == updateSensorSettings.ruuviTagId }
+                                where: { $0.id == updateSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList[updateIndex] = updateSensorSettings
                             } else {
@@ -512,7 +513,7 @@ extension CardsPresenter {
                             }
                         case .delete(let deleteSensorSettings):
                             if let deleteIndex = self?.sensorSettingsList.firstIndex(
-                                where: { $0.ruuviTagId == deleteSensorSettings.ruuviTagId }
+                                where: { $0.id == deleteSensorSettings.id }
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
                             }

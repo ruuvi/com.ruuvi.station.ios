@@ -360,7 +360,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         do {
             var sqliteSensorSettings: Settings?
             try self.database.dbPool.read { db in
-                let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
+                let request = Settings.filter(Settings.idColumn == ruuviTag.id)
                 sqliteSensorSettings = try request.fetchOne(db)
             }
             promise.succeed(value: sqliteSensorSettings)
@@ -382,15 +382,20 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         assert(ruuviTag.macId != nil)
         do {
             var isAddNewRecord = true
-            var sqliteSensorSettings = Settings(ruuviTagId: ruuviTag.id,
-                                                          temperatureOffset: nil,
-                                                          temperatureOffsetDate: nil,
-                                                          humidityOffset: nil,
-                                                          humidityOffsetDate: nil,
-                                                          pressureOffset: nil,
-                                                          pressureOffsetDate: nil)
+            var sqliteSensorSettings = Settings(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                temperatureOffset: nil,
+                temperatureOffsetDate: nil,
+                humidityOffset: nil,
+                humidityOffsetDate: nil,
+                pressureOffset: nil,
+                pressureOffsetDate: nil
+            )
             try database.dbPool.read { db in
-                let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
+                let request = Settings.filter(
+                    Settings.idColumn == ruuviTag.id
+                )
                 if let existingSettings = try request.fetchOne(db) {
                     sqliteSensorSettings = existingSettings
                     isAddNewRecord = false
@@ -436,7 +441,7 @@ class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         do {
             var success = false
             try database.dbPool.write { db in
-                let request = Settings.filter(Settings.ruuviTagIdColumn == ruuviTag.id)
+                let request = Settings.filter(Settings.idColumn == ruuviTag.id)
                 let sensorSettings: Settings? = try request.fetchOne(db)
                 if let notNullSensorSettings = sensorSettings {
                     success = try notNullSensorSettings.delete(db)
