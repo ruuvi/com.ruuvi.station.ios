@@ -15,7 +15,8 @@ public protocol RuuviServiceFactory {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceCloudSync
 
     func createOwnership(
@@ -62,7 +63,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceCloudSync {
         return RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
@@ -71,7 +73,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             ruuviLocalSettings: ruuviLocalSettings,
             ruuviLocalSyncState: ruuviLocalSyncState,
             ruuviLocalImages: ruuviLocalImages,
-            ruuviRepository: ruuviRepository
+            ruuviRepository: ruuviRepository,
+            ruuviLocalIDs: ruuviLocalIDs
         )
     }
 
