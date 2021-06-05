@@ -12,7 +12,7 @@ class RuuviTagRecordSubjectCombine {
 
     private var sqlite: SQLiteContext
     private var realm: RealmContext
-    private var luid: String
+    private var luid: LocalIdentifier
 
     let subject = PassthroughSubject<[AnyRuuviTagSensorRecord], Never>()
 
@@ -23,7 +23,11 @@ class RuuviTagRecordSubjectCombine {
         ruuviTagDataRealmToken?.invalidate()
     }
 
-    init(luid: String, sqlite: SQLiteContext, realm: RealmContext) {
+    init(
+        luid: LocalIdentifier,
+        sqlite: SQLiteContext,
+        realm: RealmContext
+    ) {
         self.sqlite = sqlite
         self.realm = realm
         self.luid = luid
@@ -32,7 +36,7 @@ class RuuviTagRecordSubjectCombine {
     func start() {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
-                                        .filter(RuuviTagDataSQLite.ruuviTagIdColumn == luid)
+            .filter(RuuviTagDataSQLite.ruuviTagIdColumn == luid.value)
         let observation = ValueObservation.tracking { db -> [RuuviTagDataSQLite] in
             try! request.fetchAll(db)
         }.removeDuplicates()
@@ -43,8 +47,8 @@ class RuuviTagRecordSubjectCombine {
         }
 
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
-                          .filter("ruuviTag.uuid == %@", luid)
-                          .sorted(byKeyPath: "date")
+            .filter("ruuviTag.uuid == %@", luid.value)
+            .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmCache = results.compactMap({ $0.any })
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }
