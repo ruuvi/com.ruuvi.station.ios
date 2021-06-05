@@ -3,7 +3,7 @@ import Foundation
 extension RuuviTagSensorRecord {
     public var sqlite: RuuviTagDataSQLite {
         return RuuviTagDataSQLite(
-            ruuviTagId: luid,
+            luid: luid,
             date: date,
             source: source,
             macId: macId,
