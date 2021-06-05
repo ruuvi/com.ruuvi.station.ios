@@ -52,7 +52,7 @@ class RuuviReactorImpl: RuuviReactor {
                 recordCombine = combine
             } else {
                 let combine = RuuviTagRecordSubjectCombine(
-                    luid: luid.value,
+                    luid: luid,
                     sqlite: sqliteContext,
                     realm: realmContext
                 )
@@ -192,9 +192,11 @@ class RuuviReactorImpl: RuuviReactor {
             if let combine = lastRecordCombines[ruuviTag.id] {
                 recordCombine = combine
             } else {
-                let combine = RuuviTagLastRecordSubjectCombine(luid: ruuviTag.id,
-                                                           sqlite: sqliteContext,
-                                                           realm: realmContext)
+                let combine = RuuviTagLastRecordSubjectCombine(
+                    luid: ruuviTag.luid ?? ruuviTag.id.luid,
+                    sqlite: sqliteContext,
+                    realm: realmContext
+                )
                 lastRecordCombines[ruuviTag.id] = combine
                 recordCombine = combine
             }

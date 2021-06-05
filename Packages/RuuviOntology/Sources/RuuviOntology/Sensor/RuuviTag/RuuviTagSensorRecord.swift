@@ -38,8 +38,8 @@ extension RuuviTagSensorRecord {
         if let macId = macId,
             !macId.value.isEmpty {
             return macId.value + "\(date.timeIntervalSince1970)"
-        } else if let ruuviTagId = luid {
-            return ruuviTagId.value + "\(date.timeIntervalSince1970)"
+        } else if let luid = luid {
+            return luid.value + "\(date.timeIntervalSince1970)"
         } else {
             fatalError()
         }
