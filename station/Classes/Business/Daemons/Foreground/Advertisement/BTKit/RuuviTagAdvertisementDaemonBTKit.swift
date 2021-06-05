@@ -137,7 +137,7 @@ final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertis
                 switch change {
                 case .delete(let sensorSettings):
                     if let dIndex = self?.sensorSettingsList.firstIndex(
-                        where: { $0.ruuviTagId == sensorSettings.ruuviTagId }
+                        where: { $0.id == sensorSettings.id }
                     ) {
                         self?.sensorSettingsList.remove(at: dIndex)
                     }
@@ -147,7 +147,7 @@ final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertis
                     self?.savedDate.removeValue(forKey: luid.value)
                 case .update(let sensorSettings):
                     if let uIndex = self?.sensorSettingsList.firstIndex(
-                        where: { $0.ruuviTagId == sensorSettings.ruuviTagId }
+                        where: { $0.id == sensorSettings.id }
                     ) {
                         self?.sensorSettingsList[uIndex] = sensorSettings
                     } else {
@@ -182,7 +182,8 @@ final class RuuviTagAdvertisementDaemonBTKit: BackgroundWorker, RuuviTagAdvertis
     }
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
-        let sensorSettings = self.sensorSettingsList.first(where: { $0.ruuviTagId == record.ruuviTagId })
+        let sensorSettings = self.sensorSettingsList
+            .first(where: { ($0.luid?.any == record.luid?.any) || ($0.macId?.any == record.macId?.any) })
         ruuviPool.create(
             record
                 .with(source: .advertisement)

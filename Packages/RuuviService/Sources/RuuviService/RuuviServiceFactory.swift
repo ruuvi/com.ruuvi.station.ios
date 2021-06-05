@@ -15,7 +15,8 @@ public protocol RuuviServiceFactory {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceCloudSync
 
     func createOwnership(
@@ -45,6 +46,10 @@ public protocol RuuviServiceFactory {
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool
     ) -> RuuviServiceOffsetCalibration
+
+    func createAlert(
+        ruuviCloud: RuuviCloud
+    ) -> RuuviServiceAlert
 }
 
 public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
@@ -58,7 +63,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
-        ruuviRepository: RuuviRepository
+        ruuviRepository: RuuviRepository,
+        ruuviLocalIDs: RuuviLocalIDs
     ) -> RuuviServiceCloudSync {
         return RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
@@ -67,7 +73,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             ruuviLocalSettings: ruuviLocalSettings,
             ruuviLocalSyncState: ruuviLocalSyncState,
             ruuviLocalImages: ruuviLocalImages,
-            ruuviRepository: ruuviRepository
+            ruuviRepository: ruuviRepository,
+            ruuviLocalIDs: ruuviLocalIDs
         )
     }
 
@@ -125,5 +132,11 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             cloud: ruuviCloud,
             pool: ruuviPool
         )
+    }
+
+    public func createAlert(
+        ruuviCloud: RuuviCloud
+    ) -> RuuviServiceAlert {
+        return RuuviServiceAlertImpl(cloud: ruuviCloud)
     }
 }

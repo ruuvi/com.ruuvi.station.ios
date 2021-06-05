@@ -207,6 +207,7 @@ class RuuviTagPropertiesDaemonBTKit: BackgroundWorker, RuuviTagPropertiesDaemon 
                 isOwner: ruuviTag.isClaimed,
                 owner: ruuviTag.owner)
             sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
+            sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
             sSelf.ruuviPool.update(ruuviSensor)
                 .on(failure: { [weak sSelf] error in
                     sSelf?.post(error: error)
