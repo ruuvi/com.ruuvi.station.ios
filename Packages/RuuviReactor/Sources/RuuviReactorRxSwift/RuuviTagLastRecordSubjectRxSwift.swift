@@ -11,7 +11,7 @@ class RuuviTagLastRecordSubjectRxSwift {
 
     private var sqlite: SQLiteContext
     private var realm: RealmContext
-    private var ruuviTagId: String
+    private var luid: LocalIdentifier
 
     private var ruuviTagDataRealmToken: NotificationToken?
     private var ruuviTagDataTransactionObserver: TransactionObserver?
@@ -21,16 +21,20 @@ class RuuviTagLastRecordSubjectRxSwift {
         subject.onCompleted()
     }
 
-    init(ruuviTagId: String, sqlite: SQLiteContext, realm: RealmContext) {
+    init(
+        luid: LocalIdentifier,
+        sqlite: SQLiteContext,
+        realm: RealmContext
+    ) {
         self.sqlite = sqlite
         self.realm = realm
-        self.ruuviTagId = ruuviTagId
+        self.luid = luid
     }
 
     func start() {
         self.isServing = true
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn.desc)
-                                        .filter(RuuviTagDataSQLite.ruuviTagIdColumn == ruuviTagId)
+            .filter(RuuviTagDataSQLite.luidColumn == luid.value)
         let observation = request.observationForFirst()
 
         self.ruuviTagDataTransactionObserver = try! observation.start(in: sqlite.database.dbPool) {
@@ -40,7 +44,7 @@ class RuuviTagLastRecordSubjectRxSwift {
             }
         }
         let results = self.realm.main.objects(RuuviTagDataRealm.self)
-            .filter("ruuviTag.uuid == %@", ruuviTagId)
+            .filter("ruuviTag.uuid == %@", luid.value)
             .sorted(byKeyPath: "date")
         self.ruuviTagDataRealmToken = results.observe { [weak self] (change) in
             guard let sSelf = self else { return }

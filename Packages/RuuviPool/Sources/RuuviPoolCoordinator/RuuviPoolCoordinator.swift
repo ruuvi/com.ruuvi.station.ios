@@ -107,7 +107,7 @@ final class RuuviPoolCoordinator: RuuviPool {
             }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))
             })
-        } else if let luid = record.ruuviTagId,
+        } else if let luid = record.luid,
                   let macId = idPersistence.mac(for: luid) {
             sqlite.create(record.with(macId: macId)).on(success: { success in
                 promise.succeed(value: success)

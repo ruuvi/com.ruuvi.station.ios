@@ -3,7 +3,8 @@ import RealmSwift
 import RuuviOntology
 
 public class SensorSettingsRealm: Object {
-    @objc public dynamic var ruuviTagId: String = ""
+    @objc public dynamic var luid: String?
+    @objc public dynamic var macId: String?
 
     public let temperatureOffset = RealmOptional<Double>()
     @objc public dynamic var temperatureOffsetDate: Date?
@@ -16,14 +17,16 @@ public class SensorSettingsRealm: Object {
 
     public convenience init(ruuviTag: RuuviTagSensor) {
         self.init()
-        ruuviTagId = ruuviTag.luid?.value ?? ruuviTag.macId?.value ?? ""
+        luid = ruuviTag.luid?.value
+        macId = ruuviTag.macId?.value
     }
 }
 
 extension SensorSettingsRealm {
     public var sensorSettings: SensorSettings {
         return SensorSettingsStruct(
-            ruuviTagId: ruuviTagId,
+            luid: luid?.luid,
+            macId: macId?.mac,
             temperatureOffset: temperatureOffset.value,
             temperatureOffsetDate: temperatureOffsetDate,
             humidityOffset: humidityOffset.value,

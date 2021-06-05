@@ -3,7 +3,8 @@ import GRDB
 import RuuviOntology
 
 public struct SensorSettingsSQLite: SensorSettings {
-    public var ruuviTagId: String
+    public var luid: LocalIdentifier?
+    public var macId: MACIdentifier?
     public var temperatureOffset: Double?
     public var temperatureOffsetDate: Date?
     public var humidityOffset: Double?
@@ -12,7 +13,8 @@ public struct SensorSettingsSQLite: SensorSettings {
     public var pressureOffsetDate: Date?
 
     public init(
-        ruuviTagId: String,
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
         temperatureOffset: Double?,
         temperatureOffsetDate: Date?,
         humidityOffset: Double?,
@@ -20,7 +22,8 @@ public struct SensorSettingsSQLite: SensorSettings {
         pressureOffset: Double?,
         pressureOffsetDate: Date?
     ) {
-        self.ruuviTagId = ruuviTagId
+        self.luid = luid
+        self.macId = macId
         self.temperatureOffset = temperatureOffset
         self.temperatureOffsetDate = temperatureOffsetDate
         self.humidityOffset = humidityOffset
@@ -32,7 +35,8 @@ public struct SensorSettingsSQLite: SensorSettings {
 
 extension SensorSettingsSQLite {
     public static let idColumn = Column("id")
-    public static let ruuviTagIdColumn = Column("ruuviTagIdColumn")
+    public static let luidColumn = Column("luid")
+    public static let macIdColumn = Column("macId")
     public static let temperatureOffsetColumn = Column("temperatureOffset")
     public static let temperatureOffsetDateColumn = Column("temperatureOffsetDate")
     public static let humidityOffsetColumn = Column("humidityOffset")
@@ -43,7 +47,8 @@ extension SensorSettingsSQLite {
 
 extension SensorSettingsSQLite: FetchableRecord {
     public init(row: Row) {
-        ruuviTagId = row[SensorSettingsSQLite.ruuviTagIdColumn]
+        luid = LocalIdentifierStruct(value: row[SensorSettingsSQLite.luidColumn])
+        macId = MACIdentifierStruct(value: row[SensorSettingsSQLite.macIdColumn])
         temperatureOffset = row[SensorSettingsSQLite.temperatureOffsetColumn]
         temperatureOffsetDate = row[SensorSettingsSQLite.temperatureOffsetDateColumn]
         humidityOffset = row[SensorSettingsSQLite.humidityOffsetColumn]
@@ -60,7 +65,8 @@ extension SensorSettingsSQLite: PersistableRecord {
 
     public func encode(to container: inout PersistenceContainer) {
         container[SensorSettingsSQLite.idColumn] = id
-        container[SensorSettingsSQLite.ruuviTagIdColumn] = ruuviTagId
+        container[SensorSettingsSQLite.luidColumn] = luid?.value
+        container[SensorSettingsSQLite.macIdColumn] = macId?.value
         container[SensorSettingsSQLite.temperatureOffsetColumn] = temperatureOffset
         container[SensorSettingsSQLite.temperatureOffsetDateColumn] = temperatureOffsetDate
         container[SensorSettingsSQLite.humidityOffsetColumn] = humidityOffset
@@ -74,7 +80,8 @@ extension SensorSettingsSQLite {
     public static func createTable(in db: Database) throws {
         try db.create(table: SensorSettingsSQLite.databaseTableName, body: { table in
             table.column(RuuviTagDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
-            table.column(SensorSettingsSQLite.ruuviTagIdColumn.name, .text)
+            table.column(SensorSettingsSQLite.luidColumn.name, .text)
+            table.column(SensorSettingsSQLite.macIdColumn.name, .text)
             table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.temperatureOffsetDateColumn.name, .datetime)
             table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
@@ -88,7 +95,8 @@ extension SensorSettingsSQLite {
 extension SensorSettingsSQLite {
     public var sensorSettings: SensorSettings {
         return SensorSettingsStruct(
-            ruuviTagId: ruuviTagId,
+            luid: luid,
+            macId: macId,
             temperatureOffset: temperatureOffset,
             temperatureOffsetDate: temperatureOffsetDate,
             humidityOffset: humidityOffset,

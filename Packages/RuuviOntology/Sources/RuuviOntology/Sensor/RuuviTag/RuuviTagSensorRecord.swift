@@ -11,7 +11,7 @@ public enum RuuviTagSensorRecordSource: String {
 }
 
 public protocol RuuviTagSensorRecord {
-    var ruuviTagId: LocalIdentifier? { get }
+    var luid: LocalIdentifier? { get }
     var date: Date { get }
     var source: RuuviTagSensorRecordSource { get }
     var macId: MACIdentifier? { get }
@@ -38,7 +38,7 @@ extension RuuviTagSensorRecord {
         if let macId = macId,
             !macId.value.isEmpty {
             return macId.value + "\(date.timeIntervalSince1970)"
-        } else if let ruuviTagId = ruuviTagId {
+        } else if let ruuviTagId = luid {
             return ruuviTagId.value + "\(date.timeIntervalSince1970)"
         } else {
             fatalError()
@@ -51,7 +51,7 @@ extension RuuviTagSensorRecord {
 
     public func with(macId: MACIdentifier) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: ruuviTagId,
+            ruuviTagId: luid,
             date: date,
             source: source,
             macId: macId,
@@ -74,7 +74,7 @@ extension RuuviTagSensorRecord {
 extension RuuviTagSensorRecord {
     public func with(source: RuuviTagSensorRecordSource) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: ruuviTagId,
+            ruuviTagId: luid,
             date: date,
             source: source,
             macId: macId,
@@ -95,7 +95,7 @@ extension RuuviTagSensorRecord {
 
     public func with(sensorSettings: SensorSettings?) -> RuuviTagSensorRecord {
         return RuuviTagSensorRecordStruct(
-            ruuviTagId: ruuviTagId,
+            ruuviTagId: luid,
             date: date,
             source: source,
             macId: macId,
@@ -116,7 +116,7 @@ extension RuuviTagSensorRecord {
 }
 
 public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
-    public var ruuviTagId: LocalIdentifier?
+    public var luid: LocalIdentifier?
     public var date: Date
     public var source: RuuviTagSensorRecordSource
     public var macId: MACIdentifier?
@@ -155,7 +155,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
         humidityOffset: Double,
         pressureOffset: Double
     ) {
-        self.ruuviTagId = ruuviTagId
+        self.luid = ruuviTagId
         self.date = date
         self.source = source
         self.macId = macId
@@ -181,8 +181,8 @@ public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable
         self.object = object
     }
 
-    public var ruuviTagId: LocalIdentifier? {
-        return object.ruuviTagId
+    public var luid: LocalIdentifier? {
+        return object.luid
     }
 
     public var date: Date {
