@@ -127,7 +127,7 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             if let ruuviTag = device.ruuvi?.tag {
                 self?.lastSensorRecord = ruuviTag
                 self?.view.viewModel.update(
-                    ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings)
+                    ruuviTagRecord: ruuviTag.with(sensorSettings: self?.sensorSettings).with(source: .advertisement)
                 )
             }
         }
