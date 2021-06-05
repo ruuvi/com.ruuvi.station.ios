@@ -151,37 +151,4 @@ final class RuuviStorageCoordinator: RuuviStorage {
         }
         return promise.future
     }
-
-    func updateOffsetCorrection(
-        type: OffsetCorrectionType,
-        with value: Double?,
-        of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviStorageError> {
-        let promise = Promise<SensorSettings, RuuviStorageError>()
-        if ruuviTag.macId != nil {
-            sqlite.updateOffsetCorrection(
-                type: type,
-                with: value,
-                of: ruuviTag,
-                lastOriginalRecord: record)
-                .on(success: { settings in
-                    promise.succeed(value: settings)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPersistence(error))
-                })
-        } else {
-            realm.updateOffsetCorrection(
-                type: type,
-                with: value,
-                of: ruuviTag,
-                lastOriginalRecord: record)
-                .on(success: { settings in
-                    promise.succeed(value: settings)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPersistence(error))
-                })
-        }
-        return promise.future
-    }
 }
